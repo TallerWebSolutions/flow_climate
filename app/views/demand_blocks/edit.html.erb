@@ -10,4 +10,12 @@
   </div>
 </div>
 
-<%= render 'demand_blocks/form', company_id: @company.id, project_id: @demand.project_id, demand_id: @demand.id, block_id: @demand_block.id %>
+<%= form_for @demand_block, url: company_project_demand_demand_block_path(@company, @project, @demand, @demand_block), method: :put, class: 'form' do |f| %>
+  <%= render 'demand_blocks/form', f: f, demand_block: @demand_block %>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <%= f.submit I18n.t('general.buttons.save'), class: 'btn btn-success' %>
+    </div>
+  </div>
+<% end %>

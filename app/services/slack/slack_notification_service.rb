@@ -160,7 +160,7 @@ module Slack
       Notifications::ItemAssignmentNotification.create(item_assignment: item_assignment)
     end
 
-    def notify_item_blocked(demand_block, demand_url, block_state = 'blocked')
+    def notify_item_blocked(demand_block, demand_url, edit_block_url, block_state = 'blocked')
       slack_configuration = SlackConfiguration.find_by(team: demand_block.demand.team, info_type: 'demand_blocked', active: true)
 
       if slack_configuration.blank?
@@ -174,19 +174,33 @@ module Slack
 
       slack_notifier = Slack::Notifier.new(slack_configuration.room_webhook)
 
-      if block_state == 'blocked'
-        message_title =  { "type": 'section', "text": { "type": 'mrkdwn', "text": ":no_entry_sign: #{demand_block.blocker_name} bloqueou a <#{demand_url}|#{demand_block.demand.external_id}> em _#{demand_block.demand.stage_at(demand_block.block_time)&.name || 'sem etapa'}_ as #{I18n.l(demand_block.block_time, format: :short)}" } }
-        block_detail = { "type": 'section', "text": { "type": 'mrkdwn', "text": "*Motivo:* #{demand_block.block_reason}" } }
-      else
-        message_title =  { "type": 'section', "text": { "type": 'mrkdwn', "text": ":tada: :tada: #{demand_block.unblocker.name} desbloqueou a <#{demand_url}|#{demand_block.demand.external_id}> em _#{demand_block.demand.stage_at(demand_block.block_time)&.name || 'sem etapa'}_ as #{I18n.l(demand_block.unblock_time, format: :short)}" } }
-        block_detail = { "type": 'section', "text": { "type": 'mrkdwn', "text": "*Tipo:* #{I18n.t("activerecord.attributes.demand_block.enums.block_type.#{demand_block.block_type}")} - :alarm_clock: #{time_distance_in_words(demand_block.reload.total_blocked_time)}" } }
-      end
-
+      block_type = { "type": 'section', "text": { "type": 'mrkdwn', "text": "*Tipo:* #{I18n.t("activerecord.attributes.demand_block.enums.block_type.#{demand_block.block_type}")}" } }
       divider_block = { "type": 'divider' }
 
-      slack_notifier.post(blocks: [message_title, block_detail, divider_block])
+      if block_state == 'blocked'
+        notify_blocked(block_type, demand_block, demand_url, divider_block, edit_block_url, slack_notifier)
+      else
+        notify_unblocked(block_type, demand_block, demand_url, divider_block, slack_notifier)
+      end
 
       Notifications::DemandBlockNotification.create(demand_block: demand_block, block_state: block_state)
+    end
+
+    private
+
+    def notify_unblocked(block_type, demand_block, demand_url, divider_block, slack_notifier)
+      message_title = { "type": 'section', "text": { "type": 'mrkdwn', "text": ":tada: :tada: #{demand_block.unblocker.name} desbloqueou a <#{demand_url}|#{demand_block.demand.external_id}> em _#{demand_block.demand.stage_at(demand_block.block_time)&.name || 'sem etapa'}_ as #{I18n.l(demand_block.unblock_time, format: :short)}" } }
+      block_detail = { "type": 'section', "text": { "type": 'mrkdwn', "text": ":alarm_clock: #{time_distance_in_words(demand_block.reload.total_blocked_time)}" } }
+
+      slack_notifier.post(blocks: [message_title, block_type, block_detail, divider_block])
+    end
+
+    def notify_blocked(block_type, demand_block, demand_url, divider_block, edit_block_url, slack_notifier)
+      message_title = { "type": 'section', "text": { "type": 'mrkdwn', "text": ":no_entry_sign: #{demand_block.blocker_name} bloqueou a <#{demand_url}|#{demand_block.demand.external_id}> em _#{demand_block.demand.stage_at(demand_block.block_time)&.name || 'sem etapa'}_ as #{I18n.l(demand_block.block_time, format: :short)}" } }
+      block_detail = { "type": 'section', "text": { "type": 'mrkdwn', "text": "*Motivo:* #{demand_block.block_reason}" } }
+      block_ask_for_edit = { "type": 'context', "elements": [{ "type": 'mrkdwn', "text": "#{demand_block.blocker.user&.slack_user_for_company(demand_block.demand.company)} <#{edit_block_url}|clique aqui para alterar a categoria do bloqueio>" }] }
+
+      slack_notifier.post(blocks: [message_title, block_type, block_detail, divider_block, block_ask_for_edit])
     end
   end
 end

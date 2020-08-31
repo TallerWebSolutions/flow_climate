@@ -257,7 +257,7 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
 
         expect_any_instance_of(Slack::Notifier).to receive(:post)
 
-        described_class.instance.notify_item_blocked(demand_block, 'http://foo.com')
+        described_class.instance.notify_item_blocked(demand_block, 'http://foo.com', 'http://bar.com')
         expect(Notifications::DemandBlockNotification.all.count).to eq 1
       end
     end
@@ -273,7 +273,7 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
 
         expect_any_instance_of(Slack::Notifier).to receive(:post)
 
-        described_class.instance.notify_item_blocked(demand_block, 'http://foo.com', 'unblocked')
+        described_class.instance.notify_item_blocked(demand_block, 'http://foo.com', 'http://bar.com', 'unblocked')
         expect(Notifications::DemandBlockNotification.all.count).to eq 1
       end
     end

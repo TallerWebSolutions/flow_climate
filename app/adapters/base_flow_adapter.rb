@@ -7,7 +7,9 @@ class BaseFlowAdapter
     demand_block = demand.demand_blocks.where(block_time: created_at).first_or_initialize
     demand_block.update(blocker: author, block_reason: read_reason(demand, created_at), unblock_time: nil, unblocker: nil)
 
-    Slack::SlackNotificationService.instance.notify_item_blocked(demand_block, demand_url)
+    edit_block_url = edit_company_project_demand_demand_block_url(demand.company, demand.project, demand, demand_block)
+
+    Slack::SlackNotificationService.instance.notify_item_blocked(demand_block, demand_url, edit_block_url)
   end
 
   def read_reason(demand, created)
@@ -22,6 +24,8 @@ class BaseFlowAdapter
 
     demand_block.update(unblocker: author, unblock_time: unblock_time)
 
-    Slack::SlackNotificationService.instance.notify_item_blocked(demand_block, demand_url, 'unblocked')
+    edit_block_url = edit_company_project_demand_demand_block_url(demand.company, demand.project, demand, demand_block)
+
+    Slack::SlackNotificationService.instance.notify_item_blocked(demand_block, demand_url, edit_block_url, 'unblocked')
   end
 end

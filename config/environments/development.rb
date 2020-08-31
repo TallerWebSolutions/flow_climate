@@ -19,7 +19,7 @@ Rails.application.configure do
     config.cache_store = :null_store
   end
 
-  config.hosts << "7b94c06c28d2.ngrok.io"
+  config.hosts << "f582d7ed7a75.ngrok.io"
 
   config.active_support.deprecation = :log
   config.active_record.migration_error = false
@@ -27,7 +27,7 @@ Rails.application.configure do
   config.assets.quiet = true
   config.action_view.raise_on_missing_translations = true
 
-  host = 'http://127.0.0.1'
+  host = 'http://127.0.0.1:3000'
   config.action_mailer.default_url_options = { host: host, port: 3000 }
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.perform_deliveries = true

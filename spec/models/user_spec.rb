@@ -225,4 +225,20 @@ RSpec.describe User, type: :model do
     it { expect(user.managing_company?(other_company)).to be true }
     it { expect(ops_user.managing_company?(other_company)).to be false }
   end
+
+  describe '#slack_user_for_company' do
+    let(:company) { Fabricate :company }
+    let(:other_company) { Fabricate :company }
+
+    let(:user) { Fabricate :user }
+    let(:other_user) { Fabricate :user }
+    let(:no_company_user) { Fabricate :user }
+
+    let!(:user_company_role) { Fabricate :user_company_role, company: company, user: user, user_role: :manager, slack_user: '@user' }
+    let!(:other_company_role) { Fabricate :user_company_role, company: other_company, user: user, user_role: :director, slack_user: '@other_user' }
+
+    it { expect(user.slack_user_for_company(company)).to eq '@user' }
+    it { expect(user.slack_user_for_company(other_company)).to eq '@other_user' }
+    it { expect(no_company_user.slack_user_for_company(other_company)).to be_nil }
+  end
 end

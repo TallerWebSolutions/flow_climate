@@ -1,43 +1,32 @@
-<%= form_for @demand_block, url: company_project_demand_demand_block_path(company_id, project_id, demand_id, block_id), method: :put, remote: true, class: 'form' do |f| %>
-  <div class="row">
-    <div class='col-xs-12 form-group <%= 'has-error' if @demand_block.errors[:block_type].present? %>'>
-      <%= f.label :block_type, class: 'control-label' %>
-      <%= f.select :block_type, DemandBlock.block_types.map { |key, _value| [t("activerecord.attributes.demand_block.enums.block_type.#{key}"), key] }, { include_blank: I18n.t('general.select'), selected: @demand_block.block_type }, class: 'form-control' %>
-      <span class="help-block"><%= @demand_block.errors[:block_type].join(', ') %></span>
-    </div>
-    <div class='col-xs-6 form-group <%= 'has-error' if @demand_block.errors[:block_time].present? %>'>
-      <%= f.label :block_time, class: 'control-label required' %>
-      <%= f.datetime_field :block_time, class: 'form-control' %>
-      <span class="help-block"><%= @demand_block.errors[:block_time].join(', ') %></span>
-    </div>
-    <div class='col-xs-6 form-group <%= 'has-error' if @demand_block.errors[:blocker_username].present? %>'>
-      <%= f.label :blocker, class: 'control-label required' %>
-      <%= f.select :blocker_id, team_members_options(@demand_block.demand.team.team_members.active, @demand_block.blocker_id), {}, class: 'form-control filter-checks' %>
-      <span class="help-block"><%= @demand_block.errors[:blocker_username].join(', ') %></span>
-    </div>
-    <div class='col-xs-12 form-group <%= 'has-error' if @demand_block.errors[:block_reason].present? %>'>
-      <%= f.label :block_reason, class: 'control-label' %>
-      <%= f.text_field :block_reason, class: 'form-control' %>
-      <span class="help-block"><%= @demand_block.errors[:block_reason].join(', ') %></span>
-    </div>
-    <div class='col-xs-6 form-group <%= 'has-error' if @demand_block.errors[:unblock_time].present? %>'>
-      <%= f.label :unblock_time, class: 'control-label required' %>
-      <%= f.datetime_field :unblock_time, class: 'form-control' %>
-      <span class="help-block"><%= @demand_block.errors[:unblock_time].join(', ') %></span>
-    </div>
-    <div class='col-xs-6 form-group <%= 'has-error' if @demand_block.errors[:unblocker_username].present? %>'>
-      <%= f.label :unblocker, class: 'control-label required' %>
-      <%= f.select :unblocker_id, team_members_options(@demand_block.demand.team.team_members.active, @demand_block.unblocker_id), { include_blank: I18n.t('general.select') }, class: 'form-control filter-checks' %>
-      <span class="help-block"><%= @demand_block.errors[:unblocker_username].join(', ') %></span>
-    </div>
+<div class="row">
+  <div class='col-xs-12 form-group <%= 'has-error' if demand_block.errors[:block_type].present? %>'>
+    <%= f.label :block_type, class: 'control-label' %>
+    <%= f.select :block_type, DemandBlock.block_types.map { |key, _value| [t("activerecord.attributes.demand_block.enums.block_type.#{key}"), key] }, { include_blank: I18n.t('general.select'), selected: demand_block.block_type }, class: 'form-control' %>
+    <span class="help-block"><%= demand_block.errors[:block_type].join(', ') %></span>
   </div>
-
-  <div class="row">
-    <div class="col-xs-12">
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-dismiss="modal"><%= I18n.t('general.buttons.cancel') %></button>
-        <%= f.submit I18n.t('general.buttons.save'), class: 'btn btn-success' %>
-      </div>
-    </div>
+  <div class='col-xs-6 form-group <%= 'has-error' if demand_block.errors[:block_time].present? %>'>
+    <%= f.label :block_time, class: 'control-label required' %>
+    <%= f.datetime_field :block_time, class: 'form-control' %>
+    <span class="help-block"><%= demand_block.errors[:block_time].join(', ') %></span>
   </div>
-<% end %>
+  <div class='col-xs-6 form-group <%= 'has-error' if demand_block.errors[:blocker_username].present? %>'>
+    <%= f.label :blocker, class: 'control-label required' %>
+    <%= f.select :blocker_id, team_members_options(demand_block.demand.team.team_members.active, demand_block.blocker_id), {}, class: 'form-control filter-checks' %>
+    <span class="help-block"><%= demand_block.errors[:blocker_username].join(', ') %></span>
+  </div>
+  <div class='col-xs-12 form-group <%= 'has-error' if demand_block.errors[:block_reason].present? %>'>
+    <%= f.label :block_reason, class: 'control-label' %>
+    <%= f.text_field :block_reason, class: 'form-control' %>
+    <span class="help-block"><%= demand_block.errors[:block_reason].join(', ') %></span>
+  </div>
+  <div class='col-xs-6 form-group <%= 'has-error' if demand_block.errors[:unblock_time].present? %>'>
+    <%= f.label :unblock_time, class: 'control-label required' %>
+    <%= f.datetime_field :unblock_time, class: 'form-control' %>
+    <span class="help-block"><%= demand_block.errors[:unblock_time].join(', ') %></span>
+  </div>
+  <div class='col-xs-6 form-group <%= 'has-error' if demand_block.errors[:unblocker_username].present? %>'>
+    <%= f.label :unblocker, class: 'control-label required' %>
+    <%= f.select :unblocker_id, team_members_options(demand_block.demand.team.team_members.active, demand_block.unblocker_id), { include_blank: I18n.t('general.select') }, class: 'form-control filter-checks' %>
+    <span class="help-block"><%= demand_block.errors[:unblocker_username].join(', ') %></span>
+  </div>
+</div>

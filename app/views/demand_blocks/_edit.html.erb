@@ -5,7 +5,19 @@
       <h4 class="modal-title" id="myModalLabel"><%= I18n.t('demand_blocks.edit.title') %></h4>
     </div>
     <div class="modal-body">
-      <%= render 'demand_blocks/form', company_id: company_id, project_id: project_id, demand_id: demand_id, block_id: block_id %>
+      <%= form_for @demand_block, url: company_project_demand_demand_block_path(@company, @project, @demand, @demand_block), method: :put, remote: true, class: 'form' do |f| %>
+        <%= render 'demand_blocks/form', f: f, demand_block: @demand_block %>
+
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal"><%= I18n.t('general.buttons.cancel') %></button>
+              <%= f.submit I18n.t('general.buttons.save'), class: 'btn btn-success' %>
+            </div>
+          </div>
+        </div>
+
+      <% end %>
     </div>
   </div>
 </div>
