@@ -12,6 +12,19 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_many(:memberships).through(:team_member) }
     it { is_expected.to have_many(:item_assignments).through(:memberships) }
     it { is_expected.to have_many(:demands).through(:item_assignments) }
+
+    context 'demands unique' do
+      let(:user) { Fabricate :user }
+      let(:demand) { Fabricate :demand }
+      let(:other_demand) { Fabricate :demand }
+      let(:team_member) { Fabricate :team_member, user: user }
+      let(:membership) { Fabricate :membership, team_member: team_member }
+      let!(:first_item_assignment) { Fabricate :item_assignment, demand: demand, membership: membership, start_time: 1.day.ago, finish_time: 2.hours.ago }
+      let!(:second_item_assignment) { Fabricate :item_assignment, demand: demand, membership: membership }
+      let!(:third_item_assignment) { Fabricate :item_assignment, demand: other_demand, membership: membership }
+
+      it { expect(user.demands).to eq [demand, other_demand] }
+    end
   end
 
   context 'validations' do

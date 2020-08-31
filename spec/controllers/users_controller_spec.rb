@@ -188,7 +188,7 @@ RSpec.describe UsersController, type: :controller do
               expect(assigns(:array_of_dates)).to eq [Date.new(2019, 12, 31), Date.new(2020, 1, 31)]
 
               expect(assigns(:statistics_information).lead_time_accumulated[0]).to be_within(1).of(7.0)
-              expect(assigns(:statistics_information).lead_time_accumulated[1]).to eq 26.0
+              expect(assigns(:statistics_information).lead_time_accumulated[1]).to eq 22.0
 
               expect(assigns(:projects_quality)).to eq(project => 100, other_project => 100)
               expect(assigns(:projects_leadtime)[project]).to be_within(0.5).of(26)
@@ -347,7 +347,7 @@ RSpec.describe UsersController, type: :controller do
             expect(assigns(:array_of_dates)).to eq [Date.new(2019, 12, 31), Date.new(2020, 1, 31)]
 
             expect(assigns(:statistics_information).lead_time_accumulated[0]).to be_within(1).of(7.0)
-            expect(assigns(:statistics_information).lead_time_accumulated[1]).to eq 26.0
+            expect(assigns(:statistics_information).lead_time_accumulated[1]).to eq 22.0
 
             expect(assigns(:projects_quality)).to eq(project => 100, other_project => 100)
             expect(assigns(:projects_leadtime)[project]).to be_within(0.5).of(26)
@@ -394,7 +394,7 @@ RSpec.describe UsersController, type: :controller do
               expect(assigns(:array_of_dates)).to eq [Date.new(2019, 12, 31), Date.new(2020, 1, 31)]
 
               expect(assigns(:statistics_information).lead_time_accumulated[0]).to be_within(1).of(7.0)
-              expect(assigns(:statistics_information).lead_time_accumulated[1]).to eq 26.0
+              expect(assigns(:statistics_information).lead_time_accumulated[1]).to eq 22.0
 
               expect(assigns(:projects_quality)).to eq(project => 100, other_project => 100)
               expect(assigns(:projects_leadtime)[project]).to be_within(0.5).of(26)
