@@ -1,15 +1,11 @@
-$('#user-dashboard-tab').html("<%= escape_javascript(render 'users/user_dashboard_company_tab',
-                                                     user: @user,
-                                                     company: @company,
-                                                     member_teams: @member_teams,
-                                                     demand_blocks: @demand_blocks,
-                                                     member_projects: @member_projects,
-                                                     pairing_chart: @pairing_chart,
-                                                     statistics_information: @statistics_information,
-                                                     array_of_dates: @array_of_dates,
-                                                     member_effort_chart: @member_effort_chart,
-                                                     demands_chart_adapter: @demands_chart_adapter,
-                                                     member_pull_interval_average_chart: @member_pull_interval_average_chart) %>")
+$('#user-dashboard-tab').html("<%= escape_javascript(render 'users/user_dashboard_company_tab', company: @company, user: @user, member_teams: @member_teams, demand_blocks: @demand_blocks,
+             member_projects: @member_projects, pairing_chart: @pairing_chart, statistics_information: @statistics_information, array_of_dates: @array_of_dates,
+             projects_quality: @projects_quality, projects_leadtime: @projects_leadtime, projects_risk: @projects_risk,
+             projects_scope: @projects_scope, projects_value_per_demand: @projects_value_per_demand,
+             projects_flow_pressure: @projects_flow_pressure,
+             member_effort_chart: @member_effort_chart,
+             demands_chart_adapter: @demands_chart_adapter,
+             member_pull_interval_average_chart: @member_pull_interval_average_chart) %>")
 
 $("#general-loader").hide();
 $("#user-dashboard-tab").show();
