@@ -151,37 +151,80 @@ RSpec.describe DemandBlocksController, type: :controller do
       let(:demand) { Fabricate :demand, project: project }
       let(:demand_block) { Fabricate :demand_block, demand: demand, active: true }
 
-      context 'passing valid parameters' do
-        before { get :edit, params: { company_id: company, project_id: project, demand_id: demand, id: demand_block }, xhr: true }
+      context 'with valid parameters' do
+        context 'with JS call' do
+          before { get :edit, params: { company_id: company, project_id: project, demand_id: demand, id: demand_block }, xhr: true }
 
-        it 'assigns the instance variable and renders the template' do
-          expect(response).to render_template 'demand_blocks/edit'
+          it 'assigns the instance variable and renders the JS template' do
+            expect(response).to render_template 'demand_blocks/edit.js.erb'
+            expect(response).to render_template 'demand_blocks/_edit'
+            expect(response).to render_template 'demand_blocks/_form'
+          end
+        end
+
+        context 'with HTML call' do
+          before { get :edit, params: { company_id: company, project_id: project, demand_id: demand, id: demand_block } }
+
+          it 'assigns the instance variable and renders the HTML template' do
+            expect(response).to render_template 'demand_blocks/edit.html.erb'
+            expect(response).to render_template 'demand_blocks/_form'
+          end
         end
       end
 
-      context 'passing invalid' do
-        context 'company' do
-          before { get :edit, params: { company_id: 'foo', project_id: project, demand_id: demand, id: demand_block }, xhr: true }
+      context 'with JS call' do
+        context 'passing invalid' do
+          context 'company' do
+            before { get :edit, params: { company_id: 'foo', project_id: project, demand_id: demand, id: demand_block }, xhr: true }
 
-          it { expect(response).to have_http_status :not_found }
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'project' do
+            before { get :edit, params: { company_id: company, project_id: 'foo', demand_id: demand, id: demand_block }, xhr: true }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'demand' do
+            before { get :edit, params: { company_id: company, project_id: project, demand_id: 'foo', id: demand_block }, xhr: true }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'demand_block' do
+            before { get :edit, params: { company_id: company, project_id: project, demand_id: demand, id: 'foo' }, xhr: true }
+
+            it { expect(response).to have_http_status :not_found }
+          end
         end
+      end
 
-        context 'project' do
-          before { get :edit, params: { company_id: company, project_id: 'foo', demand_id: demand, id: demand_block }, xhr: true }
+      context 'with HTML call' do
+        context 'passing invalid' do
+          context 'company' do
+            before { get :edit, params: { company_id: 'foo', project_id: project, demand_id: demand, id: demand_block } }
 
-          it { expect(response).to have_http_status :not_found }
-        end
+            it { expect(response).to have_http_status :not_found }
+          end
 
-        context 'demand' do
-          before { get :edit, params: { company_id: company, project_id: project, demand_id: 'foo', id: demand_block }, xhr: true }
+          context 'project' do
+            before { get :edit, params: { company_id: company, project_id: 'foo', demand_id: demand, id: demand_block } }
 
-          it { expect(response).to have_http_status :not_found }
-        end
+            it { expect(response).to have_http_status :not_found }
+          end
 
-        context 'demand_block' do
-          before { get :edit, params: { company_id: company, project_id: project, demand_id: demand, id: 'foo' }, xhr: true }
+          context 'demand' do
+            before { get :edit, params: { company_id: company, project_id: project, demand_id: 'foo', id: demand_block } }
 
-          it { expect(response).to have_http_status :not_found }
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'demand_block' do
+            before { get :edit, params: { company_id: company, project_id: project, demand_id: demand, id: 'foo' } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
         end
       end
     end
@@ -197,46 +240,89 @@ RSpec.describe DemandBlocksController, type: :controller do
       let!(:other_membership) { Fabricate :membership, team: team, team_member: other_team_member, hours_per_month: 160, start_date: 2.months.ago, end_date: 1.month.ago }
 
       let(:customer) { Fabricate :customer, company: company }
-      let!(:project) { Fabricate :project, customers: [customer], team: team }
+      let(:project) { Fabricate :project, customers: [customer], team: team }
       let(:demand) { Fabricate :demand, project: project, team: team }
       let(:demand_block) { Fabricate :demand_block, demand: demand, active: true }
 
       context 'passing valid parameters' do
-        before { put :update, params: { company_id: company, project_id: project, demand_id: demand, id: demand_block, demand_block: { block_type: :specification_needed, block_reason: 'bla', unblock_reason: 'foo', blocker_id: team_member.id, unblocker_id: other_team_member.id } }, xhr: true }
+        context 'with JS call' do
+          it 'assigns the instance variable and renders the template' do
+            put :update, params: { company_id: company, project_id: project, demand_id: demand, id: demand_block, demand_block: { block_type: :specification_needed, block_reason: 'bla', unblock_reason: 'foo', blocker_id: team_member.id, unblocker_id: other_team_member.id } }, xhr: true
 
-        it 'assigns the instance variable and renders the template' do
-          updated_demand_block = assigns(:demand_block)
-          expect(updated_demand_block.block_type).to eq 'specification_needed'
-          expect(updated_demand_block.block_reason).to eq 'bla'
-          expect(updated_demand_block.blocker).to eq team_member
-          expect(updated_demand_block.unblocker).to eq other_team_member
-          expect(response).to render_template 'demand_blocks/update'
+            updated_demand_block = assigns(:demand_block)
+            expect(updated_demand_block.block_type).to eq 'specification_needed'
+            expect(updated_demand_block.block_reason).to eq 'bla'
+            expect(updated_demand_block.blocker).to eq team_member
+            expect(updated_demand_block.unblocker).to eq other_team_member
+            expect(response).to render_template 'demand_blocks/update.js.erb'
+          end
+        end
+
+        context 'with HTML call' do
+          it 'assigns the instance variable and redirects to the demand show' do
+            put :update, params: { company_id: company, project_id: project, demand_id: demand, id: demand_block, demand_block: { block_type: :specification_needed, block_reason: 'bla', unblock_reason: 'foo', blocker_id: team_member.id, unblocker_id: other_team_member.id } }
+
+            updated_demand_block = assigns(:demand_block)
+            expect(updated_demand_block.block_type).to eq 'specification_needed'
+            expect(updated_demand_block.block_reason).to eq 'bla'
+            expect(updated_demand_block.blocker).to eq team_member
+            expect(updated_demand_block.unblocker).to eq other_team_member
+            expect(response).to redirect_to company_demand_path(company, demand)
+          end
         end
       end
 
       context 'passing invalid' do
-        context 'company' do
-          before { put :update, params: { company_id: 'foo', project_id: project, demand_id: demand, id: demand_block }, xhr: true }
+        context 'with JS call' do
+          context 'company' do
+            before { put :update, params: { company_id: 'foo', project_id: project, demand_id: demand, id: demand_block }, xhr: true }
 
-          it { expect(response).to have_http_status :not_found }
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'project' do
+            before { put :update, params: { company_id: company, project_id: 'foo', demand_id: demand, id: demand_block }, xhr: true }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'demand' do
+            before { put :update, params: { company_id: company, project_id: project, demand_id: 'foo', id: demand_block }, xhr: true }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'demand_block' do
+            before { put :update, params: { company_id: company, project_id: project, demand_id: demand, id: 'foo' }, xhr: true }
+
+            it { expect(response).to have_http_status :not_found }
+          end
         end
 
-        context 'project' do
-          before { put :update, params: { company_id: company, project_id: 'foo', demand_id: demand, id: demand_block }, xhr: true }
+        context 'with HTML call' do
+          context 'company' do
+            before { put :update, params: { company_id: 'foo', project_id: project, demand_id: demand, id: demand_block } }
 
-          it { expect(response).to have_http_status :not_found }
-        end
+            it { expect(response).to have_http_status :not_found }
+          end
 
-        context 'demand' do
-          before { put :update, params: { company_id: company, project_id: project, demand_id: 'foo', id: demand_block }, xhr: true }
+          context 'project' do
+            before { put :update, params: { company_id: company, project_id: 'foo', demand_id: demand, id: demand_block } }
 
-          it { expect(response).to have_http_status :not_found }
-        end
+            it { expect(response).to have_http_status :not_found }
+          end
 
-        context 'demand_block' do
-          before { put :update, params: { company_id: company, project_id: project, demand_id: demand, id: 'foo' }, xhr: true }
+          context 'demand' do
+            before { put :update, params: { company_id: company, project_id: project, demand_id: 'foo', id: demand_block } }
 
-          it { expect(response).to have_http_status :not_found }
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'demand_block' do
+            before { put :update, params: { company_id: company, project_id: project, demand_id: demand, id: 'foo' } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
         end
       end
     end

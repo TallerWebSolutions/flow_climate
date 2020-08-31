@@ -77,7 +77,7 @@ RSpec.describe UserCompanyRolesController, type: :controller do
 
       context 'with valid parameters' do
         it 'assigns the instance variables and renders the template' do
-          put :update, params: { user_id: user, company_id: company, id: user_company_role, user_company_role: { start_date: 1.day.ago, end_date: Time.zone.today, user_role: :director } }
+          put :update, params: { user_id: user, company_id: company, id: user_company_role, user_company_role: { start_date: 1.day.ago, end_date: Time.zone.today, user_role: :director, slack_user: '@user' } }
 
           expect(response).to redirect_to edit_company_path(company)
           expect(assigns(:company)).to eq company
@@ -86,6 +86,7 @@ RSpec.describe UserCompanyRolesController, type: :controller do
           expect(assigns(:user_company_role).start_date).to eq 1.day.ago.to_date
           expect(assigns(:user_company_role).end_date).to eq Time.zone.today
           expect(assigns(:user_company_role).user_role).to eq 'director'
+          expect(assigns(:user_company_role).slack_user).to eq '@user'
         end
       end
 

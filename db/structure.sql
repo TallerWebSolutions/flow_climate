@@ -2648,7 +2648,8 @@ CREATE TABLE public.user_company_roles (
     id integer NOT NULL,
     user_role integer DEFAULT 0 NOT NULL,
     start_date date,
-    end_date date
+    end_date date,
+    slack_user character varying
 );
 
 
@@ -5911,6 +5912,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200721155315'),
 ('20200807131518'),
 ('20200812153534'),
-('20200813131313');
+('20200813131313'),
+('20200831153123');
 
 
