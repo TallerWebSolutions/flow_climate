@@ -20,12 +20,12 @@ Have the ultimate management tools in your hands!
 
 - Install rvm or rbenv - the main development team is using *rvm*
 - If you choose rvm then 
-    - Install the correct version (the examples will use the ruby-2.7.0)
-        - `rvm install ruby-2.7.0` 
+    - Install the correct version (the examples will use the ruby-2.7.1)
+        - `rvm install ruby-2.7.1` 
     - Create the gemset to the project under the correct version
         - In the project folder run: 
-            - `rvm use 2.7.0@flow_climate --create`
-            - `rvm --ruby-version use 2.7.0`
+            - `rvm use 2.7.1@flow_climate --create`
+            - `rvm --ruby-version use 2.7.1`
             - `gem install bundler -v 1.17.3`
             - `bundle install`
 - Install PostgreSQL v. 10
