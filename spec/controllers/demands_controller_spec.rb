@@ -470,8 +470,8 @@ RSpec.describe DemandsController, type: :controller do
 
               expect(response).to render_template :index
               expect(assigns(:company)).to eq company
+              expect(assigns(:paged_demands)).to eq [first_demand, fifth_demand, second_demand, sixth_demand, fourth_demand, eigth_demand, third_demand, seventh_demand]
               expect(assigns(:demands)).to eq [first_demand, fifth_demand, second_demand, sixth_demand, fourth_demand, eigth_demand, third_demand, seventh_demand]
-              expect(assigns(:unpaged_demands)).to eq [first_demand, fifth_demand, second_demand, sixth_demand, fourth_demand, eigth_demand, third_demand, seventh_demand]
               expect(assigns(:demands_ids)).to eq [first_demand.id, fifth_demand.id, second_demand.id, sixth_demand.id, fourth_demand.id, eigth_demand.id, third_demand.id, seventh_demand.id]
 
               expect(assigns(:confidence_95_leadtime).to_f).to eq 4.6

@@ -20,8 +20,8 @@
   <div id="listing">
     <div id="flat-demands-div">
       <%= render 'demands/demands_table', company: @company,
-                 demands: @unpaged_demands,
-                 paged_demands: @demands,
+                 demands: @demands,
+                 paged_demands: @paged_demands,
                  confidence_65_leadtime: @confidence_65_leadtime,
                  confidence_80_leadtime: @confidence_80_leadtime,
                  confidence_95_leadtime: @confidence_95_leadtime,

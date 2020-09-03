@@ -23,7 +23,7 @@ RSpec.describe User, type: :model do
       let!(:second_item_assignment) { Fabricate :item_assignment, demand: demand, membership: membership }
       let!(:third_item_assignment) { Fabricate :item_assignment, demand: other_demand, membership: membership }
 
-      it { expect(user.demands).to eq [demand, other_demand] }
+      it { expect(user.demands).to match_array [demand, other_demand] }
     end
   end
 
