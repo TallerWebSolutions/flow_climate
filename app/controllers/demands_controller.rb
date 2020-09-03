@@ -7,7 +7,7 @@ class DemandsController < DemandsListController
 
   before_action :assign_company
   before_action :assign_demand, only: %i[edit update show synchronize_jira destroy destroy_physically score_research]
-  before_action :assign_project, except: %i[demands_csv demands_tab search_demands show destroy destroy_physically montecarlo_dialog score_research index]
+  before_action :assign_project, except: %i[demands_csv demands_tab search_demands show destroy destroy_physically montecarlo_dialog score_research index demands_list_by_ids]
 
   def new
     @demand = Demand.new(project: @project)
@@ -135,6 +135,14 @@ class DemandsController < DemandsListController
     render 'demands/score_matrix/score_research'
   end
 
+  def demands_list_by_ids
+    @paged_demands = demands.page(page_param)
+    assign_consolidations
+    @demands_ids = @demands.map(&:id)
+
+    render 'demands/index'
+  end
+
   private
 
   def end_date_to_status_report(demands)
@@ -146,7 +154,7 @@ class DemandsController < DemandsListController
   end
 
   def demands
-    @demands ||= @company.demands.where(id: params[:demands_ids].split(',')).includes(:portfolio_unit).includes(:product)
+    @demands ||= @company.demands.includes(:portfolio_unit).includes(:product).where(id: params[:demands_ids]&.split(','))
   end
 
   def query_demands(start_date, end_date)

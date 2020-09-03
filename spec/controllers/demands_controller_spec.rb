@@ -85,6 +85,12 @@ RSpec.describe DemandsController, type: :controller do
 
       it { expect(response).to have_http_status :unauthorized }
     end
+
+    describe 'POST #demands_list_by_ids' do
+      before { post :demands_list_by_ids, params: { company_id: 'foo' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated as gold' do
@@ -1362,6 +1368,49 @@ RSpec.describe DemandsController, type: :controller do
           let!(:demand) { Fabricate :demand, company: company, product: product }
 
           before { get :score_research, params: { company_id: other_company, id: demand } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'POST #demands_list_by_ids' do
+      include_context 'demands for controller specs'
+
+      context 'with no data' do
+        it 'assigns the instance variable and renders the template' do
+          post :demands_list_by_ids, params: { company_id: company }
+
+          expect(response).to render_template 'demands/index'
+          expect(assigns(:company)).to eq company
+        end
+      end
+
+      context 'with data' do
+        it 'assigns the instance variable and renders the template' do
+          post :demands_list_by_ids, params: { company_id: company, demands_ids: Demand.all.map(&:id).join(',') }
+
+          expect(response).to render_template 'demands/index'
+          expect(assigns(:company)).to eq company
+          expect(assigns(:demands)).to match_array Demand.all
+
+          expect(assigns(:confidence_95_leadtime)).to eq 530.2624999999999
+          expect(assigns(:confidence_80_leadtime)).to eq 355.17500000000007
+          expect(assigns(:confidence_65_leadtime)).to eq 180.08750000000003
+        end
+      end
+
+      context 'passing invalid parameters' do
+        context 'non-existent company' do
+          before { post :demands_list_by_ids, params: { company_id: 'foo' } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'not permitted' do
+          let(:company) { Fabricate :company, users: [] }
+
+          before { post :demands_list_by_ids, params: { company_id: company } }
 
           it { expect(response).to have_http_status :not_found }
         end
