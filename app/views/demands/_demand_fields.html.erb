@@ -1,7 +1,7 @@
 <td><%= render 'demands/demand_actions', company: company, demand: demand, demands_ids: demands_ids %></td>
 
 <td>
-  <% demand.memberships.each do |membership| %>
+  <% demand.memberships.uniq.each do |membership| %>
     <% if membership.team_member.user.present? && membership.team_member.user.avatar.present? %>
       <%= image_tag membership.team_member.user.avatar.url, size: '25x25', class: 'user-avatar', title: membership.team_member.name %>
     <% else %>
