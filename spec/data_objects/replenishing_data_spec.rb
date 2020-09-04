@@ -31,7 +31,7 @@ RSpec.describe ReplenishingData, type: :data_objects do
           Fabricate.times(2, :project, company: company, customers: [customer], start_date: 2.weeks.ago, end_date: Time.zone.today)
           Fabricate.times(2, :project, company: company, customers: [customer], start_date: 1.month.from_now, end_date: 1.month.from_now)
 
-          expect(replenishing_data.team_projects).to eq [first_project, second_project, third_project, fourth_project, fifth_project]
+          expect(replenishing_data.team_projects).to match_array [first_project, second_project, third_project, fourth_project, fifth_project]
           expect(replenishing_data.summary_infos[:four_last_throughputs]).to eq [1, 0, 0, 10]
           expect(replenishing_data.summary_infos[:average_throughput]).to eq 2
           expect(replenishing_data.summary_infos[:team_wip]).to eq 12
