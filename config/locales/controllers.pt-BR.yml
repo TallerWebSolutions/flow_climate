@@ -1321,6 +1321,6 @@ pt-BR:
       title: "Pontuar Demandas"
   operations_dashboard:
     effort_chart:
-      title: "Horas Úteis"
+      title: "Horas Úteis em Desenvolvimento"
     pull_interval:
       title: "Intervalo Entre Demandas Puxadas"

@@ -1,4 +1,15 @@
 <td><%= render 'demands/demand_actions', company: company, demand: demand, demands_ids: demands_ids %></td>
+
+<td>
+  <% demand.memberships.each do |membership| %>
+    <% if membership.team_member.user.present? && membership.team_member.user.avatar.present? %>
+      <%= image_tag membership.team_member.user.avatar.url, size: '25x25', class: 'user-avatar', title: membership.team_member.name %>
+    <% else %>
+      <%= image_tag 'https://res.cloudinary.com/taller-digital/image/upload/v1599220842/user_default.png', size: '25x25', class: 'user-avatar', title: membership.team_member.name %>
+    <% end %>
+  <% end %>
+</td>
+
 <td><%= link_to demand.external_id, company_demand_path(company, demand.slug), target: :_blank %></td>
 <td><%= I18n.t("activerecord.attributes.demand.enums.demand_type.#{demand.demand_type}") %></td>
 <td><%= I18n.t("activerecord.attributes.demand.enums.class_of_service.#{demand.class_of_service}") %></td>
