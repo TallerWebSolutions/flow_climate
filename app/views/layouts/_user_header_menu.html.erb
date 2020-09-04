@@ -1,5 +1,5 @@
 <% if current_user.present? %>
-  <li><%= link_to I18n.t('users.account.self'), current_user, class: 'nav-link dropdown-item'%></li>
+  <li><%= link_to I18n.t('users.account.self'), edit_user_path(current_user), class: 'nav-link dropdown-item'%></li>
   <% if current_user.email_notifications? %>
     <li><%= link_to t('users.index.turn_off_notifications'), deactivate_email_notifications_users_path, method: :patch, remote: true, class: 'nav-link dropdown-item' %></li>
   <% else %>

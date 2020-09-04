@@ -1,5 +1,5 @@
 <div class="col-xs-2">
-  <%= image_tag 'https://res.cloudinary.com/dmphguydp/image/upload/v1578667381/2_taller_branco_horizontal_t1tbwo.png', size: '131x67' %>
+  <%= image_tag 'https://res.cloudinary.com/taller-digital/image/upload/v1599220860/2_taller_branco_horizontal.png', size: '131x67' %>
 </div>
 
 <div class="col-xs-8 header-nav">
@@ -17,7 +17,7 @@
     <% if current_user.present? && current_user.avatar.present? %>
       <%= image_tag current_user.avatar.url, size: '50x50', class: 'user-avatar dropdown-toggle', 'data-toggle' => 'dropdown' %>
     <% else %>
-      <%= image_tag 'https://res.cloudinary.com/dmphguydp/image/upload/v1588172414/user_default_k86hn3.png', size: '50x50', class: 'user-avatar dropdown-toggle', 'data-toggle' => 'dropdown' %>
+      <%= image_tag 'https://res.cloudinary.com/taller-digital/image/upload/v1599220842/user_default.png', size: '50x50', class: 'user-avatar dropdown-toggle', 'data-toggle' => 'dropdown' %>
     <% end %>
 
     <ul class="dropdown-menu dropdown-menu-right">

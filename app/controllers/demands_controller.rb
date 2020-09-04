@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-class DemandsController < AuthenticatedController
+class DemandsController < DemandsListController
   protect_from_forgery except: %i[demands_tab search_demands]
 
   before_action :user_gold_check
 
   before_action :assign_company
   before_action :assign_demand, only: %i[edit update show synchronize_jira destroy destroy_physically score_research]
-  before_action :assign_project, except: %i[demands_csv demands_tab search_demands show destroy destroy_physically montecarlo_dialog score_research index]
+  before_action :assign_project, except: %i[demands_csv demands_tab search_demands show destroy destroy_physically montecarlo_dialog score_research index demands_list_by_ids]
 
   def new
     @demand = Demand.new(project: @project)
@@ -23,25 +23,25 @@ class DemandsController < AuthenticatedController
   def destroy
     @demand.discard
     assign_dates_to_query
-    @demands = demands.order('demands.end_date DESC, demands.commitment_date DESC, demands.created_date DESC').page(page_param)
-    @unpaged_demands = @demands.except(:limit, :offset)
+    @paged_demands = demands.order('demands.end_date DESC, demands.commitment_date DESC, demands.created_date DESC').page(page_param)
+    @demands = @paged_demands.except(:limit, :offset)
     assign_consolidations
 
     respond_to { |format| format.js { render 'demands/search_demands' } }
   end
 
   def edit
-    @demands = demands.order('demands.end_date DESC, demands.commitment_date DESC, demands.created_date DESC').page(page_param)
-    @demands_ids = @demands.map(&:id)
+    @paged_demands = demands.order('demands.end_date DESC, demands.commitment_date DESC, demands.created_date DESC').page(page_param)
+    @demands_ids = @paged_demands.map(&:id)
 
     respond_to { |format| format.js { render 'demands/edit' } }
   end
 
   def update
     @demand.update(demand_params)
-    @demands = demands.order('demands.end_date DESC, demands.commitment_date DESC, demands.created_date DESC').page(page_param)
-    @demands_ids = @demands.map(&:id)
-    @unpaged_demands = @demands.except(:limit, :offset)
+    @paged_demands = demands.order('demands.end_date DESC, demands.commitment_date DESC, demands.created_date DESC').page(page_param)
+    @demands_ids = @paged_demands.map(&:id)
+    @demands = @paged_demands.except(:limit, :offset)
     @unscored_demands = @project.demands.unscored_demands.order(external_id: :asc)
 
     respond_to { |format| format.js { render 'demands/update' } }
@@ -59,9 +59,9 @@ class DemandsController < AuthenticatedController
   end
 
   def index
-    @demands = @demands = @company.demands.order('end_date DESC, commitment_date DESC, created_date DESC').page(page_param)
-    @unpaged_demands = @demands.except(:limit, :offset)
-    @demands_ids = @unpaged_demands.map(&:id)
+    @paged_demands = @company.demands.order('end_date DESC, commitment_date DESC, created_date DESC').page(page_param)
+    @demands = @paged_demands.except(:limit, :offset)
+    @demands_ids = @demands.map(&:id)
 
     assign_dates_to_query
     assign_consolidations
@@ -89,8 +89,8 @@ class DemandsController < AuthenticatedController
     assign_dates_to_query
 
     @discarded_demands = demands.discarded
-    @demands = query_demands(@start_date, @end_date)
-    @unpaged_demands = @demands.except(:limit, :offset)
+    @paged_demands = query_demands(@start_date, @end_date)
+    @demands = @paged_demands.except(:limit, :offset)
 
     assign_consolidations
 
@@ -100,8 +100,8 @@ class DemandsController < AuthenticatedController
   def search_demands
     assign_dates_to_query
 
-    @demands = query_demands(@start_date, @end_date)
-    @unpaged_demands = @demands.except(:limit, :offset)
+    @paged_demands = query_demands(@start_date, @end_date)
+    @demands = @paged_demands.except(:limit, :offset)
 
     assign_consolidations
 
@@ -135,6 +135,14 @@ class DemandsController < AuthenticatedController
     render 'demands/score_matrix/score_research'
   end
 
+  def demands_list_by_ids
+    @paged_demands = demands.page(page_param)
+    assign_consolidations
+    @demands_ids = @demands.map(&:id)
+
+    render 'demands/index'
+  end
+
   private
 
   def end_date_to_status_report(demands)
@@ -146,7 +154,7 @@ class DemandsController < AuthenticatedController
   end
 
   def demands
-    @demands ||= @company.demands.where(id: params[:demands_ids].split(',')).includes(:portfolio_unit).includes(:product)
+    @demands ||= @company.demands.includes(:portfolio_unit).includes(:product).where(id: params[:demands_ids]&.split(','))
   end
 
   def query_demands(start_date, end_date)
@@ -168,32 +176,6 @@ class DemandsController < AuthenticatedController
 
   def lead_time_breakdown
     @lead_time_breakdown ||= DemandService.instance.lead_time_breakdown([@demand])
-  end
-
-  def assign_consolidations
-    if @demands.present?
-      @confidence_95_leadtime = Stats::StatisticsService.instance.percentile(95, @unpaged_demands.finished_with_leadtime.map(&:leadtime_in_days))
-      @confidence_80_leadtime = Stats::StatisticsService.instance.percentile(80, @unpaged_demands.finished_with_leadtime.map(&:leadtime_in_days))
-      @confidence_65_leadtime = Stats::StatisticsService.instance.percentile(65, @unpaged_demands.finished_with_leadtime.map(&:leadtime_in_days))
-      build_flow_informations
-    else
-      @confidence_95_leadtime = 0
-      @confidence_80_leadtime = 0
-      @confidence_65_leadtime = 0
-      @total_queue_time = 0
-      @total_touch_time = 0
-      @average_queue_time = 0
-      @average_touch_time = 0
-      @avg_work_hours_per_demand = 0
-    end
-  end
-
-  def build_flow_informations
-    @total_queue_time = @unpaged_demands.sum(&:total_queue_time).to_f / 1.hour
-    @total_touch_time = @unpaged_demands.sum(&:total_touch_time).to_f / 1.hour
-    @average_queue_time = @total_queue_time / @unpaged_demands.count
-    @average_touch_time = @total_touch_time / @unpaged_demands.count
-    @avg_work_hours_per_demand = @unpaged_demands.with_effort.sum(&:total_effort) / @unpaged_demands.count
   end
 
   def assign_dates_to_query

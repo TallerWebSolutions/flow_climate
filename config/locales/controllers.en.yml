@@ -1339,6 +1339,6 @@ en:
       title: "Score Demands"
   operations_dashboard:
     effort_chart:
-      title: "Working Hours"
+      title: "Working Hours in Development"
     pull_interval:
       title: "Demand Pull Interval"

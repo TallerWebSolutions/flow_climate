@@ -1,4 +1,4 @@
-<td><%= member.teams.map(&:name).compact.join(', ') %></td>
+<td><%= member.teams.order(:name).uniq.map(&:name).compact.join(', ') %></td>
 <td><%= link_to member.name, company_team_member_path(company, member) %></td>
 <td><%= member.demand_comments.count %></td>
 <td><%= member.demand_blocks.count %></td>
