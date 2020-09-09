@@ -4,7 +4,7 @@ class AddDemandTitleToViewDemandsList < ActiveRecord::Migration[5.2]
   def up
     execute 'DROP VIEW demands_lists'
 
-    execute <<-SQL
+    execute <<-SQL.squish
       CREATE VIEW demands_lists
       AS
       SELECT d.id,

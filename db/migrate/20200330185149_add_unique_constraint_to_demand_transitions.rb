@@ -2,7 +2,7 @@
 
 class AddUniqueConstraintToDemandTransitions < ActiveRecord::Migration[6.0]
   def up
-    execute <<-SQL
+    execute <<-SQL.squish
       delete
       from
 	      demand_transitions dt

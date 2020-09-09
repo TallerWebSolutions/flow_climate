@@ -37,7 +37,7 @@ class Membership < ApplicationRecord
   validate :active_team_member_unique
 
   scope :active, -> { where('memberships.end_date IS NULL') }
-  scope :inactive, -> { where('memberships.end_date IS NOT NULL') }
+  scope :inactive, -> { where.not('memberships.end_date' => nil) }
   scope :active_for_date, ->(limit_date) { where('end_date IS NULL OR end_date > :limit_date', limit_date: limit_date) }
 
   delegate :name, to: :team_member, prefix: true

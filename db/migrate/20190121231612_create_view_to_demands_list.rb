@@ -2,7 +2,7 @@
 
 class CreateViewToDemandsList < ActiveRecord::Migration[5.2]
   def up
-    execute <<-SQL
+    execute <<-SQL.squish
       CREATE VIEW demands_lists
       AS
       SELECT d.id,

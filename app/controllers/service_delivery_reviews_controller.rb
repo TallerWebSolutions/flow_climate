@@ -22,7 +22,7 @@ class ServiceDeliveryReviewsController < AuthenticatedController
   end
 
   def show
-    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@service_delivery_review.demands, 12.weeks.ago, Time.zone.today, 'week')
+    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@service_delivery_review.demands, @service_delivery_review.start_date, @service_delivery_review.meeting_date, 'week')
   end
 
   def destroy

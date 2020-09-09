@@ -4,7 +4,7 @@ class AddHabtmToProductsProjects < ActiveRecord::Migration[5.2]
   def up
     execute 'DROP VIEW demands_lists'
 
-    execute <<-SQL
+    execute <<-SQL.squish
       CREATE VIEW demands_lists
       AS
       SELECT d.id, d.demand_id, d.slug, proj.id AS project_id, d.created_date, d.commitment_date, d.end_date, proj.name AS project_name, d.artifact_type, d.demand_type, d.demand_title, d.class_of_service, d.effort_upstream, d.effort_downstream, d.leadtime, d.total_queue_time, d.total_touch_time, d.url, d.discarded_at,
@@ -59,7 +59,7 @@ class AddHabtmToProductsProjects < ActiveRecord::Migration[5.2]
 
     execute 'DROP VIEW demands_lists'
 
-    execute <<-SQL
+    execute <<-SQL.squish
       CREATE VIEW demands_lists
       AS
       SELECT d.id,

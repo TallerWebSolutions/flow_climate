@@ -20,7 +20,7 @@ class CreateJiraProductConfigs < ActiveRecord::Migration[5.2]
 
     add_index :jira_product_configs, %i[company_id jira_product_key], unique: true
 
-    execute <<-SQL
+    execute <<-SQL.squish
       INSERT INTO jira_product_configs(company_id, product_id, jira_product_key, created_at, updated_at)
       SELECT DISTINCT ON (prod_proj.product_id, proj_jira.jira_project_key) proj.company_id, prod_proj.product_id, proj_jira.jira_project_key, proj_jira.created_at, proj_jira.updated_at
       FROM products_projects prod_proj, project_jira_configs proj_jira, projects proj

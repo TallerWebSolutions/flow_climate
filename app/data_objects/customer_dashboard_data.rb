@@ -36,7 +36,7 @@ class CustomerDashboardData
   end
 
   def sum_hours_in_streams
-    @total_hours_delivered = [@hours_delivered_upstream, @hours_delivered_downstream].transpose.map { |item| item.inject(:+) }
+    @total_hours_delivered = [@hours_delivered_upstream, @hours_delivered_downstream].transpose.map(&:sum)
     @total_hours_delivered_accumulated = @total_hours_delivered.inject([]) { |x, y| x + [(x.last || 0) + y] }
   end
 end

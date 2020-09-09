@@ -48,7 +48,7 @@ class TeamMember < ApplicationRecord
   validates :name, uniqueness: { scope: %i[company_id jira_account_id], message: I18n.t('activerecord.attributes.team_member.validations.name_unique') }
 
   scope :active, -> { where('team_members.end_date IS NULL') }
-  scope :inactive, -> { where('team_members.end_date IS NOT NULL') }
+  scope :inactive, -> { where.not('team_members.end_date' => nil) }
 
   def to_hash
     { member_name: name, jira_account_id: jira_account_id }
