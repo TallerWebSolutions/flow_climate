@@ -145,7 +145,7 @@ RSpec.describe ServiceDeliveryReviewsController, type: :controller do
 
       context 'with invalid' do
         let(:service_delivery_review) { Fabricate :service_delivery_review, product: product }
-        
+
         context 'service_delivery review' do
           before { get :show, params: { company_id: company, product_id: product, id: other_service_delivery_review } }
 
