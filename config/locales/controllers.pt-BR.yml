@@ -1233,6 +1233,7 @@ pt-BR:
       discarded_demands_label: "Descartadas"
       general_info: "Geral"
       kpis: "KPIs"
+      see_demands: "ver demandas"
     update:
       enqueued_associations: "A construção da sua service delivery review foi enfileirada. Você receberá um email quando ela estiver completa."
   jira_custom_field_mappings:

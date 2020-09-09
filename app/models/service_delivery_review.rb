@@ -54,9 +54,9 @@ class ServiceDeliveryReview < ApplicationRecord
   end
 
   def bug_percentage
-    return 0 unless demands.kept.count.positive? && bugs_ids&.count&.positive?
+    return 0 unless demands.kept.count.positive? && demands.kept.bug.count&.positive?
 
-    (bugs_ids.count.to_f / demands.kept.count) * 100
+    (demands.kept.bug.count.to_f / demands.kept.count) * 100
   end
 
   def expedites
@@ -86,7 +86,7 @@ class ServiceDeliveryReview < ApplicationRecord
   end
 
   def portfolio_module_breakdown
-    @portfolio_module_breakdown ||= demands.where('portfolio_unit_id IS NOT NULL').group_by(&:portfolio_unit).sort_by { |_key, values| values.count }.to_h
+    @portfolio_module_breakdown ||= demands.where.not(portfolio_unit_id: nil).group_by(&:portfolio_unit).sort_by { |_key, values| values.count }.to_h
   end
 
   def overserved_demands
@@ -110,5 +110,9 @@ class ServiceDeliveryReview < ApplicationRecord
     return {} if @longest_stage.blank?
 
     { name: @longest_stage[0], time_in_stage: @longest_stage[1].sum(&:total_seconds_in_transition) }
+  end
+
+  def start_date
+    demands.map(&:end_date).min || meeting_date
   end
 end

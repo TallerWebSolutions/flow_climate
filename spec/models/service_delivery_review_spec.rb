@@ -235,4 +235,18 @@ RSpec.describe ServiceDeliveryReview, type: :model do
       expect(other_service_delivery_review.longest_stage).to eq({})
     end
   end
+
+  describe '#start_date' do
+    context 'with data' do
+      include_context 'service delivery data'
+
+      it { expect(service_delivery_review.start_date).to be_within(1.second).of 10.days.ago }
+    end
+
+    context 'without data' do
+      let!(:service_delivery_review) { Fabricate :service_delivery_review }
+
+      it { expect(service_delivery_review.start_date).to eq service_delivery_review.meeting_date }
+    end
+  end
 end

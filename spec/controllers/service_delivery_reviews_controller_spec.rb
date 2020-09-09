@@ -84,20 +84,69 @@ RSpec.describe ServiceDeliveryReviewsController, type: :controller do
     end
 
     describe 'GET #show' do
-      let(:service_delivery_review) { Fabricate :service_delivery_review, product: product }
-      let(:other_service_delivery_review) { Fabricate :service_delivery_review }
+      let!(:other_service_delivery_review) { Fabricate :service_delivery_review }
 
-      context 'valid parameters' do
-        before { get :show, params: { company_id: company, product_id: product, id: service_delivery_review } }
+      context 'with valid parameters' do
+        context 'with data' do
+          let(:project) { Fabricate :project, company: company, products: [product] }
+          let(:ongoing_stage) { Fabricate :stage, company: company, projects: [project], end_point: false, stage_stream: :downstream }
+          let(:end_stage) { Fabricate :stage, company: company, projects: [project], end_point: true }
+          let(:demand) { Fabricate :demand, product: product, project: project }
+          let!(:ongoing_demand_transition) { Fabricate :demand_transition, demand: demand, stage: ongoing_stage, last_time_in: 12.days.ago, last_time_out: 11.days.ago }
+          let!(:end_demand_transition) { Fabricate :demand_transition, demand: demand, stage: end_stage, last_time_in: 10.days.ago, last_time_out: 1.day.ago }
+          let(:service_delivery_review) { Fabricate :service_delivery_review, product: product, demands: [demand] }
 
-        it 'instantiates a new Team Member and renders the template' do
-          expect(response).to render_template :show
-          expect(assigns(:service_delivery_review)).to eq service_delivery_review
+          before { get :show, params: { company_id: company, product_id: product, id: service_delivery_review } }
+
+          it 'instantiates a new Team Member and renders the template' do
+            expect(response).to render_template :show
+            expect(assigns(:service_delivery_review)).to eq service_delivery_review
+          end
+        end
+
+        context 'with no transitions data' do
+          let(:project) { Fabricate :project, company: company, products: [product] }
+          let(:demand) { Fabricate :demand, product: product, project: project }
+          let(:service_delivery_review) { Fabricate :service_delivery_review, product: product, demands: [demand] }
+
+          before { get :show, params: { company_id: company, product_id: product, id: service_delivery_review } }
+
+          it 'instantiates a new Team Member and renders the template' do
+            expect(response).to render_template :show
+            expect(assigns(:service_delivery_review)).to eq service_delivery_review
+          end
+        end
+
+        context 'with no finished demands' do
+          let(:project) { Fabricate :project, company: company, products: [product] }
+          let(:demand) { Fabricate :demand, product: product, project: project, end_date: nil }
+          let(:service_delivery_review) { Fabricate :service_delivery_review, product: product, demands: [demand] }
+
+          before { get :show, params: { company_id: company, product_id: product, id: service_delivery_review } }
+
+          it 'instantiates a new Team Member and renders the template' do
+            expect(response).to render_template :show
+            expect(assigns(:service_delivery_review)).to eq service_delivery_review
+          end
+        end
+
+        context 'with no demands' do
+          let(:project) { Fabricate :project, company: company, products: [product] }
+          let(:service_delivery_review) { Fabricate :service_delivery_review, product: product }
+
+          before { get :show, params: { company_id: company, product_id: product, id: service_delivery_review } }
+
+          it 'instantiates a new Team Member and renders the template' do
+            expect(response).to render_template :show
+            expect(assigns(:service_delivery_review)).to eq service_delivery_review
+          end
         end
       end
 
-      context 'invalid parameters' do
-        context 'invalid service_delivery review' do
+      context 'with invalid' do
+        let(:service_delivery_review) { Fabricate :service_delivery_review, product: product }
+        
+        context 'service_delivery review' do
           before { get :show, params: { company_id: company, product_id: product, id: other_service_delivery_review } }
 
           it { expect(response).to have_http_status :not_found }
