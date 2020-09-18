@@ -16,6 +16,8 @@ module Flow
 
       @uncertain_scope = uncertain_scope_amount
 
+      end_sample_date ||= Time.zone.today
+
       @current_scope = @demands.opened_before_date(end_sample_date).count + @uncertain_scope
       @period_size = period_size
       teams = demands.map(&:team).uniq

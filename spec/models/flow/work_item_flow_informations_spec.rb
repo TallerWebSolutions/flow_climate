@@ -135,7 +135,7 @@ RSpec.describe Flow::WorkItemFlowInformations, type: :model do
     context 'with no data' do
       let(:dates_array) { TimeService.instance.weeks_between_of(Project.all.map(&:start_date).min, Project.all.map(&:end_date).max) }
 
-      it 'assigns the correct information' do
+      it 'assigns empty information' do
         item_flow_info = described_class.new(Demand.all, 10, dates_array.length, dates_array.last)
 
         item_flow_info.work_items_flow_behaviour(dates_array.first, dates_array.first, 0, true)
@@ -158,6 +158,15 @@ RSpec.describe Flow::WorkItemFlowInformations, type: :model do
         expect(item_flow_info.uncertain_scope).to eq 0
         expect(item_flow_info.current_scope).to eq 0
         expect(item_flow_info.period_size).to eq 0
+      end
+    end
+
+    context 'with no end_sample_date' do
+      it 'uses the current date as end sample date' do
+        Fabricate :demand
+        demands = Demand.all
+        expect(demands).to receive(:opened_before_date).with(Time.zone.today).once.and_return(demands)
+        described_class.new(demands, 10, 3.days.ago, nil)
       end
     end
   end
