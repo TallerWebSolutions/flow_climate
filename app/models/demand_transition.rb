@@ -66,6 +66,8 @@ class DemandTransition < ApplicationRecord
 
   def effort_in_transition
     stage_config = stage.stage_project_configs.find_by(project: demand.project)
+    return 0 if stage_config.blank?
+
     last_time_out_to_effort = last_time_out || Time.zone.now
     compute_assignments_effort(last_time_in, last_time_out_to_effort, stage_config.stage_percentage_decimal, stage_config.pairing_percentage_decimal) * (1 + stage_config.management_percentage_decimal)
   end
@@ -135,7 +137,7 @@ class DemandTransition < ApplicationRecord
   end
 
   def same_stage_project?
-    return if stage.blank? || stage.projects.include?(demand.project)
+    return if stage.blank? || stage.projects.include?(demand.project) || stage.projects.blank?
 
     errors.add(:stage, I18n.t('activerecord.errors.models.demand_transition.stage.not_same'))
   end

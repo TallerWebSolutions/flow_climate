@@ -300,16 +300,25 @@ RSpec.describe DemandTransition, type: :model do
     let!(:first_item_assignment) { Fabricate :item_assignment, demand: demand, membership: first_membership, start_time: Time.zone.local(2018, 3, 15, 17, 9, 58), finish_time: Time.zone.local(2018, 3, 22, 12, 0, 0) }
     let!(:second_item_assignment) { Fabricate :item_assignment, demand: demand, membership: second_membership, start_time: Time.zone.local(2018, 3, 17, 17, 9, 58), finish_time: Time.zone.local(2018, 3, 20, 12, 0, 0) }
 
-    context 'when there is last_time_out' do
+    context 'with last_time_out' do
       let!(:demand_transition) { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: Time.zone.local(2018, 3, 14, 17, 9, 58), last_time_out: Time.zone.local(2018, 3, 20, 12, 0, 0) }
 
       it { expect(demand_transition.effort_in_transition).to eq 27.720000000000002 }
     end
 
-    context 'when there is no last_time_out' do
+    context 'without last_time_out' do
       let(:demand_transition) { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: Time.zone.local(2018, 3, 15, 17, 9, 58), last_time_out: nil }
 
       it { expect(demand_transition.effort_in_transition).to eq 40.92000000000001 }
+    end
+
+    context 'without stage_config' do
+      let(:no_stage_config_project) { Fabricate :project, company: company }
+      let(:no_config_stage) { Fabricate :stage, company: company, commitment_point: true, end_point: false, teams: [team] }
+      let(:demand) { Fabricate :demand, project: no_stage_config_project, team: team, created_date: Time.zone.local(2018, 2, 4, 12, 0, 0) }
+      let!(:demand_transition) { Fabricate.build :demand_transition, stage: no_config_stage, demand: demand, last_time_in: Time.zone.local(2018, 3, 14, 17, 9, 58), last_time_out: Time.zone.local(2018, 3, 20, 12, 0, 0) }
+
+      it { expect(demand_transition.effort_in_transition).to eq 0 }
     end
   end
 
