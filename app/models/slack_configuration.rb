@@ -51,10 +51,10 @@ class SlackConfiguration < ApplicationRecord
 
   def valid_room_uri?
     room_webhook_url = begin
-                         URI.parse(room_webhook)
-                       rescue StandardError
-                         false
-                       end
+      URI.parse(room_webhook)
+    rescue StandardError
+      false
+    end
     return if room_webhook_url.is_a?(URI::HTTP) || room_webhook_url.is_a?(URI::HTTPS)
 
     errors.add(:room_webhook, I18n.t('errors.messages.invalid'))
