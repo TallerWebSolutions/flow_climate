@@ -24,7 +24,7 @@ jobs:
     steps:
       - checkout
       - run: gem update --system
-      - run: bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs=4 --retry=3
+      - run: bundle install --path=vendor/bundle --jobs=4 --retry=3
       - save_cache:
           key: v1-dep-{{ .Branch }}-{{ epoch }}
           paths:
@@ -38,7 +38,7 @@ jobs:
           command: dockerize -wait tcp://localhost:5432 -timeout 1m
       - run:
           name: Database setup
-          command: bundle exec rails db:schema:load --trace
+          command: RAILS_ENV=test bundle exec rails db:schema:load --trace
       - run: bundle exec rspec $TESTFILES --profile 10 --format RspecJunitFormatter --out /tmp/test-results/rspec/results.xml --format progress
       - run: bundle exec rubocop
 
