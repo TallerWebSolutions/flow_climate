@@ -4,6 +4,13 @@ orbs:
   node: circleci/node@2
 
 jobs:
+  build:
+    docker:
+      - image: circleci/ruby:2.7.1-node
+      - run: sudo apt-get update
+      - run: sudo apt install postgresql-client
+
+    executor: ruby/default
   test:
     parallelism: 3
     docker:
@@ -14,7 +21,7 @@ jobs:
           POSTGRES_USER: "postgres"
           POSTGRES_DB: flowcontrol_test
           POSTGRES_PASSWORD: ""
-          PAGER: cat # prevent psql commands using less
+          PAGER: cat # prevent psql commands triggering pager
     environment:
       BUNDLE_JOBS: "3"
       BUNDLE_RETRY: "3"
@@ -23,23 +30,31 @@ jobs:
       PGPASSWORD: ""
       RAILS_ENV: test
     steps:
-      - run: sudo apt-get update
-      - run: sudo apt install postgresql-client
       - checkout
-      - run: bundle install --jobs=4 --retry=3
+      - run:
+          name: Install Dependencies
+          command: bundle install
       - node/install-packages:
           pkg-manager: yarn
           cache-key: "yarn.lock"
       - run:
           name: Wait for DB
           command: dockerize -wait tcp://localhost:5432 -timeout 1m
-      - run: rake db:create
-      - run: bundle exec rake db:structure:load
-      - run: bundle exec rspec $TESTFILES --profile 10 --format RspecJunitFormatter --out /tmp/test-results/rspec/results.xml --format progress
-      - run: bundle exec rubocop
+      - run:
+          name: Database setup
+          command: RAILS_ENV=test bundle exec rails db:structure:load --trace
+      - run
+          name: run the specs
+          command: bundle exec rspec
+      - run:
+          name: run rubocop checking
+          command: bundle exec rubocop
 
 workflows:
   version: 2
   build_and_test:
     jobs:
-      - test
+      - build
+      - test:
+          requires:
+            - build
