@@ -11,9 +11,8 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Which bundler?
-          command: bundle -v
-      - ruby/bundle-install
+          name: Install dependencies
+          command: bundle install
   test:
     parallelism: 3
     docker:
