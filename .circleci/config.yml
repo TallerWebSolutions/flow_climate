@@ -23,9 +23,8 @@ jobs:
       RAILS_ENV: "test"
     steps:
       - checkout
-      - run: gem update --system
-      - run: bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs=4 --retry=3
-      - run: bundle update
+      - run: "gem update --system"
+      - run: "RAILS_ENV=test bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs=4 --retry=3"
       - save_cache:
           key: v1-dep-{{ .Branch }}-{{ epoch }}
           paths:
@@ -34,10 +33,10 @@ jobs:
       - node/install-packages:
           pkg-manager: yarn
           cache-key: "yarn.lock"
-      - run: dockerize -wait tcp://localhost:5432 -timeout 1m
-      - run: bundle exec rake db:create
-      - run: bundle exec rails db:schema:load RAILS_ENV=test
-      - run: bundle exec rspec $TESTFILES --profile 10 --format RspecJunitFormatter --out /tmp/test-results/rspec/results.xml --format progress
+      - run: "dockerize -wait tcp://localhost:5432 -timeout 1m"
+      - run: "RAILS_ENV=test bundle exec rake db:create"
+      - run: "RAILS_ENV=test bundle exec rails db:schema:load"
+      - run: "bundle exec rspec $TESTFILES --profile 10 --format RspecJunitFormatter --out /tmp/test-results/rspec/results.xml --format progress"
       - run: bundle exec rubocop
 
 workflows:
