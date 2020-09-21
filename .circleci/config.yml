@@ -25,7 +25,7 @@ jobs:
     steps:
       - checkout
       - run: gem update --system
-      - run: bundle install --path=vendor/bundle --jobs=4 --retry=3
+      - run: bundle install --jobs=4 --retry=3
       - run: dockerize -wait tcp://localhost:5432 -timeout 1m
       - run: bundle exec rake db:create
       - run: bundle exec rake db:schema:load
