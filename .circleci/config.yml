@@ -19,6 +19,7 @@ jobs:
       - image: cimg/ruby:2.7-node
       - image: circleci/postgres:12.4
         environment:
+          POSTGRES_HOST_AUTH_METHOD: trust
           POSTGRES_USER: "postgres"
           POSTGRES_DB: flowcontrol_test
           POSTGRES_PASSWORD: ""
