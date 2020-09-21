@@ -34,8 +34,8 @@ jobs:
           pkg-manager: yarn
           cache-key: "yarn.lock"
       - run: dockerize -wait tcp://localhost:5432 -timeout 1m
-      - run: bundle exec rake db:create RAILS_ENV=test
-      - run: bundle exec rake db:migrate RAILS_ENV=test
+      - run: bundle exec rake db:create
+      - run: bundle exec rails db:schema:load RAILS_ENV=test
       - run: bundle exec rspec $TESTFILES --profile 10 --format RspecJunitFormatter --out /tmp/test-results/rspec/results.xml --format progress
       - run: bundle exec rubocop
 
