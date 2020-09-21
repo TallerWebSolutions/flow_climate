@@ -33,12 +33,8 @@ jobs:
       - node/install-packages:
           pkg-manager: yarn
           cache-key: "yarn.lock"
-      - run:
-          name: Wait for DB
-          command: dockerize -wait tcp://localhost:5432 -timeout 1m
-      - run:
-          name: Database setup
-          command: bundle exec rake db:create db:schema:load --trace
+      - run: dockerize -wait tcp://localhost:5432 -timeout 1m
+      - run: RAILS_ENV=test bundle exec rake db:create db:schema:load
       - run: bundle exec rspec $TESTFILES --profile 10 --format RspecJunitFormatter --out /tmp/test-results/rspec/results.xml --format progress
       - run: bundle exec rubocop
 
