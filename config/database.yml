@@ -12,7 +12,7 @@ development:
 test:
   <<: *default
   database: flowcontrol_test
-  username: postgres
+  username:
 
 production:
   <<: *default
