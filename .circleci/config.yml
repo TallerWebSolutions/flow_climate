@@ -17,10 +17,10 @@ jobs:
     environment:
       BUNDLE_JOBS: "3"
       BUNDLE_RETRY: "3"
-      PGHOST: 127.0.0.1
+      PGHOST: "127.0.0.1"
       PGUSER: ""
       PGPASSWORD: ""
-      RAILS_ENV: test
+      RAILS_ENV: "test"
     steps:
       - checkout
       - run: gem update --system
