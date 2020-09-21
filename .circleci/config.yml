@@ -10,32 +10,33 @@ jobs:
       - image: cimg/ruby:2.7-node
       - image: circleci/postgres:12.4
         environment:
-          RAILS_ENV: test
           POSTGRES_HOST_AUTH_METHOD: trust
+          POSTGRES_USER: "postgres"
           POSTGRES_DB: flowcontrol_test
-          PGHOST: 127.0.0.1
-          PGUSER: ""
-          PGPASSWORD: ""
+          POSTGRES_PASSWORD: ""
+    environment:
+      BUNDLE_JOBS: "3"
+      BUNDLE_RETRY: "3"
+      PGHOST: 127.0.0.1
+      PGUSER: "postgres"
+      PGPASSWORD: ""
+      RAILS_ENV: test
     steps:
       - checkout
-      - run: gem update --system
       - run: bundle install --jobs=4 --retry=3
-      - save_cache:
-          key: v1-dep-{{ .Branch }}-{{ epoch }}
-          paths:
-            - vendor/bundle
-            - ~/.bundle
       - node/install-packages:
           pkg-manager: yarn
           cache-key: "yarn.lock"
-      - run: dockerize -wait tcp://localhost:5432 -timeout 1m
-      - run: bundle exec rake db:create
+      - run:
+          name: Wait for DB
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+      - run: rake db:create
       - run: bundle exec rake db:structure:load
       - run: bundle exec rspec $TESTFILES --profile 10 --format RspecJunitFormatter --out /tmp/test-results/rspec/results.xml --format progress
       - run: bundle exec rubocop
 
 workflows:
   version: 2
-  test_and_deploy:
+  build_and_test:
     jobs:
       - test
