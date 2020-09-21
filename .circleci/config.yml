@@ -43,9 +43,10 @@ jobs:
           command: dockerize -wait tcp://localhost:5432 -timeout 1m
       - run:
           name: Database setup
-          command: RAILS_ENV=test bundle exec rails db:schema:load --trace
-      # Run rspec in parallel
-      - ruby/rspec-test
+          command: bundle exec rails db:schema:load --trace
+      - run
+          name: run the specs
+          command: bundle exec rspec $TESTFILES --profile 10 --format RspecJunitFormatter --out /tmp/test-results/rspec/results.xml --format progress
       - run:
           name: run rubocop checking
           command: bundle exec rubocop
