@@ -23,6 +23,7 @@ jobs:
       RAILS_ENV: test
     steps:
       - checkout
+      - run: gem update --system
       - run: bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs=4 --retry=3
       - save_cache:
           key: v1-dep-{{ .Branch }}-{{ epoch }}
