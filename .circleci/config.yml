@@ -24,7 +24,7 @@ jobs:
     steps:
       - checkout
       - run: gem update --system
-      - run: bundle install --path=vendor/bundle --jobs=4 --retry=3
+      - run: bundle install --jobs=4 --retry=3
       - save_cache:
           key: v1-dep-{{ .Branch }}-{{ epoch }}
           paths:
