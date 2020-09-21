@@ -10,17 +10,16 @@ jobs:
       - image: cimg/ruby:2.7-node
       - image: circleci/postgres:12.4
         environment:
+          RAILS_ENV: test
           POSTGRES_HOST_AUTH_METHOD: trust
-          POSTGRES_USER: ""
-          POSTGRES_DB: flowcontrol_test
-          POSTGRES_PASSWORD: ""
+          PGHOST: 127.0.0.1
+          PGUSER: ""
+          PGPASSWORD: ""
     environment:
       BUNDLE_JOBS: "3"
       BUNDLE_RETRY: "3"
-      PGHOST: 127.0.0.1
-      PGUSER: ""
-      PGPASSWORD: ""
-      RAILS_ENV: test
+      POSTGRES_DB: flowcontrol_test
+      POSTGRES_USER: ""
     steps:
       - checkout
       - run: gem update --system
