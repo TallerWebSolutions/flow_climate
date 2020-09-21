@@ -22,6 +22,7 @@ jobs:
       PGPASSWORD: ""
       RAILS_ENV: test
     steps:
+      - run: sudo apt install postgresql-client
       - checkout
       - run: bundle install --jobs=4 --retry=3
       - node/install-packages:
