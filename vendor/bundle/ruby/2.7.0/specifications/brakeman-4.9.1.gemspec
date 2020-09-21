@@ -17,8 +17,8 @@ Gem::Specification.new do |s|
   s.homepage = "https://brakemanscanner.org".freeze
   s.licenses = ["Brakeman Public Use License".freeze]
   s.required_ruby_version = Gem::Requirement.new(">= 2.3.0".freeze)
-  s.rubygems_version = "3.1.2".freeze
+  s.rubygems_version = "3.1.4".freeze
   s.summary = "Security vulnerability scanner for Ruby on Rails.".freeze
 
-  s.installed_by_version = "3.1.2" if s.respond_to? :installed_by_version
+  s.installed_by_version = "3.1.4" if s.respond_to? :installed_by_version
 end

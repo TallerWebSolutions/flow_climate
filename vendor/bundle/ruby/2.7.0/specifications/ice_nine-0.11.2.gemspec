@@ -15,10 +15,10 @@ Gem::Specification.new do |s|
   s.files = ["LICENSE".freeze, "README.md".freeze, "TODO".freeze]
   s.homepage = "https://github.com/dkubb/ice_nine".freeze
   s.licenses = ["MIT".freeze]
-  s.rubygems_version = "3.1.2".freeze
+  s.rubygems_version = "3.1.4".freeze
   s.summary = "Deep Freeze Ruby Objects".freeze
 
-  s.installed_by_version = "3.1.2" if s.respond_to? :installed_by_version
+  s.installed_by_version = "3.1.4" if s.respond_to? :installed_by_version
 
   if s.respond_to? :specification_version then
     s.specification_version = 4

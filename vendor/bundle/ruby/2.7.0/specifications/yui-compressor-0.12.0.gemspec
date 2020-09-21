@@ -13,8 +13,8 @@ Gem::Specification.new do |s|
   s.email = "stevecrozz@gmail.com".freeze
   s.homepage = "http://github.com/sstephenson/ruby-yui-compressor/".freeze
   s.licenses = ["MIT".freeze, "BSD-3-clause".freeze, "MPL".freeze]
-  s.rubygems_version = "3.1.2".freeze
+  s.rubygems_version = "3.1.4".freeze
   s.summary = "JavaScript and CSS minification library".freeze
 
-  s.installed_by_version = "3.1.2" if s.respond_to? :installed_by_version
+  s.installed_by_version = "3.1.4" if s.respond_to? :installed_by_version
 end

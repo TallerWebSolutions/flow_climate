@@ -17,10 +17,10 @@ Gem::Specification.new do |s|
   s.post_install_message = "\n\n\nWARNING: Several insecure default options and features were deprecated in attr_encrypted v2.0.0.\n\nAdditionally, there was a bug in Encryptor v2.0.0 that insecurely encrypted data when using an AES-*-GCM algorithm.\n\nThis bug was fixed but introduced breaking changes between v2.x and v3.x.\n\nPlease see the README for more information regarding upgrading to attr_encrypted v3.0.0.\n\n\n".freeze
   s.rdoc_options = ["--line-numbers".freeze, "--inline-source".freeze, "--main".freeze, "README.rdoc".freeze]
   s.required_ruby_version = Gem::Requirement.new(">= 2.0.0".freeze)
-  s.rubygems_version = "3.1.2".freeze
+  s.rubygems_version = "3.1.4".freeze
   s.summary = "Encrypt and decrypt attributes".freeze
 
-  s.installed_by_version = "3.1.2" if s.respond_to? :installed_by_version
+  s.installed_by_version = "3.1.4" if s.respond_to? :installed_by_version
 
   if s.respond_to? :specification_version then
     s.specification_version = 4

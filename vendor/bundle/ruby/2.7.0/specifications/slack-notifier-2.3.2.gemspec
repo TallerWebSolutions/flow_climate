@@ -13,8 +13,8 @@ Gem::Specification.new do |s|
   s.email = ["stevenosloan@gmail.com".freeze]
   s.homepage = "http://github.com/stevenosloan/slack-notifier".freeze
   s.licenses = ["MIT".freeze]
-  s.rubygems_version = "3.1.2".freeze
+  s.rubygems_version = "3.1.4".freeze
   s.summary = "A slim ruby wrapper for posting to slack webhooks".freeze
 
-  s.installed_by_version = "3.1.2" if s.respond_to? :installed_by_version
+  s.installed_by_version = "3.1.4" if s.respond_to? :installed_by_version
 end

@@ -13,8 +13,8 @@ Gem::Specification.new do |s|
   s.email = ["nunemaker@gmail.com".freeze]
   s.homepage = "http://github.com/jnunemaker/crack".freeze
   s.licenses = ["MIT".freeze]
-  s.rubygems_version = "3.1.2".freeze
+  s.rubygems_version = "3.1.4".freeze
   s.summary = "Really simple JSON and XML parsing, ripped from Merb and Rails.".freeze
 
-  s.installed_by_version = "3.1.2" if s.respond_to? :installed_by_version
+  s.installed_by_version = "3.1.4" if s.respond_to? :installed_by_version
 end

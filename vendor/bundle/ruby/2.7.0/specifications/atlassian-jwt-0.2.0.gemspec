@@ -13,10 +13,10 @@ Gem::Specification.new do |s|
   s.description = "This gem simplifies generating the claims needed to authenticate with the Atlassian Connect REST APIs.".freeze
   s.email = ["spike@6kites.com".freeze, "seb@sebruiz.net".freeze, "ndao@atlassian.com".freeze]
   s.homepage = "https://bitbucket.org/atlassian/atlassian-jwt-ruby".freeze
-  s.rubygems_version = "3.1.2".freeze
+  s.rubygems_version = "3.1.4".freeze
   s.summary = "Encode and decode JWT tokens for use with the Atlassian Connect REST APIs.".freeze
 
-  s.installed_by_version = "3.1.2" if s.respond_to? :installed_by_version
+  s.installed_by_version = "3.1.4" if s.respond_to? :installed_by_version
 
   if s.respond_to? :specification_version then
     s.specification_version = 4
