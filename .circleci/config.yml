@@ -32,7 +32,9 @@ jobs:
       RAILS_ENV: test
     steps:
       - checkout
-      - ruby/install-deps
+      - run:
+        - name: Install Dependencies
+        - command: bundle install
       - node/install-packages:
           pkg-manager: yarn
           cache-key: "yarn.lock"
