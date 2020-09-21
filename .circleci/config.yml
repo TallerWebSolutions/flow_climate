@@ -12,14 +12,10 @@ jobs:
         environment:
           RAILS_ENV: test
           POSTGRES_HOST_AUTH_METHOD: trust
+          POSTGRES_DB: flowcontrol_test
           PGHOST: 127.0.0.1
           PGUSER: ""
           PGPASSWORD: ""
-    environment:
-      BUNDLE_JOBS: "3"
-      BUNDLE_RETRY: "3"
-      POSTGRES_DB: flowcontrol_test
-      POSTGRES_USER: ""
     steps:
       - checkout
       - run: gem update --system
