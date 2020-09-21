@@ -27,7 +27,7 @@ jobs:
       BUNDLE_JOBS: "3"
       BUNDLE_RETRY: "3"
       PGHOST: 127.0.0.1
-      PGUSER: ""
+      PGUSER: "postgres"
       PGPASSWORD: ""
       RAILS_ENV: test
     steps:
@@ -41,7 +41,7 @@ jobs:
           command: dockerize -wait tcp://localhost:5432 -timeout 1m
       - run:
           name: Database setup
-          command: bundle exec rails db:schema:load --trace
+          command: RAILS_ENV=test bundle exec rails db:schema:load --trace
       # Run rspec in parallel
       - ruby/rspec-test
       - run:
