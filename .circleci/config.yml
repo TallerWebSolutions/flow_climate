@@ -4,15 +4,6 @@ orbs:
   node: circleci/node@2
 
 jobs:
-  build:
-    docker:
-      - image: circleci/ruby:2.7.1-node
-    executor: ruby/default
-    steps:
-      - checkout
-      - run:
-          name: Install dependencies
-          command: bundle install
   test:
     parallelism: 3
     docker:
@@ -32,9 +23,12 @@ jobs:
       RAILS_ENV: test
     steps:
       - checkout
-      - run:
-          name: Install Dependencies
-          command: bundle install
+      - run: bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs=4 --retry=3
+      - save_cache:
+          key: v1-dep-{{ .Branch }}-{{ epoch }}
+          paths:
+            - vendor/bundle
+            - ~/.bundle
       - node/install-packages:
           pkg-manager: yarn
           cache-key: "yarn.lock"
@@ -44,18 +38,11 @@ jobs:
       - run:
           name: Database setup
           command: bundle exec rails db:schema:load --trace
-      - run
-          name: run the specs
-          command: bundle exec rspec $TESTFILES --profile 10 --format RspecJunitFormatter --out /tmp/test-results/rspec/results.xml --format progress
-      - run:
-          name: run rubocop checking
-          command: bundle exec rubocop
+      - run: bundle exec rspec $TESTFILES --profile 10 --format RspecJunitFormatter --out /tmp/test-results/rspec/results.xml --format progress
+      - run: bundle exec rubocop
 
 workflows:
   version: 2
   build_and_test:
     jobs:
-      - build
-      - test:
-          requires:
-            - build
+      - test
