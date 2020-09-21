@@ -1,78 +1,42 @@
-version: 2
-jobs:
-  build:
-    working_directory: ~/flow_climate
+version: 2.1
+orbs:
+  ruby: circleci/ruby@1.0
+  node: circleci/node@2
 
+jobs:
+  test:
+    parallelism: 3
     docker:
-      - image: circleci/ruby:2.4.3-node
+      - image: cimg/ruby:2.7-node
+      - image: circleci/postgres:12.4
         environment:
-          CC_TEST_REPORTER_ID: 70ab5420793b8b581d83df1dc8dcc49ca7c48d3deb51c9f9a8c2a5e0899c8f71
-          TEST_REPORT_PATH: "test/charts"
-          RAILS_ENV: test
-          PGHOST: 127.0.0.1
-          PGUSER: root
-      - image: circleci/postgres:10.1-alpine
-        environment:
-          POSTGRES_USER: root
-          POSTGRES_DB: circle-test_test
+          POSTGRES_HOST_AUTH_METHOD: trust
+          POSTGRES_USER: "postgres"
+          POSTGRES_DB: flowcontrol_test
+          POSTGRES_PASSWORD: ""
+    environment:
+      BUNDLE_JOBS: "3"
+      BUNDLE_RETRY: "3"
+      PGHOST: 127.0.0.1
+      PGUSER: "postgres"
+      PGPASSWORD: ""
+      RAILS_ENV: test
     steps:
       - checkout
-
-      - restore_cache:
-          keys:
-            - flow_climate-{{ checksum "Gemfile.lock" }}
-            - flow_climate-
-
+      - run: bundle install --jobs=4 --retry=3
+      - node/install-packages:
+          pkg-manager: yarn
+          cache-key: "yarn.lock"
       - run:
-          name: Install dependencies
-          command: |
-            bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs 4 --retry 3
-            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+          name: Wait for DB
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+      - run: rake db:create
+      - run: bundle exec rake db:structure:load
+      - run: bundle exec rspec $TESTFILES --profile 10 --format RspecJunitFormatter --out /tmp/test-results/rspec/results.xml --format progress
+      - run: bundle exec rubocop
 
-      - save_cache:
-          key: flow_climate-{{ checksum "Gemfile.lock" }}
-          paths:
-            - vendor/bundle
-
-      - run:
-          name: Database Setup
-          command: |
-            sudo apt install postgresql-client
-            bundle exec rake db:create
-            bundle exec rake db:structure:load
-
-      - run:
-          name:  Download cc-test-reporter
-          command: |
-            mkdir -p tmp/
-            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./tmp/cc-test-reporter
-            chmod +x ./tmp/cc-test-reporter
-
-
-      - persist_to_workspace:
-          root: tmp
-          paths:
-            - cc-test-reporter
-
-      - run:
-          name: RSpec
-          command: |
-            bundle exec rake spec
-            ./tmp/cc-test-reporter format-coverage -t simplecov -o tmp/codeclimate.backend.json coverage/backend/.resultset.json
-
-      - persist_to_workspace:
-          root: tmp
-          paths:
-            - codeclimate.backend.json
-
-      - attach_workspace:
-          at: ~/repo/tmp
-
-      - run:
-          name: Upload coverage results to Code Climate
-          command: |
-            ./tmp/cc-test-reporter upload-coverage -i tmp/codeclimate.backend.json
-
-      - run:
-          name: Rubocop
-          command: bundle exec rubocop -DR
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - test

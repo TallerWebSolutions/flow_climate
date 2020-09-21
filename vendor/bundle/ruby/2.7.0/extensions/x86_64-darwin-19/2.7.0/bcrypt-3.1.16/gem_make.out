@@ -1,0 +1,39 @@
+current directory: /Users/celsomartins/workspace/taller/flow_climate/vendor/bundle/ruby/2.7.0/gems/bcrypt-3.1.16/ext/mri
+/Users/celsomartins/.rvm/rubies/ruby-2.7.1/bin/ruby -I /Users/celsomartins/.rvm/rubies/ruby-2.7.1/lib/ruby/site_ruby/2.7.0 -r ./siteconf20200921-74400-16m4mv6.rb extconf.rb
+creating Makefile
+
+current directory: /Users/celsomartins/workspace/taller/flow_climate/vendor/bundle/ruby/2.7.0/gems/bcrypt-3.1.16/ext/mri
+make "DESTDIR=" clean
+
+current directory: /Users/celsomartins/workspace/taller/flow_climate/vendor/bundle/ruby/2.7.0/gems/bcrypt-3.1.16/ext/mri
+make "DESTDIR="
+compiling bcrypt_ext.c
+bcrypt_ext.c:17:25: warning: implicit conversion loses integer precision: 'long' to 'int' [-Wshorten-64-to-32]
+            NIL_P(input) ? 0 : RSTRING_LEN(input));
+                               ^~~~~~~~~~~~~~~~~~
+/Users/celsomartins/.rvm/rubies/ruby-2.7.1/include/ruby-2.7.0/ruby/ruby.h:1007:6: note: expanded from macro 'RSTRING_LEN'
+     RSTRING_EMBED_LEN(str) : \
+     ^~~~~~~~~~~~~~~~~~~~~~
+/Users/celsomartins/.rvm/rubies/ruby-2.7.1/include/ruby-2.7.0/ruby/ruby.h:1003:6: note: expanded from macro 'RSTRING_EMBED_LEN'
+     (long)((RBASIC(str)->flags >> RSTRING_EMBED_LEN_SHIFT) & \
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+bcrypt_ext.c:17:25: warning: implicit conversion loses integer precision: 'long' to 'int' [-Wshorten-64-to-32]
+            NIL_P(input) ? 0 : RSTRING_LEN(input));
+                               ^~~~~~~~~~~~~~~~~~
+/Users/celsomartins/.rvm/rubies/ruby-2.7.1/include/ruby-2.7.0/ruby/ruby.h:1008:28: note: expanded from macro 'RSTRING_LEN'
+     RSTRING(str)->as.heap.len)
+     ~~~~~~~~~~~~~~~~~~~~~~^~~
+2 warnings generated.
+compiling crypt_blowfish.c
+gcc  -D__SKIP_GNU  -I/usr/local/opt/libyaml/include -I/usr/local/opt/libksba/include -I/usr/local/opt/readline/include -I/usr/local/opt/zlib/include -I/usr/local/opt/openssl@1.1/include -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT    -c -o x86.o x86.S
+compiling crypt_gensalt.c
+compiling wrapper.c
+wrapper.c:182:60: warning: declaration of 'struct crypt_data' will not be visible outside of this function [-Wvisibility]
+char *crypt_r(const char *key, const char *setting, struct crypt_data *data)
+                                                           ^
+1 warning generated.
+linking shared-object bcrypt_ext.bundle
+
+current directory: /Users/celsomartins/workspace/taller/flow_climate/vendor/bundle/ruby/2.7.0/gems/bcrypt-3.1.16/ext/mri
+make "DESTDIR=" install
+/usr/local/opt/coreutils/bin/ginstall -c -m 0755 bcrypt_ext.bundle ./.gem.20200921-74400-1pwi6m7

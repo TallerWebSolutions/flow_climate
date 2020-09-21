@@ -1,0 +1,204 @@
+require: rubocop-performance
+
+AllCops:
+  Exclude:
+    - 'vendor/**/*'
+    - 'gemfiles/vendor/**/*'
+
+Style/HashSyntax:
+  EnforcedStyle: hash_rockets
+  SupportedStyles:
+    - hash_rockets
+
+Style/SymbolArray:
+  Enabled: false # %i[] syntax isn't 1.9.x compatible
+
+Metrics/LineLength:
+  Max: 1000
+
+Metrics/MethodLength:
+  Max: 15 # Relax slightly from the default of 10
+
+Style/DoubleNegation:
+  Enabled: false
+
+Style/Lambda:
+  Enabled: false
+
+Style/EachWithObject:
+  Enabled: false
+
+Metrics/BlockLength:
+  ExcludedMethods: ['describe', 'context'] # RSpec DSL is expected to have long blocks.
+
+Style/ExpandPathArguments:
+  Enabled: false # syntax requires Ruby >= 2.0
+
+Gemspec/RequiredRubyVersion:
+  Enabled: false # rubocop compares to gemspec, yet won't allow 1.9 as minimum version
+
+Style/Encoding:
+  Enabled: false # Ruby 1.9.3 needs these magic comments, e.g. # encoding: UTF-8
+
+Style/PercentLiteralDelimiters:
+  PreferredDelimiters:
+    # rubocop switched from () to [] at some past version.
+    # Make sure we are consistent across all bundles/builds.
+    default: '[]'
+
+Style/Documentation:
+  # We can enabled this if/when we want to start doing consistent class documentation.
+  # As is, we currently add :nodoc: if anything at all.
+  Enabled: false
+
+Naming/UncommunicativeMethodParamName:
+  # It's possible to configure this cop to allow just about anything, but what's the point.
+  # The default min length of a param name is 3, but the the default whitelist includes things
+  # like `db` and `io`. So, short names really can be useful.
+  Enabled: false
+
+Style/CaseEquality:
+  # The code uses `===` a lot to compare a regex to a string, but it's not clear that
+  # switching to `=~` is always safe, because in some cases the value could be a regex
+  # or a string and `str1 =~ str2` isn't valid. Whoever enables this cop should carefully
+  # review and test each of these.
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  # If we do this, it will be in its own PR. It requires adding these magic comments
+  # throughout the project, in order to prepare for a future Ruby 3.x.
+  Enabled: false
+
+Style/SafeNavigation:
+  # Not available in Ruby < 2.3.
+  Enabled: false
+
+#
+# Performance cops are opt in, and `Enabled: true` is always required.
+# Full list is here: https://github.com/rubocop-hq/rubocop-performance/tree/master/lib/rubocop/cop/performance
+# For travis builds, Codacy will see and use these directives.
+#
+Performance/Caller:
+  Enabled: true
+  Exclude:
+    - spec/**/*
+
+Performance/CaseWhenSplat:
+  Enabled: true
+  Exclude:
+    - spec/**/*
+
+Performance/Casecmp:
+  Enabled: true
+  Exclude:
+    - spec/**/*
+
+Performance/ChainArrayAllocation:
+  Enabled: true
+  Exclude:
+    - spec/**/*
+
+Performance/CompareWithBlock:
+  Enabled: true
+  Exclude:
+    - spec/**/*
+
+Performance/Count:
+  Enabled: true
+  Exclude:
+    - spec/**/*
+
+Performance/Detect:
+  Enabled: true
+  Exclude:
+    - spec/**/*
+
+Performance/DoubleStartEndWith:
+  Enabled: true
+  Exclude:
+    - spec/**/*
+
+Performance/EndWith:
+  Enabled: true
+  Exclude:
+    - spec/**/*
+
+Performance/FixedSize:
+  Enabled: true
+  Exclude:
+    - spec/**/*
+
+Performance/FlatMap:
+  Enabled: true
+  Exclude:
+    - spec/**/*
+
+Performance/InefficientHashSearch:
+  Enabled: true
+  Exclude:
+    - spec/**/*
+
+Performance/OpenStruct:
+  Enabled: true
+  Exclude:
+    - spec/**/*
+
+Performance/RangeInclude:
+  Enabled: true
+  Exclude:
+    - spec/**/*
+
+Performance/RedundantBlockCall:
+  Enabled: true
+  Exclude:
+    - spec/**/*
+
+Performance/RedundantMatch:
+  Enabled: true
+  Exclude:
+    - spec/**/*
+
+Performance/RedundantMerge:
+  Enabled: true
+  Exclude:
+    - spec/**/*
+
+Performance/RegexpMatch:
+  Enabled: true
+  Exclude:
+    - spec/**/*
+
+Performance/ReverseEach:
+  Enabled: true
+  Exclude:
+    - spec/**/*
+
+Performance/Size:
+  Enabled: true
+  Exclude:
+    - spec/**/*
+
+Performance/StartWith:
+  Enabled: true
+  Exclude:
+    - spec/**/*
+
+Performance/StringReplacement:
+  Enabled: true
+  Exclude:
+    - spec/**/*
+
+Performance/TimesMap:
+  Enabled: true
+  Exclude:
+    - spec/**/*
+
+Performance/UnfreezeString:
+  Enabled: true
+  Exclude:
+    - spec/**/*
+
+Performance/UriDefaultParser:
+  Enabled: true
+  Exclude:
+    - spec/**/*

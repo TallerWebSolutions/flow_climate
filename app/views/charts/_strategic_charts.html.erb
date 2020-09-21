@@ -15,6 +15,8 @@
            data-xtitle='<%= I18n.t('charts.xlabel.months') %>'
            data-ytitle='<%= I18n.t('charts.ylabel.projects.text') %>'
            data-ylinetitle='<%= I18n.t('charts.ylabel.total_hours.text') %>'
+           data-tooltipsuffix='<%= I18n.t('general.charts.hours') %>'
+           data-datalabelsuffix=''
            data-series='<%= [
                                 { type: 'column', yAxis: 1, name: I18n.t('charts.ylabel.projects.text'), data: strategic_chart_data.active_projects_count_data },
                                 { type: 'spline', name: I18n.t('charts.ylabel.total_hours.text'), data: strategic_chart_data.sold_hours_in_month }
@@ -33,6 +35,7 @@
            data-ytitle='<%= I18n.t('charts.ylabel.hours.text') %>'
            data-prefix=''
            data-tooltipsuffix='<%= I18n.t('general.charts.hours') %>'
+           data-datalabelsuffix=''
            data-ylinetitle='<%= I18n.t('charts.ylabel.total_hours.text') %>'
            data-series='<%= [
                                 { name: I18n.t('charts.series.consumed_hours.text'), data: strategic_chart_data.consumed_hours_per_month },
@@ -55,6 +58,7 @@
            data-series='<%= [ { name: I18n.t('charts.ylabel.flow_pressure.text'), data: strategic_chart_data.flow_pressure_per_month_data }].to_json %>'
            data-prefix=''
            data-tooltipsuffix='<%= I18n.t('projects.charts.flow_pressure.data_suffix') %>'
+           data-datalabelsuffix=''
            data-decimals='3'>
       </div>
     </div>
@@ -72,6 +76,7 @@
                             ].to_json %>'
            data-prefix='<%= I18n.t('projects.charts.cmd.tooltip_prefix') %>'
            data-tooltipsuffix=''
+           data-datalabelsuffix=''
            data-decimals='2'>
       </div>
     </div>
