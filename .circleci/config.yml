@@ -28,7 +28,7 @@ jobs:
       - run: bundle install --jobs=4 --retry=3
       - run: dockerize -wait tcp://localhost:5432 -timeout 1m
       - run: bundle exec rake db:create
-      - run: bundle exec rake db:schema:load
+      - run: bundle exec rake db:structure:load
       - run: bundle exec rspec $TESTFILES --profile 10 --format RspecJunitFormatter --out /tmp/test-results/rspec/results.xml --format progress
       - run: bundle exec rubocop
 
