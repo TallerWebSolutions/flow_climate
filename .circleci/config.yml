@@ -43,7 +43,7 @@ jobs:
       - run:
           name: Database setup
           command: RAILS_ENV=test bundle exec rails db:structure:load --trace
-      - run
+      - run:
           name: run the specs
           command: bundle exec rspec
       - run:
