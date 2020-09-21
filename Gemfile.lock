@@ -104,9 +104,6 @@ GEM
     crack (0.4.4)
     crass (1.0.6)
     database_cleaner (1.8.5)
-    debase (2.3.0)
-      debase-ruby_core_source (~> 0.10.10)
-    debase-ruby_core_source (0.10.10)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
     devise (4.7.3)
@@ -423,7 +420,6 @@ DEPENDENCIES
   cloudinary
   coffee-rails
   database_cleaner
-  debase
   devise
   discard
   fabrication

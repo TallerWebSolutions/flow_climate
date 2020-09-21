@@ -33,7 +33,6 @@ gem 'yui-compressor'
 group :test, :development do
   gem 'brakeman'
   gem 'database_cleaner'
-  gem 'debase'
   gem 'fabrication'
   gem 'faker'
   gem 'parser'

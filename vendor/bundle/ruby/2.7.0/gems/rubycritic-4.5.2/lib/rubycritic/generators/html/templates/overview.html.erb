@@ -1,0 +1,68 @@
+<!-- Page Content -->
+<div id="page-content-wrapper">
+  <div class="container-fluid">
+    <div class="row">
+      <!--Page Title -->
+      <div class="Page_Title">
+       <h3>Overview</h3>
+      </div>
+      <!--End Page Title -->
+      <div class="Content_Wrapper">
+        <!--Grade Wrapper-->
+        <div class="col-xs-12 col-sm-4 col-md-6 col-lg-4">
+          <div class="Graph_Cards fadeIn">
+          <div id="gpa-chart" class="chart-container"></div>
+          <div id="addText" ></div>
+          </div>
+        </div>
+        <!--End Grade Wrapper-->
+
+        <!--Churn vs Complexity graph-->
+        <div class="col-xs-12 col-sm-7 col-md-6 col-lg-8">
+          <div class="Graph_Cards fadeIn">
+            <% if Config.source_control_present? %>
+              <div id="churn-vs-complexity-graph-container" class="chart-container"></div>
+            <% else %>
+              <div id="churn-error">We can't show you Churn-vs-Complexity graph because this project does not seem to be under a source code management system like git or perforce at the moment. This doesn't mean that anything is wrong, it just means certain features like this one are not available.</div>
+            <% end %>
+
+            <script>
+             var turbulenceData = <%= @turbulence_data %>;
+             var score = <%= @score %>;
+            </script>
+          </div>
+        </div>
+        <!--End Churn vs Complexity graph-->
+
+        <!--Summary Wrapper-->
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          <div class="Graph_Cards Summary_Wrapper_Main fadeIn-3">
+            <h4>Summary</h4>
+            <% ratings =  { 'A' => 'Green_DR', 'B' => 'Green_Light', 'C' => 'Yellow_Color',
+                            'D' => 'Orange_Color', 'F' => 'Red_Color' } %>
+            <div class="Summary_Wrapper">
+              <% ratings.each do |rating, color| %>
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                  <div class="summary_wrap <%= color %>">
+                    <div class="pull-left Summary_Title col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                      <h3><%= rating %></h3>
+                    </div>
+                    <div class="pull-right Summary_Content col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                      <ul class="list-inline">
+                        <li><h4 id="ratingAfileCount"><%= @summary[rating][:files] %></h4><span>files</span></li>
+                        <li><h4 id="ratingAfileCount"><%= @summary[rating][:churns] %></h4><span>churns</span></li>
+                        <li><h4 id="ratingAfileCount"><%= @summary[rating][:smells] %></h4><span>smells</span></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+        <!--End Summary Wrapper-->
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /#page-content-wrapper -->

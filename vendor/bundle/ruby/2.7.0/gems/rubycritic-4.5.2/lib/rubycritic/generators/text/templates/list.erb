@@ -1,0 +1,12 @@
+<%= Rainbow(@analysed_module.name.to_s).foreground(color) %>:
+  Rating:       <%= Rainbow(@analysed_module.rating.to_s).foreground(color) %>
+  Churn:        <%= @analysed_module.churn %>
+  Complexity:   <%= @analysed_module.complexity %>
+  Duplication:  <%= @analysed_module.duplication %>
+  Smells:       <%= @analysed_module.smells.count %>
+<%- @analysed_module.smells.each do |smell| -%>
+    * <%= smell %>
+  <%- smell.locations.each do |location| -%>
+      - <%= location %>
+  <%- end -%>
+<%- end -%>

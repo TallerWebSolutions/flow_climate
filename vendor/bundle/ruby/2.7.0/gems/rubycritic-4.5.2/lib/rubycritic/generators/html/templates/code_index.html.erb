@@ -1,0 +1,55 @@
+<div class="row">
+    <!--Page Title -->
+    <div class="Page_Title">
+      <h3>Code</h3>
+    </div>
+    <!--End Page Title -->
+    <div class="Content_Wrapper">
+      <table id="codeTable" class="table code sortable-table tablesorter">
+        <thead>
+          <tr>
+            <% unless Config.suppress_ratings %>
+              <th width="10%" class="table-header center">Rating<span class="sort-type"></span></th>
+            <% end %>
+            <th width="50%" class="table-header left">Name<span class="sort-type"></span></th>
+            <th width="10%" class="table-header">Churn<span class="sort-type"></span></th>
+            <th width="10%" class="table-header">Complexity<span class="sort-type"></span></th>
+            <th width="10%" class="table-header">Duplication<span class="sort-type"></span></th>
+            <th width="10%" class="table-header">Smells<span class="sort-type"></span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @analysed_modules.each do |analysed_module| %>
+            <tr>
+              <% unless Config.suppress_ratings %>
+                <td class="center">
+                  <% if Config.build_mode? %>
+                    <% master_analysed_module = Config.base_branch_collection.find(analysed_module.pathname) %>
+                    <% if master_analysed_module.cost > analysed_module.cost %>
+                      <span class="glyphicon glyphicon-arrow-up green-color"></span>
+                    <% elsif master_analysed_module.cost < analysed_module.cost %>
+                      <span class="glyphicon glyphicon-arrow-down red-color"></span>
+                    <% else %>
+                      <span class="empty-span glyphicon"></span>
+                    <% end %>
+                  <% end %>
+                  <div class="rating <%= analysed_module.rating.to_s.downcase %>"><%= analysed_module.rating %></div>
+                </td>
+              <% end %>
+              <td class="left">
+                <ul class="nav nav-pills">
+                  <li role="presentation" >
+                    <a href="<%= file_path(analysed_module.pathname.sub_ext('.html')) %>"><%= analysed_module.name %></a>
+                  </li>
+                </ul>
+              </td>
+              <td><%= analysed_module.churn %></td>
+              <td><%= analysed_module.complexity %></td>
+              <td><%= analysed_module.duplication %></td>
+              <td><%= analysed_module.smells_count %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+  </div>
+</div>
