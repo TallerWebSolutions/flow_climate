@@ -23,7 +23,7 @@ jobs:
         name: Restore bundle cache
         key: flowclimate-{{ checksum "Gemfile.lock" }}
 
-      # Bundle install dependencies
+      - rum: gem update --system
       - run: bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs 4 --retry 3
 
       # Cache Dependencies
