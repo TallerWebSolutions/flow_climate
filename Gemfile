@@ -35,6 +35,7 @@ group :test, :development do
   gem 'database_cleaner'
   gem 'fabrication'
   gem 'faker'
+  gem 'parallel_tests'
   gem 'parser'
   gem 'rspec-collection_matchers'
   gem 'rspec-rails'
@@ -44,6 +45,7 @@ group :test, :development do
   gem 'rubocop-rspec'
   gem 'shoulda-matchers'
   gem 'simplecov', require: false
+  gem 'simplecov-parallel'
   gem 'webmock'
 end
 

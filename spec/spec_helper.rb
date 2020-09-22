@@ -3,13 +3,14 @@
 ENV['RAILS_ENV'] ||= 'test'
 
 require 'simplecov'
+require 'simplecov/parallel'
 
-SimpleCov.start 'rails' do
-  minimum_coverage 100
-  add_group 'Repositories', 'app/repositories'
-  add_group 'Services', 'app/services'
-  add_group 'Uploaders', 'app/uploaders'
-end
+SimpleCov::Parallel.activate
+SimpleCov.merge_timeout 3600
+SimpleCov.minimum_coverage 100
+
+SimpleCov.start('rails') { coverage_dir 'tmp/coverage' }
+
 SimpleCov.command_name 'RSpec'
 
 require File.expand_path('../config/environment', __dir__)
@@ -60,14 +61,23 @@ RSpec.configure do |config|
   config.shared_context_metadata_behavior = :apply_to_host_groups
 
   config.before(:suite) do
-    DatabaseCleaner.strategy = :transaction
-    DatabaseCleaner.clean_with :truncation, except: [ActiveRecord::InternalMetadata.table_name]
+    DatabaseCleaner.clean_with(:transaction)
   end
 
-  config.around do |example|
-    DatabaseCleaner.cleaning do
-      example.run
-    end
+  config.before(:each) do
+    DatabaseCleaner.strategy = :transaction
+  end
+
+  config.before(:each, type: :feature) do
+    DatabaseCleaner.strategy = :truncation
+  end
+
+  config.before(:each) do
+    DatabaseCleaner.start
+  end
+
+  config.after(:each) do
+    DatabaseCleaner.clean
   end
 
   config.include ActiveJob::TestHelper

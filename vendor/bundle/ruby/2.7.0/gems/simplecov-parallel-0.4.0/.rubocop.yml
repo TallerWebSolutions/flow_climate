@@ -1,0 +1,32 @@
+AllCops:
+  Exclude:
+    - fixtures/**/*
+    - vendor/**/*
+  TargetRubyVersion: 2.1
+
+Metrics/BlockLength:
+  Exclude:
+    - spec/**/*
+
+Metrics/LineLength:
+  Max: 100
+
+Style/ClassAndModuleChildren:
+  Exclude:
+    - spec/**/*
+
+Style/Documentation:
+  Enabled: false
+
+Style/EmptyElse:
+  Enabled: false
+
+Style/GuardClause:
+  Enabled: false
+
+Style/RegexpLiteral:
+  Exclude:
+    - '*.gemspec'
+
+Style/SingleLineBlockParams:
+  Enabled: false

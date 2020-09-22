@@ -85,6 +85,7 @@ GEM
       image_processing (~> 1.1)
       mimemagic (>= 0.3.0)
       mini_mime (>= 0.1.3)
+    circleci-parallel (0.5.0)
     cloudinary (1.17.1)
       aws_cf_signer
       rest-client
@@ -213,6 +214,8 @@ GEM
     oj (3.10.14)
     orm_adapter (0.5.0)
     parallel (1.19.2)
+    parallel_tests (3.3.0)
+      parallel
     parser (2.7.1.4)
       ast (~> 2.4.1)
     path_expander (1.1.0)
@@ -362,6 +365,9 @@ GEM
       docile (~> 1.1)
       simplecov-html (~> 0.11)
     simplecov-html (0.12.2)
+    simplecov-parallel (0.4.0)
+      circleci-parallel (~> 0.5)
+      simplecov (~> 0.15)
     slack-notifier (2.3.2)
     sprockets (4.0.2)
       concurrent-ruby (~> 1.0)
@@ -436,6 +442,7 @@ DEPENDENCIES
   memory_profiler
   mini_magick
   oj
+  parallel_tests
   parser
   pg
   puma
@@ -457,6 +464,7 @@ DEPENDENCIES
   sidekiq
   sidekiq-limit_fetch
   simplecov
+  simplecov-parallel
   slack-notifier
   stackprof
   traceroute
