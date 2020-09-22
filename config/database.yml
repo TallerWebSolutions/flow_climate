@@ -12,7 +12,8 @@ development:
 test:
   <<: *default
   database: flowcontrol_test
-  username:
+  username: postgres
+  password:
 
 production:
   <<: *default

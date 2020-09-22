@@ -6,7 +6,7 @@ jobs:
       - image: circleci/ruby:2.7.1
         environment:
           PGHOST: localhost
-          PGUSER: ""
+          PGUSER: "postgres"
           RAILS_ENV: test
       - image: postgres:12.4
         environment:
