@@ -13,6 +13,7 @@ before_install:
   - echo America/Sao_Paulo | sudo tee /etc/timezone
   - sudo dpkg-reconfigure --frontend noninteractive tzdata
   - gem install bundler
+  - bundle install --path vendor/bundle
 services:
   - postgresql
 addons:
