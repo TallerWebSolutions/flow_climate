@@ -49,6 +49,12 @@
     font-size: large;
     float: right;
 }
+
+.demand-tag {
+    display: inline-block;
+    margin-bottom: 5px;
+    font-size: medium;
+}
 {
     transition: all 0.6s;
 }
@@ -149,8 +155,11 @@ html {
     text-transform: uppercase;
 }
 
-.bottom-spaced-component {margin-bottom: 8px;}
+.bottom-spaced-component { margin-bottom: 8px; }
 
+.project-deadline-info {
+    margin-bottom: 17px;
+}
 
 .label-hint { color: #768899; }
 
@@ -174,15 +183,21 @@ html {
     flex: 1;
 }
 
-label.required:after{content: " *"}
-
-h1 {font-size: xx-large;}
-
-h2 {
-    font-size: large;
-    margin-bottom: 15px;
-    font-weight: bold;
+.radio-label {
+    margin-left: 5px;
+    margin-right: 20px;
+    font-weight: normal;
 }
+
+.radio-button-quiz {
+    margin-right: 100px;
+}
+
+.check-box-group-label {
+    padding-right: 10px;
+}
+
+label.required:after{content: " *"}
 
 tfoot {
     display: table-footer-group;
@@ -620,7 +635,7 @@ ul.breadcrumb li a:hover {
 }
 
 .summary-card-frame {
-    padding: 0 2px 0px 2px;
+    padding: 0 2px 0 2px;
 }
 
 .summary-card-content {
@@ -661,6 +676,23 @@ ul.breadcrumb li a:hover {
 }
 
 .center-text {
+    text-align: center;
+}
+
+.x-large-font {
+    font-size: x-large;
+}
+
+.larger-font {
+    font-size: larger;
+}
+
+.small-font {
+    font-size: small;
+}
+
+.demand-score {
+    font-size: xx-large;
     text-align: center;
 }
 
@@ -743,10 +775,6 @@ ul.breadcrumb li a:hover {
 
 
  */
-
-input[type=radio] {
-    transform: scale(1.5);
-}
 
 .visible {
     display: block;
