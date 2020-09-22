@@ -11,9 +11,7 @@ jobs:
       - image: postgres:12.4
         environment:
           POSTGRES_HOST_AUTH_METHOD: trust
-          POSTGRES_USER: ""
           POSTGRES_DB: flowcontrol_test
-          POSTGRES_PASSWORD: ""
     steps:
       - run: sudo apt-get update
       - run: sudo apt-get install nodejs
