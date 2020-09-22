@@ -463,7 +463,6 @@ DEPENDENCIES
   shoulda-matchers
   sidekiq
   sidekiq-limit_fetch
-  simplecov
   simplecov-parallel
   slack-notifier
   stackprof

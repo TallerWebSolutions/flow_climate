@@ -2,16 +2,12 @@
 
 ENV['RAILS_ENV'] ||= 'test'
 
-require 'simplecov'
 require 'simplecov/parallel'
-
 SimpleCov::Parallel.activate
-SimpleCov.merge_timeout 3600
 SimpleCov.minimum_coverage 100
-
-SimpleCov.start('rails') { coverage_dir 'tmp/coverage' }
-
-SimpleCov.command_name 'RSpec'
+SimpleCov.start do
+  add_filter 'config/initializers/rack_profiler.rb'
+end
 
 require File.expand_path('../config/environment', __dir__)
 abort('The Rails environment is running in production mode!') if Rails.env.production?
@@ -64,7 +60,7 @@ RSpec.configure do |config|
     DatabaseCleaner.clean_with(:transaction)
   end
 
-  config.before(:each) do
+  config.before do
     DatabaseCleaner.strategy = :transaction
   end
 
@@ -72,11 +68,11 @@ RSpec.configure do |config|
     DatabaseCleaner.strategy = :truncation
   end
 
-  config.before(:each) do
+  config.before do
     DatabaseCleaner.start
   end
 
-  config.after(:each) do
+  config.after do
     DatabaseCleaner.clean
   end
 
