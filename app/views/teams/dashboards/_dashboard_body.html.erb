@@ -75,7 +75,7 @@
          data-prefix=''
          data-tooltipsuffix=''
          data-series='<%= [
-                              { name: I18n.t('charts.lead_time.text'), type: 'scatter', id: 's1', marker: { radius: 2 }, data: statistics_flow_information.lead_time_data_array },
+                              { name: I18n.t('charts.lead_time.text'), type: 'scatter', id: 's1', marker: { radius: 2 }, data: statistics_flow_information.lead_time_data_array.map { |value| value.round(3) } },
                               { name: I18n.t('charts.histogram.text'), type: 'histogram', xAxis: 1, yAxis: 1, baseSeries: 's1', zIndex: -1, tooltip: { valueDecimals: 2 } }
                           ].to_json %>'
          data-decimals='2'>

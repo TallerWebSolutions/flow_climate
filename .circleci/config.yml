@@ -12,33 +12,20 @@ jobs:
         environment:
           POSTGRES_HOST_AUTH_METHOD: trust
           POSTGRES_DB: flowcontrol_test
-    steps:
-      - run: sudo apt-get update
-      - run: sudo apt-get install nodejs
-      - run: sudo apt install postgresql-client
-      - checkout
+  test:
+    parallelism: 4
+    - run: sudo apt-get update
+    - run: sudo apt-get install nodejs
+    - run: sudo apt install postgresql-client
+    - checkout
 
-      # Restore Cached Dependencies
-      - type: cache-restore
-        name: Restore bundle cache
-        key: flowclimate-{{ checksum "Gemfile.lock" }}
+    - run: bundle install
 
-#      - run: gem update --system
-#      - run: bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs 4 --retry 3
-      - run: bundle install
+    # Wait for DB
+    - run: dockerize -wait tcp://localhost:5432 -timeout 1m
 
-      # Cache Dependencies
-      - type: cache-save
-        name: Store bundle cache
-        key: flowclimate-{{ checksum "Gemfile.lock" }}
-        paths:
-          - vendor/bundle
+    # Setup the database
+    - run: bundle exec rails db:structure:load
 
-      # Wait for DB
-      - run: dockerize -wait tcp://localhost:5432 -timeout 1m
-
-      # Setup the database
-      - run: bundle exec rake db:setup
-
-      # Run the tests
-      - run: bundle exec rspec
+    # Run the tests
+    - run: bundle exec rspec

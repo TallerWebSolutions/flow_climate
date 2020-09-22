@@ -232,8 +232,8 @@ class TeamsController < DemandsListController
   end
 
   def build_query_dates
-    @start_date = start_date
-    @end_date = end_date
+    @start_date = Date.new(2020, 9, 6)
+    @end_date = Date.new(2020, 9, 12)
   end
 
   def assign_team
