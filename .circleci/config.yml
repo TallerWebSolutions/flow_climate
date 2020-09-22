@@ -12,20 +12,23 @@ jobs:
         environment:
           POSTGRES_HOST_AUTH_METHOD: trust
           POSTGRES_DB: flowcontrol_test
-  test:
-    - parallelism: 4
-    - run: sudo apt-get update
-    - run: sudo apt-get install nodejs
-    - run: sudo apt install postgresql-client
-    - checkout
+    steps:
+      - run: sudo apt-get update
+      - run: sudo apt-get install nodejs
+      - run: sudo apt install postgresql-client
+      - checkout
 
-    - run: bundle install
+      - run: bundle install
 
-    # Wait for DB
-    - run: dockerize -wait tcp://localhost:5432 -timeout 1m
+      # Wait for DB
+      - run: dockerize -wait tcp://localhost:5432 -timeout 1m
 
-    # Setup the database
-    - run: bundle exec rails db:structure:load
+      # Setup the database
+      - run: bundle exec rails db:structure:load
 
-    # Run the tests
-    - run: bundle exec rspec
+      # Run the tests
+      - run:
+        name: Tests
+        command: |
+          TESTFILES=$(circleci tests glob "spec/**/*.rb" | circleci tests split --split-by=timings)
+          bundle exec rspec -- ${TESTFILES}
