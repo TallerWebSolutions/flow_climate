@@ -5,6 +5,7 @@ jobs:
     docker:
       - image: circleci/ruby:2.7.1
         environment:
+          POSTGRES_HOST_AUTH_METHOD: trust
           PGHOST: localhost
           PGUSER: ""
           RAILS_ENV: test
