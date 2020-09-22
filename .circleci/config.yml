@@ -18,17 +18,28 @@ jobs:
       - run: sudo apt install postgresql-client
       - checkout
 
+      # Restore Cached Dependencies
+      - type: cache-restore
+        name: Restore bundle cache
+        key: flowclimate-{{ checksum "Gemfile.lock" }}
+
+#      - run: gem update --system
+#      - run: bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs 4 --retry 3
       - run: bundle install
+
+      # Cache Dependencies
+      - type: cache-save
+        name: Store bundle cache
+        key: flowclimate-{{ checksum "Gemfile.lock" }}
+        paths:
+          - vendor/bundle
 
       # Wait for DB
       - run: dockerize -wait tcp://localhost:5432 -timeout 1m
 
       # Setup the database
-      - run: bundle exec rails db:structure:load
+      - run: bundle exec rake db:setup
 
       # Run the tests
-      - run:
-        name: Tests
-        command: |
-          TESTFILES=$(circleci tests glob "spec/**/*.rb" | circleci tests split --split-by=timings)
-          bundle exec rspec -- ${TESTFILES}
+      - run: bundle exec rspec
+      - run: rubocop
