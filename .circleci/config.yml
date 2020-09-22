@@ -13,7 +13,7 @@ jobs:
           POSTGRES_HOST_AUTH_METHOD: trust
           POSTGRES_DB: flowcontrol_test
   test:
-    parallelism: 4
+    - parallelism: 4
     - run: sudo apt-get update
     - run: sudo apt-get install nodejs
     - run: sudo apt install postgresql-client
