@@ -1,60 +1,41 @@
-version: 2.1
-orbs:
-  ruby: circleci/ruby@1.0
-  node: circleci/node@2
-
+version: 2
 jobs:
   build:
+    working_directory: ~/flowclimate
     docker:
-      - image: circleci/ruby:2.7.1-node
-      - run: sudo apt-get update
-      - run: sudo apt install postgresql-client
-
-    executor: ruby/default
-  test:
-    parallelism: 3
-    docker:
-      - image: cimg/ruby:2.7-node
-      - image: circleci/postgres:12.4
+      - image: circleci/ruby:2.7.1
         environment:
-          POSTGRES_HOST_AUTH_METHOD: trust
-          POSTGRES_USER: "postgres"
+          PGHOST: localhost
+          PGUSER: ""
+          RAILS_ENV: test
+      - image: postgres:12.4
+        environment:
+          POSTGRES_USER: ""
           POSTGRES_DB: flowcontrol_test
           POSTGRES_PASSWORD: ""
-          PAGER: cat # prevent psql commands triggering pager
-    environment:
-      BUNDLE_JOBS: "3"
-      BUNDLE_RETRY: "3"
-      PGHOST: 127.0.0.1
-      PGUSER: "postgres"
-      PGPASSWORD: ""
-      RAILS_ENV: test
     steps:
       - checkout
-      - run:
-          name: Install Dependencies
-          command: bundle install
-      - node/install-packages:
-          pkg-manager: yarn
-          cache-key: "yarn.lock"
-      - run:
-          name: Wait for DB
-          command: dockerize -wait tcp://localhost:5432 -timeout 1m
-      - run:
-          name: Database setup
-          command: RAILS_ENV=test bundle exec rails db:structure:load --trace
-      - run:
-          name: run the specs
-          command: bundle exec rspec
-      - run:
-          name: run rubocop checking
-          command: bundle exec rubocop
 
-workflows:
-  version: 2
-  build_and_test:
-    jobs:
-      - build
-      - test:
-          requires:
-            - build
+      # Restore Cached Dependencies
+      - type: cache-restore
+        name: Restore bundle cache
+        key: flowclimate-{{ checksum "Gemfile.lock" }}
+
+      # Bundle install dependencies
+      - run: bundle install
+
+      # Cache Dependencies
+      - type: cache-save
+        name: Store bundle cache
+        key: flowclimate-{{ checksum "Gemfile.lock" }}
+        paths:
+          - vendor/bundle
+
+      # Wait for DB
+      - run: dockerize -wait tcp://localhost:5432 -timeout 1m
+
+      # Setup the database
+      - run: bundle exec rake db:setup
+
+      # Run the tests
+      - run: bundle exec rspec
