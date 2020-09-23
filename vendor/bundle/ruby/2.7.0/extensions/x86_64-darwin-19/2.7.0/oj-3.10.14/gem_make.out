@@ -1,5 +1,5 @@
 current directory: /Users/celsomartins/workspace/taller/flow_climate/vendor/bundle/ruby/2.7.0/gems/oj-3.10.14/ext/oj
-/Users/celsomartins/.rvm/rubies/ruby-2.7.1/bin/ruby -I /Users/celsomartins/.rvm/rubies/ruby-2.7.1/lib/ruby/site_ruby/2.7.0 -r ./siteconf20200923-9643-19bp1a7.rb extconf.rb
+/Users/celsomartins/.rvm/rubies/ruby-2.7.1/bin/ruby -I /Users/celsomartins/.rvm/rubies/ruby-2.7.1/lib/ruby/site_ruby/2.7.0 -r ./siteconf20200923-42283-uu65ak.rb extconf.rb
 >>>>> Creating Makefile for ruby version 2.7.1 on x86_64-darwin19 <<<<<
 checking for rb_time_timespec()... yes
 checking for rb_ivar_count()... yes
@@ -51,4 +51,4 @@ linking shared-object oj/oj.bundle
 
 current directory: /Users/celsomartins/workspace/taller/flow_climate/vendor/bundle/ruby/2.7.0/gems/oj-3.10.14/ext/oj
 make "DESTDIR=" install
-/usr/local/opt/coreutils/bin/ginstall -c -m 0755 oj.bundle ./.gem.20200923-9643-dgkx1w/oj
+/usr/local/opt/coreutils/bin/ginstall -c -m 0755 oj.bundle ./.gem.20200923-42283-1bw3zjf/oj
