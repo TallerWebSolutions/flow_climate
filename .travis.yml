@@ -25,12 +25,9 @@ before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
-  - sudo apt-get update
-  - sudo apt-get install postgresql-client
 script:
-  - RAILS_ENV=test bundle exec rake db:create
-  - RAILS_ENV=test bundle exec rails db:schema:load
-  - RAILS_ENV=test bundle exec rails db:test:prepare
+  - bundle exec rake db:create
+  - bundle exec rake db:schema:load
   - bundle exec rspec spec/
   - bundle exec rubocop
 after_script:
