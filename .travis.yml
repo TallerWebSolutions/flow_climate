@@ -27,7 +27,7 @@ before_script:
   - ./cc-test-reporter before-build
 script:
   - bundle exec rake db:create
-  - bundle exec rake db:schema:load
+  - bundle exec rake db:structure:load
   - bundle exec rspec spec/
   - bundle exec rubocop
 after_script:
