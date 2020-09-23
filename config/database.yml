@@ -11,7 +11,7 @@ development:
 
 test:
   <<: *default
-  database: flowcontrol_test<%= Figaro.env.test_env_number %>
+  database: flowcontrol_test
   username: postgres
   password:
 
