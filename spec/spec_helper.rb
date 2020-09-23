@@ -2,15 +2,12 @@
 
 ENV['RAILS_ENV'] ||= 'test'
 
-require 'simplecov'
-
-SimpleCov.start 'rails' do
-  minimum_coverage 100
-  add_group 'Repositories', 'app/repositories'
-  add_group 'Services', 'app/services'
-  add_group 'Uploaders', 'app/uploaders'
+require 'simplecov/parallel'
+SimpleCov::Parallel.activate
+SimpleCov.minimum_coverage 100
+SimpleCov.start do
+  add_filter 'config/initializers/rack_profiler.rb'
 end
-SimpleCov.command_name 'RSpec'
 
 require File.expand_path('../config/environment', __dir__)
 abort('The Rails environment is running in production mode!') if Rails.env.production?
@@ -60,14 +57,23 @@ RSpec.configure do |config|
   config.shared_context_metadata_behavior = :apply_to_host_groups
 
   config.before(:suite) do
-    DatabaseCleaner.strategy = :transaction
-    DatabaseCleaner.clean_with :truncation, except: [ActiveRecord::InternalMetadata.table_name]
+    DatabaseCleaner.clean_with(:transaction)
   end
 
-  config.around do |example|
-    DatabaseCleaner.cleaning do
-      example.run
-    end
+  config.before do
+    DatabaseCleaner.strategy = :transaction
+  end
+
+  config.before(:each, type: :feature) do
+    DatabaseCleaner.strategy = :truncation
+  end
+
+  config.before do
+    DatabaseCleaner.start
+  end
+
+  config.after do
+    DatabaseCleaner.clean
   end
 
   config.include ActiveJob::TestHelper

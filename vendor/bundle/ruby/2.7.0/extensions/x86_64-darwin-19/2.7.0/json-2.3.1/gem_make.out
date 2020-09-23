@@ -1,5 +1,5 @@
 current directory: /Users/celsomartins/workspace/taller/flow_climate/vendor/bundle/ruby/2.7.0/gems/json-2.3.1/ext/json
-/Users/celsomartins/.rvm/rubies/ruby-2.7.1/bin/ruby -I /Users/celsomartins/.rvm/rubies/ruby-2.7.1/lib/ruby/site_ruby/2.7.0 -r ./siteconf20200921-74400-1bz8ouu.rb extconf.rb
+/Users/celsomartins/.rvm/rubies/ruby-2.7.1/bin/ruby -I /Users/celsomartins/.rvm/rubies/ruby-2.7.1/lib/ruby/site_ruby/2.7.0 -r ./siteconf20200923-9643-17diltn.rb extconf.rb
 creating Makefile
 
 current directory: /Users/celsomartins/workspace/taller/flow_climate/vendor/bundle/ruby/2.7.0/gems/json-2.3.1/ext/json
