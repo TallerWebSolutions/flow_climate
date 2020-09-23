@@ -32,7 +32,7 @@ script:
   - bundle exec rspec spec/
   - bundle exec rubocop
   - bundle exec rake assets:precompile
-  - git add public/assets
+  - git add .
   - git commit -am 'assets precompiled'
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
