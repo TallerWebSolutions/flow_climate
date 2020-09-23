@@ -9,13 +9,8 @@ services:
 before_install:
   - echo America/Sao_Paulo | sudo tee /etc/timezone
   - sudo dpkg-reconfigure --frontend noninteractive tzdata
-  - gem install bundler
 addons:
   postgresql: '12'
-  apt:
-    packages:
-    - postgresql-12
-    - postgresql-client-12
 env:
   global:
     - PGPORT=5433
@@ -26,6 +21,9 @@ before_script:
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
 script:
+  - sudo apt-get update
+  - sudo apt-get postgresql-12
+  - sudo apt-get postgresql-client-12
   - bundle exec rake db:create
   - bundle exec rake db:structure:load
   - bundle exec rspec spec/
