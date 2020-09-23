@@ -28,7 +28,7 @@ before_script:
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
 script:
-  - bundle exec rake db:structure:load
+  - bundle exec rake db:migrate RAILS_ENV=test
   - bundle exec rake parallel:create
   - bundle exec rake parallel:spec
   - bundle exec rubocop
