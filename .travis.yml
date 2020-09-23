@@ -4,26 +4,27 @@ language: ruby
 cache: bundler
 rvm:
   - 2.7.1
-services:
-  - postgresql
-before_install:
-  - echo America/Sao_Paulo | sudo tee /etc/timezone
-  - sudo dpkg-reconfigure --frontend noninteractive tzdata
-addons:
-  postgresql: '12'
 env:
   global:
     - PGPORT=5433
     - CC_TEST_REPORTER_ID=70ab5420793b8b581d83df1dc8dcc49ca7c48d3deb51c9f9a8c2a5e0899c8f71
+services:
+    - postgresql
+before_install:
+    - echo America/Sao_Paulo | sudo tee /etc/timezone
+    - sudo dpkg-reconfigure --frontend noninteractive tzdata
+addons:
+  postgresql: '12'
+  apt:
+    packages:
+      - postgresql-12
+      - postgresql-client-12
 before_script:
   - cp config/database.yml.travis config/database.yml
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
 script:
-  - sudo apt-get update
-  - sudo apt-get postgresql-12
-  - sudo apt-get postgresql-client-12
   - bundle exec rake db:create
   - bundle exec rake db:structure:load
   - bundle exec rspec spec/
