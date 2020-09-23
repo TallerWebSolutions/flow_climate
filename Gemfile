@@ -36,7 +36,6 @@ group :test, :development do
   gem 'fabrication'
   gem 'faker'
   gem 'parallel_tests'
-  gem 'parser'
   gem 'rspec-collection_matchers'
   gem 'rspec-rails'
   gem 'rubocop'
