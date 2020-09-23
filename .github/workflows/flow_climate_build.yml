@@ -15,7 +15,7 @@ jobs:
           ruby-version: 2.7.1
       - name: Install gems
         run: |
-          bundle install
+          bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs=4 --retry=3
 
       - name: Run linters
         run: |
