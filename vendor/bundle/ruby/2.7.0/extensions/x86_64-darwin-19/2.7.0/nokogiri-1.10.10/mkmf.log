@@ -68,9 +68,9 @@ have_iconv?: checking for iconv using --with-opt-* flags... --------------------
 "gcc -o conftest -I/Users/celsomartins/.rvm/rubies/ruby-2.7.1/include/ruby-2.7.0/x86_64-darwin19 -I/Users/celsomartins/.rvm/rubies/ruby-2.7.1/include/ruby-2.7.0/ruby/backward -I/Users/celsomartins/.rvm/rubies/ruby-2.7.1/include/ruby-2.7.0 -I.  -I/usr/local/opt/libyaml/include -I/usr/local/opt/libksba/include -I/usr/local/opt/readline/include -I/usr/local/opt/zlib/include -I/usr/local/opt/openssl@1.1/include -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT   -O3 -ggdb3 -Wall -Wextra -Wdeprecated-declarations -Wdivision-by-zero -Wimplicit-function-declaration -Wimplicit-int -Wpointer-arith -Wshorten-64-to-32 -Wwrite-strings -Wmissing-noreturn -Wno-constant-logical-operand -Wno-long-long -Wno-missing-field-initializers -Wno-overlength-strings -Wno-parentheses-equality -Wno-self-assign -Wno-tautological-compare -Wno-unused-parameter -Wno-unused-value -Wunused-variable -Wextra-tokens  -fno-common -pipe  -I /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/libxml2 -O3 -Wall -Wcast-qual -Wwrite-strings -Wmissing-noreturn -Winline conftest.c  -L. -L/Users/celsomartins/.rvm/rubies/ruby-2.7.1/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/libksba/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/zlib/lib -L/usr/local/opt/openssl@1.1/lib -L. -fstack-protector-strong -L/usr/local/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/libksba/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/zlib/lib -L/usr/local/opt/openssl@1.1/lib     -lruby.2.7    "
 Undefined symbols for architecture x86_64:
   "_iconv", referenced from:
-      _main in conftest-c73431.o
+      _main in conftest-3a02e2.o
   "_iconv_open", referenced from:
-      _main in conftest-c73431.o
+      _main in conftest-3a02e2.o
 ld: symbol(s) not found for architecture x86_64
 clang: error: linker command failed with exit code 1 (use -v to see invocation)
 checked program was:
