@@ -27,7 +27,7 @@ before_script:
   - ./cc-test-reporter before-build
 script:
   - RAILS_ENV=test bundle exec rake db:create
-  - RAILS_ENV=test bundle exec rake db:schema:load
+  - RAILS_ENV=test bundle exec rake db:structure:load
   - bundle exec rspec spec/
   - bundle exec rubocop
 after_script:
