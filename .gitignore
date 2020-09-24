@@ -32,3 +32,6 @@ logfile
 .ruby-gemset
 .ruby-version
 .idea/
+
+# Ignore vendor/bundle folder
+./vendor/bundle
