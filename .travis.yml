@@ -1,7 +1,6 @@
 dist: trusty
 sudo: required
 language: ruby
-cache: bundler
 rvm:
   - 2.7.1
 env:
@@ -13,6 +12,7 @@ services:
 before_install:
     - echo America/Sao_Paulo | sudo tee /etc/timezone
     - sudo dpkg-reconfigure --frontend noninteractive tzdata
+    - bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs=4 --retry=3
 addons:
   postgresql: '10'
   apt:
