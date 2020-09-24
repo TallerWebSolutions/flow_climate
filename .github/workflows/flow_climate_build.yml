@@ -81,8 +81,7 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
     steps:
-      name: Add Heroku remote
-        run: heroku git:remote -a flowclimatestaging
+      run: heroku git:remote -a flowclimatestaging
       - uses: actions/checkout@v2
       - uses: akhileshns/heroku-deploy@v3.5.6 # This is the action
         with:
