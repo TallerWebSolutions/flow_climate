@@ -85,8 +85,8 @@ jobs:
         with:
           fetch-depth: 0
       - uses: akhileshns/heroku-deploy@v3.5.6
-        branch: develop
         with:
+          branch: develop
           dontuseforce: false
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "flowclimatestaging"
