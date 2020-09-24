@@ -6,13 +6,15 @@ default: &default
 development:
   <<: *default
   database: flowcontrol_development
+  host: localhost
   username:
   password:
 
 test:
   <<: *default
   database: flowcontrol_test
-  username: postgres
+  host: localhost
+  username:
   password:
 
 production:
