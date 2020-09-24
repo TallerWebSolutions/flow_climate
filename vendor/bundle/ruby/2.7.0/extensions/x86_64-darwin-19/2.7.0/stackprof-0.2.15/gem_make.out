@@ -1,5 +1,5 @@
 current directory: /Users/celsomartins/workspace/taller/flow_climate/vendor/bundle/ruby/2.7.0/gems/stackprof-0.2.15/ext/stackprof
-/Users/celsomartins/.rbenv/versions/2.7.1/bin/ruby -I /Users/celsomartins/.rbenv/versions/2.7.1/lib/ruby/2.7.0 -r ./siteconf20200923-89487-y0m909.rb extconf.rb
+/Users/celsomartins/.rbenv/versions/2.7.1/bin/ruby -I /Users/celsomartins/.rbenv/versions/2.7.1/lib/ruby/2.7.0 -r ./siteconf20200923-3123-20xchi.rb extconf.rb
 checking for rb_postponed_job_register_one()... yes
 checking for rb_profile_frames()... yes
 checking for rb_tracepoint_new()... yes
@@ -53,4 +53,4 @@ linking shared-object stackprof/stackprof.bundle
 
 current directory: /Users/celsomartins/workspace/taller/flow_climate/vendor/bundle/ruby/2.7.0/gems/stackprof-0.2.15/ext/stackprof
 make "DESTDIR=" install
-/usr/local/bin/ginstall -c -m 0755 stackprof.bundle ./.gem.20200923-89487-104id2s/stackprof
+/usr/local/bin/ginstall -c -m 0755 stackprof.bundle ./.gem.20200923-3123-51or0n/stackprof
