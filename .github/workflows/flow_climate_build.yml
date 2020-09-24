@@ -11,25 +11,21 @@ jobs:
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
+      - name: Ruby gem cache
+        uses: actions/cache@v1
         with:
-          ruby-version: 2.7.1
-      - name: Cache Ruby Gems
-          uses: actions/cache@v2
-          with:
-            path: vendor/bundle
-            key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
-            restore-keys: |
-              ${{ runner.os }}-gems-
-
-          - name: Bundle Install
-            run: |
-              bundle config path vendor/bundle
-              bundle install --jobs 4 --retry 3
-      - name: Run linters
-        env:
-          RAILS_ENV: test
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
+      - name: Install gems
         run: |
-          bundle exec rubocop --parallel
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
+      - name: Run linters
+        run: |
+          bin/rubocop --parallel
+
   tests:
     name: Tests
     runs-on: ubuntu-latest
@@ -37,13 +33,10 @@ jobs:
       postgres:
         image: postgres:12
         env:
-          POSTGRES_HOST: "localhost"
+          POSTGRES_DB: flowcontrol_test
           POSTGRES_USER: ""
-          POSTGRES_DB: "flowcontrol_test"
           POSTGRES_PASSWORD: ""
-        ports:
-          - 5432:5432
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+        ports: ["5432:5432"]
 
     steps:
       - name: Checkout code
@@ -51,26 +44,23 @@ jobs:
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
+      - name: Ruby gem cache
+        uses: actions/cache@v1
         with:
-          ruby-version: 2.7.1
-      - name: Cache Ruby Gems
-          uses: actions/cache@v2
-          with:
-            path: vendor/bundle
-            key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
-            restore-keys: |
-              ${{ runner.os }}-gems-
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
+      - name: Install gems
+        run: |
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
 
-          - name: Bundle Install
-            run: |
-              bundle config path vendor/bundle
-              bundle install --jobs 4 --retry 3
       - name: Setup test database
         env:
           RAILS_ENV: test
           PGHOST: localhost
           PGUSER: ""
-          POSTGRES_PORT: ${{ job.services.postgres.ports[5432] }}
         run: |
           bin/rails db:setup
 
