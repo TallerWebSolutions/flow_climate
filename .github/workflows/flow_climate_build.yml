@@ -38,7 +38,9 @@ jobs:
           POSTGRES_DB: flowcontrol_test
           POSTGRES_USER: ""
           POSTGRES_PASSWORD: ""
-        ports: ["5432:5432"]
+        ports:
+        - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
       - name: Checkout code
@@ -65,6 +67,8 @@ jobs:
           RAILS_ENV: test
           PG_HOST: localhost
           PG_USER: ""
+          PG_PASSWORD: ""
+          PG_PORT: ${{ job.services.postgres.ports['5432'] }}
         run: |
           bundle exec rails db:setup
 
