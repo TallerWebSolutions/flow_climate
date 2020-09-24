@@ -1,5 +1,5 @@
 current directory: /Users/celsomartins/workspace/taller/flow_climate/vendor/bundle/ruby/2.7.0/gems/nio4r-2.5.4/ext/nio4r
-/Users/celsomartins/.rvm/rubies/ruby-2.7.1/bin/ruby -I /Users/celsomartins/.rvm/rubies/ruby-2.7.1/lib/ruby/site_ruby/2.7.0 -r ./siteconf20200923-58050-l01om2.rb extconf.rb
+/Users/celsomartins/.rvm/rubies/ruby-2.7.1/bin/ruby -I /Users/celsomartins/.rvm/rubies/ruby-2.7.1/lib/ruby/site_ruby/2.7.0 -r ./siteconf20200923-73174-zh6ow8.rb extconf.rb
 checking for unistd.h... yes
 checking for linux/aio_abi.h... no
 checking for sys/select.h... yes
@@ -99,4 +99,4 @@ linking shared-object nio4r_ext.bundle
 
 current directory: /Users/celsomartins/workspace/taller/flow_climate/vendor/bundle/ruby/2.7.0/gems/nio4r-2.5.4/ext/nio4r
 make "DESTDIR=" install
-/usr/local/opt/coreutils/bin/ginstall -c -m 0755 nio4r_ext.bundle ./.gem.20200923-58050-lupybm
+/usr/local/opt/coreutils/bin/ginstall -c -m 0755 nio4r_ext.bundle ./.gem.20200923-73174-zjddbo

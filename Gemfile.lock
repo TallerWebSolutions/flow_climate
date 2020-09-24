@@ -443,6 +443,7 @@ DEPENDENCIES
   mini_magick
   oj
   parallel_tests
+  parser (~> 2.7, >= 2.7.1.4)
   pg
   puma
   rack-mini-profiler
