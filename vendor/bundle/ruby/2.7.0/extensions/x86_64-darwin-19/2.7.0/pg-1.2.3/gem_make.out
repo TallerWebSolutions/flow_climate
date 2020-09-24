@@ -1,5 +1,5 @@
 current directory: /Users/celsomartins/workspace/taller/flow_climate/vendor/bundle/ruby/2.7.0/gems/pg-1.2.3/ext
-/Users/celsomartins/.rbenv/versions/2.7.1/bin/ruby -I /Users/celsomartins/.rbenv/versions/2.7.1/lib/ruby/2.7.0 -r ./siteconf20200923-16507-1jnch9h.rb extconf.rb
+/Users/celsomartins/.rvm/rubies/ruby-2.7.1/bin/ruby -I /Users/celsomartins/.rvm/rubies/ruby-2.7.1/lib/ruby/2.7.0 -r ./siteconf20200924-48145-39om27.rb extconf.rb
 checking for pg_config... yes
 Using config values from /usr/local/bin/pg_config
 checking for libpq-fe.h... yes
@@ -33,16 +33,16 @@ compiling pg_coder.c
 pg_coder.c:216:34: warning: implicit conversion loses integer precision: 'long' to 'int' [-Wshorten-64-to-32]
         res = this->dec_func(this, val, RSTRING_LEN(argv[0]), tuple, field, ENCODING_GET(argv[0]));
               ~~~~                      ^~~~~~~~~~~~~~~~~~~~
-/Users/celsomartins/.rbenv/versions/2.7.1/include/ruby-2.7.0/ruby/ruby.h:1007:6: note: expanded from macro 'RSTRING_LEN'
+/Users/celsomartins/.rvm/rubies/ruby-2.7.1/include/ruby-2.7.0/ruby/ruby.h:1007:6: note: expanded from macro 'RSTRING_LEN'
      RSTRING_EMBED_LEN(str) : \
      ^~~~~~~~~~~~~~~~~~~~~~
-/Users/celsomartins/.rbenv/versions/2.7.1/include/ruby-2.7.0/ruby/ruby.h:1003:6: note: expanded from macro 'RSTRING_EMBED_LEN'
+/Users/celsomartins/.rvm/rubies/ruby-2.7.1/include/ruby-2.7.0/ruby/ruby.h:1003:6: note: expanded from macro 'RSTRING_EMBED_LEN'
      (long)((RBASIC(str)->flags >> RSTRING_EMBED_LEN_SHIFT) & \
      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pg_coder.c:216:34: warning: implicit conversion loses integer precision: 'long' to 'int' [-Wshorten-64-to-32]
         res = this->dec_func(this, val, RSTRING_LEN(argv[0]), tuple, field, ENCODING_GET(argv[0]));
               ~~~~                      ^~~~~~~~~~~~~~~~~~~~
-/Users/celsomartins/.rbenv/versions/2.7.1/include/ruby-2.7.0/ruby/ruby.h:1008:28: note: expanded from macro 'RSTRING_LEN'
+/Users/celsomartins/.rvm/rubies/ruby-2.7.1/include/ruby-2.7.0/ruby/ruby.h:1008:28: note: expanded from macro 'RSTRING_LEN'
      RSTRING(str)->as.heap.len)
      ~~~~~~~~~~~~~~~~~~~~~~^~~
 2 warnings generated.
@@ -51,16 +51,16 @@ compiling pg_copy_coder.c
 pg_copy_coder.c:228:15: warning: implicit conversion loses integer precision: 'long' to 'int' [-Wshorten-64-to-32]
                                         strlen = RSTRING_LEN(subint);
                                                ~ ^~~~~~~~~~~~~~~~~~~
-/Users/celsomartins/.rbenv/versions/2.7.1/include/ruby-2.7.0/ruby/ruby.h:1007:6: note: expanded from macro 'RSTRING_LEN'
+/Users/celsomartins/.rvm/rubies/ruby-2.7.1/include/ruby-2.7.0/ruby/ruby.h:1007:6: note: expanded from macro 'RSTRING_LEN'
      RSTRING_EMBED_LEN(str) : \
      ^~~~~~~~~~~~~~~~~~~~~~
-/Users/celsomartins/.rbenv/versions/2.7.1/include/ruby-2.7.0/ruby/ruby.h:1003:6: note: expanded from macro 'RSTRING_EMBED_LEN'
+/Users/celsomartins/.rvm/rubies/ruby-2.7.1/include/ruby-2.7.0/ruby/ruby.h:1003:6: note: expanded from macro 'RSTRING_EMBED_LEN'
      (long)((RBASIC(str)->flags >> RSTRING_EMBED_LEN_SHIFT) & \
      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pg_copy_coder.c:228:15: warning: implicit conversion loses integer precision: 'long' to 'int' [-Wshorten-64-to-32]
                                         strlen = RSTRING_LEN(subint);
                                                ~ ^~~~~~~~~~~~~~~~~~~
-/Users/celsomartins/.rbenv/versions/2.7.1/include/ruby-2.7.0/ruby/ruby.h:1008:28: note: expanded from macro 'RSTRING_LEN'
+/Users/celsomartins/.rvm/rubies/ruby-2.7.1/include/ruby-2.7.0/ruby/ruby.h:1008:28: note: expanded from macro 'RSTRING_LEN'
      RSTRING(str)->as.heap.len)
      ~~~~~~~~~~~~~~~~~~~~~~^~~
 pg_copy_coder.c:534:23: warning: implicit conversion loses integer precision: 'long' to 'int' [-Wshorten-64-to-32]
@@ -72,16 +72,16 @@ compiling pg_record_coder.c
 pg_record_coder.c:196:15: warning: implicit conversion loses integer precision: 'long' to 'int' [-Wshorten-64-to-32]
                                         strlen = RSTRING_LEN(subint);
                                                ~ ^~~~~~~~~~~~~~~~~~~
-/Users/celsomartins/.rbenv/versions/2.7.1/include/ruby-2.7.0/ruby/ruby.h:1007:6: note: expanded from macro 'RSTRING_LEN'
+/Users/celsomartins/.rvm/rubies/ruby-2.7.1/include/ruby-2.7.0/ruby/ruby.h:1007:6: note: expanded from macro 'RSTRING_LEN'
      RSTRING_EMBED_LEN(str) : \
      ^~~~~~~~~~~~~~~~~~~~~~
-/Users/celsomartins/.rbenv/versions/2.7.1/include/ruby-2.7.0/ruby/ruby.h:1003:6: note: expanded from macro 'RSTRING_EMBED_LEN'
+/Users/celsomartins/.rvm/rubies/ruby-2.7.1/include/ruby-2.7.0/ruby/ruby.h:1003:6: note: expanded from macro 'RSTRING_EMBED_LEN'
      (long)((RBASIC(str)->flags >> RSTRING_EMBED_LEN_SHIFT) & \
      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pg_record_coder.c:196:15: warning: implicit conversion loses integer precision: 'long' to 'int' [-Wshorten-64-to-32]
                                         strlen = RSTRING_LEN(subint);
                                                ~ ^~~~~~~~~~~~~~~~~~~
-/Users/celsomartins/.rbenv/versions/2.7.1/include/ruby-2.7.0/ruby/ruby.h:1008:28: note: expanded from macro 'RSTRING_LEN'
+/Users/celsomartins/.rvm/rubies/ruby-2.7.1/include/ruby-2.7.0/ruby/ruby.h:1008:28: note: expanded from macro 'RSTRING_LEN'
      RSTRING(str)->as.heap.len)
      ~~~~~~~~~~~~~~~~~~~~~~^~~
 2 warnings generated.
@@ -100,7 +100,7 @@ pg_text_encoder.c:410:12: warning: implicit conversion loses integer precision: 
 pg_text_encoder.c:617:13: warning: implicit conversion loses integer precision: 'long' to 'int' [-Wshorten-64-to-32]
         nr_elems = RARRAY_LEN(value);
                  ~ ^~~~~~~~~~~~~~~~~
-/Users/celsomartins/.rbenv/versions/2.7.1/include/ruby-2.7.0/ruby/ruby.h:1070:23: note: expanded from macro 'RARRAY_LEN'
+/Users/celsomartins/.rvm/rubies/ruby-2.7.1/include/ruby-2.7.0/ruby/ruby.h:1070:23: note: expanded from macro 'RARRAY_LEN'
 #define RARRAY_LEN(a) rb_array_len(a)
                       ^~~~~~~~~~~~~~~
 4 warnings generated.
@@ -108,7 +108,7 @@ compiling pg_tuple.c
 pg_tuple.c:482:15: warning: implicit conversion loses integer precision: 'long' to 'int' [-Wshorten-64-to-32]
         num_fields = RARRAY_LEN(values);
                    ~ ^~~~~~~~~~~~~~~~~~
-/Users/celsomartins/.rbenv/versions/2.7.1/include/ruby-2.7.0/ruby/ruby.h:1070:23: note: expanded from macro 'RARRAY_LEN'
+/Users/celsomartins/.rvm/rubies/ruby-2.7.1/include/ruby-2.7.0/ruby/ruby.h:1070:23: note: expanded from macro 'RARRAY_LEN'
 #define RARRAY_LEN(a) rb_array_len(a)
                       ^~~~~~~~~~~~~~~
 1 warning generated.
@@ -119,22 +119,22 @@ compiling pg_type_map_by_column.c
 pg_type_map_by_column.c:161:52: warning: implicit conversion loses integer precision: 'long' to 'int' [-Wshorten-64-to-32]
         return dec_func( p_coder, RSTRING_PTR(field_str), RSTRING_LEN(field_str), 0, fieldno, enc_idx );
                ~~~~~~~~                                   ^~~~~~~~~~~~~~~~~~~~~~
-/Users/celsomartins/.rbenv/versions/2.7.1/include/ruby-2.7.0/ruby/ruby.h:1007:6: note: expanded from macro 'RSTRING_LEN'
+/Users/celsomartins/.rvm/rubies/ruby-2.7.1/include/ruby-2.7.0/ruby/ruby.h:1007:6: note: expanded from macro 'RSTRING_LEN'
      RSTRING_EMBED_LEN(str) : \
      ^~~~~~~~~~~~~~~~~~~~~~
-/Users/celsomartins/.rbenv/versions/2.7.1/include/ruby-2.7.0/ruby/ruby.h:1003:6: note: expanded from macro 'RSTRING_EMBED_LEN'
+/Users/celsomartins/.rvm/rubies/ruby-2.7.1/include/ruby-2.7.0/ruby/ruby.h:1003:6: note: expanded from macro 'RSTRING_EMBED_LEN'
      (long)((RBASIC(str)->flags >> RSTRING_EMBED_LEN_SHIFT) & \
      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pg_type_map_by_column.c:161:52: warning: implicit conversion loses integer precision: 'long' to 'int' [-Wshorten-64-to-32]
         return dec_func( p_coder, RSTRING_PTR(field_str), RSTRING_LEN(field_str), 0, fieldno, enc_idx );
                ~~~~~~~~                                   ^~~~~~~~~~~~~~~~~~~~~~
-/Users/celsomartins/.rbenv/versions/2.7.1/include/ruby-2.7.0/ruby/ruby.h:1008:28: note: expanded from macro 'RSTRING_LEN'
+/Users/celsomartins/.rvm/rubies/ruby-2.7.1/include/ruby-2.7.0/ruby/ruby.h:1008:28: note: expanded from macro 'RSTRING_LEN'
      RSTRING(str)->as.heap.len)
      ~~~~~~~~~~~~~~~~~~~~~~^~~
 pg_type_map_by_column.c:230:17: warning: implicit conversion loses integer precision: 'long' to 'int' [-Wshorten-64-to-32]
         conv_ary_len = RARRAY_LEN(conv_ary);
                      ~ ^~~~~~~~~~~~~~~~~~~~
-/Users/celsomartins/.rbenv/versions/2.7.1/include/ruby-2.7.0/ruby/ruby.h:1070:23: note: expanded from macro 'RARRAY_LEN'
+/Users/celsomartins/.rvm/rubies/ruby-2.7.1/include/ruby-2.7.0/ruby/ruby.h:1070:23: note: expanded from macro 'RARRAY_LEN'
 #define RARRAY_LEN(a) rb_array_len(a)
                       ^~~~~~~~~~~~~~~
 3 warnings generated.
@@ -150,4 +150,4 @@ linking shared-object pg_ext.bundle
 
 current directory: /Users/celsomartins/workspace/taller/flow_climate/vendor/bundle/ruby/2.7.0/gems/pg-1.2.3/ext
 make "DESTDIR=" install
-/usr/local/bin/ginstall -c -m 0755 pg_ext.bundle ./.gem.20200923-16507-1cdmddw
+/usr/local/opt/coreutils/bin/ginstall -c -m 0755 pg_ext.bundle ./.gem.20200924-48145-1pak5ja
