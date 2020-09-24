@@ -79,6 +79,7 @@ jobs:
 
   deploy:
     needs: [linters, tests]
+    runs-on: ubuntu-latest
     steps:
       - name: Deploy
         env:
