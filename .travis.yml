@@ -7,7 +7,6 @@ env:
   global:
     - PGPORT=5433
     - CC_TEST_REPORTER_ID=70ab5420793b8b581d83df1dc8dcc49ca7c48d3deb51c9f9a8c2a5e0899c8f71
-    - RAILS_ENV=test
 services:
     - postgresql
 before_install:
@@ -27,7 +26,7 @@ before_script:
   - ./cc-test-reporter before-build
 script:
   - bundle exec rake db:create
-  - bundle exec rake db:structure:load
+  - bundle exec rake db:schema:load
   - bundle exec rspec
   - bundle exec rubocop
 after_script:
