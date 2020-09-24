@@ -90,7 +90,6 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "flowclimatestaging"
           heroku_email: "celso.av.martins@gmail.com"
-          usedocker: true
 
   deploy-prd:
     runs-on: ubuntu-latest
