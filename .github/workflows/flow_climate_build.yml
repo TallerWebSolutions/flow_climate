@@ -83,9 +83,13 @@ jobs:
     if: github.ref == 'refs/heads/develop'
     steps:
       - uses: actions/checkout@v2
-      - name: Staging deploy
-        run: |
-          git push -f https://heroku:${{ secrets.HEROKU_API_TOKEN }}@git.heroku.com/flowclimatestaging.git origin/develop:master
+        with:
+          fetch-depth: 0
+      - uses: akhileshns/heroku-deploy@v3.5.6 # This is the action
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "flowclimatestaging"
+          heroku_email: "celso.av.martins@gmail.com"
 
   deploy-prd:
     runs-on: ubuntu-latest
