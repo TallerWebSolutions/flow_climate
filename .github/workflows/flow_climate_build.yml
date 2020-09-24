@@ -13,13 +13,16 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.7.1
+      - name: update gem system
+        run: |
+          gem update --system
       - name: Install gems
         run: |
           bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs=4 --retry=3
 
       - name: Run linters
         run: |
-          rubocop --parallel
+          bundle exec rubocop --parallel
 
   tests:
     name: Tests

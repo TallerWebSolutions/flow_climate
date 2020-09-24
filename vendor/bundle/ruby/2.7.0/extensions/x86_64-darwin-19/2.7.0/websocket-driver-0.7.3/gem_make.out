@@ -1,5 +1,5 @@
 current directory: /Users/celsomartins/workspace/taller/flow_climate/vendor/bundle/ruby/2.7.0/gems/websocket-driver-0.7.3/ext/websocket-driver
-/Users/celsomartins/.rvm/rubies/ruby-2.7.1/bin/ruby -I /Users/celsomartins/.rvm/rubies/ruby-2.7.1/lib/ruby/site_ruby/2.7.0 -r ./siteconf20200923-90572-p6igzq.rb extconf.rb
+/Users/celsomartins/.rbenv/versions/2.7.1/bin/ruby -I /Users/celsomartins/.rbenv/versions/2.7.1/lib/ruby/2.7.0 -r ./siteconf20200923-89487-1saiql.rb extconf.rb
 creating Makefile
 
 current directory: /Users/celsomartins/workspace/taller/flow_climate/vendor/bundle/ruby/2.7.0/gems/websocket-driver-0.7.3/ext/websocket-driver
@@ -12,4 +12,4 @@ linking shared-object websocket_mask.bundle
 
 current directory: /Users/celsomartins/workspace/taller/flow_climate/vendor/bundle/ruby/2.7.0/gems/websocket-driver-0.7.3/ext/websocket-driver
 make "DESTDIR=" install
-/usr/local/opt/coreutils/bin/ginstall -c -m 0755 websocket_mask.bundle ./.gem.20200923-90572-14xyo44
+/usr/local/bin/ginstall -c -m 0755 websocket_mask.bundle ./.gem.20200923-89487-189j7tm

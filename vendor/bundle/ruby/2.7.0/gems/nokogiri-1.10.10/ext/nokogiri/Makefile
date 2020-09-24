@@ -12,12 +12,12 @@ NULLCMD = :
 #### Start of system configuration section. ####
 
 srcdir = .
-topdir = /Users/celsomartins/.rvm/rubies/ruby-2.7.1/include/ruby-2.7.0
+topdir = /Users/celsomartins/.rbenv/versions/2.7.1/include/ruby-2.7.0
 hdrdir = $(topdir)
-arch_hdrdir = /Users/celsomartins/.rvm/rubies/ruby-2.7.1/include/ruby-2.7.0/x86_64-darwin19
+arch_hdrdir = /Users/celsomartins/.rbenv/versions/2.7.1/include/ruby-2.7.0/x86_64-darwin19
 PATH_SEPARATOR = :
 VPATH = $(srcdir):$(arch_hdrdir)/ruby:$(hdrdir)/ruby
-prefix = $(DESTDIR)/Users/celsomartins/.rvm/rubies/ruby-2.7.1
+prefix = $(DESTDIR)/Users/celsomartins/.rbenv/versions/2.7.1
 rubysitearchprefix = $(rubylibprefix)/$(sitearch)
 rubyarchprefix = $(rubylibprefix)/$(arch)
 rubylibprefix = $(libdir)/$(RUBY_BASE_NAME)
@@ -31,8 +31,8 @@ rubyhdrdir = $(includedir)/$(RUBY_VERSION_NAME)
 vendorarchdir = $(vendorlibdir)/$(sitearch)
 vendorlibdir = $(vendordir)/$(ruby_version)
 vendordir = $(rubylibprefix)/vendor_ruby
-sitearchdir = $(DESTDIR)./.gem.20200923-90572-w1zcos
-sitelibdir = $(DESTDIR)./.gem.20200923-90572-w1zcos
+sitearchdir = $(DESTDIR)./.gem.20200923-89487-1i1rnt9
+sitelibdir = $(DESTDIR)./.gem.20200923-89487-1i1rnt9
 sitedir = $(rubylibprefix)/site_ruby
 rubyarchdir = $(rubylibdir)/$(arch)
 rubylibdir = $(rubylibprefix)/$(ruby_version)
@@ -65,8 +65,8 @@ archdir = $(rubyarchdir)
 
 
 CC_WRAPPER = 
-CC = gcc
-CXX = g++
+CC = clang
+CXX = clang++
 LIBRUBY = $(LIBRUBY_SO)
 LIBRUBY_A = lib$(RUBY_SO_NAME)-static.a
 LIBRUBYARG_SHARED = -l$(RUBY_SO_NAME)
@@ -84,13 +84,13 @@ debugflags = -ggdb3
 warnflags = -Wall -Wextra -Wdeprecated-declarations -Wdivision-by-zero -Wimplicit-function-declaration -Wimplicit-int -Wpointer-arith -Wshorten-64-to-32 -Wwrite-strings -Wmissing-noreturn -Wno-constant-logical-operand -Wno-long-long -Wno-missing-field-initializers -Wno-overlength-strings -Wno-parentheses-equality -Wno-self-assign -Wno-tautological-compare -Wno-unused-parameter -Wno-unused-value -Wunused-variable -Wextra-tokens
 cppflags = 
 CCDLFLAGS = -fno-common
-CFLAGS   = $(CCDLFLAGS) $(cflags)  -fno-common -pipe  -I /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/libxml2 -O3 -Wall -Wcast-qual -Wwrite-strings -Wmissing-noreturn -Winline -DNOKOGIRI_USE_PACKAGED_LIBRARIES $(ARCH_FLAG)
+CFLAGS   = $(CCDLFLAGS) $(cflags)  -fno-common -pipe  -I /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/libxml2 -DNOKOGIRI_USE_PACKAGED_LIBRARIES $(ARCH_FLAG)
 INCFLAGS = -I. -I$(arch_hdrdir) -I$(hdrdir)/ruby/backward -I$(hdrdir) -I$(srcdir)
 DEFS     = 
-CPPFLAGS = -DHAVE_ICONV_H -DHAVE_XMLPARSEDOC -DHAVE_XSLTPARSESTYLESHEETDOC -DHAVE_EXSLTFUNCREGISTER -DHAVE_XMLHASFEATURE -DHAVE_XMLFIRSTELEMENTCHILD -DHAVE_XMLRELAXNGSETPARSERSTRUCTUREDERRORS -DHAVE_XMLRELAXNGSETPARSERSTRUCTUREDERRORS -DHAVE_XMLRELAXNGSETVALIDSTRUCTUREDERRORS -DHAVE_XMLSCHEMASETVALIDSTRUCTUREDERRORS -DHAVE_XMLSCHEMASETPARSERSTRUCTUREDERRORS -I/Users/celsomartins/workspace/taller/flow_climate/vendor/bundle/ruby/2.7.0/gems/nokogiri-1.10.10/ports/x86_64-apple-darwin19.6.0/libxml2/2.9.10/include/libxml2 -I/Users/celsomartins/workspace/taller/flow_climate/vendor/bundle/ruby/2.7.0/gems/nokogiri-1.10.10/ports/x86_64-apple-darwin19.6.0/libxslt/1.1.34/include -I/Users/celsomartins/workspace/taller/flow_climate/vendor/bundle/ruby/2.7.0/gems/nokogiri-1.10.10/ports/x86_64-apple-darwin19.6.0/libxml2/2.9.10/include/libxml2  -I/usr/local/opt/libyaml/include -I/usr/local/opt/libksba/include -I/usr/local/opt/readline/include -I/usr/local/opt/zlib/include -I/usr/local/opt/openssl@1.1/include -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT $(DEFS) $(cppflags) "-DNOKOGIRI_LIBXML2_PATH=\"/Users/celsomartins/workspace/taller/flow_climate/vendor/bundle/ruby/2.7.0/gems/nokogiri-1.10.10/ports/x86_64-apple-darwin19.6.0/libxml2/2.9.10\"" "-DNOKOGIRI_LIBXML2_PATCHES=\"0001-Revert-Do-not-URI-escape-in-server-side-includes.patch 0002-Remove-script-macro-support.patch 0003-Update-entities-to-remove-handling-of-ssi.patch 0004-libxml2.la-is-in-top_builddir.patch 0005-Fix-infinite-loop-in-xmlStringLenDecodeEntities.patch\"" "-DNOKOGIRI_LIBXSLT_PATH=\"/Users/celsomartins/workspace/taller/flow_climate/vendor/bundle/ruby/2.7.0/gems/nokogiri-1.10.10/ports/x86_64-apple-darwin19.6.0/libxslt/1.1.34\"" "-DNOKOGIRI_LIBXSLT_PATCHES=\"\""
+CPPFLAGS = -DHAVE_ICONV_H -DHAVE_XMLPARSEDOC -DHAVE_XSLTPARSESTYLESHEETDOC -DHAVE_EXSLTFUNCREGISTER -DHAVE_XMLHASFEATURE -DHAVE_XMLFIRSTELEMENTCHILD -DHAVE_XMLRELAXNGSETPARSERSTRUCTUREDERRORS -DHAVE_XMLRELAXNGSETPARSERSTRUCTUREDERRORS -DHAVE_XMLRELAXNGSETVALIDSTRUCTUREDERRORS -DHAVE_XMLSCHEMASETVALIDSTRUCTUREDERRORS -DHAVE_XMLSCHEMASETPARSERSTRUCTUREDERRORS -I/Users/celsomartins/workspace/taller/flow_climate/vendor/bundle/ruby/2.7.0/gems/nokogiri-1.10.10/ports/x86_64-apple-darwin19.6.0/libxml2/2.9.10/include/libxml2 -I/Users/celsomartins/workspace/taller/flow_climate/vendor/bundle/ruby/2.7.0/gems/nokogiri-1.10.10/ports/x86_64-apple-darwin19.6.0/libxslt/1.1.34/include -I/Users/celsomartins/workspace/taller/flow_climate/vendor/bundle/ruby/2.7.0/gems/nokogiri-1.10.10/ports/x86_64-apple-darwin19.6.0/libxml2/2.9.10/include/libxml2 -I/Users/celsomartins/.rbenv/versions/2.7.1/include  -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT $(DEFS) $(cppflags) "-DNOKOGIRI_LIBXML2_PATH=\"/Users/celsomartins/workspace/taller/flow_climate/vendor/bundle/ruby/2.7.0/gems/nokogiri-1.10.10/ports/x86_64-apple-darwin19.6.0/libxml2/2.9.10\"" "-DNOKOGIRI_LIBXML2_PATCHES=\"0001-Revert-Do-not-URI-escape-in-server-side-includes.patch 0002-Remove-script-macro-support.patch 0003-Update-entities-to-remove-handling-of-ssi.patch 0004-libxml2.la-is-in-top_builddir.patch 0005-Fix-infinite-loop-in-xmlStringLenDecodeEntities.patch\"" "-DNOKOGIRI_LIBXSLT_PATH=\"/Users/celsomartins/workspace/taller/flow_climate/vendor/bundle/ruby/2.7.0/gems/nokogiri-1.10.10/ports/x86_64-apple-darwin19.6.0/libxslt/1.1.34\"" "-DNOKOGIRI_LIBXSLT_PATCHES=\"\""
 CXXFLAGS = $(CCDLFLAGS) -g -O2 $(ARCH_FLAG)
-ldflags  = -L. -fstack-protector-strong -L/usr/local/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/libksba/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/zlib/lib -L/usr/local/opt/openssl@1.1/lib
-dldflags = -Wl,-undefined,dynamic_lookup -Wl,-multiply_defined,suppress -L/usr/local/opt/libyaml/lib -L/usr/local/opt/libksba/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/zlib/lib -L/usr/local/opt/openssl@1.1/lib 
+ldflags  = -L. -L/Users/celsomartins/.rbenv/versions/2.7.1/lib  -fstack-protector-strong -L/usr/local/lib
+dldflags = -L/Users/celsomartins/.rbenv/versions/2.7.1/lib  -Wl,-undefined,dynamic_lookup -Wl,-multiply_defined,suppress 
 ARCH_FLAG = 
 DLDFLAGS = $(ldflags) $(dldflags) $(ARCH_FLAG)
 LDSHARED = $(CC) -dynamic -bundle
@@ -115,8 +115,8 @@ ruby_headers = $(hdrdir)/ruby.h $(hdrdir)/ruby/backward.h $(hdrdir)/ruby/ruby.h 
 RM = rm -f
 RM_RF = $(RUBY) -run -e rm -- -rf
 RMDIRS = rmdir -p
-MAKEDIRS = /usr/local/opt/coreutils/bin/gmkdir -p
-INSTALL = /usr/local/opt/coreutils/bin/ginstall -c
+MAKEDIRS = /usr/local/bin/gmkdir -p
+INSTALL = /usr/local/bin/ginstall -c
 INSTALL_PROG = $(INSTALL) -m 0755
 INSTALL_DATA = $(INSTALL) -m 644
 COPY = cp
@@ -125,8 +125,8 @@ TOUCH = exit >
 #### End of system configuration section. ####
 
 preload = 
-libpath = . $(libdir) /Users/celsomartins/workspace/taller/flow_climate/vendor/bundle/ruby/2.7.0/gems/nokogiri-1.10.10/ports/x86_64-apple-darwin19.6.0/libxml2/2.9.10/lib /Users/celsomartins/workspace/taller/flow_climate/vendor/bundle/ruby/2.7.0/gems/nokogiri-1.10.10/ports/x86_64-apple-darwin19.6.0/libxslt/1.1.34/lib /usr/local/opt/libyaml/lib /usr/local/opt/libksba/lib /usr/local/opt/readline/lib /usr/local/opt/zlib/lib /usr/local/opt/openssl@1.1/lib /usr/local/Cellar/xz/5.2.5/lib
-LIBPATH =  -L. -L$(libdir) -L/Users/celsomartins/workspace/taller/flow_climate/vendor/bundle/ruby/2.7.0/gems/nokogiri-1.10.10/ports/x86_64-apple-darwin19.6.0/libxml2/2.9.10/lib -L/Users/celsomartins/workspace/taller/flow_climate/vendor/bundle/ruby/2.7.0/gems/nokogiri-1.10.10/ports/x86_64-apple-darwin19.6.0/libxslt/1.1.34/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/libksba/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/zlib/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/Cellar/xz/5.2.5/lib
+libpath = . $(libdir) /Users/celsomartins/workspace/taller/flow_climate/vendor/bundle/ruby/2.7.0/gems/nokogiri-1.10.10/ports/x86_64-apple-darwin19.6.0/libxml2/2.9.10/lib /Users/celsomartins/workspace/taller/flow_climate/vendor/bundle/ruby/2.7.0/gems/nokogiri-1.10.10/ports/x86_64-apple-darwin19.6.0/libxslt/1.1.34/lib /usr/local/Cellar/xz/5.2.5/lib
+LIBPATH =  -L. -L$(libdir) -L/Users/celsomartins/workspace/taller/flow_climate/vendor/bundle/ruby/2.7.0/gems/nokogiri-1.10.10/ports/x86_64-apple-darwin19.6.0/libxml2/2.9.10/lib -L/Users/celsomartins/workspace/taller/flow_climate/vendor/bundle/ruby/2.7.0/gems/nokogiri-1.10.10/ports/x86_64-apple-darwin19.6.0/libxslt/1.1.34/lib -L/usr/local/Cellar/xz/5.2.5/lib
 DEFFILE = 
 
 CLEANFILES = mkmf.log

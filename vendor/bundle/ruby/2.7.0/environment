@@ -1,3 +1,0 @@
-export PATH="/Users/celsomartins/.rvm/gems/ruby-2.7.1@flow_climate/bin:/Users/celsomartins/.rvm/gems/ruby-2.7.1@global/bin:/Users/celsomartins/.rvm/rubies/ruby-2.7.1/bin:/Users/celsomartins/.rvm/bin:$PATH"
-export GEM_PATH="/Users/celsomartins/.rvm/gems/ruby-2.7.1@flow_climate:/Users/celsomartins/.rvm/rubies/ruby-2.7.1/lib/ruby/gems/2.7.0:/Users/celsomartins/workspace/taller/flow_climate/vendor/bundle/ruby/2.7.0"
-export GEM_HOME="/Users/celsomartins/workspace/taller/flow_climate/vendor/bundle/ruby/2.7.0"

@@ -1,5 +1,5 @@
 current directory: /Users/celsomartins/workspace/taller/flow_climate/vendor/bundle/ruby/2.7.0/gems/ffi-1.13.1/ext/ffi_c
-/Users/celsomartins/.rvm/rubies/ruby-2.7.1/bin/ruby -I /Users/celsomartins/.rvm/rubies/ruby-2.7.1/lib/ruby/site_ruby/2.7.0 -r ./siteconf20200923-90572-1gv3jhe.rb extconf.rb
+/Users/celsomartins/.rbenv/versions/2.7.1/bin/ruby -I /Users/celsomartins/.rbenv/versions/2.7.1/lib/ruby/2.7.0 -r ./siteconf20200923-89487-1qvnqr8.rb extconf.rb
 checking for ffi_prep_closure_loc() in -lffi... yes
 checking for ffi_prep_cif_var()... yes
 checking for ffi_raw_call()... yes
@@ -39,4 +39,4 @@ linking shared-object ffi_c.bundle
 
 current directory: /Users/celsomartins/workspace/taller/flow_climate/vendor/bundle/ruby/2.7.0/gems/ffi-1.13.1/ext/ffi_c
 make "DESTDIR=" install
-/usr/local/opt/coreutils/bin/ginstall -c -m 0755 ffi_c.bundle ./.gem.20200923-90572-6qg1vx
+/usr/local/bin/ginstall -c -m 0755 ffi_c.bundle ./.gem.20200923-89487-1omph3q
