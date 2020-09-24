@@ -74,3 +74,5 @@ jobs:
 
       - name: Run tests
         run: bundle exec rspec
+        env:
+          secret_key_32_encoded: "8L+WeHTWhNtEAvQzoRaYqYtl4VCwDMReh2SzicO/iCA=\n"
