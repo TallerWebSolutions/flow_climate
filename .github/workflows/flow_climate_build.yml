@@ -63,10 +63,10 @@ jobs:
       - name: Setup test database
         env:
           RAILS_ENV: test
-          PGHOST: localhost
-          PGUSER: ""
+          PG_HOST: localhost
+          PG_USER: ""
         run: |
-          bin/rails db:setup
+          bundle exec rails db:setup
 
       - name: Run tests
-        run: bin/rspec
+        run: bundle exec rspec
