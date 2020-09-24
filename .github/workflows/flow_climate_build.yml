@@ -87,6 +87,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Staging deploy
         run: |
+          heroku login
           git push -f https://heroku:${{ secrets.HEROKU_API_TOKEN }}@git.heroku.com/flowclimatestaging.git origin/develop:master
 
   deploy-prd:
