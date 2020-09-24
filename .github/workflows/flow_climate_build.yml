@@ -84,5 +84,4 @@ jobs:
       - name: Deploy
         env:
           HEROKU_API_TOKEN: "pNBUygMPs3g/KG5wZvMFWRObDR1b01NTmdHMrpvfJQZQWkYh9EwRkdY2HqWOTazgJISHKDcKx0besZyb0BkqzMUQruCfzKM9fxrpPxeYbdIMadDOuRur2ZZ8RzqjHJ+F3p9mnC8o27zqe4QcU4H+vnQAXWXI6OBt6rYzAEXFyq3H05Qjn6gDiUxFZOvL7zZJRDyBLYIONu7yOiP1NOaii/lggHaCN4WfhFNC7V0NMCp7A9o+yWfmUZDUbxNvTVbN6z1X42PCkYQ6LUWWC7QFKOFZfs6HO9Vn9YIH/0ezE/KhpUf59rzhZuhJ46aWwLUIZ5w9pDjCeJ7xnakAA4YsQ7z/LIiuRJCprwb1W6RLUIQ9Tzkfx9n+wN1J0s39cfPubuMz6N+7pAS78R7Xde7kCR+jzDU1R73K6CtduycRnRIpBO310WVxaxROIiX8F+zx88b8oCIJfOrgMSFrYG5WNs/xW1sKoOsMUp3ILH5hUg7Fue1BelLvnnle8M2sXjN/FKSw8B/vJXeYz40l/o+LhdALqQfeR5oFr1Dq2IZBYCuoHmmXgoRNhbLH7VxUKB3KfUN87GufQnGNVTpsbQwwbhDN+45al0CZXQXxN9Vn1tq8zwSIeFVzu6HNYwOh+vIK6aeyh+iu90a/hL7TCO58EwWalMhNZluf3Zm3vqm0QbU="
-          HEROKU_APP_NAME: "flowclimatestaging"
         run: git push https://heroku:$HEROKU_API_TOKEN@git.heroku.com/flowclimatestaging.git origin/master:master
