@@ -38,7 +38,8 @@ jobs:
           POSTGRES_USER: ""
           POSTGRES_DB: flowcontrol_test
           POSTGRES_PASSWORD: ""
-        ports: ["5432:5432"]
+        ports:
+          - 5432:5432
 
     steps:
       - name: Checkout code
