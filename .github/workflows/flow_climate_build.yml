@@ -1,6 +1,8 @@
 name: FlowClimateBuild
-on: [push]
-
+on:
+  push:
+    branches:
+      - develop
 jobs:
   linters:
     name: Linters
@@ -82,12 +84,8 @@ jobs:
     #    needs: [linters, tests]
     steps:
       - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
       - uses: akhileshns/heroku-deploy@v3.5.6
         with:
-          branch: develop
-          usedocker: true
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "flowclimatestaging"
           heroku_email: "celso.av.martins@gmail.com"
