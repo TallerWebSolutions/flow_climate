@@ -82,13 +82,12 @@ jobs:
   deploy-staging:
     runs-on: ubuntu-latest
     #    needs: [linters, tests]
+    if: github.ref == 'refs/heads/develop'
     steps:
       - uses: actions/checkout@v2
-      - uses: akhileshns/heroku-deploy@v3.5.6
-        with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "flowclimatestaging"
-          heroku_email: "celso.av.martins@gmail.com"
+      - name: Staging deploy
+        run: |
+          git push -f https://heroku:${{ secrets.HEROKU_API_TOKEN }}@git.heroku.com/flowclimatestaging.git origin/develop:master
 
   deploy-prd:
     runs-on: ubuntu-latest
@@ -96,6 +95,6 @@ jobs:
     if: github.ref == 'refs/heads/master'
     steps:
       - uses: actions/checkout@v2
-      - name: Staging deploy
+      - name: Production deploy
         run: |
           git push -f https://heroku:${{ secrets.HEROKU_API_TOKEN }}@git.heroku.com/flowclimateapp.git origin/develop:master
