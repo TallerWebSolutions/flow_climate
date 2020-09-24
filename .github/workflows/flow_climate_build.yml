@@ -80,13 +80,14 @@ jobs:
   deploy-staging:
     runs-on: ubuntu-latest
     #    needs: [linters, tests]
-    if: github.ref == 'refs/heads/develop'
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - uses: akhileshns/heroku-deploy@v3.5.6 # This is the action
+      - uses: akhileshns/heroku-deploy@v3.5.6
+        branch: develop
         with:
+          dontuseforce: false
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "flowclimatestaging"
           heroku_email: "celso.av.martins@gmail.com"
