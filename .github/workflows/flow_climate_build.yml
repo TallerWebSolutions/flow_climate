@@ -77,13 +77,22 @@ jobs:
         env:
           secret_key_32_encoded: "8L+WeHTWhNtEAvQzoRaYqYtl4VCwDMReh2SzicO/iCA=\n"
 
-  deploy:
+  deploy-staging:
     runs-on: ubuntu-latest
 #    needs: [linters, tests]
     if: github.ref == 'refs/heads/develop'
     steps:
       - uses: actions/checkout@v2
       - name: Staging deploy
-        branch: develop
         run: |
           git push -f https://heroku:${{ secrets.HEROKU_API_TOKEN }}@git.heroku.com/flowclimatestaging.git origin/develop:master
+
+  deploy-prd:
+    runs-on: ubuntu-latest
+#    needs: [linters, tests]
+    if: github.ref == 'refs/heads/master'
+    steps:
+      - uses: actions/checkout@v2
+      - name: Staging deploy
+        run: |
+          git push -f https://heroku:${{ secrets.HEROKU_API_TOKEN }}@git.heroku.com/flowclimateapp.git origin/develop:master
