@@ -87,7 +87,7 @@ jobs:
       - uses: akhileshns/heroku-deploy@v3.5.6
         with:
           branch: develop
-          dontuseforce: false
+          usedocker: true
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "flowclimatestaging"
           heroku_email: "celso.av.martins@gmail.com"
