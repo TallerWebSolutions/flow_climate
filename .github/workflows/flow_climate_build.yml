@@ -91,8 +91,7 @@ jobs:
           HEROKU_USER_EMAIL: "celso.av.martins@gmail.com"
         run: |
           heroku login
-          heroku git:remote -a flowclimatestaging
-          git push -f heroku HEAD:master
+          git push -f https://git.heroku.com/flowclimatestaging.git HEAD:master
 
   deploy-prd:
     runs-on: ubuntu-latest
