@@ -1,8 +1,6 @@
 name: FlowClimateBuild
-on:
-  push:
-    branches:
-      - develop
+on: [push]
+
 jobs:
   linters:
     name: Linters
@@ -82,16 +80,15 @@ jobs:
   deploy-staging:
     runs-on: ubuntu-latest
     #    needs: [linters, tests]
-    if: github.ref == 'refs/heads/develop'
     steps:
       - uses: actions/checkout@v2
-      - name: Staging deploy
-        env:
-          HEROKU_API_TOKEN: ${{ secrets.HEROKU_API_TOKEN }}
-          HEROKU_USER_EMAIL: "celso.av.martins@gmail.com"
-        run: |
-          heroku login
-          git push -f git@heroku.com:flowclimatestaging.git HEAD:master
+        with:
+          fetch-depth: 0
+      - uses: akhileshns/heroku-deploy@v3.5.6
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "flowclimatestaging"
+          heroku_email: "celso.av.martins@gmail.com"
 
   deploy-prd:
     runs-on: ubuntu-latest
@@ -99,6 +96,6 @@ jobs:
     if: github.ref == 'refs/heads/master'
     steps:
       - uses: actions/checkout@v2
-      - name: Production deploy
+      - name: Staging deploy
         run: |
           git push -f https://heroku:${{ secrets.HEROKU_API_TOKEN }}@git.heroku.com/flowclimateapp.git origin/develop:master
