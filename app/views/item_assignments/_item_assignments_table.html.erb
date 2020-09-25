@@ -9,6 +9,7 @@
       <th><%= ItemAssignment.human_attribute_name(:finish_time) %></th>
       <th><%= ItemAssignment.human_attribute_name(:stage_finish) %></th>
       <th><%= ItemAssignment.human_attribute_name(:working_time) %></th>
+      <th></th>
     </tr>
 
   </thead>
@@ -24,6 +25,11 @@
         <td><%= I18n.l(assignment.finish_time, format: :short) if assignment.finish_time.present? %></td>
         <td><%= demand.stage_at(assignment.finish_time)&.name if assignment.finish_time.present? %></td>
         <td><%= I18n.t('general.hours_text', count: assignment.item_assignment_effort) %></td>
+        <td>
+          <%= link_to company_demand_item_assignment_path(company.id, demand.id, assignment.id), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
+            <i class="fa fa-times"></i>
+          <% end %>
+        </td>
       </tr>
     <% end %>
   </tbody>

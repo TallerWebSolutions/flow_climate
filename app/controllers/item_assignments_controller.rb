@@ -4,7 +4,8 @@ class ItemAssignmentsController < AuthenticatedController
   before_action :assign_company
 
   def destroy
-    @item_assignment = ItemAssignment.find(params[:id])
+    @demand = @company.demands.find(params[:demand_id])
+    @item_assignment = @demand.item_assignments.find(params[:id])
 
     @item_assignment.destroy
 
