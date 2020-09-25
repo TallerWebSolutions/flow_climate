@@ -13,10 +13,10 @@ Gem::Specification.new do |s|
   s.email = ["nadav.soferman@cloudinary.com".freeze, "itai.lahan@cloudinary.com".freeze, "tal.levami@cloudinary.com".freeze]
   s.homepage = "http://cloudinary.com".freeze
   s.licenses = ["MIT".freeze]
-  s.rubygems_version = "3.1.4".freeze
+  s.rubygems_version = "3.1.2".freeze
   s.summary = "Client library for easily using the Cloudinary service".freeze
 
-  s.installed_by_version = "3.1.4" if s.respond_to? :installed_by_version
+  s.installed_by_version = "3.1.2" if s.respond_to? :installed_by_version
 
   if s.respond_to? :specification_version then
     s.specification_version = 4

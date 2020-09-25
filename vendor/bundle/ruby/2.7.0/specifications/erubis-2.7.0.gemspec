@@ -14,8 +14,8 @@ Gem::Specification.new do |s|
   s.executables = ["erubis".freeze]
   s.files = ["bin/erubis".freeze]
   s.homepage = "http://www.kuwata-lab.com/erubis/".freeze
-  s.rubygems_version = "3.1.4".freeze
+  s.rubygems_version = "3.1.2".freeze
   s.summary = "a fast and extensible eRuby implementation which supports multi-language".freeze
 
-  s.installed_by_version = "3.1.4" if s.respond_to? :installed_by_version
+  s.installed_by_version = "3.1.2" if s.respond_to? :installed_by_version
 end

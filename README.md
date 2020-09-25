@@ -31,6 +31,7 @@ Have the ultimate management tools in your hands!
 - Install PostgreSQL v. 10
 - Start postgresql
     - Example on macOS (brew instalation): `pg_ctl -D /usr/local/var/postgres start`
+- Check `database.yml` for further configuration
 - In the project folder run:
     - `rake db:create`
     - `rake db:migrate`

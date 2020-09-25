@@ -6,14 +6,16 @@ default: &default
 development:
   <<: *default
   database: flowcontrol_development
+  host: localhost
   username:
   password:
 
 test:
   <<: *default
-  database: flowcontrol_test<%= Figaro.env.test_env_number %>
+  database: flowcontrol_test
+  host: localhost
   username: postgres
-  password:
+  password: postgres
 
 production:
   <<: *default
