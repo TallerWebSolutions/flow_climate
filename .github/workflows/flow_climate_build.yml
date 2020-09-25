@@ -86,9 +86,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Staging deploy
+        env:
+          HEROKU_API_TOKEN: secrets.HEROKU_API_TOKEN
+          HEROKU_USER_EMAIL: "celso.av.martins@gmail.com"
         run: |
           heroku login
-          git push -f https://heroku:${{ secrets.HEROKU_API_TOKEN }}@git.heroku.com/flowclimatestaging.git origin/develop:master
+          git push -f https://git.heroku.com/flowclimatestaging.git master
 
   deploy-prd:
     runs-on: ubuntu-latest
