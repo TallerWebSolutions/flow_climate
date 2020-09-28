@@ -28,6 +28,13 @@
 <% else %>
   <div class="no-data">
     <%= I18n.t('users.show.dashboard.invalid_role') %>
+    <% if user.companies.present? %>
+      <% if user.team_member.blank? %>
+        <div><%= link_to I18n.t('users.team_member.missing'), company_path(company) %></div>
+      <% end %>
+    <% else %>
+      <div><%= I18n.t('users.company.invitation_missing') %></div>
+    <% end %>
   </div>
 
 <% end %>

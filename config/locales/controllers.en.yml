@@ -203,6 +203,10 @@ en:
         title: "Users"
       companies_table:
         title: "Companies"
+    company:
+      invitation_missing: "You must be invited to a company first."
+    team_member:
+      missing: "You should assign your membership."
   companies:
     index:
       title: "Companies"

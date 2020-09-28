@@ -202,6 +202,10 @@ pt-BR:
         title: "Usuários"
       companies_table:
         title: "Empresas"
+    company:
+      invitation_missing: "Você deve ser convidado para uma empresa."
+    team_member:
+      missing: "Você precisa atribuir a sua membresia."
   companies:
     index:
       title: "Empresas"
