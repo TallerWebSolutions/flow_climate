@@ -113,7 +113,7 @@ RSpec.describe PortfolioUnitsController, type: :controller do
           created_jira_config = Jira::JiraPortfolioUnitConfig.last
           expect(created_jira_config.jira_field_name).to eq 'foo'
           expect(assigns(:portfolio_units)).to eq [created_unit, portfolio_unit]
-          expect(assigns(:parent_portfolio_units)).to be_nil
+          expect(assigns(:parent_portfolio_units)).to eq [portfolio_unit]
 
           expect(response).to render_template 'portfolio_units/create'
         end
