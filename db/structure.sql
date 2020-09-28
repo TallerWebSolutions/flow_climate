@@ -901,6 +901,38 @@ ALTER SEQUENCE public.jira_accounts_id_seq OWNED BY public.jira_accounts.id;
 
 
 --
+-- Name: jira_api_errors; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.jira_api_errors (
+    id bigint NOT NULL,
+    demand_id integer NOT NULL,
+    processed boolean DEFAULT false,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: jira_api_errors_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.jira_api_errors_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: jira_api_errors_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.jira_api_errors_id_seq OWNED BY public.jira_api_errors.id;
+
+
+--
 -- Name: jira_custom_field_mappings; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2346,6 +2378,13 @@ ALTER TABLE ONLY public.jira_accounts ALTER COLUMN id SET DEFAULT nextval('publi
 
 
 --
+-- Name: jira_api_errors id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jira_api_errors ALTER COLUMN id SET DEFAULT nextval('public.jira_api_errors_id_seq'::regclass);
+
+
+--
 -- Name: jira_custom_field_mappings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2788,6 +2827,14 @@ ALTER TABLE ONLY public.item_assignments
 
 ALTER TABLE ONLY public.jira_accounts
     ADD CONSTRAINT jira_accounts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: jira_api_errors jira_api_errors_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jira_api_errors
+    ADD CONSTRAINT jira_api_errors_pkey PRIMARY KEY (id);
 
 
 --
@@ -3566,6 +3613,13 @@ CREATE INDEX index_jira_accounts_on_company_id ON public.jira_accounts USING btr
 --
 
 CREATE UNIQUE INDEX index_jira_accounts_on_customer_domain ON public.jira_accounts USING btree (customer_domain);
+
+
+--
+-- Name: index_jira_api_errors_on_demand_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_jira_api_errors_on_demand_id ON public.jira_api_errors USING btree (demand_id);
 
 
 --
@@ -4815,6 +4869,14 @@ ALTER TABLE ONLY public.stages_teams
 
 
 --
+-- Name: jira_api_errors fk_rails_cc434c098b; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jira_api_errors
+    ADD CONSTRAINT fk_rails_cc434c098b FOREIGN KEY (demand_id) REFERENCES public.demands(id);
+
+
+--
 -- Name: flow_impacts fk_rails_cda32ac094; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5128,6 +5190,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200807131518'),
 ('20200812153534'),
 ('20200813131313'),
-('20200831153123');
+('20200831153123'),
+('20200928150830');
 
 

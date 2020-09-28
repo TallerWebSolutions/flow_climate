@@ -1,7 +1,0 @@
-#!/usr/local/bin/ruby -w
-
-require "flog_cli"
-
-FlogCLI.run
-
-exit 0
