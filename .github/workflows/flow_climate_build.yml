@@ -38,6 +38,7 @@ jobs:
           POSTGRES_DB: flowcontrol_test
           POSTGRES_USER: "postgres"
           POSTGRES_PASSWORD: "postgres"
+          TEST_ENV_NUMBER: "3"
         ports:
           - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
@@ -70,10 +71,10 @@ jobs:
           PG_PASSWORD: ""
           PG_PORT: ${{ job.services.postgres.ports['5432'] }}
         run: |
-          bundle exec rails db:setup
+          bundle exec rake parallel:setup
 
       - name: Run tests
-        run: bundle exec rspec
+        run: bundle exec rake parallel:spec
         env:
           secret_key_32_encoded: "8L+WeHTWhNtEAvQzoRaYqYtl4VCwDMReh2SzicO/iCA=\n"
 #  deploy-staging:
