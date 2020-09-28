@@ -2,8 +2,10 @@
 
 ENV['RAILS_ENV'] ||= 'test'
 
-require 'simplecov/parallel'
-SimpleCov::Parallel.activate
+require 'knapsack_pro'
+KnapsackPro::Adapters::RSpecAdapter.bind
+
+require 'simplecov'
 SimpleCov.minimum_coverage 100
 SimpleCov.start do
   add_filter 'config/initializers/rack_profiler.rb'
@@ -11,6 +13,7 @@ end
 
 require File.expand_path('../config/environment', __dir__)
 abort('The Rails environment is running in production mode!') if Rails.env.production?
+
 require 'rspec/rails'
 require 'shoulda/matchers'
 require 'rspec/collection_matchers'

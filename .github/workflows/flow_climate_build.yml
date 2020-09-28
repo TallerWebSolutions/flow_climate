@@ -38,11 +38,19 @@ jobs:
           POSTGRES_DB: flowcontrol_test
           POSTGRES_USER: "postgres"
           POSTGRES_PASSWORD: "postgres"
-          TEST_ENV_NUMBER: "3"
         ports:
           - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-
+    strategy:
+      fail-fast: false
+      matrix:
+        # Set N number of parallel jobs you want to run tests on.
+        # Use higher number if you have slow tests to split them on more parallel jobs.
+        # Remember to update ci_node_index below to 0..N-1
+        ci_node_total: [ 5 ]
+        # set N-1 indexes for parallel jobs
+        # When you run 2 parallel jobs then first job will have index 0, the second job will have index 1 etc
+        ci_node_index: [ 0, 1, 2, 3, 4 ]
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -67,14 +75,18 @@ jobs:
         env:
           RAILS_ENV: test
           PG_HOST: localhost
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
+          PG_USER: ""
+          PG_PASSWORD: ""
           PG_PORT: ${{ job.services.postgres.ports['5432'] }}
+          KNAPSACK_PRO_TEST_SUITE_TOKEN_RSPEC: ${{ secrets.KNAPSACK_PRO_TEST_SUITE_TOKEN_RSPEC }}
+          KNAPSACK_PRO_CI_NODE_TOTAL: ${{ matrix.ci_node_total }}
+          KNAPSACK_PRO_CI_NODE_INDEX: ${{ matrix.ci_node_index }}
+          KNAPSACK_PRO_FIXED_QUEUE_SPLIT: true
         run: |
-          bundle exec rake parallel:setup
+          bundle exec rails db:setup
 
       - name: Run tests
-        run: bundle exec rake parallel:spec
+        run: bundle exec rake knapsack_pro:rspec
         env:
           secret_key_32_encoded: "8L+WeHTWhNtEAvQzoRaYqYtl4VCwDMReh2SzicO/iCA=\n"
 #  deploy-staging:
@@ -92,4 +104,4 @@ jobs:
 #          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
 #          heroku_app_name: "flowclimatestaging"
 #          heroku_email: "celso.av.martins@gmail.com"
-#
+
