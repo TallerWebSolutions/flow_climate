@@ -3,7 +3,7 @@
 namespace :project_alerts do
   desc 'Process projects alerts'
   task process_alerts: :environment do
-    JiraApiError.where(processed: false).each do |jira_error|
+    Jira::JiraApiError.where(processed: false).each do |jira_error|
       demand = jira_error.project
       jira_account = demand.company.jira_accounts.first
       project = demand.project

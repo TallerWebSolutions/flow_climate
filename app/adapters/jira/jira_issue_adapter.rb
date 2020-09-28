@@ -141,7 +141,7 @@ module Jira
       stage_from = demand.project.stages.find_by(integration_id: from_stage_id)
       DemandTransition.where(demand: demand, stage: stage_from, last_time_in: from_transition_date).first_or_create
     rescue PG::UniqueViolation
-      JiraApiError.create(demand: demand)
+      Jira::JiraApiError.create(demand: demand)
       nil
     end
 
@@ -157,7 +157,7 @@ module Jira
 
       Slack::SlackNotificationService.instance.notify_demand_state_changed(stage_to, demand, author)
     rescue PG::UniqueViolation
-      JiraApiError.create(demand: demand)
+      Jira::JiraApiError.create(demand: demand)
       nil
     end
 

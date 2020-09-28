@@ -432,7 +432,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
           allow_any_instance_of(ActiveRecord::Relation).to receive(:first_or_create).and_raise(PG::UniqueViolation)
           described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
 
-          expect(JiraApiError.count).not_to eq 0
+          expect(Jira::JiraApiError.count).not_to eq 0
         end
       end
 
@@ -441,7 +441,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
           allow_any_instance_of(DemandTransition).to receive(:update).and_raise(PG::UniqueViolation)
           described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
 
-          expect(JiraApiError.count).not_to eq 0
+          expect(Jira::JiraApiError.count).not_to eq 0
         end
       end
     end

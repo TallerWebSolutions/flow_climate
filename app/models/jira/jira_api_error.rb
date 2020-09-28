@@ -18,8 +18,10 @@
 #
 # frozen-string-literal: true
 
-class JiraApiError < ApplicationRecord
-  belongs_to :demand
+module Jira
+  class JiraApiError < ApplicationRecord
+    belongs_to :demand
 
-  validates :demand, presence: true
+    validates :demand, presence: true
+  end
 end
