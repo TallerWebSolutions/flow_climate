@@ -46,7 +46,7 @@ function buildColumnLineChart(columnDiv) {
             }
         }],
         tooltip: {
-            enabled: false
+            enabled: true
         },
         legend: {
             type: 'line',
