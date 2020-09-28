@@ -1,6 +1,0 @@
-.bundle
-.ruby-version
-/Gemfile.lock
-/gemfiles/*.gemfile.lock
-/pkg
-/tmp

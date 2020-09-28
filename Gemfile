@@ -15,7 +15,7 @@ gem 'devise'
 gem 'discard'
 gem 'figaro'
 gem 'friendly_id'
-gem 'histogram'
+gem 'histogram'git s
 gem 'httparty'
 gem 'jira-ruby', require: false
 gem 'jquery-rails'
