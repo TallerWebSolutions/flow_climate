@@ -19,11 +19,12 @@ class PortfolioUnitsController < AuthenticatedController
     @portfolio_unit = PortfolioUnit.new(portfolio_unit_params.merge(product: @product))
 
     if @portfolio_unit.save
-      assign_portfolio_units_list
+      flash[:notice] = I18n.t('general.messages.saved')
     else
       flash[:error] = @portfolio_unit.errors.full_messages.join(', ')
-      assign_parent_portfolio_units_list
     end
+    assign_parent_portfolio_units_list
+    assign_portfolio_units_list
 
     respond_to { |format| format.js { render 'portfolio_units/create' } }
   end

@@ -14,12 +14,13 @@
            data-xcategories='<%= strategic_chart_data.x_axis.to_json %>'
            data-xtitle='<%= I18n.t('charts.xlabel.months') %>'
            data-ytitle='<%= I18n.t('charts.ylabel.projects.text') %>'
+           data-prefix=''
            data-ylinetitle='<%= I18n.t('charts.ylabel.total_hours.text') %>'
            data-tooltipsuffix='<%= I18n.t('general.charts.hours') %>'
-           data-datalabelsuffix=''
+           data-datalabelsuffix='h'
            data-series='<%= [
                                 { type: 'column', yAxis: 1, name: I18n.t('charts.ylabel.projects.text'), data: strategic_chart_data.active_projects_count_data },
-                                { type: 'spline', name: I18n.t('charts.ylabel.total_hours.text'), data: strategic_chart_data.sold_hours_in_month }
+                                { type: 'spline', name: I18n.t('charts.ylabel.total_hours.text'), data: strategic_chart_data.sold_hours_in_month.map { |hour| hour.round(2) } }
 
                             ].to_json %>'
            data-decimals='0'>
