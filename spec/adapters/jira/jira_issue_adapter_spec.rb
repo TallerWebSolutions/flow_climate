@@ -413,5 +413,37 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
         expect(Demand.first.external_id).to eq 'xpto do foo'
       end
     end
+
+    context 'with errors in transitions processment' do
+      let!(:jira_custom_field_mapping) { Fabricate :jira_custom_field_mapping, jira_account: jira_account, custom_field_type: :responsibles, custom_field_machine_name: 'customfield_10024' }
+      let!(:demand) { Fabricate :demand, company: company, project: first_project, team: team, external_id: '10000' }
+      let!(:second_project) { Fabricate :project, company: company, team: team, customers: [customer, other_customer], products: [product] }
+      let!(:jira_project_config) { Fabricate :jira_project_config, jira_product_config: jira_product_config, project: second_project, fix_version_name: 'bar' }
+
+      let!(:team_member) { Fabricate :team_member, company: company, jira_account_user_email: 'foo', jira_account_id: 'bar', name: 'team_member' }
+      let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
+
+      let!(:jira_product_config) { Fabricate :jira_product_config, product: product, jira_product_key: 'foo' }
+
+      let!(:jira_issue) { client.Issue.build({ key: 'xpto do foo', summary: 'foo of bar', fields: { created: '2018-07-02T11:20:18.998-0300', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10041', created: '2018-07-09T23:34:47.440-0300', author: { displayName: default_member.name }, items: [{ field: 'status', from: 'first_stage', to: 'second_stage' }] }, { id: '10040', created: '2018-07-09T22:34:47.440-0300', author: { displayName: default_member.name }, items: [{ field: 'Key', fromString: demand.external_id, to: 'bla' }] }] } }.with_indifferent_access) }
+
+      context 'in demand transition from saving' do
+        it 'saves a Jira integration error' do
+          allow_any_instance_of(ActiveRecord::Relation).to receive(:first_or_create).and_raise(PG::UniqueViolation)
+          described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
+
+          expect(JiraApiError.count).not_to eq 0
+        end
+      end
+
+      context 'in demand transition to saving' do
+        it 'saves a Jira integration error' do
+          allow_any_instance_of(DemandTransition).to receive(:update).and_raise(PG::UniqueViolation)
+          described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
+
+          expect(JiraApiError.count).not_to eq 0
+        end
+      end
+    end
   end
 end

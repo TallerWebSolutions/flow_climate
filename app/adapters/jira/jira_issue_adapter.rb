@@ -140,9 +140,14 @@ module Jira
     def create_from_transition(demand, from_stage_id, from_transition_date)
       stage_from = demand.project.stages.find_by(integration_id: from_stage_id)
       DemandTransition.where(demand: demand, stage: stage_from, last_time_in: from_transition_date).first_or_create
+    rescue PG::UniqueViolation
+      JiraApiError.create(demand: demand)
+      nil
     end
 
     def create_to_transition(demand, from_transistion, to_stage_id, to_transition_date, author)
+      return if from_transistion.blank?
+
       from_transistion.with_lock { from_transistion.update(last_time_out: to_transition_date) }
 
       stage_to = demand.project.stages.find_by(integration_id: to_stage_id)
@@ -151,6 +156,9 @@ module Jira
       demand_transition.save
 
       Slack::SlackNotificationService.instance.notify_demand_state_changed(stage_to, demand, author)
+    rescue PG::UniqueViolation
+      JiraApiError.create(demand: demand)
+      nil
     end
 
     def read_comments(demand, jira_issue_attrs)
