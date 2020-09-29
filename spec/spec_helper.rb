@@ -11,6 +11,11 @@ SimpleCov.start do
   add_filter 'config/initializers/rack_profiler.rb'
 end
 
+KnapsackPro::Hooks::Queue.before_queue do |_queue_id|
+  SimpleCov.command_name("rspec_ci_node_#{KnapsackPro::Config::Env.ci_node_index}")
+end
+
+
 require File.expand_path('../config/environment', __dir__)
 abort('The Rails environment is running in production mode!') if Rails.env.production?
 
