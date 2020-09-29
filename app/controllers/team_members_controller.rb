@@ -4,13 +4,12 @@ class TeamMembersController < AuthenticatedController
   before_action :user_gold_check
 
   before_action :assign_company
-  before_action :assign_team_member, only: %i[edit update destroy show associate_user dissociate_user]
+  before_action :assign_team_member, only: %i[edit update destroy show associate_user dissociate_user pairings]
 
   def show
     assign_team_member_objects
     @member_demands = @team_member.demands_for_role
-
-    assign_chart_info
+    build_member_charts(@team_member)
 
     render :show
   end
@@ -66,46 +65,64 @@ class TeamMembersController < AuthenticatedController
   def search_team_members
     assign_team_members
 
-    case params['team_member_status']
-    when 'true'
-      @team_members = @team_members.active
-    when 'false'
-      @team_members = @team_members.inactive
-    end
+    @team_members = case params['team_member_status']
+                    when 'false'
+                      @team_members.inactive
+                    when 'true'
+                      @team_members.active
+                    else
+                      @team_members
+                    end
 
     respond_to { |format| format.js { render 'team_members/search_team_members' } }
   end
 
+  def pairings
+    operations_dashboards_cache
+    pairings = @operations_dashboards.map(&:operations_dashboard_pairings).flatten.map(&:pair).uniq
+
+    build_pairing_chart(pairings)
+  end
+
   private
 
-  def assign_chart_info
-    @pairing_chart = {}
-    @team_member.pairing_members.each { |name, qty| @pairing_chart[name] = qty }
-    @array_of_dates = TimeService.instance.months_between_of(start_date, Time.zone.today.end_of_month)
+  def operations_dashboards_cache
+    @operations_dashboards = Dashboards::OperationsDashboard.where(team_member: @team_member, last_data_in_month: true).order(:dashboard_date)
+    @operations_dashboards = Dashboards::OperationsDashboard.where(team_member: @team_member).order(:dashboard_date) if @operations_dashboards.blank?
+  end
 
-    @statistics_information = Flow::StatisticsFlowInformations.new(@member_demands)
+  def build_pairing_chart(pairings)
+    pairings_hash = build_pairings_hash(pairings)
 
-    @array_of_dates.each { |analysed_date| @statistics_information.statistics_flow_behaviour(analysed_date) }
+    @pairing_chart = []
 
-    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@member_demands, start_date, Time.zone.today, 'month')
+    pairings_hash.sort_by { |_key, value| value.last }.reverse.to_h.each do |key, value|
+      @pairing_chart << { name: key, data: value }
+    end
+  end
 
-    build_member_charts(@team_member)
+  def build_pairings_hash(pairings)
+    pairings_hash = {}
+
+    pairings.each { |pair| pairings_hash[pair.name] = [] }
+
+    @operations_dashboards.each do |operations_dashboard|
+      pairings.each do |pair|
+        pairings_hash[pair.name] << Dashboards::OperationsDashboardPairing.before_date(operations_dashboard.dashboard_date).for_team_member(pair, @team_member).last&.pair_times
+      end
+    end
+
+    pairings_hash
   end
 
   def build_member_charts(team_member)
     @member_effort_chart = []
     @member_pull_interval_average_chart = []
 
-    team_member.memberships.active.each do |membership|
-      membership_service = Flow::MembershipFlowInformation.new(membership)
+    operations_dashboards_cache
 
-      @member_effort_chart << { name: membership.team.name, data: membership_service.compute_developer_effort }
-      @member_pull_interval_average_chart << { name: membership.team.name, data: membership_service.average_pull_interval }
-    end
-  end
-
-  def start_date
-    @start_date ||= [@member_demands.map(&:end_date).compact.min, 1.year.ago].compact.max
+    @member_effort_chart << { name: team_member.name, data: @operations_dashboards.map { |dashboard| dashboard.member_effort.to_f } }
+    @member_pull_interval_average_chart << { name: team_member.name, data: @operations_dashboards.map { |dashboard| dashboard.pull_interval.to_f } }
   end
 
   def assign_team_member_objects

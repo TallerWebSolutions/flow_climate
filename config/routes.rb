@@ -145,6 +145,7 @@ Rails.application.routes.draw do
       end
 
       get :search_team_members, on: :collection
+      get :pairings, on: :member
     end
 
     resources :financial_informations, only: %i[new create edit update destroy]

@@ -142,11 +142,11 @@ RSpec.describe UsersController, type: :controller do
       let(:second_demand) { Fabricate :demand, team: team, product: product, project: other_project, commitment_date: Time.zone.local(2019, 12, 16, 14, 0, 0), end_date: Time.zone.local(2019, 12, 22, 14, 0, 0) }
       let(:third_demand) { Fabricate :demand, team: team, product: product, project: project, commitment_date: Time.zone.local(2019, 12, 16, 14, 0, 0), end_date: Time.zone.local(2020, 1, 11, 14, 0, 0) }
 
-      let(:first_team_member) { Fabricate :team_member, company: company, user: user, name: 'first_team_member' }
-      let(:second_team_member) { Fabricate :team_member, company: company, user: user, name: 'second_team_member' }
-      let(:third_team_member) { Fabricate :team_member, company: company, user: user, name: 'third_team_member' }
-      let(:fourth_team_member) { Fabricate :team_member, company: company, user: user, name: 'fourth_team_member' }
-      let(:fifth_team_member) { Fabricate :team_member, company: company, user: user, name: 'fifth_team_member' }
+      let(:first_team_member) { Fabricate :team_member, company: company, user: user, name: 'first_team_member', start_date: Date.new(2019, 10, 16), end_date: nil }
+      let(:second_team_member) { Fabricate :team_member, company: company, user: user, name: 'second_team_member', start_date: Date.new(2019, 10, 16), end_date: nil }
+      let(:third_team_member) { Fabricate :team_member, company: company, user: user, name: 'third_team_member', start_date: Date.new(2019, 10, 16), end_date: nil }
+      let(:fourth_team_member) { Fabricate :team_member, company: company, user: user, name: 'fourth_team_member', start_date: Date.new(2019, 10, 16), end_date: nil }
+      let(:fifth_team_member) { Fabricate :team_member, company: company, user: user, name: 'fifth_team_member', start_date: Date.new(2019, 10, 16), end_date: nil }
 
       let!(:first_membership) { Fabricate :membership, team: team, team_member: first_team_member, hours_per_month: 120, start_date: Time.zone.local(2019, 12, 16, 14, 0, 0), end_date: nil }
       let!(:second_membership) { Fabricate :membership, team: team, team_member: second_team_member, hours_per_month: 40, start_date: Time.zone.local(2019, 11, 16, 14, 0, 0), end_date: Time.zone.local(2019, 12, 16, 14, 0, 0) }
@@ -154,15 +154,15 @@ RSpec.describe UsersController, type: :controller do
       let!(:fourth_membership) { Fabricate :membership, team: team, team_member: fourth_team_member, hours_per_month: 40, start_date: Time.zone.local(2019, 11, 16, 14, 0, 0), end_date: Time.zone.local(2019, 12, 16, 14, 0, 0) }
       let!(:fifth_membership) { Fabricate :membership, team: team, team_member: fifth_team_member, hours_per_month: 40, start_date: Time.zone.local(2019, 11, 16, 14, 0, 0), end_date: Time.zone.local(2019, 12, 16, 14, 0, 0) }
 
-      let!(:first_item_assignment) { Fabricate :item_assignment, demand: first_demand, membership: first_membership, start_time: 3.days.ago, finish_time: 52.hours.ago }
-      let!(:second_item_assignment) { Fabricate :item_assignment, demand: first_demand, membership: second_membership, start_time: 2.days.ago, finish_time: nil }
-      let!(:third_item_assignment) { Fabricate :item_assignment, demand: first_demand, membership: first_membership, start_time: 2.days.ago, finish_time: nil }
-      let!(:fourth_item_assignment) { Fabricate :item_assignment, demand: second_demand, membership: third_membership, start_time: 2.days.ago, finish_time: nil }
-      let!(:fifth_item_assignment) { Fabricate :item_assignment, demand: second_demand, membership: fourth_membership, start_time: 2.days.ago, finish_time: nil }
-      let!(:sixth_item_assignment) { Fabricate :item_assignment, demand: second_demand, membership: first_membership, start_time: 2.days.ago, finish_time: nil }
-      let!(:seventh_item_assignment) { Fabricate :item_assignment, demand: third_demand, membership: first_membership, start_time: 2.days.ago, finish_time: nil }
-      let!(:eigth_item_assignment) { Fabricate :item_assignment, demand: third_demand, membership: second_membership, start_time: 2.days.ago, finish_time: nil }
-      let!(:nineth_item_assignment) { Fabricate :item_assignment, demand: third_demand, membership: fifth_membership, start_time: 4.days.ago, finish_time: 3.days.ago }
+      let!(:first_item_assignment) { Fabricate :item_assignment, demand: first_demand, membership: first_membership, start_time: Time.zone.local(2020, 1, 13, 14, 0, 0), finish_time: Time.zone.local(2020, 1, 14, 10, 0, 0) }
+      let!(:second_item_assignment) { Fabricate :item_assignment, demand: first_demand, membership: second_membership, start_time: Time.zone.local(2020, 1, 14, 14, 0, 0), finish_time: nil }
+      let!(:third_item_assignment) { Fabricate :item_assignment, demand: first_demand, membership: first_membership, start_time: Time.zone.local(2020, 1, 14, 14, 0, 0), finish_time: nil }
+      let!(:fourth_item_assignment) { Fabricate :item_assignment, demand: second_demand, membership: third_membership, start_time: Time.zone.local(2020, 1, 14, 14, 0, 0), finish_time: nil }
+      let!(:fifth_item_assignment) { Fabricate :item_assignment, demand: second_demand, membership: fourth_membership, start_time: Time.zone.local(2020, 1, 14, 14, 0, 0), finish_time: nil }
+      let!(:sixth_item_assignment) { Fabricate :item_assignment, demand: second_demand, membership: first_membership, start_time: Time.zone.local(2020, 1, 14, 14, 0, 0), finish_time: nil }
+      let!(:seventh_item_assignment) { Fabricate :item_assignment, demand: third_demand, membership: first_membership, start_time: Time.zone.local(2020, 1, 14, 14, 0, 0), finish_time: nil }
+      let!(:eigth_item_assignment) { Fabricate :item_assignment, demand: third_demand, membership: second_membership, start_time: Time.zone.local(2020, 1, 14, 14, 0, 0), finish_time: nil }
+      let!(:nineth_item_assignment) { Fabricate :item_assignment, demand: third_demand, membership: fifth_membership, start_time: Time.zone.local(2020, 1, 12, 14, 0, 0), finish_time: Time.zone.local(2020, 1, 13, 14, 0, 0) }
     end
 
     describe 'GET #show' do
@@ -182,7 +182,6 @@ RSpec.describe UsersController, type: :controller do
               expect(assigns(:user_plans)).to eq [other_user_plan, user_plan]
               expect(assigns(:companies_list)).to eq [other_company, company]
 
-              expect(assigns(:pairing_chart)).to eq(second_team_member.name => 1, third_team_member.name => 1, fourth_team_member.name => 1)
               expect(assigns(:member_teams)).to eq [team]
               expect(assigns(:member_projects)).to eq [project, other_project]
               expect(assigns(:array_of_dates)).to eq [Date.new(2019, 12, 31), Date.new(2020, 1, 31)]
@@ -198,8 +197,8 @@ RSpec.describe UsersController, type: :controller do
               expect(assigns(:projects_value_per_demand)).to eq({ project => 1000, other_project => 3500 })
               expect(assigns(:projects_flow_pressure)).to eq({ project => 8.780487804878078, other_project => 12.413793103448336 })
 
-              expect(assigns(:member_effort_chart)).to eq [{ data: [0, 0], name: team.name }]
-              expect(assigns(:member_pull_interval_average_chart)).to eq [{ data: [0.0, 0.0], name: team.name }]
+              expect(assigns(:member_effort_chart)).to eq [{ data: [], name: first_team_member.name }]
+              expect(assigns(:member_pull_interval_average_chart)).to eq [{ data: [], name: first_team_member.name }]
 
               expect(response).to render_template :show
             end
@@ -341,7 +340,6 @@ RSpec.describe UsersController, type: :controller do
 
             get :user_dashboard_company_tab, params: { id: user, company_id: company }, xhr: true
 
-            expect(assigns(:pairing_chart)).to eq(second_team_member.name => 2, third_team_member.name => 1, fourth_team_member.name => 1)
             expect(assigns(:member_teams)).to eq [team]
             expect(assigns(:member_projects)).to eq [project, other_project]
             expect(assigns(:array_of_dates)).to eq [Date.new(2019, 12, 31), Date.new(2020, 1, 31)]
@@ -388,7 +386,6 @@ RSpec.describe UsersController, type: :controller do
               expect(assigns(:user_plans)).to eq [other_user_plan, user_plan]
               expect(assigns(:companies_list)).to eq [other_company, company]
 
-              expect(assigns(:pairing_chart)).to eq(second_team_member.name => 1, third_team_member.name => 1, fourth_team_member.name => 1)
               expect(assigns(:member_teams)).to eq [team]
               expect(assigns(:member_projects)).to eq [project, other_project]
               expect(assigns(:array_of_dates)).to eq [Date.new(2019, 12, 31), Date.new(2020, 1, 31)]

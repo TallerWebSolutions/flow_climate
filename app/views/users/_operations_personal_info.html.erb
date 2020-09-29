@@ -44,10 +44,10 @@
       <td><b><%= Project.model_name.human(count: 2) %></b></td>
       <td><%= team_member.projects.count %></td>
     </tr>
-    <% if team_member.pairing_members.present? %>
+    <% if team_member.pairing_members(Time.zone.today).present? %>
       <tr>
         <td><b><%= I18n.t('user.dashboard.pairing_info') %></b></td>
-        <td><%= "#{team_member.pairing_members.keys.first} (#{team_member.pairing_members.values.first})" %></td>
+        <td><%= link_to "#{team_member.pairing_members(Time.zone.today).keys.first.team_member_name} (#{team_member.pairing_members(Time.zone.today).values.first})", pairings_company_team_member_path(company, team_member), target: '_blank' %></td>
       </tr>
     <% end %>
   </tbody>

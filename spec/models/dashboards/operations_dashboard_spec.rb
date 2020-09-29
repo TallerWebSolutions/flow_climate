@@ -5,12 +5,11 @@ RSpec.describe Dashboards::OperationsDashboard, type: :model do
     it { is_expected.to belong_to(:team_member) }
     it { is_expected.to belong_to(:first_delivery).class_name('Demand') }
 
-    it { is_expected.to have_many(:operations_dashboard_pairings).class_name('Dashboards::OperationsDashboardPairings').dependent(:destroy) }
+    it { is_expected.to have_many(:operations_dashboard_pairings).class_name('Dashboards::OperationsDashboardPairing').dependent(:destroy) }
   end
 
   context 'validations' do
     it { is_expected.to validate_presence_of :team_member }
-    it { is_expected.to validate_presence_of :first_delivery }
     it { is_expected.to validate_presence_of :dashboard_date }
     it { is_expected.to validate_presence_of :bugs_count }
     it { is_expected.to validate_presence_of :delivered_demands_count }

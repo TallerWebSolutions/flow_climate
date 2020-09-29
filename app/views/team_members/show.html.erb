@@ -12,15 +12,17 @@
   <%= render 'team_members/associate_user_to_team_member', company: @company, team_member: @team_member %>
 </div>
 
-<%= render 'users/operations_dashboard', company: @company, name: @team_member.name, demands: @member_demands, team_member: @team_member,
+<%= render 'team_members/dashboards/operations_dashboard', company: @company, name: @team_member.name, demands: @member_demands, team_member: @team_member,
            member_teams: @member_teams, demand_blocks: @demand_blocks, member_projects: @member_projects, pairing_chart: @pairing_chart,
            statistics_information: @statistics_information, array_of_dates: @array_of_dates,
            population_period: @population_period, member_effort_chart: @member_effort_chart, demands_chart_adapter: @demands_chart_adapter,
-           member_pull_interval_average_chart: @member_pull_interval_average_chart %>
+           member_pull_interval_average_chart: @member_pull_interval_average_chart,
+           operations_dashboards: @operations_dashboards %>
 
 <% content_for :javascript do %>
   <%= javascript_include_tag 'charts/column' %>
   <%= javascript_include_tag 'charts/line' %>
+  <%= javascript_include_tag 'team_members/user_dashboard_operations_charts' %>
 
   <%= javascript_include_tag 'team_members/show' %>
 <% end %>

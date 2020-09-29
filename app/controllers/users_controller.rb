@@ -104,16 +104,14 @@ class UsersController < AuthenticatedController
     @member_effort_chart = []
     @member_pull_interval_average_chart = []
 
-    team_member.memberships.active.each do |membership|
-      membership_service = Flow::MembershipFlowInformation.new(membership)
+    @operations_dashboards = Dashboards::OperationsDashboard.where(team_member: team_member, last_data_in_month: true).order(:dashboard_date)
 
-      @member_effort_chart << { name: membership.team.name, data: membership_service.compute_developer_effort }
-      @member_pull_interval_average_chart << { name: membership.team.name, data: membership_service.average_pull_interval }
-    end
+    @member_effort_chart << { name: team_member.name, data: @operations_dashboards.map { |dashboard| dashboard.member_effort.to_f } }
+    @member_pull_interval_average_chart << { name: team_member.name, data: @operations_dashboards.map { |dashboard| dashboard.pull_interval.to_f } }
   end
 
   def build_pairing_chart
-    @user.team_member.pairing_members.each { |name, qty| @pairing_chart[name] = qty }
+    @user.team_member.pairing_members(Time.zone.today).each { |name, qty| @pairing_chart[name] = qty }
   end
 
   def assign_user_dependencies

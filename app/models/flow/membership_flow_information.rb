@@ -12,35 +12,20 @@ module Flow
       @population_dates = TimeService.instance.months_between_of(start_population_date, end_population_date)
     end
 
-    def compute_developer_effort
+    def compute_developer_effort(upper_limit, bottom_limit)
       return unless @membership.developer?
 
-      efforts_by_month = []
-
-      @population_dates.each do |date|
-        item_assignments = @membership.item_assignments.where(assignment_for_role: true).where('item_assignments.start_time BETWEEN :bottom_limit_date AND :upper_limit_date', bottom_limit_date: date.beginning_of_month, upper_limit_date: date.end_of_month).sum(:item_assignment_effort)
-        efforts_by_month << item_assignments.to_f
-      end
-
-      efforts_by_month
+      item_assignments_efforts = @membership.item_assignments.where(assignment_for_role: true).where('item_assignments.start_time BETWEEN :upper_limit_date AND :bottom_limit_date', upper_limit_date: upper_limit, bottom_limit_date: bottom_limit).sum(:item_assignment_effort)
+      item_assignments_efforts.to_f
     end
 
-    def average_pull_interval
-      return unless @membership.developer?
+    def average_pull_interval(upper_limit, bottom_limit)
+      average_time_to_pull = 0
 
-      average_time_to_pull_by_month = []
+      item_assignments = @membership.item_assignments.where('item_assignments.start_time BETWEEN :upper_limit_date AND :bottom_limit_date', upper_limit_date: upper_limit, bottom_limit_date: bottom_limit).order(:start_time)
 
-      @population_dates.each do |date|
-        item_assignments = @membership.item_assignments.where('item_assignments.start_time BETWEEN :bottom_limit_date AND :upper_limit_date', bottom_limit_date: date.beginning_of_month, upper_limit_date: date.end_of_month).order(:start_time)
-
-        average_time_to_pull_by_month << if item_assignments.count.positive?
-                                           ((item_assignments.sum(:pull_interval) / item_assignments.count.to_f) / 1.hour).to_f
-                                         else
-                                           0
-                                         end
-      end
-
-      average_time_to_pull_by_month
+      average_time_to_pull = ((item_assignments.sum(:pull_interval) / item_assignments.count.to_f) / 1.hour).to_f if item_assignments.count.positive?
+      average_time_to_pull
     end
 
     def compute_effort_for_assignment(assignment)

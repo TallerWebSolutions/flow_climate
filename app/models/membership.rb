@@ -76,15 +76,15 @@ class Membership < ApplicationRecord
     ((end_date || Time.zone.today) - start_date).to_i
   end
 
-  def pairing_count
-    pairing_members.flatten.map(&:team_member_name).flatten.group_by(&:itself).map { |key, value| [key, value.count] }.sort_by { |_key, value| value }.reverse.to_h
+  def pairing_count(date)
+    pairing_members(date).flatten.map(&:team_member_name).flatten.group_by(&:itself).map { |key, value| [key, value.count] }.sort_by { |_key, value| value }.reverse.to_h
   end
 
-  def pairing_members
+  def pairing_members(date)
     return [] if demands_for_role.blank?
 
     pairing_members = []
-    same_team_demands = demands_for_role.where(team: team)
+    same_team_demands = demands_for_role.where(team: team).where('end_date <= :limit_date', limit_date: date.end_of_day)
     same_team_demands.each { |demand| pairing_members << pairing_members_in_demand(demand) }
 
     pairing_members.flatten

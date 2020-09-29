@@ -1788,15 +1788,21 @@ ALTER SEQUENCE public.operations_dashboard_pairings_id_seq OWNED BY public.opera
 
 CREATE TABLE public.operations_dashboards (
     id bigint NOT NULL,
-    team_member_id integer NOT NULL,
-    first_delivery_id integer NOT NULL,
     dashboard_date date NOT NULL,
+    last_data_in_week boolean DEFAULT false NOT NULL,
+    last_data_in_month boolean DEFAULT false NOT NULL,
+    last_data_in_year boolean DEFAULT false NOT NULL,
+    team_member_id integer NOT NULL,
+    demands_ids integer[],
+    first_delivery_id integer,
     delivered_demands_count integer DEFAULT 0 NOT NULL,
     bugs_count integer DEFAULT 0 NOT NULL,
     lead_time_min numeric DEFAULT 0.0 NOT NULL,
     lead_time_max numeric DEFAULT 0.0 NOT NULL,
     lead_time_p80 numeric DEFAULT 0.0 NOT NULL,
     projects_count integer DEFAULT 0 NOT NULL,
+    member_effort numeric,
+    pull_interval integer,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -5025,6 +5031,20 @@ CREATE UNIQUE INDEX index_users_on_email ON public.users USING btree (email);
 --
 
 CREATE UNIQUE INDEX index_users_on_reset_password_token ON public.users USING btree (reset_password_token);
+
+
+--
+-- Name: operations_dashboard_cache_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX operations_dashboard_cache_unique ON public.operations_dashboards USING btree (team_member_id, dashboard_date);
+
+
+--
+-- Name: operations_dashboard_pairings_cache_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX operations_dashboard_pairings_cache_unique ON public.operations_dashboard_pairings USING btree (operations_dashboard_id, pair_id);
 
 
 --

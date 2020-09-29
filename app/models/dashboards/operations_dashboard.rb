@@ -8,18 +8,25 @@
 #  bugs_count              :integer          default(0), not null
 #  dashboard_date          :date             not null
 #  delivered_demands_count :integer          default(0), not null
+#  demands_ids             :integer          is an Array
+#  last_data_in_month      :boolean          default(FALSE), not null
+#  last_data_in_week       :boolean          default(FALSE), not null
+#  last_data_in_year       :boolean          default(FALSE), not null
 #  lead_time_max           :decimal(, )      default(0.0), not null
 #  lead_time_min           :decimal(, )      default(0.0), not null
 #  lead_time_p80           :decimal(, )      default(0.0), not null
+#  member_effort           :decimal(, )
 #  projects_count          :integer          default(0), not null
+#  pull_interval           :integer
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
-#  first_delivery_id       :integer          not null
+#  first_delivery_id       :integer
 #  team_member_id          :integer          not null
 #
 # Indexes
 #
 #  index_operations_dashboards_on_team_member_id  (team_member_id)
+#  operations_dashboard_cache_unique              (team_member_id,dashboard_date) UNIQUE
 #
 # Foreign Keys
 #
@@ -31,9 +38,9 @@ module Dashboards
     belongs_to :team_member
     belongs_to :first_delivery, class_name: 'Demand'
 
-    has_many :operations_dashboard_pairings, class_name: 'Dashboards::OperationsDashboardPairings', dependent: :destroy
+    has_many :operations_dashboard_pairings, class_name: 'Dashboards::OperationsDashboardPairing', dependent: :destroy
 
-    validates :team_member, :first_delivery, :dashboard_date, :bugs_count, :delivered_demands_count,
+    validates :team_member, :dashboard_date, :bugs_count, :delivered_demands_count,
               :lead_time_max, :lead_time_min, :lead_time_p80, :projects_count, presence: true
   end
 end

@@ -5,7 +5,8 @@ $('#user-dashboard-tab').html("<%= escape_javascript(render 'users/user_dashboar
              projects_flow_pressure: @projects_flow_pressure,
              member_effort_chart: @member_effort_chart,
              demands_chart_adapter: @demands_chart_adapter,
-             member_pull_interval_average_chart: @member_pull_interval_average_chart) %>")
+             member_pull_interval_average_chart: @member_pull_interval_average_chart,
+             operations_dashboards: @operations_dashboards) %>")
 
 $("#general-loader").hide();
 $("#user-dashboard-tab").show();

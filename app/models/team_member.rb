@@ -58,8 +58,8 @@ class TeamMember < ApplicationRecord
     end_date.blank?
   end
 
-  def pairing_members
-    memberships.map(&:pairing_members).flatten.map(&:team_member_name).flatten.group_by(&:itself).transform_values(&:count).sort_by { |_key, value| value }.reverse.to_h
+  def pairing_members(date)
+    memberships.map { |membership| membership.pairing_members(date) }.flatten.group_by(&:itself).transform_values(&:count).sort_by { |_key, value| value }.reverse.to_h
   end
 
   def lead_time_min
