@@ -35,7 +35,7 @@ group :test, :development do
   gem 'database_cleaner'
   gem 'fabrication'
   gem 'faker'
-  gem 'knapsack_pro'
+  gem 'parallel_tests'
   gem 'parser', '~> 2.7', '>= 2.7.1.4', require: false
   gem 'rspec-collection_matchers'
   gem 'rspec-rails'
