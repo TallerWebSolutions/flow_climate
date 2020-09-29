@@ -44,7 +44,7 @@ group :test, :development do
   gem 'rubocop-rails'
   gem 'rubocop-rspec'
   gem 'shoulda-matchers'
-  gem 'simplecov'
+  gem 'simplecov-parallel'
   gem 'webmock'
 end
 
