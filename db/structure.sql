@@ -1750,6 +1750,78 @@ ALTER SEQUENCE public.memberships_id_seq OWNED BY public.memberships.id;
 
 
 --
+-- Name: operations_dashboard_pairings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.operations_dashboard_pairings (
+    id bigint NOT NULL,
+    operations_dashboard_id integer NOT NULL,
+    pair_id integer NOT NULL,
+    pair_times integer NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: operations_dashboard_pairings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.operations_dashboard_pairings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: operations_dashboard_pairings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.operations_dashboard_pairings_id_seq OWNED BY public.operations_dashboard_pairings.id;
+
+
+--
+-- Name: operations_dashboards; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.operations_dashboards (
+    id bigint NOT NULL,
+    team_member_id integer NOT NULL,
+    first_delivery_id integer NOT NULL,
+    dashboard_date date NOT NULL,
+    delivered_demands_count integer DEFAULT 0 NOT NULL,
+    bugs_count integer DEFAULT 0 NOT NULL,
+    lead_time_min numeric DEFAULT 0.0 NOT NULL,
+    lead_time_max numeric DEFAULT 0.0 NOT NULL,
+    lead_time_p80 numeric DEFAULT 0.0 NOT NULL,
+    projects_count integer DEFAULT 0 NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: operations_dashboards_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.operations_dashboards_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: operations_dashboards_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.operations_dashboards_id_seq OWNED BY public.operations_dashboards.id;
+
+
+--
 -- Name: plans; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3077,6 +3149,20 @@ ALTER TABLE ONLY public.memberships ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
+-- Name: operations_dashboard_pairings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.operations_dashboard_pairings ALTER COLUMN id SET DEFAULT nextval('public.operations_dashboard_pairings_id_seq'::regclass);
+
+
+--
+-- Name: operations_dashboards id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.operations_dashboards ALTER COLUMN id SET DEFAULT nextval('public.operations_dashboards_id_seq'::regclass);
+
+
+--
 -- Name: plans id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3660,6 +3746,22 @@ ALTER TABLE ONLY public.jira_project_configs
 
 ALTER TABLE ONLY public.memberships
     ADD CONSTRAINT memberships_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: operations_dashboard_pairings operations_dashboard_pairings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.operations_dashboard_pairings
+    ADD CONSTRAINT operations_dashboard_pairings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: operations_dashboards operations_dashboards_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.operations_dashboards
+    ADD CONSTRAINT operations_dashboards_pkey PRIMARY KEY (id);
 
 
 --
@@ -4433,6 +4535,27 @@ CREATE INDEX index_memberships_on_team_id ON public.memberships USING btree (tea
 --
 
 CREATE INDEX index_memberships_on_team_member_id ON public.memberships USING btree (team_member_id);
+
+
+--
+-- Name: index_operations_dashboard_pairings_on_operations_dashboard_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_operations_dashboard_pairings_on_operations_dashboard_id ON public.operations_dashboard_pairings USING btree (operations_dashboard_id);
+
+
+--
+-- Name: index_operations_dashboard_pairings_on_pair_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_operations_dashboard_pairings_on_pair_id ON public.operations_dashboard_pairings USING btree (pair_id);
+
+
+--
+-- Name: index_operations_dashboards_on_team_member_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_operations_dashboards_on_team_member_id ON public.operations_dashboards USING btree (team_member_id);
 
 
 --
@@ -5262,6 +5385,14 @@ ALTER TABLE ONLY public.jira_product_configs
 
 
 --
+-- Name: operations_dashboards fk_rails_3c55d6de97; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.operations_dashboards
+    ADD CONSTRAINT fk_rails_3c55d6de97 FOREIGN KEY (team_member_id) REFERENCES public.team_members(id);
+
+
+--
 -- Name: team_members fk_rails_3ec60e399b; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5502,6 +5633,14 @@ ALTER TABLE ONLY public.users
 
 
 --
+-- Name: operations_dashboards fk_rails_985b6d0e91; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.operations_dashboards
+    ADD CONSTRAINT fk_rails_985b6d0e91 FOREIGN KEY (first_delivery_id) REFERENCES public.demands(id);
+
+
+--
 -- Name: customers_projects fk_rails_9b68bbaf49; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5694,6 +5833,14 @@ ALTER TABLE ONLY public.contracts
 
 
 --
+-- Name: operations_dashboard_pairings fk_rails_db85e736aa; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.operations_dashboard_pairings
+    ADD CONSTRAINT fk_rails_db85e736aa FOREIGN KEY (operations_dashboard_id) REFERENCES public.operations_dashboards(id);
+
+
+--
 -- Name: demand_comments fk_rails_dc14d53db5; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5723,6 +5870,14 @@ ALTER TABLE ONLY public.teams
 
 ALTER TABLE ONLY public.team_resource_allocations
     ADD CONSTRAINT fk_rails_e11bdf0f2c FOREIGN KEY (team_id) REFERENCES public.teams(id);
+
+
+--
+-- Name: operations_dashboard_pairings fk_rails_ea51fcd7c0; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.operations_dashboard_pairings
+    ADD CONSTRAINT fk_rails_ea51fcd7c0 FOREIGN KEY (pair_id) REFERENCES public.team_members(id);
 
 
 --
@@ -5976,6 +6131,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200812153534'),
 ('20200813131313'),
 ('20200831153123'),
-('20200928150830');
+('20200928150830'),
+('20200929125717');
 
 

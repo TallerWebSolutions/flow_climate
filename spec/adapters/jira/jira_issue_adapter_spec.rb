@@ -429,7 +429,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
 
       context 'in demand transition from saving' do
         it 'saves a Jira integration error' do
-          allow_any_instance_of(ActiveRecord::Relation).to receive(:first_or_create).and_raise(PG::UniqueViolation)
+          allow_any_instance_of(ActiveRecord::Relation).to receive(:first_or_create).and_raise(ActiveRecord::RecordNotUnique)
           described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
 
           expect(Jira::JiraApiError.count).not_to eq 0
@@ -438,7 +438,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
 
       context 'in demand transition to saving' do
         it 'saves a Jira integration error' do
-          allow_any_instance_of(DemandTransition).to receive(:update).and_raise(PG::UniqueViolation)
+          allow_any_instance_of(DemandTransition).to receive(:update).and_raise(ActiveRecord::RecordNotUnique)
           described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
 
           expect(Jira::JiraApiError.count).not_to eq 0
