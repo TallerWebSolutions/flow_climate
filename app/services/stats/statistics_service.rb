@@ -107,11 +107,11 @@ module Stats
       duration = 0
 
       while remaining_backlog_simulated.positive?
-        begin
-          delivered_per_week = throughput_data_array.sample
-          remaining_backlog_simulated -= delivered_per_week
-          duration += 1
-        end
+
+        delivered_per_week = throughput_data_array.sample
+        remaining_backlog_simulated -= delivered_per_week
+        duration += 1
+
       end
       duration
     end
