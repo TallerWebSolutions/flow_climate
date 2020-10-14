@@ -31,36 +31,31 @@
 </div>
 
 <div class="row equal-heights">
-  <% if pairing_chart.present? %>
+  <% if operations_dashboards.present? %>
     <div class="col-xs-6">
-      <%= render 'team_members/pairings_summary', pairing_chart: pairing_chart %>
+      <%= render 'team_members/statistics_informations', dates_array: array_of_dates, operations_dashboards: operations_dashboards %>
     </div>
-  <% end %>
 
-  <% if statistics_information.present? %>
     <div class="col-xs-6">
-      <%= render 'team_members/statistics_informations', dates_array: array_of_dates, statistics_flow_informations: statistics_information %>
+      <h4><%= I18n.t('operations_dashboard.effort_chart.title') %></h4>
+
+      <div id="member-dashboard-effort-column"
+           class="flow-chart"
+           data-title=''
+           data-xcategories='<%= operations_dashboards.map(&:dashboard_date).to_json %>'
+           data-xtitle='<%= I18n.t('general.months') %>'
+           data-ytitle='<%= I18n.t('general.hours') %>'
+           data-prefix=''
+           data-tooltipsuffix=''
+           data-datalabelsuffix=''
+           data-series='<%= member_effort_chart.to_json %>'
+           data-decimals='0'>
+      </div>
     </div>
   <% end %>
 </div>
 
 <div class="row equal-heights">
-  <div class="col-xs-6">
-    <h4><%= I18n.t('operations_dashboard.effort_chart.title') %></h4>
-
-    <div id="member-dashboard-effort-column"
-         class="flow-chart"
-         data-title=''
-         data-xcategories='<%= array_of_dates.to_json %>'
-         data-xtitle='<%= I18n.t('general.months') %>'
-         data-ytitle='<%= I18n.t('general.hours') %>'
-         data-prefix=''
-         data-tooltipsuffix=''
-         data-datalabelsuffix=''
-         data-series='<%= member_effort_chart.to_json %>'
-         data-decimals='0'>
-    </div>
-  </div>
 
   <div class="col-xs-6">
     <h4><%= I18n.t('demands.charts.throughput') %></h4>
@@ -68,26 +63,24 @@
     <div id="member-dashboard-throughput-column"
          class="flow-chart"
          data-title=''
-         data-xcategories='<%= array_of_dates.to_json %>'
+         data-xcategories='<%= operations_dashboards.map(&:dashboard_date).to_json %>'
          data-xtitle='<%= I18n.t('general.months') %>'
          data-ytitle='<%= I18n.t('general.hours') %>'
          data-prefix=''
          data-tooltipsuffix=''
          data-datalabelsuffix=''
-         data-series='<%= [{ name: I18n.t('general.delivered'), data: demands_chart_adapter.throughput_chart_data }].to_json %>'
+         data-series='<%= [{ name: I18n.t('general.delivered'), data: operations_dashboards.map(&:delivered_demands_count) }].to_json %>'
          data-decimals='0'>
     </div>
   </div>
-</div>
 
-<div class="row equal-heights">
   <div class="col-xs-6">
     <h4><%= I18n.t('operations_dashboard.pull_interval.title') %></h4>
 
     <div id="member-dashboard-pull-interval-line"
          class="flow-chart"
          data-title=''
-         data-xcategories='<%= array_of_dates.to_json %>'
+         data-xcategories='<%= operations_dashboards.map(&:dashboard_date).to_json %>'
          data-xtitle='<%= I18n.t('general.months') %>'
          data-ytitle='<%= I18n.t('general.hours') %>'
          data-prefix=''

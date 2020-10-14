@@ -144,18 +144,18 @@ RSpec.describe Membership, type: :model do
   describe '#pairing_count' do
     include_context 'membership demands methods data'
 
-    it { expect(first_membership.pairing_count).to eq(second_team_member.name => 2) }
-    it { expect(second_membership.pairing_count).to eq(first_team_member.name => 2) }
-    it { expect(third_membership.pairing_count).to eq({}) }
+    it { expect(first_membership.pairing_count(Time.zone.today)).to eq(second_team_member.name => 2) }
+    it { expect(second_membership.pairing_count(Time.zone.today)).to eq(first_team_member.name => 2) }
+    it { expect(third_membership.pairing_count(Time.zone.today)).to eq({}) }
   end
 
   describe '#pairing_members' do
     include_context 'membership demands methods data'
 
-    it { expect(first_membership.pairing_members).to match_array [second_membership, second_membership] }
-    it { expect(second_membership.pairing_members).to match_array [first_membership, first_membership] }
-    it { expect(third_membership.pairing_members).to eq [] }
-    it { expect(fourth_membership.pairing_members).to eq [] }
+    it { expect(first_membership.pairing_members(Time.zone.today)).to match_array [second_membership, second_membership] }
+    it { expect(second_membership.pairing_members(Time.zone.today)).to match_array [first_membership, first_membership] }
+    it { expect(third_membership.pairing_members(Time.zone.today)).to eq [] }
+    it { expect(fourth_membership.pairing_members(Time.zone.today)).to eq [] }
   end
 
   describe '#demands_ids' do

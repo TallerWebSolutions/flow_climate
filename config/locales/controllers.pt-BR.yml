@@ -1328,4 +1328,4 @@ pt-BR:
     effort_chart:
       title: "Horas Úteis em Desenvolvimento"
     pull_interval:
-      title: "Intervalo Entre Demandas Puxadas"
+      title: "Intervalo Médio entre Demandas Puxadas"

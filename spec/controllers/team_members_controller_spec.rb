@@ -55,6 +55,12 @@ RSpec.describe TeamMembersController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'GET #pairings' do
+      before { get :pairings, params: { company_id: 'xpto', id: 'foo' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -73,7 +79,6 @@ RSpec.describe TeamMembersController, type: :controller do
 
     describe 'GET #show' do
       let(:team) { Fabricate :team, company: company }
-      let(:team_member) { Fabricate :team_member, company: company }
 
       let!(:first_membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
       let!(:second_membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
@@ -85,8 +90,8 @@ RSpec.describe TeamMembersController, type: :controller do
           expect(response).to render_template 'team_members/show'
           expect(assigns(:company)).to eq company
           expect(assigns(:team_member)).to eq team_member
-          expect(assigns(:member_effort_chart)).to eq [{ data: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], name: team.name }]
-          expect(assigns(:member_pull_interval_average_chart)).to eq [{ data: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], name: team.name }]
+          expect(assigns(:member_effort_chart)).to eq [{ data: [], name: team_member.name }]
+          expect(assigns(:member_pull_interval_average_chart)).to eq [{ data: [], name: team_member.name }]
         end
       end
 
@@ -340,7 +345,7 @@ RSpec.describe TeamMembersController, type: :controller do
     describe 'PATCH #dissociate_user' do
       let(:team) { Fabricate :team, company: company }
       let(:other_team) { Fabricate :team, company: company }
-      let(:team_member) { Fabricate :team_member, company: company }
+      let(:team_member) { Fabricate :team_member, company: company, name: 'team_member' }
 
       context 'passing valid parameters' do
         before { patch :dissociate_user, params: { company_id: company, id: team_member }, xhr: true }
@@ -410,6 +415,61 @@ RSpec.describe TeamMembersController, type: :controller do
           let(:company) { Fabricate :company, users: [] }
 
           before { get :search_team_members, params: { company_id: company }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'GET #pairings' do
+      context 'valid parameters' do
+        context 'with no data' do
+          before { get :pairings, params: { company_id: company, id: team_member } }
+
+          it 'searches for the team members and renders the template' do
+            expect(response).to render_template 'team_members/pairings'
+            expect(assigns(:operations_dashboards)).to eq []
+          end
+        end
+
+        context 'with data' do
+          let(:second_team_member) { Fabricate :team_member, company: company, name: 'second_team_member' }
+          let(:third_team_member) { Fabricate :team_member, company: company, name: 'third_team_member' }
+
+          let!(:operations_dashboard) { Fabricate :operations_dashboard, team_member: team_member, last_data_in_month: true, dashboard_date: Time.zone.today }
+          let!(:other_operations_dashboard) { Fabricate :operations_dashboard, team_member: team_member, last_data_in_month: true, dashboard_date: Time.zone.yesterday }
+          let!(:operations_dashboard_pairing) { Fabricate :operations_dashboard_pairing, operations_dashboard: operations_dashboard, pair: second_team_member, pair_times: 2 }
+          let!(:other_operations_dashboard_pairing) { Fabricate :operations_dashboard_pairing, operations_dashboard: operations_dashboard, pair: third_team_member, pair_times: 3 }
+
+          let!(:out_operations_dashboard) { Fabricate :operations_dashboard, team_member: team_member, last_data_in_month: false, dashboard_date: 2.days.ago }
+
+          it 'searches for the team members and renders the template' do
+            get :pairings, params: { company_id: company, id: team_member }
+
+            expect(response).to render_template 'team_members/pairings'
+            expect(assigns(:operations_dashboards)).to eq [other_operations_dashboard, operations_dashboard]
+            expect(assigns(:pairing_chart)).to eq [{ data: [nil, 3], name: third_team_member.name }, { data: [nil, 2], name: second_team_member.name }]
+          end
+        end
+      end
+
+      context 'invalid' do
+        context 'non-existent company' do
+          before { get :pairings, params: { company_id: 'foo', id: team_member } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'non-existent team member' do
+          before { get :pairings, params: { company_id: company, id: 'foo' } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'not-permitted company' do
+          let(:company) { Fabricate :company, users: [] }
+
+          before { get :pairings, params: { company_id: company, id: team_member } }
 
           it { expect(response).to have_http_status :not_found }
         end

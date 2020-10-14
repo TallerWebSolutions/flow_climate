@@ -47,9 +47,9 @@ RSpec.describe ItemAssignment, type: :model do
 
         it { expect(described_class.for_dates(10.days.ago, 7.days.ago)).to match_array [first_item_assignment, second_item_assignment] }
         it { expect(described_class.for_dates(169.hours.ago, 6.days.ago)).to eq [first_item_assignment] }
-        it { expect(described_class.for_dates(5.days.ago, 2.days.ago)).to eq [third_item_assignment, fourth_item_assignment] }
-        it { expect(described_class.for_dates(9.days.ago, 6.days.ago)).to eq [first_item_assignment, second_item_assignment] }
-        it { expect(described_class.for_dates(4.days.ago, nil)).to eq [third_item_assignment, fourth_item_assignment] }
+        it { expect(described_class.for_dates(5.days.ago, 2.days.ago)).to match_array [third_item_assignment, fourth_item_assignment] }
+        it { expect(described_class.for_dates(9.days.ago, 6.days.ago)).to match_array [first_item_assignment, second_item_assignment] }
+        it { expect(described_class.for_dates(4.days.ago, nil)).to match_array [third_item_assignment, fourth_item_assignment] }
       end
 
       context 'with no data' do

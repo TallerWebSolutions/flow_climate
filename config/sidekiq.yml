@@ -10,5 +10,7 @@ queues:
   - ['project_update', 1]
   - ['demand_update', 2]
   - ['consolidations', 1]
+  - ['dashboards', 1]
 limits:
   consolidations: 3
+  dashboards: 2

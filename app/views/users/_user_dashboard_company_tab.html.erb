@@ -1,5 +1,5 @@
 <% if company&.role_for_user(user)&.operations? %>
-  <%= render 'users/operations_dashboard',
+  <%= render 'team_members/dashboards/operations_dashboard',
              company: company,
              name: user.full_name,
              demands: user.demands,
@@ -12,7 +12,8 @@
              array_of_dates: array_of_dates,
              member_effort_chart: member_effort_chart,
              demands_chart_adapter: demands_chart_adapter,
-             member_pull_interval_average_chart: member_pull_interval_average_chart %>
+             member_pull_interval_average_chart: member_pull_interval_average_chart,
+             operations_dashboards: operations_dashboards %>
 
 <% elsif company&.role_for_user(user)&.manager? %>
   <%= render 'users/manager_dashboard',

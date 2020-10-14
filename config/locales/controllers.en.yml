@@ -1346,4 +1346,4 @@ en:
     effort_chart:
       title: "Working Hours in Development"
     pull_interval:
-      title: "Demand Pull Interval"
+      title: "Average Demand Pull Interval"

@@ -140,7 +140,7 @@ module Jira
     def create_from_transition(demand, from_stage_id, from_transition_date)
       stage_from = demand.project.stages.find_by(integration_id: from_stage_id)
       DemandTransition.where(demand: demand, stage: stage_from, last_time_in: from_transition_date).first_or_create
-    rescue PG::UniqueViolation
+    rescue ActiveRecord::RecordNotUnique
       Jira::JiraApiError.create(demand: demand)
       nil
     end
@@ -156,7 +156,7 @@ module Jira
       demand_transition.save
 
       Slack::SlackNotificationService.instance.notify_demand_state_changed(stage_to, demand, author)
-    rescue PG::UniqueViolation
+    rescue ActiveRecord::RecordNotUnique
       Jira::JiraApiError.create(demand: demand)
       nil
     end

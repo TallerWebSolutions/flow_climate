@@ -36,7 +36,8 @@
              projects_flow_pressure: @projects_flow_pressure,
              member_effort_chart: @member_effort_chart,
              demands_chart_adapter: @demands_chart_adapter,
-             member_pull_interval_average_chart: @member_pull_interval_average_chart %>
+             member_pull_interval_average_chart: @member_pull_interval_average_chart,
+             operations_dashboards: @operations_dashboards %>
 </div>
 
 <% content_for :javascript do %>
@@ -45,7 +46,7 @@
 
   <%= javascript_include_tag 'components/components' %>
   <%= javascript_include_tag 'routes/user_routes' %>
-  <%= javascript_include_tag 'users/user_dashboard_operations_charts' %>
+  <%= javascript_include_tag 'team_members/user_dashboard_operations_charts' %>
   <%= javascript_include_tag 'users/user_dashboard_manager_charts' %>
   <%= javascript_include_tag 'users/show' %>
 <% end %>

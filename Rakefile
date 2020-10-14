@@ -6,3 +6,5 @@
 require_relative 'config/application'
 
 Rails.application.load_tasks
+
+KnapsackPro.load_tasks if defined?(KnapsackPro)
