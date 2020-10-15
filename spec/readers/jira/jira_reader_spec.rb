@@ -47,10 +47,20 @@ RSpec.describe Jira::JiraReader do
   end
 
   describe '#read_contract' do
-    it 'extracts and save the customer' do
-      contract = Fabricate :contract, customer: customer
-      jira_issue = client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, customfield_10015: [contract.id], project: { key: 'foo', self: 'http://foo.bar' }, customfield_10024: [{ emailAddress: 'foo' }, { emailAddress: 'bar' }], fixVersions: [{ name: 'bar' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', created: '2018-07-08T22:34:47.440-0300', items: [{ field: 'status', from: 'first_stage', to: 'second_stage' }] }, { id: '10038', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'status', from: 'third_stage', to: 'first_stage' }, { field: 'module', toString: 'statistics' }] }] } }.with_indifferent_access)
-      expect(described_class.instance.read_contract(jira_account, jira_issue.attrs)).to eq contract
+    context 'with an array field in the received contract ID' do
+      it 'extracts and save the customer' do
+        contract = Fabricate :contract, customer: customer
+        jira_issue = client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, customfield_10015: [contract.id], project: { key: 'foo', self: 'http://foo.bar' }, customfield_10024: [{ emailAddress: 'foo' }, { emailAddress: 'bar' }], fixVersions: [{ name: 'bar' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', created: '2018-07-08T22:34:47.440-0300', items: [{ field: 'status', from: 'first_stage', to: 'second_stage' }] }, { id: '10038', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'status', from: 'third_stage', to: 'first_stage' }, { field: 'module', toString: 'statistics' }] }] } }.with_indifferent_access)
+        expect(described_class.instance.read_contract(jira_account, jira_issue.attrs)).to eq contract
+      end
+    end
+
+    context 'with a string field in the received contract ID' do
+      it 'extracts and save the customer' do
+        contract = Fabricate :contract, customer: customer
+        jira_issue = client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, customfield_10015: contract.id.to_s, project: { key: 'foo', self: 'http://foo.bar' }, customfield_10024: [{ emailAddress: 'foo' }, { emailAddress: 'bar' }], fixVersions: [{ name: 'bar' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', created: '2018-07-08T22:34:47.440-0300', items: [{ field: 'status', from: 'first_stage', to: 'second_stage' }] }, { id: '10038', created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'status', from: 'third_stage', to: 'first_stage' }, { field: 'module', toString: 'statistics' }] }] } }.with_indifferent_access)
+        expect(described_class.instance.read_contract(jira_account, jira_issue.attrs)).to eq contract
+      end
     end
   end
 
