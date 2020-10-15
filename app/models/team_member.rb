@@ -44,6 +44,8 @@ class TeamMember < ApplicationRecord
   has_many :demands, -> { distinct }, through: :memberships
   has_many :projects, -> { distinct }, through: :demands
 
+  has_many :operations_dashboards, class_name: 'Dashboards::OperationsDashboard', dependent: :destroy
+
   validates :name, presence: true
   validates :name, uniqueness: { scope: %i[company_id jira_account_id], message: I18n.t('activerecord.attributes.team_member.validations.name_unique') }
 

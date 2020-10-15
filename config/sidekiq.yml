@@ -12,5 +12,5 @@ queues:
   - ['consolidations', 1]
   - ['dashboards', 1]
 limits:
-  consolidations: 1
-  dashboards: 4
+  consolidations: 3
+  dashboards: 2
