@@ -45,7 +45,11 @@ module Jira
 
       jira_custom_fields_hash = build_jira_custom_fields_hash(jira_issue_attrs)
 
-      contract_id = jira_custom_fields_hash[contract_custom_field_name].try(:[], 0)
+      contract_id = if jira_custom_fields_hash[contract_custom_field_name].is_a?(Array)
+                      jira_custom_fields_hash[contract_custom_field_name].try(:[], 0)
+                    else
+                      jira_custom_fields_hash[contract_custom_field_name]
+                    end
 
       jira_account.company.contracts.find_by(id: contract_id) if contract_id.present?
     end
