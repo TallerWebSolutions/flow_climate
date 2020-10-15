@@ -4,7 +4,7 @@ namespace :dashboards_cache do
   desc 'Generates operations cache - all time'
   task generate_operations_dashboard_cache_all_time: :environment do
     TeamMember.all.each do |member|
-      first_delivery = team_member.demands.finished.order(:end_date).first
+      first_delivery = member.demands.finished.order(:end_date).first
 
       start_date = member.start_date || member.created_at.to_date
       dashboard_start_date = first_delivery&.end_date || start_date
