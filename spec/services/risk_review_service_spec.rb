@@ -47,7 +47,9 @@ RSpec.describe RiskReviewService, type: :service do
         expect(risk_review.reload.demands).to match_array [first_demand, third_demand, second_demand, fourth_demand]
         expect(risk_review.reload.demand_blocks).to match_array [first_block, third_block, second_block, fourth_block]
         expect(risk_review.reload.flow_impacts).to match_array [first_impact, third_impact, second_impact, fourth_impact, fifth_impact]
-        expect(risk_review.reload.weekly_avg_blocked_time).to eq [153_000, 153_000]
+        expect(risk_review.reload.weekly_avg_blocked_time.count).to eq 2
+        expect(risk_review.reload.weekly_avg_blocked_time[0]).to be_within(3000).of 153_000
+        expect(risk_review.reload.weekly_avg_blocked_time[1]).to be_within(3000).of 153_000
       end
     end
   end
