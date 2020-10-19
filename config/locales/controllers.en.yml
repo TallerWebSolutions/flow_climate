@@ -1235,6 +1235,7 @@ en:
       bugs_label: "Bugs"
       blocks_per_demand_label: "Blocks/Demand"
       projects_broken_wip: "Broken WiP Count"
+      average_blocked_time: "Average Blocked Time"
     update:
       enqueued_associations: "The building of your risk review was enqueued. You will receive an email when it finishes."
   team_resources:

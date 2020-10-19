@@ -39,7 +39,7 @@ RSpec.describe RiskReview, type: :model do
 
   shared_context 'risk reviews data' do
     let(:product) { Fabricate :product }
-    let(:risk_review) { Fabricate :risk_review, lead_time_outlier_limit: 5 }
+    let(:risk_review) { Fabricate :risk_review, lead_time_outlier_limit: 5, weekly_avg_blocked_time: [2, 3], monthly_avg_blocked_time: [2] }
     let(:other_risk_review) { Fabricate :risk_review, lead_time_outlier_limit: 2 }
 
     let!(:first_demand) { Fabricate :demand, risk_review: risk_review, demand_type: :bug, commitment_date: 10.days.ago, end_date: Time.zone.now }
@@ -129,6 +129,15 @@ RSpec.describe RiskReview, type: :model do
     it 'returns the demands with lead time above the outlier limit' do
       expect(risk_review.bugs).to match_array [first_demand, second_demand]
       expect(other_risk_review.bugs).to eq []
+    end
+  end
+
+  describe '#avg_blocked_time_in_weeks' do
+    include_context 'risk reviews data'
+
+    it 'returns the demands with lead time above the outlier limit' do
+      expect(risk_review.avg_blocked_time_in_weeks).to eq({ chart: { data: [2, 3], name: I18n.t('risk_reviews.show.average_blocked_time') }, x_axis: [Time.zone.today.end_of_week] })
+      expect(other_risk_review.avg_blocked_time_in_weeks).to eq({ chart: { data: nil, name: I18n.t('risk_reviews.show.average_blocked_time') }, x_axis: [] })
     end
   end
 end

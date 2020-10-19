@@ -2287,7 +2287,9 @@ CREATE TABLE public.risk_reviews (
     meeting_date date NOT NULL,
     lead_time_outlier_limit numeric NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    weekly_avg_blocked_time numeric[],
+    monthly_avg_blocked_time numeric[]
 );
 
 
@@ -6152,6 +6154,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200813131313'),
 ('20200831153123'),
 ('20200928150830'),
-('20200929125717');
+('20200929125717'),
+('20201019125426');
 
 

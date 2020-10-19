@@ -7,11 +7,25 @@ class RiskReviewService
     demands = product.demands.kept.opened_before_date(risk_review.meeting_date.end_of_day).where('demands.risk_review_id IS NULL')
     demands.map { |demand| demand.update(risk_review: risk_review) }
 
+    demands = Demand.where(risk_review: risk_review)
+
     update_blocks(product, risk_review)
     update_flow_impacts(product, risk_review)
+
+    update_block_avg_time(demands, risk_review)
   end
 
   private
+
+  def update_block_avg_time(demands, risk_review)
+    start_date = demands.map(&:end_date).compact.min
+    array_of_dates = TimeService.instance.weeks_between_of(start_date, risk_review.meeting_date)
+
+    risk_review.update(weekly_avg_blocked_time: build_avg_blocked_time(demands, array_of_dates))
+
+    array_of_dates = TimeService.instance.months_between_of(start_date, risk_review.meeting_date)
+    risk_review.update(monthly_avg_blocked_time: build_avg_blocked_time(demands, array_of_dates))
+  end
 
   def update_flow_impacts(product, risk_review)
     flow_impacts = product.flow_impacts.kept.where('flow_impacts.risk_review_id IS NULL')
@@ -21,5 +35,15 @@ class RiskReviewService
   def update_blocks(product, risk_review)
     demand_blocks = product.demand_blocks.kept.where('demand_blocks.unblock_time <= :end_date AND demand_blocks.risk_review_id IS NULL', end_date: risk_review.meeting_date.end_of_day)
     demand_blocks.map { |block| block.update(risk_review: risk_review) }
+  end
+
+  def build_avg_blocked_time(demands, array_of_dates)
+    avg_blocked_time = []
+    array_of_dates.each do |date|
+      demands_finished = demands.finished_until_date(date.end_of_day)
+      avg_blocked_time << demands_finished.map(&:blocked_time).compact.sum / demands_finished.count
+    end
+
+    avg_blocked_time
   end
 end

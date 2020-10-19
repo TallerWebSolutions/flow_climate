@@ -78,19 +78,34 @@ RSpec.describe RiskReviewsController, type: :controller do
     end
 
     describe 'GET #show' do
-      let(:risk_review) { Fabricate :risk_review, product: product }
-      let(:other_risk_review) { Fabricate :risk_review }
+      context 'with valid parameters' do
+        context 'with no data to blockings' do
+          let(:risk_review) { Fabricate :risk_review, product: product }
 
-      context 'valid parameters' do
-        before { get :show, params: { company_id: company, product_id: product, id: risk_review } }
+          before { get :show, params: { company_id: company, product_id: product, id: risk_review } }
 
-        it 'instantiates a new Team Member and renders the template' do
-          expect(response).to render_template :show
-          expect(assigns(:risk_review)).to eq risk_review
+          it 'instantiates a new Team Member and renders the template' do
+            expect(response).to render_template :show
+            expect(assigns(:risk_review)).to eq risk_review
+          end
+        end
+
+        context 'with data to blockings' do
+          let(:risk_review) { Fabricate :risk_review, product: product, weekly_avg_blocked_time: [2, 3, 5], monthly_avg_blocked_time: [1, 2] }
+
+          before { get :show, params: { company_id: company, product_id: product, id: risk_review } }
+
+          it 'instantiates a new Team Member and renders the template' do
+            expect(response).to render_template :show
+            expect(assigns(:risk_review)).to eq risk_review
+          end
         end
       end
 
       context 'invalid parameters' do
+        let(:risk_review) { Fabricate :risk_review, product: product }
+        let(:other_risk_review) { Fabricate :risk_review }
+
         context 'invalid risk review' do
           before { get :show, params: { company_id: company, product_id: product, id: other_risk_review } }
 

@@ -1208,6 +1208,7 @@ pt-BR:
       bugs_label: "Defeitos"
       blocks_per_demand_label: "Bloqueios/Demanda"
       projects_broken_wip: "Qty Quebras de WiP"
+      average_blocked_time: "Tempo Médio de Bloqueio"
     update:
       enqueued_associations: "A construção da sua revisão de risco foi enfileirada. Você receberá um email quando ela estiver completa."
   team_resources:

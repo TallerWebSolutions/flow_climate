@@ -32,7 +32,7 @@
 </div>
 
 <div class="row">
-  <div class="col-xs-4">
+  <div class="col-xs-6">
     <h4><%= I18n.t('risk_reviews.show.class_of_services.title') %></h4>
 
     <% if @risk_review.demands.kept.count.positive? %>
@@ -49,7 +49,26 @@
     <% end %>
   </div>
 
-  <div class="col-xs-4">
+  <div class="col-xs-6">
+    <h4><%= I18n.t('demands.filter.impact_categories.title') %></h4>
+
+    <% if @risk_review.flow_impacts.count.positive? %>
+      <div id="risk-review-impact-categories-donut"
+           class="flow-chart"
+           data-title=''
+           data-seriesname=''
+           data-tooltipsuffix='<%= I18n.t('general.demand_impact') %>'
+           data-series='<%= FlowImpact.impact_types.map { |impact_type| { name: I18n.t("activerecord.attributes.flow_impact.enums.impact_type.#{impact_type[0]}"), y: @risk_review.flow_impacts.send(impact_type[0]).count } if @risk_review.flow_impacts.send(impact_type[0]).count.positive? }.compact.to_json %>'
+           data-decimals='0'>
+      </div>
+    <% else %>
+      <%= render 'layouts/no_data', missing_data: FlowImpact.model_name.human(count: 2).downcase %>
+    <% end %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-6">
     <h4><%= I18n.t('demands.filter.block_categories.title') %></h4>
 
     <% if @risk_review.demand_blocks.count.positive? %>
@@ -66,22 +85,26 @@
     <% end %>
   </div>
 
-  <div class="col-xs-4">
-    <h4><%= I18n.t('demands.filter.impact_categories.title') %></h4>
-
-    <% if @risk_review.flow_impacts.count.positive? %>
-      <div id="risk-review-impact-categories-donut"
-           class="flow-chart"
-           data-title=''
-           data-seriesname=''
-           data-tooltipsuffix='<%= I18n.t('general.demand_impact') %>'
-           data-series='<%= FlowImpact.impact_types.map { |impact_type| { name: I18n.t("activerecord.attributes.flow_impact.enums.impact_type.#{impact_type[0]}"), y: @risk_review.flow_impacts.send(impact_type[0]).count } if @risk_review.flow_impacts.send(impact_type[0]).count.positive? }.compact.to_json %>'
-           data-decimals='0'>
-      </div>
+  <div class="col-xs-6">
+    <h4><%= I18n.t('risk_reviews.show.average_blocked_time') %></h4>
+    <% if @risk_review.avg_blocked_time_in_weeks[:chart][:data]&.count&.positive? %>
+    <div id="average-blocked-time-in-time"
+         class="flow-chart"
+         data-title=''
+         data-xcategories='<%= @risk_review.avg_blocked_time_in_weeks[:x_axis].to_json %>'
+         data-xtitle='<%= I18n.t('projects.charts.xlabel.time') %>'
+         data-ytitle='<%= I18n.t('general.hours') %>'
+         data-prefix=''
+         data-tooltipsuffix='h'
+         data-datalabelsuffix='h'
+         data-series='<%= [@risk_review.avg_blocked_time_in_weeks[:chart]].to_json %>'
+         data-decimals='2'>
+    </div>
     <% else %>
-      <%= render 'layouts/no_data', missing_data: FlowImpact.model_name.human(count: 2).downcase %>
+      <%= render 'layouts/no_data', missing_data: RiskReview.model_name.human(count: 2).downcase %>
     <% end %>
   </div>
+
 </div>
 
 <hr>
@@ -120,6 +143,7 @@
 
 <% content_for :javascript do %>
   <%= javascript_include_tag 'charts/donut' %>
+  <%= javascript_include_tag 'charts/line' %>
 
   <%= javascript_include_tag 'components/components' %>
 
