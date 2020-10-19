@@ -933,7 +933,7 @@ RSpec.describe Demand, type: :model do
     it { expect(demand.stages_at(50.hours.ago, 1.hour.ago)).to eq [first_stage, second_stage, fourth_stage] }
     it { expect(demand.stages_at(100.hours.ago, 1.hour.ago)).to eq [first_stage, second_stage, third_stage, fourth_stage] }
     it { expect(demand.stages_at(100.hours.ago, 97.hours.ago)).to eq [third_stage] }
-    it { expect(demand.stages_at(80.hours.ago, nil)).to eq [first_stage, second_stage, fourth_stage] }
+    it { expect(demand.stages_at(80.hours.ago, nil)).to match_array [first_stage, second_stage, fourth_stage] }
     it { expect(demand.stages_at(1.hour.ago, 1.minute.ago)).to eq [fourth_stage] }
     it { expect(demand.stages_at(7.weeks.ago, 5.weeks.ago)).to eq [] }
   end
