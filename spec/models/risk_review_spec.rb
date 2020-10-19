@@ -68,7 +68,7 @@ RSpec.describe RiskReview, type: :model do
   describe '#outlier_demands_percentage' do
     include_context 'risk reviews data'
 
-    it 'returns the demands with lead time above the outlier limit' do
+    it 'returns the percentage of demands with lead time above the outlier limit' do
       expect(risk_review.outlier_demands_percentage).to eq 50.0
       expect(other_risk_review.outlier_demands_percentage).to eq 0
     end
@@ -77,7 +77,7 @@ RSpec.describe RiskReview, type: :model do
   describe '#blocks_per_demand' do
     include_context 'risk reviews data'
 
-    it 'returns the demands with lead time above the outlier limit' do
+    it 'returns the blocks per demand' do
       expect(risk_review.blocks_per_demand).to eq 0.75
       expect(other_risk_review.blocks_per_demand).to eq 0
     end
@@ -86,7 +86,7 @@ RSpec.describe RiskReview, type: :model do
   describe '#impacts_per_demand' do
     include_context 'risk reviews data'
 
-    it 'returns the demands with lead time above the outlier limit' do
+    it 'returns the impacts per demand' do
       expect(risk_review.impacts_per_demand).to eq 0.75
       expect(other_risk_review.impacts_per_demand).to eq 0
     end
@@ -95,7 +95,7 @@ RSpec.describe RiskReview, type: :model do
   describe '#bugs_count' do
     include_context 'risk reviews data'
 
-    it 'returns the demands with lead time above the outlier limit' do
+    it 'returns the count of bugs' do
       expect(risk_review.bugs_count).to eq 2
       expect(other_risk_review.bugs_count).to eq 0
     end
@@ -104,7 +104,7 @@ RSpec.describe RiskReview, type: :model do
   describe '#bug_percentage' do
     include_context 'risk reviews data'
 
-    it 'returns the demands with lead time above the outlier limit' do
+    it 'returns the percentage of bugs' do
       expect(risk_review.bug_percentage).to eq 50.0
       expect(other_risk_review.bug_percentage).to eq 0
     end
@@ -117,7 +117,7 @@ RSpec.describe RiskReview, type: :model do
 
     include_context 'risk reviews data'
 
-    it 'returns the demands with lead time above the outlier limit' do
+    it 'returns the p80 lead time' do
       expect(risk_review.demands_lead_time_p80).to be_within(0.01).of 725_760.00
       expect(other_risk_review.demands_lead_time_p80).to eq 0
     end
@@ -126,7 +126,7 @@ RSpec.describe RiskReview, type: :model do
   describe '#bugs' do
     include_context 'risk reviews data'
 
-    it 'returns the demands with lead time above the outlier limit' do
+    it 'returns the bugs' do
       expect(risk_review.bugs).to match_array [first_demand, second_demand]
       expect(other_risk_review.bugs).to eq []
     end
@@ -135,8 +135,8 @@ RSpec.describe RiskReview, type: :model do
   describe '#avg_blocked_time_in_weeks' do
     include_context 'risk reviews data'
 
-    it 'returns the demands with lead time above the outlier limit' do
-      expect(risk_review.avg_blocked_time_in_weeks).to eq({ chart: { data: [2, 3], name: I18n.t('risk_reviews.show.average_blocked_time') }, x_axis: [Time.zone.today.end_of_week] })
+    it 'returns the average block time data' do
+      expect(risk_review.avg_blocked_time_in_weeks).to eq({ chart: { data: [0.000555555555555556, 0.000833333333333333], name: I18n.t('risk_reviews.show.average_blocked_time') }, x_axis: [Time.zone.today.end_of_week] })
       expect(other_risk_review.avg_blocked_time_in_weeks).to eq({ chart: { data: nil, name: I18n.t('risk_reviews.show.average_blocked_time') }, x_axis: [] })
     end
   end

@@ -88,6 +88,6 @@ class RiskReview < ApplicationRecord
     start_date = demands.finished.map(&:end_date).compact.min
     array_of_dates = TimeService.instance.weeks_between_of(start_date, meeting_date)
 
-    { x_axis: array_of_dates, chart: { name: I18n.t('risk_reviews.show.average_blocked_time'), data: weekly_avg_blocked_time.map { |avg_blocked| (avg_blocked / 1.hour).to_f }.flatten } }
+    { x_axis: array_of_dates, chart: { name: I18n.t('risk_reviews.show.average_blocked_time'), data: weekly_avg_blocked_time&.map { |avg_blocked| (avg_blocked / 1.hour)&.to_f }&.flatten } }
   end
 end
