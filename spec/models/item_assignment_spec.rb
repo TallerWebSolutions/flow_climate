@@ -104,28 +104,33 @@ RSpec.describe ItemAssignment, type: :model do
 
     let(:customer) { Fabricate :customer, company: company }
     let(:product) { Fabricate :product, customer: customer }
-    let(:project) { Fabricate :project, products: [product], team: team, company: company }
 
-    let!(:analysis_stage) { Fabricate :stage, company: company, projects: [project], teams: [team], name: 'analysis_stage', commitment_point: false, end_point: false, queue: false, stage_type: :analysis }
-    let!(:commitment_stage) { Fabricate :stage, company: company, projects: [project], teams: [team], name: 'commitment_stage', commitment_point: true, end_point: false, queue: true, stage_type: :development }
-    let!(:end_stage) { Fabricate :stage, company: company, projects: [project], teams: [team], name: 'end_stage', commitment_point: false, end_point: true, queue: false, stage_type: :development }
+    it 'returns the correct stage' do
+      travel_to Time.zone.local(2019, 8, 13, 10, 0, 0) do
+        project = Fabricate :project, products: [product], team: team, company: company
 
-    let(:first_team_member) { Fabricate :team_member, company: company, name: 'first_member' }
+        analysis_stage = Fabricate :stage, company: company, projects: [project], teams: [team], name: 'analysis_stage', commitment_point: false, end_point: false, queue: false, stage_type: :analysis
+        commitment_stage = Fabricate :stage, company: company, projects: [project], teams: [team], name: 'commitment_stage', commitment_point: true, end_point: false, queue: true, stage_type: :development
+        Fabricate :stage, company: company, projects: [project], teams: [team], name: 'end_stage', commitment_point: false, end_point: true, queue: false, stage_type: :development
 
-    let!(:first_membership) { Fabricate :membership, team: team, team_member: first_team_member, member_role: :developer }
+        first_team_member = Fabricate :team_member, company: company, name: 'first_member'
 
-    let(:first_demand) { Fabricate :demand, company: company, team: team, project: project }
+        first_membership = Fabricate :membership, team: team, team_member: first_team_member, member_role: :developer
 
-    let!(:first_transition) { Fabricate :demand_transition, stage: commitment_stage, demand: first_demand, last_time_in: 10.days.ago, last_time_out: 5.days.ago }
-    let!(:seventh_transition) { Fabricate :demand_transition, stage: analysis_stage, demand: first_demand, last_time_in: 119.hours.ago, last_time_out: 105.hours.ago }
+        first_demand = Fabricate :demand, company: company, team: team, project: project
 
-    let!(:first_assignment) { Fabricate :item_assignment, membership: first_membership, demand: first_demand, start_time: 11.days.ago, finish_time: 1.hour.ago }
-    let!(:second_assignment) { Fabricate :item_assignment, membership: first_membership, demand: first_demand, start_time: 10.days.ago, finish_time: 5.days.ago }
-    let!(:third_assignment) { Fabricate :item_assignment, membership: first_membership, demand: first_demand, start_time: 120.days.ago, finish_time: 40.days.ago }
+        Fabricate :demand_transition, stage: commitment_stage, demand: first_demand, last_time_in: 10.days.ago, last_time_out: 5.days.ago
+        Fabricate :demand_transition, stage: analysis_stage, demand: first_demand, last_time_in: 119.hours.ago, last_time_out: 105.hours.ago
 
-    it { expect(first_assignment.stages_during_assignment).to match_array [analysis_stage, commitment_stage] }
-    it { expect(second_assignment.stages_during_assignment).to eq [commitment_stage] }
-    it { expect(third_assignment.stages_during_assignment).to eq [] }
+        first_assignment = Fabricate :item_assignment, membership: first_membership, demand: first_demand, start_time: 11.days.ago, finish_time: 1.hour.ago
+        second_assignment = Fabricate :item_assignment, membership: first_membership, demand: first_demand, start_time: 10.days.ago, finish_time: 5.days.ago
+        third_assignment = Fabricate :item_assignment, membership: first_membership, demand: first_demand, start_time: 120.days.ago, finish_time: 40.days.ago
+
+        expect(first_assignment.stages_during_assignment).to match_array [analysis_stage, commitment_stage]
+        expect(second_assignment.stages_during_assignment).to eq [commitment_stage]
+        expect(third_assignment.stages_during_assignment).to eq []
+      end
+    end
   end
 
   context 'callbacks' do

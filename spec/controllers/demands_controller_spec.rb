@@ -467,10 +467,10 @@ RSpec.describe DemandsController, type: :controller do
               third_demand = Fabricate :demand, company: company, product: product, project: project, demand_title: 'third_demand', demand_type: :feature, class_of_service: :intangible, created_date: Time.zone.local(2019, 1, 19, 10, 0, 0), commitment_date: nil, end_date: Time.zone.local(2019, 1, 23, 10, 0, 0), effort_downstream: 0, effort_upstream: 10
               fourth_demand = Fabricate :demand, company: company, product: product, project: project, demand_title: 'fourth_demand', demand_type: :chore, class_of_service: :standard, created_date: Time.zone.local(2019, 1, 14, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 19, 10, 0, 0), end_date: Time.zone.local(2019, 1, 24, 10, 0, 0), effort_downstream: 10, effort_upstream: 20
 
-              fifth_demand = Fabricate :demand, company: company, product: product, project: project, demand_title: 'fifth_demand', demand_type: :ui, class_of_service: :fixed_date, created_date: 1.month.ago, commitment_date: nil, end_date: nil, effort_downstream: 30, effort_upstream: 10
-              sixth_demand = Fabricate :demand, company: company, product: product, project: project, demand_title: 'sixth_demand', demand_type: :feature, class_of_service: :standard, created_date: Time.zone.local(2019, 1, 23, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 24, 10, 0, 0), end_date: nil, effort_downstream: 10, effort_upstream: 10
-              seventh_demand = Fabricate :demand, company: company, product: product, project: project, demand_title: 'seventh_demand', demand_type: :performance_improvement, class_of_service: :expedite, created_date: Time.zone.local(2019, 1, 22, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 22, 10, 0, 0), end_date: Time.zone.local(2019, 1, 23, 10, 0, 0), effort_downstream: 40, effort_upstream: 10
-              eigth_demand = Fabricate :demand, company: company, product: product, project: project, demand_title: 'eigth_demand', demand_type: :wireframe, class_of_service: :fixed_date, created_date: Time.zone.local(2019, 1, 21, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 23, 10, 0, 0), end_date: Time.zone.today, effort_downstream: 50, effort_upstream: 60
+              fifth_demand = Fabricate :demand, company: company, product: product, project: project, demand_title: 'fifth_demand', demand_type: :ui, class_of_service: :fixed_date, created_date: Time.zone.local(2018, 12, 24, 10, 0, 0), commitment_date: nil, end_date: nil, effort_downstream: 30, effort_upstream: 10
+              sixth_demand = Fabricate :demand, company: company, product: product, project: project, demand_title: 'sixth_demand', demand_type: :feature, class_of_service: :standard, created_date: Time.zone.local(2019, 1, 21, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 24, 10, 0, 0), end_date: nil, effort_downstream: 10, effort_upstream: 10
+              seventh_demand = Fabricate :demand, company: company, product: product, project: project, demand_title: 'seventh_demand', demand_type: :performance_improvement, class_of_service: :expedite, created_date: Time.zone.local(2019, 1, 20, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 22, 10, 0, 0), end_date: Time.zone.local(2019, 1, 23, 10, 0, 0), effort_downstream: 40, effort_upstream: 10
+              eigth_demand = Fabricate :demand, company: company, product: product, project: project, demand_title: 'eigth_demand', demand_type: :wireframe, class_of_service: :fixed_date, created_date: Time.zone.local(2019, 1, 19, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 23, 10, 0, 0), end_date: Time.zone.today, effort_downstream: 50, effort_upstream: 60
 
               get :index, params: { company_id: company }
 
@@ -1394,9 +1394,9 @@ RSpec.describe DemandsController, type: :controller do
           expect(assigns(:company)).to eq company
           expect(assigns(:demands)).to match_array Demand.all
 
-          expect(assigns(:confidence_95_leadtime)).to be_within(40).of 530
-          expect(assigns(:confidence_80_leadtime)).to be_within(40).of 355
-          expect(assigns(:confidence_65_leadtime)).to be_within(40).of 180
+          expect(assigns(:confidence_95_leadtime)).to be_within(45).of 530
+          expect(assigns(:confidence_80_leadtime)).to be_within(45).of 355
+          expect(assigns(:confidence_65_leadtime)).to be_within(45).of 180
         end
       end
 

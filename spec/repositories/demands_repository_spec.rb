@@ -228,7 +228,7 @@ RSpec.describe DemandsRepository, type: :repository do
       expect(described_class.instance.filter_demands_by_text(Demand.all, 'climate')).to match_array [first_demand, second_demand, third_demand, fourth_demand]
       expect(described_class.instance.filter_demands_by_text(Demand.all, 'flow')).to match_array [first_demand, second_demand, third_demand, fourth_demand, fifth_demand, sixth_demand, seventh_demand, eigth_demand]
       expect(described_class.instance.filter_demands_by_text(Demand.all, 'hhh')).to eq [first_demand]
-      expect(described_class.instance.filter_demands_by_text(Demand.all, 'bar')).to match_array [second_demand, third_demand]
+      expect(described_class.instance.filter_demands_by_text(Demand.all, 'bar').map(&:external_id)).to match_array [second_demand, third_demand].map(&:external_id)
       expect(described_class.instance.filter_demands_by_text(Demand.all, 'voyager')).to match_array [sixth_demand, seventh_demand, eigth_demand]
       expect(described_class.instance.filter_demands_by_text(Demand.all, 'command')).to match_array [second_demand, fifth_demand]
     end

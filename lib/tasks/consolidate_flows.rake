@@ -21,6 +21,6 @@ namespace :statistics do
 
   desc 'Consolidations for replenishing'
   task consolidate_replenishing: :environment do
-    Consolidations::ReplenishingConsolidationJob.perform_now
+    Consolidations::ReplenishingConsolidationJob.perform_later
   end
 end

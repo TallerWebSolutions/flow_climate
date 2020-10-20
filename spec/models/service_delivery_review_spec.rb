@@ -240,7 +240,7 @@ RSpec.describe ServiceDeliveryReview, type: :model do
     context 'with data' do
       include_context 'service delivery data'
 
-      it { expect(service_delivery_review.start_date).to be_within(1.second).of 10.days.ago }
+      it { expect(service_delivery_review.start_date).to be_within(1.hour).of 10.days.ago }
     end
 
     context 'without data' do
