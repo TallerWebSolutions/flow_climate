@@ -929,9 +929,9 @@ RSpec.describe Demand, type: :model do
     let!(:third_demand_transtion) { Fabricate :demand_transition, demand: demand, stage: third_stage, last_time_in: 5.days.ago, last_time_out: 4.days.ago }
     let!(:fourth_demand_transtion) { Fabricate :demand_transition, demand: demand, stage: fourth_stage, last_time_in: 3.days.ago, last_time_out: nil }
 
-    it { expect(demand.stages_at(27.hours.ago, 26.hours.ago)).to eq [first_stage, fourth_stage] }
-    it { expect(demand.stages_at(50.hours.ago, 1.hour.ago)).to eq [first_stage, second_stage, fourth_stage] }
-    it { expect(demand.stages_at(100.hours.ago, 1.hour.ago)).to eq [first_stage, second_stage, third_stage, fourth_stage] }
+    it { expect(demand.stages_at(27.hours.ago, 26.hours.ago)).to match_array [first_stage, fourth_stage] }
+    it { expect(demand.stages_at(50.hours.ago, 1.hour.ago)).to match_array [first_stage, second_stage, fourth_stage] }
+    it { expect(demand.stages_at(100.hours.ago, 1.hour.ago)).to match_array [first_stage, second_stage, third_stage, fourth_stage] }
     it { expect(demand.stages_at(100.hours.ago, 97.hours.ago)).to eq [third_stage] }
     it { expect(demand.stages_at(80.hours.ago, nil)).to match_array [first_stage, second_stage, fourth_stage] }
     it { expect(demand.stages_at(1.hour.ago, 1.minute.ago)).to eq [fourth_stage] }
