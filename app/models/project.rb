@@ -347,12 +347,10 @@ class Project < ApplicationRecord
     (Time.zone.today - start_date).to_i
   end
 
-  def odds_to_deadline
-    last_project_consolidation&.odds_to_deadline_project || 0
-  end
-
   def current_risk_to_deadline
-    1 - odds_to_deadline
+    return 1 if last_project_consolidation.blank?
+
+    last_project_consolidation.operational_risk
   end
 
   def consolidations_last_update

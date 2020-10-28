@@ -4,7 +4,9 @@ namespace :statistics do
   desc 'Consolidations for projects'
   task consolidate_weekly: :environment do
     Company.all.each do |company|
-      company.projects.active.finishing_after(Time.zone.today).each { |project| Consolidations::ProjectConsolidationJob.perform_later(project) }
+      company.projects.active.finishing_after(Time.zone.today).each do |project|
+        Consolidations::ProjectConsolidationJob.perform_later(project)
+      end
     end
   end
 

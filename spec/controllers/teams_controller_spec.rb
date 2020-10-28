@@ -400,10 +400,10 @@ RSpec.describe TeamsController, type: :controller do
         context 'having data' do
           include_context 'demands to filters'
 
-          let!(:first_project_consolidation) { Fabricate :project_consolidation, consolidation_date: 2.weeks.ago, project: first_project }
-          let!(:second_project_consolidation) { Fabricate :project_consolidation, consolidation_date: 1.week.ago, project: first_project }
+          let!(:first_project_consolidation) { Fabricate :project_consolidation, consolidation_date: 2.weeks.ago, project: first_project, operational_risk: 0.875 }
+          let!(:second_project_consolidation) { Fabricate :project_consolidation, consolidation_date: 1.week.ago, project: first_project, operational_risk: 0.875 }
 
-          let!(:third_project_consolidation) { Fabricate :project_consolidation, consolidation_date: 1.week.ago, project: second_project }
+          let!(:third_project_consolidation) { Fabricate :project_consolidation, consolidation_date: 1.week.ago, project: second_project, operational_risk: 0.375 }
 
           it 'creates the objects and renders the tab' do
             get :team_projects_tab, params: { company_id: company, id: team }, xhr: true

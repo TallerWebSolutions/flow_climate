@@ -1190,29 +1190,13 @@ RSpec.describe Project, type: :model do
     it { expect(project.aging_today).to eq 4 }
   end
 
-  describe '#odds_to_deadline' do
-    context 'with project consolidations' do
-      let(:project) { Fabricate :project, end_date: 4.weeks.from_now }
-      let!(:project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago, project_monte_carlo_weeks: [0, 0, 0, 2, 3, 4, 5, 6, 6, 6, 7] }
-      let!(:other_project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 2.days.ago }
-
-      it { expect(project.odds_to_deadline).to eq 0.6363636363636364 }
-    end
-
-    context 'without project consolidations' do
-      let(:project) { Fabricate :project }
-
-      it { expect(project.odds_to_deadline).to eq 0 }
-    end
-  end
-
   describe '#current_risk_to_deadline' do
     context 'with project consolidations' do
       let(:project) { Fabricate :project, end_date: 2.weeks.from_now }
-      let!(:project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago, project_monte_carlo_weeks: [0, 0, 0, 2, 3, 4, 5, 6, 6, 6, 7] }
-      let!(:other_project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 2.days.ago }
+      let!(:project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago, operational_risk: 10 }
+      let!(:other_project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 2.days.ago, operational_risk: 2 }
 
-      it { expect(project.current_risk_to_deadline).to eq 0.5454545454545454 }
+      it { expect(project.current_risk_to_deadline).to eq 10 }
     end
 
     context 'without project consolidations' do
