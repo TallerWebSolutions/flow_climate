@@ -226,6 +226,7 @@ Metrics/BlockLength:
     - 'spec/**/*'
     - 'config/routes.rb'
     - 'lib/tasks/auto_annotate_models.rake'
+    - 'lib/tasks/consolidate_flows.rake'
 
 Metrics/ClassLength:
   Exclude:

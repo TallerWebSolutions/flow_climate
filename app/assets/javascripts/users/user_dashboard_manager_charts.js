@@ -1,31 +1,31 @@
 function buildManagerCharts() {
     const projectsQuality = $('#manager-dashboard-quality-column');
     if (projectsQuality.length !== 0) {
-        buildColumnChart(projectsQuality);
+        buildLineChart(projectsQuality);
     }
 
-    const projectsLeadTime = $('#manager-dashboard-lead-time-column');
+    const projectsLeadTime = $('#manager-dashboard-lead-time-line');
     if (projectsLeadTime.length !== 0) {
-        buildColumnChart(projectsLeadTime);
+        buildLineChart(projectsLeadTime);
     }
 
-    const projectsRisk = $('#manager-dashboard-risk-column');
+    const projectsRisk = $('#manager-dashboard-risk-line');
     if (projectsRisk.length !== 0) {
-        buildColumnChart(projectsRisk);
+        buildLineChart(projectsRisk);
     }
 
-    const projectsScope = $('#manager-dashboard-scope-column');
+    const projectsScope = $('#manager-dashboard-scope-line');
     if (projectsScope.length !== 0) {
-        buildColumnChart(projectsScope);
+        buildLineChart(projectsScope);
     }
 
-    const projectsValuePerDemand = $('#manager-dashboard-value-per-demand-column');
+    const projectsValuePerDemand = $('#manager-dashboard-value-per-demand-line');
     if (projectsValuePerDemand.length !== 0) {
-        buildColumnChart(projectsValuePerDemand);
+        buildLineChart(projectsValuePerDemand);
     }
 
-    const projectsFlowPressure = $('#manager-dashboard-flow-pressure-column');
+    const projectsFlowPressure = $('#manager-dashboard-flow-pressure-line');
     if (projectsFlowPressure.length !== 0) {
-        buildColumnChart(projectsFlowPressure);
+        buildLineChart(projectsFlowPressure);
     }
 }

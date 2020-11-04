@@ -27,9 +27,9 @@
 #  monte_carlo_weeks_p80                :decimal(, )      default(0.0)
 #  monte_carlo_weeks_std_dev            :integer          default(0)
 #  operational_risk                     :decimal(, )      default(0.0)
+#  project_quality                      :decimal(, )      default(0.0)
+#  project_scope                        :integer          default(0)
 #  project_throughput                   :integer          default(0)
-#  quality                              :decimal(, )      default(0.0)
-#  scope                                :integer          default(0)
 #  team_based_monte_carlo_weeks_max     :integer          default(0)
 #  team_based_monte_carlo_weeks_min     :integer          default(0)
 #  team_based_monte_carlo_weeks_p80     :decimal(, )      default(0.0)
@@ -52,6 +52,9 @@ module Consolidations
     belongs_to :project
 
     validates :project, :consolidation_date, presence: true
+
+    scope :weekly_data_for_project, ->(project) { where(project: project, last_data_in_week: true) }
+    scope :after_date, ->(date) { where('consolidation_date >= :limit_date', limit_date: date) }
 
     def total_lead_time_range
       return 0 if lead_time_max.nil? || lead_time_min.nil?

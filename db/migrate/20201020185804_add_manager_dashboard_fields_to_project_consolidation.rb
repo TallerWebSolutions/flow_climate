@@ -9,9 +9,9 @@ class AddManagerDashboardFieldsToProjectConsolidation < ActiveRecord::Migration[
       t.boolean :last_data_in_month, null: false, default: false
       t.boolean :last_data_in_year, null: false, default: false
 
-      t.integer :scope, default: 0
+      t.integer :project_scope, default: 0
       t.decimal :flow_pressure, default: 0
-      t.decimal :quality, default: 0
+      t.decimal :project_quality, default: 0
       t.decimal :value_per_demand, default: 0
 
       t.integer :monte_carlo_weeks_min, default: 0
@@ -55,7 +55,7 @@ class AddManagerDashboardFieldsToProjectConsolidation < ActiveRecord::Migration[
 
   def down
     change_table :project_consolidations, bulk: true do |t|
-      t.remove(:scope, :operational_risk, :flow_pressure, :project_throughput, :lead_time_p80, :quality, :value_per_demand, :last_data_in_week,
+      t.remove(:project_scope, :operational_risk, :flow_pressure, :project_throughput, :lead_time_p80, :project_quality, :value_per_demand, :last_data_in_week,
                :last_data_in_month, :last_data_in_year, :monte_carlo_weeks_min, :monte_carlo_weeks_max, :monte_carlo_weeks_std_dev, :team_based_operational_risk,
                :team_based_monte_carlo_weeks_min, :team_based_monte_carlo_weeks_max, :team_based_monte_carlo_weeks_std_dev, :monte_carlo_weeks_p80,
                :team_based_monte_carlo_weeks_p80, :lead_time_p25, :lead_time_p75, :lead_time_average, :lead_time_histogram_bin_min,

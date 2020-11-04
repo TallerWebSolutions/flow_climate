@@ -1343,7 +1343,7 @@ RSpec.describe Project, type: :model do
     context 'with no data' do
       let!(:project) { Fabricate :project, end_date: 4.weeks.from_now, initial_scope: 30 }
 
-      it { expect(project.quality).to eq 1 }
+      it { expect(project.quality).to eq 0 }
     end
   end
 

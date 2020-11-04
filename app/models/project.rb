@@ -171,8 +171,6 @@ class Project < ApplicationRecord
   end
 
   def backlog_for(date = Time.zone.now)
-    return demands.kept.count if date.blank?
-
     DemandsRepository.instance.known_scope_to_date(demands.map(&:id), date)
   end
 
@@ -392,27 +390,26 @@ class Project < ApplicationRecord
     demands.kept.sum(&:aging_when_finished) / demands.kept.count
   end
 
-  def quality
-    return 1 if bugs?
+  def quality(limit_date = Time.zone.today)
+    demands_in = demands.not_discarded_until(limit_date.end_of_day).until_date(limit_date.end_of_day)
 
-    1 - (demands.kept.bug.count.to_f / demands.kept.count)
+    return 0 if demands_in.count.zero?
+    return 1 if demands_in.bug.count.zero?
+
+    1 - (demands_in.kept.bug.count.to_f / demands_in.kept.count)
   end
 
   def value_per_demand
-    return value if backlog_for.count.zero? || backlog_for == 1
+    return value if delivered_scope.zero? || delivered_scope == 1
 
-    value.to_f / backlog_for.count
+    value.to_f / delivered_scope
   end
 
   def delivered_scope
-    demands.kept.finished.count
+    @delivered_scope ||= demands.kept.finished.count
   end
 
   private
-
-  def bugs?
-    demands.kept.count.zero? || demands.kept.bug.count.zero?
-  end
 
   def running?
     executing? || maintenance?

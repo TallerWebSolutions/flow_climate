@@ -46,6 +46,7 @@ module Consolidations
                            demands_ids: demands.map(&:id),
                            demands_finished_ids: demands_finished.map(&:id),
                            project_throughput: demands_finished.count,
+                           project_quality: project.quality(cache_date),
                            lead_time_min: demands_lead_time.min,
                            lead_time_max: demands_lead_time.max,
                            lead_time_p25: Stats::StatisticsService.instance.percentile(25, demands_lead_time),
@@ -64,8 +65,8 @@ module Consolidations
                            team_based_monte_carlo_weeks_std_dev: Stats::StatisticsService.instance.standard_deviation(team_based_montecarlo_durations),
                            team_based_monte_carlo_weeks_p80: Stats::StatisticsService.instance.percentile(80, team_based_montecarlo_durations),
                            operational_risk: project.current_risk_to_deadline,
-                           scope: project.backlog_for,
-                           flow_pressure: project.current_risk_to_deadline,
+                           project_scope: project.backlog_for(cache_date.end_of_day)&.count,
+                           flow_pressure: project.flow_pressure(cache_date.end_of_day),
                            value_per_demand: project.value_per_demand,
                            team_based_operational_risk: 1 - Stats::StatisticsService.instance.compute_odds_to_deadline(project.remaining_weeks, team_based_montecarlo_durations),
                            weeks_by_little_law: weeks_by_little_law)
