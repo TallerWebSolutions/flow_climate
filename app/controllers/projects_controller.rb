@@ -166,7 +166,7 @@ class ProjectsController < AuthenticatedController
   end
 
   def update_consolidations
-    Consolidations::ProjectConsolidationJob.perform_later(@project, current_user, company_project_url(@company, @project))
+    Consolidations::ProjectConsolidationJob.perform_later(@project)
     flash[:notice] = I18n.t('general.enqueued')
 
     redirect_to company_project_path(@company, @project)
