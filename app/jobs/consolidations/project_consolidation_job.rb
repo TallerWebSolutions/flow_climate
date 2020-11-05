@@ -64,7 +64,7 @@ module Consolidations
                            team_based_monte_carlo_weeks_max: team_based_montecarlo_durations.max,
                            team_based_monte_carlo_weeks_std_dev: Stats::StatisticsService.instance.standard_deviation(team_based_montecarlo_durations),
                            team_based_monte_carlo_weeks_p80: Stats::StatisticsService.instance.percentile(80, team_based_montecarlo_durations),
-                           operational_risk: project.current_risk_to_deadline,
+                           operational_risk: 1 - Stats::StatisticsService.instance.compute_odds_to_deadline(project.remaining_weeks, project_based_montecarlo_durations),
                            project_scope: project.backlog_for(cache_date.end_of_day)&.count,
                            flow_pressure: project.flow_pressure(cache_date.end_of_day),
                            value_per_demand: project.value_per_demand,

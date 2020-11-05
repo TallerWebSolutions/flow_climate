@@ -13,7 +13,7 @@
 
           <div class="col-xs-4">
             <p class="stamp-title"><%= I18n.t('general.throughput') %></p>
-            <p class="stamp-content"><%= project_consolidations.last.project_throughput %></p>
+            <p class="stamp-content"><%= project.last_weekly_throughput(10) %></p>
           </div>
           <div class="col-xs-4">
             <p class="stamp-title"><%= I18n.t('projects.risk.drill_down_wip_title') %></p>

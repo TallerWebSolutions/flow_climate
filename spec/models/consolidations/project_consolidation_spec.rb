@@ -10,6 +10,9 @@ RSpec.describe Consolidations::ProjectConsolidation, type: :model do
     it { is_expected.to validate_presence_of :consolidation_date }
   end
 
+  pending '.weekly_data_for_project'
+  pending '.after_date'
+
   describe '#total_lead_time_range' do
     let(:project) { Fabricate :project, end_date: 4.weeks.from_now }
 

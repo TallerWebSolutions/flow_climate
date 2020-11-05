@@ -409,6 +409,23 @@ class Project < ApplicationRecord
     @delivered_scope ||= demands.kept.finished.count
   end
 
+  def last_weekly_throughput(qty_data_points)
+    consolidations = project_consolidations.where(last_data_in_week: true).order(consolidation_date: :desc)
+    consolidations = project_consolidations.order(consolidation_date: :desc) if consolidations.empty?
+
+    throughputs = consolidations.first(qty_data_points + 1).map(&:project_throughput).flatten
+
+    previous_element = 0
+    last_throughputs = []
+    throughputs.each do |th|
+      last_throughputs << previous_element - th unless previous_element.zero?
+
+      previous_element = th
+    end
+
+    last_throughputs.reverse
+  end
+
   private
 
   def running?
