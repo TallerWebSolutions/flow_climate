@@ -2037,22 +2037,41 @@ ALTER SEQUENCE public.project_change_deadline_histories_id_seq OWNED BY public.p
 CREATE TABLE public.project_consolidations (
     id bigint NOT NULL,
     consolidation_date date NOT NULL,
-    population_start_date date,
-    population_end_date date,
     project_id integer NOT NULL,
     demands_ids integer[],
     demands_finished_ids integer[],
-    demands_lead_times numeric[],
     wip_limit integer,
     current_wip integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    project_weekly_throughput integer[],
-    team_weekly_throughput integer[],
-    project_monte_carlo_weeks integer[],
-    team_monte_carlo_weeks integer[],
-    demands_finished_in_week integer[],
-    lead_time_in_week numeric[]
+    last_data_in_week boolean DEFAULT false NOT NULL,
+    last_data_in_month boolean DEFAULT false NOT NULL,
+    last_data_in_year boolean DEFAULT false NOT NULL,
+    project_scope integer DEFAULT 0,
+    flow_pressure numeric DEFAULT 0.0,
+    project_quality numeric DEFAULT 0.0,
+    value_per_demand numeric DEFAULT 0.0,
+    monte_carlo_weeks_min integer DEFAULT 0,
+    monte_carlo_weeks_max integer DEFAULT 0,
+    monte_carlo_weeks_std_dev integer DEFAULT 0,
+    monte_carlo_weeks_p80 numeric DEFAULT 0.0,
+    operational_risk numeric DEFAULT 0.0,
+    team_based_monte_carlo_weeks_min integer DEFAULT 0,
+    team_based_monte_carlo_weeks_max integer DEFAULT 0,
+    team_based_monte_carlo_weeks_std_dev integer DEFAULT 0,
+    team_based_monte_carlo_weeks_p80 numeric DEFAULT 0.0,
+    team_based_operational_risk numeric DEFAULT 0.0,
+    lead_time_min numeric DEFAULT 0.0,
+    lead_time_max numeric DEFAULT 0.0,
+    lead_time_p25 numeric DEFAULT 0.0,
+    lead_time_p75 numeric DEFAULT 0.0,
+    lead_time_p80 numeric DEFAULT 0.0,
+    lead_time_average numeric DEFAULT 0.0,
+    lead_time_std_dev numeric DEFAULT 0.0,
+    lead_time_histogram_bin_min numeric DEFAULT 0.0,
+    lead_time_histogram_bin_max numeric DEFAULT 0.0,
+    weeks_by_little_law numeric DEFAULT 0.0,
+    project_throughput integer DEFAULT 0
 );
 
 
@@ -4658,20 +4677,6 @@ CREATE INDEX index_project_change_deadline_histories_on_user_id ON public.projec
 
 
 --
--- Name: index_project_consolidations_on_demands_finished_in_week; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_project_consolidations_on_demands_finished_in_week ON public.project_consolidations USING btree (demands_finished_in_week);
-
-
---
--- Name: index_project_consolidations_on_lead_time_in_week; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_project_consolidations_on_lead_time_in_week ON public.project_consolidations USING btree (lead_time_in_week);
-
-
---
 -- Name: index_project_risk_alerts_on_project_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6155,6 +6160,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200831153123'),
 ('20200928150830'),
 ('20200929125717'),
-('20201019125426');
+('20201019125426'),
+('20201020185804');
 
 

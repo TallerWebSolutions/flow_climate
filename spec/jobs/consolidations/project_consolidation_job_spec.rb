@@ -38,7 +38,7 @@ RSpec.describe Consolidations::ProjectConsolidationJob, type: :active_job do
         expect(UserNotifierMailer).not_to(receive(:async_activity_finished))
         described_class.perform_now(first_project)
 
-        expect(Consolidations::ProjectConsolidation.count).to eq 4
+        expect(Consolidations::ProjectConsolidation.count).to eq 1
       end
     end
 
@@ -46,14 +46,9 @@ RSpec.describe Consolidations::ProjectConsolidationJob, type: :active_job do
       it 'saves de consolidation and sends the notification email' do
         # TODO: improve this spec
 
-        # rubocop:disable RSpec/VerifiedDoubles
-        mail_stubbed = double('UserNotifierMailer', deliver: true)
-        # rubocop:enable RSpec/VerifiedDoubles
+        described_class.perform_now(first_project, Time.zone.today)
 
-        expect(UserNotifierMailer).to(receive(:async_activity_finished)).and_return(mail_stubbed)
-        described_class.perform_now(first_project, first_user, 'http://foo.com')
-
-        expect(Consolidations::ProjectConsolidation.count).to eq 4
+        expect(Consolidations::ProjectConsolidation.count).to eq 1
       end
     end
   end

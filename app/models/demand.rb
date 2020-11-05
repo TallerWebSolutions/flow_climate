@@ -108,6 +108,7 @@ class Demand < ApplicationRecord
   scope :in_wip, -> { kept.where('demands.commitment_date IS NOT NULL AND demands.end_date IS NULL') }
   scope :in_flow, -> { kept.joins(:demand_transitions).where('end_date IS NULL').group('demands.id').having('COUNT(demand_transitions.id) > 1') }
   scope :to_dates, ->(start_date, end_date) { where('(demands.end_date IS NOT NULL AND demands.end_date BETWEEN :start_date AND :end_date) OR (demands.commitment_date IS NOT NULL AND demands.commitment_date BETWEEN :start_date AND :end_date) OR (demands.created_date BETWEEN :start_date AND :end_date)', start_date: start_date.beginning_of_day, end_date: end_date.end_of_day) }
+  scope :until_date, ->(limit_date) { where('(demands.end_date IS NOT NULL AND demands.end_date <= :limit_date) OR (demands.commitment_date IS NOT NULL AND demands.commitment_date <= :limit_date) OR (demands.created_date <= :limit_date)', limit_date: limit_date) }
   scope :to_end_dates, ->(start_date, end_date) { where('demands.end_date BETWEEN :start_date AND :end_date', start_date: start_date.beginning_of_day, end_date: end_date.end_of_day) }
   scope :dates_inconsistent_to_project, ->(project) { kept.where('demands.commitment_date < :start_date OR demands.end_date > :end_date', start_date: project.start_date, end_date: project.end_date.end_of_day) }
   scope :scored_demands, -> { kept.where('demands.demand_score > 0') }
@@ -116,6 +117,7 @@ class Demand < ApplicationRecord
   scope :grouped_end_date_by_month, -> { kept.finished.order(end_date: :desc).group_by { |demand| [demand.end_date.to_date.cwyear, demand.end_date.to_date.month] } }
   scope :not_started, -> { kept.where('demands.commitment_date IS NULL AND demands.end_date IS NULL') }
   scope :with_valid_leadtime, -> { kept.where('demands.leadtime >= :leadtime_data_limit', leadtime_data_limit: 10.minutes.to_i) }
+  scope :not_discarded_until, ->(limit_date) { where('demands.discarded_at IS NULL OR demands.discarded_at > :limit_date', limit_date: limit_date) }
 
   delegate :name, to: :project, prefix: true
   delegate :name, to: :product, prefix: true, allow_nil: true

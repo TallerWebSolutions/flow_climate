@@ -50,12 +50,6 @@ RSpec.describe UsersController, type: :controller do
       it { expect(response).to redirect_to new_user_session_path }
     end
 
-    describe 'GET #user_dashboard_company_tab' do
-      before { get :user_dashboard_company_tab, params: { id: 'foo' } }
-
-      it { expect(response).to redirect_to new_user_session_path }
-    end
-
     describe 'GET #home' do
       before { get :home }
 
@@ -132,10 +126,10 @@ RSpec.describe UsersController, type: :controller do
       let(:customer) { Fabricate :customer, company: company }
       let(:product) { Fabricate :product, customer: customer }
 
-      let!(:project) { Fabricate :project, products: [product], status: :executing, company: company, start_date: Time.zone.local(2019, 12, 16, 14, 0, 0), end_date: Time.zone.local(2020, 1, 18, 14, 0, 0), value: 1000 }
-      let!(:other_project) { Fabricate :project, products: [product], status: :executing, company: company, start_date: Time.zone.local(2019, 11, 16, 14, 0, 0), end_date: Time.zone.local(2020, 1, 17, 14, 0, 0), value: 3500 }
-      let!(:finished_project) { Fabricate :project, products: [product], status: :finished, company: company, start_date: Time.zone.local(2020, 1, 12, 14, 0, 0), end_date: Time.zone.local(2020, 1, 14, 14, 0, 0), value: 500 }
-      let!(:waiting_project) { Fabricate :project, products: [product], status: :waiting, company: company, start_date: Time.zone.local(2020, 1, 12, 14, 0, 0), end_date: Time.zone.local(2020, 1, 14, 14, 0, 0), value: 500 }
+      let!(:project) { Fabricate :project, products: [product], name: 'project', status: :executing, company: company, start_date: Time.zone.local(2019, 12, 16, 14, 0, 0), end_date: Time.zone.local(2020, 1, 18, 14, 0, 0), value: 1000 }
+      let!(:other_project) { Fabricate :project, products: [product], name: 'other_project', status: :executing, company: company, start_date: Time.zone.local(2019, 11, 16, 14, 0, 0), end_date: Time.zone.local(2020, 1, 17, 14, 0, 0), value: 3500 }
+      let!(:finished_project) { Fabricate :project, products: [product], name: 'finished_project', status: :finished, company: company, start_date: Time.zone.local(2020, 1, 12, 14, 0, 0), end_date: Time.zone.local(2020, 1, 14, 14, 0, 0), value: 500 }
+      let!(:waiting_project) { Fabricate :project, products: [product], name: 'waiting_project', status: :waiting, company: company, start_date: Time.zone.local(2020, 1, 12, 14, 0, 0), end_date: Time.zone.local(2020, 1, 14, 14, 0, 0), value: 500 }
 
       let(:team) { Fabricate :team, company: company }
       let(:first_demand) { Fabricate :demand, team: team, product: product, project: other_project, commitment_date: Time.zone.local(2019, 10, 16, 14, 0, 0), end_date: Time.zone.local(2020, 10, 23, 14, 0, 0) }
@@ -174,6 +168,9 @@ RSpec.describe UsersController, type: :controller do
             user.update(last_company_id: company.id)
 
             travel_to Time.zone.local(2020, 1, 16, 14, 0, 0) do
+              Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago, lead_time_min: 5, lead_time_max: 10, project_quality: 0.85, last_data_in_week: true, lead_time_p80: 2.3, operational_risk: 0.4, project_scope: 20, value_per_demand: 123, flow_pressure: 0.4
+              Fabricate :project_consolidation, project: other_project, consolidation_date: 2.days.ago, lead_time_min: 5, lead_time_max: 10, project_quality: 0.6, last_data_in_week: true, lead_time_p80: 4.1, operational_risk: 0.7, project_scope: 10, value_per_demand: 32, flow_pressure: 0.7
+
               allow_any_instance_of(Membership).to(receive(:demands_ids).and_return(Demand.all.map(&:id)))
 
               get :show, params: { id: user }
@@ -189,13 +186,14 @@ RSpec.describe UsersController, type: :controller do
               expect(assigns(:statistics_information).lead_time_accumulated[0]).to be_within(1).of(7.0)
               expect(assigns(:statistics_information).lead_time_accumulated[1]).to eq 22.0
 
-              expect(assigns(:projects_quality)).to eq(project => 100, other_project => 100)
-              expect(assigns(:projects_leadtime)[project]).to be_within(0.5).of(26)
-              expect(assigns(:projects_leadtime)[other_project]).to be_within(0.1).of(299.6)
-              expect(assigns(:projects_risk)).to eq({ project => 100, other_project => 100 })
-              expect(assigns(:projects_scope)).to eq({ project => 30, other_project => 30 })
-              expect(assigns(:projects_value_per_demand)).to eq({ project => 1000, other_project => 3500 })
-              expect(assigns(:projects_flow_pressure)).to eq({ project => 8.780487804878078, other_project => 12.413793103448336 })
+              expect(assigns(:projects_quality)).to eq(other_project => [0.6], project => [0.85])
+              expect(assigns(:projects_leadtime)[project]).to eq [2.3]
+              expect(assigns(:projects_leadtime)[other_project]).to eq [4.1]
+              expect(assigns(:projects_risk)[project]).to eq [0.4]
+              expect(assigns(:projects_risk)[other_project]).to eq [0.7]
+              expect(assigns(:projects_scope)).to eq({ project => [20], other_project => [10] })
+              expect(assigns(:projects_value_per_demand)).to eq({ other_project => [32], project => [123] })
+              expect(assigns(:projects_flow_pressure)).to eq({ other_project => [0.7], project => [0.4] })
 
               expect(assigns(:member_effort_chart)).to eq [{ data: [], name: first_team_member.name }]
               expect(assigns(:member_pull_interval_average_chart)).to eq [{ data: [], name: first_team_member.name }]
@@ -324,51 +322,6 @@ RSpec.describe UsersController, type: :controller do
       end
     end
 
-    describe 'GET #user_dashboard_company_tab' do
-      before { travel_to Time.zone.local(2020, 1, 16, 14, 0, 0) }
-
-      after { travel_back }
-
-      context 'with valid parameters' do
-        context 'with data' do
-          include_context 'user demands data'
-
-          it 'assigns the instance variable and renders the template' do
-            allow_any_instance_of(Membership).to(receive(:demands_ids).and_return(Demand.all.map(&:id)))
-
-            user.update(last_company_id: company.id)
-
-            get :user_dashboard_company_tab, params: { id: user, company_id: company }, xhr: true
-
-            expect(assigns(:member_teams)).to eq [team]
-            expect(assigns(:member_projects)).to eq [project, other_project]
-            expect(assigns(:array_of_dates)).to eq [Date.new(2019, 12, 31), Date.new(2020, 1, 31)]
-
-            expect(assigns(:statistics_information).lead_time_accumulated[0]).to be_within(1).of(7.0)
-            expect(assigns(:statistics_information).lead_time_accumulated[1]).to eq 22.0
-
-            expect(assigns(:projects_quality)).to eq(project => 100, other_project => 100)
-            expect(assigns(:projects_leadtime)[project]).to be_within(0.5).of(26)
-            expect(assigns(:projects_leadtime)[other_project]).to be_within(0.1).of(299.6)
-            expect(assigns(:projects_risk)).to eq({ project => 100, other_project => 100 })
-            expect(assigns(:projects_scope)).to eq({ project => 30, other_project => 30 })
-            expect(assigns(:projects_value_per_demand)).to eq({ project => 1000, other_project => 1750 })
-            expect(assigns(:projects_flow_pressure)).to eq({ project => 8.780487804878078, other_project => 12.413793103448336 })
-
-            expect(response).to render_template 'users/user_dashboard_company_tab.js.erb'
-          end
-        end
-
-        context 'with invalid' do
-          context 'company' do
-            before { get :user_dashboard_company_tab, params: { id: user, company_id: 'foo' } }
-
-            it { expect(response).to have_http_status :not_found }
-          end
-        end
-      end
-    end
-
     describe 'GET #home' do
       context 'with valid parameters' do
         context 'with data' do
@@ -378,6 +331,9 @@ RSpec.describe UsersController, type: :controller do
             user.update(last_company_id: company.id)
 
             travel_to Time.zone.local(2020, 1, 16, 14, 0, 0) do
+              Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago, lead_time_min: 5, lead_time_max: 10, project_quality: 0.85, last_data_in_week: true, lead_time_p80: 2.3, operational_risk: 0.4, project_scope: 20, value_per_demand: 123, flow_pressure: 0.4
+              Fabricate :project_consolidation, project: other_project, consolidation_date: 2.days.ago, lead_time_min: 5, lead_time_max: 10, project_quality: 0.6, last_data_in_week: true, lead_time_p80: 4.1, operational_risk: 0.7, project_scope: 10, value_per_demand: 32, flow_pressure: 0.7
+
               allow_any_instance_of(Membership).to(receive(:demands_ids).and_return(Demand.all.map(&:id)))
 
               get :home
@@ -393,13 +349,14 @@ RSpec.describe UsersController, type: :controller do
               expect(assigns(:statistics_information).lead_time_accumulated[0]).to be_within(1).of(7.0)
               expect(assigns(:statistics_information).lead_time_accumulated[1]).to eq 22.0
 
-              expect(assigns(:projects_quality)).to eq(project => 100, other_project => 100)
-              expect(assigns(:projects_leadtime)[project]).to be_within(0.5).of(26)
-              expect(assigns(:projects_leadtime)[other_project]).to be_within(0.1).of(299.6)
-              expect(assigns(:projects_risk)).to eq({ project => 100, other_project => 100 })
-              expect(assigns(:projects_scope)).to eq({ project => 30, other_project => 30 })
-              expect(assigns(:projects_value_per_demand)).to eq({ project => 1000, other_project => 3500 })
-              expect(assigns(:projects_flow_pressure)).to eq({ project => 8.780487804878078, other_project => 12.413793103448336 })
+              expect(assigns(:projects_quality)).to eq(other_project => [0.6], project => [0.85])
+              expect(assigns(:projects_leadtime)[project]).to eq [2.3]
+              expect(assigns(:projects_leadtime)[other_project]).to eq [4.1]
+              expect(assigns(:projects_risk)[project]).to eq [0.4]
+              expect(assigns(:projects_risk)[other_project]).to eq [0.7]
+              expect(assigns(:projects_scope)).to eq({ project => [20], other_project => [10] })
+              expect(assigns(:projects_value_per_demand)).to eq({ other_project => [32], project => [123] })
+              expect(assigns(:projects_flow_pressure)).to eq({ other_project => [0.7], project => [0.4] })
 
               expect(response).to render_template 'users/show'
             end

@@ -136,7 +136,7 @@ class TeamsController < DemandsListController
       array_of_dates << project_lead_times_hash[:project_period]
       @projects_lead_time_in_time << project_lead_times_hash[:project_data]
 
-      @projects_risk_in_time << { name: project.name, data: project.project_consolidations.order(:consolidation_date).map { |consolidation| (1 - consolidation.odds_to_deadline_project) * 100 } }
+      @projects_risk_in_time << { name: project.name, data: project.project_consolidations.order(:consolidation_date).map { |consolidation| consolidation.operational_risk * 100 } }
     end
 
     build_x_axis_index(array_of_dates)

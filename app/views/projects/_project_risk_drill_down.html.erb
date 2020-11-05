@@ -13,7 +13,7 @@
 
           <div class="col-xs-4">
             <p class="stamp-title"><%= I18n.t('general.throughput') %></p>
-            <p class="stamp-content"><%= project_consolidations.last.project_weekly_throughput.last(8).join(' | ') %></p>
+            <p class="stamp-content"><%= project_consolidations.last.project_throughput %></p>
           </div>
           <div class="col-xs-4">
             <p class="stamp-title"><%= I18n.t('projects.risk.drill_down_wip_title') %></p>
@@ -21,7 +21,7 @@
           </div>
           <div class="col-xs-4">
             <p class="stamp-title"><%= I18n.t('projects.risk.drill_down_little_law_title') %></p>
-            <p class="stamp-content"><%= I18n.t('general.weeks_text', count: number_with_precision(project_consolidations.last.project_little_law_weeks(8), precision: 1)) %></p>
+            <p class="stamp-content"><%= I18n.t('general.weeks_text', count: number_with_precision(project_consolidations.last.weeks_by_little_law, precision: 1)) %></p>
           </div>
         </div>
 
@@ -55,23 +55,22 @@
           <div class="col-xs-3 bottom-spaced-component">
             <p class="stamp-title"><%= I18n.t('general.minimum') %></p>
             <p class="stamp-content">
-              <%= I18n.t('general.weeks_text', count: project_consolidations.last.project_monte_carlo_weeks_min) %>
-              <sup><%= "(#{number_to_percentage(project_consolidations.last.project_monte_carlo_weeks_min_percentage * 100, precision: 2)})" %></sup>
+              <%= I18n.t('general.weeks_text', count: project_consolidations.last.monte_carlo_weeks_min) %>
             </p>
           </div>
           <div class="col-xs-3 bottom-spaced-component">
             <p class="stamp-title"><%= I18n.t('general.maximum') %></p>
             <p class="stamp-content">
-              <%= I18n.t('general.weeks_text', count: project_consolidations.last.project_monte_carlo_weeks_max) %>
+              <%= I18n.t('general.weeks_text', count: project_consolidations.last.monte_carlo_weeks_max) %>
             </p>
           </div>
           <div class="col-xs-3 bottom-spaced-component">
             <p class="stamp-title"><%= I18n.t('general.statistics.p80') %></p>
-            <p class="stamp-content"><%= I18n.t('general.weeks_text', count: number_with_precision(project_consolidations.last.project_monte_carlo_weeks_percentil, precision: 2)) %></p>
+            <p class="stamp-content"><%= I18n.t('general.weeks_text', count: number_with_precision(project_consolidations.last.monte_carlo_weeks_p80, precision: 2)) %></p>
           </div>
           <div class="col-xs-3 bottom-spaced-component">
             <p class="stamp-title"><%= I18n.t('general.statistics.standard_deviation') %></p>
-            <p class="stamp-content"><%= I18n.t('general.weeks_text', count: number_with_precision(project_consolidations.last.project_monte_carlo_weeks_std_dev, precision: 2)) %></p>
+            <p class="stamp-content"><%= I18n.t('general.weeks_text', count: number_with_precision(project_consolidations.last.monte_carlo_weeks_std_dev, precision: 2)) %></p>
           </div>
         </div>
 
@@ -82,23 +81,22 @@
           <div class="col-xs-3 bottom-spaced-component">
             <p class="stamp-title"><%= I18n.t('general.minimum') %></p>
             <p class="stamp-content">
-              <%= I18n.t('general.weeks_text', count: project_consolidations.last.team_monte_carlo_weeks_min) %>
-              <sup><%= "(#{number_to_percentage(project_consolidations.last.team_monte_carlo_weeks_min_percentage * 100, precision: 2)})" %></sup>
+              <%= I18n.t('general.weeks_text', count: project_consolidations.last.team_based_monte_carlo_weeks_min) %>
             </p>
           </div>
           <div class="col-xs-3 bottom-spaced-component">
             <p class="stamp-title"><%= I18n.t('general.maximum') %></p>
             <p class="stamp-content">
-              <%= I18n.t('general.weeks_text', count: project_consolidations.last.team_monte_carlo_weeks_max) %>
+              <%= I18n.t('general.weeks_text', count: project_consolidations.last.team_based_monte_carlo_weeks_max) %>
             </p>
           </div>
           <div class="col-xs-3 bottom-spaced-component">
             <p class="stamp-title"><%= I18n.t('general.statistics.p80') %></p>
-            <p class="stamp-content"><%= I18n.t('general.weeks_text', count: number_with_precision(project_consolidations.last.team_monte_carlo_weeks_percentil, precision: 2)) %></p>
+            <p class="stamp-content"><%= I18n.t('general.weeks_text', count: number_with_precision(project_consolidations.last.team_based_monte_carlo_weeks_p80, precision: 2)) %></p>
           </div>
           <div class="col-xs-3 bottom-spaced-component">
             <p class="stamp-title"><%= I18n.t('general.statistics.standard_deviation') %></p>
-            <p class="stamp-content"><%= I18n.t('general.weeks_text', count: number_with_precision(project_consolidations.last.team_monte_carlo_weeks_std_dev, precision: 2)) %></p>
+            <p class="stamp-content"><%= I18n.t('general.weeks_text', count: number_with_precision(project_consolidations.last.team_based_monte_carlo_weeks_std_dev, precision: 2)) %></p>
           </div>
         </div>
 

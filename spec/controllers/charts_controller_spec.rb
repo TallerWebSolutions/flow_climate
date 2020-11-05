@@ -156,13 +156,13 @@ RSpec.describe ChartsController, type: :controller do
         let!(:sixth_block) { Fabricate :demand_block, demand: fourth_demand, block_time: 2.days.ago, unblock_time: Time.zone.today }
 
         context 'with projects consolidations' do
-          let!(:project_consolidation) { Fabricate :project_consolidation, consolidation_date: Time.zone.today, project: first_project }
-          let!(:other_project_consolidation) { Fabricate :project_consolidation, consolidation_date: 1.week.ago, project: second_project }
+          let!(:project_consolidation) { Fabricate :project_consolidation, consolidation_date: Time.zone.today, project: first_project, lead_time_min: 10, lead_time_max: 20 }
+          let!(:other_project_consolidation) { Fabricate :project_consolidation, consolidation_date: 1.week.ago, project: second_project, lead_time_min: 5, lead_time_max: 8 }
 
           context 'passing valid parameters' do
             context 'no start nor end dates nor period provided' do
               context 'and the project started after 3 months ago' do
-                it 'builds the statistic adapter and renders the view using the dates in project to a monthly period' do
+                it 'builds the chart data and renders the view using the dates in project to a monthly period' do
                   get :statistics_charts, params: { company_id: company, projects_ids: team.projects.map(&:id).join(','), project_status: '' }, xhr: true
 
                   expect(response).to render_template 'charts/statistics_tab'
@@ -182,7 +182,7 @@ RSpec.describe ChartsController, type: :controller do
                   expect(assigns(:portfolio_statistics_data).block_by_project_x_axis).to eq [first_project.name]
                   expect(assigns(:projects_consolidations_charts_adapter).lead_time_data_range_evolution[:x_axis]).to eq [1.week.ago.to_date, Time.zone.today]
                   expect(assigns(:projects_consolidations_charts_adapter).lead_time_data_range_evolution[:y_axis][0][:name]).to eq I18n.t('charts.lead_time_data_range_evolution.total_range')
-                  expect(assigns(:projects_consolidations_charts_adapter).lead_time_data_range_evolution[:y_axis][0][:data]).to eq [6.481481481481482e-05, 6.481481481481482e-05]
+                  expect(assigns(:projects_consolidations_charts_adapter).lead_time_data_range_evolution[:y_axis][0][:data]).to eq [0.00003472222222222222, 0.00011574074074074075]
                 end
               end
 
@@ -200,7 +200,7 @@ RSpec.describe ChartsController, type: :controller do
               end
             end
 
-            context 'and a start and end dates provided' do
+            context 'with a start and end dates were provided' do
               it 'builds the statistic adapter and renders the view using the parameters' do
                 get :statistics_charts, params: { company_id: company, projects_ids: team.projects.map(&:id).join(','), start_date: 1.week.ago, end_date: Time.zone.today, period: 'month', project_status: '' }, xhr: true
                 expect(response).to render_template 'charts/statistics_tab'
@@ -220,7 +220,7 @@ RSpec.describe ChartsController, type: :controller do
 
                 expect(assigns(:projects_consolidations_charts_adapter).lead_time_data_range_evolution[:x_axis]).to eq [1.week.ago.to_date, Time.zone.today]
                 expect(assigns(:projects_consolidations_charts_adapter).lead_time_data_range_evolution[:y_axis][0][:name]).to eq I18n.t('charts.lead_time_data_range_evolution.total_range')
-                expect(assigns(:projects_consolidations_charts_adapter).lead_time_data_range_evolution[:y_axis][0][:data]).to eq [6.481481481481482e-05, 6.481481481481482e-05]
+                expect(assigns(:projects_consolidations_charts_adapter).lead_time_data_range_evolution[:y_axis][0][:data]).to eq [0.00003472222222222222, 0.00011574074074074075]
               end
             end
           end

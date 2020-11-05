@@ -83,7 +83,7 @@ class ReplenishingData
     stats_hash[:project_based_risks_to_deadline] = project.current_risk_to_deadline
     stats_hash[:team_based_montecarlo_80_percent] = build_monte_carlo_info(project, build_project_share_in_team_throughput(project, build_throughput_per_period_array(@team_demands, @start_date, @end_date, uncertain_scope_for_team).last(10)))
 
-    build_proejct_consolidation_data(project, stats_hash)
+    build_team_based_consolidation_data(project.last_project_consolidation, stats_hash)
 
     stats_hash[:throughput_data_size] = throughput_grouped_per_week_hash.count
 
@@ -94,11 +94,11 @@ class ReplenishingData
     @team_projects.map(&:initial_scope).compact.sum
   end
 
-  def build_proejct_consolidation_data(project, stats_hash)
-    stats_hash[:team_based_odds_to_deadline] = project.last_project_consolidation&.odds_to_deadline_team
-    stats_hash[:team_monte_carlo_weeks_std_dev] = project.last_project_consolidation&.team_monte_carlo_weeks_std_dev
-    stats_hash[:team_monte_carlo_weeks_min] = project.last_project_consolidation&.team_monte_carlo_weeks_min
-    stats_hash[:team_monte_carlo_weeks_max] = project.last_project_consolidation&.team_monte_carlo_weeks_max
+  def build_team_based_consolidation_data(project_consolidation, stats_hash)
+    stats_hash[:team_based_odds_to_deadline] = 1 - (project_consolidation&.team_based_operational_risk || 0)
+    stats_hash[:team_monte_carlo_weeks_std_dev] = project_consolidation&.team_based_monte_carlo_weeks_std_dev || 0
+    stats_hash[:team_monte_carlo_weeks_min] = project_consolidation&.team_based_monte_carlo_weeks_min || 0
+    stats_hash[:team_monte_carlo_weeks_max] = project_consolidation&.team_based_monte_carlo_weeks_max || 0
   end
 
   def build_throughput_per_period_array(demands, start_date, end_date, initial_scope)

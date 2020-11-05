@@ -2,7 +2,7 @@
 
 class UsersController < AuthenticatedController
   before_action :check_admin, only: %i[toggle_admin admin_dashboard]
-  before_action :assign_user, only: %i[toggle_admin show edit update companies user_dashboard_company_tab]
+  before_action :assign_user, only: %i[toggle_admin show edit update companies]
 
   def admin_dashboard
     @users_list = User.all.order(%i[last_name first_name])
@@ -46,17 +46,6 @@ class UsersController < AuthenticatedController
     render 'companies/index'
   end
 
-  def user_dashboard_company_tab
-    assign_company
-
-    assign_charts_objects(@company)
-    assign_team_member_dependencies
-    assign_user_dependencies
-    assign_stats_info
-
-    respond_to { |format| format.js { render 'users/user_dashboard_company_tab.js.erb' } }
-  end
-
   def home
     @user = current_user
     build_page_objects
@@ -70,20 +59,22 @@ class UsersController < AuthenticatedController
     @companies_list = @user.companies.order(:name)
     @company = @user.last_company || @user.companies.last
 
-    assign_charts_objects(@company) if @company.present?
+    assign_manager_charts_objects(@company) if @company.present?
 
     assign_team_member_dependencies
     assign_user_dependencies
     assign_stats_info
   end
 
-  def assign_charts_objects(company)
-    assign_active_projects_quality_info(company)
-    assign_active_projects_lead_time_info(company)
-    assign_active_projects_risk_info(company)
-    assign_active_projects_scope_info(company)
-    assign_active_projects_value_per_demand_info(company)
-    assign_active_projects_flow_pressure_info(company)
+  def assign_manager_charts_objects(company)
+    projects = running_projects(company)
+    start_manager_charts_hashes
+    projects.each do |project|
+      start_manager_charts_arrays(project)
+
+      consolidations = Consolidations::ProjectConsolidation.weekly_data_for_project(project).after_date(4.weeks.ago).order(:consolidation_date)
+      build_consolidations(project, consolidations)
+    end
   end
 
   def assign_team_member_dependencies
@@ -148,39 +139,36 @@ class UsersController < AuthenticatedController
     @user = User.find(params[:id])
   end
 
-  # TODO: the following methods should be in a service
+  def build_consolidations(project, consolidations)
+    consolidations.each do |consolidation|
+      @projects_quality[project] << consolidation.project_quality
+      @projects_leadtime[project] << consolidation.lead_time_p80
+      @projects_risk[project] << consolidation.operational_risk
+      @projects_scope[project] << consolidation.project_scope
+      @projects_value_per_demand[project] << consolidation.value_per_demand
+      @projects_flow_pressure[project] << consolidation.flow_pressure
+    end
+  end
 
-  def assign_active_projects_quality_info(company)
+  def start_manager_charts_arrays(project)
+    @projects_quality[project] = []
+    @projects_leadtime[project] = []
+    @projects_risk[project] = []
+    @projects_scope[project] = []
+    @projects_value_per_demand[project] = []
+    @projects_flow_pressure[project] = []
+  end
+
+  def start_manager_charts_hashes
     @projects_quality = {}
-    running_projects(company).each { |project| @projects_quality[project] = project.quality * 100 }
-  end
-
-  def assign_active_projects_lead_time_info(company)
     @projects_leadtime = {}
-    running_projects(company).each { |project| @projects_leadtime[project] = (project.general_leadtime / 1.day).round(3) }
-  end
-
-  def assign_active_projects_risk_info(company)
     @projects_risk = {}
-    running_projects(company).each { |project| @projects_risk[project] = project.current_risk_to_deadline * 100 }
-  end
-
-  def assign_active_projects_scope_info(company)
     @projects_scope = {}
-    running_projects(company).each { |project| @projects_scope[project] = project.remaining_backlog }
-  end
-
-  def assign_active_projects_value_per_demand_info(company)
     @projects_value_per_demand = {}
-    running_projects(company).includes([:demands]).each { |project| @projects_value_per_demand[project] = project.value_per_demand }
-  end
-
-  def assign_active_projects_flow_pressure_info(company)
     @projects_flow_pressure = {}
-    running_projects(company).each { |project| @projects_flow_pressure[project] = project.flow_pressure.to_f }
   end
 
   def running_projects(company)
-    @running_projects ||= company.projects.running
+    @running_projects ||= company.projects.running.order(:end_date)
   end
 end
