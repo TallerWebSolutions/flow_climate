@@ -1373,4 +1373,20 @@ RSpec.describe Project, type: :model do
       end
     end
   end
+
+  describe '#last_weekly_throughput' do
+    let(:project) { Fabricate :project }
+
+    context 'with project consolidations' do
+      let!(:first_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago, project_throughput: 10 }
+      let!(:second_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 2.days.ago, project_throughput: 5 }
+      let!(:third_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 2.days.ago, project_throughput: 1 }
+
+      it { expect(project.last_weekly_throughput(10)).to eq [4, 5] }
+    end
+
+    context 'with no consolidations' do
+      it { expect(project.last_weekly_throughput(10)).to eq [] }
+    end
+  end
 end
