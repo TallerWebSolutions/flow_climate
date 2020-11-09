@@ -11,7 +11,7 @@ module Api
 
       def authenticate_request
         @company = Company.find_by(api_token: request.headers['HTTP_API_TOKEN'])
-        render json: { error: 'Not Authorized' }, status: 401 unless @company
+        render json: { error: 'Not Authorized' }, status: :unauthorized unless @company
       end
 
       def not_found

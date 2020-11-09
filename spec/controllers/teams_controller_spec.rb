@@ -817,7 +817,7 @@ RSpec.describe TeamsController, type: :controller do
           include_context 'demands to filters'
 
           it 'creates the objects and renders the tab' do
-            expect(Membership).to(receive(:developer).and_return(Membership.all))
+            allow(Membership).to(receive(:developer).and_return(Membership.all))
 
             allow_any_instance_of(Membership).to(receive(:demands).and_return(Demand.all))
 
