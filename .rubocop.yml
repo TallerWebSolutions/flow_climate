@@ -306,3 +306,6 @@ RSpec/ScatteredSetup:
 
 RSpec/MultipleMemoizedHelpers:
   Enabled: false
+
+Naming/VariableNumber:
+  Enabled: false
