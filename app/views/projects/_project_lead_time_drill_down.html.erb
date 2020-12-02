@@ -23,12 +23,12 @@
 
           <div class="col-xs-4 bottom-spaced-component">
             <p class="stamp-title"><%= I18n.t('general.statistics.p80') %></p>
-            <p class="stamp-content"><%= time_distance_in_words(project_consolidations.last.population_lead_time(80)) %></p>
+            <p class="stamp-content"><%= time_distance_in_words(project_consolidations.last.lead_time_p80) %></p>
           </div>
 
           <div class="col-xs-4 bottom-spaced-component">
             <p class="stamp-title"><%= I18n.t('general.statistics.standard_deviation') %></p>
-            <p class="stamp-content"><%= time_distance_in_words(project_consolidations.last.demands_lead_times_std_dev) %></p>
+            <p class="stamp-content"><%= time_distance_in_words(project_consolidations.last.lead_time_std_dev) %></p>
           </div>
 
           <div class="col-xs-4 bottom-spaced-component">
@@ -43,7 +43,7 @@
 
           <div class="col-xs-4 bottom-spaced-component">
             <p class="stamp-title"><%= I18n.t('general.statistics.average') %></p>
-            <p class="stamp-content"><%= time_distance_in_words(project_consolidations.last.demands_lead_times_average) %></p>
+            <p class="stamp-content"><%= time_distance_in_words(project_consolidations.last.lead_time_average) %></p>
           </div>
 
           <div class="col-xs-4 bottom-spaced-component">

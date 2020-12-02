@@ -97,7 +97,7 @@ en:
       deadline:
         label: "Deadline Risk"
       label: "Risk"
-    detail: "Risk Detail"
+      detail: "Risk Detail"
     minimum: "Minimum"
     maximum: "Maximum"
     statistics:
@@ -156,7 +156,10 @@ en:
     name: "Name"
     bugs: "Bugs"
     people: "People"
-    quality: "Quality"
+    quality:
+      bugs: "Quality: Bugs"
+      blocks: "Quality: Blocks for coding"
+      blocks_per_demand: "Quality: Blocks for Coding per Demand"
     role: "Role"
     show_montecarlo: "Show Monte Carlo Projection"
     demands_per_day_text: "demandas por dia"
@@ -310,7 +313,7 @@ en:
         first_part: "Remaining "
         second_part: " till D-day!"
         days: "%{remaining_days} day(s)"
-        risk: "Operational Risk of %{risk_value}"
+        risk: "and the operational risk of this deadline is "
       cmd: "Average Demand Cost"
       status_information_html: "This project is <b>%{status_description}</b>"
       delivered_demands:
@@ -361,7 +364,7 @@ en:
         deadlines_difference: "Last Difference"
         deadlines_change_count: "Change Deadline Times"
       status_report:
-        title: "Status Report for %{project_name}"
+        title: "Status Report"
         cost: "Current Cost"
         deadline: "Current Deadline"
         current_numbers: "Current Numbers"
@@ -372,7 +375,7 @@ en:
       unscored_demands:
         no_demands: "no unscored demands"
         title: "Unscored Demands"
-      update_consolidations: "Update Risk"
+      update_consolidations: "Update Cache"
     charts:
       xlabel:
         weeks: "Weeks"
@@ -449,7 +452,7 @@ en:
         queue: "Queue"
         touch: "Touch"
       flow_efficiency:
-        title: "Flow Efficiency for %{target_name}"
+        title: "Flow Efficiency"
         share: "Flow Efficiency"
       leadtime_evolution:
         title: "Lead time confidence evolution"
@@ -472,6 +475,7 @@ en:
       scope_variation:
         title: "Scope variation in time"
       risk_evolution_in_time: "Math Risk Evolution"
+      quality_block_per_demand: "blocks per demand"
     project_risk_alert_table: "Risk alerts to the project"
     project_risk_configs:
       title: "Risk Configurations"
@@ -877,6 +881,7 @@ en:
       total_range_min: "Bin Min"
     lead_time_histogram_range_evolution:
       title: "Lead Time Histogram Range Variation"
+      frequency: "Frequency"
     lead_time_interquartile_data_range_evolution:
       title: "Lead Time Interquartile Range"
       total_range: "Total Range"
@@ -950,7 +955,7 @@ en:
       warning: "This action will import all statuses from all configured workflows. It will not work if you are running a new gen project."
   demand_blocks:
     index:
-      title: "Demand Blocks"
+      title: "Blocks"
       filter:
         team_member: "Team Member"
         stage: "Stage"

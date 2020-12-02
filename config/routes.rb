@@ -127,8 +127,6 @@ Rails.application.routes.draw do
       member do
         get :replenishing_input
         get :team_projects_tab
-        get :dashboard_search
-        get :demands_tab
         get :dashboard_tab
         get :dashboard_page_two
         get :dashboard_page_three
@@ -220,6 +218,7 @@ Rails.application.routes.draw do
         get :closing_dashboard
         get :status_report_dashboard
         get :lead_time_dashboard
+        get :statistics_tab
 
         patch :copy_stages_from
         patch :finish_project
@@ -280,7 +279,6 @@ Rails.application.routes.draw do
 
     resources :demand_blocks, only: :index do
       collection do
-        get :demand_blocks_tab
         get :demand_blocks_csv
 
         get :search

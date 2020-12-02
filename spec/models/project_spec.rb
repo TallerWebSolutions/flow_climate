@@ -1389,4 +1389,26 @@ RSpec.describe Project, type: :model do
       it { expect(project.last_weekly_throughput(10)).to eq [] }
     end
   end
+
+  describe '#current_weekly_scope_ideal_burnup' do
+    context 'with data' do
+      it 'returns the ideal values to burn the scope' do
+        travel_to Time.zone.local(2020, 12, 2, 10, 0, 0) do
+          project = Fabricate :project
+          Fabricate.times(10, :demand, project: project, created_date: 4.days.ago, end_date: 2.days.ago)
+          Fabricate.times(50, :demand, project: project, created_date: 4.days.ago, end_date: nil)
+          expect(project.current_weekly_scope_ideal_burnup).to eq [3.1578947368421053, 6.315789473684211, 9.473684210526315, 12.631578947368421, 15.789473684210527, 18.94736842105263, 22.105263157894736, 25.263157894736842, 28.42105263157895, 31.578947368421055, 34.73684210526316, 37.89473684210526, 41.05263157894737, 44.21052631578947, 47.36842105263158, 50.526315789473685, 53.68421052631579, 56.8421052631579, 60.0]
+        end
+      end
+    end
+
+    context 'with no data' do
+      it 'returns an array with zero values' do
+        travel_to Time.zone.local(2020, 12, 2, 10, 0, 0) do
+          project = Fabricate :project
+          expect(project.current_weekly_scope_ideal_burnup).to eq [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        end
+      end
+    end
+  end
 end

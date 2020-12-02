@@ -1,12 +1,17 @@
 <% if @customer_dashboard_data.present? %>
   <%= render 'customers/dashboards/customer_dashboard',
-             company: nil,
+             company: @company,
              customer: @customer,
              user_invite: nil,
              customer_dashboard_data: @customer_dashboard_data,
              demands_chart_adapter: @demands_chart_adapter,
              contract: nil,
-             contracts_flow_information: @contracts_flow_information %>
+             contracts_flow_information: @contracts_flow_information,
+             flow_pressure: @flow_pressure,
+             demands: @customer.exclusives_demands.kept,
+             demands_delivered: @customer.exclusives_demands.kept.finished,
+             unscored_demands: @unscored_demands,
+             demands_blocks: @demands_blocks %>
 <% else %>
   <% render 'layouts/no_data', missing_data: I18n.t('general.no_data') %>
 <% end %>

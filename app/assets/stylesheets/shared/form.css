@@ -18,6 +18,7 @@
 .bottom-spaced-component { margin-bottom: 8px; }
 
 .project-deadline-info {
+    font-size: large;
     margin-bottom: 17px;
 }
 
@@ -55,6 +56,24 @@
 
 .check-box-group-label {
     padding-right: 10px;
+}
+
+.no-alert {
+    padding: 10px;
+    background-color: #8dfae3;
+    border: 2px solid darkgreen;
+}
+
+.yellow-alert {
+    padding: 10px;
+    background-color: #EEE1B7;
+    border: 2px solid darkorange;
+}
+
+.red-alert {
+    padding: 10px;
+    background-color: #f0cbcf;
+    border: 2px solid darkred;
 }
 
 label.required:after{content: " *"}

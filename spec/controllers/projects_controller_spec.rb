@@ -107,6 +107,12 @@ RSpec.describe ProjectsController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'GET #statistics_tab' do
+      before { get :statistics_tab, params: { company_id: 'foo', id: 'bar' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated as gold' do
@@ -151,7 +157,7 @@ RSpec.describe ProjectsController, type: :controller do
         end
       end
 
-      context 'having no results' do
+      context 'having no consolidations' do
         context 'passing valid IDs' do
           before { get :show, params: { company_id: company, customer_id: customer, id: first_project } }
 
@@ -1038,7 +1044,7 @@ RSpec.describe ProjectsController, type: :controller do
       context 'passing an invalid' do
         context 'company' do
           context 'non-existent' do
-            before { get :search_projects, params: { company_id: 'foo' }, xhr: true }
+            before { get :running_projects_charts, params: { company_id: 'foo' }, xhr: true }
 
             it { expect(response).to have_http_status :not_found }
           end
@@ -1046,7 +1052,7 @@ RSpec.describe ProjectsController, type: :controller do
           context 'not permitted' do
             let(:company) { Fabricate :company, users: [] }
 
-            before { get :search_projects, params: { company_id: company }, xhr: true }
+            before { get :running_projects_charts, params: { company_id: company }, xhr: true }
 
             it { expect(response).to have_http_status :not_found }
           end
@@ -1061,8 +1067,6 @@ RSpec.describe ProjectsController, type: :controller do
 
       context 'passing valid parameters' do
         it 'calls the consolidation job and notices the user' do
-          expect(Consolidations::ProjectConsolidationJob).to(receive(:perform_later)).once
-
           patch :update_consolidations, params: { company_id: company, id: project }
 
           expect(response).to redirect_to company_project_path(company, project)
@@ -1088,6 +1092,44 @@ RSpec.describe ProjectsController, type: :controller do
             let(:company) { Fabricate :company, users: [] }
 
             before { patch :update_consolidations, params: { company_id: company, id: project } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
+
+    describe 'GET #statistics_tab' do
+      let!(:project) { Fabricate :project, company: company }
+
+      context 'passing valid parameters' do
+        context 'with no search parameters' do
+          it 'retrieves all the projects to the company' do
+            get :statistics_tab, params: { company_id: company, id: project }
+
+            expect(response).to render_template 'projects/statistics_tab'
+          end
+        end
+      end
+
+      context 'passing an invalid' do
+        context 'project' do
+          before { get :statistics_tab, params: { company_id: company, id: 'foo' } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'company' do
+          context 'non-existent' do
+            before { get :statistics_tab, params: { company_id: 'foo', id: project } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'not permitted' do
+            let(:company) { Fabricate :company, users: [] }
+
+            before { get :statistics_tab, params: { company_id: company, id: project } }
 
             it { expect(response).to have_http_status :not_found }
           end

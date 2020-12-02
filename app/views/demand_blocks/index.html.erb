@@ -1,0 +1,11 @@
+<div class="row">
+  <div class="col-xs-12">
+    <ul class="breadcrumb">
+      <li><%= link_to I18n.t('general.home.title'), root_path %></li>
+      <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
+      <li><%= I18n.t('demand_blocks.index.title') %></li>
+    </ul>
+  </div>
+</div>
+
+<%= render 'demand_blocks/demand_blocks_table', company: @company, demand_blocks_list: @demand_blocks, paged_demand_blocks: @paged_demand_blocks %>

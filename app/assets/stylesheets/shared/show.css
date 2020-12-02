@@ -94,10 +94,7 @@
 }
 
 .countdown {
-    background-color: yellow;
-    font-size: larger;
-    padding: 5px;
-    border: solid medium #730E15;
+    font-weight: bold;
 }
 
 .loader {

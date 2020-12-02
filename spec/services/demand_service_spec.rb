@@ -59,4 +59,34 @@ RSpec.describe DemandService, type: :service do
       described_class.instance.search_engine(Demand.all, Time.zone.now, Time.zone.now, 'foo', 'bla', 'bug', 'expedite', 'xpto sbbrubles')
     end
   end
+
+  describe '#hours_per_demand' do
+    context 'with data' do
+      let!(:first_demand) { Fabricate :demand, demand_type: :bug, class_of_service: :expedite, created_date: 19.days.ago, end_date: 2.days.ago, effort_upstream: 10, effort_downstream: 30 }
+      let!(:second_demand) { Fabricate :demand, demand_type: :bug, class_of_service: :standard, created_date: 8.days.ago, end_date: 1.day.ago, effort_upstream: 15, effort_downstream: 5 }
+      let!(:third_demand) { Fabricate :demand, demand_type: :feature, class_of_service: :expedite, created_date: 2.days.ago, end_date: 1.day.ago, effort_upstream: 40, effort_downstream: 35 }
+      let!(:fourth_demand) { Fabricate :demand, demand_type: :chore, class_of_service: :expedite, created_date: 12.days.ago, end_date: 3.days.ago, effort_upstream: 100, effort_downstream: 110 }
+
+      it { expect(described_class.instance.hours_per_demand(Demand.all)).to eq 86.25 }
+    end
+
+    context 'with no data' do
+      it { expect(described_class.instance.hours_per_demand(Demand.all)).to eq 0 }
+    end
+  end
+
+  describe '#flow_efficiency' do
+    context 'with data' do
+      let!(:first_demand) { Fabricate :demand, demand_type: :bug, class_of_service: :expedite, created_date: 19.days.ago, end_date: 2.days.ago, total_queue_time: 10, total_touch_time: 30 }
+      let!(:second_demand) { Fabricate :demand, demand_type: :bug, class_of_service: :standard, created_date: 8.days.ago, end_date: 1.day.ago, total_queue_time: 15, total_touch_time: 5 }
+      let!(:third_demand) { Fabricate :demand, demand_type: :feature, class_of_service: :expedite, created_date: 2.days.ago, end_date: 1.day.ago, total_queue_time: 40, total_touch_time: 35 }
+      let!(:fourth_demand) { Fabricate :demand, demand_type: :chore, class_of_service: :expedite, created_date: 12.days.ago, end_date: 3.days.ago, total_queue_time: 100, total_touch_time: 110 }
+
+      it { expect(described_class.instance.flow_efficiency(Demand.all)).to eq 52.17391304347827 }
+    end
+
+    context 'with no data' do
+      it { expect(described_class.instance.flow_efficiency(Demand.all)).to eq 0 }
+    end
+  end
 end

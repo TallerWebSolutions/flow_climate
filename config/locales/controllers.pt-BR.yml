@@ -97,7 +97,7 @@ pt-BR:
       deadline:
         label: "Risco do Prazo"
       label: "Risco"
-    detail: "Detalhamento do Risco"
+      detail: "Detalhamento do Risco"
     minimum: "Mínimo"
     maximum: "Máximo"
     statistics:
@@ -156,7 +156,10 @@ pt-BR:
     name: "Nome"
     bugs: "Defeitos"
     people: "Pessoas"
-    quality: "Qualidade"
+    quality:
+      bugs: "Qualidade: Bugs"
+      blocks: "Qualidade: Bloqueios por Necessidade de Código"
+      blocks_per_demand: "Qualidade: Bloqueios por Código por Demanda"
     role: "Função"
     show_montecarlo: "Mostrar Simulação de Monte Carlo"
     demands_per_day_text: "demands per day"
@@ -324,7 +327,7 @@ pt-BR:
         first_part: "Faltam "
         second_part: " para o fim do projeto"
         days: "%{remaining_days} dia(s)"
-        risk: "Risco Operacional de %{risk_value}"
+        risk: " e o risco operacional deste prazo é de "
       cmd: "CMD"
       status_information_html: "Este projeto está <i>%{status_description}</i>"
       delivered_demands:
@@ -375,7 +378,7 @@ pt-BR:
         deadlines_difference: "Última Diferença"
         deadlines_change_count: "Qtd Mudanças"
       status_report:
-        title: "Relatório de Status para %{project_name}"
+        title: "Relatório de Status"
         cost: "Custo Atual"
         deadline: "Prazo Atual"
         current_numbers: "Números Atuais"
@@ -386,7 +389,7 @@ pt-BR:
       unscored_demands:
         no_demands: "sem demandas sem pontuação"
         title: "Demandas sem Pontuação"
-      update_consolidations: "Atualizar Risco"
+      update_consolidations: "Atualizar Cache"
     charts:
       xlabel:
         weeks: "Semanas"
@@ -463,7 +466,7 @@ pt-BR:
         queue: "Fila"
         touch: "Trabalho"
       flow_efficiency:
-        title: "Eficiência de Fluxo para %{target_name}"
+        title: "Eficiência de Fluxo"
         share: "Eficiência de Fluxo"
       leadtime_evolution:
         title: "Evolução do Lead Time"
@@ -486,6 +489,7 @@ pt-BR:
       scope_variation:
         title: "Variação do escopo no tempo"
       risk_evolution_in_time: "Evolução do Risco Matemático"
+      quality_block_per_demand: "bloqueios por demanda"
     project_risk_alert_table: "Alertas de risco para o projeto"
     portfolio_bulletin:
       delivered_demands: "Demandas entregues na última semana"
@@ -949,6 +953,7 @@ pt-BR:
       total_range_min: "Bin Min"
     lead_time_histogram_range_evolution:
       title: "Amplitude do Histograma do Lead Time"
+      frequency: "Frequência"
     lead_time_interquartile_data_range_evolution:
       title: "Amplitude do Interquartil do Lead Time"
       total_range: "Amplitude (IQR)"
@@ -1022,7 +1027,7 @@ pt-BR:
       warning: "Esta ação irá importar todos os statuses de todos os workflows configurados. Não funcionará caso você esteja usando projetos new gen."
   demand_blocks:
     index:
-      title: "Bloqueios de Demanda"
+      title: "Bloqueios"
       filter:
         team_member: "Membro do Time"
         stage: "Etapa"

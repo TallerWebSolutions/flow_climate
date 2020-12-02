@@ -32,10 +32,6 @@ projectNavItem.on('click', function(event){
             $('#demands-tab').hide();
             getDemands(companyId, demandsIds);
 
-        } else if ($(this).attr('id') === 'nav-item-demands-blocks') {
-            $('#demands-blocks-tab').hide();
-            getDemandBlocksForProjects(companyId, projectsIds);
-
         } else if ($(this).attr('id') === 'nav-item-flow-impacts') {
             $('#flow-impacts-tab').hide();
             getFlowImpacts(companyId, projectId, projectsIds);

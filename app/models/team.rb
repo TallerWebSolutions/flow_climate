@@ -35,6 +35,7 @@ class Team < ApplicationRecord
   has_many :slack_configurations, dependent: :destroy
   has_many :team_resource_allocations, dependent: :destroy
   has_many :team_resources, through: :team_resource_allocations
+  has_many :demand_blocks, -> { distinct }, through: :demands
 
   validates :company, :name, :max_work_in_progress, presence: true
   validates :name, uniqueness: { scope: :company, message: I18n.t('team.name.uniqueness') }

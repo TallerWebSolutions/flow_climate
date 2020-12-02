@@ -34,7 +34,6 @@
     <div class="tab">
       <button class="tablinks" id="team-dashboard-tab"><%= I18n.t('teams.show.dashboard_tab') %></button>
       <button class="tablinks" id="team-projects-tab"><%= I18n.t('teams.show.projects_tab') %></button>
-      <button class="tablinks" id="team-demands-tab"><%= I18n.t('teams.show.demands_tab') %></button>
       <button class="tablinks" id="team-replenishing-tab"><%= I18n.t('navbar.replenishing') %></button>
     </div>
   </div>
@@ -71,7 +70,11 @@
              statistics_flow_information: @statistics_flow_information,
              current_lead_time_zones: @statistics_flow_information.current_lead_time_zones,
              demands_chart_adapter: @demands_chart_adapter,
-             demands_ids: @demands.map(&:id),
+             demands: @demands,
+             demands_delivered: @demands_delivered,
+             unscored_demands: @unscored_demands,
+             demands_blocks: @demands_blocks,
+             flow_pressure: @flow_pressure,
              projects_count: @team.projects.count,
              active_projects_count: @team.active_projects.count,
              active_projects_value: @team.active_projects.map(&:value).compact.sum,
@@ -98,25 +101,6 @@
 
 <div id="team-projects-charts" class="tabcontent">
 
-</div>
-
-<div id="team-demands-info" class="tabcontent">
-  <%= render 'demands/demands_table',
-             company: @company,
-             paged_demands: @paged_demands_searched,
-             demands: @demands_searched,
-             confidence_65_leadtime: @confidence_65_leadtime,
-             confidence_80_leadtime: @confidence_80_leadtime,
-             confidence_95_leadtime: @confidence_95_leadtime,
-             queue_time: @total_queue_time,
-             touch_time: @total_touch_time,
-             avg_queue_time: @average_queue_time,
-             avg_touch_time: @average_touch_time,
-             avg_work_hours_per_demand: @avg_work_hours_per_demand,
-             start_date: @start_date,
-             end_date: @end_date,
-             discarded_demands: @discarded_demands,
-             projects_ids: @projects_ids %>
 </div>
 
 <div class="modal fade" id="edit-demand-form" tabindex="-1" role="dialog" aria-labelledby="edit-demand-form" aria-hidden="true"></div>

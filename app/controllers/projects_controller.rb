@@ -13,10 +13,20 @@ class ProjectsController < AuthenticatedController
     assign_projects_to_copy_stages_from
     assign_demands_ids
 
+    @dashboard_project_consolidations = Consolidations::ProjectConsolidation.for_project(@project).weekly_data.after_date(10.weeks.ago).order(:consolidation_date)
+    @all_project_consolidations = Consolidations::ProjectConsolidation.for_project(@project).weekly_data.order(:consolidation_date)
+
+    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@project.demands, @project.start_date, Time.zone.today, 'week')
+    @demands_finished_with_leadtime = @project.demands.finished_with_leadtime
+    @lead_time_histogram_data = Stats::StatisticsService.instance.leadtime_histogram_hash(@demands_finished_with_leadtime.map(&:leadtime))
+    @status_report_data = Highchart::StatusReportChartsAdapter.new(@demands_finished_with_leadtime, @project.start_date, Time.zone.today, 'week')
+    @last_10_deliveries = @project.demands.kept.finished.order(end_date: :desc).limit(10)
+    @unscored_demands = @project.demands.unscored_demands.order(external_id: :asc)
+    @demands_blocks = @project.demand_blocks.order(block_time: :desc)
+
     @ordered_project_risk_alerts = @project.project_risk_alerts.order(created_at: :desc)
     @project_change_deadline_histories = @project.project_change_deadline_histories.includes(:user)
     @inconsistent_demands = @project.demands.dates_inconsistent_to_project(@project)
-    @unscored_demands = @project.demands.unscored_demands.order(external_id: :asc)
   end
 
   def index
@@ -170,6 +180,10 @@ class ProjectsController < AuthenticatedController
     flash[:notice] = I18n.t('general.enqueued')
 
     redirect_to company_project_path(@company, @project)
+  end
+
+  def statistics_tab
+    @all_project_consolidations = Consolidations::ProjectConsolidation.for_project(@project).weekly_data.order(:consolidation_date)
   end
 
   private

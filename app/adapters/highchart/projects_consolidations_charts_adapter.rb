@@ -12,7 +12,7 @@ module Highchart
     end
 
     def lead_time_data_range_evolution
-      y_axis_data = build_y_axis(@x_axis, :total_lead_time_range, :lead_time_max, :lead_time_min)
+      y_axis_data = build_y_axis(@x_axis, :lead_time_range, :lead_time_max, :lead_time_min)
 
       y_axis =
         [

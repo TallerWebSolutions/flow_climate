@@ -7,6 +7,7 @@ RSpec.describe Customer, type: :model do
     it { is_expected.to have_many :products }
     it { is_expected.to have_many(:demands).dependent(:nullify) }
     it { is_expected.to have_many(:contracts).dependent(:restrict_with_error) }
+    it { is_expected.to have_many(:demand_blocks).through(:demands) }
     it { is_expected.to have_and_belong_to_many :projects }
     it { is_expected.to have_and_belong_to_many(:devise_customers).dependent(:destroy) }
   end

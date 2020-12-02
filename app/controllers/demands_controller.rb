@@ -49,6 +49,7 @@ class DemandsController < DemandsListController
 
   def show
     @demand_blocks = @demand.demand_blocks.order(:block_time)
+    @paged_demand_blocks = @demand_blocks.page(params[:page])
     @demand_transitions = @demand.demand_transitions.order(:last_time_in)
     @queue_percentage = Stats::StatisticsService.instance.compute_percentage(@demand.total_queue_time, @demand.total_touch_time)
     @touch_percentage = 100 - @queue_percentage

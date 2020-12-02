@@ -10,22 +10,23 @@ RSpec.describe Consolidations::ProjectConsolidation, type: :model do
     it { is_expected.to validate_presence_of :consolidation_date }
   end
 
-  pending '.weekly_data_for_project'
+  pending '.weekly_data'
+  pending '.for_project'
   pending '.after_date'
 
-  describe '#total_lead_time_range' do
+  describe '#lead_time_range' do
     let(:project) { Fabricate :project, end_date: 4.weeks.from_now }
 
     context 'with data' do
       let!(:project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago, lead_time_min: 5, lead_time_max: 10 }
 
-      it { expect(project_consolidation.total_lead_time_range.to_f).to eq 5 }
+      it { expect(project_consolidation.lead_time_range.to_f).to eq 5 }
     end
 
     context 'with no data' do
       let!(:project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago }
 
-      it { expect(project_consolidation.total_lead_time_range.to_f).to eq 0 }
+      it { expect(project_consolidation.lead_time_range.to_f).to eq 0 }
     end
   end
 
@@ -177,6 +178,20 @@ RSpec.describe Consolidations::ProjectConsolidation, type: :model do
       let!(:project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago, demands_ids: [] }
 
       it { expect(project_consolidation.lead_time_expedite.to_f).to eq 0 }
+    end
+  end
+
+  describe 'lead_time_range_month' do
+    context 'with lead time' do
+      let(:consolidation) { Fabricate :project_consolidation, lead_time_min_month: 3, lead_time_max_month: 7 }
+
+      it { expect(consolidation.lead_time_range_month).to eq 4 }
+    end
+
+    context 'with no lead time' do
+      let(:consolidation) { Fabricate :project_consolidation, lead_time_min_month: nil, lead_time_max_month: nil }
+
+      it { expect(consolidation.lead_time_range_month).to eq 0 }
     end
   end
 end

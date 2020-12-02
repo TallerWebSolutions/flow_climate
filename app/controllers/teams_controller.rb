@@ -12,9 +12,12 @@ class TeamsController < DemandsListController
     build_query_dates
 
     @demands_searched = team_demands_search_engine(@demands)
-
     @paged_demands_searched = @demands_searched.page(page_param)
-    @demands_ids = @demands_searched.map(&:id)
+    @demands_delivered = @demands_searched.finished
+
+    @unscored_demands = @demands_searched.unscored_demands.order(external_id: :asc)
+    @demands_blocks = @team.demand_blocks.order(block_time: :desc)
+    @flow_pressure = @team.total_flow_pressure
     build_charts_data(@demands_searched)
   end
 
@@ -69,25 +72,6 @@ class TeamsController < DemandsListController
     build_projects_lead_time_in_time_array(executing_projects)
 
     respond_to { |format| format.js { render 'teams/team_projects_tab' } }
-  end
-
-  def dashboard_search
-    build_query_dates
-    assign_demands_list
-
-    @demands_searched = team_demands_search_engine(@demands)
-
-    @paged_demands_searched = @demands_searched.page(page_param)
-    @demands_ids = @demands_searched.map(&:id)
-    build_charts_data(@demands_searched)
-
-    respond_to { |format| format.js { render 'teams/dashboards/dashboard_search' } }
-  end
-
-  def demands_tab
-    @paged_demands = demands.page(page_param)
-    assign_consolidations
-    respond_to { |format| format.js { render 'teams/demands_tab' } }
   end
 
   def dashboard_tab
