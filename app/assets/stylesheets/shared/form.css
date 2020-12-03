@@ -76,6 +76,12 @@
     border: 2px solid darkred;
 }
 
+.standard-form {
+    background-color: #f3f6fc;
+    margin-top: 10px;
+    padding: 10px;
+}
+
 label.required:after{content: " *"}
 
 tfoot {

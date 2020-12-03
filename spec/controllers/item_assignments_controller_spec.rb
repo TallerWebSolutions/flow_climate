@@ -24,7 +24,7 @@ RSpec.describe ItemAssignmentsController, type: :controller do
           delete :destroy, params: { company_id: company.id, demand_id: demand.id, id: item_assignment.id }, xhr: true
 
           expect(ItemAssignment.where(id: item_assignment.id).count).to eq 0
-          expect(response).to render_template 'item_assignments/destroy.js.erb'
+          expect(response).to render_template 'item_assignments/destroy'
         end
       end
 

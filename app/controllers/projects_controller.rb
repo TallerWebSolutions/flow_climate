@@ -10,7 +10,6 @@ class ProjectsController < AuthenticatedController
     assign_project_stages
     assign_customer_projects
     assign_product_projects
-    assign_projects_to_copy_stages_from
     assign_demands_ids
 
     @dashboard_project_consolidations = Consolidations::ProjectConsolidation.for_project(@project).weekly_data.after_date(10.weeks.ago).order(:consolidation_date)
@@ -23,6 +22,7 @@ class ProjectsController < AuthenticatedController
     @last_10_deliveries = @project.demands.kept.finished.order(end_date: :desc).limit(10)
     @unscored_demands = @project.demands.unscored_demands.order(external_id: :asc)
     @demands_blocks = @project.demand_blocks.order(block_time: :desc)
+    @flow_pressure = @project.flow_pressure
 
     @ordered_project_risk_alerts = @project.project_risk_alerts.order(created_at: :desc)
     @project_change_deadline_histories = @project.project_change_deadline_histories.includes(:user)
@@ -207,10 +207,6 @@ class ProjectsController < AuthenticatedController
 
   def assign_demands_ids
     @demands_ids = @project.demands.map(&:id)
-  end
-
-  def assign_projects_to_copy_stages_from
-    @projects_to_copy_stages_from = (@company.projects - [@project]).sort_by(&:name)
   end
 
   def assign_project_stages

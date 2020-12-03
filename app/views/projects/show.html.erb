@@ -40,9 +40,9 @@
     <div class="col-xs-6">
       <% team_based_risk = @all_project_consolidations.last.team_based_operational_risk %>
       <% team_risk_alert_color = 'no-alert' %>
+
       <% if team_based_risk > 0.5 && team_based_risk <= 0.7 %>
         <% team_risk_alert_color = 'yellow-alert' %>
-
       <% elsif team_based_risk > 0.7  %>
         <% team_risk_alert_color = 'red-alert' %>
       <% end %>
@@ -64,7 +64,11 @@
 
     <ul class="dropdown-menu dropdown-menu-right">
       <li><%= link_to I18n.t('projects.show.update_consolidations'), update_consolidations_company_project_path(@company, @project), method: :patch, class: 'nav-link dropdown-item' %></li>
+      <li><%= link_to I18n.t('demands.new.title'), new_company_project_demand_path(@company, @project), class: 'nav-link dropdown-item' %></li>
+      <li><%= link_to I18n.t('projects.actions.edit.title'), edit_company_project_path(@company, @project), class: 'nav-link dropdown-item' %></li>
       <li class="divider"></li>
+      <li><%= link_to I18n.t('jira_project_configs.index.title'), company_project_jira_project_configs_path(@company, @project), class: 'nav-link dropdown-item' %></li>
+      <li><%= link_to "#{@project.stages.count} #{I18n.t('stage_project_config.index.title')}", company_project_stage_project_configs_path(@company, @project), class: 'nav-link dropdown-item' %></li>
 
     </ul>
   </div>

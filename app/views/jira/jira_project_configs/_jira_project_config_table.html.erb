@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-xs-12">
     <div class="pull-right bottom-spaced-component">
-      <%= link_to I18n.t('jira_project_configs.new.title'), new_company_project_jira_project_config_path(company, project), class: 'btn btn-sm btn-success new-jira-config-button', remote: true %>
+      <%= link_to I18n.t('jira_project_configs.new.title'), new_company_project_jira_project_config_path(company, project), class: 'btn btn-sm btn-success new-jira-config-button' %>
     </div>
   </div>
 </div>
@@ -21,7 +21,7 @@
               <td><%= config.jira_product_config.jira_product_key %></td>
               <td><%= config.fix_version_name %></td>
               <td>
-                <%= link_to company_project_jira_project_config_path(company, project, config), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
+                <%= link_to company_project_jira_project_config_path(company, project, config), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') } do %>
                   <i class="fa fa-times" aria-hidden="true"></i>
                 <% end %>
 

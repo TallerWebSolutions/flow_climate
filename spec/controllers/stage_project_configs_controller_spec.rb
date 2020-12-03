@@ -13,6 +13,18 @@ RSpec.describe StageProjectConfigsController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'GET #index' do
+      before { get :index, params: { company_id: 'xpto', project_id: 'foo' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
+
+    describe 'DELETE #destroy' do
+      before { delete :destroy, params: { company_id: 'xpto', project_id: 'foo', id: 'bar' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -21,7 +33,7 @@ RSpec.describe StageProjectConfigsController, type: :controller do
     let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true, paid: true, finish_at: 1.week.from_now }
 
     let(:company) { Fabricate :company, users: [user] }
-    let(:stage) { Fabricate :stage, company: company }
+    let(:stage) { Fabricate :stage, company: company, order: 1 }
     let(:customer) { Fabricate :customer, company: company }
     let(:project) { Fabricate :project, customers: [customer] }
 
@@ -157,6 +169,89 @@ RSpec.describe StageProjectConfigsController, type: :controller do
 
         context 'stage_project_config' do
           before { put :update, params: { company_id: company, stage_id: stage, id: 'foo', stage_project_config: { compute_effort: true, stage_percentage: 10, pairing_percentage: 20, management_percentage: 30 } } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'GET #index' do
+      let(:other_stage) { Fabricate :stage, company: company, order: 0 }
+
+      context 'passing parameters' do
+        it 'assigns the instance variable and renders the template' do
+          config = Fabricate :stage_project_config, stage: stage, project: project
+          other_config = Fabricate :stage_project_config, stage: other_stage, project: project
+          Fabricate :stage_project_config, stage: stage
+
+          get :index, params: { company_id: company, project_id: project }
+
+          expect(response).to render_template :index
+          expect(assigns(:company)).to eq company
+          expect(assigns(:project)).to eq project
+          expect(assigns(:stages_config_list)).to eq [other_config, config]
+        end
+      end
+
+      context 'passing an invalid' do
+        context 'project' do
+          before { get :index, params: { company_id: company, project_id: 'foo' } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'non-existent company' do
+          before { get :index, params: { company_id: 'foo', project_id: project } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'not permitted' do
+          let(:company) { Fabricate :company, users: [] }
+
+          before { get :index, params: { company_id: company, project_id: stage } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'DELETE #destroy' do
+      let(:stage_project_config) { Fabricate :stage_project_config, stage: stage, project: project }
+
+      context 'passing parameters' do
+        it 'destroys the object and redirects' do
+          delete :destroy, params: { company_id: company, project_id: project, id: stage_project_config }
+
+          expect(response).to redirect_to company_project_stage_project_configs_path(company, project)
+          expect(StageProjectConfig.count).to eq 0
+          expect(flash[:notice]).to eq I18n.t('general.destroy.success')
+        end
+      end
+
+      context 'passing an invalid' do
+        context 'stage_project_config' do
+          before { delete :destroy, params: { company_id: company, project_id: project, id: 'foo' } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'project' do
+          before { delete :destroy, params: { company_id: company, project_id: 'foo', id: stage_project_config } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'non-existent company' do
+          before { delete :destroy, params: { company_id: 'foo', project_id: project, id: stage_project_config } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'not permitted' do
+          let(:company) { Fabricate :company, users: [] }
+
+          before { delete :destroy, params: { company_id: company, project_id: project, id: stage_project_config } }
 
           it { expect(response).to have_http_status :not_found }
         end

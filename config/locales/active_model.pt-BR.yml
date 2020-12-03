@@ -116,8 +116,8 @@ pt-BR:
         one: Neogicação de Prazo
         other: Negociações de Prazo
       stage_project_config:
-        one: Configuração de Stage para Projeto
-        other: Configurações de Stage para Projeto
+        one: Configuração de Etapa
+        other: Configurações de Etapa
       plan:
         one: Plano
         other: Planos

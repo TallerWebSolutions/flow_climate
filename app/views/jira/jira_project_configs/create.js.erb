@@ -1,7 +1,0 @@
-$('#content-project-jira').html("<%= escape_javascript(render 'jira/jira_project_configs/jira_project_config_table', company: @company, project: @project.reload, jira_project_config: @jira_project_config) %>");
-$('.alerts').html("<%= escape_javascript(render('layouts/error', message: flash[:error].html_safe)) if flash[:error] %>")
-
-$("#new-project-jira-config-form").modal('toggle');
-
-$('body').removeClass('modal-open');
-$('.modal-backdrop').remove();

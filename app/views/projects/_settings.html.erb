@@ -11,7 +11,6 @@
   <div class="col-xs-12">
     <div class="tab">
       <button class="tablinks tablinks-project-settings" id="tab-project-risks" onclick="openTab(event, 'content-project-risks', 'tablinks-project-settings', 'tabcontent')"><%= I18n.t('projects.settings.risks') %></button>
-      <button class="tablinks tablinks-project-settings" id="tab-project-stages" onclick="openTab(event, 'content-project-stages', 'tablinks-project-settings', 'tabcontent')"><%= I18n.t('projects.settings.stages') %></button>
       <button class="tablinks tablinks-project-settings" id="tab-project-customers" onclick="openTab(event, 'project-customers-associations', 'tablinks-project-settings', 'tabcontent')"><%= I18n.t('projects.settings.customers') %></button>
       <button class="tablinks tablinks-project-settings" id="tab-project-products" onclick="openTab(event, 'project-products-associations', 'tablinks-project-settings', 'tabcontent')"><%= I18n.t('projects.settings.products') %></button>
       <button class="tablinks tablinks-project-settings" id="tab-project-jira" onclick="openTab(event, 'content-project-jira', 'tablinks-project-settings', 'tabcontent')"><%= I18n.t('projects.settings.jira') %></button>
@@ -21,10 +20,6 @@
 
 <div id="content-project-risks" class="tabcontent">
   <%= render 'projects/project_risk_settings', company: company, project: project, project_risk_configs: project_risk_configs %>
-</div>
-
-<div id="content-project-stages" class="tabcontent">
-  <%= render 'projects/projects_stages_tab', company: company, project: project, project_stages: project_stages, projects_to_copy_stages_from: projects_to_copy_stages_from %>
 </div>
 
 <div id="project-customers-associations" class="tabcontent">

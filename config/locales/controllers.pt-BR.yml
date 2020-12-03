@@ -1072,6 +1072,8 @@ pt-BR:
     form:
       max_seconds_in_stage: "Tempo Máximo na Etapa"
       max_seconds_in_stage_period: "Período"
+    index:
+      title: "Etapas no Projeto"
   finances:
     charts:
       finance_result:
@@ -1094,6 +1096,8 @@ pt-BR:
       title: "Nova Configuração do Jira"
       fix_version_field:
         help: "Usamos fix versions ou labels para dividir os itens de trabalho em lotes de planejamento e previsibilidade. Labels possuem precedência sobre as fix versions."
+    index:
+      title: "Configurações do Jira"
   exports:
     request_project_information:
       title: "Receber Informações do Jira"

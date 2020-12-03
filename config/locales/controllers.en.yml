@@ -1023,6 +1023,8 @@ en:
     form:
       max_seconds_in_stage: "Max Time in Stage"
       max_seconds_in_stage_period: "Period"
+    index:
+      title: "Stages in Project"
   finances:
     charts:
       finance_result:
@@ -1045,6 +1047,8 @@ en:
       title: "New Jira Config"
       fix_version_field:
         help: "We are using fix versions and labels to split the work itens into a large batch for planning and predictability."
+    index:
+      title: "Jira Settings"
   exports:
     request_project_information:
       title: "Receive informations from Jira"

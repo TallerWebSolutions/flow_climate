@@ -205,9 +205,10 @@ Rails.application.routes.draw do
       end
 
       resources :flow_impacts, only: %i[new create]
+      resources :stage_project_configs, only: %i[index destroy]
 
       scope :jira do
-        resources :jira_project_configs, only: %i[new create destroy edit], module: 'jira' do
+        resources :jira_project_configs, only: %i[new create destroy index], module: 'jira' do
           put :synchronize_jira, on: :member
         end
       end
