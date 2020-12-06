@@ -103,7 +103,7 @@ class ReplenishingData
 
   def build_throughput_per_period_array(demands, start_date, end_date, initial_scope)
     dates_array = TimeService.instance.weeks_between_of(start_date, end_date)
-    work_item_flow_information = Flow::WorkItemFlowInformations.new(demands, initial_scope, dates_array.length, dates_array.last)
+    work_item_flow_information = Flow::WorkItemFlowInformations.new(demands, initial_scope, dates_array.length, dates_array.last, 'week')
 
     dates_array.each_with_index do |analysed_date, distribution_index|
       work_item_flow_information.work_items_flow_behaviour(dates_array.first, analysed_date, distribution_index, true)

@@ -298,6 +298,7 @@ en:
       total_remaining_weeks: "Remaining Weeks"
       inconsistent_demands_count: "Qty Inconsistent Demands"
       active_projects: "Active Projects"
+      average_speed: "Average Speed"
     show:
       initial_scope: "Initial Scope"
       last_team: "Current team"
@@ -477,8 +478,6 @@ en:
       risk_evolution_in_time: "Math Risk Evolution"
       quality_block_per_demand: "blocks per demand"
     project_risk_alert_table: "Risk alerts to the project"
-    project_risk_configs:
-      title: "Risk Configurations"
     portfolio_bulletin:
       red_projects: "Red Alert Projects"
     general:
@@ -788,9 +787,6 @@ en:
     score_research:
       title: "Score Research"
       go_to_list: "Go to the list"
-  project_risk_configs:
-    new:
-      title: "New Risk Configuration"
   navbar:
     details: "Details"
     charts: "Project Charts"
@@ -1014,7 +1010,7 @@ en:
   project_change_deadline_histories:
     index:
       dates_difference: "Difference (days)"
-  stage_project_config:
+  stage_project_configs:
     edit:
       title: "Edit Configuration to Stage and Project"
       project_list: "Projects with configuration on the stage"
@@ -1024,7 +1020,10 @@ en:
       max_seconds_in_stage: "Max Time in Stage"
       max_seconds_in_stage_period: "Period"
     index:
-      title: "Stages in Project"
+      title:
+        zero: "%{count} Stages in Project"
+        one: "%{count} Stages in Project"
+        other: "%{count} Stages in Project"
   finances:
     charts:
       finance_result:
@@ -1048,7 +1047,10 @@ en:
       fix_version_field:
         help: "We are using fix versions and labels to split the work itens into a large batch for planning and predictability."
     index:
-      title: "Jira Settings"
+      title:
+        zero: "%{count} Jira Settings"
+        one: "%{count} Jira Setting"
+        other: "%{count} Jira Settings"
   exports:
     request_project_information:
       title: "Receive informations from Jira"
@@ -1357,3 +1359,14 @@ en:
       title: "Working Hours in Development"
     pull_interval:
       title: "Average Demand Pull Interval"
+  project_risk_configs:
+    index:
+      title:
+        zero: "%{count} Project Risk Configurations"
+        one: "%{count} Project Risk Configuration"
+        other: "%{count} Project Risk Configurations"
+    new:
+      title: "New Risk Configuration"
+  project_risk_alerts:
+    index:
+      title: "%{count} Risk Alerts"

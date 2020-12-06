@@ -136,6 +136,7 @@ RSpec.describe TeamsController, type: :controller do
 
             expect(assigns(:work_item_flow_information)).to be_a Flow::WorkItemFlowInformations
             expect(assigns(:statistics_flow_information)).to be_a Flow::StatisticsFlowInformations
+            expect(assigns(:average_speed)).to eq 2.0
           end
         end
 
@@ -388,10 +389,12 @@ RSpec.describe TeamsController, type: :controller do
         context 'having data' do
           include_context 'demands to filters'
 
-          let!(:first_project_consolidation) { Fabricate :project_consolidation, consolidation_date: 2.weeks.ago, project: first_project, operational_risk: 0.875 }
-          let!(:second_project_consolidation) { Fabricate :project_consolidation, consolidation_date: 1.week.ago, project: first_project, operational_risk: 0.875 }
+          let!(:first_project_consolidation) { Fabricate :project_consolidation, consolidation_date: 2.weeks.ago, project: first_project, operational_risk: 0.875, last_data_in_week: true }
+          let!(:second_project_consolidation) { Fabricate :project_consolidation, consolidation_date: 1.week.ago, project: first_project, operational_risk: 0.875, last_data_in_week: true }
 
-          let!(:third_project_consolidation) { Fabricate :project_consolidation, consolidation_date: 1.week.ago, project: second_project, operational_risk: 0.375 }
+          let!(:third_project_consolidation) { Fabricate :project_consolidation, consolidation_date: 1.week.ago, project: second_project, operational_risk: 0.375, last_data_in_week: true }
+
+          let!(:fourth_project_consolidation) { Fabricate :project_consolidation, consolidation_date: 1.week.ago, project: second_project, operational_risk: 0.375, last_data_in_week: false }
 
           it 'creates the objects and renders the tab' do
             get :team_projects_tab, params: { company_id: company, id: team }, xhr: true

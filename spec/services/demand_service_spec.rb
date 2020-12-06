@@ -89,4 +89,24 @@ RSpec.describe DemandService, type: :service do
       it { expect(described_class.instance.flow_efficiency(Demand.all)).to eq 0 }
     end
   end
+
+  describe '#average_speed' do
+    context 'with data' do
+      it 'returns the correct average speed based on the demands list' do
+        Fabricate :demand, demand_type: :bug, class_of_service: :expedite, created_date: 19.days.ago, end_date: 2.days.ago
+        Fabricate :demand, demand_type: :bug, class_of_service: :standard, created_date: 8.days.ago, end_date: 1.day.ago
+        Fabricate :demand, demand_type: :feature, class_of_service: :expedite, created_date: 2.days.ago, end_date: 1.day.ago
+        Fabricate :demand, demand_type: :chore, class_of_service: :expedite, created_date: 12.days.ago, end_date: 3.days.ago
+        Fabricate :demand, demand_type: :chore, class_of_service: :expedite, created_date: 12.days.ago, end_date: nil
+
+        expect(described_class.instance.average_speed(Demand.all)).to eq 2
+      end
+    end
+
+    context 'with no data' do
+      it 'returns the correct average speed based on the demands list' do
+        expect(described_class.instance.average_speed(Demand.all)).to eq 0
+      end
+    end
+  end
 end

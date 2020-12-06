@@ -8,7 +8,7 @@ module Highchart
     def initialize(demands, start_date, end_date, chart_period_interval)
       super(demands, start_date, end_date, chart_period_interval)
 
-      @work_item_flow_information = Flow::WorkItemFlowInformations.new(demands_list, uncertain_scope, @x_axis.length, end_date)
+      @work_item_flow_information = Flow::WorkItemFlowInformations.new(demands_list, uncertain_scope, @x_axis.length, end_date, chart_period_interval)
 
       return unless @all_projects.count.positive?
 
@@ -31,20 +31,6 @@ module Highchart
       passed_time = (Time.zone.today - min_date).to_i + 1
       remaining_days = (max_date - Time.zone.today).to_i + 1
       [{ name: I18n.t('projects.index.total_remaining_days'), data: [remaining_days] }, { name: I18n.t('projects.index.passed_time'), data: [passed_time], color: '#F45830' }]
-    end
-
-    def deadline_vs_montecarlo_durations
-      return [] if @all_projects.blank?
-
-      max_date = project_end_date
-      remaining_weeks = ((max_date - Time.zone.today).to_i / 7) + 1
-
-      [
-        { name: I18n.t('projects.index.total_remaining_weeks'), data: [remaining_weeks] },
-        { name: I18n.t('projects.charts.deadline_vs_montecarlo_durations.confidence_95'), data: [@confidence_95_duration] },
-        { name: I18n.t('projects.charts.deadline_vs_montecarlo_durations.confidence_80'), data: [@confidence_80_duration] },
-        { name: I18n.t('projects.charts.deadline_vs_montecarlo_durations.confidence_60'), data: [@confidence_60_duration] }
-      ]
     end
 
     def cumulative_flow_diagram_downstream

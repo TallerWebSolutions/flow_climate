@@ -51,11 +51,10 @@ class DemandsController < DemandsListController
     @demand_blocks = @demand.demand_blocks.order(:block_time)
     @paged_demand_blocks = @demand_blocks.page(params[:page])
     @demand_transitions = @demand.demand_transitions.order(:last_time_in)
-    @queue_percentage = Stats::StatisticsService.instance.compute_percentage(@demand.total_queue_time, @demand.total_touch_time)
-    @touch_percentage = 100 - @queue_percentage
-    @upstream_percentage = Stats::StatisticsService.instance.compute_percentage(@demand.effort_upstream, @demand.effort_downstream)
-    @downstream_percentage = 100 - @upstream_percentage
     @demand_comments = @demand.demand_comments.order(:comment_date)
+
+    compute_flow_efficiency
+    compute_stream_percentages
     lead_time_breakdown
   end
 
@@ -145,6 +144,16 @@ class DemandsController < DemandsListController
   end
 
   private
+
+  def compute_flow_efficiency
+    @queue_percentage = Stats::StatisticsService.instance.compute_percentage(@demand.total_queue_time, @demand.total_touch_time)
+    @touch_percentage = 100 - @queue_percentage
+  end
+
+  def compute_stream_percentages
+    @upstream_percentage = Stats::StatisticsService.instance.compute_percentage(@demand.effort_upstream, @demand.effort_downstream)
+    @downstream_percentage = 100 - @upstream_percentage
+  end
 
   def end_date_to_status_report(demands)
     demands.finished.map(&:end_date).max || Time.zone.today

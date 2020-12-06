@@ -410,7 +410,7 @@ class Project < ApplicationRecord
   end
 
   def last_weekly_throughput(qty_data_points)
-    consolidations = project_consolidations.where(last_data_in_week: true).order(consolidation_date: :desc)
+    consolidations = project_consolidations.weekly_data.order(consolidation_date: :desc)
     consolidations = project_consolidations.order(consolidation_date: :desc) if consolidations.empty?
 
     throughputs = consolidations.first(qty_data_points + 1).map(&:project_throughput).flatten

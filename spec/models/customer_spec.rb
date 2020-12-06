@@ -153,4 +153,19 @@ RSpec.describe Customer, type: :model do
 
     it { expect(customer.current_scope).to eq 4 }
   end
+
+  describe '#total_flow_pressure' do
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:other_customer) { Fabricate :customer, company: company }
+    let(:no_projects_customer) { Fabricate :customer, company: company }
+
+    let!(:project) { Fabricate :project, company: company, customers: [customer], initial_scope: 10, end_date: 4.weeks.from_now }
+    let!(:other_project) { Fabricate :project, company: company, customers: [customer], initial_scope: 8, end_date: 2.weeks.from_now }
+    let!(:out_project) { Fabricate :project, company: company, customers: [customer, other_customer], initial_scope: 210, end_date: 30.weeks.from_now }
+
+    it { expect(customer.total_flow_pressure).to be_within(0.1).of(0.8) }
+    it { expect(other_customer.total_flow_pressure).to eq 0 }
+    it { expect(no_projects_customer.total_flow_pressure).to eq 0 }
+  end
 end

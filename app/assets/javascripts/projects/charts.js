@@ -1,69 +1,57 @@
-function buildOperationalHighcharts() {
-    const throughputDiv = $("#throughput-column");
-    buildColumnChart(throughputDiv);
+const leadTimeP80Div = $("#project-dashboard-lead-time-line");
+buildLineChart(leadTimeP80Div);
 
-    const accBugsInTimeDiv = $("#accumulated-bugs-in-time");
-    buildColumnChart(accBugsInTimeDiv);
+const projectQuality = $("#project-dashboard-quality-line");
+if (projectQuality.length !== 0) {
+    buildLineChart(projectQuality);
+}
 
-    const accShareBugsInTimeDiv = $("#accumulated-share-bug");
-    buildLineChart(accShareBugsInTimeDiv);
+const projectHoursPerDemand = $("#project-dashboard-hours-per-demand-line");
+if (projectHoursPerDemand.length !== 0) {
+    buildLineChart(projectHoursPerDemand);
+}
 
-    const bugsInTimeDiv = $("#bugs-in-time");
-    buildColumnChart(bugsInTimeDiv);
+const projectFlowEfficiency = $("#project-dashboard-flow-efficiency-line");
+if (projectFlowEfficiency.length !== 0) {
+    buildLineChart(projectFlowEfficiency);
+}
 
-    const queueTouchCountDiv = $("#queue-touch-in-time");
-    buildColumnChart(queueTouchCountDiv);
+const projectBurnup = $("#project-burnup-demands");
+if (projectBurnup.length !== 0) {
+    buildLineChart(projectBurnup);
+}
 
-    const flowEfficiencyDiv = $("#flow-efficiency");
-    buildLineChart(flowEfficiencyDiv);
+const projectBugsColumn = $("#project-dashboard-bugs-column");
+if (projectBugsColumn.length !== 0) {
+    buildColumnChart(projectBugsColumn);
+}
 
-    const hoursPerDemandDiv = $("#hours-column");
-    buildColumnChart(hoursPerDemandDiv);
+const projectFlowDataColumn = $("#project-dashboard-flow-data-column");
+if (projectFlowDataColumn.length !== 0) {
+    buildColumnChart(projectFlowDataColumn);
+}
 
-    const burnupDemands = $("#burnup-demands");
-    buildBurnupChart(burnupDemands);
+const projectLeadtimeControlChart = $("#project-leadtime-control-chart");
+if (projectLeadtimeControlChart.length !== 0) {
+    buildScatterChart(projectLeadtimeControlChart);
+}
 
-    const leadtimeControlChart = $("#leadtime-control-chart");
-    buildScatterChart(leadtimeControlChart);
+const projectLeadtimeHistogramChart = $("#project-leadtime-histogram");
+if (projectLeadtimeHistogramChart.length !== 0) {
+    buildColumnChart(projectLeadtimeHistogramChart);
+}
 
-    const leadtimeHistogramChart = $("#leadtime-histogram");
-    buildColumnChart(leadtimeHistogramChart);
+const projectCfd = $('#project-cfd-downstream-area');
+if (projectCfd.length !== 0) {
+    buildAreaChart(projectCfd);
+}
 
-    const hoursConsumedColumnDiv = $("#hours-consumed-column");
-    buildColumnChart(hoursConsumedColumnDiv);
+const projectQualityBugs = $('#project-dashboard-quality-blocks-line');
+if (projectQualityBugs.length !== 0) {
+    buildLineChart(projectQualityBugs);
+}
 
-    const hoursBlockedPerStageDiv = $("#hours-blocked-per-stage");
-    if (hoursBlockedPerStageDiv.length !== 0) {
-        buildColumnChart(hoursBlockedPerStageDiv);
-    }
-
-    const countBlockedPerStageDiv = $("#count-blocked-per-stage");
-    if (countBlockedPerStageDiv.length !== 0) {
-        buildColumnChart(countBlockedPerStageDiv);
-    }
-
-    const agingPerDemandDiv = $("#aging-per-demand-div");
-    if (agingPerDemandDiv.length !== 0) {
-        buildColumnChart(agingPerDemandDiv);
-    }
-
-    const avgDemandCost = $("#average-demand-cost");
-    if (avgDemandCost.length !== 0) {
-        buildLineChart(avgDemandCost);
-    }
-
-    const hoursEfficiency = $("#hours-efficiency");
-    if (hoursEfficiency.length !== 0) {
-        buildLineChart(hoursEfficiency);
-    }
-
-    const scopeUncertainty = $("#operational-charts-scope-uncertainty-donut");
-    if (scopeUncertainty.length !== 0) {
-        buildDonutChart(scopeUncertainty);
-    }
-
-    let columnFlowDataDiv = $("#operational-charts-flow-data-column");
-    if (columnFlowDataDiv.length !== 0) {
-        buildColumnChart(columnFlowDataDiv);
-    }
+const projectQualityBlockPerDemand = $('#project-dashboard-quality-blocks-per-demand-line');
+if (projectQualityBlockPerDemand.length !== 0) {
+    buildLineChart(projectQualityBlockPerDemand);
 }

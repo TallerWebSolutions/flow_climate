@@ -21,11 +21,8 @@
 </div>
 
 <%= hidden_field_tag :company_id, @company.id %>
-<%= hidden_field_tag :team_id, @team.id %>
-<%= hidden_field_tag :teams_ids, [@team.id] %>
 <%= hidden_field_tag :target_name, @team.name %>
-<%= hidden_field_tag :projects_ids, @projects.map(&:id).join(',') %>
-<%= hidden_field_tag :demands_ids, @demands_ids.join(',') %>
+<%= hidden_field_tag :team_id, @team.id %>
 
 <%= render 'layouts/load_spinner' %>
 
@@ -53,10 +50,6 @@
   </div>
 </div>
 
-<div id="team-dashboard-filters">
-  <%= render 'demands/demands_search_filters', start_date: @start_date, end_date: @end_date %>
-</div>
-
 <hr>
 
 <div id="team-dashboard-container-page-one" class="tabcontent">
@@ -75,6 +68,7 @@
              unscored_demands: @unscored_demands,
              demands_blocks: @demands_blocks,
              flow_pressure: @flow_pressure,
+             average_speed: @average_speed,
              projects_count: @team.projects.count,
              active_projects_count: @team.active_projects.count,
              active_projects_value: @team.active_projects.map(&:value).compact.sum,

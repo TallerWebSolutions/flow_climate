@@ -10,23 +10,13 @@ class ProjectsController < AuthenticatedController
     assign_project_stages
     assign_customer_projects
     assign_product_projects
-    assign_demands_ids
+    build_charts_adapters
+    build_project_consolidations
+    assign_special_demands
 
-    @dashboard_project_consolidations = Consolidations::ProjectConsolidation.for_project(@project).weekly_data.after_date(10.weeks.ago).order(:consolidation_date)
-    @all_project_consolidations = Consolidations::ProjectConsolidation.for_project(@project).weekly_data.order(:consolidation_date)
-
-    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@project.demands, @project.start_date, Time.zone.today, 'week')
-    @demands_finished_with_leadtime = @project.demands.finished_with_leadtime
-    @lead_time_histogram_data = Stats::StatisticsService.instance.leadtime_histogram_hash(@demands_finished_with_leadtime.map(&:leadtime))
-    @status_report_data = Highchart::StatusReportChartsAdapter.new(@demands_finished_with_leadtime, @project.start_date, Time.zone.today, 'week')
-    @last_10_deliveries = @project.demands.kept.finished.order(end_date: :desc).limit(10)
-    @unscored_demands = @project.demands.unscored_demands.order(external_id: :asc)
+    @lead_time_histogram_data = Stats::StatisticsService.instance.leadtime_histogram_hash(demands_finished_with_leadtime.map(&:leadtime))
     @demands_blocks = @project.demand_blocks.order(block_time: :desc)
-    @flow_pressure = @project.flow_pressure
-
-    @ordered_project_risk_alerts = @project.project_risk_alerts.order(created_at: :desc)
-    @project_change_deadline_histories = @project.project_change_deadline_histories.includes(:user)
-    @inconsistent_demands = @project.demands.dates_inconsistent_to_project(@project)
+    @average_speed = DemandService.instance.average_speed(demands)
   end
 
   def index
@@ -51,6 +41,8 @@ class ProjectsController < AuthenticatedController
 
   def edit
     assign_customers
+    assign_customer_projects
+    assign_product_projects
   end
 
   def update
@@ -60,6 +52,9 @@ class ProjectsController < AuthenticatedController
     return redirect_to company_project_path(@company, @project) if @project.save
 
     assign_customers
+    assign_customer_projects
+    assign_product_projects
+
     render :edit
   end
 
@@ -139,7 +134,7 @@ class ProjectsController < AuthenticatedController
   def status_report_dashboard
     @project_summary = ProjectsSummaryData.new([@project])
     @x_axis = TimeService.instance.weeks_between_of(@project.start_date.beginning_of_week, @project.end_date.end_of_week)
-    @work_item_flow_information = Flow::WorkItemFlowInformations.new(@project.demands, @project.initial_scope, @x_axis.length, @x_axis.last)
+    @work_item_flow_information = Flow::WorkItemFlowInformations.new(demands, @project.initial_scope, @x_axis.length, @x_axis.last, 'week')
 
     build_work_item_flow_information
 
@@ -188,6 +183,40 @@ class ProjectsController < AuthenticatedController
 
   private
 
+  def assign_special_demands
+    @last_10_deliveries = demands.kept.finished.order(end_date: :desc).limit(10)
+    @unscored_demands = demands.unscored_demands.order(external_id: :asc)
+  end
+
+  def build_project_consolidations
+    project_consolidations = @project.project_consolidations
+
+    @all_project_consolidations = project_consolidations.weekly_data.order(:consolidation_date)
+    @dashboard_project_consolidations = project_consolidations.weekly_data.after_date(10.weeks.ago).order(:consolidation_date)
+
+    return if Time.zone.today != Time.zone.today.end_of_week
+
+    add_current_data_to_consolidations(project_consolidations)
+  end
+
+  def add_current_data_to_consolidations(project_consolidations)
+    @all_project_consolidations = Consolidations::ProjectConsolidation.where(id: @all_project_consolidations.map(&:id) | [project_consolidations.order(:consolidation_date).last.id])
+    @dashboard_project_consolidations = Consolidations::ProjectConsolidation.where(id: @dashboard_project_consolidations.map(&:id) | [project_consolidations.order(:consolidation_date).last.id])
+  end
+
+  def build_charts_adapters
+    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(demands.kept, @project.start_date, Time.zone.today, 'week')
+    @status_report_data = Highchart::StatusReportChartsAdapter.new(demands_finished_with_leadtime, @project.start_date, Time.zone.today, 'week')
+  end
+
+  def demands
+    @demands ||= @project.demands
+  end
+
+  def demands_finished_with_leadtime
+    @demands_finished_with_leadtime ||= @demands.finished_with_leadtime
+  end
+
   def build_work_item_flow_information
     @x_axis.each_with_index do |analysed_date, distribution_index|
       add_data_to_chart = analysed_date <= Time.zone.today.end_of_week
@@ -205,26 +234,22 @@ class ProjectsController < AuthenticatedController
     projects.order(end_date: :desc).page(page_param)
   end
 
-  def assign_demands_ids
-    @demands_ids = @project.demands.map(&:id)
-  end
+  def check_change_in_deadline!
+    return if project_params[:end_date].blank? || @project.end_date == Date.parse(project_params[:end_date])
 
-  def assign_project_stages
-    @stages_list = @project.reload.stages.order(:order, :name)
+    ProjectChangeDeadlineHistory.create!(user: current_user, project: @project, previous_date: @project.end_date, new_date: project_params[:end_date])
   end
 
   def project_params
     params.require(:project).permit(:name, :nickname, :status, :project_type, :start_date, :end_date, :value, :qty_hours, :hour_value, :initial_scope, :percentage_effort_to_bugs, :team_id, :max_work_in_progress)
   end
 
-  def assign_project
-    @project = @company.projects.includes(:team).find(params[:id])
+  def assign_project_stages
+    @stages_list = @project.reload.stages.order(:order, :name)
   end
 
-  def check_change_in_deadline!
-    return if project_params[:end_date].blank? || @project.end_date == Date.parse(project_params[:end_date])
-
-    ProjectChangeDeadlineHistory.create!(user: current_user, project: @project, previous_date: @project.end_date, new_date: project_params[:end_date])
+  def assign_project
+    @project = @company.projects.includes(:team).find(params[:id])
   end
 
   def assign_customer_projects

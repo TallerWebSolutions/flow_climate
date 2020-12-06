@@ -312,6 +312,7 @@ pt-BR:
       total_remaining_weeks: "Semanas Restantes"
       inconsistent_demands_count: "Qtd Demandas Inconsistentes"
       active_projects: "Projetos Ativos"
+      average_speed: "Velocidade Média"
     show:
       initial_scope: "Escopo Inicial"
       last_team: "Time atual"
@@ -495,8 +496,6 @@ pt-BR:
       delivered_demands: "Demandas entregues na última semana"
       red_projects: "Projetos em Alerta Vermelho"
     no_demands_delivered: "Nenhuma demanda registrada para a semana passada."
-    project_risk_configs:
-      title: "Configurações de Risco"
     general:
       deadline: "Prazo"
       scope: "Escopo"
@@ -860,9 +859,6 @@ pt-BR:
     score_research:
       title: "Pesquisa de Pontuação"
       go_to_list: "Ir para a lista"
-  project_risk_configs:
-    new:
-      title: "Nova Configuração de Risco"
   navbar:
     details: "Detalhes"
     charts: "Gráficos"
@@ -1061,7 +1057,7 @@ pt-BR:
   project_change_deadline_histories:
     index:
       dates_difference: "Diferença (dias)"
-  stage_project_config:
+  stage_project_configs:
     edit:
       title: "Editar Configuração para Etapa e Projeto"
       project_list: "Projetos configurados nesta etapa"
@@ -1073,7 +1069,10 @@ pt-BR:
       max_seconds_in_stage: "Tempo Máximo na Etapa"
       max_seconds_in_stage_period: "Período"
     index:
-      title: "Etapas no Projeto"
+      title:
+        zero: "%{count} Etapa no Projeto"
+        one: "%{count} Etapa no Projeto"
+        other: "%{count} Etapas no Projeto"
   finances:
     charts:
       finance_result:
@@ -1097,7 +1096,10 @@ pt-BR:
       fix_version_field:
         help: "Usamos fix versions ou labels para dividir os itens de trabalho em lotes de planejamento e previsibilidade. Labels possuem precedência sobre as fix versions."
     index:
-      title: "Configurações do Jira"
+      title:
+        zero: "%{count} Configuração do Jira"
+        one: "%{count} Configuração do Jira"
+        other: "%{count} Configurações do Jira"
   exports:
     request_project_information:
       title: "Receber Informações do Jira"
@@ -1339,3 +1341,14 @@ pt-BR:
       title: "Horas Úteis em Desenvolvimento"
     pull_interval:
       title: "Intervalo Médio entre Demandas Puxadas"
+  project_risk_configs:
+    index:
+      title:
+        zero: "%{count} Configuração de Risco"
+        one: "%{count} Configuração de Risco"
+        other: "%{count} Configurações de Risco"
+    new:
+      title: "Nova Configuração de Risco"
+  project_risk_alerts:
+    index:
+      title: "%{count} Alertas de Risco"

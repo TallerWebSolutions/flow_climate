@@ -63,6 +63,10 @@ class Customer < ApplicationRecord
     exclusive_projects.map(&:value).compact.sum
   end
 
+  def total_flow_pressure
+    exclusive_projects.map(&:flow_pressure).compact.sum
+  end
+
   def remaining_money(end_date = Time.zone.today.end_of_day)
     exclusive_projects.map { |project| project.remaining_money(end_date) }.compact.sum
   end

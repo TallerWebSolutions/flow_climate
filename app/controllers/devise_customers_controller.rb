@@ -14,10 +14,15 @@ class DeviseCustomersController < ApplicationController
     @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(customer_demands, start_date, end_date, 'month')
     @unscored_demands = @customer.exclusives_demands.unscored_demands.order(external_id: :asc)
     @demands_blocks = @customer.exclusives_demands.unscored_demands.order(external_id: :asc)
-    @flow_pressure = Stats::StatisticsService.instance.mean(@customer.projects.running.map(&:flow_pressure))
+    build_pressure_and_speed
   end
 
   private
+
+  def build_pressure_and_speed
+    @flow_pressure = @customer.total_flow_pressure
+    @average_speed = DemandService.instance.average_speed(@customer.exclusives_demands)
+  end
 
   def customer_demands
     @customer_demands ||= @customer.exclusives_demands.finished.order(:end_date)

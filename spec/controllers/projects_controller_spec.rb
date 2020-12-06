@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe ProjectsController, type: :controller do
-  before { travel_to Time.zone.local(2018, 4, 6, 10, 0, 0) }
-
-  after { travel_back }
-
   context 'unauthenticated' do
     describe 'GET #show' do
       before { get :show, params: { company_id: 'xpto', id: 'foo' } }
@@ -128,43 +124,57 @@ RSpec.describe ProjectsController, type: :controller do
 
     describe 'GET #show' do
       let!(:product) { Fabricate :product, customer: customer }
-      let!(:first_project) { Fabricate :project, company: company, customers: [customer], products: [product], start_date: 2.weeks.ago, end_date: Time.zone.today }
+      let(:project) { Fabricate :project, company: company, customers: [customer], products: [product], start_date: 2.weeks.ago, end_date: Time.zone.today }
 
-      context 'having results' do
-        let!(:first_alert) { Fabricate :project_risk_alert, project: first_project, created_at: 1.week.ago }
-        let!(:second_alert) { Fabricate :project_risk_alert, project: first_project, created_at: Time.zone.now }
-
-        let!(:first_demand) { Fabricate :demand, project: first_project, demand_score: 10.5, end_date: Date.new(2018, 3, 10), leadtime: 2000 }
-        let!(:second_demand) { Fabricate :demand, project: first_project, external_id: 'zzz', end_date: Date.new(2018, 5, 25), leadtime: 6000 }
-        let!(:third_demand) { Fabricate :demand, project: first_project, external_id: 'aaa', end_date: nil }
-
-        let!(:fourth_demand) { Fabricate :demand, end_date: Time.zone.today }
-        let!(:first_change_deadline) { Fabricate :project_change_deadline_history, project: first_project }
-        let!(:second_change_deadline) { Fabricate :project_change_deadline_history, project: first_project }
-
+      context 'with data' do
         context 'passing valid IDs' do
-          before { get :show, params: { company_id: company, customer_id: customer, id: first_project } }
-
           it 'assigns the instance variables and renders the template' do
-            expect(response).to render_template :show
-            expect(assigns(:company)).to eq company
-            expect(assigns(:project)).to eq first_project
-            expect(assigns(:ordered_project_risk_alerts)).to eq [second_alert, first_alert]
-            expect(assigns(:project_change_deadline_histories)).to match_array [first_change_deadline, second_change_deadline]
-            expect(assigns(:inconsistent_demands)).to eq [second_demand]
-            expect(assigns(:unscored_demands)).to eq [third_demand, second_demand]
+            travel_to Time.zone.local(2020, 12, 6, 10, 0, 0) do
+              first_project = Fabricate :project, company: company, customers: [customer], products: [product], start_date: 2.weeks.ago, end_date: Time.zone.today
+
+              first_consolidation = Fabricate :project_consolidation, consolidation_date: 10.weeks.ago, project: first_project, operational_risk: 0.875, last_data_in_week: true
+              second_consolidation = Fabricate :project_consolidation, consolidation_date: 9.weeks.ago, project: first_project, operational_risk: 0.875, last_data_in_week: true
+
+              third_consolidation = Fabricate :project_consolidation, consolidation_date: 8.weeks.ago, project: first_project, operational_risk: 0.375, last_data_in_week: true
+
+              fourth_consolidation = Fabricate :project_consolidation, consolidation_date: 7.weeks.ago, project: first_project, operational_risk: 0.375, last_data_in_week: false
+
+              first_stage = Fabricate :stage, company: company, projects: [first_project], order: 1
+              second_stage = Fabricate :stage, company: company, projects: [first_project], order: 0
+
+              first_demand = Fabricate :demand, project: first_project, external_id: 'ccc', demand_score: 10.5, end_date: 2.days.ago
+              second_demand = Fabricate :demand, project: first_project, external_id: 'zzz', commitment_date: 3.days.ago, end_date: 1.day.ago
+              third_demand = Fabricate :demand, project: first_project, external_id: 'aaa', commitment_date: 1.day.ago, end_date: nil
+
+              first_block = Fabricate :demand_block, demand: first_demand, block_time: 1.day.ago
+              second_block = Fabricate :demand_block, demand: second_demand, block_time: Time.zone.now
+
+              get :show, params: { company_id: company, customer_id: customer, id: first_project }
+
+              expect(response).to render_template :show
+              expect(assigns(:company)).to eq company
+              expect(assigns(:project)).to eq first_project
+              expect(assigns(:unscored_demands)).to eq [third_demand, second_demand]
+              expect(assigns(:lead_time_histogram_data).keys.map(&:to_f)).to eq [43_200.000000001]
+              expect(assigns(:lead_time_histogram_data).values.map(&:to_f)).to eq [2]
+              expect(assigns(:last_10_deliveries).map(&:external_id)).to eq %w[zzz ccc]
+              expect(assigns(:demands_blocks)).to eq [second_block, first_block]
+              expect(assigns(:stages_list)).to eq [second_stage, first_stage]
+              expect(assigns(:average_speed)).to eq 2
+              expect(assigns(:all_project_consolidations)).to eq [first_consolidation, second_consolidation, third_consolidation, fourth_consolidation]
+            end
           end
         end
       end
 
-      context 'having no consolidations' do
+      context 'with no data' do
         context 'passing valid IDs' do
-          before { get :show, params: { company_id: company, customer_id: customer, id: first_project } }
+          before { get :show, params: { company_id: company, customer_id: customer, id: project } }
 
           it 'assigns the instance variable and renders the template' do
             expect(response).to render_template :show
             expect(assigns(:company)).to eq company
-            expect(assigns(:project)).to eq first_project
+            expect(assigns(:project)).to eq project
           end
         end
       end
@@ -179,7 +189,7 @@ RSpec.describe ProjectsController, type: :controller do
         context 'not permitted' do
           let(:company) { Fabricate :company, users: [] }
 
-          before { get :show, params: { company_id: company, customer_id: customer, id: first_project } }
+          before { get :show, params: { company_id: company, customer_id: customer, id: project } }
 
           it { expect(response).to have_http_status :not_found }
         end

@@ -18,7 +18,8 @@
            contract: @contract,
            unscored_demands: @unscored_demands,
            demands_blocks: @demands_blocks,
-           flow_pressure: @flow_pressure %>
+           flow_pressure: @flow_pressure,
+           average_speed: @average_speed %>
 
 <% content_for :javascript do %>
   <%= javascript_include_tag 'charts/column' %>

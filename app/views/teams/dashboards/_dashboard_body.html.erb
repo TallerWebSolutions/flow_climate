@@ -1,33 +1,17 @@
-<%= hidden_field_tag :demands_ids, demands.map(&:id).join(',') %>
-
-<% work_item_flow_information.demands_tags_hash.each do |demand_tag, demand_count| %>
-  <span class="label label-info demand-tag"><%= "#{demand_tag} (#{demand_count})" %></span>
-<% end %>
-
 <div class="row">
   <div class="col-xs-4">
     <h1><%= team.name %></h1>
-    <div class="tab">
-      <button class="tablinks dashboard-info-tab" onclick="openTab(event, 'team-projects-info', 'dashboard-info-tab', 'tabcontent-dashboard-info')"><%= I18n.t('teams.show.projects_info') %></button>
-      <button class="tablinks dashboard-info-tab" id="general-info-team-tab" onclick="openTab(event, 'team-general-info', 'dashboard-info-tab', 'tabcontent-dashboard-info')"><%= I18n.t('teams.show.general_info') %></button>
-    </div>
 
-    <div id="team-projects-info" class="tabcontent tabcontent-dashboard-info">
-      <%= render 'common/dashboards/projects_info',
-                 projects_count: team.projects.count,
-                 active_projects_count: team.active_projects.count,
-                 active_projects_value: team.active_projects.map(&:value).compact.sum %>
-    </div>
-
-    <div id="team-general-info" class="tabcontent tabcontent-dashboard-info">
+    <div id="team-general-info">
       <%= render 'common/dashboards/general_info',
                  company: company,
                  dashboard_name: team.name,
-                 demands: demands,
-                 demands_delivered: demands_delivered,
+                 demands: team.demands.kept,
+                 demands_delivered: team.demands.kept.finished,
                  unscored_demands: unscored_demands,
                  demands_blocks: demands_blocks,
                  flow_pressure: flow_pressure,
+                 average_speed: average_speed,
                  delivered_scope: team.demands.kept.finished.count,
                  remaining_backlog: team.demands.kept - team.demands.kept.finished,
                  average_queue_time: team.average_queue_time / 1.hour,

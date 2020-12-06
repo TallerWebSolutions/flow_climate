@@ -10,13 +10,23 @@
   </div>
 </div>
 
-<%= form_for @project, url: company_project_path(@company, @project), method: :put, class: 'form' do |f| %>
+<%= form_for @project, url: company_project_path(@company, @project), method: :put, class: 'standard-form' do |f| %>
   <div class="row bottom-spaced-component">
     <div class="col-xs-12">
       <%= render 'projects/form', f: f, company: @company, project: @project, products: @products, company_customers: @company_customers %>
     </div>
   </div>
 <% end %>
+
+<div class="row">
+  <div id="project-customers-associations" class="col-xs-6">
+    <%= render 'projects/project_customers_tab', company: @company, project: @project, not_associated_customers: @not_associated_customers, project_customers: @project_customers %>
+  </div>
+  <div id="project-products-associations" class="col-xs-6">
+    <%= render 'projects/project_products_tab', company: @company, project: @project, not_associated_products: @not_associated_products, project_products: @project_products %>
+  </div>
+</div>
+
 
 <% content_for :javascript do %>
   <%= javascript_include_tag 'projects/form' %>

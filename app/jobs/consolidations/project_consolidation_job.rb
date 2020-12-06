@@ -23,8 +23,8 @@ module Consolidations
 
       team = project.team
 
-      project_work_item_flow_information = Flow::WorkItemFlowInformations.new(project.demands.kept, project.initial_scope, x_axis.length, x_axis.last)
-      team_work_item_flow_information = Flow::WorkItemFlowInformations.new(team.demands.kept, team.projects.map(&:initial_scope).compact.sum, x_axis.length, x_axis.last)
+      project_work_item_flow_information = Flow::WorkItemFlowInformations.new(project.demands.kept, project.initial_scope, x_axis.length, x_axis.last, 'week')
+      team_work_item_flow_information = Flow::WorkItemFlowInformations.new(team.demands.kept, team.projects.map(&:initial_scope).compact.sum, x_axis.length, x_axis.last, 'week')
 
       x_axis.each_with_index do |analysed_date, distribution_index|
         project_work_item_flow_information.work_items_flow_behaviour(x_axis.first, analysed_date, distribution_index, true)

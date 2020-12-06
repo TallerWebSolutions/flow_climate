@@ -1,4 +1,4 @@
-$('#team-dashboard-container-page-two').html("<%= escape_javascript(render 'teams/dashboards/dashboard_tab_page_two', company: @company, team: @team, team_chart_data: @team_chart_data, demands_ids: @demands.map(&:id)) %>")
+$('#team-dashboard-container-page-two').html("<%= escape_javascript(render 'teams/dashboards/dashboard_tab_page_two', company: @company, team: @team, team_chart_data: @team_chart_data) %>")
 
 hideAllTeamTabs();
 

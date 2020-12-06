@@ -33,4 +33,16 @@ class DemandService
 
     Stats::StatisticsService.instance.compute_percentage(touch_time, queue_time)
   end
+
+  def average_speed(demands)
+    demands_finished = demands.kept.finished
+    min_date = demands_finished.map(&:end_date).compact.min
+    max_date = demands_finished.map(&:end_date).compact.max
+
+    return 0 if min_date.blank? || max_date.blank?
+
+    difference_in_days = (max_date.to_date - min_date.to_date).to_i
+
+    demands_finished.count / difference_in_days.to_f
+  end
 end

@@ -1388,15 +1388,17 @@ RSpec.describe DemandsController, type: :controller do
 
       context 'with data' do
         it 'assigns the instance variable and renders the template' do
-          post :demands_list_by_ids, params: { company_id: company, demands_ids: Demand.all.map(&:id).join(',') }
+          travel_to Time.zone.local(2019, 1, 19, 10, 0, 0) do
+            post :demands_list_by_ids, params: { company_id: company, demands_ids: Demand.all.map(&:id).join(',') }
 
-          expect(response).to render_template 'demands/index'
-          expect(assigns(:company)).to eq company
-          expect(assigns(:demands)).to match_array Demand.all
+            expect(response).to render_template 'demands/index'
+            expect(assigns(:company)).to eq company
+            expect(assigns(:demands)).to match_array Demand.all
 
-          expect(assigns(:confidence_95_leadtime)).to be_within(75).of 540
-          expect(assigns(:confidence_80_leadtime)).to be_within(75).of 355
-          expect(assigns(:confidence_65_leadtime)).to be_within(75).of 180
+            expect(assigns(:confidence_95_leadtime)).to be_within(40).of 600
+            expect(assigns(:confidence_80_leadtime)).to be_within(40).of 410
+            expect(assigns(:confidence_65_leadtime)).to be_within(20).of 190
+          end
         end
       end
 

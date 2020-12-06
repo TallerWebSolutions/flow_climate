@@ -77,7 +77,7 @@ RSpec.describe Flow::WorkItemFlowInformations, type: :model do
       let(:dates_array) { TimeService.instance.weeks_between_of(Project.all.map(&:start_date).min, Project.all.map(&:end_date).max) }
 
       it 'assigns the correct information' do
-        item_flow_info = described_class.new(Demand.all, 10, dates_array.length, dates_array.last)
+        item_flow_info = described_class.new(Demand.all, 10, dates_array.length, dates_array.last, 'week')
         expect(item_flow_info.demands).to match_array Demand.all
         expect(item_flow_info.uncertain_scope).to eq 10
         expect(item_flow_info.current_scope).to eq 22
@@ -136,7 +136,7 @@ RSpec.describe Flow::WorkItemFlowInformations, type: :model do
       let(:dates_array) { TimeService.instance.weeks_between_of(Project.all.map(&:start_date).min, Project.all.map(&:end_date).max) }
 
       it 'assigns empty information' do
-        item_flow_info = described_class.new(Demand.all, 10, dates_array.length, dates_array.last)
+        item_flow_info = described_class.new(Demand.all, 10, dates_array.length, dates_array.last, 'week')
 
         item_flow_info.work_items_flow_behaviour(dates_array.first, dates_array.first, 0, true)
 
@@ -166,7 +166,7 @@ RSpec.describe Flow::WorkItemFlowInformations, type: :model do
         Fabricate :demand
         demands = Demand.all
         expect(demands).to receive(:opened_before_date).with(Time.zone.today).once.and_return(demands)
-        described_class.new(demands, 10, 3.days.ago, nil)
+        described_class.new(demands, 10, 3.days.ago, nil, 'week')
       end
     end
   end

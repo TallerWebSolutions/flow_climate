@@ -197,7 +197,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :project_risk_configs, only: %i[new create destroy] do
+      resources :project_risk_configs, except: %i[edit update show] do
         member do
           patch :activate
           patch :deactivate
@@ -206,6 +206,7 @@ Rails.application.routes.draw do
 
       resources :flow_impacts, only: %i[new create]
       resources :stage_project_configs, only: %i[index destroy]
+      resources :project_risk_alerts, only: %i[index]
 
       scope :jira do
         resources :jira_project_configs, only: %i[new create destroy index], module: 'jira' do
@@ -273,9 +274,7 @@ Rails.application.routes.draw do
     end
 
     controller :charts do
-      get 'build_operational_charts', action: :build_operational_charts
       get 'build_strategic_charts', action: :build_strategic_charts
-      get 'statistics_charts', action: :statistics_charts
     end
 
     resources :demand_blocks, only: :index do
