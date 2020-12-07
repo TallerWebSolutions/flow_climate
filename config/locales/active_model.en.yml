@@ -106,6 +106,7 @@ en:
           other_demand_priority: Other Demand Priority
           waiting_for_code_review: Waiting for Code Review
           budget_approval: Budget Approval
+          waiting_deploy_window: Waiting Deploy Window
       demand:
         enums:
           class_of_service:
