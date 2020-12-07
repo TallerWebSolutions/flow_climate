@@ -72,7 +72,7 @@ class UsersController < AuthenticatedController
     projects.each do |project|
       start_manager_charts_arrays(project)
 
-      consolidations = Consolidations::ProjectConsolidation.for_project(project).after_date(4.weeks.ago).order(:consolidation_date)
+      consolidations = Consolidations::ProjectConsolidation.for_project(project).weekly_data.order(:consolidation_date)
       build_consolidations(project, consolidations)
     end
   end
@@ -80,7 +80,7 @@ class UsersController < AuthenticatedController
   def assign_team_member_dependencies
     @pairing_chart = {}
     @teams = []
-    return if @user.team_member.blank?
+    return if @user.team_member.blank? || @company.role_for_user(@user).manager?
 
     build_pairing_chart
 
