@@ -61,12 +61,6 @@
     min-height: 25px;
 }
 
-.standard-form {
-    background-color: #f3f6fc;
-    margin-top: 10px;
-    padding: 10px;
-}
-
 .table-index {
     display: block;
     overflow-x: auto;
@@ -94,10 +88,7 @@
 }
 
 .countdown {
-    background-color: yellow;
-    font-size: larger;
-    padding: 5px;
-    border: solid medium #730E15;
+    font-weight: bold;
 }
 
 .loader {

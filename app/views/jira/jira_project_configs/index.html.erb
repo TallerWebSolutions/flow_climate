@@ -1,0 +1,13 @@
+<div class="row">
+  <div class="col-xs-12">
+    <ul class="breadcrumb">
+      <li><%= link_to I18n.t('general.home.title'), root_path %></li>
+      <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
+      <li><%= link_to Project.model_name.human(count: 2), company_projects_path(@company) %></li>
+      <li><%= link_to @project.name, company_project_path(@company, @project) %></li>
+      <li><%= Jira::JiraProjectConfig.model_name.human(count: 2) %></li>
+    </ul>
+  </div>
+</div>
+
+<%= render 'jira/jira_project_configs/jira_project_config_table', company: @company, project: @project %>

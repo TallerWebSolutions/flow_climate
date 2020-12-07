@@ -10,7 +10,7 @@ class ServiceDeliveryReviewsController < AuthenticatedController
     @service_delivery_review = ServiceDeliveryReview.new(product: @product)
     service_delivery_reviews
 
-    respond_to { |format| format.js { render 'service_delivery_reviews/new.js.erb' } }
+    respond_to { |format| format.js { render 'service_delivery_reviews/new' } }
   end
 
   def create

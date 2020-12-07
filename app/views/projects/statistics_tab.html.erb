@@ -1,0 +1,85 @@
+<div class="row">
+  <div class="col-xs-12">
+    <ul class="breadcrumb">
+      <li><%= link_to I18n.t('general.home.title'), root_path %></li>
+      <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
+      <li><%= link_to Project.model_name.human(count: 2), company_projects_path(@company) %></li>
+      <li><%= @project.name %></li>
+    </ul>
+  </div>
+</div>
+
+<div id="dashboard-controls">
+  <div class="row">
+    <div class="col-xs-12 center">
+      <div class="tab">
+        <%= link_to I18n.t('navbar.charts'), company_project_path(@company, @project), class: 'btn btn-default btn-sm' %>
+        <%= link_to I18n.t('navbar.statistics'), statistics_tab_company_project_path(@company, @project), class: 'btn btn-default btn-sm active' %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-6">
+    <div id="project-lead-time-data-range-evolution-line"
+         class="flow-chart"
+         data-xcategories=""
+         data-title="<%= I18n.t('charts.lead_time_data_range_evolution.title') %>"
+         data-ytitle="<%= I18n.t('projects.charts.xlabel.days') %>"
+         data-prefix=""
+         data-tooltipsuffix=""
+         data-datalabelsuffix=""
+         data-series="<%= [
+                              { name: I18n.t('charts.lead_time_data_range_evolution.total_range'), data: @all_project_consolidations.map { |consolidation| consolidation.lead_time_range_month.to_f / 1.day } },
+                              { name: I18n.t('user.dashboard.lead_time_min'), data: @all_project_consolidations.map { |consolidation| consolidation.lead_time_min_month.to_f / 1.day }, visible: false },
+                              { name: I18n.t('user.dashboard.lead_time_max'), data: @all_project_consolidations.map { |consolidation| consolidation.lead_time_max_month.to_f / 1.day }, visible: false }
+                          ].to_json %>"
+         data-stacking="normal"
+         data-decimals="2">
+    </div>
+  </div>
+
+  <div class="col-xs-6">
+    <div id="project-histogram-data-range-evolution-line"
+         class="flow-chart"
+         data-xcategories=""
+         data-title="<%= I18n.t('charts.lead_time_histogram_range_evolution.title') %>"
+         data-ytitle="<%= I18n.t('charts.lead_time_histogram_range_evolution.frequency') %>"
+         data-prefix=""
+         data-tooltipsuffix=""
+         data-datalabelsuffix=""
+         data-series="<%= [
+                              { name: I18n.t('charts.lead_time_histogram_data_range_evolution.total_range'), data: @all_project_consolidations.map { |consolidation| consolidation.histogram_range.to_f / 1.day } },
+                              { name: I18n.t('charts.lead_time_histogram_data_range_evolution.total_range_min'), data: @all_project_consolidations.map { |consolidation| consolidation.lead_time_histogram_bin_min.to_f / 1.day }, visible: false },
+                              { name: I18n.t('charts.lead_time_histogram_data_range_evolution.total_range_max'), data: @all_project_consolidations.map { |consolidation| consolidation.lead_time_histogram_bin_max.to_f / 1.day }, visible: false }
+                          ].to_json %>"
+         data-stacking="normal"
+         data-decimals="2">
+    </div>
+  </div>
+
+  <div class="col-xs-6">
+    <div id="project-interquartile-data-range-evolution-line"
+         class="flow-chart"
+         data-xcategories=""
+         data-title="<%= I18n.t('charts.lead_time_interquartile_data_range_evolution.title') %>"
+         data-ytitle="<%= I18n.t('projects.charts.xlabel.days') %>"
+         data-prefix=""
+         data-tooltipsuffix=""
+         data-datalabelsuffix=""
+         data-series="<%= [
+                              { name: I18n.t('charts.lead_time_histogram_data_range_evolution.total_range'), data: @all_project_consolidations.map { |consolidation| consolidation.interquartile_range.to_f / 1.day } },
+                              { name: I18n.t('charts.lead_time_interquartile_data_range_evolution.percentile_25'), data: @all_project_consolidations.map { |consolidation| consolidation.lead_time_p25.to_f / 1.day }, visible: false },
+                              { name: I18n.t('charts.lead_time_interquartile_data_range_evolution.percentile_75'), data: @all_project_consolidations.map { |consolidation| consolidation.lead_time_p75.to_f / 1.day }, visible: false }
+                          ].to_json %>"
+         data-stacking="normal"
+         data-decimals="2">
+    </div>
+  </div>
+</div>
+
+<% content_for :javascript do %>
+  <%= javascript_include_tag 'charts/line' %>
+  <%= javascript_include_tag 'projects/statistics_tab' %>
+<% end %>

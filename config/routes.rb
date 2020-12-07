@@ -127,8 +127,6 @@ Rails.application.routes.draw do
       member do
         get :replenishing_input
         get :team_projects_tab
-        get :dashboard_search
-        get :demands_tab
         get :dashboard_tab
         get :dashboard_page_two
         get :dashboard_page_three
@@ -199,7 +197,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :project_risk_configs, only: %i[new create destroy] do
+      resources :project_risk_configs, except: %i[edit update show] do
         member do
           patch :activate
           patch :deactivate
@@ -207,9 +205,11 @@ Rails.application.routes.draw do
       end
 
       resources :flow_impacts, only: %i[new create]
+      resources :stage_project_configs, only: %i[index destroy]
+      resources :project_risk_alerts, only: %i[index]
 
       scope :jira do
-        resources :jira_project_configs, only: %i[new create destroy edit], module: 'jira' do
+        resources :jira_project_configs, only: %i[new create destroy index], module: 'jira' do
           put :synchronize_jira, on: :member
         end
       end
@@ -220,6 +220,7 @@ Rails.application.routes.draw do
         get :closing_dashboard
         get :status_report_dashboard
         get :lead_time_dashboard
+        get :statistics_tab
 
         patch :copy_stages_from
         patch :finish_project
@@ -273,14 +274,11 @@ Rails.application.routes.draw do
     end
 
     controller :charts do
-      get 'build_operational_charts', action: :build_operational_charts
       get 'build_strategic_charts', action: :build_strategic_charts
-      get 'statistics_charts', action: :statistics_charts
     end
 
     resources :demand_blocks, only: :index do
       collection do
-        get :demand_blocks_tab
         get :demand_blocks_csv
 
         get :search

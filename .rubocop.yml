@@ -230,7 +230,6 @@ Metrics/BlockLength:
 
 Metrics/ClassLength:
   Exclude:
-    - 'app/adapters/highchart/operational_charts_adapter.rb'
     - 'app/adapters/highchart/status_report_charts_adapter.rb'
     - 'app/adapters/highchart/finances_charts_adapter.rb'
     - 'app/data_objects/replenishing_data.rb'

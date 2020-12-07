@@ -32,6 +32,7 @@ class Customer < ApplicationRecord
 
   has_many :products, dependent: :restrict_with_error
   has_many :demands, dependent: :nullify
+  has_many :demand_blocks, -> { distinct }, through: :demands
   has_many :contracts, dependent: :restrict_with_error
   has_and_belongs_to_many :projects, dependent: :restrict_with_error
   has_and_belongs_to_many :devise_customers, dependent: :destroy
@@ -60,6 +61,10 @@ class Customer < ApplicationRecord
 
   def total_value
     exclusive_projects.map(&:value).compact.sum
+  end
+
+  def total_flow_pressure
+    exclusive_projects.map(&:flow_pressure).compact.sum
   end
 
   def remaining_money(end_date = Time.zone.today.end_of_day)

@@ -7,38 +7,6 @@
   </div>
 </div>
 
-<div class="row">
-  <div class="col-xs-12">
-    <div class="tab">
-      <button class="tablinks tablinks-project-settings" id="tab-project-risks" onclick="openTab(event, 'content-project-risks', 'tablinks-project-settings', 'tabcontent')"><%= I18n.t('projects.settings.risks') %></button>
-      <button class="tablinks tablinks-project-settings" id="tab-project-stages" onclick="openTab(event, 'content-project-stages', 'tablinks-project-settings', 'tabcontent')"><%= I18n.t('projects.settings.stages') %></button>
-      <button class="tablinks tablinks-project-settings" id="tab-project-customers" onclick="openTab(event, 'project-customers-associations', 'tablinks-project-settings', 'tabcontent')"><%= I18n.t('projects.settings.customers') %></button>
-      <button class="tablinks tablinks-project-settings" id="tab-project-products" onclick="openTab(event, 'project-products-associations', 'tablinks-project-settings', 'tabcontent')"><%= I18n.t('projects.settings.products') %></button>
-      <button class="tablinks tablinks-project-settings" id="tab-project-jira" onclick="openTab(event, 'content-project-jira', 'tablinks-project-settings', 'tabcontent')"><%= I18n.t('projects.settings.jira') %></button>
-    </div>
-  </div>
-</div>
-
-<div id="content-project-risks" class="tabcontent">
-  <%= render 'projects/project_risk_settings', company: company, project: project, project_risk_configs: project_risk_configs %>
-</div>
-
-<div id="content-project-stages" class="tabcontent">
-  <%= render 'projects/projects_stages_tab', company: company, project: project, project_stages: project_stages, projects_to_copy_stages_from: projects_to_copy_stages_from %>
-</div>
-
-<div id="project-customers-associations" class="tabcontent">
-  <%= render 'projects/project_customers_tab', company: company, project: project, not_associated_customers: @not_associated_customers, project_customers: @project_customers %>
-</div>
-
-<div id="project-products-associations" class="tabcontent">
-  <%= render 'projects/project_products_tab', company: company, project: project, not_associated_products: @not_associated_products, project_products: @project_products %>
-</div>
-
-<div id="content-project-jira" class="tabcontent">
-  <%= render 'jira/jira_project_configs/jira_project_config_table', company: company, project: project %>
-</div>
-
 <% content_for :javascript do %>
   <%= javascript_include_tag 'jira_project_configs/form_modal' %>
 <% end %>

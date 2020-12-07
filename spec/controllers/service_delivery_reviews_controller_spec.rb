@@ -61,7 +61,7 @@ RSpec.describe ServiceDeliveryReviewsController, type: :controller do
         before { get :new, params: { company_id: company, product_id: product }, xhr: true }
 
         it 'instantiates a new Team Member and renders the template' do
-          expect(response).to render_template 'service_delivery_reviews/new.js.erb'
+          expect(response).to render_template 'service_delivery_reviews/new'
           expect(assigns(:service_delivery_review)).to be_a_new ServiceDeliveryReview
         end
       end

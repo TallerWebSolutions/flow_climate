@@ -9,19 +9,19 @@ module Jira
     def new
       @jira_project_config = JiraProjectConfig.new
       @jira_product_configs = @project.products.map(&:jira_product_configs).flatten - @project.jira_project_configs.map(&:jira_product_config)
-      respond_to { |format| format.js { render 'jira/jira_project_configs/new' } }
     end
 
     def create
       @jira_project_config = JiraProjectConfig.new(jira_project_config_params.merge(project: @project))
       flash[:error] = I18n.t('jira_project_config.validations.fix_version_name_uniqueness.message') unless @jira_project_config.save
 
-      render 'jira/jira_project_configs/create'
+      redirect_to company_project_jira_project_configs_path(@company, @project)
     end
 
     def destroy
       @jira_project_config.destroy
-      render 'jira/jira_project_configs/destroy'
+      flash[:notice] = I18n.t('general.destroy.success')
+      redirect_to company_project_jira_project_configs_path(@company, @project)
     end
 
     def synchronize_jira
@@ -32,6 +32,10 @@ module Jira
       flash[:notice] = I18n.t('general.enqueued')
 
       respond_to { |format| format.js { render 'jira/jira_project_configs/synchronize_jira' } }
+    end
+
+    def index
+      @jira_project_configs = @project.jira_project_configs
     end
 
     private

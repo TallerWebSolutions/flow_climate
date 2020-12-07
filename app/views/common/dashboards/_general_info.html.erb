@@ -1,42 +1,52 @@
 <table class="table">
   <tbody>
-    <tr>
-      <td><b><%= I18n.t('general.scope') %></b></td>
-      <td><%= I18n.t('general.demands_text', count: demands_count) %></td>
-    </tr>
-    <tr>
-      <td><b><%= I18n.t('general.delivered') %></b></td>
-      <td><%= I18n.t('general.demands_text', count: delivered_scope) %></td>
-    </tr>
-    <tr>
-      <td><b><%= I18n.t('projects.index.remaining_backlog') %></b></td>
-      <td><%= I18n.t('general.demands_text', count: remaining_backlog) %></td>
-    </tr>
-    <% if total_flow_pressure.present? %>
-      <tr>
-        <td><b><%= I18n.t('projects.index.flow_pressure') %></b></td>
-        <td><%= I18n.t('general.demands_per_day', count: number_with_precision(total_flow_pressure, precision: 3)) %></td>
-      </tr>
-    <% end %>
-    <tr>
-      <td><b><%= I18n.t('teams.show.average_queue_time') %></b></td>
-      <td><%= I18n.t('general.days_text', count: number_with_precision(average_queue_time, precision: 2)) %></td>
-    </tr>
-    <tr>
-      <td><b><%= I18n.t('teams.show.average_touch_time') %></b></td>
-      <td><%= I18n.t('general.days_text', count: number_with_precision(average_touch_time, precision: 2)) %></td>
-    </tr>
-    <tr>
-      <td><b><%= I18n.t('teams.show.lead_time_p95') %></b></td>
-      <td><%= I18n.t('general.days_text', count: number_with_precision(demands_lead_time_p95, precision: 2)) %></td>
-    </tr>
-    <tr>
-      <td><b><%= I18n.t('teams.show.lead_time_p80') %></b></td>
-      <td><%= I18n.t('general.days_text', count: number_with_precision(demands_lead_time_p80, precision: 2)) %></td>
-    </tr>
-    <tr>
-      <td><b><%= I18n.t('teams.show.lead_time_p65') %></b></td>
-      <td><%= I18n.t('general.days_text', count: number_with_precision(demands_lead_time_p65, precision: 2)) %></td>
-    </tr>
+  <tr>
+    <td><b><%= I18n.t('general.scope') %></b></td>
+    <td><%= link_to I18n.t('general.demands_text', count: demands.count), demands_list_by_ids_company_demands_path(company, demands_ids: demands.map(&:id).join(',')), method: :post, target: '_blank' %></td>
+  </tr>
+  <tr>
+    <td><b><%= I18n.t('general.delivered') %></b></td>
+    <td><%= link_to I18n.t('general.demands_text', count: demands_delivered.count), demands_list_by_ids_company_demands_path(company, demands_ids: demands_delivered.map(&:id).join(',')), method: :post, target: '_blank' %></td>
+  </tr>
+  <tr>
+    <td><b><%= I18n.t('projects.index.remaining_backlog') %></b></td>
+    <td><%= link_to I18n.t('general.demands_text', count: remaining_backlog.count), demands_list_by_ids_company_demands_path(company, demands_ids: remaining_backlog.map(&:id).join(',')), method: :post, target: '_blank' %></td>
+  </tr>
+  <tr>
+    <td><b><%= I18n.t('projects.show.unscored_demands.title') %></b></td>
+    <td><%= link_to I18n.t('general.demands_text', count: unscored_demands.count), demands_list_by_ids_company_demands_path(company, demands_ids: unscored_demands.map(&:id).join(',')), method: :post, target: '_blank' %></td>
+  </tr>
+  <tr>
+    <td><b><%= I18n.t('demand_blocks.index.title') %></b></td>
+    <td><%= link_to I18n.t('general.demand_blocks_text', count: demands_blocks.count), search_company_demand_blocks_path(company, demand_blocks_ids: demands_blocks.map(&:id).join(',')), target: '_blank' %></td>
+  </tr>
+  <tr>
+    <td><b><%= I18n.t('projects.index.flow_pressure') %></b></td>
+    <td><%= I18n.t('general.demands_per_day', count: number_with_precision(flow_pressure, precision: 3)) %></td>
+  </tr>
+  <tr>
+    <td><b><%= I18n.t('projects.index.average_speed') %></b></td>
+    <td><%= I18n.t('general.demands_per_day', count: number_with_precision(average_speed, precision: 3)) %></td>
+  </tr>
+  <tr>
+    <td><b><%= I18n.t('teams.show.average_queue_time') %></b></td>
+    <td><%= I18n.t('general.days_text', count: number_with_precision(average_queue_time, precision: 2)) %></td>
+  </tr>
+  <tr>
+    <td><b><%= I18n.t('teams.show.average_touch_time') %></b></td>
+    <td><%= I18n.t('general.days_text', count: number_with_precision(average_touch_time, precision: 2)) %></td>
+  </tr>
+  <tr>
+    <td><b><%= I18n.t('teams.show.lead_time_p95') %></b></td>
+    <td><%= I18n.t('general.days_text', count: number_with_precision(demands_lead_time_p95, precision: 2)) %></td>
+  </tr>
+  <tr>
+    <td><b><%= I18n.t('teams.show.lead_time_p80') %></b></td>
+    <td><%= I18n.t('general.days_text', count: number_with_precision(demands_lead_time_p80, precision: 2)) %></td>
+  </tr>
+  <tr>
+    <td><b><%= I18n.t('teams.show.lead_time_p65') %></b></td>
+    <td><%= I18n.t('general.days_text', count: number_with_precision(demands_lead_time_p65, precision: 2)) %></td>
+  </tr>
   </tbody>
 </table>

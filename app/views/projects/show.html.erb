@@ -9,67 +9,106 @@
   </div>
 </div>
 
-<%= hidden_field_tag :company_id, @company.id %>
-<%= hidden_field_tag :project_id, @project.id %>
-<%= hidden_field_tag :projects_ids, @project.id %>
-<%= hidden_field_tag :target_name, @project.name %>
-<%= hidden_field_tag :demands_ids, @demands_ids.join(',') %>
+<% if @project.consolidations_last_update.present? %>
+  <h5><i><%= I18n.t('general.last_update.text', last_update: I18n.l(@project.consolidations_last_update, format: :short)) %></i></h5>
+<% end %>
 
 <div class="row">
-  <div class="topnav">
-    <%= link_to I18n.t('navbar.details'), '#', id: 'nav-item-stamps', class: 'nav-item active', data: { container: '#stamps' } %>
-    <%= link_to I18n.t('navbar.demands'), '#', id: 'nav-item-demands', class: 'nav-item', data: { container: '#demands-tab' } %>
-    <%= link_to I18n.t('navbar.demand_blocks'), '#', id: 'nav-item-demands-blocks', class: 'nav-item', data: { container: '#demands-blocks-tab' } %>
-    <%= link_to I18n.t('navbar.flow_impacts'), '#', id: 'nav-item-flow-impacts', class: 'nav-item', data: { container: '#flow-impacts-tab' } %>
-    <%= link_to I18n.t('projects.show.deadline.title'), '#', id: 'nav-item-deadline', class: 'nav-item', data: { container: '#deadline-change' } %>
-    <%= link_to I18n.t('navbar.charts'), '#', id: 'nav-item-charts', class: 'nav-item', data: { container: '#operational-charts' } %>
-    <%= link_to I18n.t('navbar.statistics'), '#', id: 'nav-item-statistics', class: 'nav-item', data: { container: '#statistics-charts' } %>
-    <%= link_to I18n.t('navbar.risk_alerts'), '#', id: 'nav-item-risk', class: 'nav-item', data: { container: '#project-risk-alerts-table' } %>
-    <%= link_to I18n.t('navbar.settings'), '#', id: 'nav-item-settings', class: 'nav-item', data: { container: '#project-settings' } %>
+  <% if @project.executing? %>
+    <div class="col-xs-6">
+      <% project_risk_alert_color = 'no-alert' %>
+      <% if @project.current_risk_to_deadline > 0.5 && @project.current_risk_to_deadline <= 0.7 %>
+        <% project_risk_alert_color = 'yellow-alert' %>
+
+      <% elsif @project.current_risk_to_deadline > 0.7  %>
+        <% project_risk_alert_color = 'red-alert' %>
+      <% end %>
+
+      <div class="project-deadline-info center <%= project_risk_alert_color %>">
+        <%= I18n.t('projects.show.deadline_countdown.first_part') %><span class="countdown"><%= I18n.t('projects.show.deadline_countdown.days', remaining_days: @project.remaining_days.to_i ) %></span><%= I18n.t('projects.show.deadline_countdown.second_part') %>
+        <%= I18n.t('projects.show.deadline_countdown.risk') %><span class="countdown"><%=  number_to_percentage(@project.current_risk_to_deadline * 100, precision: 2) %></span>
+        <a href="https://vimeo.com/456336459" target="_blank"><i class="fas fa-info-circle"></i></a>
+      </div>
+    </div>
+
+    <div class="col-xs-6">
+      <% team_based_risk = @all_project_consolidations.last.team_based_operational_risk %>
+      <% team_risk_alert_color = 'no-alert' %>
+
+      <% if team_based_risk > 0.5 && team_based_risk <= 0.7 %>
+        <% team_risk_alert_color = 'yellow-alert' %>
+      <% elsif team_based_risk > 0.7  %>
+        <% team_risk_alert_color = 'red-alert' %>
+      <% end %>
+
+      <div class="project-deadline-info center <%= team_risk_alert_color %>">
+        <%= sanitize "Com a estratégia de WiP e pelos dados do time, o risco atual é de <span class='countdown'>#{number_to_percentage(team_based_risk * 100, precision: 2)}</span>" %>
+        <a href="https://vimeo.com/456336459" target="_blank"><i class="fas fa-info-circle"></i></a>
+      </div>
+    </div>
+  <% else %>
+    <div class="col-xs-12"><%= (I18n.t('projects.show.status_information_html', status_description: I18n.t("activerecord.attributes.project.enums.status.#{@project.status}")))&.html_safe %></div>
+  <% end %>
+</div>
+
+<div class="col-xs-2 pull-right">
+  <div class="dropdown topnav-right">
+
+    <i class="fas fa-cogs dropdown-toggle main-config-cogs" data-toggle='dropdown'></i>
+
+    <ul class="dropdown-menu dropdown-menu-right">
+      <li><%= link_to I18n.t('projects.show.update_consolidations'), update_consolidations_company_project_path(@company, @project), method: :patch, class: 'nav-link dropdown-item' %></li>
+      <li><%= link_to I18n.t('demands.new.title'), new_company_project_demand_path(@company, @project), class: 'nav-link dropdown-item' %></li>
+      <li><%= link_to I18n.t('projects.actions.edit.title'), edit_company_project_path(@company, @project), class: 'nav-link dropdown-item' %></li>
+      <li class="divider"></li>
+      <li><%= link_to I18n.t('jira_project_configs.index.title', count: @project.jira_project_configs.count), company_project_jira_project_configs_path(@company, @project), class: 'nav-link dropdown-item' %></li>
+      <li><%= link_to I18n.t('stage_project_configs.index.title', count: @project.stages.count), company_project_stage_project_configs_path(@company, @project), class: 'nav-link dropdown-item' %></li>
+      <li><%= link_to I18n.t('project_risk_configs.index.title', count: @project.project_risk_configs.count), company_project_project_risk_configs_path(@company, @project), class: 'nav-link dropdown-item' %></li>
+    </ul>
   </div>
 </div>
 
-<%= render 'layouts/load_spinner' %>
+<br>
 
-<div id="stamps" class="tab-container">
-  <%= render 'projects/project_stamps', company: @company, project: @project, end_date: @end_date, inconsistent_demands: @inconsistent_demands, unscored_demands: @unscored_demands %>
+<div class="row">
+  <div class="col-xs-4">
+    <%= render 'common/dashboards/general_info',
+               company: @company,
+               dashboard_name: @project.name,
+               total_flow_pressure: nil,
+               demands: @project.demands.kept,
+               demands_delivered: @project.demands.kept.finished,
+               remaining_backlog: @project.demands.kept - @project.demands.kept.finished,
+               unscored_demands: @unscored_demands,
+               demands_blocks: @demands_blocks,
+               flow_pressure: @project.flow_pressure,
+               average_speed: @average_speed,
+               average_queue_time: @project.average_queue_time / 1.hour,
+               average_touch_time: @project.average_touch_time / 1.hour,
+               demands_lead_time_p95: Stats::StatisticsService.instance.percentile(95, @project.demands.kept.finished_with_leadtime.map(&:leadtime_in_days)),
+               demands_lead_time_p80: Stats::StatisticsService.instance.percentile(80, @project.demands.kept.finished_with_leadtime.map(&:leadtime_in_days)),
+               demands_lead_time_p65: Stats::StatisticsService.instance.percentile(65, @project.demands.kept.finished_with_leadtime.map(&:leadtime_in_days)) %>
+  </div>
+
+  <div class="col-xs-8">
+    <%= render 'demands/project_dashboard_demands_table', company: @company, demands: @last_10_deliveries %>
+  </div>
 </div>
 
-<div id="demands-tab" class="tab-container">
-
-</div>
-
-<div id="demands-blocks-tab" class="tab-container">
-
-</div>
-
-<div id="flow-impacts-tab" class="tab-container">
-
-</div>
-
-<div id="deadline-change" class="tab-container">
-  <%= render 'projects/deadlines', project_change_deadline_histories: @project_change_deadline_histories %>
-</div>
-
-<div id="project-risk-alerts-table" class="tab-container">
-  <%= render 'project_risk_alerts/project_risk_alerts_table', ordered_project_risk_alerts: @ordered_project_risk_alerts %>
-</div>
-
-<div id="operational-charts" class="tab-container">
-  <%= render 'charts/operational_charts_tab', company: @company, target_name: @project.name, report_data: @report_data, status_report_data: @status_report_data, demands_chart_adapter: @demands_chart_adapter, projects: [@project], start_date: @project.start_date, end_date: @project.end_date %>
-</div>
-
-<div id="statistics-charts" class="tab-container">
-
-</div>
-
-<div id="project-settings" class="tab-container">
-  <%= render 'projects/settings', company: @company, project: @project, project_stages: @stages_list, project_risk_configs: @project.project_risk_configs, projects_to_copy_stages_from: @projects_to_copy_stages_from %>
-</div>
-
-<div class="modal fade" id="edit-demand-form" tabindex="-1" role="dialog" aria-labelledby="edit-demand-form" aria-hidden="true"></div>
-<div class="modal fade" id="edit-block-form" tabindex="-1" role="dialog" aria-labelledby="edit-block-form" aria-hidden="true"></div>
-<div class="modal fade" id="show-montecarlo-dialog" tabindex="-1" role="dialog" aria-labelledby="show-montecarlo-dialog" aria-hidden="true"></div>
+<% if @all_project_consolidations.present? %>
+  <%= render 'projects/dashboards/project_dashboard_charts',
+             company: @company,
+             project: @project,
+             demands_finished_with_leadtime: @project.demands.finished_with_leadtime,
+             all_project_consolidations: @all_project_consolidations,
+             dashboard_project_consolidations: @dashboard_project_consolidations,
+             last_10_deliveries: @last_10_deliveries,
+             demands_chart_adapter: @demands_chart_adapter,
+             lead_time_histogram_data: @lead_time_histogram_data,
+             status_report_data: @status_report_data %>
+<% else %>
+  <%= render 'layouts/no_data', missing_data: I18n.t('general.data') %>
+<% end %>
 
 <% content_for :javascript do %>
   <%= javascript_include_tag 'charts/burnup' %>
@@ -81,7 +120,6 @@
   <%= javascript_include_tag 'charts/stacked_area' %>
 
   <%= javascript_include_tag 'stats_charts/statistics_charts' %>
-  <%= javascript_include_tag 'operational_charts/charts_filter' %>
 
   <%= javascript_include_tag 'components/components' %>
 
@@ -90,11 +128,9 @@
   <%= javascript_include_tag 'routes/chart_routes' %>
   <%= javascript_include_tag 'routes/demand_routes' %>
   <%= javascript_include_tag 'routes/flow_impact_routes' %>
-  <%= javascript_include_tag 'routes/demand_block_routes' %>
 
   <%= javascript_include_tag 'demand_blocks/form_modal' %>
 
-  <%= javascript_include_tag 'projects/project_navigation_behaviour' %>
   <%= javascript_include_tag 'projects/charts' %>
   <%= javascript_include_tag 'projects/closing_dashboard' %>
   <%= javascript_include_tag 'projects/status_report' %>

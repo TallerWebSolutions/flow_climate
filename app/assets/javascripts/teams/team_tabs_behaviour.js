@@ -1,18 +1,4 @@
 function bindDashboardSelectors() {
-    $("#team-demands-tab").on("click", function() {
-        hideAllTeamTabs();
-
-        let companyId = $("#company_id").val();
-        let teamId = $("#team_id").val();
-        let demandsIds = $('#demands_ids').val();
-
-        activateTab($("#team-demands-tab"));
-
-        $('#page-buttons').hide();
-
-        getDemandsTab(companyId, teamId, demandsIds);
-    });
-
     $("#team-dashboard-tab, #team-dashboard-page-one").on("click", function() {
         hideAllTeamTabs();
 
@@ -98,7 +84,6 @@ function bindDashboardSelectors() {
 }
 
 function hideAllTeamTabs(){
-    $("#team-demands-info").hide();
     $("#team-projects-charts").hide();
     $("#dashboard-controls").hide();
     $("#team-dashboard-filters").hide();

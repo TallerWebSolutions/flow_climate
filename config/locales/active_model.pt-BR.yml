@@ -116,8 +116,8 @@ pt-BR:
         one: Neogicação de Prazo
         other: Negociações de Prazo
       stage_project_config:
-        one: Configuração de Stage para Projeto
-        other: Configurações de Stage para Projeto
+        one: Configuração de Etapa
+        other: Configurações de Etapa
       plan:
         one: Plano
         other: Planos
@@ -418,6 +418,7 @@ pt-BR:
             other_demand_priority: Prioridade para Outra Demanda
             waiting_for_code_review: Aguardando revisão de código
             budget_approval: Aprovação de Orçamento
+            waiting_deploy_window: Aguardando Janela de Deploy
       project_change_deadline_history:
         project: Projeto
         user: Usuário

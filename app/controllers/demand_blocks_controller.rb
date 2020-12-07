@@ -3,10 +3,9 @@
 class DemandBlocksController < AuthenticatedController
   before_action :user_gold_check
   before_action :assign_company
-  before_action :assign_project, except: %i[index demand_blocks_tab demand_blocks_csv search]
-  before_action :assign_demand, except: %i[index demand_blocks_tab demand_blocks_csv search]
-  before_action :assign_demand_block, except: %i[index demand_blocks_tab demand_blocks_csv search]
-  before_action :assign_projects, only: %i[index demand_blocks_tab]
+  before_action :assign_project, except: %i[index demand_blocks_csv search]
+  before_action :assign_demand, except: %i[index demand_blocks_csv search]
+  before_action :assign_demand_block, except: %i[index demand_blocks_csv search]
 
   def activate
     @demand_block.activate!
@@ -35,14 +34,8 @@ class DemandBlocksController < AuthenticatedController
   end
 
   def index
-    @demand_blocks = DemandBlocksRepository.instance.active_blocks_to_projects_and_period(@projects, 3.months.ago, end_date_to_query).order(block_time: :desc)
-    render 'demand_blocks/index'
-  end
-
-  def demand_blocks_tab
-    @demand_blocks = DemandBlocksRepository.instance.active_blocks_to_projects_and_period(@projects, 3.months.ago, end_date_to_query).order(block_time: :desc)
-
-    respond_to { |format| format.js { 'demand_blocks/demand_blocks_tab' } }
+    @demand_blocks = @company.demand_blocks.order(block_time: :desc)
+    @paged_demand_blocks = @demand_blocks.page(page_param)
   end
 
   def demand_blocks_csv
@@ -66,7 +59,9 @@ class DemandBlocksController < AuthenticatedController
     @demand_blocks = build_stage_query(@demand_blocks)
     @demand_blocks = build_ordering_query(@demand_blocks)
 
-    respond_to { |format| format.js { render 'demand_blocks/search' } }
+    @paged_demand_blocks = @demand_blocks.page(page_param)
+
+    render 'demand_blocks/index'
   end
 
   private
@@ -99,12 +94,8 @@ class DemandBlocksController < AuthenticatedController
     if params[:blocks_ordering] == 'member_name'
       DemandBlock.where(id: demand_blocks.sort_by(&:blocker_name).map(&:id))
     else
-      demand_blocks.order(:block_time)
+      demand_blocks.order(block_time: :desc)
     end
-  end
-
-  def assign_projects
-    @projects = Project.where(id: projects_ids)
   end
 
   def demand_block_params
@@ -121,9 +112,5 @@ class DemandBlocksController < AuthenticatedController
 
   def assign_demand_block
     @demand_block = DemandBlock.find(params[:id])
-  end
-
-  def end_date_to_query
-    (params['end_date'] || Time.zone.today).to_date
   end
 end

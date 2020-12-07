@@ -17,4 +17,32 @@ class DemandService
     demands_list_view = DemandsRepository.instance.demand_tags_query(demands_list_view, demand_tags)
     DemandsRepository.instance.class_of_service_query(demands_list_view, demand_class_of_service)
   end
+
+  def hours_per_demand(demands_delivered)
+    return 0 if demands_delivered.count.zero?
+
+    hours_delivered = demands_delivered.sum(&:total_effort).to_f
+    hours_delivered.to_f / demands_delivered.count
+  end
+
+  def flow_efficiency(demands_delivered)
+    return 0 if demands_delivered.count.zero?
+
+    queue_time = demands_delivered.sum(&:total_queue_time).to_f / 1.hour
+    touch_time = demands_delivered.sum(&:total_touch_time).to_f / 1.hour
+
+    Stats::StatisticsService.instance.compute_percentage(touch_time, queue_time)
+  end
+
+  def average_speed(demands)
+    demands_finished = demands.kept.finished
+    min_date = demands_finished.map(&:end_date).compact.min
+    max_date = demands_finished.map(&:end_date).compact.max
+
+    return 0 if min_date.blank? || max_date.blank?
+
+    difference_in_days = (max_date.to_date - min_date.to_date).to_i
+
+    demands_finished.count / difference_in_days.to_f
+  end
 end

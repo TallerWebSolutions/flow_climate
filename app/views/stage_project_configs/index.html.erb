@@ -1,0 +1,63 @@
+<div class="row">
+  <div class="col-xs-12">
+    <ul class="breadcrumb">
+      <li><%= link_to I18n.t('general.home.title'), root_path %></li>
+      <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
+      <li><%= link_to Project.model_name.human(count: 2), company_projects_path(@company) %></li>
+      <li><%= link_to @project.name, company_project_path(@company, @project) %></li>
+      <li><%= StageProjectConfig.model_name.human(count: 2) %></li>
+    </ul>
+  </div>
+</div>
+
+<%= form_tag copy_stages_from_company_project_url(@company, @project), method: :patch, class: 'standard-form' do %>
+  <div class="row">
+    <div class="col-xs-6 col-xs-offset-3">
+      <div class="form-group">
+        <%= label_tag Project.model_name.human(count: 2), nil, class: 'control-label' %>
+        <%= select_tag :project_to_copy_stages_from, options_from_collection_for_select(@projects_to_copy_stages_from, :id, :name), class: 'form-control' %>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6 col-xs-offset-3">
+      <%= submit_tag I18n.t('projects.show.import_stages'), class: 'btn btn-success' %>
+    </div>
+  </div>
+<% end %>
+
+<div class="row">
+  <div class="col-xs-6 col-xs-offset-3">
+    <div>
+      <% if @project.stages.empty? %>
+        <div class="no-data">
+          <%= I18n.t('general.no_data', missing_data: StageProjectConfig.model_name.human(count: 2).downcase) %>
+        </div>
+      <% else %>
+        <table class="table">
+          <thead>
+          <tr>
+            <th><%= Stage.human_attribute_name(:order) %></th>
+            <th><%= Stage.human_attribute_name(:name) %></th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody>
+          <% @stages_config_list.each do |stage_config| %>
+            <tr>
+              <td><%= stage_config.stage.order %></td>
+              <td><%= stage_config.stage.name %></td>
+
+              <td>
+                <%= link_to company_project_stage_project_config_path(@company, @project, stage_config), data: { confirm: I18n.t('general.destroy.confirm') }, method: :delete do %>
+                  <i class="fa fa-times" aria-hidden="true"></i>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      <% end %>
+    </div>
+  </div>
+</div>

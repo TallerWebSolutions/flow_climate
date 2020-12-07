@@ -11,9 +11,12 @@ class CustomersController < AuthenticatedController
   def show
     @customers = [@customer]
     @customer_dashboard_data = CustomerDashboardData.new(customer_demands)
+    @unscored_demands = @customer.exclusives_demands.unscored_demands.order(external_id: :asc)
+    @demands_blocks = @customer.exclusives_demands.unscored_demands.order(external_id: :asc)
     @user_invite = UserInvite.new(invite_object_id: @customer.id, invite_type: :customer)
     @contracts = @customer.contracts.order(end_date: :desc)
     @contract = Contract.new(customer: @customer)
+    build_pressure_and_speed
   end
 
   def new
@@ -55,6 +58,11 @@ class CustomersController < AuthenticatedController
   end
 
   private
+
+  def build_pressure_and_speed
+    @flow_pressure = Stats::StatisticsService.instance.mean(@customer.projects.running.map(&:flow_pressure))
+    @average_speed = DemandService.instance.average_speed(@customer.exclusives_demands)
+  end
 
   def customer_demands
     @customer_demands ||= @customer.exclusives_demands.finished.order(:end_date)

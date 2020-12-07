@@ -410,7 +410,7 @@ class Project < ApplicationRecord
   end
 
   def last_weekly_throughput(qty_data_points)
-    consolidations = project_consolidations.where(last_data_in_week: true).order(consolidation_date: :desc)
+    consolidations = project_consolidations.weekly_data.order(consolidation_date: :desc)
     consolidations = project_consolidations.order(consolidation_date: :desc) if consolidations.empty?
 
     throughputs = consolidations.first(qty_data_points + 1).map(&:project_throughput).flatten
@@ -424,6 +424,13 @@ class Project < ApplicationRecord
     end
 
     last_throughputs.reverse
+  end
+
+  def current_weekly_scope_ideal_burnup
+    period = TimeService.instance.weeks_between_of(start_date, end_date)
+    ideal_per_period = []
+    period.each_with_index { |_date, index| ideal_per_period << (backlog_for.count.to_f / period.size) * (index + 1) }
+    ideal_per_period
   end
 
   private

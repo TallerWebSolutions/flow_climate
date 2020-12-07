@@ -11,6 +11,7 @@ RSpec.describe Team, type: :model do
     it { is_expected.to have_many(:slack_configurations).dependent(:destroy) }
     it { is_expected.to have_many(:team_resource_allocations).dependent(:destroy) }
     it { is_expected.to have_many(:team_resources).through(:team_resource_allocations) }
+    it { is_expected.to have_many(:demand_blocks).through(:demands) }
   end
 
   context 'validations' do

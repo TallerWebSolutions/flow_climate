@@ -6,9 +6,9 @@ module Flow
                 :products_throughput_per_period, :accumulated_products_throughput, :accumulated_bugs_opened_data_array,
                 :accumulated_bugs_closed_data_array, :bugs_opened_data_array, :bugs_closed_data_array, :bugs_share_data_array,
                 :upstream_total_delivered, :upstream_delivered_per_period, :downstream_total_delivered, :downstream_delivered_per_period,
-                :uncertain_scope, :current_scope, :period_size, :demands_stages_count_hash
+                :uncertain_scope, :current_scope, :period_size, :demands_stages_count_hash, :data_period
 
-    def initialize(demands, uncertain_scope_amount, period_size, end_sample_date)
+    def initialize(demands, uncertain_scope_amount, period_size, end_sample_date, data_period)
       super(demands)
       start_attributes
 
@@ -23,6 +23,8 @@ module Flow
       teams = demands.map(&:team).uniq
 
       @stages = teams.last.stages.downstream.where('stages.order >= 0').order(:order)
+
+      @data_period = data_period
     end
 
     def work_items_flow_behaviour(start_population_date, analysed_date, distribution_index, add_data_to_chart)
@@ -39,6 +41,8 @@ module Flow
     end
 
     def build_cfd_hash(start_population_date, analysed_date)
+      return if analysed_date > TimeService.instance.end_of_period_for_date(Time.zone.today, @data_period)
+
       demand_transitions = DemandTransition.for_demands_ids(@demands_ids)
 
       @stages.each do |stage|

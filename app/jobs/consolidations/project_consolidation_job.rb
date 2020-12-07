@@ -10,7 +10,9 @@ module Consolidations
 
       demands = project.demands.kept.where('demands.created_date <= :analysed_date', analysed_date: end_of_day)
       demands_finished = demands.finished.where('demands.end_date <= :analysed_date', analysed_date: end_of_day).order(end_date: :asc)
+      demands_finished_in_month = project.demands.kept.to_end_dates(cache_date.beginning_of_month, cache_date)
       demands_lead_time = demands_finished.map(&:leadtime).flatten.compact
+      demands_lead_time_in_month = demands_finished_in_month.map(&:leadtime).flatten.compact
 
       lead_time_histogram_data = Stats::StatisticsService.instance.leadtime_histogram_hash(demands_lead_time)
       lead_time_histogram_bins = lead_time_histogram_data.keys
@@ -21,8 +23,8 @@ module Consolidations
 
       team = project.team
 
-      project_work_item_flow_information = Flow::WorkItemFlowInformations.new(project.demands.kept, project.initial_scope, x_axis.length, x_axis.last)
-      team_work_item_flow_information = Flow::WorkItemFlowInformations.new(team.demands.kept, team.projects.map(&:initial_scope).compact.sum, x_axis.length, x_axis.last)
+      project_work_item_flow_information = Flow::WorkItemFlowInformations.new(project.demands.kept, project.initial_scope, x_axis.length, x_axis.last, 'week')
+      team_work_item_flow_information = Flow::WorkItemFlowInformations.new(team.demands.kept, team.projects.map(&:initial_scope).compact.sum, x_axis.length, x_axis.last, 'week')
 
       x_axis.each_with_index do |analysed_date, distribution_index|
         project_work_item_flow_information.work_items_flow_behaviour(x_axis.first, analysed_date, distribution_index, true)
@@ -37,6 +39,14 @@ module Consolidations
       throughput_average = Stats::StatisticsService.instance.population_average(project_work_item_flow_information.throughput_per_period, 8)
       weeks_by_little_law = project_remaining_backlog.to_f / throughput_average unless project_remaining_backlog.zero? || throughput_average.zero?
 
+      code_needed_blocks_count = 0
+      code_needed_blocks_per_demand = 0
+
+      if demands_finished.count.positive?
+        code_needed_blocks_count = demands_finished.map { |demand| demand.demand_blocks.coding_needed.count }.sum
+        code_needed_blocks_per_demand = code_needed_blocks_count.to_f / demands_finished.count
+      end
+
       consolidation = Consolidations::ProjectConsolidation.where(project: project, consolidation_date: cache_date).first_or_initialize
       consolidation.update(last_data_in_week: (cache_date.to_date) == (cache_date.to_date.end_of_week),
                            last_data_in_month: (cache_date.to_date) == (cache_date.to_date.end_of_month),
@@ -50,12 +60,18 @@ module Consolidations
                            lead_time_min: demands_lead_time.min,
                            lead_time_max: demands_lead_time.max,
                            lead_time_p25: Stats::StatisticsService.instance.percentile(25, demands_lead_time),
+                           lead_time_p65: Stats::StatisticsService.instance.percentile(65, demands_lead_time),
                            lead_time_p75: Stats::StatisticsService.instance.percentile(75, demands_lead_time),
                            lead_time_p80: Stats::StatisticsService.instance.percentile(80, demands_lead_time),
+                           lead_time_p95: Stats::StatisticsService.instance.percentile(95, demands_lead_time),
                            lead_time_average: Stats::StatisticsService.instance.mean(demands_lead_time),
                            lead_time_std_dev: Stats::StatisticsService.instance.standard_deviation(demands_lead_time),
                            lead_time_histogram_bin_min: lead_time_histogram_bins.min,
                            lead_time_histogram_bin_max: lead_time_histogram_bins.max,
+                           lead_time_min_month: demands_lead_time_in_month.min,
+                           lead_time_max_month: demands_lead_time_in_month.max,
+                           lead_time_p80_month: Stats::StatisticsService.instance.percentile(80, demands_lead_time_in_month),
+                           lead_time_std_dev_month: Stats::StatisticsService.instance.standard_deviation(demands_lead_time_in_month),
                            monte_carlo_weeks_min: project_based_montecarlo_durations.min,
                            monte_carlo_weeks_max: project_based_montecarlo_durations.max,
                            monte_carlo_weeks_std_dev: Stats::StatisticsService.instance.standard_deviation(project_based_montecarlo_durations),
@@ -69,7 +85,16 @@ module Consolidations
                            flow_pressure: project.flow_pressure(cache_date.end_of_day),
                            value_per_demand: project.value_per_demand,
                            team_based_operational_risk: 1 - Stats::StatisticsService.instance.compute_odds_to_deadline(project.remaining_weeks, team_based_montecarlo_durations),
-                           weeks_by_little_law: weeks_by_little_law)
+                           weeks_by_little_law: weeks_by_little_law,
+                           hours_per_demand: DemandService.instance.hours_per_demand(demands_finished),
+                           hours_per_demand_month: DemandService.instance.hours_per_demand(demands_finished_in_month),
+                           flow_efficiency: DemandService.instance.flow_efficiency(demands_finished),
+                           flow_efficiency_month: DemandService.instance.flow_efficiency(demands_finished_in_month),
+                           bugs_opened: demands.bug.count,
+                           bugs_closed: demands_finished.bug.count,
+                           code_needed_blocks_count: code_needed_blocks_count,
+                           code_needed_blocks_per_demand: code_needed_blocks_per_demand
+                           )
 
     end
 

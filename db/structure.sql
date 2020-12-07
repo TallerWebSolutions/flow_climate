@@ -2053,12 +2053,12 @@ CREATE TABLE public.project_consolidations (
     value_per_demand numeric DEFAULT 0.0,
     monte_carlo_weeks_min integer DEFAULT 0,
     monte_carlo_weeks_max integer DEFAULT 0,
-    monte_carlo_weeks_std_dev integer DEFAULT 0,
+    monte_carlo_weeks_std_dev numeric DEFAULT 0,
     monte_carlo_weeks_p80 numeric DEFAULT 0.0,
     operational_risk numeric DEFAULT 0.0,
     team_based_monte_carlo_weeks_min integer DEFAULT 0,
     team_based_monte_carlo_weeks_max integer DEFAULT 0,
-    team_based_monte_carlo_weeks_std_dev integer DEFAULT 0,
+    team_based_monte_carlo_weeks_std_dev numeric DEFAULT 0,
     team_based_monte_carlo_weeks_p80 numeric DEFAULT 0.0,
     team_based_operational_risk numeric DEFAULT 0.0,
     lead_time_min numeric DEFAULT 0.0,
@@ -2071,7 +2071,21 @@ CREATE TABLE public.project_consolidations (
     lead_time_histogram_bin_min numeric DEFAULT 0.0,
     lead_time_histogram_bin_max numeric DEFAULT 0.0,
     weeks_by_little_law numeric DEFAULT 0.0,
-    project_throughput integer DEFAULT 0
+    project_throughput integer DEFAULT 0,
+    hours_per_demand numeric DEFAULT 0.0,
+    flow_efficiency numeric DEFAULT 0.0,
+    bugs_opened integer DEFAULT 0,
+    bugs_closed integer DEFAULT 0,
+    lead_time_p65 numeric DEFAULT 0.0,
+    lead_time_p95 numeric DEFAULT 0.0,
+    lead_time_min_month numeric DEFAULT 0.0,
+    lead_time_max_month numeric DEFAULT 0.0,
+    lead_time_p80_month numeric DEFAULT 0.0,
+    lead_time_std_dev_month numeric DEFAULT 0.0,
+    flow_efficiency_month numeric DEFAULT 0.0,
+    hours_per_demand_month numeric DEFAULT 0.0,
+    code_needed_blocks_count integer DEFAULT 0,
+    code_needed_blocks_per_demand numeric DEFAULT 0.0
 );
 
 
@@ -6161,6 +6175,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200928150830'),
 ('20200929125717'),
 ('20201019125426'),
-('20201020185804');
+('20201020185804'),
+('20201111160327');
 
 

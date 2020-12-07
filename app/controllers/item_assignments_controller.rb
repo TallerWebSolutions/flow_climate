@@ -9,6 +9,6 @@ class ItemAssignmentsController < AuthenticatedController
 
     @item_assignment.destroy
 
-    respond_to { |format| format.js { render 'item_assignments/destroy.js.erb' } }
+    respond_to { |format| format.js { render 'item_assignments/destroy' } }
   end
 end

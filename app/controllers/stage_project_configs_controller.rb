@@ -4,8 +4,9 @@ class StageProjectConfigsController < AuthenticatedController
   before_action :user_gold_check
 
   before_action :assign_company
-  before_action :assign_stage
-  before_action :assign_stage_project_config
+  before_action :assign_stage, except: %i[index destroy]
+  before_action :assign_project, only: %i[index destroy]
+  before_action :assign_stage_project_config, except: :index
 
   def edit; end
 
@@ -17,7 +18,21 @@ class StageProjectConfigsController < AuthenticatedController
 
     recompute_manual_efforts_to_transitions_in_stage
     replicate_to_other_projects if params['replicate_to_projects'] == '1'
+
     redirect_to edit_company_stage_stage_project_config_path(@company, @stage, @stage_project_config)
+  end
+
+  def index
+    @projects_to_copy_stages_from = (@company.projects - [@project]).sort_by(&:name)
+    @stages_config_list = @project.stage_project_configs.joins(:stage).order('stages.order, stages.name')
+  end
+
+  def destroy
+    @stage_project_config.destroy
+
+    flash[:notice] = I18n.t('general.destroy.success')
+
+    redirect_to company_project_stage_project_configs_path(@company, @project)
   end
 
   private
@@ -58,6 +73,10 @@ class StageProjectConfigsController < AuthenticatedController
 
   def assign_stage
     @stage = Stage.find(params[:stage_id])
+  end
+
+  def assign_project
+    @project = Project.find(params[:project_id])
   end
 
   def assign_stage_project_config

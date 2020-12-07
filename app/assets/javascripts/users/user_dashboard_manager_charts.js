@@ -1,5 +1,5 @@
 function buildManagerCharts() {
-    const projectsQuality = $('#manager-dashboard-quality-column');
+    const projectsQuality = $('#manager-dashboard-quality-line');
     if (projectsQuality.length !== 0) {
         buildLineChart(projectsQuality);
     }

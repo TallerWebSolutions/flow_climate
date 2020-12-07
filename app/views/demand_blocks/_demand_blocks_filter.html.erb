@@ -1,6 +1,6 @@
-<%= form_tag search_company_demand_blocks_path(company.id), method: :get, remote: true do %>
+<%= form_tag search_company_demand_blocks_path(company.id), method: :get do %>
 
-  <%= hidden_field_tag :demand_blocks_ids, demand_blocks_ids %>
+  <%= hidden_field_tag :demand_blocks_ids, demand_blocks.map(&:id).join(',') %>
 
   <div class="row">
     <div class="col-xs-3 form-group">

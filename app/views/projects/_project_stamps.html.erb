@@ -59,39 +59,6 @@
   </div>
 </div>
 
-<div class="row">
-  <div class="col-xs-12">
-    <% if project.executing? %>
-      <h3 class="center project-deadline-info"><%= I18n.t('projects.show.deadline_countdown.first_part') %><span class="countdown"><%= I18n.t('projects.show.deadline_countdown.days', remaining_days: project.remaining_days.to_i ) %></span><%= I18n.t('projects.show.deadline_countdown.second_part') %></h3>
-      <% if project.project_consolidations.present? %>
-        <h4 class="center"><%= I18n.t('projects.show.deadline_countdown.risk', risk_value: number_to_percentage(project.current_risk_to_deadline * 100, precision: 2)) %>
-          <%= link_to update_consolidations_company_project_path(company, project), method: :patch do %>
-            <i class="fas fa-sync-alt" aria-hidden="true" title="<%= I18n.t('projects.show.update_consolidations') %>"></i>
-          <% end %>
-          <i class="far fa-calendar-alt" title="<%= "#{I18n.t('general.last_update.text', last_update: I18n.l(project.consolidations_last_update, format: :short))}" %>"></i>
-          <%= link_to risk_drill_down_company_project_path(company, project), remote: true do %>
-            <i class="fas fa-info-circle" title="<%= I18n.t('general.detail') %>"></i>
-          <% end %>
-
-          <%= link_to status_report_dashboard_company_project_path(company, project), remote: true do %>
-            <i class="fas fa-folder-open" title="<%= I18n.t('projects.show.status_report.title', project_name: project.name) %>"></i>
-          <% end %>
-
-          <%= link_to lead_time_dashboard_company_project_path(company, project), remote: true do %>
-            <i class="fas fa-clock" title="<%= I18n.t('projects.show.lead_time.title') %>"></i>
-          <% end %>
-        </h4>
-      <% end %>
-    <% else %>
-      <h2 class="center"><%= (I18n.t('projects.show.status_information_html', status_description: I18n.t("activerecord.attributes.project.enums.status.#{project.status}")))&.html_safe %>
-        <%= link_to closing_dashboard_company_project_path(company, project), remote: true do %>
-          <i class="fas fa-archive" title="<%= I18n.t('projects.show.closing_info.title') %>"></i>
-        <% end %>
-      </h2>
-    <% end %>
-  </div>
-</div>
-
 <hr>
 
 <div class="row">
