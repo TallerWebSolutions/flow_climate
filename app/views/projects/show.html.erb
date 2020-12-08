@@ -70,6 +70,25 @@
 
 <br>
 
+<div id="dashboard-controls">
+  <div class="row">
+    <div class="col-xs-12 center">
+      <div class="tab">
+        <%= link_to I18n.t('navbar.charts'), company_project_path(@company, @project), class: 'btn btn-default active' %>
+        <%= link_to I18n.t('navbar.statistics'), statistics_tab_company_project_path(@company, @project), class: 'btn btn-default' %>
+        <%= link_to I18n.t('general.risk.detail'), risk_drill_down_company_project_path(@company, @project), class: 'btn btn-default', remote: true %>
+        <%= link_to I18n.t('projects.show.status_report.title'), status_report_dashboard_company_project_path(@company, @project), class: 'btn btn-default', remote: true %>
+        <%= link_to I18n.t('projects.show.lead_time.title'), lead_time_dashboard_company_project_path(@company, @project), class: 'btn btn-default', remote: true %>
+        <% unless @project.executing? %>
+          <%= link_to I18n.t('projects.show.lead_time.title'), closing_dashboard_company_project_path(@company, @project), class: 'btn btn-default', remote: true %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<br>
+
 <div class="row">
   <div class="col-xs-4">
     <%= render 'common/dashboards/general_info',
@@ -109,6 +128,11 @@
 <% else %>
   <%= render 'layouts/no_data', missing_data: I18n.t('general.data') %>
 <% end %>
+
+<div class="modal fade" id="project-risk-drill-down" tabindex="-1" role="dialog" aria-labelledby="project-risk-drill-down" aria-hidden="true"></div>
+<div class="modal fade" id="closing-info-div" tabindex="-1" role="dialog" aria-labelledby="closing-info" aria-hidden="true"></div>
+<div class="modal fade" id="status-report-div" tabindex="-1" role="dialog" aria-labelledby="status-report" aria-hidden="true"></div>
+<div class="modal fade" id="project-lead-time-div" tabindex="-1" role="dialog" aria-labelledby="project-lead-time" aria-hidden="true"></div>
 
 <% content_for :javascript do %>
   <%= javascript_include_tag 'charts/burnup' %>

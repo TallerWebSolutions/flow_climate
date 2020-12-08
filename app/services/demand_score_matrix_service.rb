@@ -10,7 +10,7 @@ class DemandScoreMatrixService
 
     demand_answers = demand.demand_score_matrices.map(&:score_matrix_answer)
 
-    total_answers_score = demand_answers.map(&:answer_score).sum
+    total_answers_score = demand_answers.sum(&:answer_score)
 
     total_answers_score / score_matrix_total_weight.to_f
   end

@@ -265,8 +265,8 @@ RSpec.describe DemandsRepository, type: :repository do
 
     it { expect(described_class.instance.demand_tags_query(Demand.all, '')).to eq Demand.all }
     it { expect(described_class.instance.demand_tags_query(Demand.none, '')).to eq [] }
-    it { expect(described_class.instance.demand_tags_query(Demand.all, 'xpto sbbrubles'.split(' '))).to match_array [second_demand] }
-    it { expect(described_class.instance.demand_tags_query(Demand.all, 'sbbrubles'.split(' '))).to match_array [first_demand, second_demand] }
+    it { expect(described_class.instance.demand_tags_query(Demand.all, 'xpto sbbrubles'.split)).to match_array [second_demand] }
+    it { expect(described_class.instance.demand_tags_query(Demand.all, 'sbbrubles'.split)).to match_array [first_demand, second_demand] }
   end
 
   describe '#lead_time_zone_count' do

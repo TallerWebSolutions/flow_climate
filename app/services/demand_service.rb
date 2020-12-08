@@ -45,4 +45,19 @@ class DemandService
 
     demands_finished.count / difference_in_days.to_f
   end
+
+  def similar_p80_project(demand)
+    project = demand.project
+    demands = project.demands.kept.finished_with_leadtime.where(demand_type: demand.demand_type, class_of_service: demand.class_of_service)
+
+    Stats::StatisticsService.instance.percentile(80, demands.map(&:leadtime))
+  end
+
+  def similar_p80_team(demand)
+    team = demand.team
+    limit_date = [10.weeks.ago, demand.project.start_date].min
+    demands = team.demands.kept.finished_with_leadtime.finished_after_date(limit_date).where(demand_type: demand.demand_type, class_of_service: demand.class_of_service)
+
+    Stats::StatisticsService.instance.percentile(80, demands.map(&:leadtime))
+  end
 end

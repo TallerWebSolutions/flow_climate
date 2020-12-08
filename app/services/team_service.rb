@@ -42,7 +42,7 @@ class TeamService
 
       break if end_period > TimeService.instance.end_of_period_for_date(Time.zone.today, grouping_period)
 
-      hours_efficiency_hash[end_period] = array_of_teams.map { |team| team.available_hours_at(start_period.to_date, end_period.to_date).to_f }.sum
+      hours_efficiency_hash[end_period] = array_of_teams.sum { |team| team.available_hours_at(start_period.to_date, end_period.to_date).to_f }
     end
 
     hours_efficiency_hash
@@ -57,7 +57,7 @@ class TeamService
 
       break if end_date_to_hours > TimeService.instance.end_of_period_for_date(Time.zone.today, grouping_period)
 
-      hours_consumed_hash[end_date_to_hours] = team.demands.to_end_dates(start_date_to_hours.to_date, end_date_to_hours.to_date).map(&:total_effort).sum.to_f
+      hours_consumed_hash[end_date_to_hours] = team.demands.to_end_dates(start_date_to_hours.to_date, end_date_to_hours.to_date).sum(&:total_effort).to_f
     end
 
     hours_consumed_hash

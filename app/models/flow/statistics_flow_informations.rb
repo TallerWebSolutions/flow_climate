@@ -29,7 +29,7 @@ module Flow
       demands_finished_with_lead_time_until_date = @demands.finished_with_leadtime.finished_until_date(analysed_date).order(:end_date) # query
       @lead_time_accumulated << Stats::StatisticsService.instance.percentile(80, demands_finished_with_lead_time_until_date.map(&:leadtime_in_days))
       @average_aging_per_period << if demands_finished_with_lead_time_until_date.count.positive?
-                                     demands_finished_with_lead_time_until_date.map(&:aging_when_finished).sum.to_f / demands_finished_with_lead_time_until_date.count
+                                     demands_finished_with_lead_time_until_date.sum(&:aging_when_finished).to_f / demands_finished_with_lead_time_until_date.count
                                    else
                                      0
                                    end

@@ -109,4 +109,54 @@ RSpec.describe DemandService, type: :service do
       end
     end
   end
+
+  describe '#similar_p80_project' do
+    context 'with data' do
+      it 'returns the correct average speed based on the demands list' do
+        travel_to Time.zone.local(2020, 12, 8, 13, 32, 38) do
+          project = Fabricate :project
+          demand = Fabricate :demand, project: project, demand_type: :bug, class_of_service: :expedite, commitment_date: 19.days.ago, end_date: 2.days.ago
+          Fabricate :demand, project: project, demand_type: :bug, class_of_service: :intangible, commitment_date: 8.days.ago, end_date: 1.day.ago
+          Fabricate :demand, project: project, demand_type: :feature, class_of_service: :expedite, commitment_date: 2.days.ago, end_date: 1.day.ago
+          Fabricate :demand, project: project, demand_type: :chore, class_of_service: :standard, commitment_date: 12.days.ago, end_date: 3.days.ago
+          Fabricate :demand, project: project, demand_type: :chore, class_of_service: :expedite, commitment_date: 12.days.ago, end_date: nil
+          Fabricate :demand, demand_type: :bug, class_of_service: :expedite, commitment_date: 12.days.ago, end_date: 3.days.ago
+
+          expect(described_class.instance.similar_p80_project(demand)).to be_within(0.1).of(1_468_800.0)
+        end
+      end
+    end
+
+    context 'with no data' do
+      it 'returns the correct average speed based on the demands list' do
+        demand = Fabricate :demand, demand_type: :bug, class_of_service: :expedite, commitment_date: 19.days.ago, end_date: nil
+        expect(described_class.instance.similar_p80_project(demand)).to eq 0
+      end
+    end
+  end
+
+  describe '#similar_p80_team' do
+    context 'with data' do
+      it 'returns the correct average speed based on the demands list' do
+        travel_to Time.zone.local(2020, 12, 8, 13, 32, 38) do
+          team = Fabricate :team
+          demand = Fabricate :demand, team: team, demand_type: :bug, class_of_service: :expedite, commitment_date: 19.days.ago, end_date: 2.days.ago
+          Fabricate :demand, team: team, demand_type: :bug, class_of_service: :intangible, commitment_date: 8.days.ago, end_date: 1.day.ago
+          Fabricate :demand, team: team, demand_type: :feature, class_of_service: :expedite, commitment_date: 2.days.ago, end_date: 1.day.ago
+          Fabricate :demand, team: team, demand_type: :chore, class_of_service: :standard, commitment_date: 12.days.ago, end_date: 3.days.ago
+          Fabricate :demand, team: team, demand_type: :chore, class_of_service: :expedite, commitment_date: 12.days.ago, end_date: nil
+          Fabricate :demand, demand_type: :bug, class_of_service: :expedite, commitment_date: 12.days.ago, end_date: 3.days.ago
+
+          expect(described_class.instance.similar_p80_team(demand)).to be_within(0.1).of(1_468_800.0)
+        end
+      end
+    end
+
+    context 'with no data' do
+      it 'returns the correct average speed based on the demands list' do
+        demand = Fabricate :demand, demand_type: :bug, class_of_service: :expedite, commitment_date: 19.days.ago, end_date: nil
+        expect(described_class.instance.similar_p80_team(demand)).to eq 0
+      end
+    end
+  end
 end

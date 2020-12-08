@@ -88,7 +88,7 @@ class DemandTransition < ApplicationRecord
   def compute_assignments_effort(start_date, end_date, stage_percentage, pairing_percentage)
     total_blocked = work_time_blocked_in_transition * stage_percentage
     assignments_in_dates = demand.item_assignments.for_dates(start_date, end_date)
-    return [(assignments_in_dates.map { |assign_in_date| assign_in_date.working_hours_until(start_date, end_date) }.sum - total_blocked), 0].max * stage_percentage unless assignments_in_dates.count > 1
+    return [(assignments_in_dates.sum { |assign_in_date| assign_in_date.working_hours_until(start_date, end_date) } - total_blocked), 0].max * stage_percentage unless assignments_in_dates.count > 1
 
     compute_paired_effort(assignments_in_dates, start_date, end_date, pairing_percentage)
   end
@@ -101,7 +101,7 @@ class DemandTransition < ApplicationRecord
 
     pairing_assignments = assignments_in_dates.joins(:membership).where(memberships: { member_role: top_effort_membership.member_role }).to_a.delete_if { |assignment| assignment.membership == top_effort_membership }
 
-    top_effort_assignment.working_hours_until(start_date, end_date) + pairing_assignments.map { |assignments_in_date| assignments_in_date.working_hours_until(start_date, end_date) }.sum * pairing_percentage
+    top_effort_assignment.working_hours_until(start_date, end_date) + pairing_assignments.sum { |assignments_in_date| assignments_in_date.working_hours_until(start_date, end_date) } * pairing_percentage
   end
 
   def set_demand_dates
@@ -128,7 +128,7 @@ class DemandTransition < ApplicationRecord
   end
 
   def time_blocked_in_touch_transitions
-    @time_blocked_in_touch_transitions ||= demand.demand_transitions.touch_transitions.map(&:time_blocked_in_transition).sum
+    @time_blocked_in_touch_transitions ||= demand.demand_transitions.touch_transitions.sum(&:time_blocked_in_transition)
   end
 
   def current_stage
