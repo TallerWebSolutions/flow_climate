@@ -73,19 +73,17 @@ jobs:
         run: bundle exec rspec
   deploy-staging:
     runs-on: ubuntu-latest
-    needs: [linters, tests]
-
-    if: github.ref == 'refs/heads/develop'
     steps:
-      - uses: actions/checkout@v2
-      - uses: akhileshns/heroku-deploy@v3.6.8
-        with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "flowclimatestaging"
-          heroku_email: "celso.avmartins@gmail.com"
-          justlogin: true
-      - run: |
-          heroku container:login --username="celso.avmartins@gmail.com" --password=${{secrets.HEROKU_API_KEY}}
-          heroku git:remote -a flowclimatestaging
-          git remote rename heroku heroku-staging
-          git push heroku-staging master
+      - uses: actions/checkout@v1
+      - name: Login to Heroku Container registry
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: heroku container:login
+      - name: Build and push
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: heroku container:push -a flowclimatestaging web
+      - name: Release
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: heroku container:release -a flowclimatestaging web
