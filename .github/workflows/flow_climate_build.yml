@@ -82,10 +82,9 @@ jobs:
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "flowclimatestaging"
-          heroku_email: "celso.av.martins@gmail.com"
+          heroku_email: "celso.avmartins@gmail.com"
           justlogin: true
       - run: |
-          heroku container:login
           heroku git:remote -a flowclimatestaging
           git remote rename heroku heroku-staging
           git push heroku-staging master
