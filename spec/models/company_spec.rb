@@ -415,41 +415,84 @@ RSpec.describe Company, type: :model do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
     let(:other_customer) { Fabricate :customer, company: company }
-
-    let!(:first_project) { Fabricate :project, company: company, customers: [customer], name: 'first_project', status: :executing, initial_scope: 10, start_date: 2.weeks.ago.to_date, end_date: 4.days.from_now }
-    let!(:second_project) { Fabricate :project, company: company, customers: [other_customer], name: 'second_project', status: :executing, initial_scope: 40, start_date: 2.weeks.ago.to_date, end_date: 5.days.from_now }
-    let!(:third_project) { Fabricate :project, company: company, customers: [other_customer], name: 'third_project', status: :executing, initial_scope: 30, start_date: 2.weeks.ago.to_date, end_date: 6.days.from_now }
-
-    let!(:waiting_project) { Fabricate :project, company: company, customers: [customer], status: :waiting, initial_scope: 5, start_date: 2.weeks.ago.to_date, end_date: 3.days.from_now }
-
-    let!(:first_demand) { Fabricate :demand, project: first_project, created_date: 2.weeks.ago, end_date: 9.days.ago, demand_type: :bug }
-    let!(:second_demand) { Fabricate :demand, project: second_project, created_date: 2.weeks.ago, end_date: 1.week.ago, demand_type: :feature }
-    let!(:third_demand) { Fabricate :demand, project: third_project, created_date: 1.week.ago, end_date: 2.days.ago, demand_type: :feature }
-    let!(:fourth_demand) { Fabricate :demand, project: second_project, created_date: 2.weeks.ago, end_date: 1.week.ago, demand_type: :feature }
-    let!(:fifth_demand) { Fabricate :demand, project: second_project, created_date: 1.week.ago, end_date: 2.days.ago, demand_type: :feature }
-    let!(:sixth_demand) { Fabricate :demand, project: third_project, created_date: 1.week.ago, end_date: 2.days.ago, demand_type: :feature }
-    let!(:seventh_demand) { Fabricate :demand, project: third_project, created_date: 1.week.ago, end_date: 1.day.ago, demand_type: :feature }
-    let!(:eigth_demand) { Fabricate :demand, project: third_project, created_date: 1.week.ago, end_date: 2.days.ago, demand_type: :feature }
   end
 
   describe '#top_three_flow_pressure' do
     include_context 'projects to company bulletin'
-    it { expect(company.top_three_flow_pressure).to eq [second_project, third_project, first_project] }
+
+    it 'returns the top three flow pressure' do
+      travel_to Time.zone.local(2020, 12, 8, 10, 0, 0) do
+        first_project = Fabricate :project, company: company, customers: [customer], name: 'first_project', status: :executing, initial_scope: 10, start_date: 2.weeks.ago.to_date, end_date: 4.days.from_now
+        second_project = Fabricate :project, company: company, customers: [other_customer], name: 'second_project', status: :executing, initial_scope: 40, start_date: 2.weeks.ago.to_date, end_date: 5.days.from_now
+        third_project = Fabricate :project, company: company, customers: [other_customer], name: 'third_project', status: :executing, initial_scope: 30, start_date: 2.weeks.ago.to_date, end_date: 6.days.from_now
+        Fabricate :project, company: company, customers: [customer], status: :waiting, initial_scope: 5, start_date: 2.weeks.ago.to_date, end_date: 3.days.from_now
+
+        Fabricate :demand, project: first_project, created_date: 2.weeks.ago, end_date: 9.days.ago, demand_type: :bug
+        Fabricate :demand, project: second_project, created_date: 2.weeks.ago, end_date: 1.week.ago, demand_type: :feature
+        Fabricate :demand, project: third_project, created_date: 1.week.ago, end_date: 2.days.ago, demand_type: :feature
+        Fabricate :demand, project: second_project, created_date: 2.weeks.ago, end_date: 1.week.ago, demand_type: :feature
+        Fabricate :demand, project: second_project, created_date: 1.week.ago, end_date: 2.days.ago, demand_type: :feature
+        Fabricate :demand, project: third_project, created_date: 1.week.ago, end_date: 2.days.ago, demand_type: :feature
+        Fabricate :demand, project: third_project, created_date: 1.week.ago, end_date: 1.day.ago, demand_type: :feature
+        Fabricate :demand, project: third_project, created_date: 1.week.ago, end_date: 2.days.ago, demand_type: :feature
+
+        expect(company.top_three_flow_pressure).to eq [second_project, third_project, first_project]
+      end
+    end
   end
 
   describe '#top_three_throughput' do
     include_context 'projects to company bulletin'
-    it { expect(company.top_three_throughput(1.day.ago)).to eq [third_project, second_project, first_project] }
+
+    it 'returns the top three throughput' do
+      travel_to Time.zone.local(2020, 12, 8, 10, 0, 0) do
+        first_project = Fabricate :project, company: company, customers: [customer], name: 'first_project', status: :executing, initial_scope: 10, start_date: 2.weeks.ago.to_date, end_date: 4.days.from_now
+        second_project = Fabricate :project, company: company, customers: [other_customer], name: 'second_project', status: :executing, initial_scope: 40, start_date: 2.weeks.ago.to_date, end_date: 5.days.from_now
+        third_project = Fabricate :project, company: company, customers: [other_customer], name: 'third_project', status: :executing, initial_scope: 30, start_date: 2.weeks.ago.to_date, end_date: 6.days.from_now
+        Fabricate :project, company: company, customers: [customer], status: :waiting, initial_scope: 5, start_date: 2.weeks.ago.to_date, end_date: 3.days.from_now
+
+        Fabricate :demand, project: first_project, created_date: 2.weeks.ago, end_date: 9.days.ago, demand_type: :bug
+        Fabricate :demand, project: second_project, created_date: 2.weeks.ago, end_date: 1.week.ago, demand_type: :feature
+        Fabricate :demand, project: third_project, created_date: 1.week.ago, end_date: 2.days.ago, demand_type: :feature
+        Fabricate :demand, project: second_project, created_date: 2.weeks.ago, end_date: 1.week.ago, demand_type: :feature
+        Fabricate :demand, project: second_project, created_date: 1.week.ago, end_date: 2.days.ago, demand_type: :feature
+        Fabricate :demand, project: third_project, created_date: 1.week.ago, end_date: 2.days.ago, demand_type: :feature
+        Fabricate :demand, project: third_project, created_date: 1.week.ago, end_date: 1.day.ago, demand_type: :feature
+        Fabricate :demand, project: third_project, created_date: 1.week.ago, end_date: 2.days.ago, demand_type: :feature
+
+        expect(company.top_three_throughput(1.day.ago)).to eq [third_project, second_project, first_project]
+      end
+    end
   end
 
   describe '#next_starting_project' do
     include_context 'projects to company bulletin'
-    it { expect(company.next_starting_project).to eq waiting_project }
+
+    it 'returns the next waiting project' do
+      travel_to Time.zone.local(2020, 12, 8, 10, 0, 0) do
+        Fabricate :project, company: company, customers: [customer], name: 'first_project', status: :executing, initial_scope: 10, start_date: 2.weeks.ago.to_date, end_date: 4.days.from_now
+        Fabricate :project, company: company, customers: [other_customer], name: 'second_project', status: :executing, initial_scope: 40, start_date: 2.weeks.ago.to_date, end_date: 5.days.from_now
+        Fabricate :project, company: company, customers: [other_customer], name: 'third_project', status: :executing, initial_scope: 30, start_date: 2.weeks.ago.to_date, end_date: 6.days.from_now
+        waiting_project = Fabricate :project, company: company, customers: [customer], status: :waiting, initial_scope: 5, start_date: 2.weeks.ago.to_date, end_date: 3.days.from_now
+
+        expect(company.next_starting_project).to eq waiting_project
+      end
+    end
   end
 
   describe '#next_finishing_project' do
     include_context 'projects to company bulletin'
-    it { expect(company.next_finishing_project).to eq first_project }
+
+    it 'returns the next finishing project' do
+      travel_to Time.zone.local(2020, 12, 8, 10, 0, 0) do
+        first_project = Fabricate :project, company: company, customers: [customer], name: 'first_project', status: :executing, initial_scope: 10, start_date: 2.weeks.ago.to_date, end_date: 4.days.from_now
+        Fabricate :project, company: company, customers: [other_customer], name: 'second_project', status: :executing, initial_scope: 40, start_date: 2.weeks.ago.to_date, end_date: 5.days.from_now
+        Fabricate :project, company: company, customers: [other_customer], name: 'third_project', status: :executing, initial_scope: 30, start_date: 2.weeks.ago.to_date, end_date: 6.days.from_now
+        Fabricate :project, company: company, customers: [customer], status: :waiting, initial_scope: 5, start_date: 2.weeks.ago.to_date, end_date: 3.days.from_now
+
+        expect(company.next_finishing_project).to eq first_project
+      end
+    end
   end
 
   describe '#demands_delivered_last_week' do

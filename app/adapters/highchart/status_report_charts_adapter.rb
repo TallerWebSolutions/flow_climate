@@ -13,10 +13,6 @@ module Highchart
       return unless @all_projects.count.positive?
 
       build_demand_data_processors
-
-      montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo((demands.kept.not_finished.count + uncertain_scope), @work_item_flow_information.throughput_array_for_monte_carlo, 500)
-      build_montecarlo_perecentage_confidences(montecarlo_durations)
-      build_dates_to_montecarlo_duration_chart_hash
     end
 
     def delivered_vs_remaining
@@ -42,6 +38,12 @@ module Highchart
       demands_stages_count = build_cfd_hash(demands.map(&:id), stages, TimeService.instance.end_of_period_for_date(Time.zone.today, @chart_period_interval))
 
       demands_stages_count.map { |key, value| { name: key, data: value } } # build the chart
+    end
+
+    def build_monte_carlo_info
+      montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo((@demands.kept.not_finished.count + uncertain_scope), @work_item_flow_information.throughput_array_for_monte_carlo, 500)
+      build_montecarlo_perecentage_confidences(montecarlo_durations)
+      build_dates_to_montecarlo_duration_chart_hash
     end
 
     private
@@ -75,6 +77,8 @@ module Highchart
 
     def build_dates_to_montecarlo_duration_chart_hash
       @dates_to_montecarlo_duration = []
+      return @dates_to_montecarlo_duration if @all_projects.blank?
+
       active_projects = @all_projects.active
       return if active_projects.blank?
 

@@ -120,6 +120,7 @@ class DemandsController < DemandsListController
     @demands_left = demands.kept.not_finished
     @demands_delivered = demands.kept.finished
     @throughput_per_period = @status_report_data.work_item_flow_information.throughput_array_for_monte_carlo
+    @status_report_data.build_monte_carlo_info
 
     respond_to { |format| format.js { render 'demands/montecarlo_dialog' } }
   end

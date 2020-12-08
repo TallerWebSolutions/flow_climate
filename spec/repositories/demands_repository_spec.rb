@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe DemandsRepository, type: :repository do
-  before { travel_to Time.zone.local(2018, 4, 5, 10, 0, 0) }
-
-  after { travel_back }
-
   let(:company) { Fabricate :company }
   let(:customer) { Fabricate :customer, company: company }
   let(:other_customer) { Fabricate :customer }
@@ -105,6 +101,10 @@ RSpec.describe DemandsRepository, type: :repository do
   end
 
   describe '#delivered_hours_in_month_for_projects' do
+    before { travel_to Time.zone.local(2018, 4, 5, 10, 0, 0) }
+
+    after { travel_back }
+
     let(:first_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
     let(:second_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
     let(:third_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
@@ -220,21 +220,44 @@ RSpec.describe DemandsRepository, type: :repository do
   end
 
   describe '#filter_demands_by_text' do
-    include_context 'demand data for filters'
-
     it 'search for the demands using the text' do
-      expect(described_class.instance.filter_demands_by_text(Demand.all, '')).to eq Demand.all
-      expect(described_class.instance.filter_demands_by_text(Demand.none, '')).to eq []
-      expect(described_class.instance.filter_demands_by_text(Demand.all, 'climate')).to match_array [first_demand, second_demand, third_demand, fourth_demand]
-      expect(described_class.instance.filter_demands_by_text(Demand.all, 'flow')).to match_array [first_demand, second_demand, third_demand, fourth_demand, fifth_demand, sixth_demand, seventh_demand, eigth_demand]
-      expect(described_class.instance.filter_demands_by_text(Demand.all, 'hhh')).to eq [first_demand]
-      expect(described_class.instance.filter_demands_by_text(Demand.all, 'bar').map(&:external_id)).to match_array [second_demand, third_demand].map(&:external_id)
-      expect(described_class.instance.filter_demands_by_text(Demand.all, 'voyager')).to match_array [sixth_demand, seventh_demand, eigth_demand]
-      expect(described_class.instance.filter_demands_by_text(Demand.all, 'command')).to match_array [second_demand, fifth_demand]
+      travel_to Time.zone.local(2020, 12, 8, 10, 0, 0) do
+        company = Fabricate :company
+        customer = Fabricate :customer, company: company, name: 'customer'
+        other_customer = Fabricate :customer, company: company, name: 'other customer'
+        product = Fabricate :product, customer: customer, name: 'flow climate'
+        other_product = Fabricate :product, customer: customer, name: 'flow control'
+        portfolio_unit = Fabricate :portfolio_unit, product: product, name: 'command room'
+        other_portfolio_unit = Fabricate :portfolio_unit, product: other_product, name: 'command center'
+        project = Fabricate :project, company: company, customers: [customer], products: [product, other_product], name: 'sbbrubles'
+        other_project = Fabricate :project, company: company, customers: [customer], products: [product, other_product], name: 'voyager'
+        first_demand = Fabricate :demand, company: company, product: product, project: project, external_id: 'hhh', demand_title: 'foo', demand_type: :feature, class_of_service: :standard, created_date: 2.days.ago, commitment_date: nil, end_date: nil, effort_downstream: 20, effort_upstream: 15, demand_tags: %w[aaa ccc sbbrubles]
+        second_demand = Fabricate :demand, company: company, product: product, portfolio_unit: portfolio_unit, project: project, demand_title: 'foo cassini', demand_type: :bug, class_of_service: :expedite, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil, effort_downstream: 0, effort_upstream: 0, demand_tags: %w[sbbrubles xpto]
+        third_demand = Fabricate :demand, company: company, product: product, project: project, demand_title: 'cassini foo', demand_type: :feature, class_of_service: :intangible, created_date: 5.days.ago, commitment_date: nil, end_date: 1.day.ago, effort_downstream: 0, effort_upstream: 10, demand_tags: %w[aaa ccc]
+        fourth_demand = Fabricate :demand, company: company, product: product, project: project, demand_title: 'xpto', demand_type: :chore, class_of_service: :standard, created_date: 10.days.ago, commitment_date: 5.days.ago, end_date: Time.zone.today, effort_downstream: 10, effort_upstream: 20, demand_tags: %w[xpto]
+        fifth_demand = Fabricate :demand, company: company, product: other_product, portfolio_unit: other_portfolio_unit, project: project, demand_title: 'xpto', demand_type: :ui, class_of_service: :fixed_date, created_date: 1.month.ago, commitment_date: nil, end_date: nil, effort_downstream: 30, effort_upstream: 10
+        sixth_demand = Fabricate :demand, company: company, product: other_product, portfolio_unit: nil, project: project, demand_title: 'voyager sas', demand_type: :feature, class_of_service: :standard, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil, effort_downstream: 10, effort_upstream: 10
+        seventh_demand = Fabricate :demand, company: company, product: other_product, project: other_project, demand_title: 'sas', demand_type: :performance_improvement, class_of_service: :expedite, created_date: 2.days.ago, commitment_date: 2.days.ago, end_date: 1.day.ago, effort_downstream: 40, effort_upstream: 10
+        eigth_demand = Fabricate :demand, company: company, product: other_product, project: other_project, demand_title: 'sas', demand_type: :wireframe, class_of_service: :fixed_date, created_date: 3.days.ago, commitment_date: 1.day.ago, end_date: Time.zone.today, effort_downstream: 50, effort_upstream: 60
+        Fabricate :demand, company: company, customer: other_customer, demand_title: 'customer test', demand_type: :bug, class_of_service: :fixed_date, created_date: 3.months.ago, commitment_date: 1.month.ago, end_date: 15.days.ago
+
+        expect(described_class.instance.filter_demands_by_text(Demand.all, '')).to eq Demand.all
+        expect(described_class.instance.filter_demands_by_text(Demand.none, '')).to eq []
+        expect(described_class.instance.filter_demands_by_text(Demand.all, 'climate')).to match_array [first_demand, second_demand, third_demand, fourth_demand]
+        expect(described_class.instance.filter_demands_by_text(Demand.all, 'flow')).to match_array [first_demand, second_demand, third_demand, fourth_demand, fifth_demand, sixth_demand, seventh_demand, eigth_demand]
+        expect(described_class.instance.filter_demands_by_text(Demand.all, 'hhh')).to eq [first_demand]
+        expect(described_class.instance.filter_demands_by_text(Demand.all, 'cassini').map(&:external_id)).to match_array [second_demand, third_demand].map(&:external_id)
+        expect(described_class.instance.filter_demands_by_text(Demand.all, 'voyager')).to match_array [sixth_demand, seventh_demand, eigth_demand]
+        expect(described_class.instance.filter_demands_by_text(Demand.all, 'command')).to match_array [second_demand, fifth_demand]
+      end
     end
   end
 
   describe '#flow_status_query' do
+    before { travel_to Time.zone.local(2018, 4, 5, 10, 0, 0) }
+
+    after { travel_back }
+
     include_context 'demand data for filters'
 
     it { expect(described_class.instance.flow_status_query(Demand.all, '')).to eq Demand.all }
@@ -245,6 +268,10 @@ RSpec.describe DemandsRepository, type: :repository do
   end
 
   describe '#demand_type_query' do
+    before { travel_to Time.zone.local(2018, 4, 5, 10, 0, 0) }
+
+    after { travel_back }
+
     include_context 'demand data for filters'
 
     it { expect(described_class.instance.demand_type_query(Demand.all, '')).to eq Demand.all }
@@ -253,6 +280,10 @@ RSpec.describe DemandsRepository, type: :repository do
   end
 
   describe '#class_of_service_query' do
+    before { travel_to Time.zone.local(2018, 4, 5, 10, 0, 0) }
+
+    after { travel_back }
+
     include_context 'demand data for filters'
 
     it { expect(described_class.instance.class_of_service_query(Demand.all, '')).to eq Demand.all }
@@ -261,6 +292,10 @@ RSpec.describe DemandsRepository, type: :repository do
   end
 
   describe '#demand_tags_query' do
+    before { travel_to Time.zone.local(2018, 4, 5, 10, 0, 0) }
+
+    after { travel_back }
+
     include_context 'demand data for filters'
 
     it { expect(described_class.instance.demand_tags_query(Demand.all, '')).to eq Demand.all }
@@ -270,6 +305,10 @@ RSpec.describe DemandsRepository, type: :repository do
   end
 
   describe '#lead_time_zone_count' do
+    before { travel_to Time.zone.local(2018, 4, 5, 10, 0, 0) }
+
+    after { travel_back }
+
     include_context 'demand data for filters'
 
     it { expect(described_class.instance.lead_time_zone_count(Demand.all, 86_400.0, nil)).to eq 2 }
@@ -278,6 +317,10 @@ RSpec.describe DemandsRepository, type: :repository do
   end
 
   describe '#wip_count' do
+    before { travel_to Time.zone.local(2018, 4, 5, 10, 0, 0) }
+
+    after { travel_back }
+
     include_context 'demand data for filters'
 
     it { expect(described_class.instance.wip_count(Demand.all.map(&:id))).to eq 2 }
