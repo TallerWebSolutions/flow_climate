@@ -85,6 +85,7 @@ jobs:
           heroku_email: "celso.avmartins@gmail.com"
           justlogin: true
       - run: |
+          heroku container:login --username=celso.avmartins@gmail.com --password=${{secrets.HEROKU_API_KEY}}
           heroku git:remote -a flowclimatestaging
           git remote rename heroku heroku-staging
           git push heroku-staging master
