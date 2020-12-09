@@ -80,13 +80,18 @@ RSpec.describe RiskReviewsController, type: :controller do
     describe 'GET #show' do
       context 'with valid parameters' do
         context 'with no data to blockings' do
-          let(:risk_review) { Fabricate :risk_review, product: product }
-
-          before { get :show, params: { company_id: company, product_id: product, id: risk_review } }
-
           it 'instantiates a new Team Member and renders the template' do
+            demand = Fabricate :demand
+            demand_block = Fabricate :demand_block
+
+            risk_review = Fabricate :risk_review, product: product, demands: [demand], demand_blocks: [demand_block]
+
+            get :show, params: { company_id: company, product_id: product, id: risk_review }
+
             expect(response).to render_template :show
             expect(assigns(:risk_review)).to eq risk_review
+            expect(assigns(:demand_blocks)).to eq [demand_block]
+            expect(assigns(:paged_demand_blocks)).to eq [demand_block]
           end
         end
 
