@@ -4,7 +4,7 @@
       <li><%= link_to I18n.t('general.home.title'), root_path %></li>
       <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
       <li><%= link_to @stage.name, company_stage_path(@company, @stage) %></li>
-      <li><%= I18n.t('stage_project_config.edit.title') %></li>
+      <li><%= I18n.t('stage_project_configs.edit.title') %></li>
     </ul>
   </div>
 </div>
@@ -19,7 +19,7 @@
 
 <div class="row">
   <div class="col-xs-12">
-    <h2><%= I18n.t('stage_project_config.edit.project_list') %></h2>
+    <h2><%= I18n.t('stage_project_configs.edit.project_list') %></h2>
     <table class="table">
       <thead>
         <tr>

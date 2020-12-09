@@ -37,7 +37,7 @@
     <div class='col-xs-6 form-group <%= 'has-error' if service_delivery_review.errors[:lead_time_top_threshold].present? %>'>
       <%= f.label :lead_time_top_threshold, class: 'control-label required' %>
       <i class="far fa-question-circle" title="<%= I18n.t('service_delivery_review.help.lead_time_top_threshold') %>"></i>
-      <%= f.number_field :lead_time_top_threshold, value: service_delivery_review.lead_time_bottom_threshold.to_f / 1.hour, class: 'form-control', step: 0.1 %>
+      <%= f.number_field :lead_time_top_threshold, value: service_delivery_review.lead_time_top_threshold.to_f / 1.hour, class: 'form-control', step: 0.1 %>
       <span class="help-block"><%= service_delivery_review.errors[:lead_time_top_threshold].join(', ') %></span>
     </div>
   </div>
