@@ -22,7 +22,6 @@
 #
 
 class Team < ApplicationRecord
-  include ProjectAggregator
   include DemandsAggregator
 
   belongs_to :company
@@ -95,6 +94,14 @@ class Team < ApplicationRecord
     return 0 if assigned_count.zero?
 
     1 - (assigned_count.to_f / active_memberships_count)
+  end
+
+  def initial_scope
+    projects.active.sum(&:initial_scope)
+  end
+
+  def flow_pressure
+    projects.active.sum(&:flow_pressure)
   end
 
   private

@@ -1,7 +1,14 @@
 <table class="table">
   <tbody>
   <tr>
-    <td><b><%= I18n.t('general.scope') %></b></td>
+    <td>
+      <b><%= I18n.t('activerecord.attributes.project.initial_scope') %></b>
+      <i class="far fa-question-circle fa-align-right" title="<%= I18n.t('project.help.initial_scope') %>"></i>
+    </td>
+    <td><%= initial_scope %></td>
+  </tr>
+  <tr>
+    <td><b><%= I18n.t('general.demands').capitalize %></b></td>
     <td><%= link_to I18n.t('general.demands_text', count: demands.count), demands_list_by_ids_company_demands_path(company, demands_ids: demands.map(&:id).join(',')), method: :post, target: '_blank' %></td>
   </tr>
   <tr>

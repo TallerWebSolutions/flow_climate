@@ -1,9 +1,6 @@
 <% teams.each do |team| %>
   <tr>
     <td><%= link_to team.name, company_team_path(company, team) %></td>
-    <td><%= number_to_currency(team.total_value) %></td>
-    <td><%= number_with_precision(team.avg_hours_per_demand, precision: 2) %></td>
-    <td><%= number_with_precision(team.total_flow_pressure, precision: 3) %></td>
     <td>
       <%= link_to edit_company_team_path(company, team) do %>
         <i class="fas fa-edit"></i>

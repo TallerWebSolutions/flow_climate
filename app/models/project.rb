@@ -210,7 +210,7 @@ class Project < ApplicationRecord
   end
 
   def total_hours_consumed
-    @total_hours_consumed ||= total_hours_upstream + total_hours_downstream
+    total_hours_upstream + total_hours_downstream
   end
 
   def required_hours_per_available_hours
@@ -365,9 +365,9 @@ class Project < ApplicationRecord
   end
 
   def average_speed_per_week
-    return 0 if demands.kept.count.zero? || past_weeks.zero?
+    return 0 if demands.kept.finished.count.zero? || past_weeks.zero?
 
-    demands.kept.count / past_weeks
+    demands.kept.finished.count / past_weeks
   end
 
   def demands_of_class_of_service(class_of_service = :standard)
@@ -431,6 +431,41 @@ class Project < ApplicationRecord
     ideal_per_period = []
     period.each_with_index { |_date, index| ideal_per_period << (backlog_for.count.to_f / period.size) * (index + 1) }
     ideal_per_period
+  end
+
+  def current_weekly_hours_ideal_burnup
+    period = TimeService.instance.weeks_between_of(start_date, end_date)
+    ideal_per_period = []
+    period.each_with_index { |_date, index| ideal_per_period << (qty_hours.to_f / period.size) * (index + 1) }
+    ideal_per_period
+  end
+
+  def weekly_project_scope_until_end
+    return [backlog_count_for] if project_consolidations.blank?
+
+    period = TimeService.instance.weeks_between_of(start_date, end_date)
+    project_scopes = project_consolidations.weekly_data.order(:consolidation_date).map(&:project_scope)
+
+    last_scope = project_consolidations.order(:consolidation_date).last.project_scope
+    scope_to_fill = period.count - project_scopes.count
+
+    project_scopes + Array.new(scope_to_fill, last_scope)
+  end
+
+  def weekly_project_scope_hours_until_end
+    return [qty_hours] if project_consolidations.blank?
+
+    period = TimeService.instance.weeks_between_of(start_date, end_date)
+    project_scope_hours = project_consolidations.weekly_data.order(:consolidation_date).map(&:project_scope_hours)
+
+    last_scope = project_consolidations.order(:consolidation_date).last.project_scope_hours
+    scope_to_fill = period.count - project_scope_hours.count
+
+    project_scope_hours + Array.new(scope_to_fill, last_scope)
+  end
+
+  def backlog_count_for(date = Time.zone.now.end_of_day)
+    backlog_for(date).count + initial_scope
   end
 
   private

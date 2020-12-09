@@ -391,6 +391,8 @@ pt-BR:
         no_demands: "sem demandas sem pontuação"
         title: "Demandas sem Pontuação"
       update_consolidations: "Atualizar Cache"
+      charts:
+        total_effort: "Esforço Total"
     charts:
       xlabel:
         weeks: "Semanas"
@@ -652,6 +654,8 @@ pt-BR:
       error: "O projeto não foi excluído"
     modal:
       statistics: "Estatísticas de %{target_name}"
+    help:
+      initial_scope: "Este valor é usado para mapear o escopo planejado que ainda não teve demandas criadas."
   team_member:
     edit:
       title: "Editar Membro do Time"

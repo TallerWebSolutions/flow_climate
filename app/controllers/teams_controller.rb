@@ -11,7 +11,7 @@ class TeamsController < DemandsListController
 
     @unscored_demands = all_demands.unscored_demands.order(external_id: :asc)
     @demands_blocks = @team.demand_blocks.order(block_time: :desc)
-    @flow_pressure = @team.total_flow_pressure
+    @flow_pressure = @team.flow_pressure
     @average_speed = DemandService.instance.average_speed(charts_demands)
     build_charts_data(charts_demands)
   end
