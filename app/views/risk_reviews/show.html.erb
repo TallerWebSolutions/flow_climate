@@ -134,7 +134,12 @@
 </div>
 
 <div id="demand-blocks-table" class="tabcontent">
-  <%= render 'demand_blocks/demand_blocks_table', company: @company, demand_blocks_list: @risk_review.demand_blocks.order(:block_time), demand_blocks_ids: @risk_review.demand_blocks.order(:block_time).map(&:id).join(',') %>
+  <%= render 'demand_blocks/demand_blocks_table',
+             company: @company,
+             demand_blocks_list: @demand_blocks,
+             paged_demand_blocks: @paged_demand_blocks,
+             demand_blocks_ids: @risk_review.demand_blocks.order(:block_time).map(&:id).join(',')
+  %>
 </div>
 
 <div id="flow-impacts" class="tabcontent">

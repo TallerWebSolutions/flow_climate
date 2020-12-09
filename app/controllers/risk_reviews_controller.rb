@@ -25,7 +25,10 @@ class RiskReviewsController < AuthenticatedController
     respond_to { |format| format.js { render 'risk_reviews/create' } }
   end
 
-  def show; end
+  def show
+    @demand_blocks = @risk_review.demand_blocks.order(:block_time)
+    @paged_demand_blocks = @risk_review.demand_blocks.order(:block_time).page(page_param)
+  end
 
   def destroy
     @risk_review.destroy
@@ -68,5 +71,9 @@ class RiskReviewsController < AuthenticatedController
 
   def assign_product
     @product = Product.find(params[:product_id])
+  end
+
+  def page_param
+    @page_param ||= params[:page] || 1
   end
 end

@@ -3,5 +3,5 @@ $("#risk-review-action-items-container").html("<%= escape_javascript(render('ris
 $("#cancel-risk-review-action-item-form").on("click", function(event) {
     event.preventDefault();
 
-    $('#risk-review-action-items-container').html("<%= escape_javascript(render('risk_review_action_items/risk_review_action_items_table', risk_review_action_items: @risk_review.risk_review_action_items)) %>")
+    $('#risk-review-action-items-container').html("<%= escape_javascript(render('risk_review_action_items/risk_review_action_items_table', company: @company, risk_review_action_items: @risk_review.risk_review_action_items)) %>")
 });
