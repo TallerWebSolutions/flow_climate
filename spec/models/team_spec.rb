@@ -308,8 +308,8 @@ RSpec.describe Team, type: :model do
     let!(:third_project) { Fabricate :project, company: company, team: other_team, status: :waiting, start_date: Time.zone.local(2020, 9, 1, 10, 0, 0), end_date: Time.zone.local(2021, 1, 20, 10, 0, 0) }
     let!(:fourth_project) { Fabricate :project, company: company, team: team, status: :finished, start_date: Time.zone.local(2020, 11, 1, 10, 0, 0), end_date: Time.zone.local(2021, 1, 1, 10, 0, 0) }
 
-    it { expect(team.flow_pressure).to be_within(0.001).of 1.302 }
-    it { expect(other_team.flow_pressure).to be_within(0.001).of 0.693 }
+    it { expect(team.flow_pressure).to be_within(0.01).of 1.302 }
+    it { expect(other_team.flow_pressure).to be_within(0.01).of 0.693 }
     it { expect(no_projects_team.flow_pressure).to eq 0 }
   end
 end
