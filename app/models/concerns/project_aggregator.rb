@@ -16,7 +16,7 @@ module ProjectAggregator
   end
 
   def remaining_money(end_period)
-    projects.map { |project| project.remaining_money(end_period) }.sum
+    projects.sum { |project| project.remaining_money(end_period) }
   end
 
   def percentage_remaining_money(end_period)

@@ -4,7 +4,7 @@ module DemandsAggregator
   extend ActiveSupport::Concern
 
   def average_queue_time
-    total_queue_time = demands.kept.map(&:total_queue_time).sum
+    total_queue_time = demands.kept.sum(&:total_queue_time)
     total_demands = demands.kept.count
 
     return 0 if total_queue_time.zero? || total_demands.zero?
@@ -13,7 +13,7 @@ module DemandsAggregator
   end
 
   def average_touch_time
-    total_touch_time = demands.kept.map(&:total_touch_time).sum
+    total_touch_time = demands.kept.sum(&:total_touch_time)
     total_demands = demands.kept.count
 
     return 0 if total_touch_time.zero? || total_demands.zero?

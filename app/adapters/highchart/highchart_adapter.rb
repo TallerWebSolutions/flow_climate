@@ -2,7 +2,7 @@
 
 module Highchart
   class HighchartAdapter
-    attr_reader :x_axis, :x_axis_index, :all_projects, :start_date, :end_date, :chart_period_interval, :demands_list
+    attr_reader :x_axis, :x_axis_index, :all_projects, :start_date, :end_date, :chart_period_interval, :demands_list, :demands
 
     def initialize(demands, start_date, end_date, chart_period_interval)
       @chart_period_interval = chart_period_interval
@@ -12,6 +12,7 @@ module Highchart
       @all_projects = []
       @all_projects = search_projects_by_dates(demands.map(&:project_id)) if demands.present?
 
+      @demands = demands
       @demands_list = demands.where('(demands.end_date IS NOT NULL AND demands.end_date >= :base_date) OR (demands.commitment_date IS NOT NULL AND demands.commitment_date >= :base_date) OR (demands.created_date IS NOT NULL AND demands.created_date >= :base_date)', base_date: start_date).order(:end_date)
 
       build_x_axis

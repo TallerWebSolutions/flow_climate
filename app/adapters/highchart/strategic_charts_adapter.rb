@@ -35,7 +35,7 @@ module Highchart
       @x_axis.each do |date|
         start_of_period = TimeService.instance.start_of_period_for_date(date, @chart_period_interval)
         end_of_period = TimeService.instance.end_of_period_for_date(date, @chart_period_interval)
-        @consumed_hours_per_month << projects.active_in_period(start_of_period, end_of_period).map { |project| project.consumed_hours_in_period(start_of_period, end_of_period) }.sum.to_f
+        @consumed_hours_per_month << projects.active_in_period(start_of_period, end_of_period).sum { |project| project.consumed_hours_in_period(start_of_period, end_of_period) }.to_f
         @sold_hours_in_month << projects.active_in_period(start_of_period, end_of_period).sum(&:hours_per_day).to_f * period_multiplier
       end
     end

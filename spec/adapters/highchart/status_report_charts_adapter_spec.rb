@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
-  context 'having projects' do
+  context 'with projects' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
 
@@ -61,25 +61,27 @@ RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
             expect(report_data.all_projects).to match_array Project.all
             expect(report_data.x_axis).to eq [Date.new(2018, 2, 25), Date.new(2018, 3, 4), Date.new(2018, 3, 11), Date.new(2018, 3, 18), Date.new(2018, 3, 25), Date.new(2018, 4, 1), Date.new(2018, 4, 8), Date.new(2018, 4, 15), Date.new(2018, 4, 22), Date.new(2018, 4, 29), Date.new(2018, 5, 6), Date.new(2018, 5, 13)]
             expect(report_data.delivered_vs_remaining).to eq([{ name: I18n.t('projects.show.delivered_demands.opened_in_period'), data: [42] }, { name: I18n.t('projects.show.delivered_demands.delivered'), data: [10] }])
+            expect(report_data.deadline).to eq [{ data: [13], name: I18n.t('projects.index.total_remaining_days') }, { color: '#F45830', data: [71], name: I18n.t('projects.index.passed_time') }]
+            expect(report_data.cumulative_flow_diagram_downstream).to match_array([{ name: 'queue_stage', data: [3, 3, 4, 4, 5, 5, 6, 6, 6, 6, 6] }, { name: 'ongoing_stage', data: [3, 3, 4, 4, 5, 5, 6, 6, 6, 6, 6] }, { name: 'first_stage', data: [3, 3, 4, 4, 5, 5, 6, 6, 6, 6, 6] }, { name: 'second_stage', data: [3, 3, 4, 4, 5, 5, 6, 6, 6, 6, 6] }, { name: 'third_stage', data: [3, 3, 4, 4, 5, 5, 6, 6, 6, 6, 6] }])
+
+            report_data.build_monte_carlo_info
             expect(report_data.dates_to_montecarlo_duration).not_to be_empty
             expect(report_data.confidence_95_duration).to be_within(7).of(65)
             expect(report_data.confidence_80_duration).to be_within(7).of(47)
             expect(report_data.confidence_60_duration).to be_within(7).of(37)
-            expect(report_data.deadline).to eq [{ data: [13], name: I18n.t('projects.index.total_remaining_days') }, { color: '#F45830', data: [71], name: I18n.t('projects.index.passed_time') }]
-            expect(report_data.cumulative_flow_diagram_downstream).to match_array([{ name: 'queue_stage', data: [3, 3, 4, 4, 5, 5, 6, 6, 6, 6, 6] }, { name: 'ongoing_stage', data: [3, 3, 4, 4, 5, 5, 6, 6, 6, 6, 6] }, { name: 'first_stage', data: [3, 3, 4, 4, 5, 5, 6, 6, 6, 6, 6] }, { name: 'second_stage', data: [3, 3, 4, 4, 5, 5, 6, 6, 6, 6, 6] }, { name: 'third_stage', data: [3, 3, 4, 4, 5, 5, 6, 6, 6, 6, 6] }])
           end
         end
       end
+    end
+  end
 
-      context 'with no projects' do
-        subject(:report_data) { described_class.new(Project.none, 1.month.ago, Time.zone.now, 'week') }
+  context 'with no projects' do
+    subject(:report_data) { described_class.new(Project.none, 1.month.ago, Time.zone.now, 'week') }
 
-        it 'return empty sets' do
-          expect(report_data.all_projects).to eq []
-          expect(report_data.x_axis).to eq []
-          expect(report_data.hours_burnup_per_week_data).to be_nil
-        end
-      end
+    it 'return empty sets' do
+      expect(report_data.all_projects).to eq []
+      expect(report_data.x_axis).to eq []
+      expect(report_data.hours_burnup_per_week_data).to be_nil
     end
   end
 end

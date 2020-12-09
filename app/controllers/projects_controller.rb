@@ -205,7 +205,8 @@ class ProjectsController < AuthenticatedController
   end
 
   def build_charts_adapters
-    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(demands.kept, @project.start_date, Time.zone.today, 'week')
+    start_date = [@project.start_date, 8.weeks.ago].max
+    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(demands.kept, start_date, Time.zone.today, 'week')
     @status_report_data = Highchart::StatusReportChartsAdapter.new(demands_finished_with_leadtime, @project.start_date, Time.zone.today, 'week')
   end
 

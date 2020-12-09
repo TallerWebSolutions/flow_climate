@@ -133,11 +133,24 @@ RSpec.describe RiskReview, type: :model do
   end
 
   describe '#avg_blocked_time_in_weeks' do
-    include_context 'risk reviews data'
-
     it 'returns the average block time data' do
-      expect(risk_review.avg_blocked_time_in_weeks).to eq({ chart: { data: [0.000555555555555556, 0.000833333333333333], name: I18n.t('risk_reviews.show.average_blocked_time') }, x_axis: [Time.zone.today.end_of_week] })
-      expect(other_risk_review.avg_blocked_time_in_weeks).to eq({ chart: { data: nil, name: I18n.t('risk_reviews.show.average_blocked_time') }, x_axis: [] })
+      travel_to Time.zone.local(2018, 3, 6, 10, 0, 0) do
+        product = Fabricate :product
+        risk_review = Fabricate :risk_review, product: product, meeting_date: Time.zone.yesterday, lead_time_outlier_limit: 5, weekly_avg_blocked_time: [2, 3], monthly_avg_blocked_time: [2]
+        other_risk_review = Fabricate :risk_review, product: product, meeting_date: Time.zone.today, lead_time_outlier_limit: 2
+
+        first_demand = Fabricate :demand, risk_review: risk_review, demand_type: :bug, commitment_date: 10.days.ago, end_date: Time.zone.now
+        second_demand = Fabricate :demand, risk_review: risk_review, demand_type: :bug, commitment_date: 6.days.ago, end_date: Time.zone.now
+        Fabricate :demand, risk_review: risk_review, demand_type: :feature, commitment_date: 4.days.ago, end_date: Time.zone.now
+        Fabricate :demand, risk_review: risk_review, demand_type: :chore, commitment_date: 6.days.ago, end_date: nil
+
+        Fabricate :demand_block, demand: first_demand, risk_review: risk_review, block_time: Time.zone.parse('2018-03-05 23:00'), unblock_time: nil
+        Fabricate :demand_block, demand: first_demand, risk_review: risk_review, block_time: Time.zone.parse('2018-03-06 10:00'), unblock_time: nil
+        Fabricate :demand_block, demand: second_demand, risk_review: risk_review, block_time: Time.zone.parse('2018-03-06 14:00'), unblock_time: Time.zone.parse('2018-03-06 15:00')
+
+        expect(risk_review.avg_blocked_time_in_weeks).to eq({ chart: { data: [0.000555555555555556, 0.000833333333333333], name: I18n.t('risk_reviews.show.average_blocked_time') }, x_axis: [Time.zone.today.end_of_week] })
+        expect(other_risk_review.avg_blocked_time_in_weeks).to eq({ chart: { data: nil, name: I18n.t('risk_reviews.show.average_blocked_time') }, x_axis: [] })
+      end
     end
   end
 end

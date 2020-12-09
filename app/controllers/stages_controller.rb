@@ -97,7 +97,7 @@ class StagesController < AuthenticatedController
     return if @company.jira_accounts.blank?
 
     jira_stages = Jira::JiraApiService.new(@company.jira_accounts.first.username, @company.jira_accounts.first.api_token, @company.jira_accounts.first.base_uri).request_status
-    jira_stages.each(&method(:build_stage))
+    jira_stages.each { |stage| build_stage(stage) }
   end
 
   def assign_stages_list

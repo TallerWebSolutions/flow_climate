@@ -62,7 +62,7 @@ module Jira
     def read_blocks(demand, jira_issue_changelog)
       return unless hash_has_histories?(jira_issue_changelog)
 
-      history_array = jira_issue_changelog['histories'].select(&method(:impediment_field?))
+      history_array = jira_issue_changelog['histories'].select { |history_field| impediment_field?(history_field) }
 
       history_array.sort_by { |history_hash| Time.zone.parse(history_hash['created']) }.each do |history|
         next if history['items'].blank?
