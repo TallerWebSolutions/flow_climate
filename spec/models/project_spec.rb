@@ -1295,7 +1295,8 @@ RSpec.describe Project, type: :model do
   describe '#average_speed_per_week' do
     context 'with demands' do
       let(:project) { Fabricate :project, status: :executing, start_date: Time.zone.today, end_date: 4.weeks.from_now, qty_hours: 2000 }
-      let!(:demands) { Fabricate.times(40, :demand, project: project, end_date: 2.days.from_now) }
+      let!(:demands) { Fabricate.times(40, :demand, project: project, commitment_date: 5.days.ago, end_date: 2.days.ago) }
+      let!(:opened_demands) { Fabricate.times(15, :demand, project: project, end_date: nil) }
 
       it { expect(project.average_speed_per_week).to eq 35.00000000000005 }
     end
@@ -1409,6 +1410,38 @@ RSpec.describe Project, type: :model do
           expect(project.current_weekly_scope_ideal_burnup).to eq [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
         end
       end
+    end
+  end
+
+  describe '#weekly_project_scope_until_end' do
+    let(:project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 2.weeks.from_now, initial_scope: 10 }
+
+    context 'with project consolidations' do
+      let!(:first_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 4.weeks.ago, project_scope: 5, last_data_in_week: true }
+      let!(:second_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 3.weeks.ago, project_scope: 13, last_data_in_week: true }
+      let!(:third_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 2.weeks.ago, project_scope: 18 }
+
+      it { expect(project.weekly_project_scope_until_end).to eq [5, 13, 18, 18, 18, 18, 18] }
+    end
+
+    context 'with no consolidations' do
+      it { expect(project.weekly_project_scope_until_end).to eq [10] }
+    end
+  end
+
+  describe '#weekly_project_scope_hours_until_end' do
+    let(:project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 2.weeks.from_now, qty_hours: 10 }
+
+    context 'with project consolidations' do
+      let!(:first_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 4.weeks.ago, project_scope_hours: 5, last_data_in_week: true }
+      let!(:second_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 3.weeks.ago, project_scope_hours: 13, last_data_in_week: true }
+      let!(:third_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 2.weeks.ago, project_scope_hours: 18 }
+
+      it { expect(project.weekly_project_scope_hours_until_end).to eq [5, 13, 18, 18, 18, 18, 18] }
+    end
+
+    context 'with no consolidations' do
+      it { expect(project.weekly_project_scope_hours_until_end).to eq [10] }
     end
   end
 end

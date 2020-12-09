@@ -151,7 +151,7 @@ RSpec.describe Customer, type: :model do
     let!(:fourth_demand) { Fabricate :demand, customer: other_customer, project: other_project, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago }
     let!(:fifth_demand) { Fabricate :demand, customer: customer, project: other_project, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago }
 
-    it { expect(customer.current_scope).to eq 4 }
+    it { expect(customer.current_scope).to eq 34 }
   end
 
   describe '#total_flow_pressure' do
@@ -167,5 +167,21 @@ RSpec.describe Customer, type: :model do
     it { expect(customer.total_flow_pressure).to be_within(0.1).of(0.8) }
     it { expect(other_customer.total_flow_pressure).to eq 0 }
     it { expect(no_projects_customer.total_flow_pressure).to eq 0 }
+  end
+
+  describe '#initial_scope' do
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:other_customer) { Fabricate :customer, company: company }
+    let(:no_projects_customer) { Fabricate :customer, company: company }
+
+    let!(:first_roject) { Fabricate :project, company: company, customers: [customer], status: :executing, initial_scope: 10, end_date: 4.weeks.from_now }
+    let!(:second_project) { Fabricate :project, company: company, customers: [customer], status: :waiting, initial_scope: 8, end_date: 2.weeks.from_now }
+    let!(:third_project) { Fabricate :project, company: company, customers: [customer, other_customer], status: :waiting, initial_scope: 210, end_date: 30.weeks.from_now }
+    let!(:fourth_project) { Fabricate :project, company: company, customers: [customer], status: :finished, initial_scope: 410, end_date: 30.weeks.from_now }
+
+    it { expect(customer.initial_scope).to eq 18 }
+    it { expect(other_customer.initial_scope).to eq 0 }
+    it { expect(no_projects_customer.initial_scope).to eq 0 }
   end
 end

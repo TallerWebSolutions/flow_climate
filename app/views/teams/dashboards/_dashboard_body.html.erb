@@ -6,6 +6,7 @@
       <%= render 'common/dashboards/general_info',
                  company: company,
                  dashboard_name: team.name,
+                 initial_scope: team.initial_scope,
                  demands: team.demands.kept,
                  demands_delivered: team.demands.kept.finished,
                  unscored_demands: unscored_demands,

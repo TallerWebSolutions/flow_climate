@@ -2085,7 +2085,11 @@ CREATE TABLE public.project_consolidations (
     flow_efficiency_month numeric DEFAULT 0.0,
     hours_per_demand_month numeric DEFAULT 0.0,
     code_needed_blocks_count integer DEFAULT 0,
-    code_needed_blocks_per_demand numeric DEFAULT 0.0
+    code_needed_blocks_per_demand numeric DEFAULT 0.0,
+    project_scope_hours integer DEFAULT 0,
+    project_throughput_hours numeric DEFAULT 0.0,
+    project_throughput_hours_upstream numeric DEFAULT 0.0,
+    project_throughput_hours_downstream numeric DEFAULT 0.0
 );
 
 
@@ -6176,6 +6180,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200929125717'),
 ('20201019125426'),
 ('20201020185804'),
-('20201111160327');
+('20201111160327'),
+('20201209134542');
 
 

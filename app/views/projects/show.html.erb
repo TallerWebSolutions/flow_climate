@@ -94,7 +94,7 @@
     <%= render 'common/dashboards/general_info',
                company: @company,
                dashboard_name: @project.name,
-               total_flow_pressure: nil,
+               initial_scope: @project.initial_scope,
                demands: @project.demands.kept,
                demands_delivered: @project.demands.kept.finished,
                remaining_backlog: @project.demands.kept - @project.demands.kept.finished,
@@ -139,9 +139,9 @@
   <%= javascript_include_tag 'charts/column' %>
   <%= javascript_include_tag 'charts/bar' %>
   <%= javascript_include_tag 'charts/line' %>
-  <%= javascript_include_tag 'charts/donut' %>
   <%= javascript_include_tag 'charts/scatter' %>
   <%= javascript_include_tag 'charts/stacked_area' %>
+  <%= javascript_include_tag 'charts/column-line' %>
 
   <%= javascript_include_tag 'stats_charts/statistics_charts' %>
 

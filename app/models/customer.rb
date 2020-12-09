@@ -82,6 +82,10 @@ class Customer < ApplicationRecord
   end
 
   def current_scope
-    demands.kept.count
+    demands.kept.count + initial_scope
+  end
+
+  def initial_scope
+    exclusive_projects.active.sum(&:initial_scope)
   end
 end

@@ -377,6 +377,8 @@ en:
         no_demands: "no unscored demands"
         title: "Unscored Demands"
       update_consolidations: "Update Cache"
+      charts:
+        total_effort: "Total Effort"
     charts:
       xlabel:
         weeks: "Weeks"
@@ -583,6 +585,8 @@ en:
       error: "The project was not deleted"
     modal:
       statistics: "Statistics for %{target_name}"
+    help:
+      initial_scope: "This value is used to map the planned scope without demand created yet."
   team_member:
     edit:
       title: "Edit Team Member"
@@ -1143,6 +1147,8 @@ en:
         enum:
           question_type:
             service_provider_dimension: "Service Provider Dimension"
+      project:
+        initial_scope: "Initial Scope"
     models:
       demand_comment:
         other: "Demand Comments"

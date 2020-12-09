@@ -103,67 +103,9 @@ RSpec.describe Team, type: :model do
     let!(:third_demand) { Fabricate :demand, team: team, project: project, created_date: 1.week.ago, end_date: 2.days.ago, effort_downstream: 10, effort_upstream: 78 }
   end
 
-  describe '#last_week_scope' do
-    include_context 'consolidations data for team'
-    it { expect(team.last_week_scope).to eq 33 }
-  end
-
   describe '#avg_hours_per_demand' do
     include_context 'consolidations data for team'
     it { expect(team.avg_hours_per_demand).to eq team.projects.sum(&:avg_hours_per_demand) / team.projects_count.to_f }
-  end
-
-  describe '#total_value' do
-    include_context 'consolidations data for team'
-    it { expect(team.total_value).to eq team.projects.sum(:value) }
-  end
-
-  describe '#remaining_money' do
-    include_context 'consolidations data for team'
-    it { expect(team.remaining_money(4.weeks.from_now).to_f).to eq 89_350.0 }
-  end
-
-  describe '#percentage_remaining_money' do
-    context 'having data' do
-      include_context 'consolidations data for team'
-      it { expect(team.percentage_remaining_money(4.weeks.from_now).to_f).to be_within(0.01).of 89.35 }
-    end
-
-    context 'having no data' do
-      let(:company) { Fabricate :company }
-      let(:team) { Fabricate :team, company: company }
-
-      it { expect(team.percentage_remaining_money(4.weeks.from_now).to_f).to eq 0 }
-    end
-  end
-
-  describe '#remaining_backlog' do
-    include_context 'consolidations data for team'
-    it { expect(team.remaining_backlog).to eq 30 }
-  end
-
-  describe '#percentage_remaining_scope' do
-    context 'having data' do
-      include_context 'consolidations data for team'
-      it { expect(team.percentage_remaining_scope).to eq 90.9090909090909 }
-    end
-
-    context 'having no data' do
-      let(:company) { Fabricate :company }
-      let(:team) { Fabricate :team, company: company }
-
-      it { expect(team.percentage_remaining_scope).to eq 0 }
-    end
-  end
-
-  describe '#total_flow_pressure' do
-    include_context 'consolidations data for team'
-    it { expect(team.total_flow_pressure).to be_within(0.2).of(team.projects.sum(&:flow_pressure)) }
-  end
-
-  describe '#delivered_scope' do
-    include_context 'consolidations data for team'
-    it { expect(team.delivered_scope).to eq 3 }
   end
 
   describe '#consumed_hours_in_month' do
@@ -337,5 +279,37 @@ RSpec.describe Team, type: :model do
     it { expect(team.percentage_idle_members).to eq 0.6 }
     it { expect(other_team.percentage_idle_members).to eq 0 }
     it { expect(empty_team.percentage_idle_members).to eq 0 }
+  end
+
+  describe '#initial_scope' do
+    let(:company) { Fabricate :company }
+    let(:team) { Fabricate :team, company: company }
+    let(:other_team) { Fabricate :team, company: company }
+    let(:no_projects_team) { Fabricate :team, company: company }
+
+    let!(:first_roject) { Fabricate :project, company: company, team: team, status: :executing, initial_scope: 10, end_date: 4.weeks.from_now }
+    let!(:second_project) { Fabricate :project, company: company, team: team, status: :waiting, initial_scope: 8, end_date: 2.weeks.from_now }
+    let!(:third_project) { Fabricate :project, company: company, team: other_team, status: :waiting, initial_scope: 210, end_date: 30.weeks.from_now }
+    let!(:fourth_project) { Fabricate :project, company: company, team: team, status: :finished, initial_scope: 410, end_date: 30.weeks.from_now }
+
+    it { expect(team.initial_scope).to eq 18 }
+    it { expect(other_team.initial_scope).to eq 210 }
+    it { expect(no_projects_team.initial_scope).to eq 0 }
+  end
+
+  describe '#flow_pressure' do
+    let(:company) { Fabricate :company }
+    let(:team) { Fabricate :team, company: company }
+    let(:other_team) { Fabricate :team, company: company }
+    let(:no_projects_team) { Fabricate :team, company: company }
+
+    let!(:first_roject) { Fabricate :project, company: company, team: team, status: :executing, start_date: Time.zone.local(2020, 11, 1, 10, 0, 0), end_date: Time.zone.local(2021, 1, 12, 10, 0, 0) }
+    let!(:second_project) { Fabricate :project, company: company, team: team, status: :waiting, start_date: Time.zone.local(2020, 10, 1, 10, 0, 0), end_date: Time.zone.local(2021, 2, 12, 10, 0, 0) }
+    let!(:third_project) { Fabricate :project, company: company, team: other_team, status: :waiting, start_date: Time.zone.local(2020, 9, 1, 10, 0, 0), end_date: Time.zone.local(2021, 1, 20, 10, 0, 0) }
+    let!(:fourth_project) { Fabricate :project, company: company, team: team, status: :finished, start_date: Time.zone.local(2020, 11, 1, 10, 0, 0), end_date: Time.zone.local(2021, 1, 1, 10, 0, 0) }
+
+    it { expect(team.flow_pressure).to be_within(0.01).of 1.302 }
+    it { expect(other_team.flow_pressure).to be_within(0.01).of 0.693 }
+    it { expect(no_projects_team.flow_pressure).to eq 0 }
   end
 end

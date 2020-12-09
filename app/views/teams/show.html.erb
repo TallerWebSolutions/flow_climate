@@ -70,8 +70,8 @@
              flow_pressure: @flow_pressure,
              average_speed: @average_speed,
              projects_count: @team.projects.count,
-             active_projects_count: @team.active_projects.count,
-             active_projects_value: @team.active_projects.map(&:value).compact.sum,
+             active_projects_count: @team.projects.active.count,
+             active_projects_value: @team.projects.active.map(&:value).compact.sum,
              total_demands_count: @team.demands.kept.count %>
 </div>
 

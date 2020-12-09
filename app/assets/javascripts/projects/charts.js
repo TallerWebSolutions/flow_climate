@@ -21,6 +21,11 @@ if (projectBurnup.length !== 0) {
     buildLineChart(projectBurnup);
 }
 
+const projectBurnupHours = $("#project-burnup-hours");
+if (projectBurnupHours.length !== 0) {
+    buildLineChart(projectBurnupHours);
+}
+
 const projectBugsColumn = $("#project-dashboard-bugs-column");
 if (projectBugsColumn.length !== 0) {
     buildColumnChart(projectBugsColumn);
@@ -41,17 +46,22 @@ if (projectLeadtimeHistogramChart.length !== 0) {
     buildColumnChart(projectLeadtimeHistogramChart);
 }
 
-const projectCfd = $('#project-cfd-downstream-area');
+const projectCfd = $("#project-cfd-downstream-area");
 if (projectCfd.length !== 0) {
     buildAreaChart(projectCfd);
 }
 
-const projectQualityBugs = $('#project-dashboard-quality-blocks-line');
+const projectQualityBugs = $("#project-dashboard-quality-blocks-line");
 if (projectQualityBugs.length !== 0) {
     buildLineChart(projectQualityBugs);
 }
 
-const projectQualityBlockPerDemand = $('#project-dashboard-quality-blocks-per-demand-line');
+const projectQualityBlockPerDemand = $("#project-dashboard-quality-blocks-per-demand-line");
 if (projectQualityBlockPerDemand.length !== 0) {
     buildLineChart(projectQualityBlockPerDemand);
+}
+
+const projectHoursConsumed = $("#project-dashboard-hours-per-demand-column-line");
+if (projectHoursConsumed.length !== 0) {
+    buildColumnLineChart(projectHoursConsumed);
 }
