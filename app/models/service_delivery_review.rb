@@ -78,15 +78,15 @@ class ServiceDeliveryReview < ApplicationRecord
   end
 
   def demands_lead_time_p80
-    @demands_lead_time_p80 ||= Stats::StatisticsService.instance.percentile(80, demands.map(&:leadtime))
+    @demands_lead_time_p80 ||= Stats::StatisticsService.instance.percentile(80, demands.kept.map(&:leadtime))
   end
 
   def lead_time_breakdown
-    @lead_time_breakdown ||= DemandService.instance.lead_time_breakdown(demands)
+    @lead_time_breakdown ||= DemandService.instance.lead_time_breakdown(demands.kept)
   end
 
   def portfolio_module_breakdown
-    @portfolio_module_breakdown ||= demands.where.not(portfolio_unit_id: nil).group_by(&:portfolio_unit).sort_by { |_key, values| values.count }.to_h
+    @portfolio_module_breakdown ||= demands.kept.where.not(portfolio_unit_id: nil).group_by(&:portfolio_unit).sort_by { |_key, values| values.count }.to_h
   end
 
   def overserved_demands
@@ -113,6 +113,6 @@ class ServiceDeliveryReview < ApplicationRecord
   end
 
   def start_date
-    demands.map(&:end_date).min || meeting_date
+    demands.kept.map(&:end_date).min || meeting_date
   end
 end

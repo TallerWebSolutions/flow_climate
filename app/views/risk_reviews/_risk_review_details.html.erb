@@ -1,42 +1,42 @@
 <h4><%= RiskReview.human_attribute_name :meeting_date %></h4>
-<h1 class="section-title"><%= I18n.l(@risk_review.meeting_date) %></h1>
+<h1 class="section-title"><%= I18n.l(risk_review.meeting_date) %></h1>
 <table class="table">
   <tbody>
     <tr>
       <td><b><%= RiskReview.human_attribute_name :demands %></b></td>
-      <td><%= @risk_review.demands.count %></td>
+      <td><%= risk_review.demands.count %></td>
     </tr>
     <tr>
       <td><b><%= t('general.leadtime_p80_label') %></b></td>
-      <td><%= I18n.t('general.days_text', count: number_with_precision(@risk_review.demands_lead_time_p80 / 1.day, precision: 3)) %></td>
+      <td><%= I18n.t('general.days_text', count: number_with_precision(risk_review.demands_lead_time_p80 / 1.day, precision: 3)) %></td>
     </tr>
     <tr>
       <td><b><%= RiskReview.human_attribute_name :lead_time_outlier_limit %></b></td>
-      <td><%= I18n.t('general.days_text', count: number_with_precision(@risk_review.lead_time_outlier_limit, precision: 2)) %></td>
+      <td><%= I18n.t('general.days_text', count: number_with_precision(risk_review.lead_time_outlier_limit, precision: 2)) %></td>
     </tr>
     <tr>
       <td><b><%= I18n.t('risk_reviews.show.outlier_demands_label') %></b></td>
-      <td><%= @risk_review.outlier_demands.count %><sup><%= " (#{number_to_percentage(@risk_review.outlier_demands_percentage, precision: 2)})" %></sup></td>
+      <td><%= risk_review.outlier_demands.count %><sup><%= " (#{number_to_percentage(risk_review.outlier_demands_percentage, precision: 2)})" %></sup></td>
     </tr>
     <tr>
       <td><b><%= I18n.t('risk_reviews.show.bugs_label') %></b></td>
-      <td><%= @risk_review.bugs_count %><sup><%= " (#{number_to_percentage(@risk_review.bug_percentage, precision: 2)})" %></sup></td>
+      <td><%= risk_review.bugs_count %><sup><%= " (#{number_to_percentage(risk_review.bug_percentage, precision: 2)})" %></sup></td>
     </tr>
     <tr>
       <td><b><%= I18n.t('risk_reviews.show.blocks_per_demand_label') %></b></td>
-      <td><%= number_with_precision(@risk_review.blocks_per_demand, precision: 3) %></td>
+      <td><%= number_with_precision(risk_review.blocks_per_demand, precision: 3) %></td>
     </tr>
     <tr>
       <td><b><%= I18n.t('risk_reviews.show.flow_impacts_label') %></b></td>
-      <td><%= @risk_review.flow_impacts.count %></td>
+      <td><%= risk_review.flow_impacts.count %></td>
     </tr>
     <tr>
       <td><b><%= I18n.t('risk_reviews.show.impacts_per_demand_label') %></b></td>
-      <td><%= number_with_precision(@risk_review.impacts_per_demand, precision: 3) %></td>
+      <td><%= number_with_precision(risk_review.impacts_per_demand, precision: 3) %></td>
     </tr>
     <tr>
       <td><b><%= I18n.t('risk_reviews.show.projects_broken_wip') %></b></td>
-      <td><%= @risk_review.demands.map { |demand| demand.project }.uniq.map { |project| project.project_broken_wip_logs.count }.compact.sum %></td>
+      <td><%= risk_review.demands.map { |demand| demand.project }.uniq.map { |project| project.project_broken_wip_logs.count }.compact.sum %></td>
     </tr>
   </tbody>
 </table>
