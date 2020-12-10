@@ -62,8 +62,9 @@ jobs:
         run: |
           bundle config path vendor/bundle
           bundle install --jobs 4 --retry 3
-      - name: Run specs
-        uses: paambaati/codeclimate-action@v2.2.4
+
+      - name: Test & publish code coverage
+        uses: paambaati/codeclimate-action@v2.7.5
         env:
           secret_key_32_encoded: "8L+WeHTWhNtEAvQzoRaYqYtl4VCwDMReh2SzicO/iCA=\n"
           RAILS_ENV: test
@@ -74,6 +75,7 @@ jobs:
           CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
         with:
           coverageCommand: bundle exec rspec
+          debug: true
 
   deploy-staging:
     runs-on: ubuntu-latest
