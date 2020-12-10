@@ -331,7 +331,7 @@ RSpec.describe ProductsController, type: :controller do
 
           it 'assigns the instance variable and renders the templates' do
             expect(assigns(:products)).to eq [second_product, first_product]
-            expect(response).to render_template 'products/products.js.erb'
+            expect(response).to render_template 'products/products'
             expect(response).to render_template 'products/_products_table'
           end
         end
@@ -341,7 +341,7 @@ RSpec.describe ProductsController, type: :controller do
 
           it 'assigns the instance variable as empty array and renders the templates' do
             expect(assigns(:products)).to eq []
-            expect(response).to render_template 'products/products.js.erb'
+            expect(response).to render_template 'products/products'
             expect(response).to render_template 'products/_products_table'
           end
         end
@@ -353,7 +353,7 @@ RSpec.describe ProductsController, type: :controller do
 
           it 'assigns the instance variable as empty array and renders the templates' do
             expect(assigns(:products)).to eq []
-            expect(response).to render_template 'products/products.js.erb'
+            expect(response).to render_template 'products/products'
             expect(response).to render_template 'products/_products_table'
           end
         end

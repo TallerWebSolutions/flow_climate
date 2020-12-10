@@ -49,7 +49,7 @@ class ProductsController < AuthenticatedController
   end
 
   def products_for_customer
-    render_products_for_customer('products/products.js.erb', params[:customer_id])
+    render_products_for_customer('products/products', params[:customer_id])
   end
 
   def destroy

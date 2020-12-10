@@ -4,7 +4,7 @@ class RiskReviewService
   include Singleton
 
   def associate_demands_data(product, risk_review)
-    demands = product.demands.kept.opened_before_date(risk_review.meeting_date.end_of_day).where('demands.risk_review_id IS NULL')
+    demands = product.demands.kept.opened_before_date(risk_review.meeting_date.end_of_day).where('demands.risk_review_id' => nil)
     demands.map { |demand| demand.update(risk_review: risk_review) }
 
     demands = Demand.where(risk_review: risk_review)
@@ -28,7 +28,7 @@ class RiskReviewService
   end
 
   def update_flow_impacts(product, risk_review)
-    flow_impacts = product.flow_impacts.kept.where('flow_impacts.risk_review_id IS NULL')
+    flow_impacts = product.flow_impacts.kept.where('flow_impacts.risk_review_id' => nil)
     flow_impacts.map { |impact| impact.update(risk_review: risk_review) }
   end
 

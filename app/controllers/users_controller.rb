@@ -11,12 +11,12 @@ class UsersController < AuthenticatedController
 
   def activate_email_notifications
     current_user.update(email_notifications: true)
-    respond_to { |format| format.js { render 'users/reload_notifications.js.erb' } }
+    respond_to { |format| format.js { render 'users/reload_notifications' } }
   end
 
   def deactivate_email_notifications
     current_user.update(email_notifications: false)
-    respond_to { |format| format.js { render 'users/reload_notifications.js.erb' } }
+    respond_to { |format| format.js { render 'users/reload_notifications' } }
   end
 
   def toggle_admin

@@ -379,7 +379,7 @@ RSpec.describe CompaniesController, type: :controller do
             expect(company.reload.company_settings.max_active_parallel_projects).to eq 100
             expect(company.reload.company_settings.max_flow_pressure).to eq 2.2
             expect(CompanySettings.count).to eq 1
-            expect(response).to render_template 'companies/update_settings.js.erb'
+            expect(response).to render_template 'companies/update_settings'
           end
         end
 
@@ -391,7 +391,7 @@ RSpec.describe CompaniesController, type: :controller do
           it 'updates the already existent settings' do
             expect(company.reload.company_settings.max_active_parallel_projects).to eq 100
             expect(company.reload.company_settings.max_flow_pressure).to eq 2.2
-            expect(response).to render_template 'companies/update_settings.js.erb'
+            expect(response).to render_template 'companies/update_settings'
           end
         end
       end
@@ -453,7 +453,7 @@ RSpec.describe CompaniesController, type: :controller do
         context 'passing valid parameters' do
           it 'builds the statistic adapter and renders the view using the dates in project to a monthly period' do
             get :strategic_chart_tab, params: { id: company }, xhr: true
-            expect(response).to render_template 'charts/strategic_charts.js.erb'
+            expect(response).to render_template 'charts/strategic_charts'
             expect(assigns(:strategic_chart_data)).to be_a Highchart::StrategicChartsAdapter
           end
         end
@@ -462,7 +462,7 @@ RSpec.describe CompaniesController, type: :controller do
       context 'having no data' do
         it 'returns empty data set' do
           get :strategic_chart_tab, params: { id: company }, xhr: true
-          expect(response).to render_template 'charts/strategic_charts.js.erb'
+          expect(response).to render_template 'charts/strategic_charts'
           expect(assigns(:projects)).to eq []
         end
       end
@@ -479,7 +479,7 @@ RSpec.describe CompaniesController, type: :controller do
         context 'passing valid parameters' do
           it 'builds the statistic adapter and renders the view using the dates in project to a monthly period' do
             get :risks_tab, params: { id: company }, xhr: true
-            expect(response).to render_template 'companies/risks_tab.js.erb'
+            expect(response).to render_template 'companies/risks_tab'
             expect(assigns(:strategic_chart_data)).to be_a Highchart::StrategicChartsAdapter
             expect(assigns(:projects_risk_chart_data)).to be_a Highchart::ProjectRiskChartsAdapter
           end
@@ -489,7 +489,7 @@ RSpec.describe CompaniesController, type: :controller do
       context 'having no data' do
         it 'returns empty data set' do
           get :risks_tab, params: { id: company }, xhr: true
-          expect(response).to render_template 'companies/risks_tab.js.erb'
+          expect(response).to render_template 'companies/risks_tab'
           expect(assigns(:projects)).to eq []
         end
       end

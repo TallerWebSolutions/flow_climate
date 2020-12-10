@@ -150,7 +150,7 @@ RSpec.describe DemandBlocksController, type: :controller do
           before { get :edit, params: { company_id: company, project_id: project, demand_id: demand, id: demand_block }, xhr: true }
 
           it 'assigns the instance variable and renders the JS template' do
-            expect(response).to render_template 'demand_blocks/edit.js.erb'
+            expect(response).to render_template 'demand_blocks/edit'
             expect(response).to render_template 'demand_blocks/_edit'
             expect(response).to render_template 'demand_blocks/_form'
           end
@@ -160,7 +160,7 @@ RSpec.describe DemandBlocksController, type: :controller do
           before { get :edit, params: { company_id: company, project_id: project, demand_id: demand, id: demand_block } }
 
           it 'assigns the instance variable and renders the HTML template' do
-            expect(response).to render_template 'demand_blocks/edit.html.erb'
+            expect(response).to render_template 'demand_blocks/edit'
             expect(response).to render_template 'demand_blocks/_form'
           end
         end
@@ -248,7 +248,7 @@ RSpec.describe DemandBlocksController, type: :controller do
             expect(updated_demand_block.block_reason).to eq 'bla'
             expect(updated_demand_block.blocker).to eq team_member
             expect(updated_demand_block.unblocker).to eq other_team_member
-            expect(response).to render_template 'demand_blocks/update.js.erb'
+            expect(response).to render_template 'demand_blocks/update'
           end
         end
 

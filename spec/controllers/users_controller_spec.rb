@@ -99,7 +99,7 @@ RSpec.describe UsersController, type: :controller do
 
         it 'activates the email notifications and refresh the view' do
           expect(User.last.email_notifications?).to be true
-          expect(response).to render_template 'users/reload_notifications.js.erb'
+          expect(response).to render_template 'users/reload_notifications'
           expect(response).to render_template 'layouts/_header_menu'
         end
       end
@@ -111,7 +111,7 @@ RSpec.describe UsersController, type: :controller do
 
         it 'deactivates the email notifications and refresh the view' do
           expect(User.last.email_notifications?).to be false
-          expect(response).to render_template 'users/reload_notifications.js.erb'
+          expect(response).to render_template 'users/reload_notifications'
           expect(response).to render_template 'layouts/_header_menu'
         end
       end
