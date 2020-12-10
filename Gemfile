@@ -44,13 +44,12 @@ group :test, :development do
   gem 'rubocop-rails'
   gem 'rubocop-rspec'
   gem 'shoulda-matchers'
-  gem 'simplecov-parallel'
+  gem 'simplecov', '~> 0.16.1'
   gem 'webmock'
 end
 
 group :development do
   gem 'annotate'
-  gem 'bullet'
   gem 'flamegraph'
   gem 'listen'
   gem 'memory_profiler'

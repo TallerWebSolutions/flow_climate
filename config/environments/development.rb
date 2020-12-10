@@ -25,7 +25,7 @@ Rails.application.configure do
   config.active_record.migration_error = false
   config.assets.debug = true
   config.assets.quiet = true
-  config.action_view.raise_on_missing_translations = true
+  config.i18n.raise_on_missing_translations = true
 
   host = 'http://127.0.0.1:3000'
   config.action_mailer.default_url_options = { host: host, port: 3000 }
@@ -39,15 +39,4 @@ Rails.application.configure do
   logger.formatter = config.log_formatter
   config.logger = ActiveSupport::TaggedLogging.new(logger)
   config.log_level = ENV.fetch('LOG_LEVEL') { :debug }
-
-  config.after_initialize do
-    Bullet.enable = false
-    Bullet.bullet_logger = false
-    Bullet.console = false
-    Bullet.rails_logger = true
-    Bullet.rollbar = false
-    Bullet.add_footer = true
-    Bullet.stacktrace_includes =%w(your_gem your_middleware)
-    Bullet.stacktrace_excludes = ['their_gem', 'their_middleware', %w(my_file.rb my_method), ['my_file.rb', 16..20] ]
-  end
 end

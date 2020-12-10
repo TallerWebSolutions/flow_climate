@@ -63,11 +63,6 @@ jobs:
         run: |
           bundle config path vendor/bundle
           bundle install --jobs 4 --retry 3
-      - name: Setup Code Climate test-reporter
-        run: |
-          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-          chmod +x ./cc-test-reporter
-          ./cc-test-reporter before-build
 
       - name: Run specs
         env:
@@ -78,11 +73,6 @@ jobs:
           PG_PASSWORD: "postgres"
           PG_PORT: ${{ job.services.postgres.ports['5432'] }}
         run: bundle exec rspec
-
-      - name: Publish code coverage
-        run: |
-          export GIT_BRANCH="${GITHUB_REF/refs\/heads\//}"
-          ./cc-test-reporter after-build -r ${{secrets.CC_TEST_REPORTER_ID}}
 
   deploy-production:
     runs-on: ubuntu-latest
