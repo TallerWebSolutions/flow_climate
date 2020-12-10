@@ -3,6 +3,7 @@ var demandsTab = $('#demands-tab');
 demandsTab.html("<%= escape_javascript(render 'demands/demands_tab', company: @company,
                                                                      paged_demands: @paged_demands,
                                                                      demands: @demands,
+                                                                     demands_ids: @demands_ids,
                                                                      confidence_65_leadtime: @confidence_65_leadtime,
                                                                      confidence_80_leadtime: @confidence_80_leadtime,
                                                                      confidence_95_leadtime: @confidence_95_leadtime,
@@ -34,5 +35,3 @@ $('#flat-demands-div').show();
 
 $('#list-charts-button').show();
 buildDemandsTabCharts();
-
-bindDemandFilterActions();

@@ -1,12 +1,3 @@
-function bindDemandFilterActions() {
-    const companyId = $("#company_id").val();
-    const demandsIds = $("#demands_ids").val();
-
-    $('.filter-button').on('click', function() {
-        filterDemands(companyId, demandsIds)
-    });
-}
-
 function filterDemands(companyId, demandsIds) {
     $('#demands-grouped-per-month-div').hide();
     $('#demands-grouped-per-customer-div').hide();

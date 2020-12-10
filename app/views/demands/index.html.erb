@@ -8,10 +8,9 @@
   </div>
 </div>
 
-<%= hidden_field_tag :company_id, @company.id %>
-<%= hidden_field_tag :demands_ids, @demands_ids.join(',') %>
-
-<%= render 'demands/demands_search_filters', start_date: @start_date, end_date: @end_date %>
+<%= render 'demands/demands_search_filters',
+           company: @company,
+           demands_ids: @demands_ids %>
 
 <%= render 'layouts/load_spinner' %>
 
@@ -22,6 +21,7 @@
       <%= render 'demands/demands_table', company: @company,
                  demands: @demands,
                  paged_demands: @paged_demands,
+                 demands_ids: @demands_ids,
                  confidence_65_leadtime: @confidence_65_leadtime,
                  confidence_80_leadtime: @confidence_80_leadtime,
                  confidence_95_leadtime: @confidence_95_leadtime,
@@ -35,6 +35,7 @@
 </div>
 
 <div class="modal fade" id="edit-demand-form" tabindex="-1" role="dialog" aria-labelledby="edit-demand-form" aria-hidden="true"></div>
+<div class="modal fade" id="show-montecarlo-dialog" tabindex="-1" role="dialog" aria-labelledby="show-montecarlo-dialog" aria-hidden="true"></div>
 
 <% content_for :javascript do %>
   <%= javascript_include_tag 'routes/demand_routes' %>

@@ -262,10 +262,9 @@ Rails.application.routes.draw do
       end
 
       collection do
-        get 'demands_csv/(:demands_ids)', action: :demands_csv, as: 'demands_csv'
-        get 'montecarlo_dialog/(:demands_ids)', action: :montecarlo_dialog, as: 'montecarlo_dialog'
+        post 'demands_csv/(:demands_ids)', action: :demands_csv, as: 'demands_csv'
         get :demands_tab
-        post :demands_list_by_ids
+        get :demands_list_by_ids
         post 'search_demands'
       end
 

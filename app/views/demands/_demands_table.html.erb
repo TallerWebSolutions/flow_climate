@@ -28,17 +28,14 @@
   <div class="row">
     <div class="col-xs-12">
       <div>
-        <%= link_to I18n.t('general.download_csv'), demands_csv_company_demands_path(company, demands.map(&:id).to_csv, format: :csv), class: 'btn btn-sm btn-primary pull-right grouped-button' %>
-      </div>
-      <div>
-        <%= link_to I18n.t('general.show_montecarlo'), '#', onclick: "monteCarloDialog(#{company.id}, '#{demands.map(&:id).join(',')}')", class: 'btn btn-sm btn-primary pull-right grouped-button show-montecarlo-dialog' %>
+        <%= link_to I18n.t('general.download_csv'), demands_csv_company_demands_path(company, demands.map(&:id).to_csv, format: :csv), method: :post, class: 'btn btn-sm btn-primary pull-right grouped-button' %>
       </div>
     </div>
   </div>
 <% end %>
 
 <% if paged_demands.present? %>
-  <%= paginate paged_demands, remote: true %>
+  <%= paginate paged_demands %>
   <div id="demands_table">
     <table class="table table-index table-striped">
       <thead>

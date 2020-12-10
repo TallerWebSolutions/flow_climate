@@ -1,6 +1,5 @@
 $("#general-loader").hide();
 
-bindDemandFilterActions();
 buildDemandsTabCharts();
 
 $('#demands-table-list').addClass("btn-active");

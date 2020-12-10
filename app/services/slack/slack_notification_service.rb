@@ -174,12 +174,11 @@ module Slack
       return if already_notified.present?
 
       slack_notifier = Slack::Notifier.new(slack_configuration.room_webhook)
-
-      block_type = { "type": 'section', "text": { "type": 'mrkdwn', "text": "*Tipo:* #{I18n.t("activerecord.attributes.demand_block.enums.block_type.#{demand_block.block_type}")}" } }
+      block_type = { "type": 'section', "text": { "type": 'mrkdwn', "text": "*Tipo:* <#{edit_block_url}|#{I18n.t("activerecord.attributes.demand_block.enums.block_type.#{demand_block.block_type}")}> #{demand_block.blocker.user&.slack_user_for_company(demand_block.demand.company)} #{I18n.t('slack_configurations.notifications.block_change_type_text')}" } }
       divider_block = { "type": 'divider' }
 
       if block_state == 'blocked'
-        notify_blocked(block_type, demand_block, demand_url, divider_block, edit_block_url, slack_notifier)
+        notify_blocked(block_type, demand_block, demand_url, divider_block, slack_notifier)
       else
         notify_unblocked(block_type, demand_block, demand_url, divider_block, slack_notifier)
       end
@@ -196,12 +195,11 @@ module Slack
       slack_notifier.post(blocks: [message_title, block_type, block_detail, divider_block])
     end
 
-    def notify_blocked(block_type, demand_block, demand_url, divider_block, edit_block_url, slack_notifier)
+    def notify_blocked(block_type, demand_block, demand_url, divider_block, slack_notifier)
       message_title = { "type": 'section', "text": { "type": 'mrkdwn', "text": ":no_entry_sign: #{demand_block.blocker_name} bloqueou a <#{demand_url}|#{demand_block.demand.external_id}> em _#{demand_block.demand.stage_at(demand_block.block_time)&.name || 'sem etapa'}_ as #{I18n.l(demand_block.block_time, format: :short)}" } }
       block_detail = { "type": 'section', "text": { "type": 'mrkdwn', "text": "*Motivo:* #{demand_block.block_reason}" } }
-      block_ask_for_edit = { "type": 'context', "elements": [{ "type": 'mrkdwn', "text": "#{demand_block.blocker.user&.slack_user_for_company(demand_block.demand.company)} <#{edit_block_url}|clique aqui para alterar a categoria do bloqueio>" }] }
 
-      slack_notifier.post(blocks: [message_title, block_type, block_detail, divider_block, block_ask_for_edit])
+      slack_notifier.post(blocks: [message_title, block_type, block_detail, divider_block])
     end
   end
 end

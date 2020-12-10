@@ -858,8 +858,6 @@ pt-BR:
         standard: "Padrão"
         fixed_date: "Data Fixa"
         expedite: "Expedição"
-    montecarlo_dialog:
-      title: "Simulação de Monte Carlo para Demandas"
     score_research:
       title: "Pesquisa de Pontuação"
       go_to_list: "Ir para a lista"
@@ -1181,6 +1179,7 @@ pt-BR:
       title: "Nova Config do Slack"
     notifications:
       beyond_expected_title: "O time %{team_name} está com %{beyond_expected_count} demanda(s) acima do esperado na etapa"
+      block_change_type_text: "Clique no tipo para classificar o bloqueio"
     index:
       active: "Ativo?"
   portfolio_units:

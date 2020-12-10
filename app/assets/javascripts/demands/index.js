@@ -1,2 +1,1 @@
-bindDemandFilterActions();
 $("#general-loader").hide();
