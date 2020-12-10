@@ -70,7 +70,7 @@ class CompaniesController < AuthenticatedController
     @company_settings = CompanySettings.new(company: @company) if @company_settings.blank?
     @company_settings.update(company_settings_params)
     assign_jira_accounts_list
-    respond_to { |format| format.js { render 'companies/update_settings.js.erb' } }
+    respond_to { |format| format.js { render 'companies/update_settings' } }
   end
 
   def projects_tab
@@ -86,7 +86,7 @@ class CompaniesController < AuthenticatedController
     build_query_dates
     @strategic_chart_data = Highchart::StrategicChartsAdapter.new(@company, @company.teams, @projects, @company.demands.kept, @start_date, @end_date, @period)
     assign_company_children
-    respond_to { |format| format.js { render 'charts/strategic_charts.js.erb' } }
+    respond_to { |format| format.js { render 'charts/strategic_charts' } }
   end
 
   def risks_tab
@@ -95,7 +95,7 @@ class CompaniesController < AuthenticatedController
     @strategic_chart_data = Highchart::StrategicChartsAdapter.new(@company, @company.teams, @projects, @company.demands.kept, @start_date, @end_date, @period)
     @projects_risk_chart_data = Highchart::ProjectRiskChartsAdapter.new(@projects)
 
-    respond_to { |format| format.js { render 'companies/risks_tab.js.erb' } }
+    respond_to { |format| format.js { render 'companies/risks_tab' } }
   end
 
   private

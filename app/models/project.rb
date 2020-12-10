@@ -265,7 +265,7 @@ class Project < ApplicationRecord
   end
 
   def last_alert_for(risk_type)
-    project_risk_alerts.joins(:project_risk_config).where('project_risk_configs.risk_type = :risk_type', risk_type: ProjectRiskConfig.risk_types[risk_type]).order(created_at: :desc).first
+    project_risk_alerts.joins(:project_risk_config).where('project_risk_configs.risk_type' => ProjectRiskConfig.risk_types[risk_type]).order(created_at: :desc).first
   end
 
   def hours_per_month

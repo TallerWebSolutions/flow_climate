@@ -19,8 +19,8 @@ class DemandBlocksController < AuthenticatedController
 
   def edit
     respond_to do |format|
-      format.js { render 'demand_blocks/edit.js.erb' }
-      format.html { render 'demand_blocks/edit.html.erb' }
+      format.js { render 'demand_blocks/edit' }
+      format.html { render 'demand_blocks/edit' }
     end
   end
 
@@ -28,7 +28,7 @@ class DemandBlocksController < AuthenticatedController
     @demand_block.update(demand_block_params)
 
     respond_to do |format|
-      format.js { render 'demand_blocks/update.js.erb' }
+      format.js { render 'demand_blocks/update' }
       format.html { redirect_to company_demand_path(@company, @demand) }
     end
   end
@@ -75,7 +75,7 @@ class DemandBlocksController < AuthenticatedController
   def build_type_query(demand_blocks)
     return demand_blocks if params[:blocks_type].blank?
 
-    demand_blocks.where('block_type = :block_type', block_type: params[:blocks_type])
+    demand_blocks.where(block_type: params[:blocks_type])
   end
 
   def build_member_query(demand_blocks)

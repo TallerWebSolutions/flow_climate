@@ -55,7 +55,7 @@ class StageProjectConfigsController < AuthenticatedController
   def recompute_manual_efforts_to_transitions_in_stage
     project = @stage_project_config.project
     stage = @stage_project_config.stage
-    transitions = stage.demand_transitions.joins(demand: :project).where('demands.project_id = :project_id', project_id: project.id)
+    transitions = stage.demand_transitions.joins(demand: :project).where('demands.project_id' => project.id)
     demands = transitions.map(&:demand).flatten.uniq
     demands.map { |demand| demand.update_effort!(params['recompute_manual_efforts'] == '1') }
   end
