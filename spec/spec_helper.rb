@@ -2,8 +2,8 @@
 
 ENV['RAILS_ENV'] ||= 'test'
 
-require 'simplecov/parallel'
-SimpleCov::Parallel.activate
+require 'simplecov'
+SimpleCov.start
 SimpleCov.minimum_coverage 100
 SimpleCov.start do
   add_filter 'config/initializers/rack_profiler.rb'
