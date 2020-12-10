@@ -1,6 +1,6 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/bd4ed58b6b08523b837a/maintainability)](https://codeclimate.com/github/TallerWebSolutions/flow_climate/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/bd4ed58b6b08523b837a/test_coverage)](https://codeclimate.com/github/TallerWebSolutions/flow_climate/test_coverage)
-[![Build Status](https://travis-ci.org/TallerWebSolutions/flow_climate.svg?branch=develop)](https://travis-ci.org/TallerWebSolutions/flow_climate)
+![FlowClimateBuild](https://github.com/TallerWebSolutions/flow_climate/workflows/FlowClimateBuild/badge.svg)
 [![sponsored by Taller](https://raw.githubusercontent.com/TallerWebSolutions/tallerwebsolutions.github.io/master/sponsored-by-taller.png)](https://taller.net.br/en/)
 
 
@@ -38,8 +38,8 @@ Have the ultimate management tools in your hands!
     - `rake db:create RAILS_ENV=test`
     - `rake db:migrate RAILS_ENV=test`
 
-- CI: Travis
-    - Check `travis.yml`
+- CI/CD: Github actions
+    - Check [Github Actions](https://github.com/TallerWebSolutions/flow_climate/tree/develop/.github/workflows)     
     
 - The build relies on `rspec` and `rubocop` success
 - In the project folder you should be able to run and check the output of:
