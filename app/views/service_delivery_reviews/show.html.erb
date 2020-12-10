@@ -25,7 +25,10 @@
           </div>
         </div>
         <div id="sdr-general-info" class="tabcontent">
-          <%= render 'service_delivery_reviews/general_info', company: @company, service_delivery_review: @service_delivery_review %>
+          <%= render 'service_delivery_reviews/general_info',
+                     company: @company,
+                     service_delivery_review: @service_delivery_review
+          %>
         </div>
 
         <div id="sdr-kpis-ranges" class="tabcontent">
@@ -43,7 +46,7 @@
          data-title=''
          data-seriesname='<%= I18n.t('general.class_of_service') %>'
          data-tooltipsuffix='<%= I18n.t('general.demands') %>'
-         data-series='<%= Demand.class_of_services.map { |class_of_service| { name: I18n.t("activerecord.attributes.demand.enums.class_of_service.#{class_of_service[0]}"), y: @service_delivery_review.demands.send(class_of_service[0]).count } if @service_delivery_review.demands.send(class_of_service[0]).count.positive? }.compact.to_json %>'
+         data-series='<%= Demand.class_of_services.map { |class_of_service| { name: I18n.t("activerecord.attributes.demand.enums.class_of_service.#{class_of_service[0]}"), y: @service_delivery_review.demands.kept.send(class_of_service[0]).count } if @service_delivery_review.demands.kept.send(class_of_service[0]).count.positive? }.compact.to_json %>'
          data-decimals='2'>
     </div>
   </div>
@@ -72,7 +75,7 @@
 <div class="row">
   <div class="col-xs-4">
     <h4><%= I18n.t('service_delivery_reviews.show.bugs_label') %></h4>
-    <% if @service_delivery_review.demands.present? %>
+    <% if @service_delivery_review.demands.kept.present? %>
       <div id="service-delivery-review-bugs-donut"
            class="flow-chart"
            data-title=''
@@ -110,7 +113,7 @@
   <div class="col-xs-4">
     <h4><%= I18n.t('service_delivery_reviews.show.lead_time_breakdown_label') %></h4>
 
-    <% if @service_delivery_review.demands.present? %>
+    <% if @service_delivery_review.demands.kept.present? %>
       <div id="service-delivery-review-lead-time-breakdown-column"
            class="flow-chart"
            data-title=''
@@ -133,7 +136,7 @@
 
 <div class="row">
   <div class="col-xs-12 bottom-spaced-component">
-    <% if @service_delivery_review.demands.present? %>
+    <% if @service_delivery_review.demands.kept.present? %>
       <div id="service-delivery-review-flow-data-column"
            class="flow-chart"
            data-title='<%= I18n.t('demands.charts.flow_data') %>'
@@ -175,7 +178,7 @@
            data-topthreshold='<%= @service_delivery_review.lead_time_top_threshold.to_f / 1.day %>'
            data-bottomthresholdtext='<%= "#{I18n.t('activerecord.attributes.service_delivery_review.lead_time_bottom_threshold')}: #{I18n.t('general.days_text', count: number_with_precision(@service_delivery_review.lead_time_bottom_threshold.to_f / 1.day), precision: 2)}" %>'
            data-topthresholdtext='<%= "#{I18n.t('activerecord.attributes.service_delivery_review.lead_time_top_threshold')}: #{I18n.t('general.days_text', count: number_with_precision(@service_delivery_review.lead_time_top_threshold.to_f / 1.day, precision: 2))}" %>'
-           data-series='<%= [{ type: 'scatter', yAxis: 1, name: I18n.t('general.demands'), data: @service_delivery_review.demands.kept.finished.order(:end_date).map { |demand| { name: demand.external_id, y: (demand.leadtime.to_f / 1.day), end_date: I18n.l(demand.end_date, format: :short) } } }].to_json %>'
+           data-series='<%= [{ type: 'scatter', yAxis: 1, name: I18n.t('general.demands'), data: @service_delivery_review.demands.finished.order(:end_date).map { |demand| { name: demand.external_id, y: (demand.leadtime.to_f / 1.day), end_date: I18n.l(demand.end_date, format: :short) } } }].to_json %>'
            data-decimals='2'>
       </div>
     </div>

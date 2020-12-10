@@ -142,8 +142,8 @@ RSpec.describe Customer, type: :model do
     let(:customer) { Fabricate :customer, company: company }
     let(:other_customer) { Fabricate :customer, company: company }
 
-    let(:project) { Fabricate :project, company: company, customers: [customer] }
-    let(:other_project) { Fabricate :project, company: company, customers: [customer, other_customer] }
+    let(:project) { Fabricate :project, company: company, customers: [customer], status: :executing, start_date: 3.days.ago, end_date: 2.days.from_now, initial_scope: 30 }
+    let(:other_project) { Fabricate :project, company: company, customers: [customer, other_customer], status: :executing, initial_scope: 20 }
 
     let!(:first_demand) { Fabricate :demand, customer: customer, project: project, demand_type: :feature, created_date: 3.weeks.ago, commitment_date: 17.days.ago, end_date: 2.weeks.ago }
     let!(:second_demand) { Fabricate :demand, customer: customer, project: project, demand_type: :bug, created_date: 2.weeks.ago, commitment_date: 18.days.ago, end_date: 1.week.ago }

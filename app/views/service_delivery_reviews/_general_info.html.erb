@@ -2,7 +2,7 @@
   <tbody>
     <tr>
       <td><b><%= ServiceDeliveryReview.human_attribute_name :demands %></b></td>
-      <td><%= link_to service_delivery_review.demands.count, demands_list_by_ids_company_demands_path(company, demands_ids: service_delivery_review.demands.map(&:id).join(',')), method: :post, target: '_blank' %></td>
+      <td><%= link_to service_delivery_review.demands.kept.count, demands_list_by_ids_company_demands_path(company, demands_ids: service_delivery_review.demands.kept.map(&:id).join(',')), method: :post, target: '_blank' %></td>
     </tr>
     <tr>
       <td><b><%= I18n.t('service_delivery_reviews.show.discarded_demands_label') %></b></td>
