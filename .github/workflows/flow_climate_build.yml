@@ -43,7 +43,6 @@ jobs:
         ports:
           - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -63,7 +62,6 @@ jobs:
         run: |
           bundle config path vendor/bundle
           bundle install --jobs 4 --retry 3
-
       - name: Run specs
         env:
           secret_key_32_encoded: "8L+WeHTWhNtEAvQzoRaYqYtl4VCwDMReh2SzicO/iCA=\n"
@@ -72,7 +70,11 @@ jobs:
           PG_USER: "postgres"
           PG_PASSWORD: "postgres"
           PG_PORT: ${{ job.services.postgres.ports['5432'] }}
-        run: bundle exec rspec
+          CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
+        - uses: actions/checkout@master
+        - uses: paambaati/codeclimate-action@v2.2.4
+          with:
+            coverageCommand: bundle exec rspec
 
   deploy-staging:
     runs-on: ubuntu-latest
