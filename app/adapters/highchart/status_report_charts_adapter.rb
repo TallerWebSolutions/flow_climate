@@ -40,12 +40,6 @@ module Highchart
       demands_stages_count.map { |key, value| { name: key, data: value } } # build the chart
     end
 
-    def build_monte_carlo_info
-      montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo((@demands.kept.not_finished.count + uncertain_scope), @work_item_flow_information.throughput_array_for_monte_carlo, 500)
-      build_montecarlo_perecentage_confidences(montecarlo_durations)
-      build_dates_to_montecarlo_duration_chart_hash
-    end
-
     private
 
     def build_cfd_hash(demands_ids, stages, bottom_limit_date)
@@ -67,25 +61,6 @@ module Highchart
       end
 
       demands_stages_count
-    end
-
-    def build_montecarlo_perecentage_confidences(montecarlo_durations)
-      @confidence_95_duration = Stats::StatisticsService.instance.percentile(95, montecarlo_durations)
-      @confidence_80_duration = Stats::StatisticsService.instance.percentile(80, montecarlo_durations)
-      @confidence_60_duration = Stats::StatisticsService.instance.percentile(60, montecarlo_durations)
-    end
-
-    def build_dates_to_montecarlo_duration_chart_hash
-      @dates_to_montecarlo_duration = []
-      return @dates_to_montecarlo_duration if @all_projects.blank?
-
-      active_projects = @all_projects.active
-      return if active_projects.blank?
-
-      @dates_to_montecarlo_duration << { name: I18n.t('projects.charts.montecarlo_dates.project_date'), date: active_projects.maximum(:end_date), color: '#1E8449' }
-      @dates_to_montecarlo_duration << { name: I18n.t('projects.charts.montecarlo_dates.confidence_95'), date: TimeService.instance.add_weeks_to_today(@confidence_95_duration), color: '#B7950B' }
-      @dates_to_montecarlo_duration << { name: I18n.t('projects.charts.montecarlo_dates.confidence_80'), date: TimeService.instance.add_weeks_to_today(@confidence_80_duration), color: '#F4D03F' }
-      @dates_to_montecarlo_duration << { name: I18n.t('projects.charts.montecarlo_dates.confidence_60'), date: TimeService.instance.add_weeks_to_today(@confidence_60_duration), color: '#CB4335' }
     end
 
     def build_demand_data_processors

@@ -7,7 +7,7 @@ class DemandsController < DemandsListController
 
   before_action :assign_company
   before_action :assign_demand, only: %i[edit update show synchronize_jira destroy destroy_physically score_research]
-  before_action :assign_project, except: %i[demands_csv demands_tab search_demands show destroy destroy_physically montecarlo_dialog score_research index demands_list_by_ids]
+  before_action :assign_project, except: %i[demands_csv demands_tab search_demands show destroy destroy_physically score_research index demands_list_by_ids]
 
   def new
     @demand = Demand.new(project: @project)
@@ -89,8 +89,10 @@ class DemandsController < DemandsListController
     assign_dates_to_query
 
     @discarded_demands = demands.discarded
-    @paged_demands = query_demands(@start_date, @end_date)
-    @demands = @paged_demands.except(:limit, :offset)
+    @demands = query_demands.kept
+    @paged_demands = @paged_demands&.page(page_param)
+
+    @demands_ids = @demands.map(&:id).split(',')
 
     assign_consolidations
 
@@ -100,29 +102,18 @@ class DemandsController < DemandsListController
   def search_demands
     assign_dates_to_query
 
-    @paged_demands = query_demands(@start_date, @end_date)
-    @demands = @paged_demands.except(:limit, :offset)
+    @demands = query_demands
+    @paged_demands = @demands.page(page_param)
 
     assign_consolidations
 
-    respond_to { |format| format.js { render 'demands/search_demands' } }
+    render 'demands/index'
   end
 
   def destroy_physically
     flash[:error] = @demand.errors.full_messages.join(',') unless @demand.destroy
 
     respond_to { |format| format.js { render 'demands/destroy_physically' } }
-  end
-
-  def montecarlo_dialog
-    @status_report_data = Highchart::StatusReportChartsAdapter.new(demands, start_date_to_status_report(demands), end_date_to_status_report(demands), 'week')
-
-    @demands_left = demands.kept.not_finished
-    @demands_delivered = demands.kept.finished
-    @throughput_per_period = @status_report_data.work_item_flow_information.throughput_array_for_monte_carlo
-    @status_report_data.build_monte_carlo_info
-
-    respond_to { |format| format.js { render 'demands/montecarlo_dialog' } }
   end
 
   def score_research
@@ -139,12 +130,15 @@ class DemandsController < DemandsListController
   def demands_list_by_ids
     @paged_demands = demands.page(page_param)
     assign_consolidations
-    @demands_ids = @demands.map(&:id)
 
     render 'demands/index'
   end
 
   private
+
+  def demands_ids
+    @demands_ids ||= params[:demands_ids]&.split(',')
+  end
 
   def compute_flow_efficiency
     @queue_percentage = Stats::StatisticsService.instance.compute_percentage(@demand.total_queue_time, @demand.total_touch_time)
@@ -156,21 +150,13 @@ class DemandsController < DemandsListController
     @downstream_percentage = 100 - @upstream_percentage
   end
 
-  def end_date_to_status_report(demands)
-    demands.finished.map(&:end_date).max || Time.zone.today
-  end
-
-  def start_date_to_status_report(demands)
-    demands.map(&:created_date).compact.min || Time.zone.today
-  end
-
   def demands
-    @demands ||= @company.demands.includes(:portfolio_unit).includes(:product).where(id: params[:demands_ids]&.split(','))
+    @demands ||= Demand.where(id: demands_ids)
   end
 
-  def query_demands(start_date, end_date)
-    searched_demands = DemandService.instance.search_engine(demands, start_date, end_date, params[:search_text], params[:flow_status], params[:demand_type], params[:demand_class_of_service], params[:search_demand_tags]&.split(' '))
-    searched_demands.order('demands.end_date DESC, demands.commitment_date DESC, demands.created_date DESC').page(page_param)
+  def query_demands
+    searched_demands = DemandService.instance.search_engine(demands, params[:start_date], params[:end_date], params[:search_text], params[:flow_status], params[:demand_type], params[:demand_class_of_service], params[:search_demand_tags]&.split(' '))
+    searched_demands.order('demands.end_date DESC, demands.commitment_date DESC, demands.created_date DESC')
   end
 
   def demand_params

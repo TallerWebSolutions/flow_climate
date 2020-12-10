@@ -63,12 +63,6 @@ RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
             expect(report_data.delivered_vs_remaining).to eq([{ name: I18n.t('projects.show.delivered_demands.opened_in_period'), data: [42] }, { name: I18n.t('projects.show.delivered_demands.delivered'), data: [10] }])
             expect(report_data.deadline).to eq [{ data: [13], name: I18n.t('projects.index.total_remaining_days') }, { color: '#F45830', data: [71], name: I18n.t('projects.index.passed_time') }]
             expect(report_data.cumulative_flow_diagram_downstream).to match_array([{ name: 'queue_stage', data: [3, 3, 4, 4, 5, 5, 6, 6, 6, 6, 6] }, { name: 'ongoing_stage', data: [3, 3, 4, 4, 5, 5, 6, 6, 6, 6, 6] }, { name: 'first_stage', data: [3, 3, 4, 4, 5, 5, 6, 6, 6, 6, 6] }, { name: 'second_stage', data: [3, 3, 4, 4, 5, 5, 6, 6, 6, 6, 6] }, { name: 'third_stage', data: [3, 3, 4, 4, 5, 5, 6, 6, 6, 6, 6] }])
-
-            report_data.build_monte_carlo_info
-            expect(report_data.dates_to_montecarlo_duration).not_to be_empty
-            expect(report_data.confidence_95_duration).to be_within(7).of(65)
-            expect(report_data.confidence_80_duration).to be_within(7).of(47)
-            expect(report_data.confidence_60_duration).to be_within(7).of(37)
           end
         end
       end

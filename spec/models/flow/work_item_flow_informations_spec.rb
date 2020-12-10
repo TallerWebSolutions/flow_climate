@@ -97,6 +97,7 @@ RSpec.describe Flow::WorkItemFlowInformations, type: :model do
         expect(item_flow_info.upstream_delivered_per_period).to eq [0]
         expect(item_flow_info.downstream_total_delivered).to eq [0]
         expect(item_flow_info.downstream_delivered_per_period).to eq [0]
+        expect(item_flow_info.throughput_array_for_monte_carlo).to eq [0]
 
         item_flow_info.work_items_flow_behaviour(dates_array.first, dates_array.second, 1, true)
         expect(item_flow_info.scope_per_period).to eq [22, 22]
@@ -112,6 +113,7 @@ RSpec.describe Flow::WorkItemFlowInformations, type: :model do
         expect(item_flow_info.upstream_delivered_per_period).to eq [0, 0]
         expect(item_flow_info.downstream_total_delivered).to eq [0, 1]
         expect(item_flow_info.downstream_delivered_per_period).to eq [0, 1]
+        expect(item_flow_info.throughput_array_for_monte_carlo).to eq [0, 1]
 
         item_flow_info.work_items_flow_behaviour(dates_array.first, dates_array.second, 1, false)
         expect(item_flow_info.scope_per_period).to eq [22, 22, 22]
@@ -127,6 +129,7 @@ RSpec.describe Flow::WorkItemFlowInformations, type: :model do
         expect(item_flow_info.upstream_delivered_per_period).to eq [0, 0]
         expect(item_flow_info.downstream_total_delivered).to eq [0, 1]
         expect(item_flow_info.downstream_delivered_per_period).to eq [0, 1]
+        expect(item_flow_info.throughput_array_for_monte_carlo).to eq [0, 1]
 
         expect(item_flow_info.demands_tags_hash.to_h).to eq({ ccc: 4, sbbrubles: 3, aaa: 2 }.stringify_keys)
       end

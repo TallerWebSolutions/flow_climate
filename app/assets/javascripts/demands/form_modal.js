@@ -6,14 +6,3 @@ $(document).on('click', '.edit-demand-button', {} ,function(e) {
         keyboard: false
     });
 });
-
-function monteCarloDialog(companyId, demandsIds) {
-    event.preventDefault();
-
-    $("#show-montecarlo-dialog").modal({
-        backdrop: 'static',
-        keyboard: false
-    });
-
-    getMonteCarloComputation(companyId, demandsIds);
-}

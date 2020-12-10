@@ -1,5 +1,3 @@
-bindDemandFilterActions();
-
 var demandsList = $("#demands-list");
 demandsList.html("<%= escape_javascript(render 'demands/demands_list', demands: @demands, demands_ids: @demands_ids).html_safe %>");
 

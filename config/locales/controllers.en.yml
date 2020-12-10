@@ -786,8 +786,6 @@ en:
         standard: "Standard"
         fixed_date: "Fixed Date"
         expedite: "Expedite"
-    montecarlo_dialog:
-      title: "Monte Carlo Simulation to Demands"
     score_research:
       title: "Score Research"
       go_to_list: "Go to the list"
@@ -1210,6 +1208,7 @@ en:
       title: "New Slack Config"
     notifications:
       beyond_expected_title: "The team %{team_name} has %{beyond_expected_count} outdated demands."
+      block_change_type_text: "Click on the type to classify the block"
     index:
       active: "Active?"
   portfolio_units:

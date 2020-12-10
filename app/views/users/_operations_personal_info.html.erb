@@ -8,11 +8,11 @@
     </tr>
     <tr>
       <td><b><%= I18n.t('general.delivered') %></b></td>
-      <td><%= link_to demands.kept.finished.count, demands_list_by_ids_company_demands_path(company, demands_ids: demands.kept.finished.map(&:id).join(',')), method: :post, target: '_blank' %></td>
+      <td><%= link_to demands.kept.finished.count, demands_list_by_ids_company_demands_path(company, demands_ids: demands.kept.finished.map(&:id).join(',')), target: '_blank' %></td>
     </tr>
     <tr>
       <td><b><%= I18n.t('general.bugs') %></b></td>
-      <td><%= link_to demands.kept.bug.count, demands_list_by_ids_company_demands_path(company, demands_ids: demands.kept.bug.map(&:id).join(',')), method: :post, target: '_blank' %></td>
+      <td><%= link_to demands.kept.bug.count, demands_list_by_ids_company_demands_path(company, demands_ids: demands.kept.bug.map(&:id).join(',')), target: '_blank' %></td>
     </tr>
     <% if team_member.present? %>
       <% if team_member.lead_time_min.present? %>

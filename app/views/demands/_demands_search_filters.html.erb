@@ -1,48 +1,53 @@
-<div class="row bottom-spaced-component">
-  <div class="col-xs-4">
-    <div class="form-group">
-      <%= label_tag I18n.t('demands.filter.flow_status.title') %>
-      <%= select_tag :flow_status, flow_status_options, class: 'form-control', id: 'demands-table-flow-status', selected: params[:flow_status] %>
+<%= form_tag search_demands_company_demands_path(company.id), class: 'form' do %>
+  <%= hidden_field_tag :demands_ids, demands_ids&.join(',') %>
+
+  <div class="row bottom-spaced-component">
+    <div class="col-xs-4">
+      <div class="form-group">
+        <%= label_tag I18n.t('demands.filter.flow_status.title') %>
+        <%= select_tag :flow_status, flow_status_options(params[:flow_status]), class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="col-xs-4">
+      <div class="form-group">
+        <%= label_tag I18n.t('demands.filter.demand_type.title') %>
+        <%= select_tag :demand_type, demand_type_options(params[:demand_type]), class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="col-xs-4">
+      <div class="form-group">
+        <%= label_tag I18n.t('demands.filter.class_of_service.title') %>
+        <%= select_tag :class_of_service, class_of_service_options(params[:class_of_service]), class: 'form-control' %>
+      </div>
     </div>
   </div>
 
-  <div class="col-xs-4">
-    <div class="form-group">
-      <%= label_tag I18n.t('demands.filter.demand_type.title') %>
-      <%= select_tag :demand_type, demand_type_options, class: 'form-control', id: 'demands-table-demand-type', selected: params[:demand_type] %>
+  <div class="row bottom-spaced-component">
+    <div class="col-xs-2">
+      <%= label_tag Project.human_attribute_name(:start_date), nil, class: 'control-label' %>
+      <%= date_field_tag :demands_start_date, params[:start_date], class: 'form-control' %>
+    </div>
+
+    <div class="col-xs-2">
+      <%= label_tag Project.human_attribute_name(:end_date), nil, class: 'control-label' %>
+      <%= date_field_tag :demands_end_date, params[:end_date], class: 'form-control' %>
+    </div>
+
+    <div class="col-xs-4">
+      <%= label_tag Demand.human_attribute_name :demand_tags %>
+      <%= text_field_tag :demand_tags, params[:demand_tags], class: 'form-control', id: 'search-demand-tags' %>
+    </div>
+    <div class="col-xs-4">
+      <%= label_tag I18n.t('general.search_text') %>
+      <%= text_field_tag :search_text, params[:search_text], class: 'form-control', id: 'search_text', placeholder: I18n.t('demands.index.search.text.placeholder') %>
     </div>
   </div>
 
-  <div class="col-xs-4">
-    <div class="form-group">
-      <%= label_tag I18n.t('demands.filter.class_of_service.title') %>
-      <%= select_tag :class_of_service, class_of_service_options, class: 'form-control', id: 'demands-table-class-of-service', selected: params[:class_of_service] %>
+  <div class="row">
+    <div class="col-xs-2">
+      <%= submit_tag I18n.t('general.search'), class: 'btn btn-success' %>
     </div>
   </div>
-</div>
-
-<div class="row bottom-spaced-component">
-  <div class="col-xs-2">
-    <%= label_tag Project.human_attribute_name(:start_date), nil, class: 'control-label' %>
-    <%= date_field_tag :demands_start_date, start_date, class: 'form-control' %>
-  </div>
-
-  <div class="col-xs-2">
-    <%= label_tag Project.human_attribute_name(:end_date), nil, class: 'control-label' %>
-    <%= date_field_tag :demands_end_date, end_date, class: 'form-control' %>
-  </div>
-  <div class="col-xs-4">
-    <%= label_tag Demand.human_attribute_name :demand_tags %>
-    <%= text_field_tag :demand_tags, nil, class: 'form-control', id: 'search-demand-tags' %>
-  </div>
-  <div class="col-xs-4">
-    <%= label_tag I18n.t('general.search_text') %>
-    <%= text_field_tag :search_text, nil, class: 'form-control', id: 'search_text', placeholder: I18n.t('demands.index.search.text.placeholder') %>
-  </div>
-</div>
-
-<div class="row">
-  <div class="col-xs-2">
-    <%= button_tag I18n.t('general.search'), class: 'btn btn-success filter-button' %>
-  </div>
-</div>
+<% end %>
