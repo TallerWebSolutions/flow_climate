@@ -36,16 +36,6 @@ class TeamsController < DemandsListController
     render :edit
   end
 
-  def replenishing_input
-    @replenishing_data = []
-    @team.projects.running.each do |project|
-      consolidation = Consolidations::ReplenishingConsolidation.where(project: project).order(:consolidation_date).last
-      @replenishing_data << consolidation if consolidation.present?
-    end
-
-    render 'teams/replenishing_input'
-  end
-
   def destroy
     team_name = @team.name
 

@@ -32,12 +32,6 @@ RSpec.describe TeamsController, type: :controller do
       it { expect(response).to redirect_to new_user_session_path }
     end
 
-    describe 'GET #replenishing_input' do
-      before { get :replenishing_input, params: { company_id: 'xpto', id: 'foo' } }
-
-      it { expect(response).to redirect_to new_user_session_path }
-    end
-
     describe 'DELETE #destroy' do
       before { delete :destroy, params: { company_id: 'bar', id: 'foo' } }
 
@@ -304,33 +298,6 @@ RSpec.describe TeamsController, type: :controller do
           before { put :update, params: { company_id: company, id: team, team: { name: 'foo' } } }
 
           it { expect(response).to have_http_status :not_found }
-        end
-      end
-    end
-
-    describe 'GET #replenishing_input' do
-      context 'having data' do
-        include_context 'demands to filters'
-
-        it 'returns the data and redirects' do
-          Fabricate :replenishing_consolidation, project: first_project
-          Fabricate :replenishing_consolidation, project: second_project
-          Fabricate :replenishing_consolidation, project: third_project
-          Fabricate :replenishing_consolidation, project: fourth_project
-
-          get :replenishing_input, params: { company_id: company, id: team }, xhr: true
-
-          replenishing_data = assigns(:replenishing_data)
-          expect(replenishing_data.map(&:project)).to match_array [first_project, second_project]
-        end
-      end
-
-      context 'having no data' do
-        before { get :replenishing_input, params: { company_id: company, id: team }, xhr: true }
-
-        it 'returns an empty array and redirects' do
-          expect(assigns(:replenishing_data)).to eq []
-          expect(response).to render_template 'teams/replenishing_input'
         end
       end
     end

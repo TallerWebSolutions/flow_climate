@@ -172,6 +172,7 @@ pt-BR:
       first_delivery: "Primeira entrega"
       lead_time_in_month: "Lead time (p80) no mês"
     backlog: "Backlog"
+    update_cache: "Atualizar Cache"
   header:
     logout: Sair
     sign_up: Cadastre-se
@@ -1355,3 +1356,6 @@ pt-BR:
   project_risk_alerts:
     index:
       title: "%{count} Alertas de Risco"
+  replenishing_consolidations:
+    index:
+      title: "Reabastecimento"

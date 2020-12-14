@@ -124,8 +124,11 @@ Rails.application.routes.draw do
 
       resources :team_resource_allocations, only: %i[new create destroy]
 
+      resources :replenishing_consolidations, only: [:index] do
+        put :refresh_cache, on: :collection
+      end
+
       member do
-        get :replenishing_input
         get :team_projects_tab
         get :dashboard_tab
         get :dashboard_page_two

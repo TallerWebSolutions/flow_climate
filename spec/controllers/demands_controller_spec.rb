@@ -1334,7 +1334,7 @@ RSpec.describe DemandsController, type: :controller do
 
             expect(assigns(:confidence_95_leadtime)).to be_within(40).of 600
             expect(assigns(:confidence_80_leadtime)).to be_within(40).of 410
-            expect(assigns(:confidence_65_leadtime)).to be_within(20).of 190
+            expect(assigns(:confidence_65_leadtime)).to be_within(25).of 190
           end
         end
       end

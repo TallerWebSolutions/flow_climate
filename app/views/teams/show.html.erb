@@ -31,7 +31,7 @@
     <div class="tab">
       <button class="tablinks" id="team-dashboard-tab"><%= I18n.t('teams.show.dashboard_tab') %></button>
       <button class="tablinks" id="team-projects-tab"><%= I18n.t('teams.show.projects_tab') %></button>
-      <button class="tablinks" id="team-replenishing-tab"><%= I18n.t('navbar.replenishing') %></button>
+      <%= link_to I18n.t('navbar.replenishing'), company_team_replenishing_consolidations_path(@company, @team), class: 'btn btn-default' %>
     </div>
   </div>
 </div>

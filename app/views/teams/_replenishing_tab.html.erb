@@ -1,5 +1,10 @@
 <% if projects_to_replenish.present? %>
-  <h5><i><%= I18n.t('general.last_update.text', last_update: I18n.l(projects_to_replenish.map(&:updated_at).max, format: :short)) %></i></h5>
+  <h5>
+    <i><%= I18n.t('general.last_update.text', last_update: I18n.l(projects_to_replenish.map(&:updated_at).max, format: :short)) %></i>
+    <%= link_to company_team_replenishing_consolidation_refresh_consolidation_path(company, team), method: :put, remote: true do %>
+      <i class="fas fa-sync-alt same-line-sync-symbol" aria-hidden="true" title="<%= I18n.t('general.update_cache') %>"></i>
+    <% end %>
+  </h5>
 
   <div class="row header-summary">
     <div class="col-xs-3 summary-card-frame">

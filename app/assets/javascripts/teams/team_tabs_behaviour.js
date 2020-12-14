@@ -60,17 +60,6 @@ function bindDashboardSelectors() {
         getDashboardPageFive(companyId, teamId);
     });
 
-    $("#team-replenishing-tab").on("click", function() {
-        hideAllTeamTabs();
-
-        let companyId = $("#company_id").val();
-        let teamId = $("#team_id").val();
-
-        activateTab($("#team-replenishing-tab"));
-
-        buildReplenishingMeeting(companyId, teamId);
-    });
-
     $("#team-projects-tab").on("click", function() {
         hideAllTeamTabs();
 
