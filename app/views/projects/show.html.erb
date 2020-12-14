@@ -12,44 +12,46 @@
 <% if @project.consolidations_last_update.present? %>
   <h5><i><%= I18n.t('general.last_update.text', last_update: I18n.l(@project.consolidations_last_update, format: :short)) %></i></h5>
 <% end %>
+<% if @all_project_consolidations.present? %>
 
-<div class="row">
-  <% if @project.executing? %>
-    <div class="col-xs-6">
-      <% project_risk_alert_color = 'no-alert' %>
-      <% if @project.current_risk_to_deadline > 0.5 && @project.current_risk_to_deadline <= 0.7 %>
-        <% project_risk_alert_color = 'yellow-alert' %>
+  <div class="row">
+    <% if @project.executing? %>
+      <div class="col-xs-6">
+        <% project_risk_alert_color = 'no-alert' %>
+        <% if @project.current_risk_to_deadline > 0.5 && @project.current_risk_to_deadline <= 0.7 %>
+          <% project_risk_alert_color = 'yellow-alert' %>
 
-      <% elsif @project.current_risk_to_deadline > 0.7  %>
-        <% project_risk_alert_color = 'red-alert' %>
-      <% end %>
+        <% elsif @project.current_risk_to_deadline > 0.7  %>
+          <% project_risk_alert_color = 'red-alert' %>
+        <% end %>
 
-      <div class="project-deadline-info center <%= project_risk_alert_color %>">
-        <%= I18n.t('projects.show.deadline_countdown.first_part') %><span class="countdown"><%= I18n.t('projects.show.deadline_countdown.days', remaining_days: @project.remaining_days.to_i ) %></span><%= I18n.t('projects.show.deadline_countdown.second_part') %>
-        <%= I18n.t('projects.show.deadline_countdown.risk') %><span class="countdown"><%=  number_to_percentage(@project.current_risk_to_deadline * 100, precision: 2) %></span>
-        <a href="https://vimeo.com/456336459" target="_blank"><i class="fas fa-info-circle"></i></a>
+        <div class="project-deadline-info center <%= project_risk_alert_color %>">
+          <%= I18n.t('projects.show.deadline_countdown.first_part') %><span class="countdown"><%= I18n.t('projects.show.deadline_countdown.days', remaining_days: @project.remaining_days.to_i ) %></span><%= I18n.t('projects.show.deadline_countdown.second_part') %>
+          <%= I18n.t('projects.show.deadline_countdown.risk') %><span class="countdown"><%=  number_to_percentage(@project.current_risk_to_deadline * 100, precision: 2) %></span>
+          <a href="https://vimeo.com/456336459" target="_blank"><i class="fas fa-info-circle"></i></a>
+        </div>
       </div>
-    </div>
 
-    <div class="col-xs-6">
-      <% team_based_risk = @all_project_consolidations.last.team_based_operational_risk %>
-      <% team_risk_alert_color = 'no-alert' %>
+      <div class="col-xs-6">
+        <% team_based_risk = @all_project_consolidations.last.team_based_operational_risk %>
+        <% team_risk_alert_color = 'no-alert' %>
 
-      <% if team_based_risk > 0.5 && team_based_risk <= 0.7 %>
-        <% team_risk_alert_color = 'yellow-alert' %>
-      <% elsif team_based_risk > 0.7  %>
-        <% team_risk_alert_color = 'red-alert' %>
-      <% end %>
+        <% if team_based_risk > 0.5 && team_based_risk <= 0.7 %>
+          <% team_risk_alert_color = 'yellow-alert' %>
+        <% elsif team_based_risk > 0.7  %>
+          <% team_risk_alert_color = 'red-alert' %>
+        <% end %>
 
-      <div class="project-deadline-info center <%= team_risk_alert_color %>">
-        <%= sanitize "Com a estratégia de WiP e pelos dados do time, o risco atual é de <span class='countdown'>#{number_to_percentage(team_based_risk * 100, precision: 2)}</span>" %>
-        <a href="https://vimeo.com/456336459" target="_blank"><i class="fas fa-info-circle"></i></a>
+        <div class="project-deadline-info center <%= team_risk_alert_color %>">
+          <%= sanitize "Com a estratégia de WiP e pelos dados do time, o risco atual é de <span class='countdown'>#{number_to_percentage(team_based_risk * 100, precision: 2)}</span>" %>
+          <a href="https://vimeo.com/456336459" target="_blank"><i class="fas fa-info-circle"></i></a>
+        </div>
       </div>
-    </div>
-  <% else %>
-    <div class="col-xs-12"><%= (I18n.t('projects.show.status_information_html', status_description: I18n.t("activerecord.attributes.project.enums.status.#{@project.status}")))&.html_safe %></div>
-  <% end %>
-</div>
+    <% else %>
+      <div class="col-xs-12"><%= (I18n.t('projects.show.status_information_html', status_description: I18n.t("activerecord.attributes.project.enums.status.#{@project.status}")))&.html_safe %></div>
+    <% end %>
+  </div>
+<% end %>
 
 <div class="col-xs-2 pull-right">
   <div class="dropdown topnav-right">
