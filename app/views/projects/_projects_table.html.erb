@@ -16,98 +16,94 @@
     </div>
   </div>
 
-  <% if request.xhr? %>
-    <%= paginate projects_list, remote: true %>
-  <% else %>
-    <%= paginate projects_list  %>
-  <% end %>
+  <%= paginate projects_list, method: :get %>
 
   <% if projects_list.blank? || projects_list.empty? %>
     <%= I18n.t('projects.index.no_data') %>
   <% else %>
     <table class="table table-index table-striped">
       <thead>
-        <tr>
-          <th><%= I18n.t('general.table.actions') %></th>
-          <th><%= Project.model_name.human %></th>
-          <th><%= Project.human_attribute_name :team %></th>
-          <th><%= Project.human_attribute_name :start_date %></th>
-          <th><%= Project.human_attribute_name :end_date %></th>
-          <th><%= Project.human_attribute_name :status %></th>
-          <th><%= Project.human_attribute_name :project_type %></th>
-          <th><%= Project.human_attribute_name :qty_hours %></th>
-          <th><%= I18n.t('projects.index.consumed_hours') %></th>
-          <th><%= I18n.t('projects.show.demand_blocks_count') %></th>
-          <th><%= I18n.t('projects.show.demand_blocks_duration_average') %></th>
-          <th><%= I18n.t('projects.show.demands_count') %></th>
-          <th><%= I18n.t('projects.show.features_count') %></th>
-          <th><%= I18n.t('projects.show.bugs_count') %></th>
-          <th><%= I18n.t('projects.show.chore_count') %></th>
-          <th><%= I18n.t('projects.show.throughput') %></th>
-          <th><%= Project.human_attribute_name :value %></th>
-          <th><%= I18n.t('projects.index.remaining_money') %></th>
-          <th><%= I18n.t('projects.index.total_remaining_days') %></th>
-          <th><%= I18n.t('projects.index.flow_pressure') %></th>
-          <th><%= I18n.t('projects.index.percentage_flow_pressure') %></th>
-          <th>
-            <%= I18n.t('projects.index.inconsistent_demands_count') %>
-            <i class="far fa-question-circle" title="<%= I18n.t('projects.show.inconsistent_demands.help') %>"></i>
-          </th>
-          <th class="center"><%= I18n.t('projects.index.risk_alerts') %></th>
-          <th><%= I18n.t('general.table.actions') %></th>
-        </tr>
+      <tr>
+        <th><%= I18n.t('general.table.actions') %></th>
+        <th><%= Project.model_name.human %></th>
+        <th><%= Project.human_attribute_name :team %></th>
+        <th><%= Project.human_attribute_name :start_date %></th>
+        <th><%= Project.human_attribute_name :end_date %></th>
+        <th><%= Project.human_attribute_name :status %></th>
+        <th><%= Project.human_attribute_name :project_type %></th>
+        <th><%= Project.human_attribute_name :qty_hours %></th>
+        <th><%= I18n.t('projects.index.consumed_hours') %></th>
+        <th><%= I18n.t('projects.show.demand_blocks_count') %></th>
+        <th><%= I18n.t('projects.show.demand_blocks_duration_average') %></th>
+        <th><%= I18n.t('projects.show.demands_count') %></th>
+        <th><%= I18n.t('projects.show.features_count') %></th>
+        <th><%= I18n.t('projects.show.bugs_count') %></th>
+        <th><%= I18n.t('projects.show.chore_count') %></th>
+        <th><%= I18n.t('projects.show.throughput') %></th>
+        <th><%= Project.human_attribute_name :value %></th>
+        <th><%= I18n.t('projects.index.remaining_money') %></th>
+        <th><%= I18n.t('projects.index.total_remaining_days') %></th>
+        <th><%= I18n.t('projects.index.flow_pressure') %></th>
+        <th><%= I18n.t('projects.index.percentage_flow_pressure') %></th>
+        <th>
+          <%= I18n.t('projects.index.inconsistent_demands_count') %>
+          <i class="far fa-question-circle" title="<%= I18n.t('projects.show.inconsistent_demands.help') %>"></i>
+        </th>
+        <th class="center"><%= I18n.t('projects.index.risk_alerts') %></th>
+        <th><%= I18n.t('general.table.actions') %></th>
+      </tr>
       </thead>
       <tbody>
-        <% projects_list.each do |project| %>
-          <tr>
-            <td><%= render 'projects/project_actions', company: company, project: project %></td>
-            <td><%= link_to project.name, company_project_path(company, project) %></td>
-            <td><%= link_to project.team.name, company_team_path(company, project.team) if project.team.present? %></td>
-            <td><%= I18n.l(project.start_date) %></td>
-            <td><%= I18n.l(project.end_date) %></td>
-            <td><%= I18n.t("activerecord.attributes.project.enums.status.#{project.status}") %></td>
-            <td><%= I18n.t("activerecord.attributes.project.enums.project_type.#{project.project_type}") %></td>
-            <td><%= number_with_precision(project.qty_hours, precision: 2) %></td>
-            <td><%= number_with_precision(project.consumed_hours_in_period(project.start_date, project.end_date), precision: 2) %></td>
-            <td>
-              <%= link_to company_demand_blocks_path(company, projects_ids: project.id), class: 'list-block', remote: true do %>
-                <%= project.active_kept_closed_blocks.count %>
-              <% end %>
-            </td>
-            <td><%= number_with_precision(project.average_block_duration, precision: 2) %>h</td>
-            <td><%= project.demands.kept.count %></td>
-            <td><%= project.demands.kept.feature.count %><small> (<%= number_with_precision(project.percentage_of_demand_type(:feature), precision: 2) %>%)</small></td>
-            <td><%= project.demands.kept.bug.count %><small> (<%= number_with_precision(project.percentage_of_demand_type(:bug), precision: 2) %>%)</small></td>
-            <td><%= project.demands.kept.chore.count %><small> (<%= number_with_precision(project.percentage_of_demand_type(:chore), precision: 2) %>%)</small></td>
-            <td><%= number_with_precision(project.total_throughput_for(1.week.ago), precision: 0) %></td>
-            <td><%= number_to_currency(project.value) %></td>
-            <td><%= number_to_currency(project.remaining_money(project.end_date)) %></td>
-            <td><%= project.remaining_days %></td>
-            <td><%= number_with_precision(project.flow_pressure, precision: 3) %></td>
-            <td>
-              <% if projects_summary.total_flow_pressure.positive? %>
-                <%= number_to_percentage((project.flow_pressure.to_f / projects_summary.total_flow_pressure) * 100, precision: 2) %>
-              <% else %>
-                0,00
-              <% end %>
-            </td>
-            <td><%= project.demands.dates_inconsistent_to_project(project).count %></td>
-            <td><%= render 'projects/project_risk_indicators', project: project %></td>
-            <td><%= render 'projects/project_actions', company: company, project: project %></td>
-          </tr>
-          <tr id="<%= "products_table_#{project.id}" %>" class="col-table-details">
-            <td></td>
-            <td colspan="12">
-              <%= render 'projects/products_in_project', project: project %>
-            </td>
-          </tr>
-          <tr id="<%= "customers_table_#{project.id}" %>" class="col-table-details">
-            <td></td>
-            <td colspan="12">
-              <%= render 'projects/customers_in_project', project: project %>
-            </td>
-          </tr>
-        <% end %>
+      <% projects_list.each do |project| %>
+        <tr>
+          <td><%= render 'projects/project_actions', company: company, project: project %></td>
+          <td><%= link_to project.name, company_project_path(company, project) %></td>
+          <td><%= link_to project.team.name, company_team_path(company, project.team) if project.team.present? %></td>
+          <td><%= I18n.l(project.start_date) %></td>
+          <td><%= I18n.l(project.end_date) %></td>
+          <td><%= I18n.t("activerecord.attributes.project.enums.status.#{project.status}") %></td>
+          <td><%= I18n.t("activerecord.attributes.project.enums.project_type.#{project.project_type}") %></td>
+          <td><%= number_with_precision(project.qty_hours, precision: 2) %></td>
+          <td><%= number_with_precision(project.consumed_hours_in_period(project.start_date, project.end_date), precision: 2) %></td>
+          <td>
+            <%= link_to company_demand_blocks_path(company, projects_ids: project.id), class: 'list-block', remote: true do %>
+              <%= project.active_kept_closed_blocks.count %>
+            <% end %>
+          </td>
+          <td><%= number_with_precision(project.average_block_duration, precision: 2) %>h</td>
+          <td><%= project.demands.kept.count %></td>
+          <td><%= project.demands.kept.feature.count %><small> (<%= number_with_precision(project.percentage_of_demand_type(:feature), precision: 2) %>%)</small></td>
+          <td><%= project.demands.kept.bug.count %><small> (<%= number_with_precision(project.percentage_of_demand_type(:bug), precision: 2) %>%)</small></td>
+          <td><%= project.demands.kept.chore.count %><small> (<%= number_with_precision(project.percentage_of_demand_type(:chore), precision: 2) %>%)</small></td>
+          <td><%= number_with_precision(project.total_throughput_for(1.week.ago), precision: 0) %></td>
+          <td><%= number_to_currency(project.value) %></td>
+          <td><%= number_to_currency(project.remaining_money(project.end_date)) %></td>
+          <td><%= project.remaining_days %></td>
+          <td><%= number_with_precision(project.flow_pressure, precision: 3) %></td>
+          <td>
+            <% if projects_summary.total_flow_pressure.positive? %>
+              <%= number_to_percentage((project.flow_pressure.to_f / projects_summary.total_flow_pressure) * 100, precision: 2) %>
+            <% else %>
+              0,00
+            <% end %>
+          </td>
+          <td><%= project.demands.dates_inconsistent_to_project(project).count %></td>
+          <td><%= render 'projects/project_risk_indicators', project: project %></td>
+          <td><%= render 'projects/project_actions', company: company, project: project %></td>
+        </tr>
+        <tr id="<%= "products_table_#{project.id}" %>" class="col-table-details">
+          <td></td>
+          <td colspan="12">
+            <%= render 'projects/products_in_project', project: project %>
+          </td>
+        </tr>
+        <tr id="<%= "customers_table_#{project.id}" %>" class="col-table-details">
+          <td></td>
+          <td colspan="12">
+            <%= render 'projects/customers_in_project', project: project %>
+          </td>
+        </tr>
+      <% end %>
       </tbody>
     </table>
   <% end %>

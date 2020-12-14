@@ -267,7 +267,7 @@ Rails.application.routes.draw do
       collection do
         post 'demands_csv/(:demands_ids)', action: :demands_csv, as: 'demands_csv'
         get :demands_tab
-        get :demands_list_by_ids
+        post :demands_list_by_ids
         post 'search_demands'
       end
 
