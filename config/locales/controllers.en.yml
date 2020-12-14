@@ -172,6 +172,7 @@ en:
       first_delivery: "First delivery"
       lead_time_in_month: "Lead time (p80) in month"
     backlog: "Backlog"
+    update_cache: "Update Cache"
   header:
     logout: Logout
     explore: Explore
@@ -1375,3 +1376,6 @@ en:
   project_risk_alerts:
     index:
       title: "%{count} Risk Alerts"
+  replenishing_consolidations:
+    index:
+      title: "Replenishing"

@@ -1,8 +1,0 @@
-var replenishingDiv = $("#team-replenishing-container");
-
-replenishingDiv.html("<%= escape_javascript(render "teams/replenishing_tab", company: @company, projects_to_replenish: @replenishing_data).html_safe %>");
-
-$("#general-loader").hide();
-replenishingDiv.show();
-
-$(".col-table-details").hide();
