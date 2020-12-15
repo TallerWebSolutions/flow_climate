@@ -1,6 +1,4 @@
-<%= form_tag search_demands_company_demands_path(company.id), class: 'form' do %>
-  <%= hidden_field_tag :demands_ids, demands_ids&.join(',') %>
-
+<%= form_tag search_demands_company_demands_path(company.id, session_demands_key: 'demands_ids'), class: 'form', method: :get do %>
   <div class="row bottom-spaced-component">
     <div class="col-xs-4">
       <div class="form-group">

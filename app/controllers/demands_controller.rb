@@ -137,7 +137,10 @@ class DemandsController < DemandsListController
   private
 
   def demands_ids
-    @demands_ids ||= params[:demands_ids]&.split(',')
+    ids = session[params[:session_demands_key]]
+
+    ids = params[:demands_ids] if ids.blank?
+    ids&.split(',')
   end
 
   def compute_flow_efficiency
@@ -151,7 +154,8 @@ class DemandsController < DemandsListController
   end
 
   def demands
-    @demands ||= Demand.where(id: demands_ids)
+    @demands_ids = demands_ids
+    @demands ||= Demand.where(id: @demands_ids)
   end
 
   def query_demands

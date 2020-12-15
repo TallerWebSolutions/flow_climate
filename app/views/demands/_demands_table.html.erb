@@ -35,7 +35,7 @@
 <% end %>
 
 <% if paged_demands.present? %>
-  <%= paginate paged_demands %>
+  <%= paginate paged_demands, method: :post %>
   <div id="demands_table">
     <table class="table table-index table-striped">
       <thead>

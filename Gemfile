@@ -6,6 +6,7 @@ ruby '2.7.2'
 
 gem 'rails'
 
+gem 'activerecord-session_store'
 gem 'addressable'
 gem 'attr_encrypted'
 gem 'carrierwave'
