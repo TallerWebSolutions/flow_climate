@@ -267,8 +267,8 @@ Rails.application.routes.draw do
       collection do
         post 'demands_csv/(:demands_ids)', action: :demands_csv, as: 'demands_csv'
         get :demands_tab
-        post :demands_list_by_ids
-        post 'search_demands'
+        get 'demands_list_by_ids/:session_demands_key', action: :demands_list_by_ids, as: :demands_list_by_ids
+        get 'search_demands/:session_demands_key', action: :search_demands, as: :search_demands
       end
 
       resources :demand_transitions, except: %i[destroy index]

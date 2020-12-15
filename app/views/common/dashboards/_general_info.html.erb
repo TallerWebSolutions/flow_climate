@@ -8,20 +8,24 @@
     <td><%= initial_scope %></td>
   </tr>
   <tr>
+    <% session[:general_info_demands] = demands.map(&:id).join(',') %>
     <td><b><%= I18n.t('general.demands').capitalize %></b></td>
-    <td><%= link_to I18n.t('general.demands_text', count: demands.count), demands_list_by_ids_company_demands_path(company, demands_ids: demands.map(&:id).join(',')), method: :post, target: '_blank' %></td>
+    <td><%= link_to I18n.t('general.demands_text', count: demands.count), demands_list_by_ids_company_demands_path(company, session_demands_key: 'general_info_demands'), target: '_blank' %></td>
   </tr>
   <tr>
+    <% session[:delivered_demands] = demands_delivered.map(&:id).join(',') %>
     <td><b><%= I18n.t('general.delivered') %></b></td>
-    <td><%= link_to I18n.t('general.demands_text', count: demands_delivered.count), demands_list_by_ids_company_demands_path(company, demands_ids: demands_delivered.map(&:id).join(',')), target: '_blank' %></td>
+    <td><%= link_to I18n.t('general.demands_text', count: demands_delivered.count), demands_list_by_ids_company_demands_path(company, session_demands_key: 'delivered_demands'), target: '_blank' %></td>
   </tr>
   <tr>
+    <% session[:remaining_backlog] = remaining_backlog.map(&:id).join(',') %>
     <td><b><%= I18n.t('projects.index.remaining_backlog') %></b></td>
-    <td><%= link_to I18n.t('general.demands_text', count: remaining_backlog.count), demands_list_by_ids_company_demands_path(company, demands_ids: remaining_backlog.map(&:id).join(',')), target: '_blank' %></td>
+    <td><%= link_to I18n.t('general.demands_text', count: remaining_backlog.count), demands_list_by_ids_company_demands_path(company, session_demands_key: 'remaining_backlog'), target: '_blank' %></td>
   </tr>
   <tr>
+    <% session[:unscored_demands] = unscored_demands.map(&:id).join(',') %>
     <td><b><%= I18n.t('projects.show.unscored_demands.title') %></b></td>
-    <td><%= link_to I18n.t('general.demands_text', count: unscored_demands.count), demands_list_by_ids_company_demands_path(company, demands_ids: unscored_demands.map(&:id).join(',')), target: '_blank' %></td>
+    <td><%= link_to I18n.t('general.demands_text', count: unscored_demands.count), demands_list_by_ids_company_demands_path(company, session_demands_key: 'unscored_demands'), target: '_blank' %></td>
   </tr>
   <tr>
     <td><b><%= I18n.t('demand_blocks.index.title') %></b></td>

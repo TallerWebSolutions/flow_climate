@@ -8,9 +8,9 @@
   </div>
 </div>
 
-<%= render 'demands/demands_search_filters',
-           company: @company,
-           demands_ids: @demands_ids %>
+<% session[:demands_ids] = @demands_ids %>
+
+<%= render 'demands/demands_search_filters', company: @company, demands_ids: @demands_ids %>
 
 <%= render 'layouts/load_spinner' %>
 

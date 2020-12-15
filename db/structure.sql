@@ -2498,6 +2498,38 @@ ALTER SEQUENCE public.service_delivery_reviews_id_seq OWNED BY public.service_de
 
 
 --
+-- Name: sessions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.sessions (
+    id bigint NOT NULL,
+    session_id character varying NOT NULL,
+    data text,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: sessions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.sessions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: sessions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.sessions_id_seq OWNED BY public.sessions.id;
+
+
+--
 -- Name: slack_configurations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3327,6 +3359,13 @@ ALTER TABLE ONLY public.service_delivery_reviews ALTER COLUMN id SET DEFAULT nex
 
 
 --
+-- Name: sessions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sessions ALTER COLUMN id SET DEFAULT nextval('public.sessions_id_seq'::regclass);
+
+
+--
 -- Name: slack_configurations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3951,6 +3990,14 @@ ALTER TABLE ONLY public.score_matrix_questions
 
 ALTER TABLE ONLY public.service_delivery_reviews
     ADD CONSTRAINT service_delivery_reviews_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: sessions sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sessions
+    ADD CONSTRAINT sessions_pkey PRIMARY KEY (id);
 
 
 --
@@ -4811,6 +4858,20 @@ CREATE UNIQUE INDEX index_service_delivery_reviews_on_meeting_date_and_product_i
 --
 
 CREATE INDEX index_service_delivery_reviews_on_product_id ON public.service_delivery_reviews USING btree (product_id);
+
+
+--
+-- Name: index_sessions_on_session_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_sessions_on_session_id ON public.sessions USING btree (session_id);
+
+
+--
+-- Name: index_sessions_on_updated_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_sessions_on_updated_at ON public.sessions USING btree (updated_at);
 
 
 --
@@ -6181,6 +6242,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20201019125426'),
 ('20201020185804'),
 ('20201111160327'),
-('20201209134542');
+('20201209134542'),
+('20201214235753');
 
 
