@@ -19,7 +19,6 @@ RSpec.describe History::ClassOfServiceChangeHistory, type: :model do
 
     context 'complex ones' do
       context 'uniqueness' do
-
         it 'invalidates the duplicated ones' do
           change_date = 1.day.ago
           demand = Fabricate :demand
