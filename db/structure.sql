@@ -676,6 +676,40 @@ CREATE TABLE public.ar_internal_metadata (
 
 
 --
+-- Name: class_of_service_change_histories; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.class_of_service_change_histories (
+    id bigint NOT NULL,
+    demand_id integer NOT NULL,
+    change_date timestamp without time zone NOT NULL,
+    from_class_of_service integer,
+    to_class_of_service integer NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: class_of_service_change_histories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.class_of_service_change_histories_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: class_of_service_change_histories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.class_of_service_change_histories_id_seq OWNED BY public.class_of_service_change_histories.id;
+
+
+--
 -- Name: companies; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3016,6 +3050,13 @@ ALTER TABLE ONLY hdb_catalog.remote_schemas ALTER COLUMN id SET DEFAULT nextval(
 
 
 --
+-- Name: class_of_service_change_histories id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.class_of_service_change_histories ALTER COLUMN id SET DEFAULT nextval('public.class_of_service_change_histories_id_seq'::regclass);
+
+
+--
 -- Name: companies id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3593,6 +3634,14 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 
 --
+-- Name: class_of_service_change_histories class_of_service_change_histories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.class_of_service_change_histories
+    ADD CONSTRAINT class_of_service_change_histories_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: companies companies_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4154,6 +4203,13 @@ CREATE UNIQUE INDEX hdb_version_one_row ON hdb_catalog.hdb_version USING btree (
 
 
 --
+-- Name: cos_history_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX cos_history_unique ON public.class_of_service_change_histories USING btree (demand_id, change_date);
+
+
+--
 -- Name: idx_contract_consolidation_unique; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4193,6 +4249,13 @@ CREATE UNIQUE INDEX idx_replenishing_unique ON public.replenishing_consolidation
 --
 
 CREATE UNIQUE INDEX idx_transitions_unique ON public.demand_transitions USING btree (demand_id, stage_id, last_time_in);
+
+
+--
+-- Name: index_class_of_service_change_histories_on_demand_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_class_of_service_change_histories_on_demand_id ON public.class_of_service_change_histories USING btree (demand_id);
 
 
 --
@@ -5803,6 +5866,14 @@ ALTER TABLE ONLY public.demands
 
 
 --
+-- Name: class_of_service_change_histories fk_rails_b150af85df; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.class_of_service_change_histories
+    ADD CONSTRAINT fk_rails_b150af85df FOREIGN KEY (demand_id) REFERENCES public.demands(id);
+
+
+--
 -- Name: jira_accounts fk_rails_b16d2de302; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6243,6 +6314,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20201020185804'),
 ('20201111160327'),
 ('20201209134542'),
-('20201214235753');
+('20201214235753'),
+('20201215181752');
 
 

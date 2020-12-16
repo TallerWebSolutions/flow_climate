@@ -73,7 +73,9 @@ RSpec.describe Jira::JiraReader do
   end
 
   describe '#read_class_of_service' do
-    it { expect(described_class.instance.read_class_of_service(jira_account, jira_issue.attrs, jira_issue.changelog)).to eq :standard }
+    let(:demand) { Fabricate :demand }
+
+    it { expect(described_class.instance.read_class_of_service(demand, jira_account, jira_issue.attrs, jira_issue.changelog)).to eq :standard }
   end
 
   describe '#read_portfolio_unit' do

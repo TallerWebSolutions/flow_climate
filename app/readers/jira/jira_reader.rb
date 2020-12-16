@@ -62,10 +62,10 @@ module Jira
       jira_issue_attrs['fields']['project']['self']
     end
 
-    def read_class_of_service(jira_account, jira_issue_attrs, jira_issue_changelog)
-      class_of_service_name = read_class_of_service_by_tag_name(jira_issue_changelog)
+    def read_class_of_service(demand, jira_account, jira_issue_attrs, jira_issue_changelog)
+      class_of_service_name = read_class_of_service_by_field_name(demand, jira_issue_changelog)
 
-      class_of_service_name = read_class_of_service_custom_field_id(jira_account, jira_issue_attrs) if class_of_service_name.blank?
+      class_of_service_name = read_class_of_service_by_custom_field_id(demand, jira_account, jira_issue_attrs) if class_of_service_name.blank?
 
       if class_of_service_name.casecmp('expedite').zero?
         :expedite
@@ -138,7 +138,7 @@ module Jira
       jira_issue_attrs['fields']['project']['key']
     end
 
-    def read_class_of_service_custom_field_id(jira_account, jira_issue_attrs)
+    def read_class_of_service_by_custom_field_id(demand, jira_account, jira_issue_attrs)
       class_of_service_custom_field_name = jira_account.class_of_service_custom_field&.custom_field_machine_name
 
       jira_custom_fields_hash = build_jira_custom_fields_hash(jira_issue_attrs)
@@ -154,10 +154,12 @@ module Jira
                                   class_of_service_hash['value']
                                 end
       end
+      create_history_for_class_of_service_changing(demand, demand.created_date, nil, class_of_service_name)
+
       class_of_service_name
     end
 
-    def read_class_of_service_by_tag_name(jira_issue_changelog)
+    def read_class_of_service_by_field_name(demand, jira_issue_changelog)
       class_of_service = ''
       return class_of_service if jira_issue_changelog.blank?
 
@@ -165,7 +167,9 @@ module Jira
         next unless history['items'].present? && class_of_service_field?(history)
 
         class_of_service = history['items'].first['toString']
+        create_history_for_class_of_service_changing(demand, history['created'], history['items'].first['fromString'], class_of_service)
       end
+
       class_of_service
     end
 
@@ -175,6 +179,22 @@ module Jira
 
     def build_jira_custom_fields_hash(jira_issue_attrs)
       jira_issue_attrs['fields'].select { |field| field.start_with?('customfield') }
+    end
+
+    def create_history_for_class_of_service_changing(demand, change_date, from_class, to_class)
+      from_class_id = nil
+      from_class_id = Demand.class_of_services[read_class_of_service_string(from_class)] if from_class.present?
+      to_class_id = Demand.class_of_services[read_class_of_service_string(to_class.downcase)]
+
+      History::ClassOfServiceChangeHistory.where(demand: demand, change_date: change_date, from_class_of_service: from_class_id, to_class_of_service: to_class_id).first_or_create
+    end
+
+    def read_class_of_service_string(class_of_service_string)
+      class_of_service = class_of_service_string.downcase
+
+      class_of_service = 'standard' if class_of_service == 'default'
+
+      class_of_service.strip.sub(' ', '_')
     end
   end
 end
