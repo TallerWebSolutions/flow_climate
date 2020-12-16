@@ -35,11 +35,12 @@ module Jira
 
     def update_demand!(demand, jira_account, jira_issue, project, product)
       customer = define_customer(project, jira_account, jira_issue_attrs(jira_issue))
+      class_of_service = Jira::JiraReader.instance.read_class_of_service(demand, jira_account, jira_issue_attrs(jira_issue), jira_issue_changelog(jira_issue))
       demand.update(project: project, company: project.company, product: product, team: project.team,
                     customer: customer,
                     created_date: issue_fields_value(jira_issue, 'created'),
                     demand_type: read_issue_type(jira_issue_attrs(jira_issue)),
-                    class_of_service: Jira::JiraReader.instance.read_class_of_service(jira_account, jira_issue_attrs(jira_issue), jira_issue_changelog(jira_issue)),
+                    class_of_service: class_of_service,
                     demand_title: issue_fields_value(jira_issue, 'summary'),
                     external_url: build_jira_url(jira_account, demand.external_id), commitment_date: nil, discarded_at: nil)
 
