@@ -1,4 +1,4 @@
-<% if flow_impacts_list.present? %>
+<% if flow_impacts.present? %>
   <table class="table table-striped">
     <thead>
       <tr>
@@ -14,19 +14,19 @@
       </tr>
     </thead>
     <tbody>
-      <% flow_impacts_list.each do |flow_impact| %>
+      <% flow_impacts.each do |flow_impact| %>
         <tr>
           <td>
             <%= link_to company_flow_impact_path(company, flow_impact), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
               <i class="fa fa-times" title='<%= I18n.t('flow_impacts.destroy.tooltip') %>'></i>
             <% end %>
 
-            <%= link_to edit_company_flow_impact_path(company, flow_impact), remote: true do %>
+            <%= link_to edit_company_project_flow_impact_path(company, project, flow_impact) do %>
               <i class="fas fa-edit" title='<%= I18n.t('flow_impacts.edit.tooltip') %>'></i>
             <% end %>
           </td>
           <td><%= flow_impact.user&.full_name %></td>
-          <td><%= link_to I18n.t("activerecord.attributes.flow_impact.enums.impact_type.#{flow_impact.impact_type}"), company_flow_impact_path(company, flow_impact) %></td>
+          <td><%= link_to I18n.t("activerecord.attributes.flow_impact.enums.impact_type.#{flow_impact.impact_type}"), company_project_flow_impact_path(company, project, flow_impact) %></td>
           <td><%= I18n.t("activerecord.attributes.flow_impact.enums.impact_size.#{flow_impact.impact_size}") %></td>
           <td><%= flow_impact.project.name %></td>
           <td><%= flow_impact.demand&.external_id %></td>

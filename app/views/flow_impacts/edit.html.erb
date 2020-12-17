@@ -1,0 +1,16 @@
+<div class="row bottom-spaced-component">
+  <div class="col-xs-12">
+    <ul class="breadcrumb">
+      <li><%= link_to I18n.t('general.home.title'), root_path %></li>
+      <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
+      <li><%= link_to Project.model_name.human(count: 2), company_projects_path(@company) %></li>
+      <li><%= link_to @project.name, company_project_path(@company, @project) %></li>
+      <li><%= link_to FlowImpact.model_name.human(count: 2), company_project_flow_impacts_path(@company, @project) %></li>
+      <li><%= I18n.t('flow_impacts.new.title') %></li>
+    </ul>
+  </div>
+</div>
+
+<%= form_for @flow_impact, url: company_project_flow_impact_path(@company, @project, @flow_impact), method: :put, html: { class: 'standard-form' } do |f| %>
+  <%= render 'flow_impacts/form', f: f, company: @company, project: @project, flow_impact: @flow_impact, demands_for_impact_form: @demands_for_impact_form %>
+<% end %>

@@ -1183,6 +1183,11 @@ en:
       error: "Problems were found while creating the Flow Impact"
     edit:
       tooltip: "Edit Impact"
+    index:
+      title:
+        zero: "%{count} Flow Impacts"
+        one: "%{count} Flow Impact"
+        other: "%{count} Flow Impacts"
   jira_accounts:
     new:
       title: "New Jira Account"

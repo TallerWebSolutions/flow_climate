@@ -1,2 +1,2 @@
-$("#flow_impact_demand_id").html("<%= escape_javascript options_from_collection_for_select(@demands_to_project, :id, :external_id) %>");
+$("#flow_impact_demand_id").html("<%= escape_javascript options_from_collection_for_select(@demands_to_direct_link, :id, :external_id) %>");
 $("#flow_impact_demand_id").prepend("<option value='' selected='selected'><%= I18n.t('general.select') %></option>");
