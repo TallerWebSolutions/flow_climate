@@ -7,7 +7,7 @@ class DemandsController < DemandsListController
 
   before_action :assign_company
   before_action :assign_demand, only: %i[edit update show synchronize_jira destroy destroy_physically score_research]
-  before_action :assign_project, except: %i[demands_csv demands_tab search_demands show destroy destroy_physically score_research index demands_list_by_ids]
+  before_action :assign_project, except: %i[demands_csv demands_tab search_demands show destroy destroy_physically score_research index demands_list_by_ids order_demands]
 
   def new
     @demand = Demand.new(project: @project)
@@ -110,6 +110,19 @@ class DemandsController < DemandsListController
     render 'demands/index'
   end
 
+  def order_demands
+    assign_dates_to_query
+
+    @demands = query_demands
+
+    @demands = demands.order(params[:order_by] => params[:order_direction])
+    @paged_demands = @demands.page(page_param)
+
+    assign_consolidations
+
+    render 'demands/index'
+  end
+
   def destroy_physically
     flash[:error] = @demand.errors.full_messages.join(',') unless @demand.destroy
 
@@ -155,12 +168,11 @@ class DemandsController < DemandsListController
 
   def demands
     @demands_ids = demands_ids
-    @demands ||= Demand.where(id: @demands_ids)
+    @demands = Demand.where(id: @demands_ids)
   end
 
   def query_demands
-    searched_demands = DemandService.instance.search_engine(demands, params[:demands_start_date], params[:demands_end_date], params[:search_text], params[:flow_status], params[:demand_type], params[:demand_class_of_service], params[:search_demand_tags]&.split(' '))
-    searched_demands.order('demands.end_date DESC, demands.commitment_date DESC, demands.created_date DESC')
+    DemandService.instance.search_engine(demands, params[:demands_start_date], params[:demands_end_date], params[:search_text], params[:flow_status], params[:demand_type], params[:demand_class_of_service], params[:search_demand_tags]&.split(' '))
   end
 
   def demand_params

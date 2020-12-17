@@ -10,7 +10,7 @@
 
 <% session[:demands_ids] = @demands_ids %>
 
-<%= render 'demands/demands_search_filters', company: @company, demands_ids: @demands_ids %>
+<%= render 'demands/demands_search_filters', company: @company %>
 
 <%= render 'layouts/load_spinner' %>
 
@@ -21,7 +21,6 @@
       <%= render 'demands/demands_table', company: @company,
                  demands: @demands,
                  paged_demands: @paged_demands,
-                 demands_ids: @demands_ids,
                  confidence_65_leadtime: @confidence_65_leadtime,
                  confidence_80_leadtime: @confidence_80_leadtime,
                  confidence_95_leadtime: @confidence_95_leadtime,
