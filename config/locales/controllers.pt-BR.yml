@@ -1154,6 +1154,11 @@ pt-BR:
       tooltip: "Editar Impacto"
     show:
       impact_duration: "Duração do Impacto"
+    index:
+      title:
+        zero: "%{count} Impacto"
+        one: "%{count} Impacto"
+        other: "%{count} Impactos"
   jira_accounts:
     new:
       title: "Nova Conta do Jira"

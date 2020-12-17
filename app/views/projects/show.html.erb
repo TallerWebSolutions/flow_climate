@@ -12,6 +12,7 @@
 <% if @project.consolidations_last_update.present? %>
   <h5><i><%= I18n.t('general.last_update.text', last_update: I18n.l(@project.consolidations_last_update, format: :short)) %></i></h5>
 <% end %>
+
 <% if @all_project_consolidations.present? %>
 
   <div class="row">
@@ -62,6 +63,8 @@
       <li><%= link_to I18n.t('projects.show.update_consolidations'), update_consolidations_company_project_path(@company, @project), method: :patch, class: 'nav-link dropdown-item' %></li>
       <li><%= link_to I18n.t('demands.new.title'), new_company_project_demand_path(@company, @project), class: 'nav-link dropdown-item' %></li>
       <li><%= link_to I18n.t('projects.actions.edit.title'), edit_company_project_path(@company, @project), class: 'nav-link dropdown-item' %></li>
+      <li class="divider"></li>
+      <li><%= link_to I18n.t('flow_impacts.index.title', count: @project.flow_impacts.count), company_project_flow_impacts_path(@company, @project), class: 'nav-link dropdown-item' %></li>
       <li class="divider"></li>
       <li><%= link_to I18n.t('jira_project_configs.index.title', count: @project.jira_project_configs.count), company_project_jira_project_configs_path(@company, @project), class: 'nav-link dropdown-item' %></li>
       <li><%= link_to I18n.t('stage_project_configs.index.title', count: @project.stages.count), company_project_stage_project_configs_path(@company, @project), class: 'nav-link dropdown-item' %></li>

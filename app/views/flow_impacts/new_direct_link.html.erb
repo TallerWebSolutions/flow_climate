@@ -8,16 +8,16 @@
   </div>
 </div>
 
-<%= form_for [@company, @flow_impact], url: create_direct_link_company_flow_impacts_url(@company, @flow_impact) do |f| %>
+<%= form_for [@company, @flow_impact], url: create_direct_link_company_flow_impacts_url(@company, @flow_impact), html: { class: 'standard-form' } do |f| %>
   <%= f.hidden_field :company_id, value: @company.id, id: 'company_id' %>
 
   <div class="row">
-    <div class='col-xs-6 form-group <%= 'has-error' if @flow_impact.errors[:project].present? %>'>
+    <div class='col-xs-4 col-xs-offset-4 form-group <%= 'has-error' if @flow_impact.errors[:project].present? %>'>
       <%= f.label :project, class: 'control-label' %>
-      <%= f.select :project_id, @projects_to_direct_link.map { |project| [project.name, project.id] }, { include_blank: I18n.t('general.select'), selected: @flow_impact.project_id }, class: 'form-control', autofocus: true %>
+      <%= f.select :project_id, @projects_to_direct_link.map { |project| [project.name, project.id] }, { include_blank: I18n.t('general.select'), selected: @flow_impact.project_id }, class: 'form-control projects_select', autofocus: true %>
       <span class="help-block"><%= @flow_impact.errors[:project].join(', ') %></span>
     </div>
-    <div class='col-xs-6 form-group <%= 'has-error' if @flow_impact.errors[:external_id].present? %>'>
+    <div class='col-xs-4 col-xs-offset-4 form-group <%= 'has-error' if @flow_impact.errors[:external_id].present? %>'>
       <%= f.label :demand_id, class: 'control-label' %>
       <%= f.select :demand_id, @demands_to_direct_link.map { |demand| [demand.external_id, demand.id] }, { prompt: I18n.t('general.select'), selected: @flow_impact.demand_id }, class: 'form-control' %>
       <span class="help-block"><%= @flow_impact.errors[:external_id].join(', ') %></span>
@@ -25,19 +25,19 @@
   </div>
 
   <div class="row">
-    <div class='col-xs-4 form-group <%= 'has-error' if @flow_impact.errors[:impact_date].present? %>'>
+    <div class='col-xs-4 col-xs-offset-4 form-group <%= 'has-error' if @flow_impact.errors[:impact_date].present? %>'>
       <%= f.label :impact_date, class: 'control-label required' %>
       <%= f.datetime_field :impact_date, class: 'form-control' %>
       <span class="help-block"><%= @flow_impact.errors[:impact_date].join(', ') %></span>
     </div>
 
-    <div class='col-xs-4 form-group <%= 'has-error' if @flow_impact.errors[:impact_type].present? %>'>
+    <div class='col-xs-4 col-xs-offset-4 form-group <%= 'has-error' if @flow_impact.errors[:impact_type].present? %>'>
       <%= f.label :impact_type, class: 'control-label' %>
       <%= f.select :impact_type, FlowImpact.impact_types.map { |key, _value| [t("activerecord.attributes.flow_impact.enums.impact_type.#{key}"), key] }, {include_blank: I18n.t('general.select'), selected: @flow_impact.impact_type }, class: 'form-control' %>
       <span class="help-block"><%= @flow_impact.errors[:impact_type].join(', ') %></span>
     </div>
 
-    <div class='col-xs-4 form-group <%= 'has-error' if @flow_impact.errors[:impact_size].present? %>'>
+    <div class='col-xs-4 col-xs-offset-4 form-group <%= 'has-error' if @flow_impact.errors[:impact_size].present? %>'>
       <%= f.label :impact_size, class: 'control-label' %>
       <%= f.select :impact_size, FlowImpact.impact_sizes.map { |key, _value| [I18n.t("activerecord.attributes.flow_impact.enums.impact_size.#{key}"), key] }, { include_blank: I18n.t('general.select'), selected: @flow_impact.impact_size }, class: 'form-control' %>
       <span class="help-block"><%= @flow_impact.errors[:impact_size].join(', ') %></span>
@@ -46,16 +46,21 @@
   </div>
 
   <div class="row">
-    <div class='col-xs-12 form-group <%= 'has-error' if @flow_impact.errors[:impact_description].present? %>'>
+    <div class='col-xs-4 col-xs-offset-4 form-group <%= 'has-error' if @flow_impact.errors[:impact_description].present? %>'>
       <%= f.label :impact_description, class: 'control-label required' %>
-      <%= f.text_field :impact_description, class: 'form-control' %>
+      <%= f.text_area :impact_description, class: 'form-control' %>
       <span class="help-block"><%= @flow_impact.errors[:impact_description].join(', ') %></span>
     </div>
   </div>
 
   <div class="row">
-    <div class="col-xs-12">
+    <div class="col-xs-4 col-xs-offset-4">
       <%= f.submit I18n.t('general.buttons.save'), class: 'btn btn-success' %>
     </div>
   </div>
+
+<% end %>
+
+<% content_for :javascript do %>
+  <%= javascript_include_tag 'flow_impacts/new_direct_link' %>
 <% end %>
