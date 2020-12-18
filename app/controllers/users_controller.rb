@@ -72,7 +72,7 @@ class UsersController < AuthenticatedController
     projects.each do |project|
       start_manager_charts_arrays(project)
 
-      consolidations = Consolidations::ProjectConsolidation.for_project(project).weekly_data.order(:consolidation_date)
+      consolidations = Consolidations::ProjectConsolidation.for_project(project).after_date(8.weeks.ago).weekly_data.order(:consolidation_date)
       build_consolidations(project, consolidations)
     end
   end

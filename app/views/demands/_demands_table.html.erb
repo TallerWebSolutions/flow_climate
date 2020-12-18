@@ -44,6 +44,7 @@
         <th></th>
         <th>
           <%= Demand.human_attribute_name :external_id %>
+          <th><%= Demand.human_attribute_name :demand_title %></th>
           <%= link_to order_demands_company_demands_path(company_id: company.id, session_demands_key: 'demands_ids', order_by: 'external_id', order_direction: 'asc') do %>
             <i class="fas fa-sort-up"></i>
           <% end %>
@@ -116,7 +117,6 @@
           <% end %>
         </th>
         <th><%= Demand.human_attribute_name :demand_tags %></th>
-        <th><%= Demand.human_attribute_name :demand_title %></th>
         <th><%= I18n.t('general.table.actions') %></th>
       </tr>
       </thead>
