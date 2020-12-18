@@ -273,6 +273,7 @@ Rails.application.routes.draw do
         get 'demands_list_by_ids/:session_demands_key', action: :demands_list_by_ids, as: :demands_list_by_ids
         get 'search_demands/:session_demands_key', action: :search_demands, as: :search_demands
         get 'order_demands/:session_demands_key/:order_by/:order_direction', action: :order_demands, as: :order_demands
+        get 'demands_charts/:session_demands_key', action: :demands_charts, as: :demands_charts
       end
 
       resources :demand_transitions, except: %i[destroy index]

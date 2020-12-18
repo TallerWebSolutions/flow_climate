@@ -7,7 +7,7 @@ class DemandsController < DemandsListController
 
   before_action :assign_company
   before_action :assign_demand, only: %i[edit update show synchronize_jira destroy destroy_physically score_research]
-  before_action :assign_project, except: %i[demands_csv demands_tab search_demands show destroy destroy_physically score_research index demands_list_by_ids order_demands]
+  before_action :assign_project, except: %i[demands_csv demands_tab search_demands show destroy destroy_physically score_research index demands_list_by_ids order_demands demands_charts]
 
   def new
     @demand = Demand.new(project: @project)
@@ -147,12 +147,23 @@ class DemandsController < DemandsListController
     render 'demands/index'
   end
 
+  def demands_charts
+    @demands = query_demands.finished_with_leadtime.order(:end_date)
+    min_date_demands = @demands.map(&:end_date).min || Time.zone.now
+    max_date_demands = @demands.map(&:end_date).max || Time.zone.now
+
+    start_date = [min_date_demands, (max_date_demands - 6.months)].max
+
+    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@demands, start_date, Time.zone.today.end_of_week, 'week')
+  end
+
   private
 
   def demands_ids
     ids = session[params[:session_demands_key]]
 
     ids = params[:demands_ids] if ids.blank?
+    ids = @company.demands.kept.map(&:id).join(',') if ids.blank?
     ids&.split(',')
   end
 
@@ -197,14 +208,10 @@ class DemandsController < DemandsListController
   end
 
   def start_date_to_query
-    return params['start_date'].to_date if params['start_date'].present?
-
-    3.months.ago.to_date
+    params['start_date'].to_date if params['start_date'].present?
   end
 
   def end_date_to_query
-    return params['end_date'].to_date if params['end_date'].present?
-
-    Time.zone.today
+    params['end_date'].to_date if params['end_date'].present?
   end
 end
