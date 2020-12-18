@@ -11,6 +11,7 @@
 </td>
 
 <td><%= link_to demand.external_id, company_demand_path(company, demand.slug), target: :_blank %></td>
+<td title="<%= demand.demand_title %>"><%= truncate(demand.demand_title, length: 80) %></td>
 <td><%= I18n.t("activerecord.attributes.demand.enums.demand_type.#{demand.demand_type}") %></td>
 <td><%= I18n.t("activerecord.attributes.demand.enums.class_of_service.#{demand.class_of_service}") %></td>
 <% if demand.customer.present? %>
@@ -59,6 +60,5 @@
     <span class="label label-info"><%= demand_tag %></span>
   <% end %>
 </td>
-<td><%= demand.demand_title %></td>
 
 <td><%= render 'demands/demand_actions', company: company, demand: demand, demands_ids: demands_ids %></td>
