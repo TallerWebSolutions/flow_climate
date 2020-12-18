@@ -805,6 +805,7 @@ pt-BR:
       flow_data: "Dados do Fluxo"
       hours:
         suffix: "hora(s)"
+      title: "Gráficos de Demandas"
     flow:
       processed_demand: "Demandas Processadas"
       wip: "Trabalho em Progresso"

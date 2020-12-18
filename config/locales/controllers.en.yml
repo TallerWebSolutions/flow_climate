@@ -733,6 +733,7 @@ en:
         title: "Demands"
       hours:
         suffix: "hour(s)"
+      title: "Demands Charts"
     flow:
       processed_demand: "Processed Demands"
       wip: "Work in Progress"

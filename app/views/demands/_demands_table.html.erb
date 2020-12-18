@@ -28,7 +28,10 @@
   <div class="row">
     <div class="col-xs-12">
       <div>
+      </div>
+      <div>
         <%= link_to I18n.t('general.download_csv'), demands_csv_company_demands_path(company, demands.map(&:id).to_csv, format: :csv), method: :post, class: 'btn btn-sm btn-primary pull-right grouped-button' %>
+        <%= link_to I18n.t('general.tabs.charts'), demands_charts_company_demands_path(company, session_demands_key: 'demands_ids'), class: 'btn btn-sm btn-primary pull-right grouped-button', target: '_blank' %>
       </div>
     </div>
   </div>
@@ -44,7 +47,6 @@
         <th></th>
         <th>
           <%= Demand.human_attribute_name :external_id %>
-          <th><%= Demand.human_attribute_name :demand_title %></th>
           <%= link_to order_demands_company_demands_path(company_id: company.id, session_demands_key: 'demands_ids', order_by: 'external_id', order_direction: 'asc') do %>
             <i class="fas fa-sort-up"></i>
           <% end %>
@@ -52,6 +54,7 @@
             <i class="fas fa-sort-down"></i>
           <% end %>
         </th>
+        <th><%= Demand.human_attribute_name :demand_title %></th>
         <th><%= Demand.human_attribute_name :demand_type %></th>
         <th><%= Demand.human_attribute_name :class_of_service %></th>
         <th><%= Customer.model_name.human %></th>

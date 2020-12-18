@@ -8,8 +8,7 @@
     <span class="top-nav-bar-text"><%= link_to I18n.t('navbar.customers_list'), company_customers_path(company), class: 'nav-link top-nav-bar-item' %> | </span>
     <span class="top-nav-bar-text"><%= link_to I18n.t('navbar.products_list'), company_products_path(company), class: 'nav-link top-nav-bar-item' %> | </span>
     <span class="top-nav-bar-text"><%= link_to I18n.t('navbar.projects_list'), company_projects_path(company), class: 'nav-link top-nav-bar-item' %> | </span>
-    <% session[:company_demands_ids] = company.demands.map(&:id) %>
-    <span class="top-nav-bar-text"><%= link_to I18n.t('navbar.demands'), demands_list_by_ids_company_demands_path(company, session_demands_key: 'company_demands_ids'), class: 'nav-link top-nav-bar-item' %> | </span>
+    <span class="top-nav-bar-text"><%= link_to I18n.t('navbar.demands'), company_demands_path(company), class: 'nav-link top-nav-bar-item' %> | </span>
     <span class="top-nav-bar-text"><%= link_to I18n.t('navbar.demand_blocks'), company_demand_blocks_path(company), class: 'nav-link top-nav-bar-item' %></span>
   <% end %>
 </div>
