@@ -56,11 +56,7 @@ module Flow
       @hours_delivered_upstream << hours_delivered_in_upstream - @hours_delivered_upstream.sum
       @hours_delivered_downstream << hours_delivery_in_downstream - @hours_delivered_downstream.sum
 
-      @hours_per_demand << if demands_delivered.count.zero?
-                             0
-                           else
-                             ((hours_delivered_in_upstream + hours_delivery_in_downstream) / demands_delivered.count).to_f
-                           end
+      @hours_per_demand << ((hours_delivered_in_upstream + hours_delivery_in_downstream) / demands_delivered.count).to_f
     end
   end
 end

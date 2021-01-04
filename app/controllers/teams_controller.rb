@@ -194,10 +194,6 @@ class TeamsController < DemandsListController
     charts_demands.map(&:end_date).compact.max || Time.zone.today
   end
 
-  def projects
-    @projects ||= @team.projects.order(end_date: :desc).page(page_param)
-  end
-
   def assign_team
     @team = @company.teams.find(params[:id])
   end
