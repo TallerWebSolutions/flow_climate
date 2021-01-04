@@ -1337,9 +1337,9 @@ RSpec.describe DemandsController, type: :controller do
             expect(assigns(:company)).to eq company
             expect(assigns(:demands)).to match_array Demand.all
 
-            expect(assigns(:confidence_95_leadtime)).to be_within(40).of 600
-            expect(assigns(:confidence_80_leadtime)).to be_within(40).of 410
-            expect(assigns(:confidence_65_leadtime)).to be_within(25).of 190
+            expect(assigns(:confidence_95_leadtime)).to be_within(45).of 600
+            expect(assigns(:confidence_80_leadtime)).to be_within(45).of 410
+            expect(assigns(:confidence_65_leadtime)).to be_within(30).of 190
           end
         end
       end

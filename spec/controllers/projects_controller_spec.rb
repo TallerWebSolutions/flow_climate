@@ -554,8 +554,8 @@ RSpec.describe ProjectsController, type: :controller do
       context 'with valid parameters' do
         context 'when there is no stages set in the receiver project' do
           it 'makes the copy of the stages to the receiver project with its configurations as well' do
-            patch :copy_stages_from, params: { company_id: company, id: third_project, project_to_copy_stages_from: first_project }, xhr: true
-            expect(response).to render_template 'stages/update_stages_table'
+            patch :copy_stages_from, params: { company_id: company, id: third_project, project_to_copy_stages_from: first_project }
+            expect(response).to redirect_to company_project_jira_project_configs_path(company, third_project)
             expect(third_project.reload.stages).to match_array [stage_in_first_project, second_stage_in_first_project]
             expect(third_project.reload.stage_project_configs.map(&:stage_percentage)).to match_array [0, 20]
           end
@@ -564,7 +564,7 @@ RSpec.describe ProjectsController, type: :controller do
         context 'when there is stages already set in the receiver project' do
           it 'merges the stages' do
             patch :copy_stages_from, params: { company_id: company, id: second_project, project_to_copy_stages_from: first_project }, xhr: true
-            expect(response).to render_template 'stages/update_stages_table'
+            expect(response).to redirect_to company_project_jira_project_configs_path(company, second_project)
             expect(second_project.reload.stages).to match_array [stage_in_second_project, stage_in_first_project, second_stage_in_first_project]
           end
         end

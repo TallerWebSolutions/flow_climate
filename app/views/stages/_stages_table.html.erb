@@ -1,7 +1,7 @@
 <div class="row pull-right">
   <% if @company.jira_accounts.present? %>
     <div class="col-xs-6">
-      <%= link_to I18n.t('stages.import_from_jira.title'), import_from_jira_company_stages_path(company), method: :post, data: { confirm: I18n.t('stages.import_from_jira.warning') }, remote: true, class: 'btn btn-success bottom-spaced-component' %>
+      <%= link_to I18n.t('stages.import_from_jira.title'), import_from_jira_company_stages_path(company), method: :post, data: { confirm: I18n.t('stages.import_from_jira.warning') }, class: 'btn btn-success bottom-spaced-component' %>
     </div>
   <% end %>
   <div class="col-xs-6">

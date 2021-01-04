@@ -605,9 +605,8 @@ RSpec.describe StagesController, type: :controller do
               returned_status = client.Status.build('id' => 'foo', 'name' => 'bar')
 
               expect_any_instance_of(Jira::JiraApiService).to(receive(:request_status).once { [returned_status] })
-              post :import_from_jira, params: { company_id: company }, xhr: true
-              expect(response).to have_http_status :ok
-              expect(response).to render_template 'stages/update_stages_table'
+              post :import_from_jira, params: { company_id: company }
+              expect(response).to redirect_to company_stages_path(company)
               expect(assigns(:stages_list).count).to eq 3
               expect(assigns(:stages_list).where(integration_id: 'foo').count).to eq 1
             end
@@ -618,8 +617,8 @@ RSpec.describe StagesController, type: :controller do
               returned_status = client.Status.build('id' => 'sbbrubles', 'name' => 'bar')
 
               expect_any_instance_of(Jira::JiraApiService).to(receive(:request_status).once { [returned_status] })
-              post :import_from_jira, params: { company_id: company }, xhr: true
-              expect(response).to have_http_status :ok
+              post :import_from_jira, params: { company_id: company }
+              expect(response).to redirect_to company_stages_path(company)
               expect(assigns(:stages_list).count).to eq 2
               expect(assigns(:stages_list).map(&:name)).to match_array(%w[bar xpto])
             end
@@ -628,8 +627,8 @@ RSpec.describe StagesController, type: :controller do
 
         context 'without JiraAccount' do
           it 'assigns the instance variables and renders the template' do
-            post :import_from_jira, params: { company_id: company }, xhr: true
-            expect(response).to have_http_status :ok
+            post :import_from_jira, params: { company_id: company }
+            expect(response).to redirect_to company_stages_path(company)
             expect(assigns(:stages_list).count).to eq 2
           end
         end
@@ -638,7 +637,7 @@ RSpec.describe StagesController, type: :controller do
       context 'passing an invalid' do
         context 'company' do
           context 'non-existent' do
-            before { post :import_from_jira, params: { company_id: 'foo' }, xhr: true }
+            before { post :import_from_jira, params: { company_id: 'foo' } }
 
             it { expect(response).to have_http_status :not_found }
           end
@@ -646,7 +645,7 @@ RSpec.describe StagesController, type: :controller do
           context 'not permitted' do
             let(:company) { Fabricate :company, users: [] }
 
-            before { post :import_from_jira, params: { company_id: company }, xhr: true }
+            before { post :import_from_jira, params: { company_id: company } }
 
             it { expect(response).to have_http_status :not_found }
           end

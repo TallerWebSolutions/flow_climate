@@ -77,7 +77,7 @@ class StagesController < AuthenticatedController
     update_stages_in_company
     assign_stages_list
 
-    respond_to { |format| format.js { render 'stages/update_stages_table' } }
+    redirect_to company_stages_path(@company)
   end
 
   private

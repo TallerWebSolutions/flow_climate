@@ -187,11 +187,11 @@ class TeamsController < DemandsListController
   end
 
   def start_date
-    params[:start_date]&.to_date || projects.active.map(&:start_date).compact.min || Time.zone.today
+    charts_demands.map(&:end_date).compact.min || Time.zone.today
   end
 
   def end_date
-    params[:end_date]&.to_date || projects.active.map(&:end_date).compact.max || Time.zone.today
+    charts_demands.map(&:end_date).compact.max || Time.zone.today
   end
 
   def projects

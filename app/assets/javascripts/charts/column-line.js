@@ -46,7 +46,10 @@ function buildColumnLineChart(columnDiv) {
             }
         }],
         tooltip: {
-            enabled: true
+            enabled: true,
+            formatter: function () {
+                return Highcharts.numberFormat(this.y, columnDiv.data('decimals'), ',', '.');
+            }
         },
         legend: {
             type: 'line',
@@ -61,7 +64,7 @@ function buildColumnLineChart(columnDiv) {
                     enabled: true,
                     color: 'black',
                     formatter: function () {
-                        return Highcharts.numberFormat(this.y, columnDiv.data('decimals'), '.');
+                        return Highcharts.numberFormat(this.y, columnDiv.data('decimals'), ',', '.');
                     }
                 }
             },
