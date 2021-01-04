@@ -14,6 +14,11 @@ function buildSpeedometerChart(chartDiv) {
         subtitle: {
             text: 'Source: Flow Climate'
         },
+        tooltip: {
+            formatter: function () {
+                return Highcharts.numberFormat(this.y, chartDiv.data('decimals'), ',', '.');
+            }
+        },
 
         pane: {
             startAngle: -150,
