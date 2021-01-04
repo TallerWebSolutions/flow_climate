@@ -126,7 +126,6 @@ RSpec.describe TeamsController, type: :controller do
             expect(response).to render_template :show
             expect(assigns(:company)).to eq company
             expect(assigns(:team)).to eq team
-            expect(assigns(:projects)).to eq [third_project, fourth_project, second_project, first_project]
 
             expect(assigns(:work_item_flow_information)).to be_a Flow::WorkItemFlowInformations
             expect(assigns(:statistics_flow_information)).to be_a Flow::StatisticsFlowInformations
@@ -145,7 +144,6 @@ RSpec.describe TeamsController, type: :controller do
             expect(response).to render_template :show
             expect(assigns(:company)).to eq other_company
             expect(assigns(:team)).to eq empty_team
-            expect(assigns(:projects)).to eq []
           end
         end
       end

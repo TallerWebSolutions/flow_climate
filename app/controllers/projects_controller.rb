@@ -89,7 +89,7 @@ class ProjectsController < AuthenticatedController
 
     assign_project_stages
 
-    respond_to { |format| format.js { render 'stages/update_stages_table' } }
+    redirect_to company_project_jira_project_configs_path(@company, @project)
   end
 
   def associate_customer
