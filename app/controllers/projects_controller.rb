@@ -89,7 +89,7 @@ class ProjectsController < AuthenticatedController
 
     assign_project_stages
 
-    redirect_to company_project_jira_project_configs_path(@company, @project)
+    redirect_to company_project_stage_project_configs_path(@company, @project)
   end
 
   def associate_customer
