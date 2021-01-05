@@ -168,7 +168,7 @@ class Demand < ApplicationRecord
   end
 
   def active_team_members
-    memberships.includes(:item_assignments).where(item_assignments: { finish_time: nil }).uniq
+    memberships.includes([:team_member]).where(item_assignments: { finish_time: nil }).uniq
   end
 
   def update_effort!(update_manual_effort)

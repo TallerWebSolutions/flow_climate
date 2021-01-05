@@ -30,10 +30,9 @@ function destroyDemand(companyId, demandId, confirmationMessage, demandsIds) {
     }
 }
 
-function editDemand(companyId, projectId, demandId, demandsIds) {
+function editDemand(companyId, projectId, demandId) {
     jQuery.ajax({
         url: `/companies/${companyId}/projects/${projectId}/demands/${demandId}/edit.js`,
-        type: "GET",
-        data: `demands_ids=${demandsIds}`
+        type: "GET"
     });
 }

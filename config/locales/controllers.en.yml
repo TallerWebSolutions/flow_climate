@@ -173,6 +173,9 @@ en:
       lead_time_in_month: "Lead time (p80) in month"
     backlog: "Backlog"
     update_cache: "Update Cache"
+    updated:
+      success: "Updated"
+      error: "Failed"
   header:
     logout: Logout
     explore: Explore

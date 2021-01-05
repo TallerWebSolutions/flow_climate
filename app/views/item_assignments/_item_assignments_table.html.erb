@@ -15,7 +15,7 @@
   </thead>
 
   <tbody>
-    <% demand.item_assignments.order(:start_time).each do |assignment| %>
+    <% demand.item_assignments.includes([:membership]).order(:start_time).each do |assignment| %>
       <tr>
         <td><%= assignment.id %></td>
         <td><%= assignment.membership.team_member_name %></td>

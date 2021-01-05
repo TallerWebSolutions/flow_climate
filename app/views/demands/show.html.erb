@@ -118,17 +118,20 @@
 
 <div id="content-transitions" class="tabcontent">
   <div id="demand-transitions-table">
-    <%= render 'demand_transitions/demand_transitions_table', company: @company, demand: @demand, demand_transitions_list: @demand.demand_transitions.order(:last_time_in) %>
+    <%= render 'demand_transitions/demand_transitions_table', company: @company, demand: @demand, demand_transitions_list: @demand_transitions %>
   </div>
 </div>
 
 <div class="modal fade" id="edit-block-form" tabindex="-1" role="dialog" aria-labelledby="edit-block-form" aria-hidden="true"></div>
+<div class="modal fade" id="edit-demand-form" tabindex="-1" role="dialog" aria-labelledby="edit-demand-form" aria-hidden="true"></div>
 
 <% content_for :javascript do %>
   <%= javascript_include_tag 'charts/column' %>
   <%= javascript_include_tag 'components/components' %>
 
+  <%= javascript_include_tag 'routes/demand_routes' %>
   <%= javascript_include_tag 'demand_blocks/form_modal' %>
+  <%= javascript_include_tag 'demands/form_modal' %>
 
   <%= javascript_include_tag 'demands/show' %>
 <% end %>

@@ -4,7 +4,7 @@ class DemandService
   include Singleton
 
   def lead_time_breakdown(demands)
-    transitions_array = demands.map { |demand| demand.demand_transitions.joins(:stage).where(stages: { stage_stream: :downstream, end_point: false }) }.flatten
+    transitions_array = demands.map { |demand| demand.demand_transitions.includes([:stage]).where(stages: { stage_stream: :downstream, end_point: false }) }.flatten
     transitions_array.sort_by { |transition| transition.stage.order }.group_by { |transition| transition.stage.name }
   end
 

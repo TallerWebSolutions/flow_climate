@@ -32,17 +32,10 @@ common: &default_settings
 # RAILS_ENV or RACK_ENV (as appropriate) is used to determine the environment.
 # If your application has other named environments, configure them here.
 development:
-  <<: *default_settings
-  app_name: FlowClimate (Development)
 
 test:
-  <<: *default_settings
-  # It doesn't make sense to report to New Relic from automated test runs.
-  monitor_mode: false
 
 staging:
-  <<: *default_settings
-  app_name: FlowClimate (Staging)
 
 production:
   <<: *default_settings

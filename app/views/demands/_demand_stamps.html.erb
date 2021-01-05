@@ -2,112 +2,36 @@
 <div class="row bottom-spaced-component">
 
   <div class="col-xs-4">
-    <h4>
-      <% demand.demand_tags.each do |label| %>
-        <span class="label label-info"><%= label %></span>
-      <% end %>
-    </h4>
 
-    <h3>
+    <div class="show-main-info">
       <%= demand.external_id %>
+
       <% if demand.external_url.present? %>
-        <%= link_to demand.external_url, target: :_blank do %>
+        <%= link_to demand.external_url, class: 'show-main-info-buttons', target: :_blank do %>
           <i class="fas fa-external-link-alt" title="<%= I18n.t('activerecord.attributes.demand.external_url') %>"></i>
         <% end %>
       <% end %>
-    </h3>
-    <h4>
+
+      <%= link_to '#', class: 'edit-demand-button show-main-info-buttons', onclick: "editDemand(#{company.id}, #{demand.project_id}, #{demand.id})", title: I18n.t('general.buttons.edit') do %>
+        <i class="fas fa-edit"></i>
+      <% end %>
+    </div>
+
+    <div class="show-secondary-info">
+      <% demand.demand_tags.each do |label| %>
+        <span class="label label-info"><%= label %></span>
+      <% end %>
+    </div>
+
+    <div class="show-important-detail">
       <%= I18n.t("activerecord.attributes.demand.enums.demand_type.#{demand.demand_type}") %>
-    </h4>
+    </div>
   </div>
 </div>
 
 <div class="row">
-  <div class="col-xs-6">
-    <table class="table">
-      <tbody>
-      <tr>
-        <td><b><%= Demand.human_attribute_name :demand_title %></b></td>
-        <td><%= demand.demand_title %></td>
-      </tr>
-      <tr>
-        <td><b><%= Customer.model_name.human %></b></td>
-        <% if company.present? && demand.customer.present? %>
-          <td><%= link_to demand.customer_name, company_customer_path(company, demand.customer) %></td>
-        <% elsif demand.customer.present? && company.blank? %>
-          <td><%= demand.customer_name %></td>
-        <% else %>
-          <td></td>
-        <% end %>
-      </tr>
-      <tr>
-        <td><b><%= Contract.model_name.human %></b></td>
-        <% if company.present? && demand.contract.present? && demand.customer&.id.present?%>
-          <td><%= link_to demand.contract.id, company_customer_contract_path(company, demand.customer.id, demand.contract) %></td>
-        <% elsif demand.contract.present? && company.blank? %>
-          <td><%= demand.contract.id %></td>
-        <% else %>
-          <td></td>
-        <% end %>
-      </tr>
-      <tr>
-        <td><b><%= Product.model_name.human %></b></td>
-        <% if demand.product.present? %>
-          <td><%= link_to demand.product_name, company_product_path(company, demand.product) %></td>
-        <% end %>
-      </tr>
-      <tr>
-        <td><b><%= PortfolioUnit.model_name.human %></b></td>
-        <td><%= link_to demand.portfolio_unit_name, company_product_portfolio_unit_path(company, demand.product, demand.portfolio_unit) if demand.portfolio_unit_name.present? %></td>
-      </tr>
-      <tr>
-        <td><b><%= Project.model_name.human %></b></td>
-        <td><%= link_to demand.project_name, company_project_path(company, demand.project) %></td>
-      </tr>
-      <tr>
-        <td><b><%= Team.model_name.human %></b></td>
-        <td><%= link_to demand.team_name, company_team_path(company, demand.team) %></td>
-      </tr>
-      <tr>
-        <td><b><%= Demand.human_attribute_name :created_date %></b></td>
-        <td><%= I18n.l(demand.created_date, format: :short) %></td>
-      </tr>
-      <tr>
-        <td><b><%= Demand.human_attribute_name :commitment_date %></b></td>
-        <td><%= I18n.l(demand.commitment_date, format: :short) if demand.commitment_date.present? %></td>
-      </tr>
-      <tr>
-        <td><b><%= Demand.human_attribute_name :end_date %></b></td>
-        <td><%= I18n.l(demand.end_date, format: :short) if demand.end_date.present? %></td>
-      </tr>
-      <% if demand.discarded_at.present? %>
-        <tr>
-          <td><b><%= Demand.human_attribute_name :discarded_at %></b></td>
-          <td><%= I18n.l(demand.discarded_at, format: :short) %></td>
-        </tr>
-      <% end %>
-      <tr>
-        <td><b><%= Demand.human_attribute_name :class_of_service %></b></td>
-        <td><%= I18n.t("activerecord.attributes.demand.enums.class_of_service.#{demand.class_of_service}") %></td>
-      </tr>
-      <tr>
-        <td><b><span><%= Demand.human_attribute_name :team_members %></span><sup><%= " (#{demand.active_team_members.count})" %></sup></b></td>
-        <td><%= demand.active_team_members.map(&:team_member_name).join(', ') %></td>
-      </tr>
-      <tr>
-        <td><b><%= Demand.human_attribute_name :effort_upstream %></b></td>
-        <td><%= I18n.t('general.hours_text', count: number_with_precision(demand.effort_upstream, precision: 3)) %></td>
-      </tr>
-      <tr>
-        <td><b><%= Demand.human_attribute_name :effort_downstream %></b></td>
-        <td><%= I18n.t('general.hours_text', count: number_with_precision(demand.effort_downstream, precision: 3)) %></td>
-      </tr>
-      <tr>
-        <td><b><%= I18n.t('demands.index.cost_to_project') %></b></td>
-        <td><%= number_to_currency(demand.cost_to_project) %></td>
-      </tr>
-      </tbody>
-    </table>
+  <div class="col-xs-6" id="demand-general-info">
+    <%= render 'demands/general_info', company: company, demand: demand %>
   </div>
 
   <% if demand.leadtime.present? %>

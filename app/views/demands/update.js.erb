@@ -1,15 +1,25 @@
 var updatedRow = $('#demand_<%= @demand.id %>');
 var unscoredDemandsDiv = $('#project-unscored-demands');
+var demandGeneralInfo = $('#demand-general-info');
 
-if (updatedRow.val() !== undefined) {
-    updatedRow.html("<%= escape_javascript(render 'demands/demand_fields', company: @company, demand: @demand, projects_ids: @projects_ids, demands_ids: @demands_ids).html_safe %>");
-} else if (unscoredDemandsDiv.val() !== undefined) {
-    unscoredDemandsDiv.html("<%= escape_javascript(render 'demands/unscored_demands', company: @company, unscored_demands: @unscored_demands).html_safe %>");
-}
+var alertDiv = $(".alerts");
 
-$("#edit-demand-form").modal('toggle');
+<% if flash[:error].present? %>
+  alertDiv.html("<%= escape_javascript(render('layouts/error', message: flash[:error].html_safe)) %>")
 
-$('body').removeClass('modal-open');
-$('.modal-backdrop').remove();
+<% elsif flash[:notice].present? %>
+  if (updatedRow.val() !== undefined) {
+      updatedRow.html("<%= escape_javascript(render 'demands/demand_fields', company: @company, demand: @demand, projects_ids: @projects_ids, demands_ids: @demands_ids).html_safe %>");
+  } else if (unscoredDemandsDiv.val() !== undefined) {
+      unscoredDemandsDiv.html("<%= escape_javascript(render 'demands/unscored_demands', company: @company, unscored_demands: @unscored_demands).html_safe %>");
+  } else if (demandGeneralInfo.val() !== undefined) {
+      demandGeneralInfo.html("<%= escape_javascript(render 'demands/general_info', company: @company, demand: @demand).html_safe %>");
+  }
 
-updatedRow.effect("highlight", { color: "lightgreen" }, 2000);
+  alertDiv.html("<%= escape_javascript(render('layouts/notice', message: flash[:notice].html_safe)) %>")
+<% end %>
+
+$("#edit-demand-form").modal("toggle");
+
+$("body").removeClass("modal-open");
+$(".modal-backdrop").remove();

@@ -23,7 +23,7 @@ class DemandsController < DemandsListController
   def destroy
     @demand.discard
     assign_dates_to_query
-    @paged_demands = demands.order('demands.end_date DESC, demands.commitment_date DESC, demands.created_date DESC').page(page_param)
+    page_demands
     @demands = @paged_demands.except(:limit, :offset)
     assign_consolidations
 
@@ -31,7 +31,7 @@ class DemandsController < DemandsListController
   end
 
   def edit
-    @paged_demands = demands.order('demands.end_date DESC, demands.commitment_date DESC, demands.created_date DESC').page(page_param)
+    page_demands
     @demands_ids = @paged_demands.map(&:id)
 
     respond_to { |format| format.js { render 'demands/edit' } }
@@ -39,19 +39,22 @@ class DemandsController < DemandsListController
 
   def update
     @demand.update(demand_params)
-    @paged_demands = demands.order('demands.end_date DESC, demands.commitment_date DESC, demands.created_date DESC').page(page_param)
-    @demands_ids = @paged_demands.map(&:id)
-    @demands = @paged_demands.except(:limit, :offset)
-    @unscored_demands = @project.demands.unscored_demands.order(external_id: :asc)
+    page_demands
+    build_demands_objects
 
-    respond_to { |format| format.js { render 'demands/update' } }
+    if @demand.valid?
+      flash[:notice] = I18n.t('general.updated.success')
+      respond_to { |format| format.js { render 'demands/update' } }
+    else
+      flash[:error] = "#{I18n.t('general.updated.error')} | #{@demand.errors.full_messages.join(' | ')}"
+    end
   end
 
   def show
-    @demand_blocks = @demand.demand_blocks.order(:block_time)
+    @demand_blocks = @demand.demand_blocks.includes([:blocker]).includes([:unblocker]).includes([:stage]).order(:block_time)
     @paged_demand_blocks = @demand_blocks.page(params[:page])
-    @demand_transitions = @demand.demand_transitions.order(:last_time_in)
-    @demand_comments = @demand.demand_comments.order(:comment_date)
+    @demand_transitions = @demand.demand_transitions.includes([:stage]).order(:last_time_in)
+    @demand_comments = @demand.demand_comments.includes([:team_member]).order(:comment_date)
 
     compute_flow_efficiency
     compute_stream_percentages
@@ -158,6 +161,16 @@ class DemandsController < DemandsListController
   end
 
   private
+
+  def build_demands_objects
+    @demands_ids = @paged_demands.map(&:id)
+    @demands = @paged_demands.except(:limit, :offset)
+    @unscored_demands = @project.demands.unscored_demands.order(external_id: :asc)
+  end
+
+  def page_demands
+    @paged_demands = demands.order('demands.end_date DESC, demands.commitment_date DESC, demands.created_date DESC').page(page_param)
+  end
 
   def demands_ids
     ids = session[params[:session_demands_key]]
