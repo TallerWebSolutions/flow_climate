@@ -63,7 +63,6 @@ class UsersController < AuthenticatedController
 
     assign_team_member_dependencies
     assign_user_dependencies
-    assign_stats_info
   end
 
   def assign_manager_charts_objects(company)
@@ -82,8 +81,6 @@ class UsersController < AuthenticatedController
     @teams = []
     return if @user.team_member.blank? || @company.role_for_user(@user).manager?
 
-    build_pairing_chart
-
     @member_teams = @user.team_member.teams.order(:name)
     @demand_blocks = @user.team_member.demand_blocks.order(block_time: :desc).first(5)
     @member_projects = @user.team_member.projects.active.order(end_date: :desc).last(5)
@@ -95,40 +92,14 @@ class UsersController < AuthenticatedController
     @member_effort_chart = []
     @member_pull_interval_average_chart = []
 
-    @operations_dashboards = Dashboards::OperationsDashboard.where(team_member: team_member, last_data_in_month: true).order(:dashboard_date)
+    @operations_dashboards = Dashboards::OperationsDashboard.where(team_member: team_member, last_data_in_month: true).where('operations_dashboards.dashboard_date > :limit_date', limit_date: 6.months.ago.beginning_of_day).order(:dashboard_date)
 
     @member_effort_chart << { name: team_member.name, data: @operations_dashboards.map { |dashboard| dashboard.member_effort.to_f } }
     @member_pull_interval_average_chart << { name: team_member.name, data: @operations_dashboards.map { |dashboard| dashboard.pull_interval.to_f } }
   end
 
-  def build_pairing_chart
-    @user.team_member.pairing_members(Time.zone.today).each { |name, qty| @pairing_chart[name] = qty }
-  end
-
   def assign_user_dependencies
     @user_plans = @user.user_plans.order(finish_at: :desc)
-  end
-
-  def assign_stats_info
-    user_demands = @user.demands
-
-    @array_of_dates = TimeService.instance.months_between_of(start_date(user_demands), Time.zone.today.end_of_month)
-
-    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(member_demands, start_date(user_demands), Time.zone.today, 'month')
-
-    @statistics_information = Flow::StatisticsFlowInformations.new(user_demands)
-
-    @array_of_dates.each { |analysed_date| @statistics_information.statistics_flow_behaviour(analysed_date) }
-  end
-
-  def start_date(user_demands)
-    user_demands.map(&:end_date).compact.min || Time.zone.now
-  end
-
-  def member_demands
-    member_demands = Demand.none
-    member_demands = Demand.where(id: @user.team_member.demands_for_role) if @user.team_member.present?
-    member_demands
   end
 
   def user_params
