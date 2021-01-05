@@ -39,5 +39,8 @@ module FlowControl
 
     config.active_job.queue_adapter = :sidekiq
     config.action_mailer.delivery_method = :smtp
+
+    require 'sidekiq/web'
+    Sidekiq::Web.disable :sessions
   end
 end

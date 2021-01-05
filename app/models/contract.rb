@@ -90,6 +90,13 @@ class Contract < ApplicationRecord
     hours_per_demand
   end
 
+  def flow_pressure(date = Time.zone.today.end_of_day)
+    days_between = TimeService.instance.days_between_of(date, end_date)
+    return 0 if demands.not_started.blank? || days_between.count.zero?
+
+    demands.not_started.count.to_f / days_between.count
+  end
+
   private
 
   def save_estimation_change_history

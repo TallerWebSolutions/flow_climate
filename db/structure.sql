@@ -889,6 +889,54 @@ ALTER SEQUENCE public.contracts_id_seq OWNED BY public.contracts.id;
 
 
 --
+-- Name: customer_consolidations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.customer_consolidations (
+    id bigint NOT NULL,
+    customer_id integer NOT NULL,
+    consolidation_date date NOT NULL,
+    last_data_in_week boolean DEFAULT false,
+    last_data_in_month boolean DEFAULT false,
+    last_data_in_year boolean DEFAULT false,
+    consumed_hours numeric DEFAULT 0.0,
+    consumed_hours_in_month numeric DEFAULT 0.0,
+    average_consumed_hours_in_month numeric DEFAULT 0.0,
+    flow_pressure numeric DEFAULT 0.0,
+    lead_time_p80 numeric DEFAULT 0.0,
+    lead_time_p80_in_month numeric DEFAULT 0.0,
+    value_per_demand numeric DEFAULT 0.0,
+    value_per_demand_in_month numeric DEFAULT 0.0,
+    hours_per_demand numeric DEFAULT 0.0,
+    hours_per_demand_in_month numeric DEFAULT 0.0,
+    qty_demands_created integer DEFAULT 0,
+    qty_demands_committed integer DEFAULT 0,
+    qty_demands_finished integer DEFAULT 0,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: customer_consolidations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.customer_consolidations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: customer_consolidations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.customer_consolidations_id_seq OWNED BY public.customer_consolidations.id;
+
+
+--
 -- Name: customers; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3092,6 +3140,13 @@ ALTER TABLE ONLY public.contracts ALTER COLUMN id SET DEFAULT nextval('public.co
 
 
 --
+-- Name: customer_consolidations id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.customer_consolidations ALTER COLUMN id SET DEFAULT nextval('public.customer_consolidations_id_seq'::regclass);
+
+
+--
 -- Name: customers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3682,6 +3737,14 @@ ALTER TABLE ONLY public.contracts
 
 
 --
+-- Name: customer_consolidations customer_consolidations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.customer_consolidations
+    ADD CONSTRAINT customer_consolidations_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: customers_devise_customers customers_devise_customers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4210,6 +4273,13 @@ CREATE UNIQUE INDEX cos_history_unique ON public.class_of_service_change_histori
 
 
 --
+-- Name: customer_consolidation_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX customer_consolidation_unique ON public.customer_consolidations USING btree (customer_id, consolidation_date);
+
+
+--
 -- Name: idx_contract_consolidation_unique; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4319,6 +4389,34 @@ CREATE INDEX index_contracts_on_customer_id ON public.contracts USING btree (cus
 --
 
 CREATE INDEX index_contracts_on_product_id ON public.contracts USING btree (product_id);
+
+
+--
+-- Name: index_customer_consolidations_on_customer_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_customer_consolidations_on_customer_id ON public.customer_consolidations USING btree (customer_id);
+
+
+--
+-- Name: index_customer_consolidations_on_last_data_in_month; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_customer_consolidations_on_last_data_in_month ON public.customer_consolidations USING btree (last_data_in_month);
+
+
+--
+-- Name: index_customer_consolidations_on_last_data_in_week; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_customer_consolidations_on_last_data_in_week ON public.customer_consolidations USING btree (last_data_in_week);
+
+
+--
+-- Name: index_customer_consolidations_on_last_data_in_year; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_customer_consolidations_on_last_data_in_year ON public.customer_consolidations USING btree (last_data_in_year);
 
 
 --
@@ -5490,6 +5588,14 @@ ALTER TABLE ONLY public.demand_data_processments
 
 
 --
+-- Name: customer_consolidations fk_rails_34ed62881e; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.customer_consolidations
+    ADD CONSTRAINT fk_rails_34ed62881e FOREIGN KEY (customer_id) REFERENCES public.customers(id);
+
+
+--
 -- Name: demands fk_rails_34f0dad22e; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6315,6 +6421,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20201111160327'),
 ('20201209134542'),
 ('20201214235753'),
-('20201215181752');
+('20201215181752'),
+('20210105172949');
 
 
