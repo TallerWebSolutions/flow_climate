@@ -39,7 +39,7 @@ namespace :statistics do
   end
 
   desc 'Consolidations for customers - all time'
-  task consolidate_customers: :environment do
+  task consolidate_customers_all_time: :environment do
     Company.all.each do |company|
       company.customers.each do |customer|
         start_date = customer.start_date
