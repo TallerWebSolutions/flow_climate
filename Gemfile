@@ -22,6 +22,7 @@ gem 'jira-ruby', require: false
 gem 'jquery-rails'
 gem 'kaminari'
 gem 'mini_magick'
+gem 'newrelic_rpm'
 gem 'oj'
 gem 'pg'
 gem 'rollbar'
@@ -33,6 +34,7 @@ gem 'yui-compressor'
 
 group :test, :development do
   gem 'brakeman'
+  gem 'bullet'
   gem 'database_cleaner'
   gem 'fabrication'
   gem 'faker'
