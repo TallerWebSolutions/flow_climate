@@ -41,7 +41,7 @@ function buildBurnupChart(burnupDiv) {
         },
         tooltip: {
             formatter: function () {
-                return burnupDiv.data('prefix') + ' ' + Highcharts.numberFormat(this.y, burnupDiv.data('decimals'), '.') + ' ' + burnupDiv.data('tooltipsuffix');
+                return Highcharts.numberFormat(this.y, burnupDiv.data('decimals'), ',', '.');
             }
         },
         legend: {

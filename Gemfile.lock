@@ -85,6 +85,9 @@ GEM
     bindex (0.8.1)
     brakeman (4.10.1)
     builder (3.2.4)
+    bullet (6.1.2)
+      activesupport (>= 3.0.0)
+      uniform_notifier (~> 1.11)
     carrierwave (2.1.0)
       activemodel (>= 5.0.0)
       activesupport (>= 5.0.0)
@@ -215,6 +218,7 @@ GEM
     multi_xml (0.6.0)
     multipart-post (2.1.1)
     netrc (0.11.0)
+    newrelic_rpm (6.14.0)
     nio4r (2.5.4)
     nokogiri (1.11.0)
       mini_portile2 (~> 2.5.0)
@@ -394,6 +398,7 @@ GEM
       unf_ext
     unf_ext (0.0.7.7)
     unicode-display_width (1.7.0)
+    uniform_notifier (1.13.0)
     virtus (1.0.5)
       axiom-types (~> 0.1)
       coercible (~> 1.0)
@@ -425,6 +430,7 @@ DEPENDENCIES
   annotate
   attr_encrypted
   brakeman
+  bullet
   carrierwave
   cloudinary
   coffee-rails
@@ -444,6 +450,7 @@ DEPENDENCIES
   listen
   memory_profiler
   mini_magick
+  newrelic_rpm
   oj
   parallel_tests
   parser (~> 2.7, >= 2.7.1.4)

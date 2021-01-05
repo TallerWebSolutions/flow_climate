@@ -107,6 +107,7 @@
          data-ytitle='<%= I18n.t('projects.charts.burnup.ylabel') %>'
          data-tooltipsuffix=''
          data-prefix=''
+         data-decimals='2'
          data-series='<%= [{ name: I18n.t('charts.burnup.scope'), data: work_item_flow_information.scope_per_period, dataLabels: { enabled: false }, marker: false },
                            { name: I18n.t('charts.burnup.ideal'), data: work_item_flow_information.ideal_per_period, dataLabels: { enabled: false }, marker: false },
                            { name: I18n.t('charts.burnup.current'), data: work_item_flow_information.accumulated_throughput, dataLabels: { enabled: false }, marker: false }].to_json %>'>
