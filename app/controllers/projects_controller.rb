@@ -189,25 +189,25 @@ class ProjectsController < AuthenticatedController
   end
 
   def build_project_consolidations
-    project_consolidations = @project.project_consolidations
+    project_consolidations = @project.project_consolidations.order(:consolidation_date)
 
-    @all_project_consolidations = project_consolidations.weekly_data.order(:consolidation_date)
-    @dashboard_project_consolidations = project_consolidations.weekly_data.after_date(10.weeks.ago).order(:consolidation_date)
-
-    return if Time.zone.today != Time.zone.today.end_of_week
-
-    add_current_data_to_consolidations(project_consolidations)
+    @all_project_consolidations = project_consolidations.weekly_data
+    last_consolidation = project_consolidations.last
+    append_current_data(last_consolidation)
+    @dashboard_project_consolidations = @all_project_consolidations.after_date(10.weeks.ago)
   end
 
-  def add_current_data_to_consolidations(project_consolidations)
-    @all_project_consolidations = Consolidations::ProjectConsolidation.where(id: @all_project_consolidations.map(&:id) | [project_consolidations.order(:consolidation_date).last.id])
-    @dashboard_project_consolidations = Consolidations::ProjectConsolidation.where(id: @dashboard_project_consolidations.map(&:id) | [project_consolidations.order(:consolidation_date).last.id])
+  def append_current_data(last_consolidation)
+    return if last_consolidation&.last_data_in_week?
+
+    @all_project_consolidations = Consolidations::ProjectConsolidation.where(id: @all_project_consolidations.map(&:id) + [last_consolidation&.id]).order(:consolidation_date)
   end
 
   def build_charts_adapters
     start_date = [@project.start_date, 8.weeks.ago].max
-    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(demands.kept, start_date, Time.zone.today, 'week')
-    @status_report_data = Highchart::StatusReportChartsAdapter.new(demands_finished_with_leadtime, @project.start_date, Time.zone.today, 'week')
+    end_date = [@project.end_date, Time.zone.today].min
+    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(demands.kept, start_date, end_date, 'week')
+    @status_report_data = Highchart::StatusReportChartsAdapter.new(demands_finished_with_leadtime, @project.start_date, end_date, 'week')
   end
 
   def demands
