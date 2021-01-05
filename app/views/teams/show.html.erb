@@ -29,8 +29,8 @@
 <div class="row">
   <div class="col-xs-12 center">
     <div class="tab">
-      <button class="tablinks" id="team-dashboard-tab"><%= I18n.t('teams.show.dashboard_tab') %></button>
-      <button class="tablinks" id="team-projects-tab"><%= I18n.t('teams.show.projects_tab') %></button>
+      <%= link_to I18n.t('teams.show.dashboard_tab'), '#', class: "tablinks btn btn-default", id: 'team-dashboard-tab' %>
+      <%= link_to I18n.t('teams.show.projects_tab'), '#', class: "tablinks btn btn-default", id: 'team-projects-tab' %>
       <%= link_to I18n.t('navbar.replenishing'), company_team_replenishing_consolidations_path(@company, @team), class: 'btn btn-default' %>
     </div>
   </div>
@@ -40,11 +40,11 @@
   <div class="row bottom-spaced-component" id="page-buttons">
     <div class="col-xs-12 center">
       <div class="tab">
-        <button class="tablinks btn btn-sm" id="team-dashboard-page-one" title="<%= I18n.t('teams.show.dashboard.tab_one') %>">1</button>
-        <button class="tablinks btn btn-sm" id="team-dashboard-page-two" title="<%= I18n.t('teams.show.dashboard.tab_two') %>">2</button>
-        <button class="tablinks btn btn-sm" id="team-dashboard-page-three" title="<%= I18n.t('teams.show.dashboard.tab_three') %>">3</button>
-        <button class="tablinks btn btn-sm" id="team-dashboard-page-four" title="<%= I18n.t('teams.show.dashboard.tab_four') %>">4</button>
-        <button class="tablinks btn btn-sm" id="team-dashboard-page-five" title="<%= I18n.t('teams.show.dashboard.tab_five') %>">5</button>
+        <%= link_to 1, '#', class: "tablinks btn btn-default btn-sm", id: 'team-dashboard-page-one', title: I18n.t('teams.show.dashboard.tab_one') %>
+        <%= link_to 2, '#', class: "tablinks btn btn-default btn-sm", id: 'team-dashboard-page-two', title: I18n.t('teams.show.dashboard.tab_two') %>
+        <%= link_to 3, '#', class: "tablinks btn btn-default btn-sm", id: 'team-dashboard-page-three', title: I18n.t('teams.show.dashboard.tab_three') %>
+        <%= link_to 4, '#', class: "tablinks btn btn-default btn-sm", id: 'team-dashboard-page-four', title: I18n.t('teams.show.dashboard.tab_four') %>
+        <%= link_to 5, '#', class: "tablinks btn btn-default btn-sm", id: 'team-dashboard-page-five', title: I18n.t('teams.show.dashboard.tab_five') %>
       </div>
     </div>
   </div>

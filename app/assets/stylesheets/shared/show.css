@@ -32,15 +32,29 @@
     font-weight: bold;
 }
 
+.show-main-info {
+    font-size: x-large;
+    margin-bottom: 3px;
+}
+
+.show-main-info-buttons {
+    font-size: large;
+}
+
+.show-secondary-info {
+    font-size: medium;
+    margin-bottom: 20px;
+}
+
+.show-important-detail {
+    font-size: larger;
+    margin-bottom: 5px;
+    font-style: italic;
+}
+
 .stamp {
     padding: 10px;
     background-color: lightskyblue;
-    border: thin solid;
-}
-
-.red-stamp {
-    background-color: #f0cbcf;
-    padding: 10px;
     border: thin solid;
 }
 

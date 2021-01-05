@@ -9,7 +9,7 @@
     <p><%= I18n.t('general.demands_text', count: unscored_demands.count ) %></p>
     <p>
       <%= unscored_demands.map do |demand| %>
-        <% link_to '#', class: 'edit-demand-button', onclick: "editDemand(#{company.id}, #{demand.project_id}, #{demand.id}, null)" do %>
+        <% link_to '#', class: 'edit-demand-button', onclick: "editDemand(#{company.id}, #{demand.project_id}, #{demand.id})" do %>
           <span><%= demand.external_id %></span>
           <span><i class="fas fa-edit"></i></span>
         <% end %>

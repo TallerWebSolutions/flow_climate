@@ -101,7 +101,7 @@ class Team < ApplicationRecord
   end
 
   def flow_pressure
-    projects.active.sum(&:flow_pressure)
+    projects.active.includes([:demands]).sum(&:flow_pressure)
   end
 
   private
