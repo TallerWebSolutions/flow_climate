@@ -34,6 +34,7 @@ class Customer < ApplicationRecord
   has_many :demands, dependent: :nullify
   has_many :demand_blocks, -> { distinct }, through: :demands
   has_many :contracts, dependent: :restrict_with_error
+  has_many :customer_consolidations, dependent: :destroy, class_name: 'Consolidations::CustomerConsolidation'
   has_and_belongs_to_many :projects, dependent: :restrict_with_error
   has_and_belongs_to_many :devise_customers, dependent: :destroy
 
@@ -63,8 +64,8 @@ class Customer < ApplicationRecord
     exclusive_projects.map(&:value).compact.sum
   end
 
-  def total_flow_pressure
-    exclusive_projects.map(&:flow_pressure).compact.sum
+  def total_flow_pressure(date = Time.zone.today)
+    contracts.map { |contract| contract.flow_pressure(date) }.compact.sum
   end
 
   def remaining_money(end_date = Time.zone.today.end_of_day)
@@ -87,5 +88,13 @@ class Customer < ApplicationRecord
 
   def initial_scope
     exclusive_projects.active.sum(&:initial_scope)
+  end
+
+  def start_date
+    exclusives_demands.kept.order(:created_date).first&.created_date&.to_date || Time.zone.today
+  end
+
+  def end_date
+    exclusives_demands.kept.finished.order(:end_date).first&.end_date&.to_date || Time.zone.today
   end
 end

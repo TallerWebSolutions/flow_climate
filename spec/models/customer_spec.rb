@@ -8,6 +8,7 @@ RSpec.describe Customer, type: :model do
     it { is_expected.to have_many(:demands).dependent(:nullify) }
     it { is_expected.to have_many(:contracts).dependent(:restrict_with_error) }
     it { is_expected.to have_many(:demand_blocks).through(:demands) }
+    it { is_expected.to have_many(:customer_consolidations).dependent(:destroy).class_name('Consolidations::CustomerConsolidation') }
     it { is_expected.to have_and_belong_to_many :projects }
     it { is_expected.to have_and_belong_to_many(:devise_customers).dependent(:destroy) }
   end
@@ -156,17 +157,28 @@ RSpec.describe Customer, type: :model do
 
   describe '#total_flow_pressure' do
     let(:company) { Fabricate :company }
-    let(:customer) { Fabricate :customer, company: company }
-    let(:other_customer) { Fabricate :customer, company: company }
-    let(:no_projects_customer) { Fabricate :customer, company: company }
 
-    let!(:project) { Fabricate :project, company: company, customers: [customer], initial_scope: 10, end_date: 4.weeks.from_now }
-    let!(:other_project) { Fabricate :project, company: company, customers: [customer], initial_scope: 8, end_date: 2.weeks.from_now }
-    let!(:out_project) { Fabricate :project, company: company, customers: [customer, other_customer], initial_scope: 210, end_date: 30.weeks.from_now }
+    it 'returns the total_flow_pressure in date' do
+      customer = Fabricate :customer, company: company
+      other_customer = Fabricate :customer, company: company
+      empty_customer = Fabricate :customer, company: company
 
-    it { expect(customer.total_flow_pressure).to be_within(0.1).of(0.8) }
-    it { expect(other_customer.total_flow_pressure).to eq 0 }
-    it { expect(no_projects_customer.total_flow_pressure).to eq 0 }
+      contract = Fabricate :contract, customer: customer, start_date: 2.months.ago, end_date: 3.weeks.from_now, hours_per_demand: 10
+      other_contract = Fabricate :contract, customer: customer, start_date: 1.month.ago, end_date: 5.weeks.from_now, hours_per_demand: 10
+      Fabricate :contract, customer: customer, start_date: 2.months.ago, end_date: 3.weeks.from_now
+      Fabricate :contract, customer: customer, start_date: 2.months.ago, end_date: 3.weeks.ago
+
+      Fabricate :demand, customer: customer, contract: contract, demand_type: :feature, created_date: 3.weeks.ago, commitment_date: 17.days.ago, end_date: 2.weeks.ago, effort_downstream: 30, effort_upstream: 10
+      Fabricate.times(40, :demand, customer: customer, contract: contract, demand_type: :feature, created_date: 3.weeks.ago, commitment_date: nil, end_date: nil, effort_downstream: 30, effort_upstream: 10)
+      Fabricate :demand, customer: customer, contract: contract, demand_type: :bug, created_date: 2.weeks.ago, commitment_date: 18.days.ago, end_date: 1.week.ago, effort_downstream: 2, effort_upstream: 18
+      Fabricate :demand, customer: customer, contract: contract, demand_type: :bug, created_date: 2.weeks.ago, commitment_date: 18.days.ago, end_date: nil, effort_downstream: 2, effort_upstream: 18
+      Fabricate :demand, customer: customer, contract: contract, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago, effort_downstream: 43, effort_upstream: 49
+      Fabricate :demand, customer: customer, contract: contract, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: nil, effort_downstream: 43, effort_upstream: 49
+      Fabricate :demand, customer: other_customer, contract: other_contract, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago, effort_downstream: 38, effort_upstream: 15
+
+      expect(customer.total_flow_pressure).to eq 1.8181818181818181
+      expect(empty_customer.total_flow_pressure).to eq 0
+    end
   end
 
   describe '#initial_scope' do
@@ -183,5 +195,32 @@ RSpec.describe Customer, type: :model do
     it { expect(customer.initial_scope).to eq 18 }
     it { expect(other_customer.initial_scope).to eq 0 }
     it { expect(no_projects_customer.initial_scope).to eq 0 }
+  end
+
+  describe '#start_date' do
+    let(:company) { Fabricate :company }
+
+    it 'returns the total_flow_pressure in date' do
+      customer = Fabricate :customer, company: company
+      other_customer = Fabricate :customer, company: company
+      empty_customer = Fabricate :customer, company: company
+
+      contract = Fabricate :contract, customer: customer, start_date: 2.months.ago, end_date: 3.weeks.from_now, hours_per_demand: 10
+      other_contract = Fabricate :contract, customer: customer, start_date: 1.month.ago, end_date: 5.weeks.from_now, hours_per_demand: 10
+      Fabricate :contract, customer: customer, start_date: 2.months.ago, end_date: 3.weeks.from_now
+      Fabricate :contract, customer: customer, start_date: 2.months.ago, end_date: 3.weeks.ago
+
+      Fabricate :demand, customer: customer, contract: contract, demand_type: :feature, created_date: 3.weeks.ago, commitment_date: 17.days.ago, end_date: 2.weeks.ago, effort_downstream: 30, effort_upstream: 10
+      Fabricate :demand, customer: customer, contract: contract, demand_type: :bug, created_date: 2.weeks.ago, commitment_date: 18.days.ago, end_date: 1.week.ago, effort_downstream: 2, effort_upstream: 18
+      Fabricate :demand, customer: customer, contract: contract, demand_type: :bug, created_date: 2.weeks.ago, commitment_date: 18.days.ago, end_date: nil, effort_downstream: 2, effort_upstream: 18
+      Fabricate :demand, customer: customer, contract: contract, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago, effort_downstream: 43, effort_upstream: 49
+      Fabricate :demand, customer: customer, contract: contract, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: nil, effort_downstream: 43, effort_upstream: 49
+      Fabricate :demand, customer: other_customer, contract: other_contract, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago, effort_downstream: 38, effort_upstream: 15
+
+      expect(customer.start_date).to eq Date.new(2020, 12, 15)
+      expect(customer.end_date).to eq Date.new(2020, 12, 22)
+      expect(empty_customer.start_date).to eq Time.zone.today
+      expect(empty_customer.end_date).to eq Time.zone.today
+    end
   end
 end
