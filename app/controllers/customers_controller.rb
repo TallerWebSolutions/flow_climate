@@ -14,7 +14,7 @@ class CustomersController < AuthenticatedController
     @unscored_demands = @customer.exclusives_demands.unscored_demands.order(external_id: :asc)
     @demands_blocks = @customer.exclusives_demands.unscored_demands.order(external_id: :asc)
     @user_invite = UserInvite.new(invite_object_id: @customer.id, invite_type: :customer)
-    @contracts = @customer.contracts.order(end_date: :desc)
+    @contracts = @customer.contracts.includes([:product]).order(end_date: :desc)
     @contract = Contract.new(customer: @customer)
     build_pressure_and_speed
   end
