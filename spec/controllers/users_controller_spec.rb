@@ -181,10 +181,6 @@ RSpec.describe UsersController, type: :controller do
 
               expect(assigns(:member_teams)).to eq [team]
               expect(assigns(:member_projects)).to eq [project, other_project]
-              expect(assigns(:array_of_dates)).to eq [Date.new(2019, 12, 31), Date.new(2020, 1, 31)]
-
-              expect(assigns(:statistics_information).lead_time_accumulated[0]).to be_within(1).of(7.0)
-              expect(assigns(:statistics_information).lead_time_accumulated[1]).to eq 22.0
 
               expect(assigns(:projects_quality)).to eq(other_project => [0.6], project => [0.85])
               expect(assigns(:projects_leadtime)[project]).to eq [2.3]
@@ -344,10 +340,6 @@ RSpec.describe UsersController, type: :controller do
 
               expect(assigns(:member_teams)).to eq [team]
               expect(assigns(:member_projects)).to eq [project, other_project]
-              expect(assigns(:array_of_dates)).to eq [Date.new(2019, 12, 31), Date.new(2020, 1, 31)]
-
-              expect(assigns(:statistics_information).lead_time_accumulated[0]).to be_within(1).of(7.0)
-              expect(assigns(:statistics_information).lead_time_accumulated[1]).to eq 22.0
 
               expect(assigns(:projects_quality)).to eq(other_project => [0.6], project => [0.85])
               expect(assigns(:projects_leadtime)[project]).to eq [2.3]
