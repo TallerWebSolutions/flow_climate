@@ -39,7 +39,7 @@
         <th><%= I18n.t('projects.show.features_count') %></th>
         <th><%= I18n.t('projects.show.bugs_count') %></th>
         <th><%= I18n.t('projects.show.chore_count') %></th>
-        <th><%= I18n.t('projects.show.throughput') %></th>
+        <th><%= I18n.t('general.throughput') %></th>
         <th><%= Project.human_attribute_name :value %></th>
         <th><%= I18n.t('projects.index.remaining_money') %></th>
         <th><%= I18n.t('projects.index.total_remaining_days') %></th>
@@ -75,7 +75,7 @@
           <td><%= project.demands.kept.feature.count %><small> (<%= number_with_precision(project.percentage_of_demand_type(:feature), precision: 2) %>%)</small></td>
           <td><%= project.demands.kept.bug.count %><small> (<%= number_with_precision(project.percentage_of_demand_type(:bug), precision: 2) %>%)</small></td>
           <td><%= project.demands.kept.chore.count %><small> (<%= number_with_precision(project.percentage_of_demand_type(:chore), precision: 2) %>%)</small></td>
-          <td><%= number_with_precision(project.total_throughput_for(1.week.ago), precision: 0) %></td>
+          <td><%= number_with_precision(project.total_throughput_for, precision: 0) %></td>
           <td><%= number_to_currency(project.value) %></td>
           <td><%= number_to_currency(project.remaining_money(project.end_date)) %></td>
           <td><%= project.remaining_days %></td>

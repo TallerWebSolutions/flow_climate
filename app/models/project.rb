@@ -157,7 +157,7 @@ class Project < ApplicationRecord
   end
 
   def consumed_hours
-    last_consolidation = project_consolidations.weekly_data.order(:consolidation_date).last
+    last_consolidation = project_consolidations.order(:consolidation_date).last
     return last_consolidation.project_throughput_hours if last_consolidation.present?
 
     demands.finished.sum(&:total_effort)
