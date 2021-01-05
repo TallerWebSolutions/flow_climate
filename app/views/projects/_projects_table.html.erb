@@ -64,7 +64,7 @@
           <td><%= I18n.t("activerecord.attributes.project.enums.status.#{project.status}") %></td>
           <td><%= I18n.t("activerecord.attributes.project.enums.project_type.#{project.project_type}") %></td>
           <td><%= number_with_precision(project.qty_hours, precision: 2) %></td>
-          <td><%= number_with_precision(project.consumed_hours_in_period(project.start_date, project.end_date), precision: 2) %></td>
+          <td><%= number_with_precision(project.consumed_hours, precision: 2) %></td>
           <td>
             <%= link_to company_demand_blocks_path(company, projects_ids: project.id), class: 'list-block', remote: true do %>
               <%= project.active_kept_closed_blocks.count %>

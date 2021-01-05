@@ -168,9 +168,9 @@
          data-suffix=""
          data-tooltipsuffix="<%= I18n.t('general.hours') %>"
          data-datalabelsuffix="<%= I18n.t('general.hours') %>"
-         data-series="<%= [{ type: 'column', visible: false, name: I18n.t('demands.index.effort_upstream'), data: all_project_consolidations.map { |consolidation| consolidation.project_throughput_hours_upstream.to_f } },
-                           { type: 'column', visible: false, name: I18n.t('demands.index.effort_downstream'), data: all_project_consolidations.map { |consolidation| consolidation.project_throughput_hours_downstream.to_f } },
-                           { type: 'spline', name: I18n.t('projects.show.charts.total_effort'), data: all_project_consolidations.map { |consolidation| consolidation.project_throughput_hours.to_f } }].to_json %>"
+         data-series="<%= [{ type: 'column', visible: false, name: I18n.t('demands.index.effort_upstream'), data: dashboard_project_consolidations.map { |consolidation| consolidation.project_throughput_hours_upstream.to_f } },
+                           { type: 'column', visible: false, name: I18n.t('demands.index.effort_downstream'), data: dashboard_project_consolidations.map { |consolidation| consolidation.project_throughput_hours_downstream.to_f } },
+                           { type: 'spline', name: I18n.t('projects.show.charts.total_effort'), data: dashboard_project_consolidations.map { |consolidation| consolidation.project_throughput_hours.to_f } }].to_json %>"
          data-decimals="2">
     </div>
   </div>
@@ -206,9 +206,9 @@
          data-prefix=""
          data-suffix=""
          data-datalabelsuffix=""
-         data-series="<%= [ { name: I18n.t('general.scope'), data: all_project_consolidations.map(&:project_scope_hours) },
+         data-series="<%= [ { name: I18n.t('general.scope'), data: project.weekly_project_scope_hours_until_end },
                             { name: I18n.t('charts.burnup.ideal'), data: project.current_weekly_hours_ideal_burnup },
-                            { name: I18n.t('general.delivered'), data: all_project_consolidations.map(&:project_throughput_hours) }].to_json %>"
+                            { name: I18n.t('general.delivered'), data: all_project_consolidations.map(&:project_throughput_hours).map(&:to_f) }].to_json %>"
          data-decimals="2">
     </div>
   </div>

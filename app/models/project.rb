@@ -156,6 +156,13 @@ class Project < ApplicationRecord
     (value || 0) - (consumed_hours_in_period(start_date, end_period) * hour_value_calc)
   end
 
+  def consumed_hours
+    last_consolidation = project_consolidations.weekly_data.order(:consolidation_date).last
+    return last_consolidation.project_throughput_hours if last_consolidation.present?
+
+    demands.finished.sum(&:total_effort)
+  end
+
   def last_week_scope
     backlog_for(1.week.ago).count + initial_scope
   end
