@@ -10,7 +10,7 @@ class DeviseCustomersController < ApplicationController
 
     @company = @customer.company
 
-    @customer_dashboard_data = CustomerDashboardData.new(customer_demands)
+    @customer_consolidations = @customer.customer_consolidations.monthly_data.order(:consolidation_date)
     @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(customer_demands, start_date, end_date, 'month')
     @unscored_demands = @customer.exclusives_demands.unscored_demands.order(external_id: :asc)
     @demands_blocks = @customer.exclusives_demands.unscored_demands.order(external_id: :asc)

@@ -176,6 +176,7 @@ en:
     updated:
       success: "Updated"
       error: "Failed"
+    hours_per_demand: "Hours per Demand"
   header:
     logout: Logout
     explore: Explore
@@ -624,8 +625,13 @@ en:
       no_customers_message: "You do not have teams yet."
     show:
       total_value: "Projects Total Value"
+      no_data: "customer cache"
+      no_cache: "There is no cache to show the charts. Use the sync button bellow to create some."
     add_user_to_customer:
       success: "User added"
+    charts:
+      avg_hours_per_month:
+        title: "Avg Hours Per Month to %{target_name}"
   customer:
     edit:
       title: "Edit Customer"
@@ -1347,8 +1353,9 @@ en:
       success: "Contract updated."
     index:
       current_hours_per_demand: "Current HpD"
-      hours_estimate_gap: "Estimative Gap"
+      hours_estimate_gap: "Gap"
       update_consolidations: "Update Consolidations"
+      average_hours_per_month: "Avg Hours Month"
   score_matrix_questions:
     create:
       success: "Score matrix question created."

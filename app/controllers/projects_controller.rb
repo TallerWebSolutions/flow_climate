@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class ProjectsController < AuthenticatedController
-  before_action :user_gold_check
-
   before_action :assign_company
   before_action :assign_project, except: %i[new create index search_projects running_projects_charts]
 

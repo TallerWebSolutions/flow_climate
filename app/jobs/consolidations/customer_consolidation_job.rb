@@ -29,7 +29,7 @@ module Consolidations
       hours_per_demand_in_month = 0
       value_per_demand_in_month = 0
       unless demands_finished_in_month.count.zero?
-        hours_per_demand_in_month = customer_dashboard_data.total_hours_delivered.last / demands_finished_in_month.count
+        hours_per_demand_in_month = customer_dashboard_data.total_hours_delivered.last / demands_finished_in_month.count if customer_dashboard_data.total_hours_delivered_accumulated.last.present?
         value_per_demand_in_month = demands_finished_in_month.sum(&:cost_to_project) / demands_finished_in_month.count
       end
 

@@ -9,11 +9,25 @@
   </div>
 </div>
 
+<% if @customer_consolidations.last.present? %>
+  <%= I18n.t('general.last_update.text', last_update: I18n.l(@customer_consolidations.last.updated_at, format: :short)) %>
+<% else %>
+  <h3>
+    <%= I18n.t('customers.show.no_cache') %>
+  </h3>
+<% end %>
+
+<h3>
+  <%= link_to update_cache_company_customer_path(@company, @customer), method: :patch do %>
+    <i class="fas fa-sync-alt" aria-hidden="true" title="<%= I18n.t('general.update_cache') %>"></i>
+  <% end %>
+</h3>
+
 <%= render 'customers/dashboards/customer_dashboard',
            company: @company,
            customer: @customer,
            user_invite: @user_invite,
-           customer_dashboard_data: @customer_dashboard_data,
+           customer_consolidations: @customer_consolidations,
            contracts: @contracts,
            contract: @contract,
            unscored_demands: @unscored_demands,
@@ -27,6 +41,6 @@
   <%= javascript_include_tag 'charts/line' %>
   <%= javascript_include_tag 'charts/donut' %>
 
-  <%= javascript_include_tag 'contracts/contract-charts' %>
+  <%= javascript_include_tag 'customers/customer-charts' %>
   <%= javascript_include_tag 'customers/show' %>
 <% end %>

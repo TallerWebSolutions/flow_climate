@@ -217,10 +217,32 @@ RSpec.describe Customer, type: :model do
       Fabricate :demand, customer: customer, contract: contract, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: nil, effort_downstream: 43, effort_upstream: 49
       Fabricate :demand, customer: other_customer, contract: other_contract, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago, effort_downstream: 38, effort_upstream: 15
 
-      expect(customer.start_date).to eq Date.new(2020, 12, 15)
-      expect(customer.end_date).to eq Date.new(2020, 12, 22)
+      expect(customer.start_date).to eq 2.weeks.ago.to_date
+      expect(customer.end_date).to eq 2.days.ago.to_date
       expect(empty_customer.start_date).to eq Time.zone.today
       expect(empty_customer.end_date).to eq Time.zone.today
+    end
+  end
+
+  describe '#active?' do
+    let(:company) { Fabricate :company }
+
+    it 'returns true when the customer has active projects' do
+      active_customer = Fabricate :customer, company: company
+      other_customer = Fabricate :customer, company: company
+      inactive_customer = Fabricate :customer, company: company
+      no_projects_customer = Fabricate :customer, company: company
+
+      Fabricate :project, company: company, customers: [active_customer], status: :executing, initial_scope: 10, end_date: 4.weeks.from_now
+      Fabricate :project, company: company, customers: [active_customer], status: :waiting, initial_scope: 8, end_date: 2.weeks.from_now
+      Fabricate :project, company: company, customers: [active_customer, other_customer], status: :waiting, initial_scope: 210, end_date: 30.weeks.from_now
+      Fabricate :project, company: company, customers: [active_customer], status: :finished, initial_scope: 410, end_date: 30.weeks.from_now
+      Fabricate :project, company: company, customers: [active_customer], status: :finished, initial_scope: 410, end_date: 30.weeks.from_now
+
+      expect(active_customer.active?).to eq true
+      expect(other_customer.active?).to eq true
+      expect(inactive_customer.active?).to eq false
+      expect(no_projects_customer.active?).to eq false
     end
   end
 end

@@ -42,6 +42,8 @@ module Consolidations
   class CustomerConsolidation < ApplicationRecord
     belongs_to :customer
 
+    scope :monthly_data, -> { where(last_data_in_month: true) }
+
     validates :customer, :consolidation_date, presence: true
     validates :customer, uniqueness: { scope: :consolidation_date }
   end

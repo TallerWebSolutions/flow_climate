@@ -151,8 +151,10 @@ Rails.application.routes.draw do
     resources :financial_informations, only: %i[new create edit update destroy]
 
     resources :customers do
-      post :add_user_to_customer, on: :member
-
+      member do
+        post :add_user_to_customer
+        patch :update_cache
+      end
       resources :contracts, except: %i[index] do
         patch :update_consolidations, on: :member
       end

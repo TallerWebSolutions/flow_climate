@@ -97,6 +97,13 @@ class Contract < ApplicationRecord
     demands.not_started.count.to_f / days_between.count
   end
 
+  def avg_hours_per_month
+    end_date = [end_date, Time.zone.today].compact.min
+    months = TimeService.instance.months_between_of(start_date, end_date)
+
+    demands.kept.finished.sum(&:total_effort) / months.count
+  end
+
   private
 
   def save_estimation_change_history

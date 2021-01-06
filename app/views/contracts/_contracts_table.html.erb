@@ -8,9 +8,13 @@
         <th><%= Contract.human_attribute_name :end_date %></th>
         <th><%= Contract.human_attribute_name :total_hours %></th>
         <th><%= Contract.human_attribute_name :total_value %></th>
-        <th><%= Contract.human_attribute_name :hours_per_demand %></th>
+        <th>
+          <%= Contract.human_attribute_name :hours_per_demand %>
+          <i class="far fa-question-circle" title="<%= I18n.t('general.hours_per_demand') %>"></i>
+        </th>
         <th><%= I18n.t('contracts.index.current_hours_per_demand') %></th>
         <th><%= I18n.t('contracts.index.hours_estimate_gap') %></th>
+        <th><%= I18n.t('contracts.index.average_hours_per_month') %></th>
         <th></th>
       </tr>
     </thead>
@@ -27,6 +31,7 @@
           <td><%= I18n.t('general.hours_text', count: contract.hours_per_demand) %></td>
           <td><%= I18n.t('general.hours_text', count: number_with_precision(contract.current_hours_per_demand, precision: 2)) %></td>
           <td><%= number_to_percentage(contract.current_estimate_gap * 100, precision: 2) %></td>
+          <td><%= number_with_precision(contract.avg_hours_per_month, precision: 2) %></td>
           <td>
             <%= link_to update_consolidations_company_customer_contract_path(company, contract.customer, contract), method: :patch do %>
               <i class="fas fa-sync-alt" aria-hidden="true" title="<%= I18n.t('contracts.index.update_consolidations') %>"></i>
