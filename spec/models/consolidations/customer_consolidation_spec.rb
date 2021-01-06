@@ -31,4 +31,6 @@ RSpec.describe Consolidations::CustomerConsolidation, type: :model do
       end
     end
   end
+
+  pending '.monthly_data'
 end

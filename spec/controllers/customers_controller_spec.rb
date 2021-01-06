@@ -49,6 +49,12 @@ RSpec.describe CustomersController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'PATCH #update_cache' do
+      before { patch :update_cache, params: { company_id: 'foo', id: 'bar' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -244,25 +250,16 @@ RSpec.describe CustomersController, type: :controller do
       after { travel_back }
 
       let(:customer) { Fabricate :customer, company: company }
-      let!(:contract) { Fabricate :contract, customer: customer, end_date: 1.day.from_now }
-      let!(:other_contract) { Fabricate :contract, customer: customer, end_date: 2.days.from_now }
-      let!(:out_contract) { Fabricate :contract, end_date: 3.days.from_now }
-
-      let!(:contract_consolidation) { Fabricate :contract_consolidation, contract: contract, consolidation_date: Time.zone.today }
-      let!(:other_contract_consolidation) { Fabricate :contract_consolidation, contract: contract, consolidation_date: 1.week.ago }
-
-      let(:project) { Fabricate :project, customers: [customer] }
-      let(:first_end_date) { 1.day.ago }
-      let(:second_end_date) { 1.day.from_now }
-      let!(:demand) { Fabricate :demand, project: project, end_date: first_end_date }
-      let!(:other_demand) { Fabricate :demand, project: project, end_date: second_end_date }
 
       context 'with valid data' do
         it 'assigns the instance variable and renders the template' do
-          array_of_dates = [Time.zone.yesterday.to_date, Time.zone.today]
-          customer_data = instance_double('CustomerDashboardData', hours_delivered_upstream: 10, hours_delivered_downstream: 20, array_of_dates: array_of_dates, total_hours_delivered: 20, total_hours_delivered_accumulated: 40)
+          contract = Fabricate :contract, customer: customer, end_date: 1.day.from_now
+          other_contract = Fabricate :contract, customer: customer, end_date: 2.days.from_now
+          Fabricate :contract, end_date: 3.days.from_now
 
-          expect(CustomerDashboardData).to(receive(:new).once { customer_data })
+          first_consolidation = Fabricate :customer_consolidation, customer: customer, consolidation_date: 2.days.ago, last_data_in_month: true
+          second_consolidation = Fabricate :customer_consolidation, customer: customer, consolidation_date: 3.days.ago, last_data_in_month: true
+          Fabricate :customer_consolidation, customer: customer, consolidation_date: 4.days.ago, last_data_in_month: false
 
           get :show, params: { company_id: company, id: customer }
 
@@ -270,8 +267,7 @@ RSpec.describe CustomersController, type: :controller do
           expect(assigns(:company)).to eq company
           expect(assigns(:customer)).to eq customer
           expect(assigns(:contracts)).to eq [other_contract, contract]
-          expect(assigns(:contract)).to be_a_new Contract
-          expect(assigns(:customer_demands)).to match_array [demand, other_demand]
+          expect(assigns(:customer_consolidations)).to eq [second_consolidation, first_consolidation]
         end
       end
 
@@ -399,6 +395,63 @@ RSpec.describe CustomersController, type: :controller do
             let(:company) { Fabricate :company, users: [] }
 
             before { post :add_user_to_customer, params: { company_id: company, id: customer, user_invite: { invite_email: 'foo' } } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
+
+    describe 'PATCH #update_cache' do
+      let(:customer) { Fabricate :customer, company: company }
+
+      context 'with no consolidations' do
+        it 'enqueues the cache update for all customer time' do
+          Fabricate :demand, customer: customer, created_date: 4.days.ago, end_date: 4.days.ago
+          Fabricate :demand, customer: customer, created_date: 4.days.ago, end_date: 2.days.ago
+
+          expect(Consolidations::CustomerConsolidationJob).to(receive(:perform_later)).exactly(3).times
+
+          patch :update_cache, params: { company_id: company, id: customer }
+
+          expect(flash[:notice]).to eq I18n.t('general.enqueued')
+          expect(response).to redirect_to company_customer_path(company, customer)
+        end
+      end
+
+      context 'with consolidations' do
+        it 'enqueues the cache update for the day' do
+          Fabricate :demand, customer: customer, created_date: 4.days.ago, end_date: 4.days.ago
+          Fabricate :demand, customer: customer, created_date: 4.days.ago, end_date: 2.days.ago
+          Fabricate :customer_consolidation, customer: customer
+
+          expect(Consolidations::CustomerConsolidationJob).to(receive(:perform_later)).exactly(1).time
+
+          patch :update_cache, params: { company_id: company, id: customer }
+
+          expect(flash[:notice]).to eq I18n.t('general.enqueued')
+          expect(response).to redirect_to company_customer_path(company, customer)
+        end
+      end
+
+      context 'with invalid' do
+        context 'customer' do
+          before { patch :update_cache, params: { company_id: company, id: 'foo' } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'company' do
+          context 'non-existent' do
+            before { patch :update_cache, params: { company_id: 'bar', id: customer } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'not permitted' do
+            let(:company) { Fabricate :company, users: [] }
+
+            before { patch :update_cache, params: { company_id: company, id: customer } }
 
             it { expect(response).to have_http_status :not_found }
           end

@@ -149,8 +149,9 @@ RSpec.describe ProjectsController, type: :controller do
               first_block = Fabricate :demand_block, demand: first_demand, block_time: 1.day.ago
               second_block = Fabricate :demand_block, demand: second_demand, block_time: Time.zone.now
 
-              get :show, params: { company_id: company, customer_id: customer, id: first_project }
+              get :show, params: { company_id: company, id: first_project }
 
+              expect(response).to have_http_status :ok
               expect(response).to render_template :show
               expect(assigns(:company)).to eq company
               expect(assigns(:project)).to eq first_project

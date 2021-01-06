@@ -2,7 +2,7 @@
 
 class CustomersController < AuthenticatedController
   before_action :assign_company
-  before_action :assign_customer, only: %i[edit update show destroy add_user_to_customer]
+  before_action :assign_customer, only: %i[edit update show destroy add_user_to_customer update_cache]
 
   def index
     @customers = @company.customers.order(:name)
@@ -10,12 +10,12 @@ class CustomersController < AuthenticatedController
 
   def show
     @customers = [@customer]
-    @customer_dashboard_data = CustomerDashboardData.new(customer_demands)
+
+    @customer_consolidations = @customer.customer_consolidations.monthly_data.order(:consolidation_date)
     @unscored_demands = @customer.exclusives_demands.unscored_demands.order(external_id: :asc)
     @demands_blocks = @customer.exclusives_demands.unscored_demands.order(external_id: :asc)
     @user_invite = UserInvite.new(invite_object_id: @customer.id, invite_type: :customer)
     @contracts = @customer.contracts.includes([:product]).order(end_date: :desc)
-    @contract = Contract.new(customer: @customer)
     build_pressure_and_speed
   end
 
@@ -57,15 +57,27 @@ class CustomersController < AuthenticatedController
     redirect_to company_customer_path(@company, @customer)
   end
 
+  def update_cache
+    if @customer.customer_consolidations.blank?
+      start_date = @customer.start_date
+      end_date = @customer.end_date
+
+      cache_date_arrays = TimeService.instance.days_between_of(start_date, end_date)
+      cache_date_arrays.each { |cache_date| Consolidations::CustomerConsolidationJob.perform_later(@customer, cache_date) }
+    else
+      Consolidations::CustomerConsolidationJob.perform_later(@customer)
+    end
+
+    flash[:notice] = I18n.t('general.enqueued')
+
+    redirect_to company_customer_path(@company, @customer)
+  end
+
   private
 
   def build_pressure_and_speed
-    @flow_pressure = Stats::StatisticsService.instance.mean(@customer.projects.running.map(&:flow_pressure))
+    @flow_pressure = (@customer_consolidations.last&.flow_pressure || @customer.total_flow_pressure)
     @average_speed = DemandService.instance.average_speed(@customer.exclusives_demands)
-  end
-
-  def customer_demands
-    @customer_demands ||= @customer.exclusives_demands.finished.order(:end_date)
   end
 
   def assign_customer

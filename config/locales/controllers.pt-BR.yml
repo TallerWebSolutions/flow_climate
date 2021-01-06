@@ -176,6 +176,7 @@ pt-BR:
     updated:
       success: "Atualizado"
       error: "Falhou"
+    hours_per_demand: "Horas por Demanda"
   header:
     logout: Sair
     sign_up: Cadastre-se
@@ -696,8 +697,13 @@ pt-BR:
       active_contracts:
         one: "%{count} contrato ativo"
         other: "%{count} contratos ativos"
+      no_data: "cache do cliente"
+      no_cache: "Não existe cache de dados para os gráficos. Use o botão abaixo para gerar algum."
     add_user_to_customer:
       success: "Usuário adicionado"
+    charts:
+      avg_hours_per_month:
+        title: "Média de Horas por Mês para %{target_name}"
   customer:
     edit:
       title: "Editar Cliente"
@@ -1327,8 +1333,9 @@ pt-BR:
       success: "Contrato atualizado."
     index:
       current_hours_per_demand: "HpD Atual"
-      hours_estimate_gap: "Gap da Estimativa"
+      hours_estimate_gap: "Gap"
       update_consolidations: "Atualizar Consolidações"
+      average_hours_per_month: "Média Horas Mês"
   score_matrix_questions:
     create:
       success: "Pergunta de pontuação criada."

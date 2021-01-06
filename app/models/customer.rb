@@ -47,6 +47,10 @@ class Customer < ApplicationRecord
     devise_customers << devise_customer
   end
 
+  def active?
+    projects.active.present?
+  end
+
   def exclusives_demands
     exclusive_demands_ids = (exclusive_projects.includes([:demands]).map(&:demands).flatten.map(&:id) + demands.map(&:id)).uniq
     Demand.where(id: exclusive_demands_ids)
@@ -91,10 +95,10 @@ class Customer < ApplicationRecord
   end
 
   def start_date
-    exclusives_demands.kept.order(:created_date).first&.created_date&.to_date || Time.zone.today
+    exclusives_demands.kept.order(:end_date).first&.end_date&.to_date || Time.zone.today
   end
 
   def end_date
-    exclusives_demands.kept.finished.order(:end_date).first&.end_date&.to_date || Time.zone.today
+    exclusives_demands.kept.finished.order(:end_date).last&.end_date&.to_date || Time.zone.today
   end
 end

@@ -1177,7 +1177,7 @@ RSpec.describe DemandsController, type: :controller do
 
                 get :search_demands, params: { company_id: company, session_demands_key: 'bar', demands_ids: Demand.all.map(&:id).join(','), start_date: start_date, end_date: end_date, search_text: nil, search_demand_tags: 'xpto' }
                 expect(response).to render_template 'demands/index'
-                expect(assigns(:demands).map(&:id)).to eq [second_demand.id, fourth_demand.id]
+                expect(assigns(:demands).map(&:id)).to match_array [second_demand.id, fourth_demand.id]
                 expect(assigns(:confidence_95_leadtime)).to eq 5.0
                 expect(assigns(:confidence_80_leadtime)).to eq 5.0
                 expect(assigns(:confidence_65_leadtime)).to eq 5.0

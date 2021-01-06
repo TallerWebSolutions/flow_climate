@@ -32,21 +32,8 @@ namespace :statistics do
   desc 'Consolidations for customers'
   task consolidate_customers: :environment do
     Company.all.each do |company|
-      company.customers.each do |customer|
+      company.customers.select(&:active?).each do |customer|
         Consolidations::CustomerConsolidationJob.perform_later(customer)
-      end
-    end
-  end
-
-  desc 'Consolidations for customers - all time'
-  task consolidate_customers_all_time: :environment do
-    Company.all.each do |company|
-      company.customers.each do |customer|
-        start_date = customer.start_date
-        end_date = customer.end_date
-
-        cache_date_arrays = TimeService.instance.days_between_of(start_date, end_date)
-        cache_date_arrays.each { |cache_date| Consolidations::CustomerConsolidationJob.perform_later(customer, cache_date) }
       end
     end
   end
