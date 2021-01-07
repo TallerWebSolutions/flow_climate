@@ -5,6 +5,7 @@ module Consolidations
     queue_as :consolidations
 
     def perform(customer, cache_date = Time.zone.today)
+      return if cache_date < Date.new(2018, 1, 1)
 
       end_of_day = cache_date.end_of_day
 

@@ -9,3 +9,10 @@
 </div>
 
 <%= render 'demand_blocks/demand_blocks_table', company: @company, demand_blocks_list: @demand_blocks, paged_demand_blocks: @paged_demand_blocks %>
+
+<div class="modal fade" id="edit-block-form" tabindex="-1" role="dialog" aria-labelledby="edit-block-form" aria-hidden="true"></div>
+
+<% content_for :javascript do %>
+  <%= javascript_include_tag 'demand_blocks/form_modal' %>
+  <%= javascript_include_tag 'demand_blocks/index' %>
+<% end %>
