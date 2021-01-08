@@ -33,14 +33,19 @@ RSpec.describe DemandsRepository, type: :repository do
 
   describe '#committed_demands_to_period' do
     context 'with data' do
-      let!(:first_demand) { Fabricate :demand, project: first_project, commitment_date: 3.weeks.ago }
-      let!(:second_demand) { Fabricate :demand, project: first_project, commitment_date: 2.weeks.ago }
-      let!(:third_demand) { Fabricate :demand, project: first_project, commitment_date: 1.week.ago }
-      let!(:fourth_demand) { Fabricate :demand, project: first_project, commitment_date: 1.week.ago }
-      let!(:fifth_demand) { Fabricate :demand, project: second_project, commitment_date: 1.week.ago }
-      let!(:sixth_demand) { Fabricate :demand, project: first_project, commitment_date: 1.week.ago, discarded_at: Time.zone.today }
+      it 'returns the correct demands' do
+        travel_to Time.zone.local(2020, 12, 12, 10, 0, 0) do
+          first_demand = Fabricate :demand, project: first_project, commitment_date: 1.week.ago
+          second_demand = Fabricate :demand, project: first_project, commitment_date: 1.week.ago
+          third_demand = Fabricate :demand, project: second_project, commitment_date: 1.week.ago
 
-      it { expect(described_class.instance.committed_demands_to_period(Demand.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to match_array [third_demand, fourth_demand, fifth_demand] }
+          Fabricate :demand, project: first_project, commitment_date: 3.weeks.ago
+          Fabricate :demand, project: first_project, commitment_date: 2.weeks.ago
+          Fabricate :demand, project: first_project, commitment_date: 1.week.ago, discarded_at: Time.zone.today
+
+          expect(described_class.instance.committed_demands_to_period(Demand.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to match_array [first_demand, second_demand, third_demand]
+        end
+      end
     end
 
     context 'with no data' do
