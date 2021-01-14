@@ -177,10 +177,6 @@ class TeamsController < DemandsListController
     @charts_demands ||= @team.demands.kept.includes([:product]).to_dates(1.year.ago, Time.zone.now.end_of_day)
   end
 
-  def all_demands
-    @all_demands ||= @team.demands.kept.includes([:product]).includes([:company]).includes([:project])
-  end
-
   def build_charts_data(demands)
     @array_of_dates = TimeService.instance.weeks_between_of(start_date, end_date)
     @work_item_flow_information = Flow::WorkItemFlowInformations.new(demands, uncertain_scope, @array_of_dates.length, @array_of_dates.last, 'week')
@@ -193,10 +189,6 @@ class TeamsController < DemandsListController
     @array_of_dates.each_with_index do |analysed_date, _distribution_index|
       @work_item_flow_information.build_cfd_hash(@array_of_dates.first.beginning_of_week, analysed_date)
     end
-  end
-
-  def add_data?(analysed_date)
-    analysed_date < Time.zone.now.end_of_week
   end
 
   def uncertain_scope
