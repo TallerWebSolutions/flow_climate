@@ -51,6 +51,14 @@ class TimeService
     Time.zone.today + weeks.weeks
   end
 
+  def beginning_of_semester(date = Time.zone.today)
+    if date.month < 7
+      Date.new(date.year, 1, 1).beginning_of_day
+    else
+      Date.new(date.year, 7, 1).beginning_of_day
+    end
+  end
+
   private
 
   def compute_dates(min_date, max_date, period_frame, end_of_period)

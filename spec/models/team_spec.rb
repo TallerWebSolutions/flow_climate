@@ -12,6 +12,7 @@ RSpec.describe Team, type: :model do
     it { is_expected.to have_many(:team_resource_allocations).dependent(:destroy) }
     it { is_expected.to have_many(:team_resources).through(:team_resource_allocations) }
     it { is_expected.to have_many(:demand_blocks).through(:demands) }
+    it { is_expected.to have_many(:team_consolidations).class_name('Consolidations::TeamConsolidation').dependent(:destroy) }
   end
 
   context 'validations' do
@@ -314,6 +315,47 @@ RSpec.describe Team, type: :model do
         expect(other_team.flow_pressure).to be_within(0.3).of 0.2
         expect(no_projects_team.flow_pressure).to eq 0
       end
+    end
+  end
+
+  describe '#active?' do
+    let(:company) { Fabricate :company }
+
+    it 'returns true when the customer has active projects' do
+      active_team = Fabricate :team, company: company
+      inactive_team = Fabricate :team, company: company
+      no_projects_team = Fabricate :team, company: company
+
+      Fabricate :project, company: company, team: active_team, status: :executing, initial_scope: 10, end_date: 4.weeks.from_now
+      Fabricate :project, company: company, team: active_team, status: :waiting, initial_scope: 8, end_date: 2.weeks.from_now
+      Fabricate :project, company: company, team: active_team, status: :finished, initial_scope: 410, end_date: 30.weeks.from_now
+      Fabricate :project, company: company, team: active_team, status: :finished, initial_scope: 410, end_date: 30.weeks.from_now
+
+      expect(active_team.active?).to eq true
+      expect(inactive_team.active?).to eq false
+      expect(no_projects_team.active?).to eq false
+    end
+  end
+
+  describe '#start_date' do
+    let(:company) { Fabricate :company }
+
+    it 'returns the start team date' do
+      team = Fabricate :team, company: company
+      other_team = Fabricate :team, company: company
+      empty_team = Fabricate :team, company: company
+
+      Fabricate :demand, team: team, demand_type: :feature, created_date: 3.weeks.ago, commitment_date: 17.days.ago, end_date: 2.weeks.ago, effort_downstream: 30, effort_upstream: 10
+      Fabricate :demand, team: team, demand_type: :bug, created_date: 2.weeks.ago, commitment_date: 18.days.ago, end_date: 1.week.ago, effort_downstream: 2, effort_upstream: 18
+      Fabricate :demand, team: team, demand_type: :bug, created_date: 2.weeks.ago, commitment_date: 18.days.ago, end_date: nil, effort_downstream: 2, effort_upstream: 18
+      Fabricate :demand, team: team, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago, effort_downstream: 43, effort_upstream: 49
+      Fabricate :demand, team: team, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: nil, effort_downstream: 43, effort_upstream: 49
+      Fabricate :demand, team: other_team, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago, effort_downstream: 38, effort_upstream: 15
+
+      expect(team.start_date).to eq 2.weeks.ago.to_date
+      expect(team.end_date).to eq 2.days.ago.to_date
+      expect(empty_team.start_date).to eq Time.zone.today
+      expect(empty_team.end_date).to eq Time.zone.today
     end
   end
 end

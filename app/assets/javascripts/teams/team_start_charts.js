@@ -9,10 +9,10 @@ function startCharts() {
     buildLineChart(lineLeadtimeAccumulated);
 
     const lineBugsAccumulated = $('#line-bug-share-accumalated');
-    buildLineChart(lineBugsAccumulated);
+    buildColumnLineChart(lineBugsAccumulated);
 
-    const burnupDemands = $('#burnup-demands');
-    buildLineChart(burnupDemands);
+    const columnBugsMonth = $('#column-bug-opened-closed-month');
+    buildColumnChart(columnBugsMonth);
 
     const throughputDiv = $('#throughput-column');
     buildColumnChart(throughputDiv);
@@ -22,9 +22,6 @@ function startCharts() {
 
     const flowEfficiencyDiv = $('#flow-efficiency');
     buildLineChart(flowEfficiencyDiv);
-
-    const bugsInTimeDiv = $('#bugs-in-time');
-    buildColumnChart(bugsInTimeDiv);
 
     const leadTimeZonesDonut = $('#lead-time-zones-donut');
     buildDonutChart(leadTimeZonesDonut);

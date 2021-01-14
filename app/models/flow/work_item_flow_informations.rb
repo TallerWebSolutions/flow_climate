@@ -46,12 +46,12 @@ module Flow
       demand_transitions = DemandTransition.for_demands_ids(@demands_ids)
 
       @stages.each do |stage|
-        delivered_count = demand_transitions.select('DISTINCT demand_id').after_date(start_population_date).before_date_after_stage(analysed_date.end_of_day, stage.order).count
+        transitions_until_date = demand_transitions.select('DISTINCT demand_id').after_date(start_population_date).before_date_after_stage(analysed_date.end_of_day, stage.order).count
 
         if @demands_stages_count_hash[stage.name].present?
-          @demands_stages_count_hash[stage.name] << delivered_count
+          @demands_stages_count_hash[stage.name] << transitions_until_date
         else
-          @demands_stages_count_hash[stage.name] = [delivered_count]
+          @demands_stages_count_hash[stage.name] = [transitions_until_date]
         end
       end
     end

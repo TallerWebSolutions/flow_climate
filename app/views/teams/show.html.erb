@@ -24,6 +24,20 @@
 <%= hidden_field_tag :target_name, @team.name %>
 <%= hidden_field_tag :team_id, @team.id %>
 
+<% if @team_consolidations.last.present? %>
+  <%= I18n.t('general.last_update.text', last_update: I18n.l(@team_consolidations.last.updated_at, format: :short)) %>
+<% else %>
+  <h3>
+    <%= I18n.t('general.no_cache') %>
+  </h3>
+<% end %>
+
+<h3>
+  <%= link_to update_cache_company_team_path(@company, @team), method: :patch do %>
+    <i class="fas fa-sync-alt" aria-hidden="true" title="<%= I18n.t('general.update_cache') %>"></i>
+  <% end %>
+</h3>
+
 <%= render 'layouts/load_spinner' %>
 
 <div class="row">
@@ -59,11 +73,12 @@
              slack_configurations: @slack_configurations,
              dates_array: @array_of_dates,
              work_item_flow_information: @work_item_flow_information,
-             time_flow_information: @time_flow_information,
+             team_consolidations: @team_consolidations,
              statistics_flow_information: @statistics_flow_information,
              current_lead_time_zones: @statistics_flow_information.current_lead_time_zones,
              demands_chart_adapter: @demands_chart_adapter,
              demands: @demands,
+             charts_demands: @charts_demands,
              demands_delivered: @demands_delivered,
              unscored_demands: @unscored_demands,
              demands_blocks: @demands_blocks,

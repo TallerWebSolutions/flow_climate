@@ -177,6 +177,7 @@ pt-BR:
       success: "Atualizado"
       error: "Falhou"
     hours_per_demand: "Horas por Demanda"
+    no_cache: "Não existe cache de dados para os gráficos. Use o botão abaixo para gerar algum."
   header:
     logout: Sair
     sign_up: Cadastre-se
@@ -622,6 +623,14 @@ pt-BR:
         tab_four: "Gráficos do portfólio"
         tab_five: "Gráficos de Membros do Time"
       projects_tab: "Projetos"
+      lead_time_p80_in_month: "Lead Time p80 (Mês)"
+      quality_share_in_month:
+        series: "Defeitos no Mês (%)"
+      quality_opened_bugs:
+        series: "Defeitos Abertos"
+      quality_opened_in_month_bugs:
+        series: "Defeitos Abertos no Mês"
+      data_range: "Dados de um ano"
     replenishing:
       title: "Reabastecimento do Fluxo"
     charts:
@@ -698,7 +707,6 @@ pt-BR:
         one: "%{count} contrato ativo"
         other: "%{count} contratos ativos"
       no_data: "cache do cliente"
-      no_cache: "Não existe cache de dados para os gráficos. Use o botão abaixo para gerar algum."
     add_user_to_customer:
       success: "Usuário adicionado"
     charts:
@@ -1000,6 +1008,14 @@ pt-BR:
       label: "Horas Bloqueadas por Entrega"
     external_dependency:
       label: "Bloqueios"
+    bugs_in_month:
+      title: "Defeitos no Mês"
+      opened: "Abertos"
+      closed: "Fechados"
+    accumulated: "Acumulado"
+    in_month: "No Mês"
+    in_quarter: "No Trimestre"
+    in_year: "No Ano"
   finances_params:
     edit:
       title: "Editar Informação Financeira"
