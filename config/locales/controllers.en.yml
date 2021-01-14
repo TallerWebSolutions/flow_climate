@@ -177,6 +177,7 @@ en:
       success: "Updated"
       error: "Failed"
     hours_per_demand: "Hours per Demand"
+    no_cache: "There is no cache to show the charts. Use the sync button bellow to create some."
   header:
     logout: Logout
     explore: Explore
@@ -626,7 +627,6 @@ en:
     show:
       total_value: "Projects Total Value"
       no_data: "customer cache"
-      no_cache: "There is no cache to show the charts. Use the sync button bellow to create some."
     add_user_to_customer:
       success: "User added"
     charts:
@@ -928,6 +928,14 @@ en:
       label: "Hours Blocked per Delivery"
     external_dependency:
       label: "Blocks"
+    bugs_in_month:
+      title: "Bugs in Month"
+      opened: "Opened"
+      closed: "Closed"
+    accumulated: "Accumulated"
+    in_month: "In Month"
+    in_quarter: "In Quarter"
+    in_year: "In Year"
   finances_params:
     edit:
       title: "Edit Financial Information"
@@ -1113,6 +1121,14 @@ en:
         tab_four: "Portfolio charts"
         tab_five: "Memberships Charts"
       projects_tab: "Projects"
+      lead_time_p80_in_month: "Lead Time p80 (Month)"
+      quality_share_in_month:
+        series: "Bugs In Month (%)"
+      quality_opened_bugs:
+        series: "Bugs Opened"
+      quality_opened_in_month_bugs:
+        series: "Bugs Opened in Month"
+      data_range: "1 year data"
     new:
       title: "New Team"
     index:

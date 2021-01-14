@@ -121,7 +121,7 @@ RSpec.describe TimeService, type: :service do
   end
 
   describe '#end_of_period_for_date' do
-    it 'returns the the start period based on the period variable' do
+    it 'returns the the end period based on the period variable' do
       start_of_period = described_class.instance.end_of_period_for_date(Time.zone.today)
 
       expect(start_of_period).to eq Time.zone.today.end_of_month
@@ -141,6 +141,21 @@ RSpec.describe TimeService, type: :service do
       start_of_period = described_class.instance.end_of_period_for_date(Time.zone.today, 'foo')
 
       expect(start_of_period).to eq Time.zone.today.end_of_month
+    end
+  end
+
+  describe '#beginning_of_semester' do
+    it 'returns beginning of semester' do
+      travel_to Time.zone.local(2021, 1, 11, 19, 0, 0) do
+        date = described_class.instance.beginning_of_semester
+        expect(date).to eq Date.new(2021, 1, 1).beginning_of_day
+
+        date = described_class.instance.beginning_of_semester(Date.new(2021, 6, 30))
+        expect(date).to eq Date.new(2021, 1, 1).beginning_of_day
+
+        date = described_class.instance.beginning_of_semester(Date.new(2021, 7, 30))
+        expect(date).to eq Date.new(2021, 7, 1).beginning_of_day
+      end
     end
   end
 end

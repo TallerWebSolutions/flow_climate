@@ -1320,8 +1320,6 @@ RSpec.describe DemandsController, type: :controller do
     end
 
     describe 'GET #demands_list_by_ids' do
-      include_context 'demands for controller specs'
-
       context 'with no data' do
         it 'assigns the instance variable and renders the template' do
           get :demands_list_by_ids, params: { company_id: company, session_demands_key: 'bar' }
@@ -1334,15 +1332,25 @@ RSpec.describe DemandsController, type: :controller do
       context 'with data' do
         it 'assigns the instance variable and renders the template' do
           travel_to Time.zone.local(2019, 1, 19, 10, 0, 0) do
+            Fabricate :demand, company: company, product: product, project: project, external_id: 'hhh', demand_title: 'foo', demand_type: :feature, class_of_service: :standard, created_date: Time.zone.local(2019, 1, 22, 10, 0, 0), commitment_date: nil, end_date: nil, effort_downstream: 20, effort_upstream: 15
+            Fabricate :demand, company: company, product: product, project: project, demand_title: 'foo bar', demand_type: :bug, class_of_service: :expedite, created_date: Time.zone.local(2019, 1, 23, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 24, 10, 0, 0), end_date: nil, effort_downstream: 0, effort_upstream: 0
+            Fabricate :demand, company: company, product: product, project: project, demand_title: 'bar foo', demand_type: :feature, class_of_service: :intangible, created_date: Time.zone.local(2019, 1, 19, 10, 0, 0), commitment_date: nil, end_date: Time.zone.local(2019, 1, 23, 10, 0, 0), effort_downstream: 0, effort_upstream: 10
+            Fabricate :demand, company: company, product: product, project: project, demand_title: 'xpto', demand_type: :chore, class_of_service: :standard, created_date: Time.zone.local(2019, 1, 14, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 19, 10, 0, 0), end_date: Time.zone.local(2019, 1, 24, 10, 0, 0), effort_downstream: 10, effort_upstream: 20
+
+            Fabricate :demand, company: company, product: product, project: project, demand_title: 'xpto', demand_type: :ui, class_of_service: :fixed_date, created_date: 1.month.ago, commitment_date: nil, end_date: nil, effort_downstream: 30, effort_upstream: 10
+            Fabricate :demand, company: company, product: product, project: project, demand_title: 'sas', demand_type: :feature, class_of_service: :standard, created_date: Time.zone.local(2019, 1, 23, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 24, 10, 0, 0), end_date: nil, effort_downstream: 10, effort_upstream: 10
+            Fabricate :demand, company: company, product: product, project: project, demand_title: 'sas', demand_type: :performance_improvement, class_of_service: :expedite, created_date: Time.zone.local(2019, 1, 22, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 22, 10, 0, 0), end_date: Time.zone.local(2019, 1, 23, 10, 0, 0), effort_downstream: 40, effort_upstream: 10
+            Fabricate :demand, company: company, product: product, project: project, demand_title: 'sas', demand_type: :wireframe, class_of_service: :fixed_date, created_date: Time.zone.local(2019, 1, 21, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 23, 10, 0, 0), end_date: Time.zone.today, effort_downstream: 50, effort_upstream: 60
+
             get :demands_list_by_ids, params: { company_id: company, session_demands_key: 'bar', demands_ids: Demand.all.map(&:id).join(',') }
 
             expect(response).to render_template 'demands/index'
             expect(assigns(:company)).to eq company
             expect(assigns(:demands)).to match_array Demand.all
 
-            expect(assigns(:confidence_95_leadtime)).to be_within(45).of 600
-            expect(assigns(:confidence_80_leadtime)).to be_within(45).of 410
-            expect(assigns(:confidence_65_leadtime)).to be_within(30).of 190
+            expect(assigns(:confidence_95_leadtime)).to be_within(0.1).of 4.6
+            expect(assigns(:confidence_80_leadtime)).to be_within(0.1).of 3.4
+            expect(assigns(:confidence_65_leadtime)).to be_within(0.1).of 2.2
           end
         end
       end

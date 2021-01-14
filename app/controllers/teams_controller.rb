@@ -7,9 +7,9 @@ class TeamsController < DemandsListController
   before_action :assign_team, except: %i[new create]
 
   def show
-    @demands_delivered = all_demands.finished
+    build_cache_object
 
-    @unscored_demands = all_demands.unscored_demands.order(external_id: :asc)
+    @unscored_demands = charts_demands.unscored_demands.order(external_id: :asc)
     @demands_blocks = @team.demand_blocks.order(block_time: :desc)
     @flow_pressure = @team.flow_pressure
     @average_speed = DemandService.instance.average_speed(charts_demands)
@@ -93,7 +93,28 @@ class TeamsController < DemandsListController
     respond_to { |format| format.js { render 'teams/dashboards/dashboard_page_five' } }
   end
 
+  def update_cache
+    if @team.team_consolidations.blank?
+      start_date = @team.start_date
+      end_date = @team.end_date
+
+      cache_date_arrays = TimeService.instance.days_between_of(start_date, end_date)
+      cache_date_arrays.each { |cache_date| Consolidations::TeamConsolidationJob.perform_later(@team, cache_date) }
+    else
+      Consolidations::TeamConsolidationJob.perform_later(@team)
+    end
+
+    flash[:notice] = I18n.t('general.enqueued')
+
+    redirect_to company_team_path(@company, @team)
+  end
+
   private
+
+  def build_cache_object
+    @team_consolidations = @team.team_consolidations.weekly_data.where('consolidation_date >= :limit_date', limit_date: 1.year.ago).order(:consolidation_date)
+    @team_consolidations = @team.team_consolidations.order(:consolidation_date) if @team_consolidations.blank?
+  end
 
   def build_projects_lead_time_in_time_array(executing_projects)
     @projects_lead_time_in_time = []
@@ -153,33 +174,21 @@ class TeamsController < DemandsListController
   end
 
   def charts_demands
-    @charts_demands ||= @team.demands.kept.to_dates(6.months.ago, Time.zone.now.end_of_day)
-  end
-
-  def all_demands
-    @all_demands ||= @team.demands.kept.includes([:product]).includes([:company]).includes([:project])
+    @charts_demands ||= @team.demands.kept.includes([:product]).to_dates(1.year.ago, Time.zone.now.end_of_day)
   end
 
   def build_charts_data(demands)
     @array_of_dates = TimeService.instance.weeks_between_of(start_date, end_date)
     @work_item_flow_information = Flow::WorkItemFlowInformations.new(demands, uncertain_scope, @array_of_dates.length, @array_of_dates.last, 'week')
     @statistics_flow_information = Flow::StatisticsFlowInformations.new(demands)
-    @time_flow_information = Flow::TimeFlowInformations.new(demands)
 
     build_chart_objects
   end
 
   def build_chart_objects
-    @array_of_dates.each_with_index do |analysed_date, distribution_index|
-      @work_item_flow_information.work_items_flow_behaviour(@array_of_dates.first.beginning_of_week, analysed_date, distribution_index, add_data?(analysed_date))
+    @array_of_dates.each_with_index do |analysed_date, _distribution_index|
       @work_item_flow_information.build_cfd_hash(@array_of_dates.first.beginning_of_week, analysed_date)
-      @statistics_flow_information.statistics_flow_behaviour(analysed_date) if add_data?(analysed_date)
-      @time_flow_information.hours_flow_behaviour(analysed_date) if add_data?(analysed_date)
     end
-  end
-
-  def add_data?(analysed_date)
-    analysed_date < Time.zone.now.end_of_week
   end
 
   def uncertain_scope

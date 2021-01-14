@@ -625,5 +625,62 @@ RSpec.describe TeamsController, type: :controller do
         end
       end
     end
+
+    describe 'PATCH #update_cache' do
+      let(:team) { Fabricate :team, company: company }
+
+      context 'with no consolidations' do
+        it 'enqueues the cache update for all customer time' do
+          Fabricate :demand, team: team, created_date: 4.days.ago, end_date: 4.days.ago
+          Fabricate :demand, team: team, created_date: 4.days.ago, end_date: 2.days.ago
+
+          expect(Consolidations::TeamConsolidationJob).to(receive(:perform_later)).exactly(3).times
+
+          patch :update_cache, params: { company_id: company, id: team }
+
+          expect(flash[:notice]).to eq I18n.t('general.enqueued')
+          expect(response).to redirect_to company_team_path(company, team)
+        end
+      end
+
+      context 'with consolidations' do
+        it 'enqueues the cache update for the day' do
+          Fabricate :demand, team: team, created_date: 4.days.ago, end_date: 4.days.ago
+          Fabricate :demand, team: team, created_date: 4.days.ago, end_date: 2.days.ago
+          Fabricate :team_consolidation, team: team
+
+          expect(Consolidations::TeamConsolidationJob).to(receive(:perform_later)).exactly(1).time
+
+          patch :update_cache, params: { company_id: company, id: team }
+
+          expect(flash[:notice]).to eq I18n.t('general.enqueued')
+          expect(response).to redirect_to company_team_path(company, team)
+        end
+      end
+
+      context 'with invalid' do
+        context 'customer' do
+          before { patch :update_cache, params: { company_id: company, id: 'foo' } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'company' do
+          context 'non-existent' do
+            before { patch :update_cache, params: { company_id: 'bar', id: team } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'not permitted' do
+            let(:company) { Fabricate :company, users: [] }
+
+            before { patch :update_cache, params: { company_id: company, id: team } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
   end
 end

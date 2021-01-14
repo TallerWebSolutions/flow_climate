@@ -35,11 +35,16 @@ class Team < ApplicationRecord
   has_many :team_resource_allocations, dependent: :destroy
   has_many :team_resources, through: :team_resource_allocations
   has_many :demand_blocks, -> { distinct }, through: :demands
+  has_many :team_consolidations, class_name: 'Consolidations::TeamConsolidation', dependent: :destroy
 
   validates :company, :name, :max_work_in_progress, presence: true
   validates :name, uniqueness: { scope: :company, message: I18n.t('team.name.uniqueness') }
 
   delegate :count, to: :projects, prefix: true
+
+  def active?
+    projects.active.present?
+  end
 
   def active_monthly_cost_for_billable_types(billable_type)
     team_members.active.where(billable: true, billable_type: billable_type).map(&:monthly_payment).compact.sum
@@ -76,10 +81,12 @@ class Team < ApplicationRecord
   end
 
   def larger_lead_times(number_of_weeks, number_of_records)
+    demands_to_leadtime = demands.kept.finished_with_leadtime.includes([:product]).includes([:company]).includes([:project])
+
     if number_of_weeks <= 0
-      demands.kept.finished_with_leadtime.order(leadtime: :desc).first(number_of_records)
+      demands_to_leadtime.order(leadtime: :desc).first(number_of_records)
     else
-      demands.kept.finished_with_leadtime.where('end_date >= :limit_date', limit_date: number_of_weeks.weeks.ago).order(leadtime: :desc).first(number_of_records)
+      demands_to_leadtime.where('end_date >= :limit_date', limit_date: number_of_weeks.weeks.ago).order(leadtime: :desc).first(number_of_records)
     end
   end
 
@@ -102,6 +109,14 @@ class Team < ApplicationRecord
 
   def flow_pressure
     projects.active.includes([:demands]).sum(&:flow_pressure)
+  end
+
+  def start_date
+    demands.kept.order(:end_date).first&.end_date&.to_date || Time.zone.today
+  end
+
+  def end_date
+    demands.kept.finished.order(:end_date).last&.end_date&.to_date || Time.zone.today
   end
 
   private

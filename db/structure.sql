@@ -2759,6 +2759,94 @@ ALTER SEQUENCE public.stages_teams_id_seq OWNED BY public.stages_teams.id;
 
 
 --
+-- Name: team_consolidations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.team_consolidations (
+    id bigint NOT NULL,
+    team_id integer NOT NULL,
+    consolidation_date date NOT NULL,
+    last_data_in_week boolean DEFAULT false,
+    last_data_in_month boolean DEFAULT false,
+    last_data_in_year boolean DEFAULT false,
+    consumed_hours_in_month numeric DEFAULT 0.0,
+    lead_time_p80 numeric DEFAULT 0.0,
+    lead_time_p80_in_week numeric DEFAULT 0.0,
+    lead_time_p80_in_month numeric DEFAULT 0.0,
+    lead_time_p80_in_quarter numeric DEFAULT 0.0,
+    lead_time_p80_in_semester numeric DEFAULT 0.0,
+    lead_time_p80_in_year numeric DEFAULT 0.0,
+    flow_efficiency numeric DEFAULT 0.0,
+    flow_efficiency_in_month numeric DEFAULT 0.0,
+    flow_efficiency_in_quarter numeric DEFAULT 0.0,
+    flow_efficiency_in_semester numeric DEFAULT 0.0,
+    flow_efficiency_in_year numeric DEFAULT 0.0,
+    hours_per_demand numeric DEFAULT 0.0,
+    hours_per_demand_in_month numeric DEFAULT 0.0,
+    hours_per_demand_in_quarter numeric DEFAULT 0.0,
+    hours_per_demand_in_semester numeric DEFAULT 0.0,
+    hours_per_demand_in_year numeric DEFAULT 0.0,
+    value_per_demand numeric DEFAULT 0.0,
+    value_per_demand_in_month numeric DEFAULT 0.0,
+    value_per_demand_in_quarter numeric DEFAULT 0.0,
+    value_per_demand_in_semester numeric DEFAULT 0.0,
+    value_per_demand_in_year numeric DEFAULT 0.0,
+    qty_demands_created integer DEFAULT 0,
+    qty_demands_created_in_week integer DEFAULT 0,
+    qty_demands_committed integer DEFAULT 0,
+    qty_demands_committed_in_week integer DEFAULT 0,
+    qty_demands_finished_upstream integer DEFAULT 0,
+    qty_demands_finished_upstream_in_week integer DEFAULT 0,
+    qty_demands_finished_upstream_in_month integer DEFAULT 0,
+    qty_demands_finished_upstream_in_quarter integer DEFAULT 0,
+    qty_demands_finished_upstream_in_semester integer DEFAULT 0,
+    qty_demands_finished_upstream_in_year integer DEFAULT 0,
+    qty_demands_finished_downstream integer DEFAULT 0,
+    qty_demands_finished_downstream_in_week integer DEFAULT 0,
+    qty_demands_finished_downstream_in_month integer DEFAULT 0,
+    qty_demands_finished_downstream_in_quarter integer DEFAULT 0,
+    qty_demands_finished_downstream_in_semester integer DEFAULT 0,
+    qty_demands_finished_downstream_in_year integer DEFAULT 0,
+    qty_bugs_opened integer DEFAULT 0,
+    qty_bugs_opened_in_month integer DEFAULT 0,
+    qty_bugs_opened_in_quarter integer DEFAULT 0,
+    qty_bugs_opened_in_semester integer DEFAULT 0,
+    qty_bugs_opened_in_year integer DEFAULT 0,
+    qty_bugs_closed integer DEFAULT 0,
+    qty_bugs_closed_in_month integer DEFAULT 0,
+    qty_bugs_closed_in_quarter integer DEFAULT 0,
+    qty_bugs_closed_in_semester integer DEFAULT 0,
+    qty_bugs_closed_in_year integer DEFAULT 0,
+    bugs_share numeric DEFAULT 0.0,
+    bugs_share_in_month numeric DEFAULT 0.0,
+    bugs_share_in_quarter numeric DEFAULT 0.0,
+    bugs_share_in_semester numeric DEFAULT 0.0,
+    bugs_share_in_year numeric DEFAULT 0.0,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: team_consolidations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.team_consolidations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: team_consolidations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.team_consolidations_id_seq OWNED BY public.team_consolidations.id;
+
+
+--
 -- Name: team_members; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3490,6 +3578,13 @@ ALTER TABLE ONLY public.stages_teams ALTER COLUMN id SET DEFAULT nextval('public
 
 
 --
+-- Name: team_consolidations id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.team_consolidations ALTER COLUMN id SET DEFAULT nextval('public.team_consolidations_id_seq'::regclass);
+
+
+--
 -- Name: team_members id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4142,6 +4237,14 @@ ALTER TABLE ONLY public.stages
 
 ALTER TABLE ONLY public.stages_teams
     ADD CONSTRAINT stages_teams_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: team_consolidations team_consolidations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.team_consolidations
+    ADD CONSTRAINT team_consolidations_pkey PRIMARY KEY (id);
 
 
 --
@@ -5106,6 +5209,34 @@ CREATE INDEX index_stages_teams_on_team_id ON public.stages_teams USING btree (t
 
 
 --
+-- Name: index_team_consolidations_on_last_data_in_month; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_team_consolidations_on_last_data_in_month ON public.team_consolidations USING btree (last_data_in_month);
+
+
+--
+-- Name: index_team_consolidations_on_last_data_in_week; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_team_consolidations_on_last_data_in_week ON public.team_consolidations USING btree (last_data_in_week);
+
+
+--
+-- Name: index_team_consolidations_on_last_data_in_year; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_team_consolidations_on_last_data_in_year ON public.team_consolidations USING btree (last_data_in_year);
+
+
+--
+-- Name: index_team_consolidations_on_team_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_team_consolidations_on_team_id ON public.team_consolidations USING btree (team_id);
+
+
+--
 -- Name: index_team_members_on_company_id_and_name_and_jira_account_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5292,6 +5423,13 @@ CREATE UNIQUE INDEX operations_dashboard_cache_unique ON public.operations_dashb
 --
 
 CREATE UNIQUE INDEX operations_dashboard_pairings_cache_unique ON public.operations_dashboard_pairings USING btree (operations_dashboard_id, pair_id);
+
+
+--
+-- Name: team_consolidation_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX team_consolidation_unique ON public.team_consolidations USING btree (team_id, consolidation_date);
 
 
 --
@@ -6188,6 +6326,14 @@ ALTER TABLE ONLY public.customers_projects
 
 
 --
+-- Name: team_consolidations fk_rails_ee628d9f6b; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.team_consolidations
+    ADD CONSTRAINT fk_rails_ee628d9f6b FOREIGN KEY (team_id) REFERENCES public.teams(id);
+
+
+--
 -- Name: customers fk_rails_ef51a916ef; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6422,6 +6568,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20201209134542'),
 ('20201214235753'),
 ('20201215181752'),
-('20210105172949');
+('20210105172949'),
+('20210107143637');
 
 

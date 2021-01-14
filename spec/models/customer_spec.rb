@@ -200,7 +200,7 @@ RSpec.describe Customer, type: :model do
   describe '#start_date' do
     let(:company) { Fabricate :company }
 
-    it 'returns the total_flow_pressure in date' do
+    it 'returns the start customer date' do
       customer = Fabricate :customer, company: company
       other_customer = Fabricate :customer, company: company
       empty_customer = Fabricate :customer, company: company

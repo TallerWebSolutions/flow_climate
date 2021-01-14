@@ -38,6 +38,15 @@ namespace :statistics do
     end
   end
 
+  desc 'Consolidations for teams'
+  task consolidate_teams: :environment do
+    Company.all.each do |company|
+      company.teams.select(&:active?).each do |team|
+        Consolidations::TeamConsolidationJob.perform_later(team)
+      end
+    end
+  end
+
   desc 'Consolidations for replenishing'
   task consolidate_replenishing: :environment do
     Consolidations::ReplenishingConsolidationJob.perform_later
