@@ -178,6 +178,9 @@ pt-BR:
       error: "Falhou"
     hours_per_demand: "Horas por Demanda"
     no_cache: "Não existe cache de dados para os gráficos. Use o botão abaixo para gerar algum."
+    ordering:
+      direction: "Direção"
+      title: "Ordering"
   header:
     logout: Sair
     sign_up: Cadastre-se

@@ -9,6 +9,7 @@
 </div>
 
 <% session[:demands_ids] = @demands_ids %>
+<% session[:searched_ids] = @demands.map(&:id) %>
 
 <%= render 'demands/demands_search_filters', company: @company %>
 

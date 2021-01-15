@@ -48,6 +48,17 @@ RSpec.describe FilterHelper, type: :helper do
   end
 
   describe '#project_statuses_options' do
-    it { expect(helper.project_statuses_options('waiting')).to eq options_for_select(Project.statuses.map { |key, _value| [t("activerecord.attributes.project.enums.status.#{key}"), key] }, 'waiting') }
+    it { expect(helper.project_statuses_options('waiting')).to eq options_for_select(Project.statuses.map { |key, _value| [I18n.t("activerecord.attributes.project.enums.status.#{key}"), key] }, 'waiting') }
+  end
+
+  describe '#ordering_options' do
+    it do
+      expect(helper.ordering_options('cost_to_project')).to eq options_for_select([[Demand.human_attribute_name(:external_id), :external_id],
+                                                                                   [I18n.t('demands.index.cost_to_project'), :cost_to_project],
+                                                                                   [Demand.human_attribute_name(:leadtime), :leadtime],
+                                                                                   [Demand.human_attribute_name(:created_date), :created_date],
+                                                                                   [Demand.human_attribute_name(:commitment_date), :commitment_date],
+                                                                                   [Demand.human_attribute_name(:end_date), :end_date]], 'cost_to_project')
+    end
   end
 end

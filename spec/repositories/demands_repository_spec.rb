@@ -296,17 +296,31 @@ RSpec.describe DemandsRepository, type: :repository do
     it { expect(described_class.instance.class_of_service_query(Demand.all, 'expedite')).to match_array [second_demand, seventh_demand] }
   end
 
-  describe '#demand_tags_query' do
-    before { travel_to Time.zone.local(2018, 4, 5, 10, 0, 0) }
-
-    after { travel_back }
-
+  describe '#team_query' do
     include_context 'demand data for filters'
 
-    it { expect(described_class.instance.demand_tags_query(Demand.all, '')).to eq Demand.all }
-    it { expect(described_class.instance.demand_tags_query(Demand.none, '')).to eq [] }
-    it { expect(described_class.instance.demand_tags_query(Demand.all, 'xpto sbbrubles'.split)).to match_array [second_demand] }
-    it { expect(described_class.instance.demand_tags_query(Demand.all, 'sbbrubles'.split)).to match_array [first_demand, second_demand] }
+    it 'returns the information' do
+      travel_to Time.zone.local(2018, 4, 5, 10, 0, 0) do
+        company = Fabricate :company
+        team = Fabricate :team, company: company
+        other_team = Fabricate :team, company: company
+
+        first_demand = Fabricate :demand, company: company, team: team, created_date: 2.days.ago, commitment_date: nil, end_date: nil, effort_downstream: 20, effort_upstream: 15, demand_tags: %w[aaa ccc sbbrubles]
+        second_demand = Fabricate :demand, company: company, team: team, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil, effort_downstream: 0, effort_upstream: 0, demand_tags: %w[sbbrubles xpto]
+        third_demand = Fabricate :demand, company: company, team: team, created_date: 5.days.ago, commitment_date: nil, end_date: 1.day.ago, effort_downstream: 0, effort_upstream: 10, demand_tags: %w[aaa ccc]
+        fourth_demand = Fabricate :demand, company: company, team: team, created_date: 10.days.ago, commitment_date: 5.days.ago, end_date: Time.zone.today, effort_downstream: 10, effort_upstream: 20, demand_tags: %w[xpto]
+
+        fifth_demand = Fabricate :demand, company: company, team: other_team, demand_title: 'xpto', demand_type: :ui, class_of_service: :fixed_date, created_date: 1.month.ago, commitment_date: nil, end_date: nil, effort_downstream: 30, effort_upstream: 10
+        sixth_demand = Fabricate :demand, company: company, team: other_team, demand_title: 'voyager sas', demand_type: :feature, class_of_service: :standard, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil, effort_downstream: 10, effort_upstream: 10
+        seventh_demand = Fabricate :demand, company: company, team: other_team, demand_title: 'sas', demand_type: :performance_improvement, class_of_service: :expedite, created_date: 2.days.ago, commitment_date: 2.days.ago, end_date: 1.day.ago, effort_downstream: 40, effort_upstream: 10
+        eigth_demand = Fabricate :demand, company: company, team: other_team, demand_title: 'sas', demand_type: :wireframe, class_of_service: :fixed_date, created_date: 3.days.ago, commitment_date: 1.day.ago, end_date: Time.zone.today, effort_downstream: 50, effort_upstream: 60
+
+        expect(described_class.instance.team_query(Demand.all, team.id)).to match_array [first_demand, second_demand, third_demand, fourth_demand]
+        expect(described_class.instance.team_query(Demand.all, other_team.id)).to match_array [fifth_demand, sixth_demand, seventh_demand, eigth_demand]
+        expect(described_class.instance.team_query(Demand.none, other_team.id)).to eq []
+        expect(described_class.instance.team_query(Demand.all, nil)).to match_array Demand.all
+      end
+    end
   end
 
   describe '#lead_time_zone_count' do
