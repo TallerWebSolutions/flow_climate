@@ -55,8 +55,9 @@ RSpec.describe DemandService, type: :service do
       expect(DemandsRepository.instance).to(receive(:demand_type_query).with(anything, 'bug').once { Demand.none })
       expect(DemandsRepository.instance).to(receive(:class_of_service_query).with(anything, 'expedite').once { Demand.none })
       expect(DemandsRepository.instance).to(receive(:demand_tags_query).with(anything, 'xpto sbbrubles').once { Demand.none })
+      expect(DemandsRepository.instance).to(receive(:team_query).with(anything, 1).once { Demand.none })
 
-      described_class.instance.search_engine(Demand.all, Time.zone.now, Time.zone.now, 'foo', 'bla', 'bug', 'expedite', 'xpto sbbrubles')
+      described_class.instance.search_engine(Demand.all, Time.zone.now, Time.zone.now, 'foo', 'bla', 'bug', 'expedite', 'xpto sbbrubles', 1)
     end
   end
 

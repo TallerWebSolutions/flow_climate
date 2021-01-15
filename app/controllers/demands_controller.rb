@@ -7,7 +7,7 @@ class DemandsController < DemandsListController
 
   before_action :assign_company
   before_action :assign_demand, only: %i[edit update show synchronize_jira destroy destroy_physically score_research]
-  before_action :assign_project, except: %i[demands_csv demands_tab search_demands show destroy destroy_physically score_research index demands_list_by_ids order_demands demands_charts]
+  before_action :assign_project, except: %i[demands_csv demands_tab search_demands show destroy destroy_physically score_research index demands_list_by_ids demands_charts]
 
   def new
     @demand = Demand.new(project: @project)
@@ -106,19 +106,8 @@ class DemandsController < DemandsListController
     assign_dates_to_query
 
     @demands = query_demands
-    @paged_demands = @demands.page(page_param)
+    @demands = @demands.order(params[:order_by] => order_direction) if params[:order_by].present?
 
-    assign_consolidations
-
-    render 'demands/index'
-  end
-
-  def order_demands
-    assign_dates_to_query
-
-    @demands = query_demands
-
-    @demands = demands.order(params[:order_by] => params[:order_direction])
     @paged_demands = @demands.page(page_param)
 
     assign_consolidations
@@ -162,6 +151,10 @@ class DemandsController < DemandsListController
 
   private
 
+  def order_direction
+    params[:order_direction] || 'asc'
+  end
+
   def build_demands_objects
     @demands_ids = @paged_demands.map(&:id)
     @demands = @paged_demands.except(:limit, :offset)
@@ -196,7 +189,7 @@ class DemandsController < DemandsListController
   end
 
   def query_demands
-    DemandService.instance.search_engine(demands, params[:demands_start_date], params[:demands_end_date], params[:search_text], params[:flow_status], params[:demand_type], params[:demand_class_of_service], params[:search_demand_tags]&.split(' '))
+    DemandService.instance.search_engine(demands, params[:demands_start_date], params[:demands_end_date], params[:search_text], params[:flow_status], params[:demand_type], params[:demand_class_of_service], params[:search_demand_tags]&.split(' '), params[:team_id])
   end
 
   def demand_params

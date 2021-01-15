@@ -104,6 +104,12 @@ class DemandsRepository
     demands
   end
 
+  def team_query(demands, team_id)
+    return demands.where(team_id: team_id) if team_id.present?
+
+    demands
+  end
+
   def lead_time_zone_count(demands, lower_limit, higher_limit)
     if lower_limit.present? && higher_limit.blank?
       demands.finished_with_leadtime.where('leadtime <= :lead_time_zone', lead_time_zone: lower_limit).count

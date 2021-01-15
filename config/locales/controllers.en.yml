@@ -178,6 +178,9 @@ en:
       error: "Failed"
     hours_per_demand: "Hours per Demand"
     no_cache: "There is no cache to show the charts. Use the sync button bellow to create some."
+    ordering:
+      direction: "Direction"
+      title: "Ordenação"
   header:
     logout: Logout
     explore: Explore
