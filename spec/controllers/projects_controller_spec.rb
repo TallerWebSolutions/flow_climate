@@ -1074,18 +1074,25 @@ RSpec.describe ProjectsController, type: :controller do
     describe 'PATCH #update_consolidations' do
       let(:company) { Fabricate :company, users: [user] }
       let(:customer) { Fabricate :customer, company: company }
-      let!(:project) { Fabricate :project, company: company }
 
-      context 'passing valid parameters' do
+      context 'with valid parameters' do
         it 'calls the consolidation job and notices the user' do
-          patch :update_consolidations, params: { company_id: company, id: project }
+          travel_to Time.zone.local(2021, 1, 18, 10, 0, 0) do
+            project = Fabricate :project, company: company, start_date: 3.weeks.ago, end_date: 1.day.from_now
+            expect(Consolidations::ProjectConsolidationJob).to(receive(:perform_later)).exactly(22).times
+            expect_any_instance_of(Project).to(receive(:remove_outdated_consolidations)).once
 
-          expect(response).to redirect_to company_project_path(company, project)
-          expect(flash[:notice]).to eq I18n.t('general.enqueued')
+            patch :update_consolidations, params: { company_id: company, id: project }
+
+            expect(response).to redirect_to company_project_path(company, project)
+            expect(flash[:notice]).to eq I18n.t('general.enqueued')
+          end
         end
       end
 
-      context 'passing an invalid' do
+      context 'with invalid' do
+        let!(:project) { Fabricate :project, company: company }
+
         context 'non-existent project' do
           before { patch :update_consolidations, params: { company_id: company, id: 'foo' } }
 

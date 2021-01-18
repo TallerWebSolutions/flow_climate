@@ -73,6 +73,8 @@ class Project < ApplicationRecord
   scope :active_in_period, ->(start_period, end_period) { where('(projects.start_date <= :start_period AND projects.end_date >= :start_period) OR (projects.start_date >= :start_period AND projects.start_date <= :end_period)', start_period: start_period, end_period: end_period) }
   scope :finishing_after, ->(date) { where('projects.end_date >= :end_date', end_date: date) }
 
+  after_save :remove_outdated_consolidations
+
   def add_user(user)
     return if users.include?(user)
 
@@ -473,6 +475,11 @@ class Project < ApplicationRecord
 
   def backlog_count_for(date = Time.zone.now.end_of_day)
     backlog_for(date).count + initial_scope
+  end
+
+  def remove_outdated_consolidations
+    project_consolidations.where('consolidation_date < :limit_date', limit_date: start_date).map(&:destroy)
+    project_consolidations.where('consolidation_date > :limit_date', limit_date: end_date).map(&:destroy)
   end
 
   private

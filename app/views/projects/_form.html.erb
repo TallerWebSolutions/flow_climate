@@ -83,7 +83,11 @@
   <div class="row">
     <div class="col-xs-12">
       <%= f.submit I18n.t('general.buttons.save'), class: 'btn btn-success' %>
-      <%= link_to I18n.t('general.buttons.cancel'), company_projects_path(company), class: 'btn btn-danger' %>
+      <% if project.persisted? %>
+        <%= link_to I18n.t('general.buttons.cancel'), company_project_path(company, project), class: 'btn btn-danger' %>
+      <% else %>
+        <%= link_to I18n.t('general.buttons.cancel'), company_projects_path(company), class: 'btn btn-danger' %>
+      <% end %>
     </div>
   </div>
 </div>

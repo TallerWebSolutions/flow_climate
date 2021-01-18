@@ -169,7 +169,13 @@ class ProjectsController < AuthenticatedController
   end
 
   def update_consolidations
-    Consolidations::ProjectConsolidationJob.perform_later(@project)
+    end_date = [Time.zone.today, @project.end_date.end_of_day].min
+
+    @project.remove_outdated_consolidations
+
+    cache_date_arrays = TimeService.instance.days_between_of(@project.start_date, end_date)
+    cache_date_arrays.each { |cache_date| Consolidations::ProjectConsolidationJob.perform_later(@project, cache_date) }
+
     flash[:notice] = I18n.t('general.enqueued')
 
     redirect_to company_project_path(@company, @project)
@@ -189,7 +195,7 @@ class ProjectsController < AuthenticatedController
   def build_project_consolidations
     project_consolidations = @project.project_consolidations.order(:consolidation_date)
 
-    @all_project_consolidations = project_consolidations.weekly_data
+    @all_project_consolidations = project_consolidations.weekly_data.order(:consolidation_date)
     last_consolidation = project_consolidations.last
     append_current_data(last_consolidation)
     @dashboard_project_consolidations = @all_project_consolidations.after_date(10.weeks.ago)

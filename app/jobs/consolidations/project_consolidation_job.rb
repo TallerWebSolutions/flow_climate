@@ -5,7 +5,6 @@ module Consolidations
     queue_as :consolidations
 
     def perform(project, cache_date = Time.zone.today)
-
       end_of_day = cache_date.end_of_day
 
       demands = project.demands.kept.where('demands.created_date <= :analysed_date', analysed_date: end_of_day)
