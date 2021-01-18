@@ -1444,4 +1444,26 @@ RSpec.describe Project, type: :model do
       it { expect(project.weekly_project_scope_hours_until_end).to eq [10] }
     end
   end
+
+  describe '#remove_outdated_consolidations' do
+    context 'with project consolidations' do
+      it 'removes the consolidations outside project range' do
+        project = Fabricate :project, start_date: 4.weeks.ago, end_date: 2.weeks.from_now, qty_hours: 10
+        Fabricate :project_consolidation, project: project, consolidation_date: 5.weeks.ago, project_scope_hours: 5, last_data_in_week: true
+        Fabricate :project_consolidation, project: project, consolidation_date: 3.weeks.ago, project_scope_hours: 13, last_data_in_week: true
+        Fabricate :project_consolidation, project: project, consolidation_date: 4.weeks.from_now, project_scope_hours: 18
+
+        project.remove_outdated_consolidations
+        expect(project.project_consolidations.reload.count).to eq 1
+      end
+    end
+
+    context 'with no consolidations' do
+      let(:project) { Fabricate :project }
+
+      before { project.remove_outdated_consolidations }
+
+      it { expect(project.project_consolidations.reload.count).to eq 0 }
+    end
+  end
 end
