@@ -16,7 +16,7 @@
     </div>
   </div>
 
-  <%= paginate projects_list, method: :get %>
+  <%= paginate projects_list %>
 
   <% if projects_list.blank? || projects_list.empty? %>
     <%= I18n.t('projects.index.no_data') %>
