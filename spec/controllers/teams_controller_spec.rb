@@ -649,7 +649,7 @@ RSpec.describe TeamsController, type: :controller do
           Fabricate :demand, team: team, created_date: 4.days.ago, end_date: 2.days.ago
           Fabricate :team_consolidation, team: team
 
-          expect(Consolidations::TeamConsolidationJob).to(receive(:perform_later)).exactly(1).time
+          expect(Consolidations::TeamConsolidationJob).to(receive(:perform_later)).exactly(3).times
 
           patch :update_cache, params: { company_id: company, id: team }
 

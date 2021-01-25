@@ -63,8 +63,8 @@ class DemandsRepository
     return demands.includes(:project) if filter_text.blank?
 
     demands.includes(:project)
-           .joins(:project)
-           .joins(:product)
+           .left_outer_joins(:project)
+           .left_outer_joins(:product)
            .left_outer_joins(:customer)
            .left_outer_joins(:portfolio_unit)
            .left_outer_joins(item_assignments: { membership: :team_member })
@@ -105,7 +105,7 @@ class DemandsRepository
   end
 
   def team_query(demands, team_id)
-    return demands.where(team_id: team_id) if team_id.present?
+    return demands.joins(:team).where(team_id: team_id) if team_id.present?
 
     demands
   end
