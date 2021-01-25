@@ -94,15 +94,11 @@ class TeamsController < DemandsListController
   end
 
   def update_cache
-    if @team.team_consolidations.blank?
-      start_date = @team.start_date
-      end_date = @team.end_date
+    start_date = @team.start_date
+    end_date = @team.end_date
 
-      cache_date_arrays = TimeService.instance.days_between_of(start_date, end_date)
-      cache_date_arrays.each { |cache_date| Consolidations::TeamConsolidationJob.perform_later(@team, cache_date) }
-    else
-      Consolidations::TeamConsolidationJob.perform_later(@team)
-    end
+    cache_date_arrays = TimeService.instance.days_between_of(start_date, end_date)
+    cache_date_arrays.each { |cache_date| Consolidations::TeamConsolidationJob.perform_later(@team, cache_date) }
 
     flash[:notice] = I18n.t('general.enqueued')
 

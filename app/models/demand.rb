@@ -66,6 +66,8 @@
 class Demand < ApplicationRecord
   include Discard::Model
 
+  paginates_per 20
+
   extend FriendlyId
   friendly_id :external_id, use: :slugged
 
