@@ -4,7 +4,7 @@ module Api
   module V1
     class DemandsController < AuthenticatedApiController
       def show
-        demand = Demand.where('lower(external_id) = :external_id', external_id: params[:id]&.downcase).first
+        demand = @company.demands.where('lower(external_id) = :external_id', external_id: params[:id]&.downcase).first
 
         return not_found if demand.blank?
 
