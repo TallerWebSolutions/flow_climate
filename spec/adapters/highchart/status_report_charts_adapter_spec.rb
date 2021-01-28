@@ -7,7 +7,7 @@ RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
 
     describe '.initialize' do
       context 'with projects' do
-        it 'do the math and provides the correct information' do
+        it 'does the math and provides the correct information' do
           travel_to Time.zone.local(2018, 5, 1, 10, 0, 0) do
             product = Fabricate :product, customer: customer
             team = Fabricate :team, company: company

@@ -7,15 +7,6 @@ function getProductPortfolioUnitsTab(companyId, productId) {
     });
 }
 
-function getProjectsTab(companyId, productId) {
-    $("#general-loader").show();
-
-    jQuery.ajax({
-        url: `/companies/${companyId}/products/${productId}/projects_tab.js`,
-        type: "GET"
-    });
-}
-
 function getPortfolioChartsTab(companyId, productId) {
     $("#general-loader").show();
 

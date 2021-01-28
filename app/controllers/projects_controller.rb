@@ -18,7 +18,7 @@ class ProjectsController < AuthenticatedController
   end
 
   def index
-    @projects = @company.projects.distinct.includes(:team).order(end_date: :desc).page(page_param)
+    assign_projects
     @unpaged_projects = @projects.except(:limit, :offset)
 
     @projects_summary = ProjectsSummaryData.new(@unpaged_projects)
@@ -148,12 +148,12 @@ class ProjectsController < AuthenticatedController
   def search_projects
     @target_name = params[:target_name]
 
-    @projects = build_projects_search(projects_ids, params[:start_date], params[:end_date], params[:project_status], params[:project_name])
+    @projects = build_projects_search(projects_ids, params[:projects_filter_start_date], params[:projects_filter_end_date], params[:project_status], params[:project_name])
     @unpaged_projects = @projects.except(:limit, :offset)
 
     @projects_summary = ProjectsSummaryData.new(@unpaged_projects)
 
-    respond_to { |format| format.js { render 'projects/search_projects' } }
+    render 'projects/index'
   end
 
   def running_projects_charts
@@ -186,6 +186,14 @@ class ProjectsController < AuthenticatedController
   end
 
   private
+
+  def assign_projects
+    @projects = if params[:projects_ids].present?
+                  @company.projects.where(id: params[:projects_ids].split(',')).order(end_date: :desc).page(page_param)
+                else
+                  @company.projects.distinct.includes(:team).order(end_date: :desc).order(end_date: :desc).page(page_param)
+                end
+  end
 
   def assign_special_demands
     @last_10_deliveries = demands.kept.finished.order(end_date: :desc).limit(10)

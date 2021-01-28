@@ -1,15 +1,24 @@
 <div class="row">
   <%= link_to company_product_path(@company, product) do %>
-    <div class="col-xs-3 stamp">
+    <div class="col-xs-6 stamp">
       <div class="stamp-title"><%= Product.model_name.human %></div>
-      <div class="stamp-content"><%= link_to product.name, company_product_path(@company, product) %></div>
+      <div class="stamp-content"><%= product.name %></div>
     </div>
   <% end %>
+  <%= link_to company_projects_path(@company, projects_ids: projects_ids), target: '_blank' do %>
+    <div class="col-xs-6 stamp">
+      <div class="stamp-title"><%= Project.model_name.human(count: projects_ids.split(',').count) %></div>
+      <div class="stamp-content"><%= projects_ids.split(',').count %></div>
+    </div>
+  <% end %>
+</div>
+
+<div class="row">
   <div class="col-xs-3 stamp">
     <div class="stamp-title"><%= I18n.t('general.delivered') %></div>
     <div class="stamp-content"><%= product.delivered_scope  %></div>
   </div>
-  <div class="col-xs-3 stamp">
+  <div class="col-xs-2 stamp">
     <div class="stamp-title"><%= I18n.t('projects.index.remaining_backlog') %></div>
     <div class="stamp-content"><%= product.remaining_backlog  %></div>
   </div>
@@ -17,14 +26,11 @@
     <div class="stamp-title"><%= I18n.t('projects.index.percentage_remaining_scope') %></div>
     <div class="stamp-content"><%= number_to_percentage(product.percentage_remaining_scope * 100, precision: 2)  %></div>
   </div>
-</div>
-
-<div class="row">
-  <div class="col-xs-6 stamp">
+  <div class="col-xs-2 stamp">
     <div class="stamp-title"><%= I18n.t('general.stamps.hours_per_demand') %></div>
     <div class="stamp-content"><%= number_with_precision(product.avg_hours_per_demand, precision: 3)  %></div>
   </div>
-  <div class="col-xs-6 stamp">
+  <div class="col-xs-2 stamp">
     <div class="stamp-title"><%= I18n.t('projects.index.flow_pressure') %></div>
     <div class="stamp-content"><%= I18n.t('general.demands_per_day', count: number_with_precision(product.total_flow_pressure, precision: 3)) %></div>
   </div>

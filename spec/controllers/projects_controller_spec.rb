@@ -961,54 +961,54 @@ RSpec.describe ProjectsController, type: :controller do
       context 'passing valid parameters' do
         context 'with no search parameters' do
           it 'retrieves all the projects to the company' do
-            get :search_projects, params: { company_id: company, projects_ids: [first_project, second_project, third_project, fourth_project].map(&:id).join(',') }, xhr: true
+            get :search_projects, params: { company_id: company, projects_ids: [first_project, second_project, third_project, fourth_project].map(&:id).join(',') }
 
-            expect(response).to render_template 'projects/search_projects'
+            expect(response).to render_template 'projects/index'
             expect(assigns(:projects)).to eq [fourth_project, third_project, second_project, first_project]
           end
         end
 
         context 'with search by status' do
           it 'retrieves all executing the projects to the company' do
-            get :search_projects, params: { company_id: company, projects_ids: [first_project, second_project, third_project, fourth_project].map(&:id).join(','), project_status: :executing }, xhr: true
+            get :search_projects, params: { company_id: company, projects_ids: [first_project, second_project, third_project, fourth_project].map(&:id).join(','), project_status: :executing }
 
-            expect(response).to render_template 'projects/search_projects'
+            expect(response).to render_template 'projects/index'
             expect(assigns(:projects)).to eq [fourth_project, second_project]
           end
         end
 
         context 'with search by start_date' do
           it 'retrieves all executing the projects to the company' do
-            get :search_projects, params: { company_id: company, projects_ids: [first_project, second_project, third_project, fourth_project].map(&:id).join(','), start_date: 3.days.ago }, xhr: true
+            get :search_projects, params: { company_id: company, projects_ids: [first_project, second_project, third_project, fourth_project].map(&:id).join(','), projects_filter_start_date: 3.days.ago }
 
-            expect(response).to render_template 'projects/search_projects'
+            expect(response).to render_template 'projects/index'
             expect(assigns(:projects)).to eq [fourth_project, third_project]
           end
         end
 
         context 'with search by end_date' do
           it 'retrieves all executing the projects to the company' do
-            get :search_projects, params: { company_id: company, projects_ids: [first_project, second_project, third_project, fourth_project].map(&:id).join(','), end_date: 16.days.ago }, xhr: true
+            get :search_projects, params: { company_id: company, projects_ids: [first_project, second_project, third_project, fourth_project].map(&:id).join(','), projects_filter_end_date: 16.days.ago }
 
-            expect(response).to render_template 'projects/search_projects'
+            expect(response).to render_template 'projects/index'
             expect(assigns(:projects)).to eq [first_project]
           end
         end
 
         context 'with search by status and start_date' do
           it 'retrieves all executing the projects to the company' do
-            get :search_projects, params: { company_id: company, projects_ids: [first_project, second_project, third_project, fourth_project].map(&:id).join(','), project_status: :executing, start_date: 3.days.ago }, xhr: true
+            get :search_projects, params: { company_id: company, projects_ids: [first_project, second_project, third_project, fourth_project].map(&:id).join(','), project_status: :executing, projects_filter_start_date: 3.days.ago }
 
-            expect(response).to render_template 'projects/search_projects'
+            expect(response).to render_template 'projects/index'
             expect(assigns(:projects)).to eq [fourth_project]
           end
         end
 
         context 'with search by project name' do
           it 'retrieves all executing the projects to the company' do
-            get :search_projects, params: { company_id: company, projects_ids: [first_project, second_project, third_project, fourth_project].map(&:id).join(','), project_name: 'bar' }, xhr: true
+            get :search_projects, params: { company_id: company, projects_ids: [first_project, second_project, third_project, fourth_project].map(&:id).join(','), project_name: 'bar' }
 
-            expect(response).to render_template 'projects/search_projects'
+            expect(response).to render_template 'projects/index'
             expect(assigns(:projects)).to eq [third_project, first_project]
             expect(assigns(:unpaged_projects)).to eq [third_project, first_project]
           end
@@ -1018,7 +1018,7 @@ RSpec.describe ProjectsController, type: :controller do
       context 'passing an invalid' do
         context 'company' do
           context 'non-existent' do
-            before { get :search_projects, params: { company_id: 'foo' }, xhr: true }
+            before { get :search_projects, params: { company_id: 'foo' } }
 
             it { expect(response).to have_http_status :not_found }
           end
@@ -1026,7 +1026,7 @@ RSpec.describe ProjectsController, type: :controller do
           context 'not permitted' do
             let(:company) { Fabricate :company, users: [] }
 
-            before { get :search_projects, params: { company_id: company }, xhr: true }
+            before { get :search_projects, params: { company_id: company } }
 
             it { expect(response).to have_http_status :not_found }
           end
