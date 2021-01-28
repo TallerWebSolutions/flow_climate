@@ -1,6 +1,10 @@
 var projectsDiv = $('#projects-table')
 
-projectsDiv.html("<%= escape_javascript(render 'projects/projects_table', company: @company, target_name: @target_name, projects_list: @projects, projects_summary: @projects_summary) %>")
+projectsDiv.html("<%= escape_javascript(render 'projects/projects_table', company: @company,
+                                                                          target_name: @target_name,
+                                                                          projects_list: @projects,
+                                                                          projects_ids: @projects.map(&:id).join(','),
+                                                                          projects_summary: @projects_summary) %>")
 
 $('#general-loader').hide();
 

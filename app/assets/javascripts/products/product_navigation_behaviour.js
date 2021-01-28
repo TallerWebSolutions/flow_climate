@@ -24,10 +24,6 @@ navItem.on('click', function(event){
         if ($(this).attr('id') === 'nav-portfolio-unit') {
             getProductPortfolioUnitsTab(companyId, productId)
 
-        } else if ($(this).attr('id') === 'nav-projects-table') {
-            $('.col-table-details').hide();
-            getProjectsTab(companyId, productId)
-
         } else if ($(this).attr('id') === 'nav-portfolio-demands') {
             $('.col-table-details').hide();
             getDemands(companyId, demandsIds)

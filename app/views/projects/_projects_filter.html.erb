@@ -1,31 +1,35 @@
-<div class="row bottom-spaced-component">
-  <div class="col-xs-3">
-    <%= label_tag Project.human_attribute_name(:start_date), nil, class: 'control-label' %>
-    <%= date_field_tag :projects_filter_start_date, params[:start_date], class: 'form-control' %>
-  </div>
+<%= form_tag search_projects_company_projects_path(company), method: :get do %>
+  <%= hidden_field_tag :projects_ids, projects_ids %>
 
-  <div class="col-xs-3">
-    <%= label_tag Project.human_attribute_name(:end_date), nil, class: 'control-label' %>
-    <%= date_field_tag :projects_filter_end_date, params[:end_date], class: 'form-control' %>
-  </div>
+  <div class="row bottom-spaced-component">
+    <div class="col-xs-3">
+      <%= label_tag Project.human_attribute_name(:start_date), nil, class: 'control-label' %>
+      <%= date_field_tag :projects_filter_start_date, params[:projects_filter_start_date], class: 'form-control' %>
+    </div>
 
-  <div class="col-xs-3">
-    <div class="form-group">
-      <%= label_tag :status, nil, class: 'control-label' %>
-      <%= select_tag :projects_filter_status, project_statuses_options(params[:project_status]), class: 'form-control', include_blank: I18n.t('general.select') %>
+    <div class="col-xs-3">
+      <%= label_tag Project.human_attribute_name(:end_date), nil, class: 'control-label' %>
+      <%= date_field_tag :projects_filter_end_date, params[:projects_filter_end_date], class: 'form-control' %>
+    </div>
+
+    <div class="col-xs-3">
+      <div class="form-group">
+        <%= label_tag :status, nil, class: 'control-label' %>
+        <%= select_tag :project_status, project_statuses_options(params[:project_status]), class: 'form-control', include_blank: I18n.t('general.select') %>
+      </div>
+    </div>
+
+    <div class="col-xs-3">
+      <div class="form-group">
+        <%= label_tag :name, nil, class: 'control-label' %>
+        <%= text_field_tag :project_name, params[:project_name], class: 'form-control' %>
+      </div>
     </div>
   </div>
 
-  <div class="col-xs-3">
-    <div class="form-group">
-      <%= label_tag :name, nil, class: 'control-label' %>
-      <%= text_field_tag :project_name, params[:project_name], class: 'form-control' %>
+  <div class="row bottom-spaced-component">
+    <div class="col-xs-3">
+      <%= submit_tag I18n.t('general.search'), class: 'btn btn-primary' %>
     </div>
   </div>
-</div>
-
-<div class="row bottom-spaced-component">
-  <div class="col-xs-3">
-    <%= link_to I18n.t('general.search'), '#', class: 'btn btn-primary', id: 'search-projects' %>
-  </div>
-</div>
+<% end %>
