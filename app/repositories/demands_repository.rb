@@ -62,19 +62,21 @@ class DemandsRepository
   def filter_demands_by_text(demands, filter_text)
     return demands.includes(:project) if filter_text.blank?
 
-    demands.includes(:project)
-           .left_outer_joins(:project)
-           .left_outer_joins(:product)
-           .left_outer_joins(:customer)
-           .left_outer_joins(:portfolio_unit)
-           .left_outer_joins(item_assignments: { membership: :team_member })
-           .where('demands.demand_title ILIKE :search_param
-                   OR demands.external_id ILIKE :search_param
-                   OR projects.name ILIKE :search_param
-                   OR portfolio_units.name ILIKE :search_param
-                   OR team_members.name ILIKE :search_param
-                   OR products.name ILIKE :search_param
-                   OR customers.name ILIKE :search_param', search_param: "%#{filter_text.downcase}%")
+    searched_demands = demands.includes(:project)
+                              .left_outer_joins(:project)
+                              .left_outer_joins(:product)
+                              .left_outer_joins(:customer)
+                              .left_outer_joins(:portfolio_unit)
+                              .left_outer_joins(item_assignments: { membership: :team_member })
+                              .where('demands.demand_title ILIKE :search_param
+                                      OR demands.external_id ILIKE :search_param
+                                      OR projects.name ILIKE :search_param
+                                      OR portfolio_units.name ILIKE :search_param
+                                      OR team_members.name ILIKE :search_param
+                                      OR products.name ILIKE :search_param
+                                      OR customers.name ILIKE :search_param', search_param: "%#{filter_text.downcase}%").uniq
+
+    Demand.where(id: searched_demands.map(&:id))
   end
 
   def flow_status_query(demands, flow_status)

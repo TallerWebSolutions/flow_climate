@@ -180,7 +180,7 @@ en:
     no_cache: "There is no cache to show the charts. Use the sync button bellow to create some."
     ordering:
       direction: "Direction"
-      title: "Ordenação"
+      title: "Ordering"
   header:
     logout: Logout
     explore: Explore
