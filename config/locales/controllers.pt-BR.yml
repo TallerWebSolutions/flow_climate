@@ -180,7 +180,7 @@ pt-BR:
     no_cache: "Não existe cache de dados para os gráficos. Use o botão abaixo para gerar algum."
     ordering:
       direction: "Direção"
-      title: "Ordering"
+      title: "Ordem"
   header:
     logout: Sair
     sign_up: Cadastre-se

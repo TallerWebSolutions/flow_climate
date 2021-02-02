@@ -47,7 +47,7 @@
     <div class="col-xs-6">
       <div class="form-group">
         <%= label_tag Team.model_name.human %>
-        <%= select_tag :team_id, teams_in_company_options(company, params[:team_id]), class: 'form-control' %>
+        <%= select_tag :team_id, teams_in_company_options(company, params[:team_id]), include_blank: I18n.t('general.select'), class: 'form-control' %>
       </div>
     </div>
     <div class="col-xs-4">
