@@ -486,7 +486,8 @@ en:
         confidence_60: "Date having 60% of Confidence"
       scope_variation:
         title: "Scope variation in time"
-      risk_evolution_in_time: "Math Risk Evolution"
+      risk_evolution_in_time: "Operational Math Risk Evolution"
+      risk_evolution_in_time_team_based: "Operational Math Risk Evolution - Team Data"
       quality_block_per_demand: "blocks per demand"
     project_risk_alert_table: "Risk alerts to the project"
     portfolio_bulletin:

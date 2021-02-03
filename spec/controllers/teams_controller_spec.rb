@@ -351,23 +351,22 @@ RSpec.describe TeamsController, type: :controller do
       let!(:second_team) { Fabricate :team, company: company }
 
       context 'with valid parameters' do
-        context 'having data' do
+        context 'with data' do
           include_context 'demands to filters'
 
-          let!(:first_project_consolidation) { Fabricate :project_consolidation, consolidation_date: 2.weeks.ago, project: first_project, operational_risk: 0.875, last_data_in_week: true }
-          let!(:second_project_consolidation) { Fabricate :project_consolidation, consolidation_date: 1.week.ago, project: first_project, operational_risk: 0.875, last_data_in_week: true }
-
-          let!(:third_project_consolidation) { Fabricate :project_consolidation, consolidation_date: 1.week.ago, project: second_project, operational_risk: 0.375, last_data_in_week: true }
-
-          let!(:fourth_project_consolidation) { Fabricate :project_consolidation, consolidation_date: 1.week.ago, project: second_project, operational_risk: 0.375, last_data_in_week: false }
-
           it 'creates the objects and renders the tab' do
+            Fabricate :project_consolidation, consolidation_date: 2.weeks.ago, project: first_project, operational_risk: 0.875, team_based_operational_risk: 0.2, last_data_in_week: true
+            Fabricate :project_consolidation, consolidation_date: 1.week.ago, project: first_project, operational_risk: 0.875, team_based_operational_risk: 0.1, last_data_in_week: true
+            Fabricate :project_consolidation, consolidation_date: 1.week.ago, project: second_project, operational_risk: 0.375, team_based_operational_risk: 0.75, last_data_in_week: true
+            Fabricate :project_consolidation, consolidation_date: 1.week.ago, project: second_project, operational_risk: 0.375, team_based_operational_risk: 0.32, last_data_in_week: false
+
             get :team_projects_tab, params: { company_id: company, id: team }, xhr: true
 
             expect(response).to render_template 'teams/team_projects_tab'
             expect(assigns(:x_axis_index)).to eq [1, 2, 3, 4, 5]
             expect(assigns(:projects_lead_time_in_time)).to match_array [{ data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1.0], name: first_project.name }, { data: [0, 0, 0, 0, 0, 0, 0, 0, 0.0], name: second_project.name }]
             expect(assigns(:projects_risk_in_time)).to match_array [{ data: [87.5, 87.5], name: first_project.name }, { data: [37.5], name: second_project.name }]
+            expect(assigns(:projects_risk_in_time_team_based)).to match_array [{ data: [20, 10], name: first_project.name }, { data: [75], name: second_project.name }]
           end
         end
       end

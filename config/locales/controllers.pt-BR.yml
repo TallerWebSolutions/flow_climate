@@ -500,7 +500,8 @@ pt-BR:
         confidence_60: "Data com 60% de Confiança"
       scope_variation:
         title: "Variação do escopo no tempo"
-      risk_evolution_in_time: "Evolução do Risco Matemático"
+      risk_evolution_in_time: "Evolução do Risco Matemático Operacional"
+      risk_evolution_in_time_team_based: "Evolução do Risco Matemático Operacional - Team Data"
       quality_block_per_demand: "bloqueios por demanda"
     project_risk_alert_table: "Alertas de risco para o projeto"
     portfolio_bulletin:
