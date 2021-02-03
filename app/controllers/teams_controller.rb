@@ -53,6 +53,9 @@ class TeamsController < DemandsListController
   def team_projects_tab
     executing_projects = @team.projects.running
 
+    @projects_lead_time_in_time = []
+    @projects_risk_in_time = []
+    @projects_risk_in_time_team_based = []
     build_projects_lead_time_in_time_array(executing_projects)
 
     respond_to { |format| format.js { render 'teams/team_projects_tab' } }
@@ -113,15 +116,15 @@ class TeamsController < DemandsListController
   end
 
   def build_projects_lead_time_in_time_array(executing_projects)
-    @projects_lead_time_in_time = []
-    @projects_risk_in_time = []
     array_of_dates = []
+
     executing_projects.each do |project|
       project_lead_times_hash = compute_project_lead_times(project)
       array_of_dates << project_lead_times_hash[:project_period]
       @projects_lead_time_in_time << project_lead_times_hash[:project_data]
 
-      @projects_risk_in_time << { name: project.name, data: project.project_consolidations.weekly_data.order(:consolidation_date).map { |consolidation| (consolidation.operational_risk * 100).to_f } }
+      @projects_risk_in_time << { name: project.name, data: ProjectService.instance.risk_data_by_week(project) }
+      @projects_risk_in_time_team_based << { name: project.name, data: ProjectService.instance.risk_data_by_week_team_data(project) }
     end
 
     build_x_axis_index(array_of_dates)
