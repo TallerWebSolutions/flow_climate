@@ -37,7 +37,7 @@ RSpec.describe Consolidations::ReplenishingConsolidationJob do
         expect(new_consolidations.count).to eq 2
 
         expect(new_consolidations[0].consolidation_date).to eq Time.zone.today
-        expect(new_consolidations[0].flow_pressure).to eq 6.54545454545456
+        expect(new_consolidations[0].flow_pressure).to eq 3.05454545454546
         expect(new_consolidations[0].customer_happiness).to eq 0.131578947368421
         expect(new_consolidations[0].leadtime_80).to eq 259_200
         expect(new_consolidations[0].max_work_in_progress).to eq 5
@@ -45,8 +45,8 @@ RSpec.describe Consolidations::ReplenishingConsolidationJob do
         expect(new_consolidations[0].project_based_risks_to_deadline).to eq 0.27
         expect(new_consolidations[0].project_throughput_data).to eq [0, 9, 0]
         expect(new_consolidations[0].qty_selected_last_week).to eq 7
-        expect(new_consolidations[0].qty_using_pressure).to eq 3
-        expect(new_consolidations[0].relative_flow_pressure).to eq 50
+        expect(new_consolidations[0].qty_using_pressure).to eq 3.36
+        expect(new_consolidations[0].relative_flow_pressure).to eq 56
         expect(new_consolidations[0].team_based_montecarlo_80_percent).to eq 7.6
         expect(new_consolidations[0].team_based_odds_to_deadline).to eq 1
         expect(new_consolidations[0].team_monte_carlo_weeks_max).to eq 12
@@ -55,7 +55,7 @@ RSpec.describe Consolidations::ReplenishingConsolidationJob do
         expect(new_consolidations[0].work_in_progress).to eq 7
 
         expect(new_consolidations[1].consolidation_date).to eq Time.zone.today
-        expect(new_consolidations[1].flow_pressure).to eq 6.54545454545456
+        expect(new_consolidations[1].flow_pressure).to eq 2.40000000000001
         expect(new_consolidations[1].customer_happiness).to eq 0.131578947368421
         expect(new_consolidations[1].leadtime_80).to eq 172_800
         expect(new_consolidations[1].max_work_in_progress).to eq 3
@@ -63,8 +63,8 @@ RSpec.describe Consolidations::ReplenishingConsolidationJob do
         expect(new_consolidations[1].project_based_risks_to_deadline).to eq 0.875
         expect(new_consolidations[1].project_throughput_data).to eq [0, 0, 10, 5]
         expect(new_consolidations[1].qty_selected_last_week).to eq 9
-        expect(new_consolidations[1].qty_using_pressure).to eq 3
-        expect(new_consolidations[1].relative_flow_pressure).to eq 50
+        expect(new_consolidations[1].qty_using_pressure).to eq 2.64
+        expect(new_consolidations[1].relative_flow_pressure).to eq 44
         expect(new_consolidations[1].team_based_montecarlo_80_percent).to eq 7.6
         expect(new_consolidations[1].team_based_odds_to_deadline).to eq 1
         expect(new_consolidations[1].team_monte_carlo_weeks_max).to eq 12

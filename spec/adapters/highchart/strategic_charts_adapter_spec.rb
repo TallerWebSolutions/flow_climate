@@ -41,7 +41,7 @@ RSpec.describe Highchart::StrategicChartsAdapter, type: :service do
         expect(strategic_data.sold_hours_in_month).to eq [1175.5952380952385, 3174.4626489310676, 2954.02919487946, 2715.9339567842217, 2715.9339567842217, 7403.4339567842235, 6686.36741083583]
         expect(strategic_data.consumed_hours_per_month).to eq [0.0, 210.0, 530.0, 0.0, 0.0, 120.0, 0.0]
         expect(strategic_data.available_hours_per_period).to eq [0.0, 63.99999999999999, 114.66666666666666, 18.666666666666664]
-        expect(strategic_data.flow_pressure_per_month_data.map { |pressure| pressure.round(2) }).to eq [0.0, 1.56, 3.57, 3.57, 3.57, 6.01, 3.99]
+        expect(strategic_data.flow_pressure_per_month_data.map { |pressure| pressure.round(2) }).to eq [0.0, 1.56, 3.55, 3.55, 3.55, 5.99, 3.99]
         expect(strategic_data.money_per_month_data.map { |money| money.round(2) }).to eq [1_644_577.98, 1_644_660.89, 1_647_960.95, 3570.47, 3570.47, 3685.78, 198.23]
         expect(strategic_data.expenses_per_month_data.map { |expense| expense.round(2) }).to eq [300.0, 300.0, 200.0, 200.0, 200.0, 100.0, 100.0]
       end
