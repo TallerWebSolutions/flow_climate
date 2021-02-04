@@ -977,4 +977,17 @@ RSpec.describe Demand, type: :model do
       expect(ended_demand.date_to_use).to be_within(1.second).of(now)
     end
   end
+
+  describe '#decrease_uncertain_scope' do
+    let(:empty_project) { Fabricate :project, initial_scope: 0 }
+    let(:filled_project) { Fabricate :project, initial_scope: 10 }
+
+    it 'changes the project initial scope if the initial scope is greather than zero' do
+      Fabricate :demand, project: empty_project
+      Fabricate :demand, project: filled_project
+
+      expect(empty_project.initial_scope).to eq 0
+      expect(filled_project.initial_scope).to eq 9
+    end
+  end
 end

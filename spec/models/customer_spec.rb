@@ -152,7 +152,7 @@ RSpec.describe Customer, type: :model do
     let!(:fourth_demand) { Fabricate :demand, customer: other_customer, project: other_project, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago }
     let!(:fifth_demand) { Fabricate :demand, customer: customer, project: other_project, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago }
 
-    it { expect(customer.current_scope).to eq 34 }
+    it { expect(customer.current_scope).to eq 32 }
   end
 
   describe '#total_flow_pressure' do

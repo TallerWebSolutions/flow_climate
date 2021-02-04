@@ -130,7 +130,7 @@ RSpec.describe ProjectsController, type: :controller do
         context 'passing valid IDs' do
           it 'assigns the instance variables and renders the template' do
             travel_to Time.zone.local(2020, 12, 6, 10, 0, 0) do
-              first_project = Fabricate :project, company: company, customers: [customer], products: [product], start_date: 2.weeks.ago, end_date: Time.zone.today
+              first_project = Fabricate :project, company: company, customers: [customer], products: [product], start_date: 15.weeks.ago, end_date: Time.zone.today
 
               first_consolidation = Fabricate :project_consolidation, consolidation_date: 10.weeks.ago, project: first_project, operational_risk: 0.875, last_data_in_week: true
               second_consolidation = Fabricate :project_consolidation, consolidation_date: 9.weeks.ago, project: first_project, operational_risk: 0.875, last_data_in_week: true

@@ -133,6 +133,8 @@ class Demand < ApplicationRecord
 
   before_save :compute_and_update_automatic_fields
   before_save :compute_lead_time
+  after_create :decrease_uncertain_scope
+
   after_discard :discard_dependencies
   after_undiscard :undiscard_dependencies
 
@@ -402,5 +404,13 @@ class Demand < ApplicationRecord
     demand_comments.undiscard_all
     item_assignments.undiscard_all
     flow_impacts.undiscard_all
+  end
+
+  def decrease_uncertain_scope
+    current_initial_scope = project.initial_scope
+
+    return if current_initial_scope <= 0
+
+    project.update(initial_scope: (current_initial_scope - 1))
   end
 end

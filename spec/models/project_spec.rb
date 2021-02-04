@@ -257,11 +257,11 @@ RSpec.describe Project, type: :model do
 
           after { travel_back }
 
-          it { expect(project.flow_pressure).to be_within(0.5).of(25.1) }
+          it { expect(project.flow_pressure).to be_within(0.5).of(13.5) }
         end
 
         context 'specifying a date' do
-          it { expect(project.flow_pressure(Time.zone.parse('2018-03-05 22:00'))).to be_within(0.5).of(17.9) }
+          it { expect(project.flow_pressure(Time.zone.parse('2018-03-05 22:00'))).to be_within(0.5).of(8.1) }
         end
 
         context 'having date negotiations' do
@@ -275,7 +275,7 @@ RSpec.describe Project, type: :model do
           let!(:second_project_change_deadline_history) { Fabricate :project_change_deadline_history, project: project, created_at: Time.zone.parse('2018-03-08 07:00'), previous_date: Time.zone.parse('2018-03-09 10:00'), new_date: Time.zone.parse('2018-03-10 22:00') }
           let!(:third_project_change_deadline_history) { Fabricate :project_change_deadline_history, project: project, created_at: Time.zone.parse('2018-03-09 05:00'), previous_date: Time.zone.parse('2018-03-10 22:00'), new_date: Time.zone.parse('2018-03-12 22:00') }
 
-          it { expect(project.flow_pressure(Time.zone.parse('2018-03-08 10:00'))).to be_within(0.2).of(16.7) }
+          it { expect(project.flow_pressure(Time.zone.parse('2018-03-08 10:00'))).to be_within(0.2).of(8.3) }
         end
       end
 
@@ -298,7 +298,7 @@ RSpec.describe Project, type: :model do
       context 'having demands' do
         let!(:opened_features) { Fabricate.times(10, :demand, project: project, demand_type: :feature, end_date: nil) }
 
-        it { expect(project.flow_pressure).to be_within(0.1).of(18.9) }
+        it { expect(project.flow_pressure).to be_within(0.1).of(12.6) }
       end
 
       context 'having no demands' do
@@ -320,7 +320,7 @@ RSpec.describe Project, type: :model do
 
         after { travel_back }
 
-        it { expect(project.relative_flow_pressure(80)).to be_within(0.5).of(31.4) }
+        it { expect(project.relative_flow_pressure(80)).to be_within(0.5).of(16.9) }
       end
 
       context 'with no demands' do
@@ -425,7 +425,7 @@ RSpec.describe Project, type: :model do
   describe '#last_week_scope' do
     context 'having data' do
       include_context 'demands with effort'
-      it { expect(project.last_week_scope).to eq 33 }
+      it { expect(project.last_week_scope).to eq 28 }
     end
 
     context 'having no data' do
@@ -439,12 +439,12 @@ RSpec.describe Project, type: :model do
     context 'with demands' do
       context 'with no date' do
         include_context 'demands with effort'
-        it { expect(project.remaining_backlog).to eq 30 }
+        it { expect(project.remaining_backlog).to eq 25 }
       end
 
       context 'with a date' do
         include_context 'demands with effort'
-        it { expect(project.remaining_backlog(2.weeks.ago)).to eq 32 }
+        it { expect(project.remaining_backlog(2.weeks.ago)).to eq 27 }
       end
     end
 
@@ -459,12 +459,12 @@ RSpec.describe Project, type: :model do
     context 'having demands' do
       context 'specifying no date' do
         include_context 'demands with effort'
-        it { expect(project.percentage_remaining_backlog).to eq 0.9117647058823529 }
+        it { expect(project.percentage_remaining_backlog).to eq 0.896551724137931 }
       end
 
       context 'specifying a date' do
         include_context 'demands with effort'
-        it { expect(project.percentage_remaining_backlog(2.weeks.ago)).to eq 0.9705882352941176 }
+        it { expect(project.percentage_remaining_backlog(2.weeks.ago)).to eq 0.9655172413793104 }
       end
     end
 
@@ -565,7 +565,7 @@ RSpec.describe Project, type: :model do
 
     context 'having data' do
       include_context 'demands with effort'
-      it { expect(project.required_hours).to eq 2700.0 }
+      it { expect(project.required_hours).to eq 2250.0 }
     end
 
     context 'having no data' do
@@ -582,7 +582,7 @@ RSpec.describe Project, type: :model do
 
     context 'having data' do
       include_context 'demands with effort'
-      it { expect(project.required_hours_per_available_hours).to be_within(0.02).of(0.98) }
+      it { expect(project.required_hours_per_available_hours).to be_within(0.02).of(0.82) }
     end
 
     context 'having no data' do
@@ -629,7 +629,7 @@ RSpec.describe Project, type: :model do
 
     context 'having data' do
       include_context 'demands with effort'
-      it { expect(project.backlog_growth_rate).to eq 0.030303030303030304 }
+      it { expect(project.backlog_growth_rate).to eq 0.03571428571428571 }
     end
 
     context 'having no data' do
