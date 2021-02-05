@@ -5,7 +5,7 @@ class UsersController < AuthenticatedController
   before_action :assign_user, only: %i[toggle_admin show edit update companies]
 
   def admin_dashboard
-    @users_list = User.all.order(%i[last_name first_name])
+    @users_list = User.all.sort_by(&:full_name)
     @companies_list = Company.all.order(:name)
   end
 

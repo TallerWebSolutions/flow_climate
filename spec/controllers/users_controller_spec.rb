@@ -58,7 +58,7 @@ RSpec.describe UsersController, type: :controller do
   end
 
   context 'authenticated as admin' do
-    let(:user) { Fabricate :user, admin: true, first_name: 'aaa', last_name: 'zzz' }
+    let(:user) { Fabricate :user, admin: true, first_name: 'rrr', last_name: 'vvv' }
 
     before { sign_in user }
 
@@ -74,7 +74,7 @@ RSpec.describe UsersController, type: :controller do
     end
 
     describe 'GET #admin_dashboard' do
-      let!(:other_user) { Fabricate :user, admin: false, first_name: 'rrr', last_name: 'vvv' }
+      let!(:other_user) { Fabricate :user, admin: false, first_name: 'aaa', last_name: 'zzz' }
       let!(:company) { Fabricate :company, name: 'zzz' }
       let!(:other_company) { Fabricate :company, name: 'aaa' }
 
