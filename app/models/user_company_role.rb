@@ -38,5 +38,5 @@ class UserCompanyRole < ApplicationRecord
 
   validates :user, uniqueness: { scope: :company, message: I18n.t('user_company_role.validations.user_company') }
 
-  delegate :first_name, :last_name, :email, to: :user
+  delegate :first_name, :last_name, :email, :full_name, to: :user
 end

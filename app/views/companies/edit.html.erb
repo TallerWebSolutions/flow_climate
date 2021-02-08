@@ -44,7 +44,6 @@
     <table class="table">
       <thead>
         <th><%= User.human_attribute_name :first_name %></th>
-        <th><%= User.human_attribute_name :last_name %></th>
         <th><%= User.human_attribute_name :email %></th>
         <th><%= UserCompanyRole.human_attribute_name :user_role %></th>
         <th><%= UserCompanyRole.human_attribute_name :slack_user %></th>
@@ -53,8 +52,7 @@
       <tbody>
         <% @users_in_company.each do |user_company_role| %>
           <tr>
-            <td><%= user_company_role.first_name %></td>
-            <td><%= user_company_role.last_name %></td>
+            <td><%= user_company_role.full_name %></td>
             <td><%= user_company_role.email %></td>
             <td><%= I18n.t("activerecord.attributes.user_company_role.enums.user_role.#{user_company_role.user_role}") %></td>
             <td><%= user_company_role.slack_user %></td>
