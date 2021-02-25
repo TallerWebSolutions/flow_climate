@@ -18,7 +18,7 @@ RSpec.describe FlowClimateImageUploader, type: :image_uploader do
   describe '#extension_whitelist' do
     let(:uploader) { described_class.new(User.new(id: 1)) }
 
-    it { expect(uploader.extension_whitelist).to eq %w[jpg jpeg gif png] }
+    it { expect(uploader.extension_allowlist).to eq %w[jpg jpeg gif png] }
   end
 
   describe '#store_dir' do

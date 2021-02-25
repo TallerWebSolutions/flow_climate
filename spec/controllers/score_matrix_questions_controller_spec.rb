@@ -120,7 +120,7 @@ RSpec.describe ScoreMatrixQuestionsController, type: :controller do
           expect(created_question.description).to eq 'bla'
           expect(created_question.question_weight).to eq 40
 
-          expect(demand.reload.demand_score).to eq 1.05263157894737
+          expect(demand.reload.demand_score).to eq 1.052631578947368
 
           expect(flash[:notice]).to eq I18n.t('score_matrix_questions.create.success')
 
@@ -349,7 +349,7 @@ RSpec.describe ScoreMatrixQuestionsController, type: :controller do
           expect(updated_question.description).to eq 'bla'
           expect(updated_question.question_weight).to eq 10
 
-          expect(demand.reload.demand_score).to eq 1.53846153846154
+          expect(demand.reload.demand_score.to_f).to eq 1.538461538461539
 
           expect(response).to redirect_to company_product_path(company, product)
         end
