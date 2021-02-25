@@ -6,7 +6,7 @@ ruby '3.0.0'
 
 gem 'rails'
 
-gem 'activerecord-session_store'
+gem 'activerecord-session_store', git: 'https://github.com/rails/activerecord-session_store', branch: 'master'
 gem 'addressable'
 gem 'attr_encrypted'
 gem 'barnes'
