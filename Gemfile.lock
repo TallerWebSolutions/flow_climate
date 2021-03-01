@@ -442,6 +442,7 @@ DEPENDENCIES
   barnes
   brakeman
   bullet
+  bundler
   carrierwave
   cloudinary
   coffee-rails
