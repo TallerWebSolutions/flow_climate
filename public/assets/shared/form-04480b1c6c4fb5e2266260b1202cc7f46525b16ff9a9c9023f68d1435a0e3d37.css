@@ -1,0 +1,92 @@
+.help-block {
+    margin-bottom: 0;
+
+    font-size: 1.2rem;
+    text-align: left;
+}
+
+.has-error {
+    border: 2px solid lighten(#EE1C3A, 10%) !important;
+    box-shadow: none;
+}
+
+.header-link {
+    text-align: right;
+    text-transform: uppercase;
+}
+
+.bottom-spaced-component { margin-bottom: 8px; }
+
+.project-deadline-info {
+    font-size: large;
+    margin-bottom: 17px;
+}
+
+.label-hint { color: #768899; }
+
+.data-red {
+    color: #EE1C3A;
+}
+
+.data-yellow {
+    color: #EEE1B7;
+}
+
+.grouped-button {
+    margin-left: 2px;
+}
+
+.flex-container {
+    display: flex;
+}
+
+.input-field {
+    flex: 1;
+}
+
+.radio-label {
+    margin-left: 5px;
+    margin-right: 20px;
+    font-weight: normal;
+}
+
+.radio-button-quiz {
+    margin-right: 100px;
+}
+
+.check-box-group-label {
+    padding-right: 10px;
+}
+
+.no-alert {
+    padding: 10px;
+    background-color: #8dfae3;
+    border: 2px solid darkgreen;
+}
+
+.yellow-alert {
+    padding: 10px;
+    background-color: #EEE1B7;
+    border: 2px solid darkorange;
+}
+
+.red-alert {
+    padding: 10px;
+    background-color: #f0cbcf;
+    border: 2px solid darkred;
+}
+
+.standard-form {
+    background-color: #f3f6fc;
+    margin-top: 10px;
+    padding: 10px;
+}
+
+label.required:after{content: " *"}
+
+tfoot {
+    display: table-footer-group;
+    vertical-align: middle;
+    border-color: inherit;
+    font-weight: bolder;
+}
