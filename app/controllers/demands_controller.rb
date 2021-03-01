@@ -152,7 +152,9 @@ class DemandsController < DemandsListController
   private
 
   def order_direction
-    params[:order_direction] || 'asc'
+    return 'asc' if params[:order_direction].blank?
+
+    params[:order_direction]
   end
 
   def build_demands_objects

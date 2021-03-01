@@ -475,21 +475,6 @@ RSpec.describe Project, type: :model do
     end
   end
 
-  describe '#backlog_for' do
-    context 'having data' do
-      include_context 'demands with effort'
-      it { expect(project.backlog_for(1.week.ago).count).to eq 3 }
-      it { expect(project.backlog_for(2.weeks.ago).count).to eq 2 }
-      it { expect(project.backlog_for.count).to eq 4 }
-    end
-
-    context 'having no data' do
-      let!(:project) { Fabricate :project, end_date: 4.weeks.from_now, initial_scope: 30 }
-
-      it { expect(project.backlog_for(1.week.ago).count).to eq 0 }
-    end
-  end
-
   describe '#total_hours_upstream' do
     before { travel_to Date.new(2018, 11, 19) }
 
@@ -1406,7 +1391,7 @@ RSpec.describe Project, type: :model do
     context 'with no data' do
       it 'returns an array with zero values' do
         travel_to Time.zone.local(2020, 12, 2, 10, 0, 0) do
-          project = Fabricate :project, start_date: Time.zone.local(2020, 8, 2, 10, 0, 0), end_date: Time.zone.local(2021, 1, 2, 10, 0, 0)
+          project = Fabricate :project, start_date: Time.zone.local(2020, 8, 2, 10, 0, 0), end_date: Time.zone.local(2021, 1, 2, 10, 0, 0), initial_scope: 0
           expect(project.current_weekly_scope_ideal_burnup).to eq [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
         end
       end
