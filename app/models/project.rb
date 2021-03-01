@@ -170,17 +170,13 @@ class Project < ApplicationRecord
   end
 
   def backlog_unit_growth
-    (backlog_for(Time.zone.now).count + initial_scope) - last_week_scope
+    backlog_count_for - last_week_scope
   end
 
   def backlog_growth_rate
     return 0 if demands.kept.blank? || last_week_scope.zero?
 
     backlog_unit_growth.to_f / last_week_scope
-  end
-
-  def backlog_for(date = Time.zone.now)
-    DemandsRepository.instance.known_scope_to_date(demands.map(&:id), date)
   end
 
   def flow_pressure(date = Time.zone.now)
@@ -438,7 +434,7 @@ class Project < ApplicationRecord
   def current_weekly_scope_ideal_burnup
     period = TimeService.instance.weeks_between_of(start_date, end_date)
     ideal_per_period = []
-    period.each_with_index { |_date, index| ideal_per_period << (backlog_for.count.to_f / period.size) * (index + 1) }
+    period.each_with_index { |_date, index| ideal_per_period << (backlog_count_for.to_f / period.size) * (index + 1) }
     ideal_per_period
   end
 
@@ -483,6 +479,10 @@ class Project < ApplicationRecord
   end
 
   private
+
+  def backlog_for(date = Time.zone.now)
+    DemandsRepository.instance.known_scope_to_date(demands.map(&:id), date)
+  end
 
   def running?
     executing? || maintenance?

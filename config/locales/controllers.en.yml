@@ -181,6 +181,7 @@ en:
     ordering:
       direction: "Direction"
       title: "Ordering"
+    created_demands: "Created Demands"
   header:
     logout: Logout
     explore: Explore

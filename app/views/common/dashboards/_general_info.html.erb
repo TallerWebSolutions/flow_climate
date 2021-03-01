@@ -9,7 +9,7 @@
   </tr>
   <tr>
     <% session[:general_info_demands] = demands.map(&:id).join(',') %>
-    <td><b><%= I18n.t('general.demands').capitalize %></b></td>
+    <td><b><%= I18n.t('general.created_demands') %></b></td>
     <td><%= link_to I18n.t('general.demands_text', count: demands.count), demands_list_by_ids_company_demands_path(company, session_demands_key: 'general_info_demands'), target: '_blank' %></td>
   </tr>
   <tr>

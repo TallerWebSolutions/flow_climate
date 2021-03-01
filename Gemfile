@@ -6,6 +6,8 @@ ruby '3.0.0'
 
 gem 'rails'
 
+gem 'bundler', require: false
+
 gem 'activerecord-session_store', git: 'https://github.com/rails/activerecord-session_store', branch: 'master'
 gem 'addressable'
 gem 'attr_encrypted'
@@ -41,6 +43,7 @@ group :test, :development do
   gem 'faker'
   gem 'parallel_tests'
   gem 'parser'
+  gem 'rails-controller-testing'
   gem 'rspec-collection_matchers'
   gem 'rspec-rails'
   gem 'rubocop'
@@ -58,7 +61,7 @@ group :development do
   gem 'listen'
   gem 'memory_profiler'
   gem 'rack-mini-profiler', require: false
-  gem 'rails_best_practices'
+  gem 'rails_best_practices', require: false
   gem 'rubycritic', require: false
   gem 'stackprof'
   gem 'traceroute'
@@ -66,7 +69,6 @@ group :development do
 end
 
 group :test do
-  gem 'rails-controller-testing'
   gem 'rspec_junit_formatter'
 end
 

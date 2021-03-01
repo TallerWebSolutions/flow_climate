@@ -181,6 +181,7 @@ pt-BR:
     ordering:
       direction: "Direção"
       title: "Ordem"
+    created_demands: "Demandas Criadas"
   header:
     logout: Sair
     sign_up: Cadastre-se
