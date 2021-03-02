@@ -160,6 +160,9 @@ module Jira
     rescue ActiveRecord::RecordNotUnique
       Jira::JiraApiError.create(demand: demand)
       nil
+    rescue ArgumentError
+      Rails.logger.error('Invalid Slack API - ArgumentError')
+      nil
     end
 
     def read_comments(demand, jira_issue_attrs)

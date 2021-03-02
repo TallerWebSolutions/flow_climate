@@ -446,6 +446,15 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
           expect(Jira::JiraApiError.count).not_to eq 0
         end
       end
+
+      context 'in demand transition to saving slack ArgumentError' do
+        it 'registers the error in the logger and does not halt the demana' do
+          allow_any_instance_of(Slack::SlackNotificationService).to receive(:notify_demand_state_changed).and_raise(ArgumentError)
+          expect(Rails.logger).to(receive(:error)).once
+
+          described_class.instance.process_issue!(jira_account, product, first_project, jira_issue)
+        end
+      end
     end
   end
 end
