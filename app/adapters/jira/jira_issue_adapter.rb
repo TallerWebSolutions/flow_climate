@@ -160,6 +160,8 @@ module Jira
     rescue ActiveRecord::RecordNotUnique
       Jira::JiraApiError.create(demand: demand)
       nil
+    rescue ArgumentError
+      nil
     end
 
     def read_comments(demand, jira_issue_attrs)
