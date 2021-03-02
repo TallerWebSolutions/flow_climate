@@ -161,6 +161,7 @@ module Jira
       Jira::JiraApiError.create(demand: demand)
       nil
     rescue ArgumentError
+      Rails.logger.error('Invalid Slack API - ArgumentError')
       nil
     end
 
