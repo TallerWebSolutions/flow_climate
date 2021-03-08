@@ -17,7 +17,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :projects, only: [] do
+      resources :projects, only: :show do
         resources :flow_impacts, only: %i[new create] do
           get :opened_impacts, on: :collection
         end
