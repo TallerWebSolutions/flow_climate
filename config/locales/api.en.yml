@@ -21,3 +21,5 @@ en:
     api:
       company_details:
         message: "Company Details"
+      active_projects:
+        message: "Active Projects in the Company"

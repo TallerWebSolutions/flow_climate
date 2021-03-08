@@ -21,3 +21,5 @@ pt-BR:
     api:
       company_details:
         message: "Detalhes da Empresa"
+      active_projects:
+        message: "Projetos Ativos na Empresa"

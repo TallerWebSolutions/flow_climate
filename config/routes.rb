@@ -5,7 +5,9 @@ require 'sidekiq/web'
 Rails.application.routes.draw do
   namespace 'api' do
     namespace 'v1' do
-      resources :companies, only: :show
+      resources :companies, only: :show do
+        get :active_projects, on: :member
+      end
 
       resources :teams, only: [] do
         member do
