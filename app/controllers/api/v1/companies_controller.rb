@@ -8,6 +8,12 @@ module Api
 
         render json: { status: 'SUCCESS', message: I18n.t('companies.api.company_details.message'), data: company.to_hash }, status: :ok
       end
+
+      def active_projects
+        company = Company.find(params[:id])
+
+        render json: { status: 'SUCCESS', message: I18n.t('companies.api.active_projects.message'), data: { projects_ids: company.active_projects.order(:end_date).map(&:id) } }, status: :ok
+      end
     end
   end
 end

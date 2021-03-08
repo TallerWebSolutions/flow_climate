@@ -137,6 +137,17 @@ RSpec.describe Project, type: :model do
     pending '.active_in_period'
   end
 
+  describe '#to_hash' do
+    it 'returns as project hash' do
+      project = Fabricate :project
+      expected = { id: project.id, name: project.name, start_date: project.start_date, end_date: project.end_date, remaining_backlog: project.remaining_backlog,
+                   remaining_days: project.remaining_days, remaining_weeks: project.remaining_weeks, remaining_hours: project.remaining_hours, deadline_risk: project.current_risk_to_deadline.to_f,
+                   deadline_risk_team_info: (project.last_project_consolidation&.team_based_operational_risk || 1), current_lead_time: project.last_project_consolidation&.lead_time_p80 }
+
+      expect(project.to_hash).to eq expected
+    end
+  end
+
   describe '#total_days' do
     let(:project) { Fabricate :project, start_date: 1.day.ago, end_date: 1.day.from_now }
 
