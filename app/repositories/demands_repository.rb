@@ -79,17 +79,21 @@ class DemandsRepository
     Demand.where(id: searched_demands.map(&:id))
   end
 
+  # rubocop:disable Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/PerceivedComplexity
   def flow_status_query(demands, flow_status)
-    filtered_demands = demands
-    filtered_demands = filtered_demands.not_started if flow_status == 'not_started'
-    filtered_demands = filtered_demands.in_wip if flow_status == 'wip'
-    filtered_demands = filtered_demands.finished if flow_status == 'delivered'
+    return demands if flow_status.blank? || flow_status.include?('all_demands')
 
-    filtered_demands
+    filtered_demands = []
+    filtered_demands << demands.not_started.map(&:id) if flow_status.include?('not_started')
+    filtered_demands << demands.in_wip.map(&:id) if flow_status.include?('wip')
+    filtered_demands << demands.finished.map(&:id) if flow_status.include?('delivered')
+
+    Demand.where(id: filtered_demands.flatten)
   end
 
   def demand_type_query(demands, demand_type)
-    return demands.where(demand_type: demand_type) if demand_type.present? && demand_type != 'all_types' && demands.respond_to?(demand_type)
+    return demands.where(demand_type: demand_type) if demand_type.present? && demand_type.exclude?('all_types')
 
     demands
   end
@@ -101,7 +105,7 @@ class DemandsRepository
   end
 
   def class_of_service_query(demands, class_of_service)
-    return demands.where(class_of_service: class_of_service) if class_of_service.present? && class_of_service != 'all_classes'
+    return demands.where(class_of_service: class_of_service) if class_of_service.present? && class_of_service.exclude?('all_classes')
 
     demands
   end

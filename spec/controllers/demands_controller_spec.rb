@@ -1004,7 +1004,7 @@ RSpec.describe DemandsController, type: :controller do
                     Fabricate :demand, company: company, product: product, project: second_project, demand_title: 'sas', demand_type: :performance_improvement, class_of_service: :expedite, created_date: Time.zone.local(2019, 1, 22, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 22, 10, 0, 0), end_date: Time.zone.local(2019, 1, 23, 10, 0, 0), effort_downstream: 0, effort_upstream: 0
                     Fabricate :demand, company: company, product: product, project: second_project, demand_title: 'sas', demand_type: :wireframe, class_of_service: :fixed_date, created_date: Time.zone.local(2019, 1, 21, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 23, 10, 0, 0), end_date: Time.zone.local(2019, 1, 24, 10, 0, 0), effort_downstream: 0, effort_upstream: 0
 
-                    get :search_demands, params: { company_id: company, session_demands_key: 'bar', demands_ids: Demand.all.map(&:id).join(','), start_date: start_date, end_date: end_date, demand_class_of_service: 'standard' }
+                    get :search_demands, params: { company_id: company, session_demands_key: 'bar', demands_ids: Demand.all.map(&:id).join(','), start_date: start_date, end_date: end_date, class_of_service: ['standard'] }
                     expect(response).to render_template 'demands/index'
                     expect(assigns(:demands).map(&:id)).to match_array [first_demand.id, sixth_demand.id, fourth_demand.id]
                     expect(assigns(:confidence_95_leadtime)).to eq 5.0
@@ -1027,7 +1027,7 @@ RSpec.describe DemandsController, type: :controller do
                     Fabricate :demand, company: company, product: product, project: second_project, demand_title: 'sas', demand_type: :performance_improvement, class_of_service: :expedite, created_date: Time.zone.local(2019, 1, 22, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 22, 10, 0, 0), end_date: Time.zone.local(2019, 1, 23, 10, 0, 0), effort_downstream: 0, effort_upstream: 0
                     eigth_demand = Fabricate :demand, company: company, product: product, project: second_project, demand_title: 'sas', demand_type: :wireframe, class_of_service: :fixed_date, created_date: Time.zone.local(2019, 1, 21, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 23, 10, 0, 0), end_date: Time.zone.local(2019, 1, 24, 10, 0, 0), effort_downstream: 0, effort_upstream: 0
 
-                    get :search_demands, params: { company_id: company, session_demands_key: 'bar', demands_ids: Demand.all.map(&:id).join(','), start_date: start_date, end_date: end_date, demand_class_of_service: 'fixed_date' }
+                    get :search_demands, params: { company_id: company, session_demands_key: 'bar', demands_ids: Demand.all.map(&:id).join(','), start_date: start_date, end_date: end_date, class_of_service: ['fixed_date'] }
                     expect(response).to render_template 'demands/index'
                     expect(assigns(:demands).map(&:id)).to eq [fifth_demand.id, eigth_demand.id]
                     expect(assigns(:confidence_95_leadtime)).to eq 1.0
@@ -1050,7 +1050,7 @@ RSpec.describe DemandsController, type: :controller do
                     Fabricate :demand, company: company, product: product, project: second_project, demand_title: 'sas', demand_type: :performance_improvement, class_of_service: :expedite, created_date: Time.zone.local(2019, 1, 22, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 22, 10, 0, 0), end_date: Time.zone.local(2019, 1, 23, 10, 0, 0), effort_downstream: 0, effort_upstream: 0
                     Fabricate :demand, company: company, product: product, project: second_project, demand_title: 'sas', demand_type: :wireframe, class_of_service: :fixed_date, created_date: Time.zone.local(2019, 1, 21, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 23, 10, 0, 0), end_date: Time.zone.local(2019, 1, 24, 10, 0, 0), effort_downstream: 0, effort_upstream: 0
 
-                    get :search_demands, params: { company_id: company, session_demands_key: 'bar', demands_ids: Demand.all.map(&:id).join(','), start_date: start_date, end_date: end_date, demand_class_of_service: 'intangible' }
+                    get :search_demands, params: { company_id: company, session_demands_key: 'bar', demands_ids: Demand.all.map(&:id).join(','), start_date: start_date, end_date: end_date, class_of_service: ['intangible'] }
                     expect(response).to render_template 'demands/index'
                     expect(assigns(:demands).map(&:id)).to eq [third_demand.id]
                     expect(assigns(:confidence_95_leadtime)).to eq 3.0
@@ -1073,7 +1073,7 @@ RSpec.describe DemandsController, type: :controller do
                     seventh_demand = Fabricate :demand, company: company, product: product, project: second_project, demand_title: 'sas', demand_type: :performance_improvement, class_of_service: :expedite, created_date: Time.zone.local(2019, 1, 22, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 22, 10, 0, 0), end_date: Time.zone.local(2019, 1, 23, 10, 0, 0), effort_downstream: 0, effort_upstream: 0
                     Fabricate :demand, company: company, product: product, project: second_project, demand_title: 'sas', demand_type: :wireframe, class_of_service: :fixed_date, created_date: Time.zone.local(2019, 1, 21, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 23, 10, 0, 0), end_date: Time.zone.local(2019, 1, 24, 10, 0, 0), effort_downstream: 0, effort_upstream: 0
 
-                    get :search_demands, params: { company_id: company, session_demands_key: 'bar', demands_ids: Demand.all.map(&:id).join(','), start_date: start_date, end_date: end_date, demand_class_of_service: 'expedite' }
+                    get :search_demands, params: { company_id: company, session_demands_key: 'bar', demands_ids: Demand.all.map(&:id).join(','), start_date: start_date, end_date: end_date, class_of_service: ['expedite'] }
                     expect(response).to render_template 'demands/index'
                     expect(assigns(:demands).map(&:id)).to eq [second_demand.id, seventh_demand.id]
                     expect(assigns(:confidence_95_leadtime)).to eq 1.0

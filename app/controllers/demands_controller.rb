@@ -191,7 +191,7 @@ class DemandsController < DemandsListController
   end
 
   def query_demands
-    DemandService.instance.search_engine(demands, params[:demands_start_date], params[:demands_end_date], params[:search_text], params[:flow_status], params[:demand_type], params[:demand_class_of_service], params[:search_demand_tags]&.split(' '), params[:team_id])
+    DemandService.instance.search_engine(demands, params[:demands_start_date], params[:demands_end_date], params[:search_text], params[:flow_status], params[:demand_type], params[:class_of_service], params[:search_demand_tags]&.split(' '), params[:team_id])
   end
 
   def demand_params

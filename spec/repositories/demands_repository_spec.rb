@@ -270,6 +270,7 @@ RSpec.describe DemandsRepository, type: :repository do
     it { expect(described_class.instance.flow_status_query(Demand.all, 'wip')).to match_array [second_demand, sixth_demand] }
     it { expect(described_class.instance.flow_status_query(Demand.all, 'delivered')).to match_array [third_demand, fourth_demand, seventh_demand, eigth_demand, ninth_demand] }
     it { expect(described_class.instance.flow_status_query(Demand.all, 'not_started')).to match_array [first_demand, fifth_demand] }
+    it { expect(described_class.instance.flow_status_query(Demand.all, %w[not_started wip])).to match_array [first_demand, fifth_demand, second_demand, sixth_demand] }
   end
 
   describe '#demand_type_query' do
