@@ -91,6 +91,8 @@ class DemandsRepository
 
     Demand.where(id: filtered_demands.flatten)
   end
+  # rubocop:enable Metrics/CyclomaticComplexity
+  # rubocop:enable Metrics/PerceivedComplexity
 
   def demand_type_query(demands, demand_type)
     return demands.where(demand_type: demand_type) if demand_type.present? && demand_type.exclude?('all_types')
