@@ -73,7 +73,7 @@ RSpec.describe ReplenishingData, type: :data_objects do
           expect(project_data_to_replenish[1][:leadtime_80]).to be_within(0.1).of(51_840.0)
           expect(project_data_to_replenish[1][:qty_selected_last_week]).to eq 2
           expect(project_data_to_replenish[1][:work_in_progress]).to eq 0
-          expect(project_data_to_replenish[1][:montecarlo_80_percent]).to be_within(40).of(184)
+          expect(project_data_to_replenish[1][:montecarlo_80_percent]).to be_within(50).of(184)
           expect(project_data_to_replenish[1][:throughput_last_week]).to eq 2
           expect(project_data_to_replenish[1][:customer_happiness]).to be_within(0.05).of(0.01)
           expect(project_data_to_replenish[1][:max_work_in_progress]).to eq 2
