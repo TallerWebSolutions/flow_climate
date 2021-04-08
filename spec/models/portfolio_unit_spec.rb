@@ -2,7 +2,7 @@
 
 RSpec.describe PortfolioUnit, type: :model do
   context 'enums' do
-    it { is_expected.to define_enum_for(:portfolio_unit_type).with_values(product_module: 0, epic: 4) }
+    it { is_expected.to define_enum_for(:portfolio_unit_type).with_values(product_module: 0, journey_stage: 1, theme: 2, epic: 4) }
   end
 
   context 'associations' do

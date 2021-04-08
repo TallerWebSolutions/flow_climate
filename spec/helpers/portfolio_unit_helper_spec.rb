@@ -3,11 +3,11 @@
 RSpec.describe PortfolioUnitHelper, type: :helper do
   describe '#period_options' do
     context 'with no argument' do
-      it { expect(helper.portfolio_unit_type_options).to eq options_for_select([[I18n.t('activerecord.attributes.portfolio_unit.enums.portfolio_unit_type.product_module'), :product_module], [I18n.t('activerecord.attributes.portfolio_unit.enums.portfolio_unit_type.epic'), :epic]], :product_module) }
+      it { expect(helper.portfolio_unit_type_options).to eq options_for_select(PortfolioUnit.portfolio_unit_types.keys.map { |unit| [I18n.t("activerecord.attributes.portfolio_unit.enums.portfolio_unit_type.#{unit}"), unit] }, :product_module) }
     end
 
     context 'with argument' do
-      it { expect(helper.portfolio_unit_type_options(:epic)).to eq options_for_select([[I18n.t('activerecord.attributes.portfolio_unit.enums.portfolio_unit_type.product_module'), :product_module], [I18n.t('activerecord.attributes.portfolio_unit.enums.portfolio_unit_type.epic'), :epic]], :epic) }
+      it { expect(helper.portfolio_unit_type_options(:epic)).to eq options_for_select(PortfolioUnit.portfolio_unit_types.keys.map { |unit| [I18n.t("activerecord.attributes.portfolio_unit.enums.portfolio_unit_type.#{unit}"), unit] }, :epic) }
     end
   end
 
