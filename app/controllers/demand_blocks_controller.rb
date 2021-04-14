@@ -111,6 +111,6 @@ class DemandBlocksController < AuthenticatedController
   end
 
   def assign_demand_block
-    @demand_block = DemandBlock.find(params[:id])
+    @demand_block = @demand.demand_blocks.unscoped.find(params[:id])
   end
 end
