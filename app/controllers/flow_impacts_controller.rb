@@ -12,10 +12,15 @@ class FlowImpactsController < AuthenticatedController
 
   def create
     @flow_impact = FlowImpact.new(flow_impact_params.merge(project: @project, user: current_user))
-    @flow_impact.save
-    @demands_for_impact_form = @project.demands.in_flow
+    @demands_for_impact_form = @project.demands.in_flow.order(:external_id)
 
-    redirect_to company_project_flow_impacts_path(@company, @project)
+    if @flow_impact.save
+      flash[:notice] = I18n.t('flow_impacts.create.success')
+      redirect_to company_project_flow_impacts_path(@company, @project)
+    else
+      flash[:error] = I18n.t('flow_impacts.create.error')
+      render :new
+    end
   end
 
   def destroy

@@ -176,7 +176,10 @@ RSpec.describe FlowImpactsController, type: :controller do
         context 'parameters' do
           before { post :create, params: { company_id: company, project_id: project, flow_impact: { demand_id: '' } }, xhr: true }
 
-          it { expect(assigns(:flow_impact).errors.full_messages).to eq ['Data do Impacto não pode ficar em branco', 'Tipo do Impacto não pode ficar em branco', 'Descrição do Impacto não pode ficar em branco'] }
+          it 're-assigns the form with the errors' do
+            expect(response).to render_template :new
+            expect(assigns(:flow_impact).errors.full_messages).to eq ['Data do Impacto não pode ficar em branco', 'Tipo do Impacto não pode ficar em branco', 'Descrição do Impacto não pode ficar em branco']
+          end
         end
 
         context 'company' do
