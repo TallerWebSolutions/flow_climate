@@ -2,9 +2,7 @@
   <tr>
     <th></th>
     <th><%= Demand.human_attribute_name :external_id %></th>
-    <th><%= Demand.human_attribute_name :demand_type %></th>
-    <th><%= Demand.human_attribute_name :class_of_service %></th>
-    <th><%= Stage.model_name.human %></th>
+    <th><%= Demand.human_attribute_name :demand_title %></th>
     <th><%= Demand.human_attribute_name :demand_score %></th>
     <% score_matrix_questions.each do |question| %>
       <th><%= "#{question.description} (#{question.question_weight})" %></th>
@@ -19,12 +17,10 @@
         <%= link_to score_research_company_demand_path(demand.company, demand) do %>
           <i class="fas fa-tasks" title="<%= I18n.t('demand_score_matrices.new.title') %>"></i>
         <% end %>
-        <i class="far fa-question-circle" title="<%= demand.demand_title %>"></i>
+        <i class="far fa-question-circle" title="<%= "#{I18n.t("activerecord.attributes.demand.enums.demand_type.#{demand.demand_type}")} | #{I18n.t("activerecord.attributes.demand.enums.class_of_service.#{demand.class_of_service}")} | #{demand.current_stage_name}" %>"></i>
       </td>
       <td><%= demand.external_id %></td>
-      <td><%= I18n.t("activerecord.attributes.demand.enums.demand_type.#{demand.demand_type}") %></td>
-      <td><%= I18n.t("activerecord.attributes.demand.enums.class_of_service.#{demand.class_of_service}") %></td>
-      <td><%= demand.current_stage_name %></td>
+      <td><%= demand.demand_title %></td>
       <td><%= number_with_precision(demand.demand_score, precision: 3) %></td>
       <%= form_tag create_from_sheet_demand_score_matrices_path(demand_score_matrix), class: 'form' do %>
         <%= hidden_field_tag :demand_id, demand.id %>
