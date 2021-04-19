@@ -11,7 +11,18 @@ namespace :statistics do
     end
   end
 
-  desc 'Data cache for projects - all time'
+  desc 'Data cache for all projects - 6 months'
+  task consolidate_all_projects_six_months: :environment do
+    Company.all.each do |company|
+      company.projects.finishing_after(6.months.ago).each do |project|
+        project.remove_outdated_consolidations
+        cache_date_arrays = TimeService.instance.days_between_of(project.start_date, Time.zone.today)
+        cache_date_arrays.each { |cache_date| Consolidations::ProjectConsolidationJob.perform_later(project, cache_date) }
+      end
+    end
+  end
+
+  desc 'Data cache for active projects - all time'
   task consolidate_active_projects_all_time: :environment do
     Company.all.each do |company|
       company.projects.active.finishing_after(Time.zone.today.beginning_of_year).each do |project|

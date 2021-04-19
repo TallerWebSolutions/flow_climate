@@ -38,3 +38,19 @@
      data-series='<%= projects_risk_data_team_based.to_json %>'
      data-decimals='2'>
 </div>
+
+<% if last_six_months_hours_per_project[:data].present? %>
+  <div id="team-hours-per-project-column"
+       class="flow-chart"
+       data-title='<%= I18n.t('projects.charts.throughput_hours_six_months.title') %>'
+       data-xcategories='<%= last_six_months_hours_per_project[:x_axis].to_json %>'
+       data-xtitle='<%= I18n.t('general.months') %>'
+       data-ytitle='<%= I18n.t('general.hours') %>'
+       data-prefix=''
+       data-tooltipsuffix='<%= I18n.t('general.hours') %>'
+       data-series='<%= last_six_months_hours_per_project[:data].map { |k, v| { name: k, data: v } }.to_json %>'
+       data-stacking='normal'
+       data-datalabelsuffix='h'
+       data-decimals='0'>
+  </div>
+<% end %>

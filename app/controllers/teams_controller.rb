@@ -58,6 +58,11 @@ class TeamsController < DemandsListController
     @projects_risk_in_time_team_based = []
     build_projects_lead_time_in_time_array(executing_projects)
 
+    start_date = 3.months.ago.to_date.end_of_month
+    end_date = Time.zone.today
+    projects_last_six_months = @team.projects.active_in_period(start_date, end_date)
+    @last_six_months_hours_per_project = Highchart::ProjectsChartAdapter.new(projects_last_six_months).hours_per_project_in_period(start_date, end_date)
+
     respond_to { |format| format.js { render 'teams/team_projects_tab' } }
   end
 
@@ -111,7 +116,7 @@ class TeamsController < DemandsListController
   private
 
   def build_cache_object
-    @team_consolidations = @team.team_consolidations.weekly_data.where('consolidation_date >= :limit_date', limit_date: 1.year.ago).order(:consolidation_date)
+    @team_consolidations = @team.team_consolidations.weekly_data.where('consolidation_date >= :limit_date', limit_date: 6.months.ago).order(:consolidation_date)
     @team_consolidations = @team.team_consolidations.order(:consolidation_date) if @team_consolidations.blank?
   end
 
@@ -173,7 +178,7 @@ class TeamsController < DemandsListController
   end
 
   def charts_demands
-    @charts_demands ||= @team.demands.kept.includes([:product]).to_dates(1.year.ago, Time.zone.now.end_of_day)
+    @charts_demands ||= @team.demands.kept.includes([:product]).to_dates(6.months.ago, Time.zone.now.end_of_day)
   end
 
   def build_charts_data(demands)

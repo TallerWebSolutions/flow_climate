@@ -4,61 +4,64 @@
 #
 # Table name: project_consolidations
 #
-#  id                                   :bigint           not null, primary key
-#  bugs_closed                          :integer          default(0)
-#  bugs_opened                          :integer          default(0)
-#  code_needed_blocks_count             :integer          default(0)
-#  code_needed_blocks_per_demand        :decimal(, )      default(0.0)
-#  consolidation_date                   :date             not null
-#  current_wip                          :integer
-#  demands_finished_ids                 :integer          is an Array
-#  demands_ids                          :integer          is an Array
-#  flow_efficiency                      :decimal(, )      default(0.0)
-#  flow_efficiency_month                :decimal(, )      default(0.0)
-#  flow_pressure                        :decimal(, )      default(0.0)
-#  hours_per_demand                     :decimal(, )      default(0.0)
-#  hours_per_demand_month               :decimal(, )      default(0.0)
-#  last_data_in_month                   :boolean          default(FALSE), not null
-#  last_data_in_week                    :boolean          default(FALSE), not null
-#  last_data_in_year                    :boolean          default(FALSE), not null
-#  lead_time_average                    :decimal(, )      default(0.0)
-#  lead_time_histogram_bin_max          :decimal(, )      default(0.0)
-#  lead_time_histogram_bin_min          :decimal(, )      default(0.0)
-#  lead_time_max                        :decimal(, )      default(0.0)
-#  lead_time_max_month                  :decimal(, )      default(0.0)
-#  lead_time_min                        :decimal(, )      default(0.0)
-#  lead_time_min_month                  :decimal(, )      default(0.0)
-#  lead_time_p25                        :decimal(, )      default(0.0)
-#  lead_time_p65                        :decimal(, )      default(0.0)
-#  lead_time_p75                        :decimal(, )      default(0.0)
-#  lead_time_p80                        :decimal(, )      default(0.0)
-#  lead_time_p80_month                  :decimal(, )      default(0.0)
-#  lead_time_p95                        :decimal(, )      default(0.0)
-#  lead_time_std_dev                    :decimal(, )      default(0.0)
-#  lead_time_std_dev_month              :decimal(, )      default(0.0)
-#  monte_carlo_weeks_max                :integer          default(0)
-#  monte_carlo_weeks_min                :integer          default(0)
-#  monte_carlo_weeks_p80                :decimal(, )      default(0.0)
-#  monte_carlo_weeks_std_dev            :decimal(, )      default(0.0)
-#  operational_risk                     :decimal(, )      default(0.0)
-#  project_quality                      :decimal(, )      default(0.0)
-#  project_scope                        :integer          default(0)
-#  project_scope_hours                  :integer          default(0)
-#  project_throughput                   :integer          default(0)
-#  project_throughput_hours             :decimal(, )      default(0.0)
-#  project_throughput_hours_downstream  :decimal(, )      default(0.0)
-#  project_throughput_hours_upstream    :decimal(, )      default(0.0)
-#  team_based_monte_carlo_weeks_max     :integer          default(0)
-#  team_based_monte_carlo_weeks_min     :integer          default(0)
-#  team_based_monte_carlo_weeks_p80     :decimal(, )      default(0.0)
-#  team_based_monte_carlo_weeks_std_dev :decimal(, )      default(0.0)
-#  team_based_operational_risk          :decimal(, )      default(0.0)
-#  value_per_demand                     :decimal(, )      default(0.0)
-#  weeks_by_little_law                  :decimal(, )      default(0.0)
-#  wip_limit                            :integer
-#  created_at                           :datetime         not null
-#  updated_at                           :datetime         not null
-#  project_id                           :integer          not null
+#  id                                           :bigint           not null, primary key
+#  bugs_closed                                  :integer          default(0)
+#  bugs_opened                                  :integer          default(0)
+#  code_needed_blocks_count                     :integer          default(0)
+#  code_needed_blocks_per_demand                :decimal(, )      default(0.0)
+#  consolidation_date                           :date             not null
+#  current_wip                                  :integer
+#  demands_finished_ids                         :integer          is an Array
+#  demands_ids                                  :integer          is an Array
+#  flow_efficiency                              :decimal(, )      default(0.0)
+#  flow_efficiency_month                        :decimal(, )      default(0.0)
+#  flow_pressure                                :decimal(, )      default(0.0)
+#  hours_per_demand                             :decimal(, )      default(0.0)
+#  hours_per_demand_month                       :decimal(, )      default(0.0)
+#  last_data_in_month                           :boolean          default(FALSE), not null
+#  last_data_in_week                            :boolean          default(FALSE), not null
+#  last_data_in_year                            :boolean          default(FALSE), not null
+#  lead_time_average                            :decimal(, )      default(0.0)
+#  lead_time_histogram_bin_max                  :decimal(, )      default(0.0)
+#  lead_time_histogram_bin_min                  :decimal(, )      default(0.0)
+#  lead_time_max                                :decimal(, )      default(0.0)
+#  lead_time_max_month                          :decimal(, )      default(0.0)
+#  lead_time_min                                :decimal(, )      default(0.0)
+#  lead_time_min_month                          :decimal(, )      default(0.0)
+#  lead_time_p25                                :decimal(, )      default(0.0)
+#  lead_time_p65                                :decimal(, )      default(0.0)
+#  lead_time_p75                                :decimal(, )      default(0.0)
+#  lead_time_p80                                :decimal(, )      default(0.0)
+#  lead_time_p80_month                          :decimal(, )      default(0.0)
+#  lead_time_p95                                :decimal(, )      default(0.0)
+#  lead_time_std_dev                            :decimal(, )      default(0.0)
+#  lead_time_std_dev_month                      :decimal(, )      default(0.0)
+#  monte_carlo_weeks_max                        :integer          default(0)
+#  monte_carlo_weeks_min                        :integer          default(0)
+#  monte_carlo_weeks_p80                        :decimal(, )      default(0.0)
+#  monte_carlo_weeks_std_dev                    :decimal(, )      default(0.0)
+#  operational_risk                             :decimal(, )      default(0.0)
+#  project_quality                              :decimal(, )      default(0.0)
+#  project_scope                                :integer          default(0)
+#  project_scope_hours                          :integer          default(0)
+#  project_throughput                           :integer          default(0)
+#  project_throughput_hours                     :decimal(, )      default(0.0)
+#  project_throughput_hours_downstream          :decimal(, )      default(0.0)
+#  project_throughput_hours_downstream_in_month :decimal(, )
+#  project_throughput_hours_in_month            :decimal(, )
+#  project_throughput_hours_upstream            :decimal(, )      default(0.0)
+#  project_throughput_hours_upstream_in_month   :decimal(, )
+#  team_based_monte_carlo_weeks_max             :integer          default(0)
+#  team_based_monte_carlo_weeks_min             :integer          default(0)
+#  team_based_monte_carlo_weeks_p80             :decimal(, )      default(0.0)
+#  team_based_monte_carlo_weeks_std_dev         :decimal(, )      default(0.0)
+#  team_based_operational_risk                  :decimal(, )      default(0.0)
+#  value_per_demand                             :decimal(, )      default(0.0)
+#  weeks_by_little_law                          :decimal(, )      default(0.0)
+#  wip_limit                                    :integer
+#  created_at                                   :datetime         not null
+#  updated_at                                   :datetime         not null
+#  project_id                                   :integer          not null
 #
 # Foreign Keys
 #

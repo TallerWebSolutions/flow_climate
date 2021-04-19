@@ -490,6 +490,8 @@ en:
       risk_evolution_in_time: "Operational Math Risk Evolution"
       risk_evolution_in_time_team_based: "Operational Math Risk Evolution - Team Data"
       quality_block_per_demand: "blocks per demand"
+      throughput_hours_six_months:
+        title: "Projects' Hours per Month - Last 6 months"
     project_risk_alert_table: "Risk alerts to the project"
     portfolio_bulletin:
       red_projects: "Red Alert Projects"
@@ -1133,7 +1135,7 @@ en:
         series: "Bugs Opened"
       quality_opened_in_month_bugs:
         series: "Bugs Opened in Month"
-      data_range: "1 year data"
+      data_range: "3 months data"
     new:
       title: "New Team"
     index:

@@ -96,7 +96,10 @@ module Consolidations
                            project_scope_hours: project.qty_hours,
                            project_throughput_hours: demands_finished.sum(&:total_effort),
                            project_throughput_hours_upstream: demands_finished.sum(&:effort_upstream),
-                           project_throughput_hours_downstream: demands_finished.sum(&:effort_downstream)
+                           project_throughput_hours_downstream: demands_finished.sum(&:effort_downstream),
+                           project_throughput_hours_in_month: demands_finished_in_month.sum(&:total_effort),
+                           project_throughput_hours_upstream_in_month: demands_finished_in_month.sum(&:effort_upstream),
+                           project_throughput_hours_downstream_in_month: demands_finished_in_month.sum(&:effort_downstream)
       )
 
     end
