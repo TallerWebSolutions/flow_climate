@@ -1521,7 +1521,10 @@ CREATE TABLE public.project_consolidations (
     project_scope_hours integer DEFAULT 0,
     project_throughput_hours numeric DEFAULT 0.0,
     project_throughput_hours_upstream numeric DEFAULT 0.0,
-    project_throughput_hours_downstream numeric DEFAULT 0.0
+    project_throughput_hours_downstream numeric DEFAULT 0.0,
+    project_throughput_hours_in_month numeric,
+    project_throughput_hours_upstream_in_month numeric,
+    project_throughput_hours_downstream_in_month numeric
 );
 
 
@@ -5784,6 +5787,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20201214235753'),
 ('20201215181752'),
 ('20210105172949'),
-('20210107143637');
+('20210107143637'),
+('20210418214342');
 
 

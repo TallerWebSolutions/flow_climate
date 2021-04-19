@@ -33,6 +33,7 @@
 #  lead_time_p80_in_year                       :decimal(, )      default(0.0)
 #  qty_bugs_closed                             :integer          default(0)
 #  qty_bugs_closed_in_month                    :integer          default(0)
+#  qty_bugs_closed_in_quarter                  :integer          default(0)
 #  qty_bugs_closed_in_semester                 :integer          default(0)
 #  qty_bugs_closed_in_year                     :integer          default(0)
 #  qty_bugs_opened                             :integer          default(0)

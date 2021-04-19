@@ -360,6 +360,7 @@ RSpec.describe TeamsController, type: :controller do
             Fabricate :project_consolidation, consolidation_date: 1.week.ago, project: second_project, operational_risk: 0.375, team_based_operational_risk: 0.75, last_data_in_week: true
             Fabricate :project_consolidation, consolidation_date: 1.week.ago, project: second_project, operational_risk: 0.375, team_based_operational_risk: 0.32, last_data_in_week: false
 
+            expect_any_instance_of(Highchart::ProjectsChartAdapter).to(receive(:hours_per_project_in_period)).once.and_return({ x_axis: %(a b), data: { 'bla' => [2, 3] } })
             get :team_projects_tab, params: { company_id: company, id: team }, xhr: true
 
             expect(response).to render_template 'teams/team_projects_tab'
@@ -373,6 +374,7 @@ RSpec.describe TeamsController, type: :controller do
 
       context 'with no data' do
         it 'render the template with empty data' do
+          expect_any_instance_of(Highchart::ProjectsChartAdapter).to(receive(:hours_per_project_in_period)).once.and_return({})
           get :team_projects_tab, params: { company_id: company, id: first_team }, xhr: true
 
           expect(assigns(:x_axis_index)).to eq []
