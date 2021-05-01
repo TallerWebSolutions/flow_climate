@@ -10,10 +10,10 @@ module Jira
       project_issues = Jira::JiraApiService.new(jira_account.username, jira_account.api_token, jira_account.base_uri).request_issues_by_fix_version(jira_product_key, jira_project_config.fix_version_name)
 
       project_issues.each do |jira_issue|
-        next if jira_issue.attrs['key'].blank?
+        jira_issue_key = jira_issue.attrs['key']
+        next if jira_issue_key.blank?
 
-        jira_issue_with_transitions = Jira::JiraApiService.new(jira_account.username, jira_account.api_token, jira_account.base_uri).request_issue_details(jira_issue.attrs['key'])
-        Jira::JiraIssueAdapter.instance.process_issue!(jira_account, jira_project_config.jira_product_config.product, jira_project_config.project, jira_issue_with_transitions)
+        Jira::ProcessJiraIssueJob.perform_later(jira_account, jira_project_config.project, jira_issue_key, nil, nil, nil)
       end
 
       finished_time = Time.zone.now

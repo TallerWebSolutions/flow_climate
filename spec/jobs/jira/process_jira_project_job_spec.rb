@@ -29,8 +29,8 @@ RSpec.describe Jira::ProcessJiraProjectJob, type: :active_job do
           context 'and demand' do
             it 'calls the adapter to translation' do
               allow_any_instance_of(Jira::JiraApiService).to(receive(:request_issues_by_fix_version) { [jira_issue] })
-              allow_any_instance_of(Jira::JiraApiService).to(receive(:request_issue_details).with('10000') { jira_issue })
-              expect(Jira::JiraIssueAdapter.instance).to receive(:process_issue!).with(jira_account, product, project, jira_issue).once
+              allow_any_instance_of(Jira::JiraApiService).to(receive(:request_issue_changelog).with('10000') { jira_issue })
+              expect(Jira::ProcessJiraIssueJob).to receive(:perform_later).once
               described_class.perform_now(jira_account, jira_config, 'foo@bar.com', 'Foo Bar', 'http://foo.com.br')
             end
           end
@@ -43,8 +43,8 @@ RSpec.describe Jira::ProcessJiraProjectJob, type: :active_job do
 
           it 'returns doing nothing' do
             allow_any_instance_of(Jira::JiraApiService).to(receive(:request_issues_by_fix_version) { [jira_issue] })
-            expect_any_instance_of(Jira::JiraApiService).not_to(receive(:request_issue_details))
-            expect(Jira::JiraIssueAdapter.instance).not_to receive(:process_issue!)
+            expect_any_instance_of(Jira::JiraApiService).not_to(receive(:request_issue_changelog))
+            expect(Jira::JiraIssueAdapter.instance).not_to receive(:process_issue)
             described_class.perform_now(jira_account, jira_config, 'foo@bar.com', 'Foo Bar', 'http://foo.com.br')
           end
         end

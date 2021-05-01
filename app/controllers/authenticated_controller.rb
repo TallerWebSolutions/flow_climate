@@ -14,15 +14,6 @@ class AuthenticatedController < ApplicationController
     no_plan_to_access(:gold)
   end
 
-  def user_lite_check
-    return true if current_user.admin?
-
-    user_plan = current_user.current_user_plan
-    return true unless user_plan.blank? || user_plan.trial?
-
-    no_plan_to_access(:lite)
-  end
-
   def assign_company
     @company = Company.friendly.find(params[:company_id]&.downcase)
     not_found unless current_user.companies.include?(@company)

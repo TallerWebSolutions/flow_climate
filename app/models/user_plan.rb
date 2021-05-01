@@ -33,8 +33,6 @@ class UserPlan < ApplicationRecord
   belongs_to :user
   belongs_to :plan
 
-  has_many :demand_data_processments, dependent: :destroy
-
   validates :user, :plan, :plan_billing_period, :start_at, :finish_at, :plan_value, presence: true
   validate :user_plan_uniqueness
 

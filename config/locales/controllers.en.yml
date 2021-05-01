@@ -491,7 +491,7 @@ en:
       risk_evolution_in_time_team_based: "Operational Math Risk Evolution - Team Data"
       quality_block_per_demand: "blocks per demand"
       throughput_hours_six_months:
-        title: "Projects' Hours per Month - Last 6 months"
+        title: "Projects' Hours per Month - Last 3 months"
     project_risk_alert_table: "Risk alerts to the project"
     portfolio_bulletin:
       red_projects: "Red Alert Projects"
@@ -1086,8 +1086,6 @@ en:
       queued: "Your request was queued. You'll receive an email having the data and you also can download it through your profile page."
       csv_attached: "The information you requested is attached."
       address_in_web: "You can also find it here."
-    demand_data_processment:
-      email_sent: "The content was sent."
   plans:
     buttons:
       inactive_plan_present: "You're already have an inactive plan"

@@ -10,8 +10,16 @@ module Jira
       @connection_parameters = { username: username, password: api_token, site: base_uri, context_path: '/', auth_type: :basic }
     end
 
-    def request_issue_details(issue_key)
-      client.Issue.find(issue_key, expand: 'changelog')
+    def request_issue(issue_key)
+      client.Issue.find(issue_key)
+    rescue JIRA::HTTPError
+      client.Issue.build
+    end
+
+    def request_issue_changelog(issue_key, start_at = 0, max_results = 100)
+      response = client.get("/rest/api/3/issue/#{issue_key}/changelog?maxResults=#{max_results}&startAt=#{start_at}")
+
+      JSON.parse(response.body)
     rescue JIRA::HTTPError
       client.Issue.build
     end

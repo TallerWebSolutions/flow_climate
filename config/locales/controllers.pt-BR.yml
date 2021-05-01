@@ -505,7 +505,7 @@ pt-BR:
       risk_evolution_in_time_team_based: "Evolução do Risco Matemático Operacional - Team Data"
       quality_block_per_demand: "bloqueios por demanda"
       throughput_hours_six_months:
-        title: "Horas de Projetos por Mês - Últimos 6 meses"
+        title: "Horas de Projetos por Mês - Últimos 3 meses"
     project_risk_alert_table: "Alertas de risco para o projeto"
     portfolio_bulletin:
       delivered_demands: "Demandas entregues na última semana"
@@ -1143,8 +1143,6 @@ pt-BR:
       queued: "Seu pedido foi enfileirado. Você receberá um email com os dados e também poderá baixá-los através da página do seu perfil."
       csv_attached: ""
       address_in_web: "Você também pode encontrar essa informação aqui."
-    demand_data_processment:
-      email_sent: "O conteúdo foi enviado."
   plans:
     buttons:
       inactive_plan_present: "Você já tem um plano inativo"
