@@ -52,7 +52,6 @@ class User < ApplicationRecord
   has_many :item_assignments, through: :memberships
   has_many :demands, -> { distinct }, through: :item_assignments
 
-  has_many :demand_data_processments, dependent: :destroy
   has_many :user_plans, dependent: :destroy
 
   validates :first_name, :last_name, :email, presence: true

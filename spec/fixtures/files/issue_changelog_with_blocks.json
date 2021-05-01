@@ -1,0 +1,1082 @@
+{
+  "self": "https://tallerflow.atlassian.net/rest/api/3/issue/EBANX-2/changelog?maxResults=100&startAt=0",
+  "maxResults": 100,
+  "startAt": 0,
+  "total": 38,
+  "isLast": true,
+  "values": [
+    {
+      "id": "42117",
+      "author": {
+        "self": "https://tallerflow.atlassian.net/rest/api/3/user?accountId=557032%3Aa208333a-a398-4c00-b623-86740208ee73",
+        "accountId": "557032:a208333a-a398-4c00-b623-86740208ee73",
+        "avatarUrls": {
+          "48x48": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png",
+          "24x24": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png",
+          "16x16": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png",
+          "32x32": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png"
+        },
+        "displayName": "other_team_member",
+        "active": true,
+        "timeZone": "America/Sao_Paulo",
+        "accountType": "atlassian"
+      },
+      "created": "2021-03-22T16:49:24.808-0300",
+      "items": [
+        {
+          "field": "status",
+          "fieldtype": "jira",
+          "fieldId": "status",
+          "from": "10000",
+          "fromString": "Backlog",
+          "to": "10009",
+          "toString": "Ready to Analysis"
+        }
+      ]
+    },
+    {
+      "id": "42121",
+      "author": {
+        "self": "https://tallerflow.atlassian.net/rest/api/3/user?accountId=557032%3Aa208333a-a398-4c00-b623-86740208ee73",
+        "accountId": "557032:a208333a-a398-4c00-b623-86740208ee73",
+        "avatarUrls": {
+          "48x48": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png",
+          "24x24": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png",
+          "16x16": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png",
+          "32x32": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png"
+        },
+        "displayName": "other_team_member",
+        "active": true,
+        "timeZone": "America/Sao_Paulo",
+        "accountType": "atlassian"
+      },
+      "created": "2021-03-22T16:49:25.424-0300",
+      "items": [
+        {
+          "field": "Rank",
+          "fieldtype": "custom",
+          "fieldId": "customfield_10017",
+          "from": "",
+          "fromString": "",
+          "to": "",
+          "toString": "Ranked higher"
+        }
+      ]
+    },
+    {
+      "id": "42527",
+      "author": {
+        "self": "https://tallerflow.atlassian.net/rest/api/3/user?accountId=557032%3Aa208333a-a398-4c00-b623-86740208ee73",
+        "accountId": "557032:a208333a-a398-4c00-b623-86740208ee73",
+        "avatarUrls": {
+          "48x48": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png",
+          "24x24": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png",
+          "16x16": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png",
+          "32x32": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png"
+        },
+        "displayName": "other_team_member",
+        "active": true,
+        "timeZone": "America/Sao_Paulo",
+        "accountType": "atlassian"
+      },
+      "created": "2021-04-08T09:47:34.765-0300",
+      "items": [
+        {
+          "field": "status",
+          "fieldtype": "jira",
+          "fieldId": "status",
+          "from": "10009",
+          "fromString": "Ready to Analysis",
+          "to": "10010",
+          "toString": "In Analysis"
+        }
+      ]
+    },
+    {
+      "id": "42528",
+      "author": {
+        "self": "https://tallerflow.atlassian.net/rest/api/3/user?accountId=557032%3Aa208333a-a398-4c00-b623-86740208ee73",
+        "accountId": "557032:a208333a-a398-4c00-b623-86740208ee73",
+        "avatarUrls": {
+          "48x48": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png",
+          "24x24": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png",
+          "16x16": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png",
+          "32x32": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png"
+        },
+        "displayName": "other_team_member",
+        "active": true,
+        "timeZone": "America/Sao_Paulo",
+        "accountType": "atlassian"
+      },
+      "created": "2021-04-08T09:47:36.959-0300",
+      "items": [
+        {
+          "field": "Rank",
+          "fieldtype": "custom",
+          "fieldId": "customfield_10017",
+          "from": "",
+          "fromString": "",
+          "to": "",
+          "toString": "Ranked higher"
+        }
+      ]
+    },
+    {
+      "id": "42530",
+      "author": {
+        "self": "https://tallerflow.atlassian.net/rest/api/3/user?accountId=557032%3Aa208333a-a398-4c00-b623-86740208ee73",
+        "accountId": "557032:a208333a-a398-4c00-b623-86740208ee73",
+        "avatarUrls": {
+          "48x48": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png",
+          "24x24": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png",
+          "16x16": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png",
+          "32x32": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png"
+        },
+        "displayName": "other_team_member",
+        "active": true,
+        "timeZone": "America/Sao_Paulo",
+        "accountType": "atlassian"
+      },
+      "created": "2021-04-08T11:46:33.151-0300",
+      "items": [
+        {
+          "field": "summary",
+          "fieldtype": "jira",
+          "fieldId": "summary",
+          "from": null,
+          "fromString": "Make card information available",
+          "to": null,
+          "toString": "ermitir que o cliente tenha acesso as informações sobre seu cartão virtual"
+        }
+      ]
+    },
+    {
+      "id": "42531",
+      "author": {
+        "self": "https://tallerflow.atlassian.net/rest/api/3/user?accountId=557032%3Aa208333a-a398-4c00-b623-86740208ee73",
+        "accountId": "557032:a208333a-a398-4c00-b623-86740208ee73",
+        "avatarUrls": {
+          "48x48": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png",
+          "24x24": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png",
+          "16x16": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png",
+          "32x32": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png"
+        },
+        "displayName": "other_team_member",
+        "active": true,
+        "timeZone": "America/Sao_Paulo",
+        "accountType": "atlassian"
+      },
+      "created": "2021-04-08T11:46:38.688-0300",
+      "items": [
+        {
+          "field": "summary",
+          "fieldtype": "jira",
+          "fieldId": "summary",
+          "from": null,
+          "fromString": "ermitir que o cliente tenha acesso as informações sobre seu cartão virtual",
+          "to": null,
+          "toString": "Permitir que o cliente tenha acesso as informações sobre seu cartão virtual"
+        }
+      ]
+    },
+    {
+      "id": "42533",
+      "author": {
+        "self": "https://tallerflow.atlassian.net/rest/api/3/user?accountId=557032%3Aa208333a-a398-4c00-b623-86740208ee73",
+        "accountId": "557032:a208333a-a398-4c00-b623-86740208ee73",
+        "avatarUrls": {
+          "48x48": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png",
+          "24x24": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png",
+          "16x16": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png",
+          "32x32": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png"
+        },
+        "displayName": "other_team_member",
+        "active": true,
+        "timeZone": "America/Sao_Paulo",
+        "accountType": "atlassian"
+      },
+      "created": "2021-04-08T11:48:20.024-0300",
+      "items": [
+        {
+          "field": "description",
+          "fieldtype": "jira",
+          "fieldId": "description",
+          "from": null,
+          "fromString": null,
+          "to": "{\"id\":\"ari:cloud:jira:763eadb7-3809-48e4-8d47-f6fd95df0292:issuefieldvalue/12278/description\",\"version\":\"1\"}",
+          "toString": "O usuário terá um recurso no app onde ele poderá visualizar os dados do seu cartão virtual."
+        }
+      ]
+    },
+    {
+      "id": "42534",
+      "author": {
+        "self": "https://tallerflow.atlassian.net/rest/api/3/user?accountId=557032%3Aa208333a-a398-4c00-b623-86740208ee73",
+        "accountId": "557032:a208333a-a398-4c00-b623-86740208ee73",
+        "avatarUrls": {
+          "48x48": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png",
+          "24x24": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png",
+          "16x16": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png",
+          "32x32": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png"
+        },
+        "displayName": "other_team_member",
+        "active": true,
+        "timeZone": "America/Sao_Paulo",
+        "accountType": "atlassian"
+      },
+      "created": "2021-04-08T11:48:26.019-0300",
+      "items": [
+        {
+          "field": "Responsible",
+          "fieldtype": "custom",
+          "fieldId": "customfield_10024",
+          "from": null,
+          "fromString": null,
+          "to": "557032:a208333a-a398-4c00-b623-86740208ee73",
+          "toString": "other_team_member"
+        }
+      ]
+    },
+    {
+      "id": "42536",
+      "author": {
+        "self": "https://tallerflow.atlassian.net/rest/api/3/user?accountId=557032%3Aa208333a-a398-4c00-b623-86740208ee73",
+        "accountId": "557032:a208333a-a398-4c00-b623-86740208ee73",
+        "avatarUrls": {
+          "48x48": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png",
+          "24x24": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png",
+          "16x16": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png",
+          "32x32": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png"
+        },
+        "displayName": "other_team_member",
+        "active": true,
+        "timeZone": "America/Sao_Paulo",
+        "accountType": "atlassian"
+      },
+      "created": "2021-04-08T11:55:14.361-0300",
+      "items": [
+        {
+          "field": "description",
+          "fieldtype": "jira",
+          "fieldId": "description",
+          "from": "{\"id\":\"ari:cloud:jira:763eadb7-3809-48e4-8d47-f6fd95df0292:issuefieldvalue/12278/description\",\"version\":\"1\"}",
+          "fromString": "O usuário terá um recurso no app onde ele poderá visualizar os dados do seu cartão virtual.",
+          "to": "{\"id\":\"ari:cloud:jira:763eadb7-3809-48e4-8d47-f6fd95df0292:issuefieldvalue/12278/description\",\"version\":\"2\"}",
+          "toString": "O usuário terá um recurso no app onde ele poderá visualizar os dados do seu cartão virtual.\n\nContext mapping\n\n!image-20210408-145054.png|width=532,height=395!\n\nMiro: [https://miro.com/app/board/o9J_lYlN2ls=/|https://miro.com/app/board/o9J_lYlN2ls=/|smart-link] \n\nOs dados do cartão que devemos fornecer:\n\n* Número do cartão\n* Nome completo\n* Código de Segurança\n* Data de expiração do cartão;\n\nEvent storm\n\n!image-20210408-145500.png|width=1075,height=528!"
+        }
+      ]
+    },
+    {
+      "id": "42537",
+      "author": {
+        "self": "https://tallerflow.atlassian.net/rest/api/3/user?accountId=557032%3Aa208333a-a398-4c00-b623-86740208ee73",
+        "accountId": "557032:a208333a-a398-4c00-b623-86740208ee73",
+        "avatarUrls": {
+          "48x48": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png",
+          "24x24": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png",
+          "16x16": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png",
+          "32x32": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png"
+        },
+        "displayName": "other_team_member",
+        "active": true,
+        "timeZone": "America/Sao_Paulo",
+        "accountType": "atlassian"
+      },
+      "created": "2021-04-08T11:55:29.342-0300",
+      "items": [
+        {
+          "field": "status",
+          "fieldtype": "jira",
+          "fieldId": "status",
+          "from": "10010",
+          "fromString": "In Analysis",
+          "to": "10039",
+          "toString": "Ready to Technical Analysis"
+        }
+      ]
+    },
+    {
+      "id": "42538",
+      "author": {
+        "self": "https://tallerflow.atlassian.net/rest/api/3/user?accountId=557032%3Aa208333a-a398-4c00-b623-86740208ee73",
+        "accountId": "557032:a208333a-a398-4c00-b623-86740208ee73",
+        "avatarUrls": {
+          "48x48": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png",
+          "24x24": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png",
+          "16x16": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png",
+          "32x32": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png"
+        },
+        "displayName": "other_team_member",
+        "active": true,
+        "timeZone": "America/Sao_Paulo",
+        "accountType": "atlassian"
+      },
+      "created": "2021-04-08T11:55:33.961-0300",
+      "items": [
+        {
+          "field": "Responsible",
+          "fieldtype": "custom",
+          "fieldId": "customfield_10024",
+          "from": "557032:a208333a-a398-4c00-b623-86740208ee73",
+          "fromString": "other_team_member",
+          "to": "",
+          "toString": ""
+        }
+      ]
+    },
+    {
+      "id": "42543",
+      "author": {
+        "self": "https://tallerflow.atlassian.net/rest/api/3/user?accountId=557032%3Aa208333a-a398-4c00-b623-86740208ee73",
+        "accountId": "557032:a208333a-a398-4c00-b623-86740208ee73",
+        "avatarUrls": {
+          "48x48": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png",
+          "24x24": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png",
+          "16x16": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png",
+          "32x32": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png"
+        },
+        "displayName": "other_team_member",
+        "active": true,
+        "timeZone": "America/Sao_Paulo",
+        "accountType": "atlassian"
+      },
+      "created": "2021-04-08T12:33:24.583-0300",
+      "items": [
+        {
+          "field": "description",
+          "fieldtype": "jira",
+          "fieldId": "description",
+          "from": "{\"id\":\"ari:cloud:jira:763eadb7-3809-48e4-8d47-f6fd95df0292:issuefieldvalue/12278/description\",\"version\":\"2\"}",
+          "fromString": "O usuário terá um recurso no app onde ele poderá visualizar os dados do seu cartão virtual.\n\nContext mapping\n\n!image-20210408-145054.png|width=532,height=395!\n\nMiro: [https://miro.com/app/board/o9J_lYlN2ls=/|https://miro.com/app/board/o9J_lYlN2ls=/|smart-link] \n\nOs dados do cartão que devemos fornecer:\n\n* Número do cartão\n* Nome completo\n* Código de Segurança\n* Data de expiração do cartão;\n\nEvent storm\n\n!image-20210408-145500.png|width=1075,height=528!",
+          "to": "{\"id\":\"ari:cloud:jira:763eadb7-3809-48e4-8d47-f6fd95df0292:issuefieldvalue/12278/description\",\"version\":\"3\"}",
+          "toString": "[https://miro.com/app/board/o9J_lYlN2ls=/|https://miro.com/app/board/o9J_lYlN2ls=/|smart-link]  \n\nO usuário terá um recurso no app onde ele poderá visualizar os dados do\n\n!image-20210408-153215.png|width=50%!\n\nseu cartão virtual.\n\nOs dados do cartão que devemos fornecer:\n\n* Número do cartão\n* Nome completo\n* Código de Segurança\n* Data de expiração do cartão;\n\n\n\n\n\n\n\n\n\n\n*Context mapping*\n\n!image-20210408-145054.png|width=532,height=395!\n\n*Event storm*\n\n!image-20210408-145500.png|width=1075,height=528!"
+        }
+      ]
+    },
+    {
+      "id": "42546",
+      "author": {
+        "self": "https://tallerflow.atlassian.net/rest/api/3/user?accountId=557032%3A1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "accountId": "557032:1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "avatarUrls": {
+          "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/48",
+          "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/24",
+          "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/16",
+          "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/32"
+        },
+        "displayName": "team_member",
+        "active": true,
+        "timeZone": "America/Sao_Paulo",
+        "accountType": "atlassian"
+      },
+      "created": "2021-04-08T12:36:17.819-0300",
+      "items": [
+        {
+          "field": "status",
+          "fieldtype": "jira",
+          "fieldId": "status",
+          "from": "10039",
+          "fromString": "Ready to Technical Analysis",
+          "to": "10040",
+          "toString": "In Technical Analysis"
+        }
+      ]
+    },
+    {
+      "id": "42547",
+      "author": {
+        "self": "https://tallerflow.atlassian.net/rest/api/3/user?accountId=557032%3A1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "accountId": "557032:1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "avatarUrls": {
+          "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/48",
+          "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/24",
+          "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/16",
+          "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/32"
+        },
+        "displayName": "team_member",
+        "active": true,
+        "timeZone": "America/Sao_Paulo",
+        "accountType": "atlassian"
+      },
+      "created": "2021-04-08T12:36:27.131-0300",
+      "items": [
+        {
+          "field": "Responsible",
+          "fieldtype": "custom",
+          "fieldId": "customfield_10024",
+          "from": null,
+          "fromString": null,
+          "to": "557032:1443bd4b-d660-4319-946e-1ed68fd24b64",
+          "toString": "team_member"
+        }
+      ]
+    },
+    {
+      "id": "42548",
+      "author": {
+        "self": "https://tallerflow.atlassian.net/rest/api/3/user?accountId=557032%3A1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "accountId": "557032:1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "avatarUrls": {
+          "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/48",
+          "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/24",
+          "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/16",
+          "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/32"
+        },
+        "displayName": "team_member",
+        "active": true,
+        "timeZone": "America/Sao_Paulo",
+        "accountType": "atlassian"
+      },
+      "created": "2021-04-08T12:36:50.347-0300",
+      "items": [
+        {
+          "field": "labels",
+          "fieldtype": "jira",
+          "fieldId": "labels",
+          "from": null,
+          "fromString": "",
+          "to": null,
+          "toString": "API GraphQL NodeJS Typescript backend"
+        }
+      ]
+    },
+    {
+      "id": "42554",
+      "author": {
+        "self": "https://tallerflow.atlassian.net/rest/api/3/user?accountId=557032%3A1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "accountId": "557032:1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "avatarUrls": {
+          "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/48",
+          "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/24",
+          "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/16",
+          "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/32"
+        },
+        "displayName": "team_member",
+        "active": true,
+        "timeZone": "America/Sao_Paulo",
+        "accountType": "atlassian"
+      },
+      "created": "2021-04-08T12:39:43.199-0300",
+      "items": [
+        {
+          "field": "description",
+          "fieldtype": "jira",
+          "fieldId": "description",
+          "from": "{\"id\":\"ari:cloud:jira:763eadb7-3809-48e4-8d47-f6fd95df0292:issuefieldvalue/12278/description\",\"version\":\"3\"}",
+          "fromString": "[https://miro.com/app/board/o9J_lYlN2ls=/|https://miro.com/app/board/o9J_lYlN2ls=/|smart-link]  \n\nO usuário terá um recurso no app onde ele poderá visualizar os dados do\n\n!image-20210408-153215.png|width=50%!\n\nseu cartão virtual.\n\nOs dados do cartão que devemos fornecer:\n\n* Número do cartão\n* Nome completo\n* Código de Segurança\n* Data de expiração do cartão;\n\n\n\n\n\n\n\n\n\n\n*Context mapping*\n\n!image-20210408-145054.png|width=532,height=395!\n\n*Event storm*\n\n!image-20210408-145500.png|width=1075,height=528!",
+          "to": "{\"id\":\"ari:cloud:jira:763eadb7-3809-48e4-8d47-f6fd95df0292:issuefieldvalue/12278/description\",\"version\":\"4\"}",
+          "toString": "[https://miro.com/app/board/o9J_lYlN2ls=/|https://miro.com/app/board/o9J_lYlN2ls=/|smart-link]  \n\nO usuário terá um recurso no app onde ele poderá visualizar os dados do\n\n!image-20210408-153215.png|width=50%!\n\nseu cartão virtual.\n\nOs dados do cartão que devemos fornecer:\n\n* Número do cartão\n* Nome completo\n* Código de Segurança\n* Data de expiração do cartão;\n\n\n\n\n\n\n\n\n\n\n*Context mapping*\n\n!image-20210408-145054.png|width=532,height=395!\n\n*Event storm*\n\n!image-20210408-145500.png|width=1075,height=528!\n\n\n\nh3. Análise Técnica\n\nVamos precisar ter algum controle de autenticação do usuário no GraphQL, exemplo: [https://www.apollographql.com/docs/apollo-server/security/authentication/|https://www.apollographql.com/docs/apollo-server/security/authentication/]"
+        }
+      ]
+    },
+    {
+      "id": "42555",
+      "author": {
+        "self": "https://tallerflow.atlassian.net/rest/api/3/user?accountId=557032%3A1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "accountId": "557032:1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "avatarUrls": {
+          "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/48",
+          "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/24",
+          "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/16",
+          "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/32"
+        },
+        "displayName": "team_member",
+        "active": true,
+        "timeZone": "America/Sao_Paulo",
+        "accountType": "atlassian"
+      },
+      "created": "2021-04-08T12:39:51.071-0300",
+      "items": [
+        {
+          "field": "description",
+          "fieldtype": "jira",
+          "fieldId": "description",
+          "from": "{\"id\":\"ari:cloud:jira:763eadb7-3809-48e4-8d47-f6fd95df0292:issuefieldvalue/12278/description\",\"version\":\"4\"}",
+          "fromString": "[https://miro.com/app/board/o9J_lYlN2ls=/|https://miro.com/app/board/o9J_lYlN2ls=/|smart-link]  \n\nO usuário terá um recurso no app onde ele poderá visualizar os dados do\n\n!image-20210408-153215.png|width=50%!\n\nseu cartão virtual.\n\nOs dados do cartão que devemos fornecer:\n\n* Número do cartão\n* Nome completo\n* Código de Segurança\n* Data de expiração do cartão;\n\n\n\n\n\n\n\n\n\n\n*Context mapping*\n\n!image-20210408-145054.png|width=532,height=395!\n\n*Event storm*\n\n!image-20210408-145500.png|width=1075,height=528!\n\n\n\nh3. Análise Técnica\n\nVamos precisar ter algum controle de autenticação do usuário no GraphQL, exemplo: [https://www.apollographql.com/docs/apollo-server/security/authentication/|https://www.apollographql.com/docs/apollo-server/security/authentication/]",
+          "to": "{\"id\":\"ari:cloud:jira:763eadb7-3809-48e4-8d47-f6fd95df0292:issuefieldvalue/12278/description\",\"version\":\"5\"}",
+          "toString": "[https://miro.com/app/board/o9J_lYlN2ls=/|https://miro.com/app/board/o9J_lYlN2ls=/|smart-link]  \n\nO usuário terá um recurso no app onde ele poderá visualizar os dados do\n\n!image-20210408-153215.png|width=50%!\n\nseu cartão virtual.\n\nOs dados do cartão que devemos fornecer:\n\n* Número do cartão\n* Nome completo\n* Código de Segurança\n* Data de expiração do cartão;\n\n\n\n\n\n\n\n\n\n\n*Context mapping*\n\n!image-20210408-145054.png|width=532,height=395!\n\n*Event storm*\n\n!image-20210408-145500.png|width=1075,height=528!\n\nh3. Análise Técnica\n\nVamos precisar ter algum controle de autenticação do usuário no GraphQL, exemplo: [https://www.apollographql.com/docs/apollo-server/security/authentication/|https://www.apollographql.com/docs/apollo-server/security/authentication/]"
+        }
+      ]
+    },
+    {
+      "id": "42568",
+      "author": {
+        "self": "https://tallerflow.atlassian.net/rest/api/3/user?accountId=557032%3A1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "accountId": "557032:1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "avatarUrls": {
+          "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/48",
+          "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/24",
+          "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/16",
+          "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/32"
+        },
+        "displayName": "team_member",
+        "active": true,
+        "timeZone": "America/Sao_Paulo",
+        "accountType": "atlassian"
+      },
+      "created": "2021-04-08T15:53:23.733-0300",
+      "items": [
+        {
+          "field": "Responsible",
+          "fieldtype": "custom",
+          "fieldId": "customfield_10024",
+          "from": "557032:1443bd4b-d660-4319-946e-1ed68fd24b64",
+          "fromString": "team_member",
+          "to": "",
+          "toString": ""
+        }
+      ]
+    },
+    {
+      "id": "42569",
+      "author": {
+        "self": "https://tallerflow.atlassian.net/rest/api/3/user?accountId=557032%3A1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "accountId": "557032:1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "avatarUrls": {
+          "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/48",
+          "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/24",
+          "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/16",
+          "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/32"
+        },
+        "displayName": "team_member",
+        "active": true,
+        "timeZone": "America/Sao_Paulo",
+        "accountType": "atlassian"
+      },
+      "created": "2021-04-08T15:53:50.959-0300",
+      "items": [
+        {
+          "field": "description",
+          "fieldtype": "jira",
+          "fieldId": "description",
+          "from": "{\"id\":\"ari:cloud:jira:763eadb7-3809-48e4-8d47-f6fd95df0292:issuefieldvalue/12278/description\",\"version\":\"5\"}",
+          "fromString": "[https://miro.com/app/board/o9J_lYlN2ls=/|https://miro.com/app/board/o9J_lYlN2ls=/|smart-link]  \n\nO usuário terá um recurso no app onde ele poderá visualizar os dados do\n\n!image-20210408-153215.png|width=50%!\n\nseu cartão virtual.\n\nOs dados do cartão que devemos fornecer:\n\n* Número do cartão\n* Nome completo\n* Código de Segurança\n* Data de expiração do cartão;\n\n\n\n\n\n\n\n\n\n\n*Context mapping*\n\n!image-20210408-145054.png|width=532,height=395!\n\n*Event storm*\n\n!image-20210408-145500.png|width=1075,height=528!\n\nh3. Análise Técnica\n\nVamos precisar ter algum controle de autenticação do usuário no GraphQL, exemplo: [https://www.apollographql.com/docs/apollo-server/security/authentication/|https://www.apollographql.com/docs/apollo-server/security/authentication/]",
+          "to": "{\"id\":\"ari:cloud:jira:763eadb7-3809-48e4-8d47-f6fd95df0292:issuefieldvalue/12278/description\",\"version\":\"6\"}",
+          "toString": "[https://miro.com/app/board/o9J_lYlN2ls=/|https://miro.com/app/board/o9J_lYlN2ls=/|smart-link]  \n\nO usuário terá um recurso no app onde ele poderá visualizar os dados do\n\n!image-20210408-153215.png|width=50%!\n\nseu cartão virtual.\n\nOs dados do cartão que devemos fornecer:\n\n* Número do cartão\n* Nome completo\n* Código de Segurança\n* Data de expiração do cartão;\n\n\n\n\n\n\n\n\n\n\n*Context mapping*\n\n!image-20210408-145054.png|width=532,height=395!\n\n*Event storm*\n\n!image-20210408-145500.png|width=1075,height=528!\n\nh3. Análise Técnica\n\nVamos precisar ter algum controle de autenticação do usuário no GraphQL, exemplo: [https://www.apollographql.com/docs/apollo-server/security/authentication/|https://www.apollographql.com/docs/apollo-server/security/authentication/]\n\nJá existem especificações da API REST do ebanx mas é preciso alinhar com alguém de lá."
+        }
+      ]
+    },
+    {
+      "id": "42596",
+      "author": {
+        "self": "https://tallerflow.atlassian.net/rest/api/3/user?accountId=557032%3A1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "accountId": "557032:1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "avatarUrls": {
+          "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/48",
+          "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/24",
+          "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/16",
+          "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/32"
+        },
+        "displayName": "team_member",
+        "active": true,
+        "timeZone": "America/Sao_Paulo",
+        "accountType": "atlassian"
+      },
+      "created": "2021-04-09T11:57:48.724-0300",
+      "items": [
+        {
+          "field": "Responsible",
+          "fieldtype": "custom",
+          "fieldId": "customfield_10024",
+          "from": null,
+          "fromString": null,
+          "to": "557032:1443bd4b-d660-4319-946e-1ed68fd24b64",
+          "toString": "team_member"
+        }
+      ]
+    },
+    {
+      "id": "42602",
+      "author": {
+        "self": "https://tallerflow.atlassian.net/rest/api/3/user?accountId=557032%3A1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "accountId": "557032:1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "avatarUrls": {
+          "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/48",
+          "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/24",
+          "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/16",
+          "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/32"
+        },
+        "displayName": "team_member",
+        "active": true,
+        "timeZone": "America/Sao_Paulo",
+        "accountType": "atlassian"
+      },
+      "created": "2021-04-09T12:09:03.885-0300",
+      "items": [
+        {
+          "field": "description",
+          "fieldtype": "jira",
+          "fieldId": "description",
+          "from": "{\"id\":\"ari:cloud:jira:763eadb7-3809-48e4-8d47-f6fd95df0292:issuefieldvalue/12278/description\",\"version\":\"6\"}",
+          "fromString": "[https://miro.com/app/board/o9J_lYlN2ls=/|https://miro.com/app/board/o9J_lYlN2ls=/|smart-link]  \n\nO usuário terá um recurso no app onde ele poderá visualizar os dados do\n\n!image-20210408-153215.png|width=50%!\n\nseu cartão virtual.\n\nOs dados do cartão que devemos fornecer:\n\n* Número do cartão\n* Nome completo\n* Código de Segurança\n* Data de expiração do cartão;\n\n\n\n\n\n\n\n\n\n\n*Context mapping*\n\n!image-20210408-145054.png|width=532,height=395!\n\n*Event storm*\n\n!image-20210408-145500.png|width=1075,height=528!\n\nh3. Análise Técnica\n\nVamos precisar ter algum controle de autenticação do usuário no GraphQL, exemplo: [https://www.apollographql.com/docs/apollo-server/security/authentication/|https://www.apollographql.com/docs/apollo-server/security/authentication/]\n\nJá existem especificações da API REST do ebanx mas é preciso alinhar com alguém de lá.",
+          "to": "{\"id\":\"ari:cloud:jira:763eadb7-3809-48e4-8d47-f6fd95df0292:issuefieldvalue/12278/description\",\"version\":\"7\"}",
+          "toString": "[https://miro.com/app/board/o9J_lYlN2ls=/|https://miro.com/app/board/o9J_lYlN2ls=/|smart-link]  \n\nO usuário terá um recurso no app onde ele poderá visualizar os dados do\n\n!image-20210408-153215.png|width=50%!\n\nseu cartão virtual.\n\nOs dados do cartão que devemos fornecer:\n\n* Número do cartão\n* Nome completo\n* Código de Segurança\n* Data de expiração do cartão;\n\n\n\n\n\n\n\n\n\n\n*Context mapping*\n\n!image-20210408-145054.png|width=532,height=395!\n\n*Event storm*\n\n!image-20210408-145500.png|width=1075,height=528!\n\nh3. Análise Técnica\n\nVamos precisar ter algum controle de autenticação do usuário no GraphQL, exemplo: [https://www.apollographql.com/docs/apollo-server/security/authentication/|https://www.apollographql.com/docs/apollo-server/security/authentication/]\n\nJá existem especificações da API REST do ebanx mas é preciso alinhar com alguém de lá.\n\nA API do ebanx ainda não está implementada mas é possível ver a especificação dela usando os seguintes Yamls. Você pode visualizar se importar o yaml no site [https://editor.swagger.io/|https://editor.swagger.io/]\n\n[^swagger-banking-cards-service.yaml]\n[^swagger-banking-account-service.yaml]\n\n*Autenticação API GraphqL → API Ebanx*\n\nPara usar a API do ebanx é necessário usar um Token que vai ser dado por eles e precisa ser passado em todo request como um header Authorization Bearer, isso vai dizer para a API do Ebanx que o client (nossa API) tem acesso à eles.\n\n*Autenticação Usuário*\n\nQuando um request é feito de uma aplicação para a API de GraphQL o client vai passar um Authorization Header com um jsonwebtoken onde depois de decodado vai ter dados como o id do usuário que pode ser usado nos campos externalRef como identificador do usuário\n\n!image-20210409-150333.png|width=545,height=508!\n\n*Tracing*\n\nVai ser preciso criar alguma lógica de tracing da aplicação e onde o id do tracing vai ser passado pra API do ebanx através do campo Trace-id\n\n*Dados*\n\nO nome no cartão vai vir de um endpoint ainda não definido, então vamos ter que mocar essa parte.\nO saldo vai vir no getBalances e o campo *type* vai decidir se o valor da API é do tipo saldo disponível."
+        }
+      ]
+    },
+    {
+      "id": "42603",
+      "author": {
+        "self": "https://tallerflow.atlassian.net/rest/api/3/user?accountId=557032%3A1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "accountId": "557032:1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "avatarUrls": {
+          "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/48",
+          "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/24",
+          "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/16",
+          "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/32"
+        },
+        "displayName": "team_member",
+        "active": true,
+        "timeZone": "America/Sao_Paulo",
+        "accountType": "atlassian"
+      },
+      "created": "2021-04-09T12:09:09.857-0300",
+      "items": [
+        {
+          "field": "status",
+          "fieldtype": "jira",
+          "fieldId": "status",
+          "from": "10040",
+          "fromString": "In Technical Analysis",
+          "to": "10008",
+          "toString": "Options Inventory"
+        }
+      ]
+    },
+    {
+      "id": "42605",
+      "author": {
+        "self": "https://tallerflow.atlassian.net/rest/api/3/user?accountId=557032%3A1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "accountId": "557032:1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "avatarUrls": {
+          "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/48",
+          "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/24",
+          "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/16",
+          "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/32"
+        },
+        "displayName": "team_member",
+        "active": true,
+        "timeZone": "America/Sao_Paulo",
+        "accountType": "atlassian"
+      },
+      "created": "2021-04-09T12:09:14.905-0300",
+      "items": [
+        {
+          "field": "Responsible",
+          "fieldtype": "custom",
+          "fieldId": "customfield_10024",
+          "from": "557032:1443bd4b-d660-4319-946e-1ed68fd24b64",
+          "fromString": "team_member",
+          "to": "",
+          "toString": ""
+        }
+      ]
+    },
+    {
+      "id": "42608",
+      "author": {
+        "self": "https://tallerflow.atlassian.net/rest/api/3/user?accountId=557032%3A1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "accountId": "557032:1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "avatarUrls": {
+          "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/48",
+          "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/24",
+          "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/16",
+          "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/32"
+        },
+        "displayName": "team_member",
+        "active": true,
+        "timeZone": "America/Sao_Paulo",
+        "accountType": "atlassian"
+      },
+      "created": "2021-04-09T12:10:50.334-0300",
+      "items": [
+        {
+          "field": "description",
+          "fieldtype": "jira",
+          "fieldId": "description",
+          "from": "{\"id\":\"ari:cloud:jira:763eadb7-3809-48e4-8d47-f6fd95df0292:issuefieldvalue/12278/description\",\"version\":\"7\"}",
+          "fromString": "[https://miro.com/app/board/o9J_lYlN2ls=/|https://miro.com/app/board/o9J_lYlN2ls=/|smart-link]  \n\nO usuário terá um recurso no app onde ele poderá visualizar os dados do\n\n!image-20210408-153215.png|width=50%!\n\nseu cartão virtual.\n\nOs dados do cartão que devemos fornecer:\n\n* Número do cartão\n* Nome completo\n* Código de Segurança\n* Data de expiração do cartão;\n\n\n\n\n\n\n\n\n\n\n*Context mapping*\n\n!image-20210408-145054.png|width=532,height=395!\n\n*Event storm*\n\n!image-20210408-145500.png|width=1075,height=528!\n\nh3. Análise Técnica\n\nVamos precisar ter algum controle de autenticação do usuário no GraphQL, exemplo: [https://www.apollographql.com/docs/apollo-server/security/authentication/|https://www.apollographql.com/docs/apollo-server/security/authentication/]\n\nJá existem especificações da API REST do ebanx mas é preciso alinhar com alguém de lá.\n\nA API do ebanx ainda não está implementada mas é possível ver a especificação dela usando os seguintes Yamls. Você pode visualizar se importar o yaml no site [https://editor.swagger.io/|https://editor.swagger.io/]\n\n[^swagger-banking-cards-service.yaml]\n[^swagger-banking-account-service.yaml]\n\n*Autenticação API GraphqL → API Ebanx*\n\nPara usar a API do ebanx é necessário usar um Token que vai ser dado por eles e precisa ser passado em todo request como um header Authorization Bearer, isso vai dizer para a API do Ebanx que o client (nossa API) tem acesso à eles.\n\n*Autenticação Usuário*\n\nQuando um request é feito de uma aplicação para a API de GraphQL o client vai passar um Authorization Header com um jsonwebtoken onde depois de decodado vai ter dados como o id do usuário que pode ser usado nos campos externalRef como identificador do usuário\n\n!image-20210409-150333.png|width=545,height=508!\n\n*Tracing*\n\nVai ser preciso criar alguma lógica de tracing da aplicação e onde o id do tracing vai ser passado pra API do ebanx através do campo Trace-id\n\n*Dados*\n\nO nome no cartão vai vir de um endpoint ainda não definido, então vamos ter que mocar essa parte.\nO saldo vai vir no getBalances e o campo *type* vai decidir se o valor da API é do tipo saldo disponível.",
+          "to": "{\"id\":\"ari:cloud:jira:763eadb7-3809-48e4-8d47-f6fd95df0292:issuefieldvalue/12278/description\",\"version\":\"8\"}",
+          "toString": "[https://miro.com/app/board/o9J_lYlN2ls=/|https://miro.com/app/board/o9J_lYlN2ls=/|smart-link]  \n\nO usuário terá um recurso no app onde ele poderá visualizar os dados do\n\n!image-20210408-153215.png|width=50%!\n\nseu cartão virtual.\n\nOs dados do cartão que devemos fornecer:\n\n* Número do cartão\n* Nome completo\n* Código de Segurança\n* Data de expiração do cartão;\n\n\n\n\n\n\n\n\n\n\n*Context mapping*\n\n!image-20210408-145054.png|width=532,height=395!\n\n*Event storm*\n\n!image-20210408-145500.png|width=1075,height=528!\n\nh3. Análise Técnica\n\nVamos precisar ter algum controle de autenticação do usuário no GraphQL, exemplo: [https://www.apollographql.com/docs/apollo-server/security/authentication/|https://www.apollographql.com/docs/apollo-server/security/authentication/]\n\nJá existem especificações da API REST do ebanx mas é preciso alinhar com alguém de lá.\n\nA API do ebanx ainda não está implementada mas é possível ver a especificação dela usando os seguintes Yamls. Você pode visualizar se importar o yaml no site [https://editor.swagger.io/|https://editor.swagger.io/]\n\n[^swagger-banking-cards-service.yaml]\n[^swagger-banking-account-service.yaml]\n\n*Autenticação API GraphqL → API Ebanx*\n\nPara usar a API do ebanx é necessário usar um Token que vai ser dado por eles e precisa ser passado em todo request como um header Authorization Bearer, isso vai dizer para a API do Ebanx que o client (nossa API) tem acesso à eles.\n\n*Autenticação Usuário*\n\nQuando um request é feito de uma aplicação para a API de GraphQL o client vai passar um Authorization Header com um jsonwebtoken onde depois de decodado vai ter dados como o id do usuário que pode ser usado nos campos externalRef como identificador do usuário\n\n!image-20210409-150333.png|width=545,height=508!\n\n*Tracing*\n\nVai ser preciso criar alguma lógica de tracing da aplicação e onde o id do tracing vai ser passado pra API do ebanx através do campo Trace-id\n\n*Dados*\n\nO nome no cartão vai vir de um endpoint ainda não definido, então vamos ter que mocar essa parte.\nO saldo vai vir no {{/accounts/{accountId}/balances}} e o campo *type* vai decidir se o valor da API é do tipo saldo disponível. o AccountId vai vir do jsonwebtoken"
+        }
+      ]
+    },
+    {
+      "id": "42700",
+      "author": {
+        "self": "https://tallerflow.atlassian.net/rest/api/3/user?accountId=557032%3Aa208333a-a398-4c00-b623-86740208ee73",
+        "accountId": "557032:a208333a-a398-4c00-b623-86740208ee73",
+        "avatarUrls": {
+          "48x48": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png",
+          "24x24": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png",
+          "16x16": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png",
+          "32x32": "https://secure.gravatar.com/avatar/143ec51a095fa4855577e984d6596fd2?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FHF-2.png"
+        },
+        "displayName": "other_team_member",
+        "active": true,
+        "timeZone": "America/Sao_Paulo",
+        "accountType": "atlassian"
+      },
+      "created": "2021-04-12T14:19:17.791-0300",
+      "items": [
+        {
+          "field": "status",
+          "fieldtype": "jira",
+          "fieldId": "status",
+          "from": "10008",
+          "fromString": "Options Inventory",
+          "to": "10001",
+          "toString": "Ready to Dev"
+        }
+      ]
+    },
+    {
+      "id": "42770",
+      "author": {
+        "self": "https://tallerflow.atlassian.net/rest/api/3/user?accountId=557032%3A1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "accountId": "557032:1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "avatarUrls": {
+          "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/48",
+          "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/24",
+          "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/16",
+          "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/32"
+        },
+        "displayName": "team_member",
+        "active": true,
+        "timeZone": "America/Sao_Paulo",
+        "accountType": "atlassian"
+      },
+      "created": "2021-04-13T15:32:45.342-0300",
+      "items": [
+        {
+          "field": "status",
+          "fieldtype": "jira",
+          "fieldId": "status",
+          "from": "10001",
+          "fromString": "Ready to Dev",
+          "to": "10003",
+          "toString": "Developing"
+        }
+      ]
+    },
+    {
+      "id": "42771",
+      "author": {
+        "self": "https://tallerflow.atlassian.net/rest/api/3/user?accountId=557032%3A1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "accountId": "557032:1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "avatarUrls": {
+          "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/48",
+          "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/24",
+          "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/16",
+          "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/32"
+        },
+        "displayName": "team_member",
+        "active": true,
+        "timeZone": "America/Sao_Paulo",
+        "accountType": "atlassian"
+      },
+      "created": "2021-04-13T15:32:55.287-0300",
+      "items": [
+        {
+          "field": "Responsible",
+          "fieldtype": "custom",
+          "fieldId": "customfield_10024",
+          "from": null,
+          "fromString": null,
+          "to": "557032:1443bd4b-d660-4319-946e-1ed68fd24b64",
+          "toString": "team_member"
+        }
+      ]
+    },
+    {
+      "id": "43049",
+      "author": {
+        "self": "https://tallerflow.atlassian.net/rest/api/3/user?accountId=557032%3A1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "accountId": "557032:1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "avatarUrls": {
+          "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/48",
+          "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/24",
+          "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/16",
+          "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/32"
+        },
+        "displayName": "team_member",
+        "active": true,
+        "timeZone": "America/Sao_Paulo",
+        "accountType": "atlassian"
+      },
+      "created": "2021-04-19T14:46:59.437-0300",
+      "items": [
+        {
+          "field": "Flagged",
+          "fieldtype": "custom",
+          "fieldId": "customfield_10023",
+          "from": null,
+          "fromString": null,
+          "to": "[10019]",
+          "toString": "Impediment"
+        }
+      ]
+    },
+    {
+      "id": "43050",
+      "author": {
+        "self": "https://tallerflow.atlassian.net/rest/api/3/user?accountId=557032%3A1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "accountId": "557032:1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "avatarUrls": {
+          "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/48",
+          "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/24",
+          "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/16",
+          "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/32"
+        },
+        "displayName": "team_member",
+        "active": true,
+        "timeZone": "America/Sao_Paulo",
+        "accountType": "atlassian"
+      },
+      "created": "2021-04-19T15:29:07.219-0300",
+      "items": [
+        {
+          "field": "Flagged",
+          "fieldtype": "custom",
+          "fieldId": "customfield_10023",
+          "from": "[10019]",
+          "fromString": "Impediment",
+          "to": "",
+          "toString": ""
+        }
+      ]
+    },
+    {
+      "id": "43052",
+      "author": {
+        "self": "https://tallerflow.atlassian.net/rest/api/3/user?accountId=557032%3A1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "accountId": "557032:1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "avatarUrls": {
+          "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/48",
+          "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/24",
+          "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/16",
+          "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/32"
+        },
+        "displayName": "team_member",
+        "active": true,
+        "timeZone": "America/Sao_Paulo",
+        "accountType": "atlassian"
+      },
+      "created": "2021-04-19T16:03:04.825-0300",
+      "items": [
+        {
+          "field": "Test Direction",
+          "fieldtype": "custom",
+          "fieldId": "customfield_10030",
+          "from": null,
+          "fromString": null,
+          "to": "{\"id\":\"ari:cloud:jira:763eadb7-3809-48e4-8d47-f6fd95df0292:issuefieldvalue/12278/customfield_10030\",\"version\":\"1\"}",
+          "toString": "Checar que é possível pegar dados do cartão do usuário pela API de GraphQL"
+        }
+      ]
+    },
+    {
+      "id": "43053",
+      "author": {
+        "self": "https://tallerflow.atlassian.net/rest/api/3/user?accountId=557032%3A1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "accountId": "557032:1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "avatarUrls": {
+          "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/48",
+          "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/24",
+          "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/16",
+          "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/32"
+        },
+        "displayName": "team_member",
+        "active": true,
+        "timeZone": "America/Sao_Paulo",
+        "accountType": "atlassian"
+      },
+      "created": "2021-04-19T16:03:11.313-0300",
+      "items": [
+        {
+          "field": "status",
+          "fieldtype": "jira",
+          "fieldId": "status",
+          "from": "10003",
+          "fromString": "Developing",
+          "to": "10005",
+          "toString": "Ready to HMG"
+        }
+      ]
+    },
+    {
+      "id": "43054",
+      "author": {
+        "self": "https://tallerflow.atlassian.net/rest/api/3/user?accountId=557032%3A1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "accountId": "557032:1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "avatarUrls": {
+          "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/48",
+          "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/24",
+          "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/16",
+          "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/32"
+        },
+        "displayName": "team_member",
+        "active": true,
+        "timeZone": "America/Sao_Paulo",
+        "accountType": "atlassian"
+      },
+      "created": "2021-04-19T16:03:15.463-0300",
+      "items": [
+        {
+          "field": "status",
+          "fieldtype": "jira",
+          "fieldId": "status",
+          "from": "10005",
+          "fromString": "Ready to HMG",
+          "to": "10007",
+          "toString": "Homologating"
+        }
+      ]
+    },
+    {
+      "id": "43062",
+      "author": {
+        "self": "https://tallerflow.atlassian.net/rest/api/3/user?accountId=557032%3A1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "accountId": "557032:1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "avatarUrls": {
+          "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/48",
+          "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/24",
+          "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/16",
+          "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/32"
+        },
+        "displayName": "team_member",
+        "active": true,
+        "timeZone": "America/Sao_Paulo",
+        "accountType": "atlassian"
+      },
+      "created": "2021-04-19T17:51:20.104-0300",
+      "items": [
+        {
+          "field": "Flagged",
+          "fieldtype": "custom",
+          "fieldId": "customfield_10023",
+          "from": null,
+          "fromString": null,
+          "to": "[10019]",
+          "toString": "Impediment"
+        }
+      ]
+    },
+    {
+      "id": "43077",
+      "author": {
+        "self": "https://tallerflow.atlassian.net/rest/api/3/user?accountId=557032%3A1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "accountId": "557032:1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "avatarUrls": {
+          "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/48",
+          "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/24",
+          "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/16",
+          "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/32"
+        },
+        "displayName": "team_member",
+        "active": true,
+        "timeZone": "America/Sao_Paulo",
+        "accountType": "atlassian"
+      },
+      "created": "2021-04-20T11:15:04.315-0300",
+      "items": [
+        {
+          "field": "status",
+          "fieldtype": "jira",
+          "fieldId": "status",
+          "from": "10007",
+          "fromString": "Homologating",
+          "to": "10006",
+          "toString": "Ready to Deploy"
+        }
+      ]
+    },
+    {
+      "id": "43078",
+      "author": {
+        "self": "https://tallerflow.atlassian.net/rest/api/3/user?accountId=557032%3A1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "accountId": "557032:1443bd4b-d660-4319-946e-1ed68fd24b64",
+        "avatarUrls": {
+          "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/48",
+          "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/24",
+          "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/16",
+          "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/557032:1443bd4b-d660-4319-946e-1ed68fd24b64/beac5b1b-9b67-4a91-8752-75e50fc07bb2/32"
+        },
+        "displayName": "team_member",
+        "active": true,
+        "timeZone": "America/Sao_Paulo",
+        "accountType": "atlassian"
+      },
+      "created": "2021-04-20T11:15:08.754-0300",
+      "items": [
+        {
+          "field": "status",
+          "fieldtype": "jira",
+          "fieldId": "status",
+          "from": "10006",
+          "fromString": "Ready to Deploy",
+          "to": "10002",
+          "toString": "Done"
+        }
+      ]
+    },
+    {
+      "id": "43395",
+      "author": {
+        "self": "https://tallerflow.atlassian.net/rest/api/3/user?accountId=557032%3Ae9ce22bc-22d0-4280-9c3a-e5ef8d186be7",
+        "accountId": "557032:e9ce22bc-22d0-4280-9c3a-e5ef8d186be7",
+        "avatarUrls": {
+          "48x48": "https://secure.gravatar.com/avatar/635d2c27bdda404b56a01e0574f07082?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FRC-2.png",
+          "24x24": "https://secure.gravatar.com/avatar/635d2c27bdda404b56a01e0574f07082?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FRC-2.png",
+          "16x16": "https://secure.gravatar.com/avatar/635d2c27bdda404b56a01e0574f07082?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FRC-2.png",
+          "32x32": "https://secure.gravatar.com/avatar/635d2c27bdda404b56a01e0574f07082?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FRC-2.png"
+        },
+        "displayName": "Rafael Caceres",
+        "active": true,
+        "timeZone": "America/Sao_Paulo",
+        "accountType": "atlassian"
+      },
+      "created": "2021-04-30T11:12:02.910-0300",
+      "items": [
+        {
+          "field": "Module",
+          "fieldtype": "custom",
+          "fieldId": "customfield_10052",
+          "from": null,
+          "fromString": null,
+          "to": null,
+          "toString": "Pre-paid virtual card"
+        }
+      ]
+    },
+    {
+      "id": "43396",
+      "author": {
+        "self": "https://tallerflow.atlassian.net/rest/api/3/user?accountId=557032%3Ae9ce22bc-22d0-4280-9c3a-e5ef8d186be7",
+        "accountId": "557032:e9ce22bc-22d0-4280-9c3a-e5ef8d186be7",
+        "avatarUrls": {
+          "48x48": "https://secure.gravatar.com/avatar/635d2c27bdda404b56a01e0574f07082?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FRC-2.png",
+          "24x24": "https://secure.gravatar.com/avatar/635d2c27bdda404b56a01e0574f07082?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FRC-2.png",
+          "16x16": "https://secure.gravatar.com/avatar/635d2c27bdda404b56a01e0574f07082?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FRC-2.png",
+          "32x32": "https://secure.gravatar.com/avatar/635d2c27bdda404b56a01e0574f07082?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FRC-2.png"
+        },
+        "displayName": "Rafael Caceres",
+        "active": true,
+        "timeZone": "America/Sao_Paulo",
+        "accountType": "atlassian"
+      },
+      "created": "2021-04-30T11:14:51.162-0300",
+      "items": [
+        {
+          "field": "Module",
+          "fieldtype": "custom",
+          "fieldId": "customfield_10052",
+          "from": null,
+          "fromString": "Pre-paid Virtual Card",
+          "to": null,
+          "toString": "Pre-paid virtual card"
+        }
+      ]
+    }
+  ]
+}

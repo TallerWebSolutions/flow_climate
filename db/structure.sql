@@ -496,40 +496,6 @@ ALTER SEQUENCE public.demand_comments_id_seq OWNED BY public.demand_comments.id;
 
 
 --
--- Name: demand_data_processments; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.demand_data_processments (
-    id bigint NOT NULL,
-    user_id integer NOT NULL,
-    project_key character varying NOT NULL,
-    downloaded_content text NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    user_plan_id integer NOT NULL
-);
-
-
---
--- Name: demand_data_processments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.demand_data_processments_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: demand_data_processments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.demand_data_processments_id_seq OWNED BY public.demand_data_processments.id;
-
-
---
 -- Name: demand_score_matrices; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2623,13 +2589,6 @@ ALTER TABLE ONLY public.demand_comments ALTER COLUMN id SET DEFAULT nextval('pub
 
 
 --
--- Name: demand_data_processments id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.demand_data_processments ALTER COLUMN id SET DEFAULT nextval('public.demand_data_processments_id_seq'::regclass);
-
-
---
 -- Name: demand_score_matrices id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3103,14 +3062,6 @@ ALTER TABLE ONLY public.demand_blocks
 
 ALTER TABLE ONLY public.demand_comments
     ADD CONSTRAINT demand_comments_pkey PRIMARY KEY (id);
-
-
---
--- Name: demand_data_processments demand_data_processments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.demand_data_processments
-    ADD CONSTRAINT demand_data_processments_pkey PRIMARY KEY (id);
 
 
 --
@@ -3787,20 +3738,6 @@ CREATE INDEX index_demand_blocks_on_unblocker_id ON public.demand_blocks USING b
 --
 
 CREATE INDEX index_demand_comments_on_demand_id ON public.demand_comments USING btree (demand_id);
-
-
---
--- Name: index_demand_data_processments_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_demand_data_processments_on_user_id ON public.demand_data_processments USING btree (user_id);
-
-
---
--- Name: index_demand_data_processments_on_user_plan_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_demand_data_processments_on_user_plan_id ON public.demand_data_processments USING btree (user_plan_id);
 
 
 --
@@ -4872,14 +4809,6 @@ ALTER TABLE ONLY public.jira_custom_field_mappings
 
 
 --
--- Name: demand_data_processments fk_rails_1e9a84a8ab; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.demand_data_processments
-    ADD CONSTRAINT fk_rails_1e9a84a8ab FOREIGN KEY (user_plan_id) REFERENCES public.user_plans(id);
-
-
---
 -- Name: project_change_deadline_histories fk_rails_1f60eef53a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4933,14 +4862,6 @@ ALTER TABLE ONLY public.portfolio_units
 
 ALTER TABLE ONLY public.service_delivery_reviews
     ADD CONSTRAINT fk_rails_2ee3d597b3 FOREIGN KEY (product_id) REFERENCES public.products(id);
-
-
---
--- Name: demand_data_processments fk_rails_337e2008a8; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.demand_data_processments
-    ADD CONSTRAINT fk_rails_337e2008a8 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
@@ -5788,6 +5709,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20201215181752'),
 ('20210105172949'),
 ('20210107143637'),
-('20210418214342');
+('20210418214342'),
+('20210430222819');
 
 

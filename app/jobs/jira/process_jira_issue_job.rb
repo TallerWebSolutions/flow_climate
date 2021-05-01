@@ -6,15 +6,28 @@ module Jira
 
     def perform(jira_account, project, issue_key, user_email, user_name, demand_url)
       started_time = Time.zone.now
-      jira_issue_with_transitions = Jira::JiraApiService.new(jira_account.username, jira_account.api_token, jira_account.base_uri).request_issue_details(issue_key)
+      jira_con = Jira::JiraApiService.new(jira_account.username, jira_account.api_token, jira_account.base_uri)
 
-      return if jira_issue_with_transitions.attrs['key'].blank?
+      jira_issue = jira_con.request_issue(issue_key)
+      if jira_issue.attrs.present?
+        product = Jira::JiraReader.instance.read_product(jira_issue.attrs, jira_account)
+        demand = Jira::JiraIssueAdapter.instance.process_issue(jira_account, jira_issue, product, project)
 
-      Jira::JiraIssueAdapter.instance.process_issue!(jira_account, Jira::JiraReader.instance.read_product(jira_issue_with_transitions.attrs, jira_account), project, jira_issue_with_transitions)
+        max_results = 100
+        start_at = 0
+        new_page = true
+        while new_page
+          jira_issue_changelog = jira_con.request_issue_changelog(issue_key, start_at, max_results)
+          Jira::JiraIssueAdapter.instance.process_jira_issue_changelog(jira_account, jira_issue_changelog, demand)
 
-      finished_time = Time.zone.now
+          start_at += 100
+          new_page = !jira_issue_changelog['isLast']
+        end
 
-      UserNotifierMailer.async_activity_finished(user_email, user_name, Demand.model_name.human.downcase, issue_key, started_time, finished_time, demand_url).deliver if user_email.present?
+        finished_time = Time.zone.now
+
+        UserNotifierMailer.async_activity_finished(user_email, user_name, Demand.model_name.human.downcase, issue_key, started_time, finished_time, demand_url).deliver if user_email.present?
+      end
     end
   end
 end

@@ -6,24 +6,46 @@ RSpec.describe Jira::JiraApiService, type: :service do
 
   let(:jira_account) { Fabricate :jira_account, base_uri: 'https://foo.atlassian.net/', username: 'foo', api_token: 'bar' }
 
-  describe '#request_issue_details' do
-    context 'when the issue exists' do
+  describe 'request_issue' do
+    context 'when success' do
       it 'returns the issue details' do
         returned_issue = client.Issue.build(summary: 'foo of bar')
         expect(JIRA::Resource::Issue).to(receive(:find).once { returned_issue })
 
-        issue_details = described_class.new(jira_account.username, jira_account.api_token, jira_account.base_uri).request_issue_details('FC-3')
+        issue_details = described_class.new(jira_account.username, jira_account.api_token, jira_account.base_uri).request_issue('FC-3')
 
         expect(issue_details.attrs[:summary]).to eq 'foo of bar'
+      end
+    end
+
+    context 'when failure' do
+      it 'returns an empty issue' do
+        response = Net::HTTPResponse.new(1.0, 404, 'not found')
+        allow(JIRA::Resource::Issue).to(receive(:find).and_raise(JIRA::HTTPError.new(response)))
+
+        issue_details = described_class.new(jira_account.username, jira_account.api_token, jira_account.base_uri).request_issue('FC-3')
+
+        expect(issue_details).to be_an_instance_of JIRA::Resource::Issue
+      end
+    end
+  end
+
+  describe '#request_issue_changelog' do
+    context 'when the issue exists' do
+      it 'returns the issue details' do
+        jira_issue_changelog = instance_double(Net::HTTPSuccess, body: file_fixture('issue_changelog_with_blocks.json').read)
+        expect_any_instance_of(JIRA::Client).to(receive(:get).once.and_return(jira_issue_changelog))
+
+        described_class.new(jira_account.username, jira_account.api_token, jira_account.base_uri).request_issue_changelog('EBANX-2')
       end
     end
 
     context 'when the issue does not exist' do
       it 'returns an empty Issue' do
         response = Net::HTTPResponse.new(1.0, 404, 'not found')
-        expect(JIRA::Resource::Issue).to(receive(:find).once.and_raise(JIRA::HTTPError.new(response)))
+        expect_any_instance_of(JIRA::Client).to(receive(:get).once.and_raise(JIRA::HTTPError.new(response)))
 
-        issue_details = described_class.new(jira_account.username, jira_account.api_token, jira_account.base_uri).request_issue_details('FC-1')
+        issue_details = described_class.new(jira_account.username, jira_account.api_token, jira_account.base_uri).request_issue_changelog('EBANX-2')
 
         expect(issue_details.attrs[:summary]).to be_nil
         expect(issue_details.id).to be_nil

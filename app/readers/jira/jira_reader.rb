@@ -78,24 +78,6 @@ module Jira
       end
     end
 
-    def read_portfolio_unit(jira_issue_changelog, jira_issue_attrs, product)
-      jira_history_fields_hash = build_history_fields_hash(jira_issue_changelog)
-      jira_custom_fields_hash = jira_history_fields_hash.merge(build_jira_custom_fields_hash(jira_issue_attrs))
-
-      portfolio_units = product.portfolio_units
-
-      portfolio_unit = nil
-      portfolio_units.each do |unit|
-        portfolio_unit_value = jira_custom_fields_hash[unit.jira_portfolio_unit_config.jira_field_name]
-        next if portfolio_unit_value.blank?
-
-        portfolio_unit = portfolio_units.find_by(name: portfolio_unit_value)
-        break
-      end
-
-      portfolio_unit
-    end
-
     private
 
     def extract_customer_name(customer_name)
@@ -104,20 +86,6 @@ module Jira
       else
         customer_name['value']
       end
-    end
-
-    def build_history_fields_hash(jira_issue)
-      jira_history_fields_hash = {}
-
-      jira_issue['histories'].sort_by { |history| history['created'] }.each do |history|
-        next if history['items'].blank?
-
-        history['items'].each do |item|
-          jira_history_fields_hash[item['field']] = item['toString']
-        end
-      end
-
-      jira_history_fields_hash
     end
 
     def read_project_name(jira_issue_attrs)

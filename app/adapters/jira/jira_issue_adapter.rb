@@ -5,18 +5,25 @@ module Jira
     include Singleton
     include Rails.application.routes.url_helpers
 
-    def process_issue!(jira_account, product_in_jira, project, jira_issue)
+    def process_issue(jira_account, jira_issue, product, project)
       issue_key = jira_issue_attrs(jira_issue)['key']
       return if issue_key.blank?
 
       demand = Demand.where(company_id: project.company.id, external_id: issue_key).first_or_initialize
       project_in_jira = Jira::JiraReader.instance.read_project(jira_issue_attrs(jira_issue), jira_account) || project
 
-      update_demand!(demand, jira_account, jira_issue, project_in_jira, product_in_jira)
+      update_demand!(demand, jira_account, jira_issue, project_in_jira, product)
       process_product_changes(jira_issue_changelog(jira_issue))
-      process_labels(demand, jira_issue_changelog(jira_issue))
+      read_comments(demand, jira_issue.attrs)
+      define_contract(demand, jira_account, jira_issue.attrs)
 
-      define_contract(demand, jira_account, jira_issue_attrs(jira_issue))
+      demand
+    end
+
+    def process_jira_issue_changelog(jira_account, jira_issue_changelog, demand)
+      read_demand_details(demand, jira_account, jira_issue_changelog)
+
+      process_labels(demand, jira_issue_changelog['values'])
 
       demand.update_effort!(false)
     end
@@ -43,32 +50,22 @@ module Jira
                     class_of_service: class_of_service,
                     demand_title: issue_fields_value(jira_issue, 'summary'),
                     external_url: build_jira_url(jira_account, demand.external_id), commitment_date: nil, discarded_at: nil)
-
-      read_demand_details(demand, project.team, jira_account, jira_issue)
     end
 
-    def read_demand_details(demand, team, jira_account, jira_issue)
-      read_responsibles_info(demand, team, jira_account, jira_issue)
-      return unless demand.valid?
+    def read_demand_details(demand, jira_account, jira_issue_changelog)
+      read_responsibles_info(demand, jira_account, jira_issue_changelog)
 
-      read_comments(demand, jira_issue_attrs(jira_issue))
+      read_blocks(demand, jira_issue_changelog)
+      read_transitions(demand, jira_issue_changelog)
 
-      return unless jira_issue.respond_to?(:changelog)
-
-      read_blocks(demand, jira_issue_changelog(jira_issue))
-      read_transitions!(demand, jira_issue_changelog(jira_issue))
-      demand.update(portfolio_unit: Jira::JiraReader.instance.read_portfolio_unit(jira_issue_changelog(jira_issue), jira_issue_attrs(jira_issue), demand.product)) if demand.product.present?
+      read_portfolio_unit(demand, jira_issue_changelog)
     end
 
     def read_blocks(demand, jira_issue_changelog)
-      return unless hash_has_histories?(jira_issue_changelog)
+      transitions_history = sort_histories_fields(jira_issue_changelog, 'flagged')
 
-      history_array = jira_issue_changelog['histories'].select { |history_field| impediment_field?(history_field) }
-
-      history_array.sort_by { |history_hash| Time.zone.parse(history_hash['created']) }.each do |history|
-        next if history['items'].blank?
-
-        process_demand_block(demand, history, history['items'][0])
+      transitions_history.each do |history|
+        process_demand_block(demand, history, history)
       end
     end
 
@@ -88,59 +85,46 @@ module Jira
     end
 
     def process_labels(demand, jira_issue_changelog)
-      return unless hash_has_histories?(jira_issue_changelog)
-
-      sorted_histories = jira_issue_changelog['histories'].sort_by { |history_hash| Time.zone.parse(history_hash['created']) }
-      history_array = jira_field_hash(sorted_histories, 'labels')
-
-      history = history_array.last
-
-      new_labels_to_demand = []
-
-      new_labels_to_demand = history['toString']&.split(' ') if history.present?
-
-      demand.update(demand_tags: new_labels_to_demand)
+      labels_field = jira_issue_changelog.map { |inside_hash| inside_hash['items'].select { |h| h['field'] == 'labels' } }.reject(&:blank?).flatten
+      new_labels_to_demand = labels_field.map { |label_field| label_field['toString']&.split(' ') }
+      demand.update(demand_tags: new_labels_to_demand.flatten)
     end
 
-    def read_transitions!(demand, issue_changelog)
+    def read_transitions(demand, issue_changelog)
       backlog_transition_date = demand.created_date
 
       first_stage_in_the_flow = demand.first_stage_in_the_flow
       return if first_stage_in_the_flow.blank?
+
+      first_transitions = demand.demand_transitions.where(last_time_in: backlog_transition_date)
+
+      first_transitions.where.not(stage: backlog_transition_date).map(&:destroy) if first_transitions.count > 1
 
       create_from_transition(demand, first_stage_in_the_flow.integration_id, backlog_transition_date)
 
       read_transition_history(demand, issue_changelog)
     end
 
-    def sorted_histories(issue_changelog)
-      issue_changelog['histories'].sort_by { |history_hash| history_hash['created'] }
-    end
-
     def read_transition_history(demand, issue_changelog)
       from_transition_date = demand.created_date
 
-      sorted_histories(issue_changelog).each do |history|
-        next if history['items'].blank?
-
-        history['items'].each do |item|
-          next unless item['field'].casecmp('status').zero?
-
-          to_transition_date = history['created'].to_datetime
-          from_transition = create_from_transition(demand, item['from'], from_transition_date)
-          create_to_transition(demand, from_transition, item['to'], to_transition_date, read_author(history))
-          from_transition_date = to_transition_date
-        end
+      transitions_history = sort_histories_fields(issue_changelog, 'status')
+      transitions_history.each do |history|
+        to_transition_date = history['created'].to_datetime
+        from_transition_date = previous_transition(demand, to_transition_date)&.last_time_in || from_transition_date
+        from_transition = create_from_transition(demand, history['from'], from_transition_date)
+        create_to_transition(demand, from_transition, history['to'], to_transition_date, build_author(demand.team, history, :developer))
+        from_transition_date = to_transition_date
       end
     end
 
-    def read_author(history)
-      TeamMember.where('lower(name) = :author', author: history['author']['displayName']&.downcase).first
+    def previous_transition(demand, to_transition_date)
+      demand.demand_transitions.where('last_time_in < :transition_date', transition_date: to_transition_date).order(:last_time_in).last
     end
 
-    def create_from_transition(demand, from_stage_id, from_transition_date)
+    def create_from_transition(demand, from_stage_id, transition_date)
       stage_from = demand.project.stages.find_by(integration_id: from_stage_id)
-      DemandTransition.where(demand: demand, stage: stage_from, last_time_in: from_transition_date).first_or_create
+      DemandTransition.where(demand: demand, stage: stage_from, last_time_in: transition_date).first_or_create
     rescue ActiveRecord::RecordNotUnique
       Jira::JiraApiError.create(demand: demand)
       nil
@@ -165,14 +149,13 @@ module Jira
       nil
     end
 
-    def read_comments(demand, jira_issue_attrs)
-      return if jira_issue_attrs['fields']['comment'].blank?
+    def read_comments(demand, jira_issue)
+      return if jira_issue['fields']['comment'].blank?
 
-      demand.demand_comments.map(&:destroy)
-      comments = jira_issue_attrs['fields']['comment']['comments']
+      comments = jira_issue['fields']['comment']['comments']
       comments.each do |comment|
-        comment_author = build_author(demand.team, comment, :client)
-        DemandComment.create(demand: demand, team_member: comment_author, comment_text: comment['body'], comment_date: comment['created'])
+        comment_author = build_author(demand.team, comment, :developer)
+        DemandComment.where(demand: demand, team_member: comment_author, comment_text: comment['body'], comment_date: comment['created']).first_or_create
       end
     end
 
@@ -191,49 +174,45 @@ module Jira
       :feature
     end
 
-    def read_responsibles_info(demand, team, jira_account, jira_issue)
+    def read_responsibles_info(demand, jira_account, jira_issue_changelog)
       responsibles_custom_field_name = jira_account.responsibles_custom_field&.custom_field_machine_name
-      return unless responsibles_custom_field_name.present? && jira_issue.respond_to?(:changelog)
+      return if responsibles_custom_field_name.blank?
 
-      ordered_history_data(jira_issue).each do |history_hash|
-        next if history_hash['items'].blank?
+      sort_histories_fields(jira_issue_changelog, responsibles_custom_field_name).each do |history_hash|
+        next if history_hash.blank?
 
-        responsible_hash_processment(demand, history_hash, responsibles_custom_field_name, team)
+        responsible_hash_processment(demand, history_hash)
       end
     end
 
-    def responsible_hash_processment(demand, history_hash, responsibles_custom_field_name, team)
-      history_hash['items'].each do |history_item|
-        next unless history_item['fieldId'] == responsibles_custom_field_name
-
-        responsible_item_processment(demand, team, history_hash, history_item)
-      end
+    def responsible_hash_processment(demand, history_hash)
+      responsible_item_processment(demand, history_hash)
     end
 
-    def responsible_item_processment(demand, team, history_hash, history_item)
-      to_array = responsible_string_processment(history_item['toString'])
-      from_array = responsible_string_processment(history_item['fromString'])
+    def responsible_item_processment(demand, history_hash)
+      to_array = responsible_string_processment(history_hash['toString'])
+      from_array = responsible_string_processment(history_hash['fromString'])
       unassigment_history = from_array.try(:-, to_array)
 
-      to_array.each { |to_responsible| read_assigned_responsibles(demand, team, history_hash['created'].to_datetime, to_responsible.strip) } if to_array.present?
-      unassigment_history.each { |from_responsible| read_unassigned_responsibles(demand, team, history_hash['created'].to_datetime, from_responsible.strip) } if unassigment_history.present?
+      to_array.each { |to_responsible| read_assigned_responsibles(demand, history_hash['created'].to_datetime, to_responsible.strip) } if to_array.present?
+      unassigment_history.each { |from_responsible| read_unassigned_responsibles(demand, history_hash['created'].to_datetime, from_responsible.strip) } if unassigment_history.present?
     end
 
     def responsible_string_processment(responsible_string)
       responsible_string&.delete(']')&.delete('[')&.split(',')&.map(&:strip)
     end
 
-    def read_unassigned_responsibles(demand, team, history_date, from_name)
-      exiting_team_member = TeamMember.where(company: team.company).where('lower(name) = :member_name', member_name: from_name.downcase).first
-      exiting_membership = Membership.where(team_member: exiting_team_member, team: team).active_for_date(history_date).first
+    def read_unassigned_responsibles(demand, history_date, from_name)
+      exiting_team_member = TeamMember.where(company: demand.team.company).where('lower(name) = :member_name', member_name: from_name.downcase).first
+      exiting_membership = Membership.where(team_member: exiting_team_member, team: demand.team).active_for_date(history_date).first
 
       item_assignment_exiting = demand.item_assignments.where(membership: exiting_membership).where('start_time <= :start_time', start_time: history_date).order(:start_time).last
 
       item_assignment_exiting.update(finish_time: history_date) if item_assignment_exiting.present?
     end
 
-    def read_assigned_responsibles(demand, team, history_date, responsible_name)
-      membership = define_membership(history_date, responsible_name, team)
+    def read_assigned_responsibles(demand, history_date, responsible_name)
+      membership = define_membership(history_date, demand.team, responsible_name)
 
       already_assigned = demand.item_assignments.where(membership: membership, finish_time: nil)
 
@@ -244,7 +223,20 @@ module Jira
       item_assignment.update(finish_time: nil)
     end
 
-    def define_membership(history_date, responsible_name, team)
+    def read_portfolio_unit(demand, jira_issue_changelog)
+      product = demand.product
+      portfolio_unit = product.portfolio_units.first
+
+      return if portfolio_unit.blank?
+
+      unit_history = sort_histories_fields(jira_issue_changelog, portfolio_unit.jira_portfolio_unit_config.jira_field_name).last
+      return if unit_history.try(:[], 'toString').blank?
+
+      portfolio_unit = product.portfolio_units.find_by('LOWER(name) = :name', name: unit_history['toString'].downcase)
+      demand.update(portfolio_unit: portfolio_unit)
+    end
+
+    def define_membership(history_date, team, responsible_name)
       team_member = TeamMember.where(company: team.company).where('lower(name) = :member_name', member_name: responsible_name.downcase).first
       membership = Membership.where(team_member: team_member, team: team).active_for_date(history_date).first
 
@@ -252,17 +244,6 @@ module Jira
       membership = Membership.create(team: team, team_member: team_member, start_date: history_date) if membership.blank?
 
       membership
-    end
-
-    def ordered_history_data(jira_issue)
-      jira_issue.changelog['histories'].sort_by { |history| history['created'] }
-    end
-
-    def impediment_field?(history)
-      return false if history['items'].blank?
-
-      history_item = history['items'][0]
-      history_item['field'].present? && (history_item['field'].casecmp('impediment').zero? || history_item['field'].casecmp('flagged').zero?)
     end
 
     def jira_field_hash(histories, field_name)
@@ -304,23 +285,21 @@ module Jira
 
     def build_author(team, history, member_role)
       author_display_name = history['author']['displayName']
-      author_account_id = history['author']['accountId']
 
-      return if author_account_id.blank? || author_display_name.blank?
+      return if author_display_name.blank?
 
-      team_member = define_team_member(author_account_id, author_display_name, team)
+      team_member = define_team_member(author_display_name, team)
       membership = Membership.where(team: team, team_member: team_member).first_or_initialize
       membership.update(member_role: member_role, start_date: Time.zone.today) unless membership.persisted?
 
-      team_member.update(name: author_display_name, jira_account_id: author_account_id)
+      team_member.update(name: author_display_name)
       membership.save
 
       team_member
     end
 
-    def define_team_member(author_account_id, author_display_name, team)
-      team_member = TeamMember.where(company: team.company).where(jira_account_id: author_account_id).first
-      team_member = TeamMember.where(company: team.company).where('lower(name) LIKE :author_name', author_name: "%#{author_display_name.downcase}%").first_or_initialize if team_member.blank?
+    def define_team_member(author_display_name, team)
+      team_member = TeamMember.where(company: team.company).where('lower(name) LIKE :author_name', author_name: "%#{author_display_name.downcase}%").first_or_initialize
       team_member.update(start_date: Time.zone.today, name: author_display_name) unless team_member.persisted?
       team_member
     end
@@ -336,14 +315,28 @@ module Jira
       project.customers.first if project.customers.count == 1
     end
 
-    def define_contract(demand, jira_account, jira_issue_attrs)
-      contract_to_card = Jira::JiraReader.instance.read_contract(jira_account, jira_issue_attrs)
+    def define_contract(demand, jira_account, jira_issue_changelog)
+      contract_to_card = Jira::JiraReader.instance.read_contract(jira_account, jira_issue_changelog)
 
       if contract_to_card.present?
         demand.update(contract: contract_to_card)
       else
         active_contracts = demand.product.contracts.active(demand.date_to_use)
         demand.update(contract: active_contracts.first)
+      end
+    end
+
+    def sort_histories_fields(issue_changelog, field_name)
+      filtered_hash = issue_changelog['values'].map do |history|
+        filter_hash_for_field(field_name, history).flatten[0]&.merge('created' => history['created'], 'author' => { 'displayName' => history['author']['displayName'] })
+      end
+
+      filtered_hash.reject(&:blank?).sort_by { |transition| transition['created'] }
+    end
+
+    def filter_hash_for_field(field_name, history)
+      history['items'].select do |item|
+        item['fieldId']&.casecmp(field_name.downcase)&.zero? || item['field']&.casecmp(field_name.downcase)&.zero?
       end
     end
   end

@@ -124,9 +124,6 @@ pt-BR:
       user_plan:
         one: Plano do Usuário
         other: Planos do Usuário
-      demand_data_processment:
-        one: Processamento de Demandas
-        other: Processamentos de Demandas
       flow_impact:
         one: Impacto no Fluxo
         other: Impactos no Fluxo
@@ -444,17 +441,12 @@ pt-BR:
       user_plan:
         user: Usuário
         plan: Plano
-        demand_data_processments: Processamentos de Demandas
         plan_billing_period: Período de Cobrança do Plano
         start_at: Inicia Em
         finish_at: Finaliza Em
         paid: Pago?
         plan_value: Valor do Plano
         active: Ativo?
-      demand_data_processment:
-        created_at: Criado em
-        project_key: Chave do Projeto
-        user: Usuário
       flow_impact:
         user: Criada por
         project: Projeto

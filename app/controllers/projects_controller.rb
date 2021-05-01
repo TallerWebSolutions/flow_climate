@@ -188,11 +188,7 @@ class ProjectsController < AuthenticatedController
   private
 
   def assign_projects
-    @projects = if params[:projects_ids].present?
-                  @company.projects.where(id: params[:projects_ids].split(',')).order(end_date: :desc).page(page_param)
-                else
-                  @company.projects.distinct.includes(:team).order(end_date: :desc).order(end_date: :desc).page(page_param)
-                end
+    @projects = @company.projects.distinct.includes(:team).order(end_date: :desc).order(end_date: :desc).page(page_param)
   end
 
   def assign_special_demands

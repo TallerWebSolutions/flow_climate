@@ -53,13 +53,6 @@ Rails.application.routes.draw do
     get :show
   end
 
-  controller :exports do
-    get :request_project_information
-    post :process_requested_information
-
-    post :send_csv_data_by_email
-  end
-
   controller :plans do
     get :no_plan
     post :plan_choose
