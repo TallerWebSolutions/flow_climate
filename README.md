@@ -20,8 +20,8 @@ Have the ultimate management tools in your hands!
 
 - Install rvm or rbenv - the main development team is using *rvm*
 - If you choose rvm then 
-    - Install the correct version (the examples will use the ruby-3.0.0)
-        - `rvm install ruby-3.0.0` 
+    - Install the correct version (the examples will use the ruby-3.0.1)
+        - `rvm install ruby-3.0.1` 
     - Create the gemset to the project under the correct version
         - In the project folder run: 
             - `rvm use 3.0.0@flow_climate --create`
