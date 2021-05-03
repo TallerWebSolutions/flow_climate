@@ -1397,6 +1397,7 @@ en:
   score_matrices:
     show:
       title: "Score Demands"
+      ordering: "Order Score"
   operations_dashboard:
     effort_chart:
       title: "Working Hours in Development"

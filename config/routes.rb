@@ -90,6 +90,7 @@ Rails.application.routes.draw do
     member do
       get :customer_dimension
       get :service_provider_dimension
+      get :ordered_demands_list
     end
   end
 

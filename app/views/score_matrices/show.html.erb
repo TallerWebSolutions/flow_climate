@@ -1,4 +1,10 @@
-<h1 class="bottom-spaced-component"><%= @score_matrix.product.name %></h1>
+<h1 class="bottom-spaced-component">
+  <%= @score_matrix.product.name %>
+</h1>
+
+<p class="pull-right">
+  <%= link_to I18n.t('score_matrices.show.ordering'), ordered_demands_list_score_matrix_path(@score_matrix), class: 'btn btn-primary' %>
+</p>
 
 <% unless @score_matrix.single_dimension? %>
   <div class="center-text bottom-spaced-component">

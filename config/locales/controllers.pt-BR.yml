@@ -1377,6 +1377,7 @@ pt-BR:
   score_matrices:
     show:
       title: "Pontuar Demandas"
+      ordering: "Ordenar Pontuação"
   operations_dashboard:
     effort_chart:
       title: "Horas Úteis em Desenvolvimento"
