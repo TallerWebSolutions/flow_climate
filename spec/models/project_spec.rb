@@ -138,13 +138,34 @@ RSpec.describe Project, type: :model do
   end
 
   describe '#to_hash' do
-    it 'returns as project hash' do
-      project = Fabricate :project
-      expected = { id: project.id, name: project.name, start_date: project.start_date, end_date: project.end_date, remaining_backlog: project.remaining_backlog,
-                   remaining_days: project.remaining_days, remaining_weeks: project.remaining_weeks, remaining_hours: project.remaining_hours, deadline_risk: project.current_risk_to_deadline.to_f,
-                   deadline_risk_team_info: (project.last_project_consolidation&.team_based_operational_risk || 1), current_lead_time: project.last_project_consolidation&.lead_time_p80 }
+    context 'when it has consolidations' do
+      it 'returns as project hash' do
+        project = Fabricate :project
+        Fabricate :project_consolidation, project: project, project_throughput_hours_in_month: 10, project_throughput_hours: 30, consolidation_date: Time.zone.today
+        Fabricate :project_consolidation, project: project, project_throughput_hours_in_month: 20, project_throughput_hours: 40, consolidation_date: 1.day.ago
 
-      expect(project.to_hash).to eq expected
+        expected = { id: project.id, name: project.name, start_date: project.start_date, end_date: project.end_date, remaining_backlog: project.remaining_backlog,
+                     remaining_days: project.remaining_days, remaining_weeks: project.remaining_weeks, remaining_hours: project.remaining_hours,
+                     produced_hours_in_current_month: 10, produced_hours_total: 30,
+                     deadline_risk: project.current_risk_to_deadline.to_f,
+                     deadline_risk_team_info: (project.last_project_consolidation&.team_based_operational_risk || 1), current_lead_time: project.last_project_consolidation&.lead_time_p80 }
+
+        expect(project.to_hash).to eq expected
+      end
+    end
+
+    context 'when it has no consolidations' do
+      it 'returns as project hash' do
+        project = Fabricate :project
+
+        expected = { id: project.id, name: project.name, start_date: project.start_date, end_date: project.end_date, remaining_backlog: project.remaining_backlog,
+                     remaining_days: project.remaining_days, remaining_weeks: project.remaining_weeks, remaining_hours: project.remaining_hours,
+                     produced_hours_in_current_month: 0,
+                     produced_hours_total: 0, deadline_risk: project.current_risk_to_deadline.to_f,
+                     deadline_risk_team_info: (project.last_project_consolidation&.team_based_operational_risk || 1), current_lead_time: project.last_project_consolidation&.lead_time_p80 }
+
+        expect(project.to_hash).to eq expected
+      end
     end
   end
 
