@@ -77,7 +77,10 @@ class Project < ApplicationRecord
 
   def to_hash
     { id: id, name: name, start_date: start_date, end_date: end_date, remaining_backlog: remaining_backlog,
-      remaining_days: remaining_days, remaining_weeks: remaining_weeks, remaining_hours: remaining_hours, deadline_risk: current_risk_to_deadline.to_f,
+      remaining_days: remaining_days, remaining_weeks: remaining_weeks, remaining_hours: remaining_hours,
+      produced_hours_in_current_month: project_consolidations.order(:consolidation_date).last&.project_throughput_hours_in_month&.to_f || 0,
+      produced_hours_total: consumed_hours,
+      deadline_risk: current_risk_to_deadline.to_f,
       deadline_risk_team_info: (last_project_consolidation&.team_based_operational_risk || 1), current_lead_time: last_project_consolidation&.lead_time_p80 }
   end
 
