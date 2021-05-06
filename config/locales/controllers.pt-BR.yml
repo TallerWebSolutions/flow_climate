@@ -618,7 +618,6 @@ pt-BR:
       lead_time_p80: "Lead time p80"
       search_info: "Resultados da Busca"
       dashboard_tab: "Dashboard"
-      demands_tab: "Demandas"
       lead_time_p95: "Lead time p95"
       lead_time_p65: "Lead time p65"
       average_queue_time: "Tempo Médio de Fila"
@@ -857,7 +856,7 @@ pt-BR:
       flow_status:
         title: "Estado no Fluxo"
         all_demands: "Todas as Demandas"
-        not_started: "Não Iniciadas"
+        not_committed: "Não Comprometidas"
         work_in_progress: "Trabalho em Progresso"
         delivered_demands: "Entregues"
       demand_type:

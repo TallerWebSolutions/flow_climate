@@ -1,13 +1,3 @@
-function getDemands(companyId, demandsIds) {
-    $("#general-loader").show();
-
-    jQuery.ajax({
-        url: `/companies/${companyId}/demands/demands_tab.js`,
-        type: "GET",
-        data: `demands_ids=${demandsIds}`
-    });
-}
-
 function searchDemands(companyId, demandsIds, flowStatus, demandType, demandClassOfService, searchText, startDate, endDate, searchDemandTags) {
     $("#general-loader").show();
 

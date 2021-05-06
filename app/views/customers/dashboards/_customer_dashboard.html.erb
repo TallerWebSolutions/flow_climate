@@ -4,6 +4,8 @@
     <%= render 'common/dashboards/general_info',
                company: company,
                dashboard_name: customer.name,
+               object_type: object_type,
+               object_id: object_id,
                initial_scope: customer.initial_scope,
                demands: customer.exclusives_demands.kept,
                demands_delivered: customer.exclusives_demands.kept.finished,

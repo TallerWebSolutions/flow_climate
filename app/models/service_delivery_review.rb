@@ -100,7 +100,7 @@ class ServiceDeliveryReview < ApplicationRecord
   end
 
   def fit_for_purpose_demands
-    fit_for_purpose_demands = demands.kept - overserved_demands[:value] - underserved_demands[:value]
+    fit_for_purpose_demands = Demand.where(id: (demands.kept - overserved_demands[:value] - underserved_demands[:value]).map(&:id))
     { value: fit_for_purpose_demands, share: fit_for_purpose_demands.count.to_f / demands.kept.count }
   end
 

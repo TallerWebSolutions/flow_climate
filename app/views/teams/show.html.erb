@@ -70,6 +70,8 @@
   <%= render 'teams/dashboards/dashboard_body',
              company: @company,
              team: @team,
+             object_type: 'Team',
+             object_id: @team.id,
              slack_configurations: @slack_configurations,
              dates_array: @array_of_dates,
              work_item_flow_information: @work_item_flow_information,

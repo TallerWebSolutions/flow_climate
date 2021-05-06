@@ -24,11 +24,7 @@ navItem.on('click', function(event){
         if ($(this).attr('id') === 'nav-portfolio-unit') {
             getProductPortfolioUnitsTab(companyId, productId)
 
-        } else if ($(this).attr('id') === 'nav-portfolio-demands') {
-            $('.col-table-details').hide();
-            getDemands(companyId, demandsIds)
-
-        } else if ($(this).attr('id') === 'nav-portfolio-charts') {
+        }  else if ($(this).attr('id') === 'nav-portfolio-charts') {
             $('.col-table-details').hide();
             getPortfolioChartsTab(companyId, productId)
 

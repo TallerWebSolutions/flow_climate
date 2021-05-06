@@ -1,4 +1,9 @@
-<%= form_tag search_demands_company_demands_path(company.id, session_demands_key: 'demands_ids'), class: 'form', method: :get do %>
+<%= form_tag search_demands_company_demands_path(company_id: company.id, object_type: object_type, object_id: object_id, demand_state: demand_state, demand_fitness: demand_fitness), class: 'form', method: :get do %>
+  <%#= hidden_field_tag :object_type, object_type %>
+  <%#= hidden_field_tag :object_id, object_id %>
+  <%#= hidden_field_tag :demand_state, demand_state %>
+  <%#= hidden_field_tag :demand_fitness, demand_fitness %>
+
   <div class="row bottom-spaced-component">
     <div class="col-xs-4">
       <div class="form-group">

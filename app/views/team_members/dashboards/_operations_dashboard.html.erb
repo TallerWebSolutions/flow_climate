@@ -1,6 +1,6 @@
 <div class="row equal-heights">
   <div class="col-xs-4">
-    <%= render 'users/operations_personal_info', company: company, name: name, demands: demands, team_member: team_member, first_delivery: demands.kept.finished.order(:end_date).first %>
+    <%= render 'users/operations_personal_info', company: company, object_type: object_type, object_id: object_id, name: name, demands: demands, team_member: team_member, first_delivery: demands.kept.finished.order(:end_date).first %>
   </div>
 
   <% if demands.present? %>

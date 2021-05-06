@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe Highchart::PortfolioChartsAdapter, type: :service do
-  before { travel_to Time.zone.local(2018, 2, 20, 10, 0, 0) }
-
-  after { travel_back }
-
   describe '#block_count_by_project' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
@@ -98,17 +94,22 @@ RSpec.describe Highchart::PortfolioChartsAdapter, type: :service do
       end
 
       context 'and having throughputs' do
-        let!(:first_demand) { Fabricate :demand, project: first_project, end_date: 1.day.ago }
-        let!(:second_demand) { Fabricate :demand, project: first_project, end_date: Time.zone.today }
-        let!(:third_demand) { Fabricate :demand, project: second_project, end_date: 2.days.ago }
-        let!(:fourth_demand) { Fabricate :demand, project: first_project, end_date: 1.day.ago }
-        let!(:fifth_demand) { Fabricate :demand, project: first_project, end_date: 1.day.ago }
-
         it 'builds the data structure for scope_data_evolution' do
-          portfolio_data = described_class.new([first_project, second_project], [first_project.start_date, second_project.start_date].min, [first_project.end_date, second_project.end_date].max, '')
+          travel_to Time.zone.local(2018, 2, 20, 10, 0, 0) do
+            first_project = Fabricate :project, customers: [customer], status: :maintenance, start_date: 3.days.ago, end_date: 1.day.ago
+            second_project = Fabricate :project, customers: [customer], status: :executing, start_date: 3.days.ago, end_date: Time.zone.today
 
-          expect(portfolio_data.throughput_by_project[:series]).to match_array([{ data: [4, 1], marker: { enabled: true }, name: I18n.t('portfolio.charts.throughput_by_project.data_title') }])
-          expect(portfolio_data.throughput_by_project[:x_axis]).to eq [first_project.name, second_project.name]
+            Fabricate :demand, project: first_project, end_date: 1.day.ago
+            Fabricate :demand, project: first_project, end_date: Time.zone.today
+            Fabricate :demand, project: second_project, end_date: 2.days.ago
+            Fabricate :demand, project: first_project, end_date: 1.day.ago
+            Fabricate :demand, project: first_project, end_date: 1.day.ago
+
+            portfolio_data = described_class.new([first_project, second_project], [first_project.start_date, second_project.start_date].min, [first_project.end_date, second_project.end_date].max, '')
+
+            expect(portfolio_data.throughput_by_project[:series]).to match_array([{ data: [4, 1], marker: { enabled: true }, name: I18n.t('portfolio.charts.throughput_by_project.data_title') }])
+            expect(portfolio_data.throughput_by_project[:x_axis]).to eq [first_project.name, second_project.name]
+          end
         end
       end
     end

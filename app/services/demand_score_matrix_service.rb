@@ -30,8 +30,8 @@ class DemandScoreMatrixService
   end
 
   def demands_list(demand)
-    if demand.not_started?
-      demand.product.demands.kept.not_started.order(demand_score: :desc)
+    if demand.not_committed?
+      demand.product.demands.kept.not_committed.order(demand_score: :desc)
     else
       demand.product.demands.kept.order(demand_score: :desc)
     end

@@ -72,7 +72,9 @@ RSpec.describe Demand, type: :model do
   end
 
   context 'scopes' do
-    let(:project) { Fabricate :project }
+    let(:company) { Fabricate :company }
+    let(:team) { Fabricate :team, company: company }
+    let(:project) { Fabricate :project, company: company, team: team }
 
     describe '.finished' do
       let!(:first_demand) { Fabricate :demand, project: project, end_date: Time.zone.now }
@@ -220,12 +222,24 @@ RSpec.describe Demand, type: :model do
       it { expect(described_class.grouped_end_date_by_month[[1.month.ago.to_date.cwyear, 1.month.ago.to_date.month]].map(&:id)).to eq [third_demand.id] }
     end
 
-    describe '.not_started' do
+    describe '.not_committed' do
       let!(:first_demand) { Fabricate :demand, project: project, commitment_date: nil, end_date: Time.zone.now }
       let!(:second_demand) { Fabricate :demand, project: project, commitment_date: Time.zone.now, end_date: nil }
       let!(:third_demand) { Fabricate :demand, project: project, commitment_date: nil, end_date: nil }
 
-      it { expect(described_class.not_started.map(&:id)).to match_array [third_demand.id] }
+      it { expect(described_class.not_committed.map(&:id)).to match_array [third_demand.id] }
+    end
+
+    describe '.not_started' do
+      let(:first_stage) { Fabricate :stage, teams: [team], projects: [project], order: 0 }
+      let(:second_stage) { Fabricate :stage, teams: [team], projects: [project], order: 1 }
+
+      let!(:first_demand) { Fabricate :demand, team: team, project: project, current_stage: first_stage, demand_title: 'first_demand' }
+      let!(:second_demand) { Fabricate :demand, team: team, project: project, current_stage: first_stage, demand_title: 'second_demand' }
+      let!(:third_demand) { Fabricate :demand, team: team, project: project, current_stage: second_stage, demand_title: 'third_demand' }
+      let!(:fourth_demand) { Fabricate :demand, team: team, project: project, current_stage: nil, demand_title: 'fourth_demand' }
+
+      it { expect(described_class.not_started.map(&:demand_title)).to match_array [first_demand.demand_title, second_demand.demand_title] }
     end
 
     describe '.opened_before_date' do
@@ -923,7 +937,7 @@ RSpec.describe Demand, type: :model do
     end
   end
 
-  describe '#not_started?' do
+  describe '#not_committed?' do
     let(:company) { Fabricate :company }
     let(:team) { Fabricate :team, company: company }
 
@@ -931,9 +945,9 @@ RSpec.describe Demand, type: :model do
     let!(:second_demand) { Fabricate :demand, commitment_date: Time.zone.now, end_date: nil }
     let!(:third_demand) { Fabricate :demand, commitment_date: nil, end_date: Time.zone.now }
 
-    it { expect(first_demand.not_started?).to be true }
-    it { expect(second_demand.not_started?).to be false }
-    it { expect(third_demand.not_started?).to be false }
+    it { expect(first_demand.not_committed?).to be true }
+    it { expect(second_demand.not_committed?).to be false }
+    it { expect(third_demand.not_committed?).to be false }
   end
 
   describe '#stages_at' do
