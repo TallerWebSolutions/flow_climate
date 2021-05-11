@@ -247,7 +247,20 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
   end
 
   describe '#notify_item_blocked' do
-    context 'with blocked' do
+    context 'when there is no config' do
+      it 'calls slack notification method, creates the notification but do not send any' do
+        demand = Fabricate :demand, team: team
+        demand_block = Fabricate :demand_block, demand: demand
+        Notifications::DemandBlockNotification.destroy_all
+
+        expect_any_instance_of(Slack::Notifier).not_to receive(:post)
+
+        described_class.instance.notify_item_blocked(demand_block, 'http://foo.com', 'http://bar.com')
+        expect(Notifications::DemandBlockNotification.all.count).to eq 1
+      end
+    end
+
+    context 'when blocked' do
       it 'calls slack notification method' do
         demand = Fabricate :demand, team: team
         demand_block = Fabricate :demand_block, demand: demand
@@ -262,7 +275,7 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
       end
     end
 
-    context 'with unblocked' do
+    context 'when unblocked' do
       it 'calls slack notification method' do
         demand = Fabricate :demand, team: team
         unblocker = Fabricate :team_member

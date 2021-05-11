@@ -25,4 +25,12 @@ namespace :notifications do
       slack_configs.each { |slack_config| Slack::SlackNotificationsJob.perform_now(slack_config, team) }
     end
   end
+
+  task slack_notifications_blocks: :environment do
+    Team.all.each do |team|
+      next if team.slack_configurations.blank?
+
+      Slack::BlockSlackNotificationsJob.perform_later(team)
+    end
+  end
 end
