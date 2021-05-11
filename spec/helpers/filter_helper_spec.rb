@@ -6,7 +6,7 @@ RSpec.describe FilterHelper, type: :helper do
   end
 
   describe '#flow_status_options' do
-    it { expect(helper.flow_status_options).to eq options_for_select([[I18n.t('demands.filter.flow_status.all_demands'), :all_demands], [I18n.t('demands.filter.flow_status.not_started'), :not_started], [I18n.t('demands.filter.flow_status.work_in_progress'), :wip], [I18n.t('demands.filter.flow_status.delivered_demands'), :delivered]], :all_demands) }
+    it { expect(helper.flow_status_options).to eq options_for_select([[I18n.t('demands.filter.flow_status.all_demands'), :all_demands], [I18n.t('demands.filter.flow_status.not_committed'), :not_committed], [I18n.t('demands.filter.flow_status.work_in_progress'), :wip], [I18n.t('demands.filter.flow_status.delivered_demands'), :delivered]], :all_demands) }
   end
 
   describe '#demand_type_options' do

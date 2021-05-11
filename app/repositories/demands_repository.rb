@@ -85,7 +85,7 @@ class DemandsRepository
     return demands if flow_status.blank? || flow_status.include?('all_demands')
 
     filtered_demands = []
-    filtered_demands << demands.not_started.map(&:id) if flow_status.include?('not_started')
+    filtered_demands << demands.not_committed.map(&:id) if flow_status.include?('not_committed')
     filtered_demands << demands.in_wip.map(&:id) if flow_status.include?('wip')
     filtered_demands << demands.finished.map(&:id) if flow_status.include?('delivered')
 

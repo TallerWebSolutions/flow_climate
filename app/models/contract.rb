@@ -92,9 +92,9 @@ class Contract < ApplicationRecord
 
   def flow_pressure(date = Time.zone.today.end_of_day)
     days_between = TimeService.instance.days_between_of(date, end_date)
-    return 0 if demands.not_started.blank? || days_between.count.zero?
+    return 0 if demands.not_committed.blank? || days_between.count.zero?
 
-    demands.not_started.count.to_f / days_between.count
+    demands.not_committed.count.to_f / days_between.count
   end
 
   def avg_hours_per_month

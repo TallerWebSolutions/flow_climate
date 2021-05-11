@@ -8,12 +8,11 @@
   </div>
 </div>
 
-<% session[:demands_ids] = @demands_ids %>
-<% session[:searched_ids] = @demands.map(&:id) %>
-
-<%= render 'demands/demands_search_filters', company: @company %>
+<%= render 'demands/demands_search_filters', company: @company, object_type: @object_type, object_id: @object_id, demand_state: @demand_state, demand_type: @demand_type, demand_fitness: @demand_fitness %>
 
 <%= render 'layouts/load_spinner' %>
+
+<% params[:demands_ids_params] = @demands.map(&:id).join(',') %>
 
 <div id="demand-tab-content">
   <hr>

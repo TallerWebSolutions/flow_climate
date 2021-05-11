@@ -26,6 +26,8 @@
 <%= render 'customers/dashboards/customer_dashboard',
            company: @company,
            customer: @customer,
+           object_type: 'Customer',
+           object_id: @customer.id,
            user_invite: @user_invite,
            customer_consolidations: @customer_consolidations,
            contracts: @contracts,

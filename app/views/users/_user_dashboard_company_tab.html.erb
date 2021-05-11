@@ -1,6 +1,8 @@
 <% if company&.role_for_user(user)&.operations? %>
   <%= render 'team_members/dashboards/operations_dashboard',
              company: company,
+             object_type: object_type,
+             object_id: object_id,
              name: user.full_name,
              demands: user.demands,
              team_member: user.team_member,

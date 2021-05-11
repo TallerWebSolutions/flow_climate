@@ -777,7 +777,7 @@ en:
       flow_status:
         title: "Flow Status"
         all_demands: "All Demands"
-        not_started: "Not Started"
+        not_committed: "Not Committed"
         work_in_progress: "Work in Progress"
         delivered_demands: "Delivered"
       demand_type:
@@ -1114,7 +1114,6 @@ en:
       lead_time_p80: "Lead time p80"
       search_info: "Search Info"
       dashboard_tab: "Dashboard"
-      demands_tab: "Demands"
       lead_time_p95: "Lead time p95"
       lead_time_p65: "Lead time p65"
       average_queue_time: "Average Queue Time"

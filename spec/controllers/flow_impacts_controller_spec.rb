@@ -81,7 +81,7 @@ RSpec.describe FlowImpactsController, type: :controller do
 
     let!(:out_demand) { Fabricate :demand, project: other_project, commitment_date: 1.day.ago, end_date: nil, external_id: 'ccc' }
 
-    let!(:not_started_demand) { Fabricate :demand, project: project, commitment_date: nil, end_date: nil, external_id: 'ddd' }
+    let!(:not_committed_demand) { Fabricate :demand, project: project, commitment_date: nil, end_date: nil, external_id: 'ddd' }
     let!(:finished_demand) { Fabricate :demand, project: project, commitment_date: 1.day.ago, end_date: Time.zone.today, external_id: 'eee' }
 
     let!(:first_demand_transition) { Fabricate :demand_transition, demand: demand }
@@ -290,7 +290,7 @@ RSpec.describe FlowImpactsController, type: :controller do
         it 'assign the instance variable and renders the template' do
           get :edit, params: { company_id: company, project_id: project, id: flow_impact }
           expect(response).to render_template :edit
-          expect(assigns(:demands_for_impact_form)).to eq [other_demand, demand, not_started_demand, finished_demand]
+          expect(assigns(:demands_for_impact_form)).to eq [other_demand, demand, not_committed_demand, finished_demand]
           expect(assigns(:flow_impact)).to eq flow_impact
         end
       end

@@ -108,6 +108,8 @@ class Demand < ApplicationRecord
   scope :finished_with_leadtime, -> { kept.where('demands.end_date IS NOT NULL AND demands.leadtime IS NOT NULL') }
   scope :finished_until_date, ->(limit_date) { finished.where('demands.end_date <= :limit_date', limit_date: limit_date) }
   scope :finished_after_date, ->(limit_date) { finished.where('demands.end_date >= :limit_date', limit_date: limit_date) }
+  scope :not_started, -> { kept.joins(team: :stages).where('current_stage_id = (SELECT stage_id FROM stages, stages_teams WHERE stages_teams.stage_id = stages.id AND stages_teams.team_id = teams.id AND stages.order = 0)').uniq }
+  scope :not_committed, -> { kept.where('demands.commitment_date IS NULL AND demands.end_date IS NULL') }
   scope :not_finished, -> { kept.where(end_date: nil) }
   scope :in_wip, -> { kept.where('demands.commitment_date IS NOT NULL AND demands.end_date IS NULL') }
   scope :in_flow, -> { kept.joins(:demand_transitions).where(end_date: nil).group('demands.id').having('COUNT(demand_transitions.id) > 1') }
@@ -119,7 +121,6 @@ class Demand < ApplicationRecord
   scope :unscored_demands, -> { kept.where('demands.demand_score = 0') }
   scope :with_effort, -> { where('demands.effort_downstream > 0 OR demands.effort_upstream > 0') }
   scope :grouped_end_date_by_month, -> { kept.finished.order(end_date: :desc).group_by { |demand| [demand.end_date.to_date.cwyear, demand.end_date.to_date.month] } }
-  scope :not_started, -> { kept.where('demands.commitment_date IS NULL AND demands.end_date IS NULL') }
   scope :with_valid_leadtime, -> { kept.where('demands.leadtime >= :leadtime_data_limit', leadtime_data_limit: 10.minutes.to_i) }
   scope :not_discarded_until, ->(limit_date) { where('demands.discarded_at IS NULL OR demands.discarded_at > :limit_date', limit_date: limit_date) }
 
@@ -272,7 +273,7 @@ class Demand < ApplicationRecord
     project.stages.where('stages.order >= 0').order(:order).first
   end
 
-  def not_started?
+  def not_committed?
     commitment_date.blank? && end_date.blank?
   end
 
