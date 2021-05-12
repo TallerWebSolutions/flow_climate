@@ -13,8 +13,8 @@ class ProjectsRepository
     projects.where('end_date >= :limit_date', limit_date: limit_date)
   end
 
-  def finish_project!(project)
-    project.demands.not_finished.each { |demand| demand.update(end_date: Time.zone.now) }
-    project.update(status: :finished)
+  def finish_project(project, finish_date = Time.zone.now)
+    project.demands.not_finished.each { |demand| demand.update(end_date: finish_date) }
+    project.update(status: :finished, end_date: finish_date)
   end
 end

@@ -356,8 +356,8 @@ RSpec.describe ProjectsController, type: :controller do
       let(:project) { Fabricate :project, company: company, customers: [customer], products: [product], start_date: 1.day.ago, end_date: 7.weeks.from_now, initial_scope: 100 }
       let!(:team) { Fabricate :team, company: company }
 
-      context 'passing valid parameters' do
-        context 'changing the deadline and the initial scope' do
+      context 'with valid parameters' do
+        context 'when changing the deadline and the initial scope' do
           before { put :update, params: { company_id: company, id: project, project: { product_id: product, team_id: team.id, name: 'foo', status: :executing, project_type: :outsourcing, start_date: 1.day.ago, end_date: 1.day.from_now, value: 100.2, qty_hours: 300, hour_value: 200, initial_scope: 1000, percentage_effort_to_bugs: 10, max_work_in_progress: 3 } } }
 
           it 'updates the project, register the deadline change, compute the results again and redirects to projects index' do
@@ -375,6 +375,15 @@ RSpec.describe ProjectsController, type: :controller do
             expect(ProjectChangeDeadlineHistory.count).to eq 1
             expect(Project.last.team).to eq team
             expect(Project.last.max_work_in_progress).to eq 3
+            expect(response).to redirect_to company_project_path(company, project)
+          end
+        end
+
+        context 'when changing the deadline to a previous date' do
+          it 'updates the project, and finishes it' do
+            expect(ProjectsRepository.instance).to(receive(:finish_project)).once
+
+            put :update, params: { company_id: company, id: project, project: { start_date: 2.days.ago, end_date: 1.day.ago } }
             expect(response).to redirect_to company_project_path(company, project)
           end
         end
@@ -478,7 +487,7 @@ RSpec.describe ProjectsController, type: :controller do
 
       context 'passing valid parameters' do
         it 'finishes the project' do
-          expect(ProjectsRepository.instance).to receive(:finish_project!).with(project).once
+          expect(ProjectsRepository.instance).to receive(:finish_project).with(project, project.end_date).once
           patch :finish_project, params: { company_id: company, id: project }
           expect(response).to redirect_to company_project_path(company, project)
           expect(flash[:notice]).to eq I18n.t('projects.finish_project.success_message')
