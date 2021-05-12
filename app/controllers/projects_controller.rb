@@ -47,6 +47,8 @@ class ProjectsController < AuthenticatedController
     check_change_in_deadline!
     @project.update(project_params)
 
+    ProjectsRepository.instance.finish_project(@project, @project.end_date) if @project.valid? && @project.end_date <= Time.zone.today
+
     return redirect_to company_project_path(@company, @project) if @project.save
 
     assign_customers
@@ -67,7 +69,7 @@ class ProjectsController < AuthenticatedController
   end
 
   def finish_project
-    ProjectsRepository.instance.finish_project!(@project)
+    ProjectsRepository.instance.finish_project(@project, @project.end_date)
     flash[:notice] = I18n.t('projects.finish_project.success_message')
     redirect_to company_project_path(@company, @project)
   end

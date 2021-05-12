@@ -31,19 +31,25 @@ RSpec.describe ProjectsRepository, type: :repository do
     end
   end
 
-  describe '#finish_project!' do
-    let(:project) { Fabricate :project, company: company, status: :executing }
+  describe '#finish_project' do
+    let(:project) { Fabricate :project, company: company, status: :executing, start_date: 4.days.ago, end_date: 1.day.from_now }
     let(:other_project) { Fabricate :project, company: company, status: :executing }
     let(:previous_end_date) { 1.day.ago }
+    let!(:consolidation_on_time) { Fabricate(:project_consolidation, project: project, consolidation_date: 1.day.ago) }
+    let!(:consolidation_out_time) { Fabricate(:project_consolidation, project: project, consolidation_date: 1.day.from_now) }
+    let!(:other_consolidation_out_time) { Fabricate(:project_consolidation, project: project, consolidation_date: 2.days.from_now) }
 
-    context 'having ongoing demands' do
+    context 'with ongoing demands' do
       let!(:first_demand) { Fabricate :demand, project: project, end_date: previous_end_date }
       let!(:second_demand) { Fabricate :demand, project: project, end_date: nil }
       let!(:third_demand) { Fabricate :demand, project: project, end_date: nil }
 
-      before { described_class.instance.finish_project!(project) }
+      before { described_class.instance.finish_project(project) }
 
       it { expect(project.reload.status).to eq 'finished' }
+      it { expect(project.reload.end_date).to eq Time.zone.today }
+      it { expect(project.reload.project_consolidations.count).to eq 1 }
+
       it { expect(first_demand.reload.end_date).to eq previous_end_date }
       it { expect(second_demand.reload.end_date).not_to be_nil }
       it { expect(third_demand.reload.end_date).not_to be_nil }
@@ -52,7 +58,7 @@ RSpec.describe ProjectsRepository, type: :repository do
     context 'having no demands' do
       let!(:first_demand) { Fabricate :demand, project: project, end_date: previous_end_date }
 
-      before { described_class.instance.finish_project!(project) }
+      before { described_class.instance.finish_project(project) }
 
       it { expect(first_demand.reload.end_date).to eq previous_end_date }
       it { expect(project.reload.status).to eq 'finished' }
