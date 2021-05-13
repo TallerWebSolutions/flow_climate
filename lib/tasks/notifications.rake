@@ -28,7 +28,7 @@ namespace :notifications do
 
   task slack_notifications_for_demands: :environment do
     Team.all.each do |team|
-      next if team.slack_configurations.blank?
+      next if team.slack_configurations.blank? || !team.active?
 
       Slack::DemandSlackNotificationsJob.perform_later(team)
     end
