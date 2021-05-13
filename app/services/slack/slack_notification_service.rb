@@ -146,7 +146,7 @@ module Slack
 
       slack_notifier = Slack::Notifier.new(slack_configuration.room_webhook)
 
-      message_title =  { type: 'section', text: { type: 'mrkdwn', text: "#{item_assignment.team_member_name} puxou a _#{item_assignment.demand.external_id}_ em _#{item_assignment.assigned_at&.name || 'sem etapa'}_" } }
+      message_title =  { type: 'section', text: { type: 'mrkdwn', text: "#{item_assignment.team_member_name} puxou a _#{item_assignment.demand.external_id}_ em _#{item_assignment.assigned_at&.name || 'sem etapa'}_ as #{I18n.l(item_assignment.start_time, format: :short)}" } }
       message_divider = { type: 'divider' }
       message_previous_pull = { type: 'section', text: { type: 'mrkdwn', text: "Anterior: #{item_assignment.previous_assignment&.demand&.external_id}" } }
       message_ongoing = { type: 'section', text: { type: 'mrkdwn', text: ":computer: #{item_assignment.membership_open_assignments.map(&:demand).flatten.map { |demand| "#{demand.external_id} (#{demand.current_stage_name})" }.join(', ')}" } }
