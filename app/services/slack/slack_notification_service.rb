@@ -187,7 +187,7 @@ module Slack
     private
 
     def notify_unblocked(block_type, demand_block, demand_url, divider_block, slack_notifier)
-      message_title = { type: 'section', text: { type: 'mrkdwn', text: ":tada: :tada: #{demand_block.unblocker.name} desbloqueou a <#{demand_url}|#{demand_block.demand.external_id}> em _#{demand_block.demand.stage_at(demand_block.block_time)&.name || 'sem etapa'}_ as #{I18n.l(demand_block.unblock_time, format: :short)}" } }
+      message_title = { type: 'section', text: { type: 'mrkdwn', text: ":tada: :tada: #{demand_block.unblocker&.name} desbloqueou a <#{demand_url}|#{demand_block.demand.external_id}> em _#{demand_block.demand.stage_at(demand_block.block_time)&.name || 'sem etapa'}_ as #{I18n.l(demand_block.unblock_time, format: :short)}" } }
       block_detail = { type: 'section', text: { type: 'mrkdwn', text: ":alarm_clock: #{time_distance_in_words(demand_block.reload.total_blocked_time)}" } }
 
       slack_notifier.post(blocks: [message_title, block_type, block_detail, divider_block])
