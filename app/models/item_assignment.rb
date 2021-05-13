@@ -6,6 +6,7 @@
 #
 #  id                     :bigint           not null, primary key
 #  assignment_for_role    :boolean          default(FALSE)
+#  assignment_notified    :boolean          default(FALSE), not null
 #  discarded_at           :datetime
 #  finish_time            :datetime
 #  item_assignment_effort :decimal(, )      default(0.0), not null
@@ -33,8 +34,6 @@ class ItemAssignment < ApplicationRecord
   belongs_to :demand
   belongs_to :membership
 
-  has_many :item_assignment_notifications, dependent: :destroy, class_name: 'Notifications::ItemAssignmentNotification'
-
   validates :demand, :membership, presence: true
 
   validates :demand, uniqueness: { scope: %i[membership start_time], message: I18n.t('item_assignment.validations.demand_unique') }
@@ -47,8 +46,6 @@ class ItemAssignment < ApplicationRecord
 
   before_save :compute_assignment_effort
   before_save :compute_pull_interval
-
-  after_create :notify_assignment
 
   def working_hours_until(beginning_time = nil, end_time = Time.zone.now)
     start_effort_time = [start_time, beginning_time].compact.max
@@ -110,9 +107,5 @@ class ItemAssignment < ApplicationRecord
     return nil if transition_finished_time.blank? && assignment.finish_time.blank?
 
     [assignment.finish_time, transition_finished_time].compact.min
-  end
-
-  def notify_assignment
-    Slack::SlackNotificationService.instance.notify_item_assigned(self)
   end
 end

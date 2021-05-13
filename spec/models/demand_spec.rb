@@ -27,7 +27,6 @@ RSpec.describe Demand, type: :model do
     it { is_expected.to have_many(:item_assignments).dependent(:destroy) }
     it { is_expected.to have_many(:memberships).through(:item_assignments) }
     it { is_expected.to have_many(:demand_score_matrices).dependent(:destroy) }
-    it { is_expected.to have_many(:demand_transition_notifications).dependent(:destroy) }
     it { is_expected.to have_many(:jira_api_errors).class_name('Jira::JiraApiError').dependent(:destroy) }
     it { is_expected.to have_many(:class_of_service_change_histories).class_name('History::ClassOfServiceChangeHistory').dependent(:destroy) }
   end

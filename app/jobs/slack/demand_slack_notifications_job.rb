@@ -1,11 +1,35 @@
 # frozen_string_literal: true
 
 module Slack
-  class BlockSlackNotificationsJob < ApplicationJob
+  class DemandSlackNotificationsJob < ApplicationJob
     include Rails.application.routes.url_helpers
 
     def perform(team)
-      team.demand_blocks.each do |block|
+      team.demands.each do |demand|
+        process_blocks(demand)
+        process_transitions(demand)
+        process_assignments(demand)
+      end
+    end
+
+    private
+
+    def process_transitions(demand)
+      demand.demand_transitions.each do |transition|
+        next if transition.transition_notified?
+        Slack::SlackNotificationService.instance.notify_demand_state_changed(transition.stage, transition, demand)
+      end
+    end
+
+    def process_assignments(demand)
+      demand.item_assignments.each do |assignment|
+        next if assignment.assignment_notified?
+        Slack::SlackNotificationService.instance.notify_item_assigned(assignment)
+      end
+    end
+
+    def process_blocks(demand)
+      demand.demand_blocks.each do |block|
         return if block.demand_block_notifications.unblocked.present?
 
         demand = block.demand

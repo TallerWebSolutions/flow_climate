@@ -14,7 +14,6 @@ RSpec.describe Stage, type: :model do
     it { is_expected.to have_many(:demand_transitions).dependent(:restrict_with_error) }
     it { is_expected.to have_many(:demand_blocks).dependent(:restrict_with_error) }
     it { is_expected.to have_many(:current_demands).class_name('Demand').inverse_of(:current_stage).dependent(:nullify) }
-    it { is_expected.to have_many(:demand_transition_notifications).dependent(:destroy) }
   end
 
   context 'validations' do
