@@ -136,11 +136,11 @@ module Jira
       from_transistion.with_lock { from_transistion.update(last_time_out: to_transition_date) }
 
       stage_to = demand.project.stages.find_by(integration_id: to_stage_id)
-      demand_transition = DemandTransition.where(demand: demand, stage: stage_to, last_time_in: to_transition_date).first_or_initialize
+      demand_transition = DemandTransition.where(demand: demand, stage: stage_to, last_time_in: to_transition_date, team_member: author).first_or_initialize
 
       demand_transition.save
 
-      Slack::SlackNotificationService.instance.notify_demand_state_changed(stage_to, demand, demand_transition, author)
+      Slack::SlackNotificationService.instance.notify_demand_state_changed(stage_to, demand, demand_transition)
     rescue ActiveRecord::RecordNotUnique
       Jira::JiraApiError.create(demand: demand)
       nil
@@ -221,6 +221,8 @@ module Jira
       item_assignment = demand.item_assignments.where(membership: membership, start_time: history_date).first_or_create
 
       item_assignment.update(finish_time: nil)
+
+      Slack::SlackNotificationService.instance.notify_item_assigned(item_assignment)
     end
 
     def read_portfolio_unit(demand, jira_issue_changelog)

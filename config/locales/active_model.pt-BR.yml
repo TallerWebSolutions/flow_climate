@@ -734,7 +734,3 @@ pt-BR:
   user_notifier_mailer:
     user_invite_to_customer:
       registration_link: "Siga o link para registro"
-  demand_transition_notification:
-    validations:
-      stage:
-        uniqueness: "Não é permitida a mesma demanda para a mesma etapa."

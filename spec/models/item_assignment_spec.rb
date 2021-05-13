@@ -4,7 +4,6 @@ RSpec.describe ItemAssignment, type: :model do
   context 'associations' do
     it { is_expected.to belong_to :demand }
     it { is_expected.to belong_to :membership }
-    it { is_expected.to have_many(:item_assignment_notifications).dependent(:destroy) }
   end
 
   context 'validations' do
@@ -215,14 +214,6 @@ RSpec.describe ItemAssignment, type: :model do
           third_assignment.save
           expect(third_assignment.reload.pull_interval).to eq 0
         end
-      end
-    end
-
-    describe '#notify_assignment' do
-      it 'notify after saving' do
-        expect(Slack::SlackNotificationService.instance).to receive(:notify_item_assigned)
-
-        Fabricate :item_assignment
       end
     end
   end

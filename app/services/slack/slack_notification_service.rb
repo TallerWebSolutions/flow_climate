@@ -100,18 +100,18 @@ module Slack
       Rails.logger.error('Invalid Slack API - It may be caused by an API token problem')
     end
 
-    def notify_demand_state_changed(stage, demand, demand_transition, team_member)
+    def notify_demand_state_changed(stage, demand, demand_transition)
+      return if demand_transition.transition_notified?
+
       slack_configuration = SlackConfiguration.find_by(team: demand.team, info_type: :demand_state_changed, active: true)
 
       unless slack_configuration.present? && slack_configuration.notify_stage?(stage)
-        Notifications::DemandTransitionNotification.create(stage: stage, demand: demand)
+        demand_transition.update(transition_notified: true)
 
         return
       end
 
-      already_notified = Notifications::DemandTransitionNotification.where(stage: stage, demand: demand)
-
-      return if already_notified.present?
+      team_member = demand_transition.team_member
 
       slack_notifier = Slack::Notifier.new(slack_configuration.room_webhook)
 
@@ -131,20 +131,18 @@ module Slack
 
       slack_notifier.ping(change_state_notify)
 
-      Notifications::DemandTransitionNotification.create(stage: stage, demand: demand)
+      demand_transition.update(transition_notified: true)
     end
 
     def notify_item_assigned(item_assignment)
       slack_configuration = SlackConfiguration.find_by(team: item_assignment.demand.team, info_type: 'item_assigned', active: true)
 
       if slack_configuration.blank?
-        Notifications::ItemAssignmentNotification.where(item_assignment: item_assignment).first_or_create
+        item_assignment.update(assignment_notified: true)
         return
       end
 
-      already_notified = Notifications::ItemAssignmentNotification.where(item_assignment: item_assignment)
-
-      return if already_notified.present?
+      return if item_assignment.assignment_notified?
 
       slack_notifier = Slack::Notifier.new(slack_configuration.room_webhook)
 
@@ -158,7 +156,7 @@ module Slack
 
       slack_notifier.post(blocks: [message_title, message_divider, message_previous_pull, message_ongoing, message_idle, divider_block])
 
-      Notifications::ItemAssignmentNotification.create(item_assignment: item_assignment)
+      item_assignment.update(assignment_notified: true)
     end
 
     def notify_item_blocked(demand_block, demand_url, edit_block_url, block_state = 'blocked')

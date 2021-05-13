@@ -41,7 +41,6 @@ class Stage < ApplicationRecord
   has_many :demand_transitions, dependent: :restrict_with_error
   has_many :demand_blocks, dependent: :restrict_with_error
   has_many :current_demands, class_name: 'Demand', foreign_key: :current_stage_id, inverse_of: :current_stage, dependent: :nullify
-  has_many :demand_transition_notifications, dependent: :destroy, class_name: 'Notifications::DemandTransitionNotification'
 
   validates :integration_id, :name, :stage_type, :stage_stream, presence: true
 

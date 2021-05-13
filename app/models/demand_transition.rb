@@ -4,25 +4,30 @@
 #
 # Table name: demand_transitions
 #
-#  id            :bigint           not null, primary key
-#  discarded_at  :datetime
-#  last_time_in  :datetime         not null
-#  last_time_out :datetime
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#  demand_id     :integer          not null
-#  stage_id      :integer          not null
+#  id                  :bigint           not null, primary key
+#  discarded_at        :datetime
+#  last_time_in        :datetime         not null
+#  last_time_out       :datetime
+#  transition_notified :boolean          default(FALSE), not null
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  demand_id           :integer          not null
+#  stage_id            :integer          not null
+#  team_member_id      :integer
 #
 # Indexes
 #
-#  idx_transitions_unique                    (demand_id,stage_id,last_time_in) UNIQUE
-#  index_demand_transitions_on_demand_id     (demand_id)
-#  index_demand_transitions_on_discarded_at  (discarded_at)
-#  index_demand_transitions_on_stage_id      (stage_id)
+#  idx_transitions_unique                           (demand_id,stage_id,last_time_in) UNIQUE
+#  index_demand_transitions_on_demand_id            (demand_id)
+#  index_demand_transitions_on_discarded_at         (discarded_at)
+#  index_demand_transitions_on_stage_id             (stage_id)
+#  index_demand_transitions_on_team_member_id       (team_member_id)
+#  index_demand_transitions_on_transition_notified  (transition_notified)
 #
 # Foreign Keys
 #
 #  fk_rails_2a5bc4c3f8  (demand_id => demands.id)
+#  fk_rails_b9c641c4b5  (team_member_id => team_members.id)
 #  fk_rails_c63024fc81  (stage_id => stages.id)
 #
 
@@ -31,6 +36,8 @@ class DemandTransition < ApplicationRecord
 
   belongs_to :demand
   belongs_to :stage
+
+  belongs_to :team_member
 
   validates :demand, :stage, :last_time_in, presence: true
   validate :same_stage_project?

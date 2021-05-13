@@ -94,7 +94,6 @@ class Demand < ApplicationRecord
   has_many :stages, -> { distinct }, through: :demand_transitions
   has_many :memberships, through: :item_assignments
   has_many :demand_score_matrices, dependent: :destroy
-  has_many :demand_transition_notifications, dependent: :destroy, class_name: 'Notifications::DemandTransitionNotification'
   has_many :jira_api_errors, dependent: :destroy, class_name: 'Jira::JiraApiError'
   has_many :class_of_service_change_histories, class_name: 'History::ClassOfServiceChangeHistory', dependent: :destroy
 

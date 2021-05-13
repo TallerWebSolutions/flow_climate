@@ -207,12 +207,12 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
         stage = Fabricate :stage, end_point: false
         demand = Fabricate :demand, team: team
         team_member = Fabricate :team_member
-        demand_transition = Fabricate :demand_transition, stage: stage, demand: demand
+        demand_transition = Fabricate :demand_transition, stage: stage, demand: demand, team_member: team_member
         Fabricate :slack_configuration, team: team, info_type: :demand_state_changed, stages_to_notify_transition: [stage.id]
 
         expect_any_instance_of(Slack::Notifier).to receive(:ping).with(/#{team_member.name}/)
 
-        described_class.instance.notify_demand_state_changed(stage, demand, demand_transition, team_member)
+        described_class.instance.notify_demand_state_changed(stage, demand, demand_transition)
       end
     end
 
@@ -221,12 +221,12 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
         stage = Fabricate :stage, end_point: true
         demand = Fabricate :demand, team: team
         team_member = Fabricate :team_member
-        demand_transition = Fabricate :demand_transition, demand: demand, stage: stage
+        demand_transition = Fabricate :demand_transition, demand: demand, stage: stage, team_member: team_member
         Fabricate :slack_configuration, team: team, info_type: :demand_state_changed, stages_to_notify_transition: [stage.id]
 
         expect_any_instance_of(Slack::Notifier).to receive(:ping).with(/moneybag/)
 
-        described_class.instance.notify_demand_state_changed(stage, demand, demand_transition, team_member)
+        described_class.instance.notify_demand_state_changed(stage, demand, demand_transition)
       end
     end
   end
@@ -236,15 +236,14 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
       demand = Fabricate :demand, team: team
       team_member = Fabricate :team_member
       membership = Fabricate :membership, team_member: team_member
-      item_assignment = Fabricate :item_assignment, membership: membership, demand: demand
-      Notifications::ItemAssignmentNotification.destroy_all
+      item_assignment = Fabricate :item_assignment, membership: membership, demand: demand, assignment_notified: false
 
       Fabricate :slack_configuration, team: team, info_type: :item_assigned, active: true
 
       expect_any_instance_of(Slack::Notifier).to receive(:post)
 
       described_class.instance.notify_item_assigned(item_assignment)
-      expect(Notifications::ItemAssignmentNotification.all.count).to eq 1
+      expect(item_assignment.reload.assignment_notified?).to be true
     end
   end
 

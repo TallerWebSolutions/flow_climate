@@ -26,11 +26,11 @@ namespace :notifications do
     end
   end
 
-  task slack_notifications_blocks: :environment do
+  task slack_notifications_for_demands: :environment do
     Team.all.each do |team|
       next if team.slack_configurations.blank?
 
-      Slack::BlockSlackNotificationsJob.perform_later(team)
+      Slack::DemandSlackNotificationsJob.perform_later(team)
     end
   end
 end
