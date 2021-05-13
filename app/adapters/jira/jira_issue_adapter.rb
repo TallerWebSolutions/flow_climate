@@ -140,7 +140,7 @@ module Jira
 
       demand_transition.save
 
-      Slack::SlackNotificationService.instance.notify_demand_state_changed(stage_to, demand, author)
+      Slack::SlackNotificationService.instance.notify_demand_state_changed(stage_to, demand, demand_transition, author)
     rescue ActiveRecord::RecordNotUnique
       Jira::JiraApiError.create(demand: demand)
       nil

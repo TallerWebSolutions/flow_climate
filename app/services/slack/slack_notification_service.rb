@@ -100,7 +100,7 @@ module Slack
       Rails.logger.error('Invalid Slack API - It may be caused by an API token problem')
     end
 
-    def notify_demand_state_changed(stage, demand, team_member)
+    def notify_demand_state_changed(stage, demand, demand_transition, team_member)
       slack_configuration = SlackConfiguration.find_by(team: demand.team, info_type: :demand_state_changed, active: true)
 
       unless slack_configuration.present? && slack_configuration.notify_stage?(stage)
@@ -115,7 +115,7 @@ module Slack
 
       slack_notifier = Slack::Notifier.new(slack_configuration.room_webhook)
 
-      change_state_notify = "*#{demand.external_id} - #{demand.demand_title}*\n:information_source: _#{team_member&.name || 'anônimo'}_ moveu para _#{stage.name}_"
+      change_state_notify = "*#{demand.external_id} - #{demand.demand_title}*\n:information_source: _#{team_member&.name || 'anônimo'}_ moveu para _#{stage.name}_ em #{I18n.l(demand_transition.last_time_in, format: :short)}"
 
       change_state_notify += if stage.end_point?
                                " :tada: \n"
