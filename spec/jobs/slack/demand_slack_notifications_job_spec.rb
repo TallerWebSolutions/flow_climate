@@ -28,8 +28,7 @@ RSpec.describe Slack::DemandSlackNotificationsJob, type: :active_job do
 
       context 'when it has notified blocked' do
         it 'calls slack notification method once' do
-          demand_block = Fabricate :demand_block, demand: demand
-          Fabricate :demand_block_notification, demand_block: demand_block, block_state: 'blocked'
+          Fabricate :demand_block, demand: demand
 
           expect_any_instance_of(Slack::SlackNotificationService).to receive(:notify_item_blocked).once
           described_class.perform_now(team)
