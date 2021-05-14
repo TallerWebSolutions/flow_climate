@@ -962,64 +962,102 @@ RSpec.describe ProjectsController, type: :controller do
 
     describe 'GET #search_projects' do
       let(:company) { Fabricate :company, users: [user] }
-      let!(:first_project) { Fabricate :project, company: company, start_date: 2.months.ago, end_date: 1.month.ago, status: :waiting, name: 'FooBarXpTO' }
-      let!(:second_project) { Fabricate :project, company: company, start_date: 1.month.ago, end_date: 15.days.ago, status: :executing, name: 'XpTO' }
-      let!(:third_project) { Fabricate :project, company: company, start_date: 2.days.ago, end_date: 1.day.ago, status: :finished, name: 'FooBar' }
-      let!(:fourth_project) { Fabricate :project, company: company, start_date: 2.days.ago, end_date: 1.hour.ago, status: :executing, name: 'Foo' }
 
       context 'passing valid parameters' do
         context 'with no search parameters' do
           it 'retrieves all the projects to the company' do
-            get :search_projects, params: { company_id: company, projects_ids: [first_project, second_project, third_project, fourth_project].map(&:id).join(',') }
+            travel_to Time.zone.local(2021, 5, 14, 10, 0, 0) do
+              first_project = Fabricate :project, company: company, start_date: 2.months.ago, end_date: 1.month.ago, status: :waiting, name: 'FooBarXpTO'
+              second_project = Fabricate :project, company: company, start_date: 1.month.ago, end_date: 15.days.ago, status: :executing, name: 'XpTO'
+              third_project = Fabricate :project, company: company, start_date: 2.days.ago, end_date: 1.day.ago, status: :finished, name: 'FooBar'
+              fourth_project = Fabricate :project, company: company, start_date: 2.days.ago, end_date: 1.hour.ago, status: :executing, name: 'Foo'
 
-            expect(response).to render_template 'projects/index'
-            expect(assigns(:projects)).to eq [fourth_project, third_project, second_project, first_project]
+              get :search_projects, params: { company_id: company, projects_ids: [first_project, second_project, third_project, fourth_project].map(&:id).join(',') }
+
+              expect(response).to render_template 'projects/index'
+              expect(assigns(:projects)).to eq [fourth_project, third_project, second_project, first_project]
+            end
           end
         end
 
         context 'with search by status' do
           it 'retrieves all executing the projects to the company' do
-            get :search_projects, params: { company_id: company, projects_ids: [first_project, second_project, third_project, fourth_project].map(&:id).join(','), project_status: :executing }
+            travel_to Time.zone.local(2021, 5, 14, 10, 0, 0) do
+              first_project = Fabricate :project, company: company, start_date: 2.months.ago, end_date: 1.month.ago, status: :waiting, name: 'FooBarXpTO'
+              second_project = Fabricate :project, company: company, start_date: 1.month.ago, end_date: 15.days.ago, status: :executing, name: 'XpTO'
+              third_project = Fabricate :project, company: company, start_date: 2.days.ago, end_date: 1.day.ago, status: :finished, name: 'FooBar'
+              fourth_project = Fabricate :project, company: company, start_date: 2.days.ago, end_date: 1.hour.ago, status: :executing, name: 'Foo'
 
-            expect(response).to render_template 'projects/index'
-            expect(assigns(:projects)).to eq [fourth_project, second_project]
+              get :search_projects, params: { company_id: company, projects_ids: [first_project, second_project, third_project, fourth_project].map(&:id).join(','), project_status: :executing }
+
+              expect(response).to render_template 'projects/index'
+              expect(assigns(:projects)).to eq [fourth_project, second_project]
+            end
           end
         end
 
         context 'with search by start_date' do
           it 'retrieves all executing the projects to the company' do
-            get :search_projects, params: { company_id: company, projects_ids: [first_project, second_project, third_project, fourth_project].map(&:id).join(','), projects_filter_start_date: 3.days.ago }
+            travel_to Time.zone.local(2021, 5, 14, 10, 0, 0) do
+              first_project = Fabricate :project, company: company, start_date: 2.months.ago, end_date: 1.month.ago, status: :waiting, name: 'FooBarXpTO'
+              second_project = Fabricate :project, company: company, start_date: 1.month.ago, end_date: 15.days.ago, status: :executing, name: 'XpTO'
+              third_project = Fabricate :project, company: company, start_date: 2.days.ago, end_date: 1.day.ago, status: :finished, name: 'FooBar'
+              fourth_project = Fabricate :project, company: company, start_date: 2.days.ago, end_date: 1.hour.ago, status: :executing, name: 'Foo'
 
-            expect(response).to render_template 'projects/index'
-            expect(assigns(:projects)).to eq [fourth_project, third_project]
+              get :search_projects, params: { company_id: company, projects_ids: [first_project, second_project, third_project, fourth_project].map(&:id).join(','), projects_filter_start_date: 3.days.ago }
+
+              expect(response).to render_template 'projects/index'
+              expect(assigns(:projects)).to eq [fourth_project, third_project]
+            end
           end
         end
 
         context 'with search by end_date' do
           it 'retrieves all executing the projects to the company' do
-            get :search_projects, params: { company_id: company, projects_ids: [first_project, second_project, third_project, fourth_project].map(&:id).join(','), projects_filter_end_date: 16.days.ago }
+            travel_to Time.zone.local(2021, 5, 14, 10, 0, 0) do
+              first_project = Fabricate :project, company: company, start_date: 2.months.ago, end_date: 1.month.ago, status: :waiting, name: 'FooBarXpTO'
+              second_project = Fabricate :project, company: company, start_date: 1.month.ago, end_date: 15.days.ago, status: :executing, name: 'XpTO'
+              third_project = Fabricate :project, company: company, start_date: 2.days.ago, end_date: 1.day.ago, status: :finished, name: 'FooBar'
+              fourth_project = Fabricate :project, company: company, start_date: 2.days.ago, end_date: 1.hour.ago, status: :executing, name: 'Foo'
 
-            expect(response).to render_template 'projects/index'
-            expect(assigns(:projects)).to eq [first_project]
+              get :search_projects, params: { company_id: company, projects_ids: [first_project, second_project, third_project, fourth_project].map(&:id).join(','), projects_filter_end_date: 16.days.ago }
+
+              expect(response).to render_template 'projects/index'
+              expect(assigns(:projects)).to eq [first_project]
+            end
           end
         end
 
         context 'with search by status and start_date' do
           it 'retrieves all executing the projects to the company' do
-            get :search_projects, params: { company_id: company, projects_ids: [first_project, second_project, third_project, fourth_project].map(&:id).join(','), project_status: :executing, projects_filter_start_date: 3.days.ago }
+            travel_to Time.zone.local(2021, 5, 14, 10, 0, 0) do
+              first_project = Fabricate :project, company: company, start_date: 2.months.ago, end_date: 1.month.ago, status: :waiting, name: 'FooBarXpTO'
+              second_project = Fabricate :project, company: company, start_date: 1.month.ago, end_date: 15.days.ago, status: :executing, name: 'XpTO'
+              third_project = Fabricate :project, company: company, start_date: 2.days.ago, end_date: 1.day.ago, status: :finished, name: 'FooBar'
+              fourth_project = Fabricate :project, company: company, start_date: 2.days.ago, end_date: 1.hour.ago, status: :executing, name: 'Foo'
 
-            expect(response).to render_template 'projects/index'
-            expect(assigns(:projects)).to eq [fourth_project]
+              get :search_projects, params: { company_id: company, projects_ids: [first_project, second_project, third_project, fourth_project].map(&:id).join(','), project_status: :executing, projects_filter_start_date: 3.days.ago }
+
+              expect(response).to render_template 'projects/index'
+              expect(assigns(:projects)).to eq [fourth_project]
+            end
           end
         end
 
         context 'with search by project name' do
           it 'retrieves all executing the projects to the company' do
-            get :search_projects, params: { company_id: company, projects_ids: [first_project, second_project, third_project, fourth_project].map(&:id).join(','), project_name: 'bar' }
+            travel_to Time.zone.local(2021, 5, 14, 10, 0, 0) do
+              first_project = Fabricate :project, company: company, start_date: 2.months.ago, end_date: 1.month.ago, status: :waiting, name: 'FooBarXpTO'
+              second_project = Fabricate :project, company: company, start_date: 1.month.ago, end_date: 15.days.ago, status: :executing, name: 'XpTO'
+              third_project = Fabricate :project, company: company, start_date: 2.days.ago, end_date: 1.day.ago, status: :finished, name: 'FooBar'
+              fourth_project = Fabricate :project, company: company, start_date: 2.days.ago, end_date: 1.hour.ago, status: :executing, name: 'Foo'
 
-            expect(response).to render_template 'projects/index'
-            expect(assigns(:projects)).to eq [third_project, first_project]
-            expect(assigns(:unpaged_projects)).to eq [third_project, first_project]
+              get :search_projects, params: { company_id: company, projects_ids: [first_project, second_project, third_project, fourth_project].map(&:id).join(','), project_name: 'bar' }
+
+              expect(response).to render_template 'projects/index'
+              expect(assigns(:projects)).to eq [third_project, first_project]
+              expect(assigns(:unpaged_projects)).to eq [third_project, first_project]
+            end
           end
         end
       end
