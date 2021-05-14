@@ -386,6 +386,7 @@ pt-BR:
       demand_transition:
         demand: Demanda
         stage: Etapa
+        team_member: Executada por
         last_time_in: Entrada
         last_time_out: Saída
       demand_block:

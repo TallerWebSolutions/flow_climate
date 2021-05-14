@@ -182,6 +182,7 @@ en:
       direction: "Direction"
       title: "Ordering"
     created_demands: "Created Demands"
+    no_register: "No Register"
   header:
     logout: Logout
     explore: Explore

@@ -182,6 +182,7 @@ pt-BR:
       direction: "Direção"
       title: "Ordem"
     created_demands: "Demandas Criadas"
+    no_register: "Sem Registro"
   header:
     logout: Sair
     sign_up: Cadastre-se
