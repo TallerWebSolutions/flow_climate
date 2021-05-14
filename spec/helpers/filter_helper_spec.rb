@@ -5,8 +5,8 @@ RSpec.describe FilterHelper, type: :helper do
     it { expect(helper.period_options).to eq options_for_select([[I18n.t('general.filter.period.option.last_week'), 'week'], [I18n.t('general.filter.period.option.last_month'), 'month'], [I18n.t('general.filter.period.option.last_quarter'), 'quarter'], [I18n.t('general.filter.period.option.all_period'), 'all']], :month) }
   end
 
-  describe '#flow_status_options' do
-    it { expect(helper.flow_status_options).to eq options_for_select([[I18n.t('demands.filter.flow_status.all_demands'), :all_demands], [I18n.t('demands.filter.flow_status.not_committed'), :not_committed], [I18n.t('demands.filter.flow_status.work_in_progress'), :wip], [I18n.t('demands.filter.flow_status.delivered_demands'), :delivered]], :all_demands) }
+  describe '#demand_state_options' do
+    it { expect(helper.demand_state_options).to eq options_for_select([[I18n.t('demands.filter.demand_state.all_demands'), :all_demands], [I18n.t('demands.filter.demand_state.not_started'), :not_started], [I18n.t('demands.filter.demand_state.not_committed'), :not_committed], [I18n.t('demands.filter.demand_state.work_in_progress'), :wip], [I18n.t('demands.filter.demand_state.delivered_demands'), :delivered]], :all_demands) }
   end
 
   describe '#demand_type_options' do

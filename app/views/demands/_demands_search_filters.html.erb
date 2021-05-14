@@ -1,14 +1,9 @@
 <%= form_tag search_demands_company_demands_path(company_id: company.id, object_type: object_type, object_id: object_id, demand_state: demand_state, demand_fitness: demand_fitness), class: 'form', method: :get do %>
-  <%#= hidden_field_tag :object_type, object_type %>
-  <%#= hidden_field_tag :object_id, object_id %>
-  <%#= hidden_field_tag :demand_state, demand_state %>
-  <%#= hidden_field_tag :demand_fitness, demand_fitness %>
-
   <div class="row bottom-spaced-component">
     <div class="col-xs-4">
       <div class="form-group">
-        <%= label_tag I18n.t('demands.filter.flow_status.title') %>
-        <%= select_tag :flow_status, flow_status_options(params[:flow_status]), multiple: true, class: 'form-control' %>
+        <%= label_tag I18n.t('demands.filter.demand_state.title') %>
+        <%= select_tag :demand_state, demand_state_options(params[:demand_state]), multiple: true, class: 'form-control' %>
       </div>
     </div>
 

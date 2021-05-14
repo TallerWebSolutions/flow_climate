@@ -258,19 +258,19 @@ RSpec.describe DemandsRepository, type: :repository do
     end
   end
 
-  describe '#flow_status_query' do
+  describe '#demand_state_query' do
     before { travel_to Time.zone.local(2018, 4, 5, 10, 0, 0) }
 
     after { travel_back }
 
     include_context 'demand data for filters'
 
-    it { expect(described_class.instance.flow_status_query(Demand.all, '')).to eq Demand.all }
-    it { expect(described_class.instance.flow_status_query(Demand.none, '')).to eq [] }
-    it { expect(described_class.instance.flow_status_query(Demand.all, 'wip')).to match_array [second_demand, sixth_demand] }
-    it { expect(described_class.instance.flow_status_query(Demand.all, 'delivered')).to match_array [third_demand, fourth_demand, seventh_demand, eigth_demand, ninth_demand] }
-    it { expect(described_class.instance.flow_status_query(Demand.all, 'not_committed')).to match_array [first_demand, fifth_demand] }
-    it { expect(described_class.instance.flow_status_query(Demand.all, %w[not_committed wip])).to match_array [first_demand, fifth_demand, second_demand, sixth_demand] }
+    it { expect(described_class.instance.demand_state_query(Demand.all, '')).to eq Demand.all }
+    it { expect(described_class.instance.demand_state_query(Demand.none, '')).to eq [] }
+    it { expect(described_class.instance.demand_state_query(Demand.all, 'wip')).to match_array [second_demand, sixth_demand] }
+    it { expect(described_class.instance.demand_state_query(Demand.all, 'delivered')).to match_array [third_demand, fourth_demand, seventh_demand, eigth_demand, ninth_demand] }
+    it { expect(described_class.instance.demand_state_query(Demand.all, 'not_committed')).to match_array [first_demand, fifth_demand] }
+    it { expect(described_class.instance.demand_state_query(Demand.all, %w[not_committed wip])).to match_array [first_demand, fifth_demand, second_demand, sixth_demand] }
   end
 
   describe '#demand_type_query' do

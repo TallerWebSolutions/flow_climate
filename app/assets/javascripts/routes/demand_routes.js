@@ -1,4 +1,4 @@
-function searchDemands(companyId, demandsIds, flowStatus, demandType, demandClassOfService, searchText, startDate, endDate, searchDemandTags) {
+function searchDemands(companyId, demandsIds, demandState, demandType, demandClassOfService, searchText, startDate, endDate, searchDemandTags) {
     $("#general-loader").show();
 
     $(".form-control").prop('disabled', true);
@@ -6,7 +6,7 @@ function searchDemands(companyId, demandsIds, flowStatus, demandType, demandClas
     jQuery.ajax({
         url: `/companies/${companyId}/demands/search_demands.js`,
         type: "POST",
-        data: `&demands_ids=${demandsIds}&flow_status=${flowStatus}&demand_type=${demandType}&demand_class_of_service=${demandClassOfService}&search_text=${searchText}&start_date=${startDate}&end_date=${endDate}&search_demand_tags=${searchDemandTags}`
+        data: `&demands_ids=${demandsIds}&demand_state=${demandState}&demand_type=${demandType}&demand_class_of_service=${demandClassOfService}&search_text=${searchText}&start_date=${startDate}&end_date=${endDate}&search_demand_tags=${searchDemandTags}`
     });
 }
 

@@ -183,6 +183,8 @@ en:
       title: "Ordering"
     created_demands: "Created Demands"
     no_register: "No Register"
+    upstream: "Upstream"
+    downstream: "Downstream"
   header:
     logout: Logout
     explore: Explore
@@ -775,12 +777,13 @@ en:
         grouped_by_month: "Grouped By Month"
         grouped_by_customer: "Grouped by Customer"
         grouped_by_stage: "Grouped by Stage"
-      flow_status:
+      demand_state:
         title: "Flow Status"
         all_demands: "All Demands"
         not_committed: "Not Committed"
         work_in_progress: "Work in Progress"
         delivered_demands: "Delivered"
+        not_started: "Not Started"
       demand_type:
         title: "Demand Type"
         all_types: "All Types"

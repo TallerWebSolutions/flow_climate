@@ -81,18 +81,21 @@ class DemandsRepository
 
   # rubocop:disable Metrics/CyclomaticComplexity
   # rubocop:disable Metrics/PerceivedComplexity
-  def flow_status_query(demands, flow_status)
-    return demands if flow_status.blank? || flow_status.include?('all_demands')
+  # rubocop:disable Metrics/AbcSize
+  def demand_state_query(demands, demand_state)
+    return demands if demand_state.blank? || demand_state.include?('all_demands')
 
     filtered_demands = []
-    filtered_demands << demands.not_committed.map(&:id) if flow_status.include?('not_committed')
-    filtered_demands << demands.in_wip.map(&:id) if flow_status.include?('wip')
-    filtered_demands << demands.finished.map(&:id) if flow_status.include?('delivered')
+    filtered_demands << demands.not_started.map(&:id) if demand_state.include?('not_started')
+    filtered_demands << demands.not_committed.map(&:id) if demand_state.include?('not_committed')
+    filtered_demands << demands.in_wip.map(&:id) if demand_state.include?('wip')
+    filtered_demands << demands.finished.map(&:id) if demand_state.include?('delivered')
 
     Demand.where(id: filtered_demands.flatten)
   end
   # rubocop:enable Metrics/CyclomaticComplexity
   # rubocop:enable Metrics/PerceivedComplexity
+  # rubocop:enable Metrics/AbcSize
 
   def demand_type_query(demands, demand_type)
     return demands.where(demand_type: demand_type) if demand_type.present? && demand_type.exclude?('all_types')

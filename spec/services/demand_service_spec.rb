@@ -51,7 +51,7 @@ RSpec.describe DemandService, type: :service do
   describe '#search_engine' do
     it 'calls the specific methods in the query' do
       expect(DemandsRepository.instance).to(receive(:filter_demands_by_text).with(anything, 'foo').once { Demand.none })
-      expect(DemandsRepository.instance).to(receive(:flow_status_query).with(anything, 'bla').once { Demand.none })
+      expect(DemandsRepository.instance).to(receive(:demand_state_query).with(anything, 'bla').once { Demand.none })
       expect(DemandsRepository.instance).to(receive(:demand_type_query).with(anything, 'bug').once { Demand.none })
       expect(DemandsRepository.instance).to(receive(:class_of_service_query).with(anything, 'expedite').once { Demand.none })
       expect(DemandsRepository.instance).to(receive(:demand_tags_query).with(anything, 'xpto sbbrubles').once { Demand.none })
