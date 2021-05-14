@@ -168,6 +168,10 @@ class DemandsController < DemandsListController
                  demandable.demands.kept.finished
                elsif @demand_state == 'backlog'
                  Demand.where(id: demandable.demands.not_started.map(&:id)).kept
+               elsif @demand_state == 'upstream'
+                 Demand.where(id: demandable.upstream_demands.map(&:id)).kept
+               elsif @demand_state == 'downstream'
+                 demandable.demands.in_wip.kept
                elsif @demand_state == 'unscored'
                  demandable.demands.unscored_demands.kept
                else
@@ -217,7 +221,7 @@ class DemandsController < DemandsListController
 
   def query_demands
     build_demands_list
-    DemandService.instance.search_engine(@demands, params[:demands_start_date], params[:demands_end_date], params[:search_text], params[:flow_status], params[:demand_type], params[:class_of_service], params[:search_demand_tags]&.split(' '), params[:team_id])
+    DemandService.instance.search_engine(@demands, params[:demands_start_date], params[:demands_end_date], params[:search_text], params[:demand_state], params[:demand_type], params[:class_of_service], params[:search_demand_tags]&.split(' '), params[:team_id])
   end
 
   def demand_params

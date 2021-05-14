@@ -26,4 +26,8 @@ module DemandsAggregator
 
     demands.kept.map(&:total_effort).compact.sum / demands.kept.count
   end
+
+  def upstream_demands
+    demands.kept - demands.finished - demands.in_wip
+  end
 end

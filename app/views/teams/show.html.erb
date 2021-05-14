@@ -72,6 +72,8 @@
              team: @team,
              object_type: 'Team',
              object_id: @team.id,
+             upstream_demands: @team.upstream_demands,
+             downstream_demands: @team.demands.kept.in_wip,
              slack_configurations: @slack_configurations,
              dates_array: @array_of_dates,
              work_item_flow_information: @work_item_flow_information,

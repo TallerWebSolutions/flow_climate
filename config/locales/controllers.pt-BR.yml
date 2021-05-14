@@ -183,6 +183,8 @@ pt-BR:
       title: "Ordem"
     created_demands: "Demandas Criadas"
     no_register: "Sem Registro"
+    upstream: "Upstream"
+    downstream: "Downstream"
   header:
     logout: Sair
     sign_up: Cadastre-se
@@ -854,12 +856,13 @@ pt-BR:
         grouped_by_month: "Agrupado por Mês"
         grouped_by_customer: "Agrupado por Cliente"
         grouped_by_stage: "Agrupado por Etapa"
-      flow_status:
+      demand_state:
         title: "Estado no Fluxo"
         all_demands: "Todas as Demandas"
         not_committed: "Não Comprometidas"
         work_in_progress: "Trabalho em Progresso"
         delivered_demands: "Entregues"
+        not_started: "Não Iniciadas"
       demand_type:
         title: "Tipo da Demanda"
         all_types: "Todos os Tipos"

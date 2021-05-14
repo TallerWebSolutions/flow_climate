@@ -57,13 +57,13 @@ function getDashboardPageFive(companyId, teamId) {
     });
 }
 
-function searchTeamDemands(companyId, teamId, demandsIds, flowStatus, demandType, demandClassOfService, searchText, startDate, endDate, searchDemandTags) {
+function searchTeamDemands(companyId, teamId, demandsIds, demandState, demandType, demandClassOfService, searchText, startDate, endDate, searchDemandTags) {
     $("#general-loader").show();
 
     jQuery.ajax({
         url: `/companies/${companyId}/teams/${teamId}/dashboard_search.js`,
         type: "GET",
-        data: `&demands_ids=${demandsIds}&flow_status=${flowStatus}&demand_type=${demandType}&demand_class_of_service=${demandClassOfService}&search_text=${searchText}&start_date=${startDate}&end_date=${endDate}&search_demand_tags=${searchDemandTags}`
+        data: `&demands_ids=${demandsIds}&demand_state=${demandState}&demand_type=${demandType}&demand_class_of_service=${demandClassOfService}&search_text=${searchText}&start_date=${startDate}&end_date=${endDate}&search_demand_tags=${searchDemandTags}`
     });
 }
 
