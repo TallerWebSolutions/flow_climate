@@ -5,11 +5,15 @@ namespace :jira_errors do
   task process_api_errors: :environment do
     Jira::JiraApiError.where(processed: false).each do |jira_error|
       demand = jira_error.demand
-      jira_account = demand.company.jira_accounts.first
-      project = demand.project
-      Jira::ProcessJiraIssueJob.perform_later(jira_account, project, demand.external_id, '', '', '')
+      if demand.jira_errors.count > 5
+        demand.jira_errors.map { |demand_jira_error| demand_jira_error.update(processed: true) }
+      else
+        jira_account = demand.company.jira_accounts.first
+        project = demand.project
+        Jira::ProcessJiraIssueJob.perform_later(jira_account, project, demand.external_id, '', '', '')
 
-      jira_error.update(processed: true)
+        jira_error.update(processed: true)
+      end
     end
   end
 end

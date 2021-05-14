@@ -30,7 +30,7 @@ namespace :notifications do
     Team.all.each do |team|
       next if team.slack_configurations.blank? || !team.active?
 
-      Slack::DemandSlackNotificationsJob.perform_later(team)
+      Slack::DemandSlackNotificationsJob.perform_now(team)
     end
   end
 end

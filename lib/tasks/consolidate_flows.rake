@@ -3,7 +3,7 @@
 namespace :statistics do
   desc 'Data cache for projects'
   task consolidate_active_projects: :environment do
-    return if Time.zone.hour.odd?
+    return if Time.zone.now.hour.odd?
 
     Company.all.each do |company|
       company.projects.active.finishing_after(Time.zone.today).each do |project|

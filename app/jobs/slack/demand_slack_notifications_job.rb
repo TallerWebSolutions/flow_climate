@@ -35,12 +35,9 @@ module Slack
         demand = block.demand
         demand_url = company_demand_url(demand.company, demand)
         edit_block_url = edit_company_project_demand_demand_block_url(demand.company, demand.project, demand, block)
-        if block.demand_block_notifications.blank?
-          Slack::SlackNotificationService.instance.notify_item_blocked(block, demand_url, edit_block_url)
-          Slack::SlackNotificationService.instance.notify_item_blocked(block, demand_url, edit_block_url, 'unblocked') if block.unblock_time.present?
-        else
-          Slack::SlackNotificationService.instance.notify_item_blocked(block, demand_url, edit_block_url, 'unblocked')
-        end
+
+        Slack::SlackNotificationService.instance.notify_item_blocked(block, demand_url, edit_block_url) if block.demand_block_notifications.blank?
+        Slack::SlackNotificationService.instance.notify_item_blocked(block, demand_url, edit_block_url, 'unblocked') if block.unblock_time.present? && block.demand_block_notifications.unblocked.blank?
       end
     end
   end
