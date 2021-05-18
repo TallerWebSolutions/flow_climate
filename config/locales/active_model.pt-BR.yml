@@ -551,6 +551,7 @@ pt-BR:
             developer: 'Desenvolvedor'
             manager: 'Gestor'
             client: 'Cliente'
+            designer: 'Designer'
       risk_review:
         product: Produto
         company: Empresa

@@ -24,7 +24,7 @@ module DemandsAggregator
   def avg_hours_per_demand
     return 0 unless demands.kept.count.positive?
 
-    demands.kept.map(&:total_effort).compact.sum / demands.kept.count
+    demands.kept.filter_map(&:total_effort).sum / demands.kept.count
   end
 
   def upstream_demands

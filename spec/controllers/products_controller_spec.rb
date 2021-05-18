@@ -552,7 +552,7 @@ RSpec.describe ProductsController, type: :controller do
             get :portfolio_charts_tab, params: { company_id: company, id: first_product }, xhr: true
             expect(response).to render_template 'portfolio_units/portfolio_charts_tab'
             expect(assigns(:demands)).to eq [third_demand, second_demand, first_demand]
-            expect(assigns(:start_date)).to eq [third_demand, second_demand, first_demand].map(&:created_date).compact.min.to_date
+            expect(assigns(:start_date)).to eq [third_demand, second_demand, first_demand].filter_map(&:created_date).min.to_date
             expect(assigns(:end_date)).to eq Time.zone.today
             expect(assigns(:period)).to eq 'month'
           end

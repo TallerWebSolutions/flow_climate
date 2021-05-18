@@ -28,7 +28,8 @@
 class DeviseCustomer < ApplicationRecord
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable, :trackable, :validatable
 
-  has_and_belongs_to_many :customers, dependent: :destroy
+  has_many :customers_devise_customers, dependent: :destroy
+  has_many :customers, through: :customers_devise_customers, dependent: :destroy
 
   validates :first_name, :last_name, :email, presence: true
 end

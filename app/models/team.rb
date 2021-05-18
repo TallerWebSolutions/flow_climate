@@ -25,7 +25,8 @@ class Team < ApplicationRecord
   include DemandsAggregator
 
   belongs_to :company
-  has_and_belongs_to_many :stages
+  has_many :stages_teams, dependent: :destroy
+  has_many :stages, through: :stages_teams
 
   has_many :memberships, dependent: :destroy
   has_many :team_members, through: :memberships
@@ -47,11 +48,11 @@ class Team < ApplicationRecord
   end
 
   def active_monthly_cost_for_billable_types(billable_type)
-    team_members.active.where(billable: true, billable_type: billable_type).map(&:monthly_payment).compact.sum
+    team_members.active.where(billable: true, billable_type: billable_type).filter_map(&:monthly_payment).sum
   end
 
   def active_monthly_available_hours_for_billable_types(billable_type)
-    memberships.joins(:team_member).active.where(team_members: { billable: true, billable_type: billable_type }).map(&:hours_per_month).compact.sum
+    memberships.joins(:team_member).active.where(team_members: { billable: true, billable_type: billable_type }).filter_map(&:hours_per_month).sum
   end
 
   def consumed_hours_in_month(required_date)

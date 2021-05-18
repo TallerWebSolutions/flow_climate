@@ -38,8 +38,8 @@ class DemandService
 
   def average_speed(demands)
     demands_finished = demands.kept.finished
-    min_date = demands_finished.map(&:end_date).compact.min
-    max_date = demands_finished.map(&:end_date).compact.max
+    min_date = demands_finished.filter_map(&:end_date).min
+    max_date = demands_finished.filter_map(&:end_date).max
 
     return 0 if min_date.blank? || max_date.blank?
 

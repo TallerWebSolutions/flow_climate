@@ -102,7 +102,7 @@ class ItemAssignment < ApplicationRecord
 
   def assignment_finish_time(assignment)
     transitions_during_assignment = assignment.demand.demand_transitions_at(assignment.start_time)
-    transition_finished_time = transitions_during_assignment.map(&:last_time_out).compact.max
+    transition_finished_time = transitions_during_assignment.filter_map(&:last_time_out).max
 
     return nil if transition_finished_time.blank? && assignment.finish_time.blank?
 

@@ -25,8 +25,10 @@ RSpec.describe Project, type: :model do
     it { is_expected.to have_many(:user_project_roles).dependent(:destroy) }
     it { is_expected.to have_many(:users).through(:user_project_roles) }
 
-    it { is_expected.to have_and_belong_to_many(:customers).dependent(:destroy) }
-    it { is_expected.to have_and_belong_to_many(:products).dependent(:destroy) }
+    it { is_expected.to have_many(:customers_projects).dependent(:destroy) }
+    it { is_expected.to have_many(:customers).through(:customers_projects).dependent(:destroy) }
+    it { is_expected.to have_many(:products_projects).dependent(:destroy) }
+    it { is_expected.to have_many(:products).through(:products_projects).dependent(:destroy) }
   end
 
   context 'validations' do

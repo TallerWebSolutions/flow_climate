@@ -9,8 +9,10 @@ RSpec.describe Customer, type: :model do
     it { is_expected.to have_many(:contracts).dependent(:restrict_with_error) }
     it { is_expected.to have_many(:demand_blocks).through(:demands) }
     it { is_expected.to have_many(:customer_consolidations).dependent(:destroy).class_name('Consolidations::CustomerConsolidation') }
-    it { is_expected.to have_and_belong_to_many :projects }
-    it { is_expected.to have_and_belong_to_many(:devise_customers).dependent(:destroy) }
+    it { is_expected.to have_many(:customers_projects) }
+    it { is_expected.to have_many(:projects).through(:customers_projects) }
+    it { is_expected.to have_many(:customers_devise_customers).dependent(:destroy) }
+    it { is_expected.to have_many(:devise_customers).through(:customers_devise_customers).dependent(:destroy) }
   end
 
   context 'validations' do

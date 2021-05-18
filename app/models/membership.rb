@@ -26,7 +26,7 @@
 #
 
 class Membership < ApplicationRecord
-  enum member_role: { developer: 0, manager: 1, client: 2 }
+  enum member_role: { developer: 0, manager: 1, client: 2, designer: 3 }
 
   belongs_to :team
   belongs_to :team_member

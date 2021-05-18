@@ -262,7 +262,7 @@ class Demand < ApplicationRecord
   end
 
   def blocked_time
-    demand_blocks.map(&:total_blocked_time).compact.sum
+    demand_blocks.filter_map(&:total_blocked_time).sum
   end
 
   def first_stage_in_the_flow
@@ -363,7 +363,7 @@ class Demand < ApplicationRecord
   end
 
   def compute_total_bloked_working_time
-    demand_blocks.closed.map(&:block_working_time_duration).compact.sum
+    demand_blocks.closed.filter_map(&:block_working_time_duration).sum
   end
 
   def compute_cost_to_project
@@ -385,7 +385,7 @@ class Demand < ApplicationRecord
   def sum_blocked_effort(effort_transitions)
     total_blocked = 0
     effort_transitions.each do |transition|
-      total_blocked += demand_blocks.closed.active.for_date_interval(transition.last_time_in, transition.last_time_out).map(&:block_working_time_duration).compact.sum
+      total_blocked += demand_blocks.closed.active.for_date_interval(transition.last_time_in, transition.last_time_out).filter_map(&:block_working_time_duration).sum
     end
     total_blocked
   end

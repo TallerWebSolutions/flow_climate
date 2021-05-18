@@ -5,7 +5,8 @@ RSpec.describe Product, type: :model do
     it { is_expected.to belong_to :customer }
     it { is_expected.to have_many(:teams).through(:projects) }
     it { is_expected.to have_many(:memberships).through(:teams) }
-    it { is_expected.to have_and_belong_to_many(:projects).dependent(:destroy) }
+    it { is_expected.to have_many(:projects).dependent(:destroy) }
+    it { is_expected.to have_many(:products_projects).dependent(:destroy) }
     it { is_expected.to have_many(:portfolio_units).dependent(:destroy) }
     it { is_expected.to have_many(:demands).dependent(:restrict_with_error) }
     it { is_expected.to have_many(:demand_blocks).through(:demands) }
