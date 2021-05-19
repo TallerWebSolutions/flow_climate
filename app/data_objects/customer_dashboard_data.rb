@@ -20,11 +20,11 @@ class CustomerDashboardData
   private
 
   def start_date(customer_demands)
-    customer_demands.map(&:end_date).compact.min
+    customer_demands.filter_map(&:end_date).min
   end
 
   def end_date(customer_demands)
-    @end_date ||= [Time.zone.today.end_of_month, customer_demands.map(&:end_date).compact.max].compact.min
+    @end_date ||= [Time.zone.today.end_of_month, customer_demands.filter_map(&:end_date).max].compact.min
   end
 
   def build_flow_services(time_flow_information)

@@ -17,7 +17,7 @@ module Slack
     def process_transitions(demand)
       demand.demand_transitions.each do |transition|
         next if transition.transition_notified?
-        Slack::SlackNotificationService.instance.notify_demand_state_changed(transition.stage, transition, demand)
+        Slack::SlackNotificationService.instance.notify_demand_state_changed(transition.stage, demand, transition)
       end
     end
 

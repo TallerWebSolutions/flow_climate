@@ -103,32 +103,32 @@ module Consolidations
     end
 
     def lead_time_feature(percentil = 80)
-      feature_demands = demands.kept.feature.map(&:leadtime).compact
+      feature_demands = demands.kept.feature.filter_map(&:leadtime)
       @lead_time_feature ||= Stats::StatisticsService.instance.percentile(percentil, feature_demands)
     end
 
     def lead_time_bug(percentil = 80)
-      bugs_lead_time_compact = demands.kept.bug.map(&:leadtime).compact
+      bugs_lead_time_compact = demands.kept.bug.filter_map(&:leadtime)
       @lead_time_bug ||= Stats::StatisticsService.instance.percentile(percentil, bugs_lead_time_compact)
     end
 
     def lead_time_chore(percentil = 80)
-      chore_demands = demands.kept.chore.map(&:leadtime).compact
+      chore_demands = demands.kept.chore.filter_map(&:leadtime)
       @lead_time_chore ||= Stats::StatisticsService.instance.percentile(percentil, chore_demands)
     end
 
     def lead_time_standard(percentil = 80)
-      standard_demands = demands.kept.standard.map(&:leadtime).compact
+      standard_demands = demands.kept.standard.filter_map(&:leadtime)
       @lead_time_standard ||= Stats::StatisticsService.instance.percentile(percentil, standard_demands)
     end
 
     def lead_time_fixed_date(percentil = 80)
-      fixed_date_demands = demands.kept.fixed_date.map(&:leadtime).compact
+      fixed_date_demands = demands.kept.fixed_date.filter_map(&:leadtime)
       @lead_time_fixed_date ||= Stats::StatisticsService.instance.percentile(percentil, fixed_date_demands)
     end
 
     def lead_time_expedite(percentil = 80)
-      expedite_demands = demands.kept.expedite.map(&:leadtime).compact
+      expedite_demands = demands.kept.expedite.filter_map(&:leadtime)
       @lead_time_expedite ||= Stats::StatisticsService.instance.percentile(percentil, expedite_demands)
     end
 

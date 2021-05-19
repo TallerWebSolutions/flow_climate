@@ -63,7 +63,7 @@ class Contract < ApplicationRecord
     demands_finished = customer.demands.kept.finished.finished_after_date(start_date).finished_until_date(end_date)
     return 0 if demands_finished.blank?
 
-    demands_finished.map(&:total_effort).compact.sum / demands_finished.count
+    demands_finished.filter_map(&:total_effort).sum / demands_finished.count
   end
 
   def current_estimate_gap

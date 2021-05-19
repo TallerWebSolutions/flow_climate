@@ -25,7 +25,7 @@ class ScoreMatrix < ApplicationRecord
   validates :product, presence: true
 
   def total_weight
-    score_matrix_questions.map(&:question_weight).compact.sum
+    score_matrix_questions.filter_map(&:question_weight).sum
   end
 
   def single_dimension?

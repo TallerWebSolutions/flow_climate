@@ -168,7 +168,7 @@ class TeamsController < DemandsListController
 
   def compute_membership_lead_times(membership)
     membership_demands = membership.demands
-    start_date = [membership.start_date, membership_demands.kept.map(&:commitment_date).compact.min].compact.max
+    start_date = [membership.start_date, membership_demands.kept.filter_map(&:commitment_date).min].compact.max
     membership_period = TimeService.instance.weeks_between_of(start_date, Time.zone.today)
 
     statistics_informations = Flow::StatisticsFlowInformations.new(membership_demands)
@@ -196,15 +196,15 @@ class TeamsController < DemandsListController
   end
 
   def uncertain_scope
-    @team.projects.map(&:initial_scope).compact.sum
+    @team.projects.filter_map(&:initial_scope).sum
   end
 
   def start_date
-    charts_demands.map(&:end_date).compact.min || Time.zone.today
+    charts_demands.filter_map(&:end_date).min || Time.zone.today
   end
 
   def end_date
-    charts_demands.map(&:end_date).compact.max || Time.zone.today
+    charts_demands.filter_map(&:end_date).max || Time.zone.today
   end
 
   def assign_team

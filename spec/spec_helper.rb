@@ -17,7 +17,7 @@ require 'rspec/collection_matchers'
 require 'webmock/rspec'
 require 'jira-ruby'
 
-Dir[Rails.root.join('spec/support/*.rb')].sort.each { |f| require f }
+Dir[Rails.root.join('spec/support/*.rb')].each { |f| require f }
 
 Rails.logger.level = 4
 Devise.stretches = 1

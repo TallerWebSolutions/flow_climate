@@ -34,7 +34,8 @@ class Stage < ApplicationRecord
 
   belongs_to :company
 
-  has_and_belongs_to_many :teams
+  has_many :stages_teams, dependent: :restrict_with_error
+  has_many :teams, through: :stages_teams, dependent: :restrict_with_error
 
   has_many :stage_project_configs, dependent: :destroy
   has_many :projects, through: :stage_project_configs

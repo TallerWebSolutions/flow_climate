@@ -2,7 +2,7 @@
 
 RSpec.describe Membership, type: :model do
   context 'enums' do
-    it { is_expected.to define_enum_for(:member_role).with_values(developer: 0, manager: 1, client: 2) }
+    it { is_expected.to define_enum_for(:member_role).with_values(developer: 0, manager: 1, client: 2, designer: 3) }
   end
 
   context 'associations' do

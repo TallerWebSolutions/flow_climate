@@ -24,8 +24,9 @@ class Product < ApplicationRecord
   include DemandsAggregator
 
   belongs_to :customer, counter_cache: true
-  has_and_belongs_to_many :projects, dependent: :destroy
 
+  has_many :products_projects, dependent: :destroy
+  has_many :projects, through: :products_projects, dependent: :destroy
   has_many :teams, -> { distinct }, through: :projects
   has_many :memberships, -> { distinct }, through: :teams
   has_many :jira_product_configs, class_name: 'Jira::JiraProductConfig', dependent: :destroy
@@ -77,7 +78,7 @@ class Product < ApplicationRecord
   end
 
   def total_flow_pressure
-    max_end_date = projects.active.map(&:end_date).compact.max
+    max_end_date = projects.active.filter_map(&:end_date).max
 
     return 0 if max_end_date.blank?
 

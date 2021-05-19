@@ -18,7 +18,7 @@ class RiskReviewService
   private
 
   def update_block_avg_time(demands, risk_review)
-    start_date = demands.map(&:end_date).compact.min
+    start_date = demands.filter_map(&:end_date).min
     array_of_dates = TimeService.instance.weeks_between_of(start_date, risk_review.meeting_date)
 
     risk_review.update(weekly_avg_blocked_time: build_avg_blocked_time(demands, array_of_dates))
@@ -41,7 +41,7 @@ class RiskReviewService
     avg_blocked_time = []
     array_of_dates.each do |date|
       demands_finished = demands.finished_until_date(date.end_of_day)
-      avg_blocked_time << demands_finished.map(&:blocked_time).compact.sum / demands_finished.count
+      avg_blocked_time << demands_finished.filter_map(&:blocked_time).sum / demands_finished.count
     end
 
     avg_blocked_time

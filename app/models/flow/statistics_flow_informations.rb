@@ -38,8 +38,8 @@ module Flow
     def current_lead_time_zones
       return {} if @demands.blank?
 
-      lead_time_max = @demands.kept.finished_with_leadtime.map(&:leadtime).compact.max.to_f
-      lead_time_min = @demands.kept.finished_with_leadtime.map(&:leadtime).compact.min.to_f
+      lead_time_max = @demands.kept.finished_with_leadtime.filter_map(&:leadtime).max.to_f
+      lead_time_min = @demands.kept.finished_with_leadtime.filter_map(&:leadtime).min.to_f
       lead_time_difference = lead_time_max - lead_time_min
 
       build_lead_time_zones(lead_time_difference)

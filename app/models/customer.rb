@@ -35,8 +35,10 @@ class Customer < ApplicationRecord
   has_many :demand_blocks, -> { distinct }, through: :demands
   has_many :contracts, dependent: :restrict_with_error
   has_many :customer_consolidations, dependent: :destroy, class_name: 'Consolidations::CustomerConsolidation'
-  has_and_belongs_to_many :projects, dependent: :restrict_with_error
-  has_and_belongs_to_many :devise_customers, dependent: :destroy
+  has_many :customers_projects, dependent: :restrict_with_error
+  has_many :projects, through: :customers_projects, dependent: :restrict_with_error
+  has_many :customers_devise_customers, dependent: :destroy
+  has_many :devise_customers, through: :customers_devise_customers, dependent: :destroy
 
   validates :company, :name, presence: true
   validates :name, uniqueness: { scope: :company, message: I18n.t('customer.name.uniqueness') }
@@ -65,15 +67,15 @@ class Customer < ApplicationRecord
   end
 
   def total_value
-    exclusive_projects.map(&:value).compact.sum
+    exclusive_projects.filter_map(&:value).sum
   end
 
   def total_flow_pressure(date = Time.zone.today)
-    contracts.map { |contract| contract.flow_pressure(date) }.compact.sum
+    contracts.filter_map { |contract| contract.flow_pressure(date) }.sum
   end
 
   def remaining_money(end_date = Time.zone.today.end_of_day)
-    exclusive_projects.map { |project| project.remaining_money(end_date) }.compact.sum
+    exclusive_projects.filter_map { |project| project.remaining_money(end_date) }.sum
   end
 
   def larger_lead_times(number_of_weeks, number_of_records)

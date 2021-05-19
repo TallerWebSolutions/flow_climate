@@ -46,7 +46,7 @@ module Flow
     private
 
     def start_population_date
-      [@demands.kept.finished.map(&:end_date).compact.min, 1.year.ago].compact.max
+      [@demands.kept.finished.filter_map(&:end_date).min, 1.year.ago].compact.max
     end
 
     def end_population_date

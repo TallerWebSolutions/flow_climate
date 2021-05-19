@@ -81,13 +81,13 @@ class DemandTransition < ApplicationRecord
 
   def work_time_blocked_in_transition
     last_time_out_to_block = last_time_out || Time.zone.now
-    demand.demand_blocks.kept.closed.active.for_date_interval(last_time_in, last_time_out_to_block).map(&:block_working_time_duration).compact.sum
+    demand.demand_blocks.kept.closed.active.for_date_interval(last_time_in, last_time_out_to_block).filter_map(&:block_working_time_duration).sum
   end
 
   def time_blocked_in_transition
     last_time_out_to_block = last_time_out || Time.zone.now
 
-    demand.demand_blocks.kept.closed.active.for_date_interval(last_time_in, last_time_out_to_block).map(&:total_blocked_time).compact.sum
+    demand.demand_blocks.kept.closed.active.for_date_interval(last_time_in, last_time_out_to_block).filter_map(&:total_blocked_time).sum
   end
 
   private

@@ -29,10 +29,10 @@ class DeviseCustomersController < ApplicationController
   end
 
   def start_date
-    @start_date ||= customer_demands.map(&:end_date).compact.min || Time.zone.now
+    @start_date ||= customer_demands.filter_map(&:end_date).min || Time.zone.now
   end
 
   def end_date
-    @end_date ||= [customer_demands.map(&:end_date).compact.max, Time.zone.today].compact.min
+    @end_date ||= [customer_demands.filter_map(&:end_date).max, Time.zone.today].compact.min
   end
 end
