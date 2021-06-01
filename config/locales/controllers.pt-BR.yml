@@ -326,6 +326,8 @@ pt-BR:
       inconsistent_demands_count: "Qtd Demandas Inconsistentes"
       active_projects: "Projetos Ativos"
       average_speed: "Velocidade Média"
+      consumed_hours_role: "Horas Consumidas por Função"
+      consumed_hours_role_in_month: "Horas Consumidas por Função por Mês"
     show:
       initial_scope: "Escopo Inicial"
       last_team: "Time atual"
@@ -796,6 +798,7 @@ pt-BR:
       consolidations: "Consolidações"
       memberships:
         blank: "Sem papel no time %{team_name}"
+      efforts_tab: "Esforços"
     sync:
       enqueued: "Sua solicitação foi colocada na fila. Será processada em breve."
       done: "Sua sincronização foi realizada."
@@ -1026,6 +1029,13 @@ pt-BR:
     in_month: "No Mês"
     in_quarter: "No Trimestre"
     in_year: "No Ano"
+    effort_development: "Esforço Desenvolvimento"
+    effort_design: "Esforço de Design"
+    effort_management: "Esforço de Gestão"
+    effort_design_month: "Esforço de Design no Mês"
+    effort_development_month: "Horas de Desenvolvimento no Mês"
+    effort_management_month: "Horas de Gestão no Mês"
+    total_effort_month: "Esforço Total no Mês"
   finances_params:
     edit:
       title: "Editar Informação Financeira"
@@ -1400,3 +1410,6 @@ pt-BR:
   replenishing_consolidations:
     index:
       title: "Reabastecimento"
+  demand_efforts:
+    index:
+      title: "Esforços"

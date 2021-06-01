@@ -12,6 +12,10 @@
 #  bugs_share_in_year                          :decimal(, )      default(0.0)
 #  consolidation_date                          :date             not null
 #  consumed_hours_in_month                     :decimal(, )      default(0.0)
+#  design_consumed_hours                       :decimal(, )      default(0.0), not null
+#  design_consumed_hours_in_month              :decimal(, )      default(0.0), not null
+#  development_consumed_hours                  :decimal(, )      default(0.0), not null
+#  development_consumed_hours_in_month         :decimal(, )      default(0.0), not null
 #  flow_efficiency                             :decimal(, )      default(0.0)
 #  flow_efficiency_in_month                    :decimal(, )      default(0.0)
 #  flow_efficiency_in_quarter                  :decimal(, )      default(0.0)
@@ -31,6 +35,8 @@
 #  lead_time_p80_in_semester                   :decimal(, )      default(0.0)
 #  lead_time_p80_in_week                       :decimal(, )      default(0.0)
 #  lead_time_p80_in_year                       :decimal(, )      default(0.0)
+#  management_consumed_hours                   :decimal(, )      default(0.0), not null
+#  management_consumed_hours_in_month          :decimal(, )      default(0.0), not null
 #  qty_bugs_closed                             :integer          default(0)
 #  qty_bugs_closed_in_month                    :integer          default(0)
 #  qty_bugs_closed_in_quarter                  :integer          default(0)

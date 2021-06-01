@@ -1,0 +1,57 @@
+<div class="row">
+  <div class="col-xs-12">
+    <h3><%= I18n.t('demand_efforts.index.title') %></h3>
+  </div>
+</div>
+
+<% if demand_efforts_list.empty? %>
+  <%= render 'layouts/no_data', missing_data: DemandEffort.model_name.human.downcase %>
+<% else %>
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th><%= DemandEffort.human_attribute_name :demand %></th>
+      <th><%= DemandEffort.human_attribute_name :who %></th>
+      <th><%= DemandEffort.human_attribute_name :member_role %></th>
+      <th><%= DemandEffort.human_attribute_name :stage %></th>
+      <th><%= DemandEffort.human_attribute_name :effort_value %></th>
+      <th><%= DemandEffort.human_attribute_name :start_time_to_computation %></th>
+      <th><%= DemandEffort.human_attribute_name :finish_time_to_computation %></th>
+      <th><%= DemandEffort.human_attribute_name :stage_percentage %></th>
+      <th><%= DemandEffort.human_attribute_name :pairing_percentage %></th>
+      <th><%= DemandEffort.human_attribute_name :management_percentage %></th>
+      <th><%= DemandEffort.human_attribute_name :total_blocked %></th>
+      <th><%= DemandEffort.human_attribute_name :automatic_update %></th>
+      <th><%= DemandEffort.human_attribute_name :main_effort_in_transition %></th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <% demand_efforts_list.each do |effort| %>
+      <tr>
+        <td><%= effort.demand.external_id %></td>
+        <td><%= effort.who %></td>
+        <td><%= I18n.t("activerecord.attributes.membership.enums.member_role.#{effort.member_role}") %></td>
+        <td><%= effort.stage %></td>
+        <td><%= "#{number_with_precision(effort.effort_value, precision: 2)} h" %></td>
+        <td><%= I18n.l(effort.start_time_to_computation, format: :short) %></td>
+        <td><%= I18n.l(effort.finish_time_to_computation, format: :short) %></td>
+        <td><%= number_with_precision(100 * effort.stage_percentage, precision: 2) %></td>
+        <td><%= number_with_precision(100 * effort.pairing_percentage, precision: 2) %></td>
+        <td><%= number_with_precision(100 * effort.management_percentage, precision: 2) %></td>
+        <td><%= "#{number_with_precision(effort.total_blocked, precision: 2)} h" %></td>
+        <td>
+          <% if effort.automatic_update? %>
+            <i class="fa fa-check" aria-hidden="true"></i>
+          <% end %>
+        </td>
+        <td>
+          <% if effort.main_effort_in_transition? %>
+            <i class="fa fa-check" aria-hidden="true"></i>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+<% end %>

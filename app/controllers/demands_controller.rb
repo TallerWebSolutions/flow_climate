@@ -7,7 +7,7 @@ class DemandsController < DemandsListController
 
   before_action :assign_company
   before_action :assign_demand, only: %i[edit update show synchronize_jira destroy destroy_physically score_research]
-  before_action :assign_project, except: %i[demands_csv search_demands show destroy destroy_physically score_research index demands_list_by_ids demands_charts]
+  before_action :assign_project, except: %i[demands_csv search_demands show destroy destroy_physically score_research index demands_list_by_ids demands_charts synchronize_jira]
 
   def new
     @demand = Demand.new(project: @project)
@@ -53,6 +53,7 @@ class DemandsController < DemandsListController
     @paged_demand_blocks = @demand_blocks.page(params[:page])
     @demand_transitions = @demand.demand_transitions.includes([:stage]).order(:last_time_in)
     @demand_comments = @demand.demand_comments.includes([:team_member]).order(:comment_date)
+    @demand_efforts = @demand.demand_efforts.order(:start_time_to_computation)
 
     compute_flow_efficiency
     compute_stream_percentages
@@ -71,7 +72,7 @@ class DemandsController < DemandsListController
   def synchronize_jira
     jira_account = @company.jira_accounts.first
     demand_url = company_project_demand_url(@demand.project.company, @demand.project, @demand)
-    Jira::ProcessJiraIssueJob.perform_later(jira_account, @project, @demand.external_id, current_user.email, current_user.full_name, demand_url)
+    Jira::ProcessJiraIssueJob.perform_later(jira_account, @demand.project, @demand.external_id, current_user.email, current_user.full_name, demand_url)
     flash[:notice] = I18n.t('general.enqueued')
     redirect_to company_demand_path(@company, @demand)
   end

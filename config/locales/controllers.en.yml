@@ -312,6 +312,8 @@ en:
       inconsistent_demands_count: "Qty Inconsistent Demands"
       active_projects: "Active Projects"
       average_speed: "Average Speed"
+      consumed_hours_role: "Consumed Hours by Role"
+      consumed_hours_role_in_month: "Consumed Hours by Role in Month"
     show:
       initial_scope: "Initial Scope"
       last_team: "Current team"
@@ -717,6 +719,7 @@ en:
       consolidations: "Consolidations"
       memberships:
         blank: "No role in the team %{team_name}"
+      efforts_tab: "Efforts"
     sync:
       enqueued: "Your request was enqueued. It will be processed soon."
       done: "The sync is done."
@@ -947,6 +950,13 @@ en:
     in_month: "In Month"
     in_quarter: "In Quarter"
     in_year: "In Year"
+    effort_development: "Effort Development"
+    effort_design: "Effort Design"
+    effort_management: "Effort Management"
+    effort_design_month: "Design Effort In Month"
+    effort_development_month: "Development Hours in Month"
+    effort_management_month: "Management Hours in Month"
+    total_effort_month: "Total Effort in Month"
   finances_params:
     edit:
       title: "Edit Financial Information"
@@ -1420,3 +1430,6 @@ en:
   replenishing_consolidations:
     index:
       title: "Replenishing"
+  demand_efforts:
+    index:
+      title: "Efforts"

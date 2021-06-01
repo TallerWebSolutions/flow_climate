@@ -50,7 +50,7 @@
 <td><%= I18n.t('general.hours_text', count: number_with_precision((demand.total_queue_time || 0) / 1.hour, precision: 2)) %></td>
 <td><%= I18n.t('general.hours_text', count: number_with_precision((demand.total_touch_time || 0) / 1.hour, precision: 2)) %></td>
 <td><%= demand.demand_blocks.count %></td>
-<td><%= I18n.t('general.hours_text', count: number_with_precision((demand.blocked_time || 0) / 1.hour, precision: 2)) %></td>
+<td><%= I18n.t('general.hours_text', count: number_with_precision((demand.total_bloked_working_time || 0) / 1.hour, precision: 2)) %></td>
 <td><%= I18n.t('general.hours_text', count: number_with_precision((demand.total_bloked_working_time), precision: 2)) %></td>
 <td><%= I18n.l(demand.created_date, format: :short) if demand.created_date.present? %></td>
 <td><%= I18n.l(demand.commitment_date, format: :short) if demand.commitment_date.present? %></td>

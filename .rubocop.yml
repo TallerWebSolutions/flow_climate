@@ -63,6 +63,7 @@ Metrics/ClassLength:
     - 'app/models/demand.rb'
     - 'app/models/flow/work_item_flow_informations.rb'
     - 'app/models/flow/contracts_flow_information.rb'
+    - 'app/models/demand_transition.rb'
     - 'app/controllers/projects_controller.rb'
     - 'app/controllers/demands_controller.rb'
     - 'app/controllers/companies_controller.rb'

@@ -13,21 +13,24 @@ module Consolidations
       demands_lead_time = demands_finished.map(&:leadtime).flatten.compact
       demands_lead_time_in_month = demands_finished_in_month.map(&:leadtime).flatten.compact
 
+      demands_efforts = DemandEffort.where(id: demands_finished.map { |demand| demand.demand_efforts.map(&:id) }.flatten)
+      demands_efforts_in_month = DemandEffort.where(id: demands_finished_in_month.map { |demand| demand.demand_efforts.map(&:id) }.flatten)
+
       lead_time_histogram_data = Stats::StatisticsService.instance.leadtime_histogram_hash(demands_lead_time)
       lead_time_histogram_bins = lead_time_histogram_data.keys
 
       data_start_date = 12.weeks.ago
 
-      x_axis = TimeService.instance.weeks_between_of(data_start_date.end_of_week, cache_date.end_of_week)
+      consolidation_period = TimeService.instance.weeks_between_of(data_start_date.end_of_week, cache_date.end_of_week)
 
       team = project.team
 
-      project_work_item_flow_information = Flow::WorkItemFlowInformations.new(project.demands.kept, project.initial_scope, x_axis.length, x_axis.last, 'week')
-      team_work_item_flow_information = Flow::WorkItemFlowInformations.new(team.demands.kept, team.projects.map(&:initial_scope).compact.sum, x_axis.length, x_axis.last, 'week')
+      project_work_item_flow_information = Flow::WorkItemFlowInformations.new(project.demands.kept, project.initial_scope, consolidation_period.length, consolidation_period.last, 'week')
+      team_work_item_flow_information = Flow::WorkItemFlowInformations.new(team.demands.kept, team.projects.map(&:initial_scope).compact.sum, consolidation_period.length, consolidation_period.last, 'week')
 
-      x_axis.each_with_index do |analysed_date, distribution_index|
-        project_work_item_flow_information.work_items_flow_behaviour(x_axis.first, analysed_date, distribution_index, true)
-        team_work_item_flow_information.work_items_flow_behaviour(x_axis.first, analysed_date, distribution_index, true)
+      consolidation_period.each_with_index do |analysed_date, distribution_index|
+        project_work_item_flow_information.work_items_flow_behaviour(consolidation_period.first, analysed_date, distribution_index, true)
+        team_work_item_flow_information.work_items_flow_behaviour(consolidation_period.first, analysed_date, distribution_index, true)
       end
 
       project_based_montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(project.remaining_work(end_of_day), project_work_item_flow_information.throughput_array_for_monte_carlo.last(12), 500)
@@ -99,7 +102,13 @@ module Consolidations
                            project_throughput_hours_downstream: demands_finished.sum(&:effort_downstream),
                            project_throughput_hours_in_month: demands_finished_in_month.sum(&:total_effort),
                            project_throughput_hours_upstream_in_month: demands_finished_in_month.sum(&:effort_upstream),
-                           project_throughput_hours_downstream_in_month: demands_finished_in_month.sum(&:effort_downstream)
+                           project_throughput_hours_downstream_in_month: demands_finished_in_month.sum(&:effort_downstream),
+                           project_throughput_hours_development: demands_efforts.developer_efforts.sum(&:effort_value),
+                           project_throughput_hours_design: demands_efforts.designer_efforts.sum(&:effort_value),
+                           project_throughput_hours_management: demands_efforts.manager_efforts.sum(&:effort_value),
+                           project_throughput_hours_development_in_month: demands_efforts_in_month.developer_efforts.sum(&:effort_value),
+                           project_throughput_hours_design_in_month: demands_efforts_in_month.designer_efforts.sum(&:effort_value),
+                           project_throughput_hours_management_in_month: demands_efforts_in_month.manager_efforts.sum(&:effort_value)
       )
 
     end

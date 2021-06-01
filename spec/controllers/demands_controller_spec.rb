@@ -45,7 +45,7 @@ RSpec.describe DemandsController, type: :controller do
     end
 
     describe 'PUT #synchronize_jira' do
-      before { put :synchronize_jira, params: { company_id: 'foo', project_id: 'bar', id: 'bla' } }
+      before { put :synchronize_jira, params: { company_id: 'foo', id: 'bla' } }
 
       it { expect(response).to redirect_to new_user_session_path }
     end
@@ -389,6 +389,10 @@ RSpec.describe DemandsController, type: :controller do
           let!(:second_block) { Fabricate :demand_block, demand: first_demand, block_time: 2.days.ago }
           let!(:out_block) { Fabricate :demand_block, demand: second_demand }
 
+          let!(:demand_effort) { Fabricate :demand_effort, demand: first_demand, start_time_to_computation: 1.day.ago }
+          let!(:other_demand_effort) { Fabricate :demand_effort, demand: first_demand, start_time_to_computation: 2.days.ago }
+          let!(:out_demand_effort) { Fabricate :demand_effort, start_time_to_computation: 2.days.ago }
+
           before { get :show, params: { company_id: company, id: first_demand } }
 
           it 'assigns the instance variable and renders the template' do
@@ -401,6 +405,7 @@ RSpec.describe DemandsController, type: :controller do
             expect(assigns(:upstream_percentage)).to eq 42.857142857142854
             expect(assigns(:downstream_percentage)).to eq 57.142857142857146
             expect(assigns(:demand_comments)).to eq [other_demand_comment, demand_comment]
+            expect(assigns(:demand_efforts)).to eq [other_demand_effort, demand_effort]
             expect(assigns(:lead_time_breakdown)).to eq({})
           end
         end
@@ -516,7 +521,7 @@ RSpec.describe DemandsController, type: :controller do
 
           it 'calls the services and the reader' do
             expect(Jira::ProcessJiraIssueJob).to receive(:perform_later)
-            put :synchronize_jira, params: { company_id: company, project_id: project, id: first_demand }
+            put :synchronize_jira, params: { company_id: company, id: first_demand }
             expect(response).to redirect_to company_demand_path(company, first_demand)
             expect(first_demand.reload.project).to eq project
             expect(flash[:notice]).to eq I18n.t('general.enqueued')
@@ -526,20 +531,14 @@ RSpec.describe DemandsController, type: :controller do
 
       context 'invalid' do
         context 'demand' do
-          before { put :synchronize_jira, params: { company_id: company, project_id: project, id: 'foo' } }
-
-          it { expect(response).to have_http_status :not_found }
-        end
-
-        context 'project' do
-          before { put :synchronize_jira, params: { company_id: company, project_id: 'foo', id: first_demand } }
+          before { put :synchronize_jira, params: { company_id: company, id: 'foo' } }
 
           it { expect(response).to have_http_status :not_found }
         end
 
         context 'company' do
           context 'non-existent' do
-            before { put :synchronize_jira, params: { company_id: 'foo', project_id: project, id: first_demand } }
+            before { put :synchronize_jira, params: { company_id: 'foo', id: first_demand } }
 
             it { expect(response).to have_http_status :not_found }
           end
@@ -547,7 +546,7 @@ RSpec.describe DemandsController, type: :controller do
           context 'not-permitted' do
             let(:company) { Fabricate :company, users: [] }
 
-            before { put :synchronize_jira, params: { company_id: company, project_id: project, id: first_demand } }
+            before { put :synchronize_jira, params: { company_id: company, id: first_demand } }
 
             it { expect(response).to have_http_status :not_found }
           end
@@ -564,8 +563,7 @@ RSpec.describe DemandsController, type: :controller do
 
       context 'valid parameters' do
         it 'calls the to_csv and responds success' do
-          demand.update_effort!(false)
-
+          DemandEffortService.instance.build_efforts_to_demand(demand)
           get :demands_csv, params: { company_id: company, demands_ids: Demand.all.map(&:id).to_csv }, format: :csv
           expect(response).to have_http_status :ok
 
@@ -1570,10 +1568,10 @@ RSpec.describe DemandsController, type: :controller do
         context 'with data' do
           it 'runs the query and sort it' do
             travel_to Time.zone.local(2020, 12, 18, 10, 0, 0) do
-              first_demand = Fabricate :demand, company: company, product: product, project: first_project, demand_title: 'first_demand', demand_type: :feature, class_of_service: :intangible, created_date: Time.zone.local(2019, 1, 19, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 20, 10, 0, 0), end_date: Time.zone.local(2019, 1, 23, 10, 0, 0), effort_downstream: 0, effort_upstream: 10, demand_tags: %w[aaa ccc]
+              first_demand = Fabricate :demand, company: company, product: product, project: first_project, demand_title: 'first_demand', demand_type: :feature, class_of_service: :intangible, created_date: Time.zone.local(2019, 1, 19, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 20, 10, 0, 0), end_date: Time.zone.local(2019, 1, 23, 12, 0, 0), effort_downstream: 0, effort_upstream: 10, demand_tags: %w[aaa ccc]
               second_demand = Fabricate :demand, company: company, product: product, project: first_project, demand_title: 'second_demand', demand_type: :chore, class_of_service: :standard, created_date: Time.zone.local(2019, 1, 14, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 19, 10, 0, 0), end_date: Time.zone.local(2019, 1, 24, 10, 0, 0), effort_downstream: 0, effort_upstream: 0, demand_tags: %w[xpto]
               third_demand = Fabricate :demand, company: company, product: product, project: second_project, demand_title: 'third_demand', demand_type: :performance_improvement, class_of_service: :expedite, created_date: Time.zone.local(2019, 1, 22, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 22, 10, 0, 0), end_date: Time.zone.local(2019, 1, 23, 10, 0, 0), effort_downstream: 0, effort_upstream: 0
-              fourth_demand = Fabricate :demand, company: company, product: product, project: second_project, demand_title: 'fourth_demand', demand_type: :wireframe, class_of_service: :fixed_date, created_date: Time.zone.local(2019, 1, 21, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 23, 10, 0, 0), end_date: Time.zone.local(2019, 1, 24, 10, 0, 0), effort_downstream: 0, effort_upstream: 0
+              fourth_demand = Fabricate :demand, company: company, product: product, project: second_project, demand_title: 'fourth_demand', demand_type: :wireframe, class_of_service: :fixed_date, created_date: Time.zone.local(2019, 1, 21, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 23, 10, 0, 0), end_date: Time.zone.local(2019, 1, 24, 9, 0, 0), effort_downstream: 0, effort_upstream: 0
 
               Fabricate :demand, company: company, product: product, project: second_project, demand_type: :ui, class_of_service: :fixed_date, created_date: Time.zone.local(2018, 12, 24, 11, 0, 0), commitment_date: nil, end_date: nil, effort_downstream: 0, effort_upstream: 0
               Fabricate :demand, company: company, product: product, project: second_project, demand_type: :feature, class_of_service: :standard, created_date: Time.zone.local(2019, 1, 23, 12, 0, 0), commitment_date: Time.zone.local(2019, 1, 24, 10, 0, 0), end_date: nil, effort_downstream: 0, effort_upstream: 0
@@ -1583,7 +1581,7 @@ RSpec.describe DemandsController, type: :controller do
               get :demands_charts, params: { company_id: company, session_demands_key: 'bar', demands_ids: Demand.all.map(&:id).join(',') }
 
               expect(response).to render_template 'demands/demands_charts'
-              expect(assigns(:demands).map(&:id)).to eq [first_demand.id, third_demand.id, second_demand.id, fourth_demand.id]
+              expect(assigns(:demands).map(&:demand_title)).to eq [third_demand.demand_title, first_demand.demand_title, fourth_demand.demand_title, second_demand.demand_title]
             end
           end
         end

@@ -5,6 +5,7 @@ RSpec.describe DemandTransition, type: :model do
     it { is_expected.to belong_to(:demand) }
     it { is_expected.to belong_to(:stage) }
     it { is_expected.to belong_to(:team_member) }
+    it { is_expected.to have_many(:demand_efforts).dependent(:destroy) }
   end
 
   context 'validations' do
@@ -142,7 +143,6 @@ RSpec.describe DemandTransition, type: :model do
 
   context 'delegations' do
     it { is_expected.to delegate_method(:name).to(:stage).with_prefix }
-    it { is_expected.to delegate_method(:compute_effort).to(:stage).with_prefix }
   end
 
   describe '#set_demand_dates' do
@@ -388,4 +388,9 @@ RSpec.describe DemandTransition, type: :model do
       it { expect(other_demand_transition.time_blocked_in_transition).to eq 0 }
     end
   end
+
+  pending '#stage_compute_effort_to_project?'
+  pending '#stage_percentage_to_project'
+  pending '#stage_pairing_percentage_to_project'
+  pending '#stage_management_percentage_to_project'
 end

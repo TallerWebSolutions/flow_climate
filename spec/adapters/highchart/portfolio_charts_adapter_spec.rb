@@ -107,7 +107,9 @@ RSpec.describe Highchart::PortfolioChartsAdapter, type: :service do
 
             portfolio_data = described_class.new([first_project, second_project], [first_project.start_date, second_project.start_date].min, [first_project.end_date, second_project.end_date].max, '')
 
-            expect(portfolio_data.throughput_by_project[:series]).to match_array([{ data: [4, 1], marker: { enabled: true }, name: I18n.t('portfolio.charts.throughput_by_project.data_title') }])
+            expect(portfolio_data.throughput_by_project[:series][0][:data]).to match_array([4, 1])
+            expect(portfolio_data.throughput_by_project[:series][0][:marker]).to eq({ enabled: true })
+            expect(portfolio_data.throughput_by_project[:series][0][:name]).to eq(I18n.t('portfolio.charts.throughput_by_project.data_title'))
             expect(portfolio_data.throughput_by_project[:x_axis]).to eq [first_project.name, second_project.name]
           end
         end

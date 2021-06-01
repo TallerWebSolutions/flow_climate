@@ -36,14 +36,9 @@ class DemandTransition < ApplicationRecord
 
   belongs_to :demand
   belongs_to :stage
-
   belongs_to :team_member
 
-  validates :demand, :stage, :last_time_in, presence: true
-  validate :same_stage_project?
-
-  delegate :name, to: :stage, prefix: true, allow_nil: true
-  delegate :compute_effort, to: :stage, prefix: true
+  has_many :demand_efforts, dependent: :destroy
 
   scope :upstream_transitions, -> { joins(:stage).where('stages.stage_stream' => Stage.stage_streams[:upstream]) }
   scope :downstream_transitions, -> { joins(:stage).where('stages.stage_stream = :stream AND stages.end_point = false', stream: Stage.stage_streams[:downstream]) }
@@ -54,6 +49,11 @@ class DemandTransition < ApplicationRecord
   scope :for_demands_ids, ->(demands_ids) { where(demand_id: demands_ids) }
   scope :after_date, ->(date) { where('last_time_in >= :limit_date', limit_date: date) }
   scope :for_date, ->(date) { where('(last_time_in <= :limit_date AND (last_time_out IS NULL OR last_time_out >= :limit_date)) OR (last_time_in > :limit_date AND (last_time_out IS NULL OR last_time_out <= :limit_date))', limit_date: date) }
+
+  validates :demand, :stage, :last_time_in, presence: true
+  validate :same_stage_project?
+
+  delegate :name, to: :stage, prefix: true, allow_nil: true
 
   after_save :set_demand_dates
   after_save :set_demand_computed_fields
@@ -88,6 +88,22 @@ class DemandTransition < ApplicationRecord
     last_time_out_to_block = last_time_out || Time.zone.now
 
     demand.demand_blocks.kept.closed.active.for_date_interval(last_time_in, last_time_out_to_block).filter_map(&:total_blocked_time).sum
+  end
+
+  def stage_compute_effort_to_project?
+    stage.stage_project_configs.find_by(project: demand.project)&.compute_effort?
+  end
+
+  def stage_percentage_to_project
+    stage.stage_project_configs.find_by(project: demand.project)&.stage_percentage_decimal
+  end
+
+  def stage_pairing_percentage_to_project
+    stage.stage_project_configs.find_by(project: demand.project)&.pairing_percentage_decimal
+  end
+
+  def stage_management_percentage_to_project
+    stage.stage_project_configs.find_by(project: demand.project)&.management_percentage_decimal
   end
 
   private

@@ -190,8 +190,6 @@ Rails.application.routes.draw do
 
     resources :projects do
       resources :demands, except: %i[show destroy index] do
-        put :synchronize_jira, on: :member
-
         resources :demand_blocks, only: %i[edit update] do
           member do
             patch :activate
@@ -263,8 +261,8 @@ Rails.application.routes.draw do
     resources :demands, only: %i[show destroy index] do
       member do
         delete :destroy_physically
-
         get :score_research
+        put :synchronize_jira
       end
 
       collection do
