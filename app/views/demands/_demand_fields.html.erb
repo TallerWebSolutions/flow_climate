@@ -55,6 +55,7 @@
 <td><%= I18n.l(demand.created_date, format: :short) if demand.created_date.present? %></td>
 <td><%= I18n.l(demand.commitment_date, format: :short) if demand.commitment_date.present? %></td>
 <td><%= I18n.l(demand.end_date, format: :short) if demand.end_date.present? %></td>
+<td><%= I18n.l(demand.discarded_at, format: :short) if demand.discarded_at.present? %></td>
 <td>
   <% demand.demand_tags.each do |demand_tag| %>
     <span class="label label-info"><%= demand_tag %></span>

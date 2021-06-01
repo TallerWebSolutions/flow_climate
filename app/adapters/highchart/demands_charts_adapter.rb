@@ -40,7 +40,7 @@ module Highchart
     def build_throughput_chart_data
       @throughput_chart_data = []
       @x_axis.each do |date|
-        @throughput_chart_data << @demands_in_chart.where('demands.end_date BETWEEN :start_date AND :end_date', start_date: beginning_of_period_for_query(date), end_date: end_of_period_for_query(date)).count if add_data_to_chart?(date)
+        @throughput_chart_data << @demands_in_chart.to_end_dates(beginning_of_period_for_query(date), end_of_period_for_query(date)).count if add_data_to_chart?(date)
       end
     end
 

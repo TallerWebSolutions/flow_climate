@@ -6,7 +6,7 @@ RSpec.describe FilterHelper, type: :helper do
   end
 
   describe '#demand_state_options' do
-    it { expect(helper.demand_state_options).to eq options_for_select([[I18n.t('demands.filter.demand_state.all_demands'), :all_demands], [I18n.t('demands.filter.demand_state.not_started'), :not_started], [I18n.t('demands.filter.demand_state.not_committed'), :not_committed], [I18n.t('demands.filter.demand_state.work_in_progress'), :wip], [I18n.t('demands.filter.demand_state.delivered_demands'), :delivered]], :all_demands) }
+    it { expect(helper.demand_state_options).to eq options_for_select([[I18n.t('demands.filter.demand_state.all_demands'), :all_demands], [I18n.t('demands.filter.demand_state.discarded_demands'), :discarded], [I18n.t('demands.filter.demand_state.not_discarded_demands'), :not_discarded], [I18n.t('demands.filter.demand_state.not_started'), :not_started], [I18n.t('demands.filter.demand_state.not_committed'), :not_committed], [I18n.t('demands.filter.demand_state.work_in_progress'), :wip], [I18n.t('demands.filter.demand_state.delivered_demands'), :delivered]], :all_demands) }
   end
 
   describe '#demand_type_options' do

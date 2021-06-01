@@ -50,6 +50,7 @@ en:
     destroy:
       confirm: "You are about to delete a record. Are you sure?"
       success: "Excluded"
+      confirm_physical: "You are about to detroy physically a record. Are you sure?"
     period: "Period"
     throughput: "Throughput (items/week)"
     delivered: "Delivered"
@@ -496,7 +497,7 @@ en:
       risk_evolution_in_time_team_based: "Operational Math Risk Evolution - Team Data"
       quality_block_per_demand: "blocks per demand"
       throughput_hours_six_months:
-        title: "Projects' Hours per Month - Last 3 months"
+        title: "Projects' Hours per Month - Last 6 months"
     project_risk_alert_table: "Risk alerts to the project"
     portfolio_bulletin:
       red_projects: "Red Alert Projects"
@@ -772,7 +773,7 @@ en:
       std_throughput: "STD Throughput"
       avg_touch: "Average Touch (hours)"
       avg_queue: "Average Queue (hours)"
-      avg_work_hours_per_demand: "Avg Work Hours per Demand"
+      avg_work_hours_per_demand: "Hours per Demand (HpD)"
     filter:
       grouping:
         title: "Grouped By"
@@ -787,6 +788,8 @@ en:
         work_in_progress: "Work in Progress"
         delivered_demands: "Delivered"
         not_started: "Not Started"
+        discarded_demands: "Discarded"
+        not_discarded_demands: "Not Discarded"
       demand_type:
         title: "Demand Type"
         all_types: "All Types"
@@ -814,6 +817,8 @@ en:
     score_research:
       title: "Score Research"
       go_to_list: "Go to the list"
+    destroy:
+      tip: "Delete demand permanentely"
   navbar:
     details: "Details"
     charts: "Project Charts"

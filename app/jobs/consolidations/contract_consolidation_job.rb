@@ -12,7 +12,7 @@ module Consolidations
       while start_date <= end_date
         end_of_month = start_date.end_of_month
 
-        demands = contract.demands.kept.where('demands.created_date <= :analysed_date', analysed_date: end_of_month)
+        demands = contract.demands.where('demands.created_date <= :analysed_date', analysed_date: end_of_month)
 
         if demands.present?
           demands_chart_adapter = Highchart::DemandsChartsAdapter.new(demands, contract_start, end_of_month, 'week')
@@ -20,7 +20,7 @@ module Consolidations
           contract_based_montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(contract.remaining_work(end_of_month), demands_chart_adapter.throughput_chart_data.last(20), 500)
           risk_to_date = 1 - Stats::StatisticsService.instance.compute_odds_to_deadline(contract.remaining_weeks(end_of_month), contract_based_montecarlo_durations)
 
-          demands_finished = contract.demands.kept.finished.finished_after_date(contract_start).finished_until_date(start_date)
+          demands_finished = contract.demands.finished.finished_after_date(contract_start).finished_until_date(start_date)
           real_hours_per_demand = if demands_finished.count.positive?
                                     demands_finished.map(&:total_effort).compact.sum / demands_finished.count
                                   else

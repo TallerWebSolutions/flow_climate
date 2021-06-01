@@ -156,27 +156,27 @@ class DemandsController < DemandsListController
                    end
 
     @demands = if @demand_fitness == 'overserved'
-                 demandable.overserved_demands[:value].kept
+                 demandable.overserved_demands[:value]
                elsif @demand_fitness == 'underserved'
-                 demandable.underserved_demands[:value].kept
+                 demandable.underserved_demands[:value]
                elsif @demand_fitness == 'f4p'
-                 demandable.fit_for_purpose_demands[:value].kept
+                 demandable.fit_for_purpose_demands[:value]
                elsif @demand_state == 'discarded'
                  demandable.demands.discarded
                elsif @demand_type.present?
-                 demandable.demands.where(demand_type: @demand_type).kept
+                 demandable.demands.where(demand_type: @demand_type)
                elsif @demand_state == 'delivered'
-                 demandable.demands.kept.finished
+                 demandable.demands.finished
                elsif @demand_state == 'backlog'
-                 Demand.where(id: demandable.demands.not_started.map(&:id)).kept
+                 Demand.where(id: demandable.demands.not_started.map(&:id))
                elsif @demand_state == 'upstream'
-                 Demand.where(id: demandable.upstream_demands.map(&:id)).kept
+                 Demand.where(id: demandable.upstream_demands.map(&:id))
                elsif @demand_state == 'downstream'
-                 demandable.demands.in_wip.kept
+                 demandable.demands.in_wip
                elsif @demand_state == 'unscored'
-                 demandable.demands.unscored_demands.kept
+                 demandable.demands.unscored_demands
                else
-                 demandable.demands.kept
+                 demandable.demands
                end
   end
   # rubocop:enable Metrics/AbcSize

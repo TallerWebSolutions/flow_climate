@@ -44,7 +44,7 @@ RSpec.describe ChartsController, type: :controller do
 
           expect(response).to render_template 'charts/strategic_charts'
           expect(assigns(:strategic_chart_data).x_axis).to eq TimeService.instance.months_between_of(3.months.ago.to_date.end_of_month, 2.months.from_now.end_of_month)
-          expect(assigns(:strategic_chart_data).active_projects_count_data).to eq [1, 2, 3, 2, 2, 1]
+          expect(assigns(:strategic_chart_data).active_projects_count_data).to eq [1, 1, 2, 0, 1, 1]
         end
       end
 

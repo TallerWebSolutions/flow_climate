@@ -26,14 +26,7 @@ module Highchart
     private
 
     def hours_to_month(date, project)
-      consolidation_date = date
-      consolidation_date = [project.end_date, date].min if project.end_date.month == date.month
-      consolidation_date = [consolidation_date, Time.zone.today].min
-
-      project_consolidation = project.project_consolidations.where(consolidation_date: consolidation_date).last
-      return project_consolidation.project_throughput_hours_in_month.to_f if project_consolidation.present?
-
-      0
+      project.demands.to_end_dates(date.beginning_of_month, date.end_of_month).sum(&:total_effort).to_f
     end
   end
 end

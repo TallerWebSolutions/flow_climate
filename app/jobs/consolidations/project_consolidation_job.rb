@@ -7,9 +7,9 @@ module Consolidations
     def perform(project, cache_date = Time.zone.today)
       end_of_day = cache_date.end_of_day
 
-      demands = project.demands.kept.where('demands.created_date <= :analysed_date', analysed_date: end_of_day)
+      demands = project.demands.where('demands.created_date <= :analysed_date', analysed_date: end_of_day)
       demands_finished = demands.finished.where('demands.end_date <= :analysed_date', analysed_date: end_of_day).order(end_date: :asc)
-      demands_finished_in_month = project.demands.kept.to_end_dates(cache_date.beginning_of_month, cache_date)
+      demands_finished_in_month = project.demands.to_end_dates(cache_date.beginning_of_month, cache_date)
       demands_lead_time = demands_finished.map(&:leadtime).flatten.compact
       demands_lead_time_in_month = demands_finished_in_month.map(&:leadtime).flatten.compact
 
@@ -25,8 +25,8 @@ module Consolidations
 
       team = project.team
 
-      project_work_item_flow_information = Flow::WorkItemFlowInformations.new(project.demands.kept, project.initial_scope, consolidation_period.length, consolidation_period.last, 'week')
-      team_work_item_flow_information = Flow::WorkItemFlowInformations.new(team.demands.kept, team.projects.map(&:initial_scope).compact.sum, consolidation_period.length, consolidation_period.last, 'week')
+      project_work_item_flow_information = Flow::WorkItemFlowInformations.new(project.demands, project.initial_scope, consolidation_period.length, consolidation_period.last, 'week')
+      team_work_item_flow_information = Flow::WorkItemFlowInformations.new(team.demands, team.projects.map(&:initial_scope).compact.sum, consolidation_period.length, consolidation_period.last, 'week')
 
       consolidation_period.each_with_index do |analysed_date, distribution_index|
         project_work_item_flow_information.work_items_flow_behaviour(consolidation_period.first, analysed_date, distribution_index, true)

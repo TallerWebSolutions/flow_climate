@@ -8,13 +8,13 @@ class DemandsRepository
   end
 
   def remaining_backlog_to_date(demands_ids, analysed_date)
-    demands = demands_list_data(demands_ids).kept.opened_before_date(analysed_date)
+    demands = demands_list_data(demands_ids).opened_before_date(analysed_date)
 
-    demands.where('(demands.end_date IS NULL OR demands.end_date > :analysed_date) AND (demands.commitment_date IS NULL OR demands.commitment_date > :analysed_date)', analysed_date: analysed_date).count
+    demands.where('(demands.end_date IS NULL OR demands.end_date > :analysed_date) AND (demands.commitment_date IS NULL OR demands.commitment_date > :analysed_date) AND (demands.discarded_at IS NULL OR demands.discarded_at > :analysed_date)', analysed_date: analysed_date).count
   end
 
   def committed_demands_to_period(demands, week, year)
-    demands.kept.where('EXTRACT(WEEK FROM commitment_date) = :week AND EXTRACT(YEAR FROM commitment_date) = :year', week: week, year: year)
+    demands.where('EXTRACT(WEEK FROM commitment_date) = :week AND EXTRACT(YEAR FROM commitment_date) = :year', week: week, year: year)
   end
 
   def wip_count(demands_ids, date = Time.zone.now)
@@ -28,11 +28,11 @@ class DemandsRepository
   end
 
   def throughput_to_period(demands, start_period, end_period)
-    demands.kept.to_end_dates(start_period, end_period)
+    demands.to_end_dates(start_period, end_period)
   end
 
   def throughput_to_products_team_and_period(products, team, start_period, end_period)
-    Demand.kept.where(product_id: products, team: team).to_end_dates(start_period, end_period)
+    Demand.where(product_id: products, team: team).to_end_dates(start_period, end_period)
   end
 
   def created_to_projects_and_period(projects, start_period, end_period)
@@ -40,7 +40,7 @@ class DemandsRepository
   end
 
   def demands_delivered_for_period(demands, start_period, end_period)
-    Demand.kept.where(id: demands.map(&:id)).to_end_dates(start_period, end_period)
+    Demand.where(id: demands.map(&:id)).to_end_dates(start_period, end_period)
   end
 
   def delivered_hours_in_month_for_projects(projects, date = Time.zone.today)
@@ -55,8 +55,8 @@ class DemandsRepository
     demands_for_projects_finished_in_period(projects, date.beginning_of_month, date.end_of_month).finished_in_downstream
   end
 
-  def demands_delivered_for_period_accumulated(demands, upper_date_limit)
-    Demand.kept.where(id: demands.map(&:id)).where('demands.end_date <= :upper_limit', upper_limit: upper_date_limit)
+  def demands_delivered_for_period_accumulated(demands, limit_date)
+    Demand.where(id: demands.map(&:id)).where('demands.end_date <= :upper_limit', upper_limit: limit_date)
   end
 
   def filter_demands_by_text(demands, filter_text)
@@ -85,13 +85,23 @@ class DemandsRepository
   def demand_state_query(demands, demand_state)
     return demands if demand_state.blank? || demand_state.include?('all_demands')
 
-    filtered_demands = []
-    filtered_demands << demands.not_started.map(&:id) if demand_state.include?('not_started')
-    filtered_demands << demands.not_committed.map(&:id) if demand_state.include?('not_committed')
-    filtered_demands << demands.in_wip.map(&:id) if demand_state.include?('wip')
-    filtered_demands << demands.finished.map(&:id) if demand_state.include?('delivered')
+    filtered_demands = if demand_state.include?('discarded')
+                         demands.discarded
+                       elsif demand_state.include?('not_discarded')
+                         demands.kept
+                       else
+                         demands
+                       end
 
-    Demand.where(id: filtered_demands.flatten)
+    filtered_demands_ids = []
+    filtered_demands_ids << filtered_demands.not_started.map(&:id) if demand_state.include?('not_started')
+    filtered_demands_ids << filtered_demands.not_committed.map(&:id) if demand_state.include?('not_committed')
+    filtered_demands_ids << filtered_demands.in_wip.map(&:id) if demand_state.include?('wip')
+    filtered_demands_ids << filtered_demands.finished.map(&:id) if demand_state.include?('delivered')
+
+    return filtered_demands if filtered_demands_ids.blank?
+
+    Demand.where(id: filtered_demands_ids.flatten)
   end
   # rubocop:enable Metrics/CyclomaticComplexity
   # rubocop:enable Metrics/PerceivedComplexity
@@ -138,10 +148,10 @@ class DemandsRepository
   end
 
   def demands_stories_to_projects(projects)
-    Demand.kept.where(project_id: projects.map(&:id))
+    Demand.where(project_id: projects.map(&:id))
   end
 
   def demands_for_projects_finished_in_period(projects, start_period, end_period)
-    Demand.kept.where(project_id: projects).to_end_dates(start_period, end_period)
+    Demand.where(project_id: projects).to_end_dates(start_period, end_period)
   end
 end

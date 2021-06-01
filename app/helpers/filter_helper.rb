@@ -6,7 +6,7 @@ module FilterHelper
   end
 
   def demand_state_options(selected_value = :all_demands)
-    options_for_select([[I18n.t('demands.filter.demand_state.all_demands'), :all_demands], [I18n.t('demands.filter.demand_state.not_started'), :not_started], [I18n.t('demands.filter.demand_state.not_committed'), :not_committed], [I18n.t('demands.filter.demand_state.work_in_progress'), :wip], [I18n.t('demands.filter.demand_state.delivered_demands'), :delivered]], selected_value)
+    options_for_select([[I18n.t('demands.filter.demand_state.all_demands'), :all_demands], [I18n.t('demands.filter.demand_state.discarded_demands'), :discarded], [I18n.t('demands.filter.demand_state.not_discarded_demands'), :not_discarded], [I18n.t('demands.filter.demand_state.not_started'), :not_started], [I18n.t('demands.filter.demand_state.not_committed'), :not_committed], [I18n.t('demands.filter.demand_state.work_in_progress'), :wip], [I18n.t('demands.filter.demand_state.delivered_demands'), :delivered]], selected_value)
   end
 
   def demand_type_options(selected_value = :all_types)

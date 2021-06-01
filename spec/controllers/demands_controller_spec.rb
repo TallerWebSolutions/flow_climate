@@ -235,11 +235,11 @@ RSpec.describe DemandsController, type: :controller do
             expect(response).to have_http_status :ok
             expect(response).to render_template 'demands/search_demands'
             expect(first_demand.reload.discarded_at).not_to be_nil
-            expect(assigns(:demands).map(&:id)).to match_array [second_demand.id, third_demand.id, fourth_demand.id, fifth_demand.id, sixth_demand.id, seventh_demand.id, eigth_demand.id]
+            expect(assigns(:demands).map(&:id)).to match_array [first_demand.id, second_demand.id, third_demand.id, fourth_demand.id, fifth_demand.id, sixth_demand.id, seventh_demand.id, eigth_demand.id]
             expect(assigns(:confidence_95_leadtime)).to be_within(0.1).of(4.6)
             expect(assigns(:confidence_80_leadtime)).to be_within(0.1).of(3.4)
             expect(assigns(:confidence_65_leadtime)).to be_within(0.1).of(2.2)
-            expect(assigns(:avg_work_hours_per_demand).to_f).to eq 37.142857142857146
+            expect(assigns(:avg_work_hours_per_demand).to_f).to eq 36.875
           end
         end
       end
@@ -978,7 +978,7 @@ RSpec.describe DemandsController, type: :controller do
 
                     get :search_demands, params: { company_id: company, session_demands_key: 'bar', demands_ids: Demand.all.map(&:id).join(','), start_date: start_date, end_date: end_date, class_of_service: ['fixed_date'] }
                     expect(response).to render_template 'demands/index'
-                    expect(assigns(:demands).map(&:id)).to eq [fifth_demand.id, eigth_demand.id]
+                    expect(assigns(:demands).map(&:id)).to match_array [fifth_demand.id, eigth_demand.id]
                     expect(assigns(:confidence_95_leadtime)).to eq 1.0
                     expect(assigns(:confidence_80_leadtime)).to eq 1.0
                     expect(assigns(:confidence_65_leadtime)).to eq 1.0
@@ -1024,7 +1024,7 @@ RSpec.describe DemandsController, type: :controller do
 
                     get :search_demands, params: { company_id: company, session_demands_key: 'bar', demands_ids: Demand.all.map(&:id).join(','), start_date: start_date, end_date: end_date, class_of_service: ['expedite'] }
                     expect(response).to render_template 'demands/index'
-                    expect(assigns(:demands).map(&:id)).to eq [second_demand.id, seventh_demand.id]
+                    expect(assigns(:demands).map(&:id)).to match_array [second_demand.id, seventh_demand.id]
                     expect(assigns(:confidence_95_leadtime)).to eq 1.0
                     expect(assigns(:confidence_80_leadtime)).to eq 1.0
                     expect(assigns(:confidence_65_leadtime)).to eq 1.0

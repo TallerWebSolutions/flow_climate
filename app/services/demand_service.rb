@@ -10,7 +10,7 @@ class DemandService
 
   def search_engine(demands, start_date, end_date, search_text, demand_state, demand_type, demand_class_of_service, demand_tags, team_id)
     demands_list = demands
-    demands_list = demands.kept.to_dates(start_date.to_date, end_date.to_date) if start_date.present? && end_date.present?
+    demands_list = demands.to_dates(start_date.to_date, end_date.to_date) if start_date.present? && end_date.present?
     demands_list = DemandsRepository.instance.filter_demands_by_text(demands_list, search_text)
     demands_list = DemandsRepository.instance.team_query(demands_list, team_id)
 

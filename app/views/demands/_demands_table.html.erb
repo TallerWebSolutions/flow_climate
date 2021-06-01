@@ -71,13 +71,14 @@
         <th><%= Demand.human_attribute_name :created_date %></th>
         <th><%= Demand.human_attribute_name :commitment_date %></th>
         <th><%= Demand.human_attribute_name :end_date %></th>
+        <th><%= Demand.human_attribute_name :discarded_at %></th>
         <th><%= Demand.human_attribute_name :demand_tags %></th>
         <th><%= I18n.t('general.table.actions') %></th>
       </tr>
       </thead>
       <tbody>
       <% paged_demands.each do |demand| %>
-        <tr id='demand_<%= demand.id %>'>
+        <tr id='demand_<%= demand.id %>' class="<%= 'discarded' if demand.discarded? %>">
           <%= render 'demands/demand_fields', company: company, demand: demand, demands_ids: paged_demands.map(&:id) %>
         </tr>
       <% end %>

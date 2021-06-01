@@ -50,6 +50,7 @@ pt-BR:
     destroy:
       confirm: "Confirma a exclusão do registro?"
       success: "Excluído com sucesso"
+      confirm_physical: "Você vai excluir fisicamente o registro. Tem certeza?"
     period: "Período"
     throughput: "Vazão (itens/semana)"
     delivered: "Entregas"
@@ -510,7 +511,7 @@ pt-BR:
       risk_evolution_in_time_team_based: "Evolução do Risco Matemático Operacional - Team Data"
       quality_block_per_demand: "bloqueios por demanda"
       throughput_hours_six_months:
-        title: "Horas de Projetos por Mês - Últimos 3 meses"
+        title: "Horas de Projetos por Mês - Últimos 6 meses"
     project_risk_alert_table: "Alertas de risco para o projeto"
     portfolio_bulletin:
       delivered_demands: "Demandas entregues na última semana"
@@ -851,7 +852,7 @@ pt-BR:
       std_committed_with: "Desvio Padrão Comprometido"
       avg_touch: "Trabalho Médio (horas)"
       avg_queue: "Fila Média (horas)"
-      avg_work_hours_per_demand: "Média Horas Úteis por Demanda"
+      avg_work_hours_per_demand: "Horas por Demanda (HpD)"
     filter:
       grouping:
         title: "Agrupado por"
@@ -866,6 +867,8 @@ pt-BR:
         work_in_progress: "Trabalho em Progresso"
         delivered_demands: "Entregues"
         not_started: "Não Iniciadas"
+        discarded_demands: "Descartadas"
+        not_discarded_demands: "Não Descartadas"
       demand_type:
         title: "Tipo da Demanda"
         all_types: "Todos os Tipos"
@@ -893,6 +896,8 @@ pt-BR:
     score_research:
       title: "Pesquisa de Pontuação"
       go_to_list: "Ir para a lista"
+    destroy:
+      tip: "Apaga a demanda permanentemente"
   navbar:
     details: "Detalhes"
     charts: "Gráficos"

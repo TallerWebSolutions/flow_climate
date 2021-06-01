@@ -48,9 +48,9 @@
        data-ytitle='<%= I18n.t('general.hours') %>'
        data-prefix=''
        data-tooltipsuffix='<%= I18n.t('general.hours') %>'
-       data-series='<%= last_six_months_hours_per_project[:data].map { |k, v| { name: k, data: v } }.to_json %>'
+       data-series='<%= last_six_months_hours_per_project[:data].map { |k, v| { name: k, data: v, type: 'column' } }.to_json %>'
        data-stacking='normal'
        data-datalabelsuffix='h'
-       data-decimals='0'>
+       data-decimals='2'>
   </div>
 <% end %>
