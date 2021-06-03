@@ -559,7 +559,7 @@ RSpec.describe DemandsController, type: :controller do
       let!(:stage) { Fabricate :stage, company: company, projects: [project], end_point: false, commitment_point: false, stage_stream: :downstream, order: 0 }
       let!(:end_stage) { Fabricate :stage, company: company, projects: [project], commitment_point: false, end_point: true, order: 1, stage_stream: :downstream }
       let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: end_stage }
-      let!(:deleted_demand) { Fabricate :demand, company: company, product: product, project: project, end_date: Time.zone.today, discarded_at: Time.zone.yesterday }
+      let!(:discarded_demand) { Fabricate :demand, company: company, product: product, project: project, end_date: Time.zone.today, discarded_at: Time.zone.yesterday }
 
       context 'valid parameters' do
         it 'calls the to_csv and responds success' do
@@ -568,21 +568,8 @@ RSpec.describe DemandsController, type: :controller do
           expect(response).to have_http_status :ok
 
           csv = CSV.parse(response.body, headers: true)
-          expect(csv.count).to eq 1
-          expect(csv.first[0].to_i).to eq demand.id
-          expect(csv.first[1]).to eq demand.portfolio_unit_name
-          expect(csv.first[2]).to eq demand.current_stage&.name
-          expect(csv.first[3].to_i).to eq demand.project_id
-          expect(csv.first[4]).to eq demand.external_id
-          expect(csv.first[5]).to eq demand.demand_title
-          expect(csv.first[6]).to eq 'feature'
-          expect(csv.first[7]).to eq 'standard'
-          expect(csv.first[8]).to eq demand.effort_downstream.to_f.to_s.gsub('.', I18n.t('number.format.separator'))
-          expect(csv.first[9]).to eq demand.effort_upstream.to_f.to_s.gsub('.', I18n.t('number.format.separator'))
-          expect(csv.first[10]).to eq demand.demand_score.to_f.to_s.gsub('.', I18n.t('number.format.separator'))
-          expect(csv.first[11]).to eq demand.created_date.iso8601
-          expect(csv.first[12]).to eq demand.commitment_date.iso8601
-          expect(csv.first[13]).to eq demand.end_date.iso8601
+          expect(csv.count).to eq 2
+          expect(csv.map { |row| row[0].to_i }).to match_array [demand.id, discarded_demand.id]
         end
       end
 
