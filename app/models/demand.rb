@@ -146,6 +146,7 @@ class Demand < ApplicationRecord
       portfolio_unit_name,
       current_stage_name,
       project_id,
+      project_name,
       external_id,
       demand_title,
       demand_type,

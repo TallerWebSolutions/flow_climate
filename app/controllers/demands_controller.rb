@@ -78,12 +78,12 @@ class DemandsController < DemandsListController
   end
 
   def demands_csv
-    build_demands_list
-    @demands_in_csv = @demands.kept.order(end_date: :desc)
-    attributes = %w[id portfolio_unit current_stage project_id external_id demand_title demand_type class_of_service demand_score effort_downstream effort_upstream created_date commitment_date end_date]
+    demands = Demand.where(id: params[:demands_ids].split(','))
+    demands_in_csv = demands.order(end_date: :desc)
+    attributes = %w[id portfolio_unit current_stage project_id project_name external_id demand_title demand_type class_of_service demand_score effort_downstream effort_upstream created_date commitment_date end_date]
     demands_csv = CSV.generate(headers: true) do |csv|
       csv << attributes
-      @demands_in_csv.each { |demand| csv << demand.csv_array }
+      demands_in_csv.each { |demand| csv << demand.csv_array }
     end
     respond_to { |format| format.csv { send_data demands_csv, filename: "demands-#{Time.zone.now}.csv" } }
   end
