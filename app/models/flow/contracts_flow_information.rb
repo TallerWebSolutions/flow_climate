@@ -169,7 +169,7 @@ module Flow
       return if date > @limit_date
 
       @hours_blocked_per_deliver_info << if demands_delivered_to_date.count.positive?
-                                           (demands_delivered_to_date.sum(&:blocked_time) / 1.hour) / demands_delivered_to_date.count
+                                           demands_delivered_to_date.sum(&:total_bloked_working_time) / demands_delivered_to_date.count
                                          else
                                            0
                                          end

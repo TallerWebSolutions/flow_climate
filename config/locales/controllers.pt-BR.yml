@@ -50,6 +50,7 @@ pt-BR:
     destroy:
       confirm: "Confirma a exclusão do registro?"
       success: "Excluído com sucesso"
+      confirm_physical: "Você vai excluir fisicamente o registro. Tem certeza?"
     period: "Período"
     throughput: "Vazão (itens/semana)"
     delivered: "Entregas"
@@ -326,6 +327,8 @@ pt-BR:
       inconsistent_demands_count: "Qtd Demandas Inconsistentes"
       active_projects: "Projetos Ativos"
       average_speed: "Velocidade Média"
+      consumed_hours_role: "Horas Consumidas por Função"
+      consumed_hours_role_in_month: "Horas Consumidas por Função por Mês"
     show:
       initial_scope: "Escopo Inicial"
       last_team: "Time atual"
@@ -508,7 +511,7 @@ pt-BR:
       risk_evolution_in_time_team_based: "Evolução do Risco Matemático Operacional - Team Data"
       quality_block_per_demand: "bloqueios por demanda"
       throughput_hours_six_months:
-        title: "Horas de Projetos por Mês - Últimos 3 meses"
+        title: "Horas de Projetos por Mês - Últimos 6 meses"
     project_risk_alert_table: "Alertas de risco para o projeto"
     portfolio_bulletin:
       delivered_demands: "Demandas entregues na última semana"
@@ -796,6 +799,7 @@ pt-BR:
       consolidations: "Consolidações"
       memberships:
         blank: "Sem papel no time %{team_name}"
+      efforts_tab: "Esforços"
     sync:
       enqueued: "Sua solicitação foi colocada na fila. Será processada em breve."
       done: "Sua sincronização foi realizada."
@@ -848,7 +852,7 @@ pt-BR:
       std_committed_with: "Desvio Padrão Comprometido"
       avg_touch: "Trabalho Médio (horas)"
       avg_queue: "Fila Média (horas)"
-      avg_work_hours_per_demand: "Média Horas Úteis por Demanda"
+      avg_work_hours_per_demand: "Horas por Demanda (HpD)"
     filter:
       grouping:
         title: "Agrupado por"
@@ -863,6 +867,8 @@ pt-BR:
         work_in_progress: "Trabalho em Progresso"
         delivered_demands: "Entregues"
         not_started: "Não Iniciadas"
+        discarded_demands: "Descartadas"
+        not_discarded_demands: "Não Descartadas"
       demand_type:
         title: "Tipo da Demanda"
         all_types: "Todos os Tipos"
@@ -890,6 +896,8 @@ pt-BR:
     score_research:
       title: "Pesquisa de Pontuação"
       go_to_list: "Ir para a lista"
+    destroy:
+      tip: "Apaga a demanda permanentemente"
   navbar:
     details: "Detalhes"
     charts: "Gráficos"
@@ -1026,6 +1034,13 @@ pt-BR:
     in_month: "No Mês"
     in_quarter: "No Trimestre"
     in_year: "No Ano"
+    effort_development: "Esforço Desenvolvimento"
+    effort_design: "Esforço de Design"
+    effort_management: "Esforço de Gestão"
+    effort_design_month: "Esforço de Design no Mês"
+    effort_development_month: "Horas de Desenvolvimento no Mês"
+    effort_management_month: "Horas de Gestão no Mês"
+    total_effort_month: "Esforço Total no Mês"
   finances_params:
     edit:
       title: "Editar Informação Financeira"
@@ -1400,3 +1415,6 @@ pt-BR:
   replenishing_consolidations:
     index:
       title: "Reabastecimento"
+  demand_efforts:
+    index:
+      title: "Esforços"

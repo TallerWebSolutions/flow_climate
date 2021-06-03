@@ -58,9 +58,9 @@ class TeamsController < DemandsListController
     @projects_risk_in_time_team_based = []
     build_projects_lead_time_in_time_array(executing_projects)
 
-    start_date = 3.months.ago.to_date.end_of_month
+    start_date = 6.months.ago.to_date.beginning_of_month
     end_date = Time.zone.today
-    projects_last_six_months = @team.projects.active_in_period(start_date, end_date)
+    projects_last_six_months = @team.projects.not_cancelled.active_in_period(start_date, end_date)
     @last_six_months_hours_per_project = Highchart::ProjectsChartAdapter.new(projects_last_six_months).hours_per_project_in_period(start_date, end_date)
 
     respond_to { |format| format.js { render 'teams/team_projects_tab' } }

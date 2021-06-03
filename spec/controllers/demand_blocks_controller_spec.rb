@@ -356,20 +356,22 @@ RSpec.describe DemandBlocksController, type: :controller do
       let(:customer) { Fabricate :customer, company: company }
       let(:project) { Fabricate :project, customers: [customer], start_date: 2.days.ago, end_date: Time.zone.today }
       let!(:demand) { Fabricate :demand, project: project, end_date: Time.zone.now }
-      let!(:demand_block) { Fabricate :demand_block, demand: demand, block_time: 1.day.ago, unblock_time: nil }
 
       context 'valid parameters' do
         it 'calls the to_csv and responds success' do
-          get :demand_blocks_csv, params: { company_id: company, demand_blocks_ids: [demand_block.id].join(',') }, format: :csv
-          expect(response).to have_http_status :ok
+          travel_to Time.zone.local(2021, 5, 26, 10, 0) do
+            demand_block = Fabricate :demand_block, demand: demand, block_time: 1.day.ago, unblock_time: nil
+            get :demand_blocks_csv, params: { company_id: company, demand_blocks_ids: [demand_block.id].join(',') }, format: :csv
+            expect(response).to have_http_status :ok
 
-          csv = CSV.parse(response.body, headers: true)
-          expect(csv.count).to eq 1
-          expect(csv.first[0].to_i).to eq demand_block.id
-          expect(csv.first[1]).to eq demand_block.block_time&.iso8601
-          expect(csv.first[2]).to eq demand_block.unblock_time&.iso8601
-          expect(csv.first[3].to_i).to eq 0
-          expect(csv.first[4]).to eq demand.external_id
+            csv = CSV.parse(response.body, headers: true)
+            expect(csv.count).to eq 1
+            expect(csv.first[0].to_i).to eq demand_block.id
+            expect(csv.first[1]).to eq demand_block.block_time&.iso8601
+            expect(csv.first[2]).to eq demand_block.unblock_time&.iso8601
+            expect(csv.first[3].to_i).to eq 6
+            expect(csv.first[4]).to eq demand.external_id
+          end
         end
       end
 

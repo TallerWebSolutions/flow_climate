@@ -4,43 +4,44 @@
 #
 # Table name: demands
 #
-#  id                              :bigint           not null, primary key
-#  blocked_working_time_downstream :decimal(, )      default(0.0)
-#  blocked_working_time_upstream   :decimal(, )      default(0.0)
-#  class_of_service                :integer          default("standard"), not null
-#  commitment_date                 :datetime
-#  cost_to_project                 :decimal(, )      default(0.0)
-#  created_date                    :datetime         not null
-#  demand_score                    :decimal(, )      default(0.0)
-#  demand_tags                     :string           default([]), is an Array
-#  demand_title                    :string
-#  demand_type                     :integer          not null
-#  demand_url                      :string
-#  discarded_at                    :datetime
-#  effort_downstream               :decimal(, )      default(0.0)
-#  effort_upstream                 :decimal(, )      default(0.0)
-#  end_date                        :datetime
-#  external_url                    :string
-#  leadtime                        :decimal(, )
-#  manual_effort                   :boolean          default(FALSE)
-#  slug                            :string
-#  total_bloked_working_time       :decimal(, )      default(0.0)
-#  total_queue_time                :integer          default(0)
-#  total_touch_blocked_time        :decimal(, )      default(0.0)
-#  total_touch_time                :integer          default(0)
-#  created_at                      :datetime         not null
-#  updated_at                      :datetime         not null
-#  company_id                      :integer          not null
-#  contract_id                     :integer
-#  current_stage_id                :integer
-#  customer_id                     :integer
-#  external_id                     :string           not null
-#  portfolio_unit_id               :integer
-#  product_id                      :integer
-#  project_id                      :integer          not null
-#  risk_review_id                  :integer
-#  service_delivery_review_id      :integer
-#  team_id                         :integer          not null
+#  id                         :bigint           not null, primary key
+#  class_of_service           :integer          default("standard"), not null
+#  commitment_date            :datetime
+#  cost_to_project            :decimal(, )      default(0.0)
+#  created_date               :datetime         not null
+#  demand_score               :decimal(, )      default(0.0)
+#  demand_tags                :string           default([]), is an Array
+#  demand_title               :string
+#  demand_type                :integer          not null
+#  demand_url                 :string
+#  discarded_at               :datetime
+#  effort_design              :decimal(, )      default(0.0), not null
+#  effort_development         :decimal(, )      default(0.0), not null
+#  effort_downstream          :decimal(, )      default(0.0)
+#  effort_management          :decimal(, )      default(0.0), not null
+#  effort_upstream            :decimal(, )      default(0.0)
+#  end_date                   :datetime
+#  external_url               :string
+#  leadtime                   :decimal(, )
+#  manual_effort              :boolean          default(FALSE)
+#  slug                       :string
+#  total_bloked_working_time  :decimal(, )      default(0.0)
+#  total_queue_time           :integer          default(0)
+#  total_touch_blocked_time   :decimal(, )      default(0.0)
+#  total_touch_time           :integer          default(0)
+#  created_at                 :datetime         not null
+#  updated_at                 :datetime         not null
+#  company_id                 :integer          not null
+#  contract_id                :integer
+#  current_stage_id           :integer
+#  customer_id                :integer
+#  external_id                :string           not null
+#  portfolio_unit_id          :integer
+#  product_id                 :integer
+#  project_id                 :integer          not null
+#  risk_review_id             :integer
+#  service_delivery_review_id :integer
+#  team_id                    :integer          not null
 #
 # Indexes
 #
@@ -90,6 +91,7 @@ class Demand < ApplicationRecord
   has_many :demand_comments, dependent: :destroy
   has_many :item_assignments, dependent: :destroy
   has_many :flow_impacts, dependent: :destroy
+  has_many :demand_efforts, dependent: :destroy
 
   has_many :stages, -> { distinct }, through: :demand_transitions
   has_many :memberships, through: :item_assignments
@@ -101,26 +103,26 @@ class Demand < ApplicationRecord
   validates :external_id, uniqueness: { scope: :company_id, message: I18n.t('demand.validations.external_id_unique.message') }
 
   scope :opened_before_date, ->(date) { where('demands.created_date <= :analysed_date AND (demands.discarded_at IS NULL OR demands.discarded_at > :analysed_date)', analysed_date: date.end_of_day) }
-  scope :finished_in_downstream, -> { kept.where('commitment_date IS NOT NULL AND end_date IS NOT NULL') }
-  scope :finished_in_upstream, -> { kept.where('commitment_date IS NULL AND end_date IS NOT NULL') }
-  scope :finished, -> { kept.where.not('demands.end_date' => nil) }
-  scope :finished_with_leadtime, -> { kept.where('demands.end_date IS NOT NULL AND demands.leadtime IS NOT NULL') }
-  scope :finished_until_date, ->(limit_date) { finished.where('demands.end_date <= :limit_date', limit_date: limit_date) }
-  scope :finished_after_date, ->(limit_date) { finished.where('demands.end_date >= :limit_date', limit_date: limit_date) }
-  scope :not_started, -> { kept.joins(team: :stages).where('current_stage_id = (SELECT stage_id FROM stages, stages_teams WHERE stages_teams.stage_id = stages.id AND stages_teams.team_id = teams.id AND stages.order = 0)').uniq }
-  scope :not_committed, -> { kept.where('demands.commitment_date IS NULL AND demands.end_date IS NULL') }
-  scope :not_finished, -> { kept.where(end_date: nil) }
-  scope :in_wip, -> { kept.where('demands.commitment_date IS NOT NULL AND demands.end_date IS NULL') }
-  scope :in_flow, -> { kept.joins(:demand_transitions).where(end_date: nil).group('demands.id').having('COUNT(demand_transitions.id) > 1') }
+  scope :finished_in_downstream, -> { where('commitment_date IS NOT NULL AND end_date IS NOT NULL') }
+  scope :finished_in_upstream, -> { where('commitment_date IS NULL AND end_date IS NOT NULL') }
+  scope :finished, -> { where.not('demands.end_date' => nil) }
+  scope :finished_with_leadtime, -> { where('demands.end_date IS NOT NULL AND demands.leadtime IS NOT NULL') }
+  scope :finished_until_date, ->(limit_date) { finished.where('(demands.end_date <= :limit_date) AND (demands.discarded_at IS NULL OR demands.discarded_at > :limit_date)', limit_date: limit_date) }
+  scope :finished_after_date, ->(limit_date) { finished.where('(demands.end_date >= :limit_date) AND (demands.discarded_at IS NULL OR demands.discarded_at > :limit_date)', limit_date: limit_date) }
+  scope :not_started, -> { joins(team: :stages).where('current_stage_id = (SELECT stage_id FROM stages, stages_teams WHERE stages_teams.stage_id = stages.id AND stages_teams.team_id = teams.id AND stages.order = 0)').uniq }
+  scope :not_committed, -> { where('demands.commitment_date IS NULL AND demands.end_date IS NULL') }
+  scope :not_finished, -> { where(end_date: nil) }
+  scope :in_wip, -> { where('demands.commitment_date IS NOT NULL AND demands.end_date IS NULL') }
+  scope :in_flow, -> { joins(:demand_transitions).where(end_date: nil).group('demands.id').having('COUNT(demand_transitions.id) > 1') }
   scope :to_dates, ->(start_date, end_date) { where('(demands.end_date IS NOT NULL AND demands.end_date BETWEEN :start_date AND :end_date) OR (demands.end_date IS NULL AND demands.commitment_date IS NOT NULL AND demands.commitment_date BETWEEN :start_date AND :end_date) OR (demands.end_date IS NULL AND demands.commitment_date IS NULL AND demands.created_date BETWEEN :start_date AND :end_date)', start_date: start_date.beginning_of_day, end_date: end_date.end_of_day) }
   scope :until_date, ->(limit_date) { where('(demands.end_date IS NOT NULL AND demands.end_date <= :limit_date) OR (demands.commitment_date IS NOT NULL AND demands.commitment_date <= :limit_date) OR (demands.created_date <= :limit_date)', limit_date: limit_date) }
   scope :to_end_dates, ->(start_date, end_date) { where('demands.end_date BETWEEN :start_date AND :end_date', start_date: start_date.beginning_of_day, end_date: end_date.end_of_day) }
-  scope :dates_inconsistent_to_project, ->(project) { kept.where('demands.commitment_date < :start_date OR demands.end_date > :end_date', start_date: project.start_date, end_date: project.end_date.end_of_day) }
-  scope :scored_demands, -> { kept.where('demands.demand_score > 0') }
-  scope :unscored_demands, -> { kept.where('demands.demand_score = 0') }
+  scope :dates_inconsistent_to_project, ->(project) { where('demands.commitment_date < :start_date OR demands.end_date > :end_date', start_date: project.start_date, end_date: project.end_date.end_of_day) }
+  scope :scored_demands, -> { where('demands.demand_score > 0') }
+  scope :unscored_demands, -> { where('demands.demand_score = 0') }
   scope :with_effort, -> { where('demands.effort_downstream > 0 OR demands.effort_upstream > 0') }
-  scope :grouped_end_date_by_month, -> { kept.finished.order(end_date: :desc).group_by { |demand| [demand.end_date.to_date.cwyear, demand.end_date.to_date.month] } }
-  scope :with_valid_leadtime, -> { kept.where('demands.leadtime >= :leadtime_data_limit', leadtime_data_limit: 10.minutes.to_i) }
+  scope :grouped_end_date_by_month, -> { finished.order(end_date: :desc).group_by { |demand| [demand.end_date.to_date.cwyear, demand.end_date.to_date.month] } }
+  scope :with_valid_leadtime, -> { where('demands.leadtime >= :leadtime_data_limit', leadtime_data_limit: 10.minutes.to_i) }
   scope :not_discarded_until, ->(limit_date) { where('demands.discarded_at IS NULL OR demands.discarded_at > :limit_date', limit_date: limit_date) }
 
   delegate :name, to: :project, prefix: true
@@ -173,12 +175,6 @@ class Demand < ApplicationRecord
 
   def active_team_members
     memberships.includes([:team_member]).where(item_assignments: { finish_time: nil }).uniq
-  end
-
-  def update_effort!(update_manual_effort)
-    return if manual_effort? && !update_manual_effort
-
-    update(effort_downstream: compute_effort_downstream, effort_upstream: compute_effort_upstream)
   end
 
   def downstream_demand?
@@ -261,10 +257,6 @@ class Demand < ApplicationRecord
     commitment_transition.last_time_out - commitment_transition.last_time_in
   end
 
-  def blocked_time
-    demand_blocks.filter_map(&:total_blocked_time).sum
-  end
-
   def first_stage_in_the_flow
     first_stage = team.stages.where('stages.order >= 0').order(:order).first
     return first_stage if first_stage.present?
@@ -302,55 +294,11 @@ class Demand < ApplicationRecord
     product_tree_array
   end
 
-  def sum_blocked_time_for_transitions(transitions)
-    total_blocked = 0
-    transitions.each do |transition|
-      total_blocked += demand_blocks.closed.active.for_date_interval(transition.last_time_in, transition.last_time_out).sum(&:total_blocked_time)
-    end
-    total_blocked
-  end
-
   def decimal_value_to_csv(value)
     value.to_f.to_s.gsub('.', I18n.t('number.format.separator'))
   end
 
-  def compute_effort_upstream
-    valid_effort = working_time_upstream
-    valid_effort *= (project.percentage_effort_to_bugs / 100.0) if bug?
-    valid_effort
-  end
-
-  def compute_effort_downstream
-    valid_effort = working_time_downstream
-    valid_effort *= (project.percentage_effort_to_bugs / 100.0) if bug?
-    valid_effort
-  end
-
-  def working_time_upstream
-    effort_transitions = demand_transitions.upstream_transitions.effort_transitions_to_project(project_id)
-    return sum_effort(effort_transitions) if effort_transitions.count.positive?
-
-    0
-  end
-
-  def working_time_downstream
-    effort_transitions = demand_transitions.downstream_transitions.effort_transitions_to_project(project_id)
-    return sum_effort(effort_transitions) if effort_transitions.count.positive?
-
-    0
-  end
-
-  def sum_effort(effort_transitions)
-    total_effort = 0
-    effort_transitions.each { |transition| total_effort += transition.effort_in_transition }
-    total_effort
-  end
-
   def compute_and_update_automatic_fields
-    self.blocked_working_time_downstream = compute_blocked_working_time_downstream
-    self.blocked_working_time_upstream = compute_blocked_working_time_upstream
-    self.total_bloked_working_time = compute_total_bloked_working_time
-    self.total_touch_blocked_time = compute_total_touch_blocked_time
     self.cost_to_project = compute_cost_to_project
   end
 
@@ -358,36 +306,10 @@ class Demand < ApplicationRecord
     self.leadtime = (end_date - commitment_date if commitment_date.present? && end_date.present?)
   end
 
-  def compute_total_touch_blocked_time
-    sum_blocked_time_for_transitions(demand_transitions.touch_transitions)
-  end
-
-  def compute_total_bloked_working_time
-    demand_blocks.closed.filter_map(&:block_working_time_duration).sum
-  end
-
   def compute_cost_to_project
     return 0 if project.hour_value.blank?
 
     (effort_downstream + effort_upstream) * project.hour_value
-  end
-
-  def compute_blocked_working_time_downstream
-    effort_transitions = demand_transitions.downstream_transitions.effort_transitions_to_project(project_id)
-    sum_blocked_effort(effort_transitions)
-  end
-
-  def compute_blocked_working_time_upstream
-    effort_transitions = demand_transitions.upstream_transitions.effort_transitions_to_project(project_id)
-    sum_blocked_effort(effort_transitions)
-  end
-
-  def sum_blocked_effort(effort_transitions)
-    total_blocked = 0
-    effort_transitions.each do |transition|
-      total_blocked += demand_blocks.closed.active.for_date_interval(transition.last_time_in, transition.last_time_out).filter_map(&:block_working_time_duration).sum
-    end
-    total_blocked
   end
 
   def discard_dependencies

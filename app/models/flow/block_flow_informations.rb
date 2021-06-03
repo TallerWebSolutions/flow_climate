@@ -22,7 +22,7 @@ module Flow
     private
 
     def build_block_flow_info(demands_finished_until_date)
-      block_time = demands_finished_until_date.sum(&:blocked_time).to_f / 1.hour
+      block_time = demands_finished_until_date.sum(&:total_bloked_working_time).to_f
       block_count = demands_finished_until_date.sum(&:demand_blocks_count)
 
       @blocks_time << block_time - @blocks_time.sum

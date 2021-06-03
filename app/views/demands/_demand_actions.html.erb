@@ -1,6 +1,10 @@
-<% unless demand.discarded? %>
-  <%= link_to '#', onclick: "destroyDemand(#{company.id}, #{demand.id}, '#{I18n.t('general.destroy.confirm')}', #{demands_ids})" do %>
+<% if demand.discarded? %>
+  <%= link_to destroy_physically_company_demand_path(company, demand), method: :delete, data: { confirm: I18n.t('general.destroy.confirm_physical') }, title: I18n.t('demands.destroy.tip'), remote: true do %>
     <i class="fa fa-times" aria-hidden="true"></i>
+  <% end %>
+<% else %>
+  <%= link_to '#', onclick: "destroyDemand(#{company.id}, #{demand.id}, '#{I18n.t('general.destroy.confirm')}', #{demands_ids})" do %>
+    <i class="fa fa-trash"></i>
   <% end %>
 <% end %>
 

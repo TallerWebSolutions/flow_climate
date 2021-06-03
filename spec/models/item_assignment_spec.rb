@@ -4,6 +4,7 @@ RSpec.describe ItemAssignment, type: :model do
   context 'associations' do
     it { is_expected.to belong_to :demand }
     it { is_expected.to belong_to :membership }
+    it { is_expected.to have_many(:demand_efforts).dependent(:destroy) }
   end
 
   context 'validations' do

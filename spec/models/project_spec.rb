@@ -132,6 +132,10 @@ RSpec.describe Project, type: :model do
       it { expect(described_class.active).to match_array [first_project, third_project, fourth_project, seventh_project] }
     end
 
+    describe '.not_cancelled' do
+      it { expect(described_class.not_cancelled).to match_array [first_project, second_project, third_project, fourth_project, sixth_project, seventh_project] }
+    end
+
     describe '.finishing_after' do
       it { expect(described_class.finishing_after(26.hours.ago)).to match_array [first_project, fourth_project, fifth_project, sixth_project, seventh_project, third_project] }
     end

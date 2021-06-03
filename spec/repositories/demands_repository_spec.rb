@@ -41,9 +41,9 @@ RSpec.describe DemandsRepository, type: :repository do
 
           Fabricate :demand, project: first_project, commitment_date: 3.weeks.ago
           Fabricate :demand, project: first_project, commitment_date: 2.weeks.ago
-          Fabricate :demand, project: first_project, commitment_date: 1.week.ago, discarded_at: Time.zone.today
+          fourth_demand = Fabricate :demand, project: first_project, commitment_date: 1.week.ago, discarded_at: Time.zone.today
 
-          expect(described_class.instance.committed_demands_to_period(Demand.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to match_array [first_demand, second_demand, third_demand]
+          expect(described_class.instance.committed_demands_to_period(Demand.all, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear)).to match_array [first_demand, second_demand, third_demand, fourth_demand]
         end
       end
     end
@@ -62,7 +62,7 @@ RSpec.describe DemandsRepository, type: :repository do
       let!(:fifth_demand) { Fabricate :demand, project: second_project, created_date: 1.week.ago }
       let!(:sixth_demand) { Fabricate :demand, project: first_project, created_date: 1.week.ago, discarded_at: Time.zone.today }
 
-      it { expect(described_class.instance.created_to_projects_and_period(Project.all, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)).to match_array [third_demand, fourth_demand, fifth_demand] }
+      it { expect(described_class.instance.created_to_projects_and_period(Project.all, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)).to match_array [third_demand, fourth_demand, fifth_demand, sixth_demand] }
     end
 
     context 'with no data' do
@@ -79,7 +79,7 @@ RSpec.describe DemandsRepository, type: :repository do
       let!(:fifth_demand) { Fabricate :demand, project: second_project, end_date: 1.week.ago }
       let!(:sixth_demand) { Fabricate :demand, project: first_project, end_date: 1.week.ago, discarded_at: Time.zone.today }
 
-      it { expect(described_class.instance.throughput_to_period(Demand.all, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)).to match_array [third_demand, fourth_demand, fifth_demand] }
+      it { expect(described_class.instance.throughput_to_period(Demand.all, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)).to match_array [third_demand, fourth_demand, fifth_demand, sixth_demand] }
     end
 
     context 'with no data' do
@@ -97,7 +97,7 @@ RSpec.describe DemandsRepository, type: :repository do
 
       let!(:sixth_demand) { Fabricate :demand, end_date: 1.week.ago, team: team, discarded_at: Time.zone.today }
 
-      it { expect(described_class.instance.throughput_to_products_team_and_period(Product.all, first_project.team, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)).to match_array [third_demand, fourth_demand, fifth_demand] }
+      it { expect(described_class.instance.throughput_to_products_team_and_period(Product.all, first_project.team, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)).to match_array [third_demand, fourth_demand, fifth_demand, sixth_demand] }
     end
 
     context 'with no data' do
@@ -125,7 +125,7 @@ RSpec.describe DemandsRepository, type: :repository do
 
       let!(:eigth_demand) { Fabricate :demand, project: second_project, commitment_date: Time.zone.today, discarded_at: Time.zone.today, effort_upstream: 54_321, effort_downstream: 15_223 }
 
-      it { expect(described_class.instance.delivered_hours_in_month_for_projects(Project.all).to_f).to eq 3374.0 }
+      it { expect(described_class.instance.delivered_hours_in_month_for_projects(Project.all).to_f).to eq 72_918.0 }
       it { expect(described_class.instance.delivered_hours_in_month_for_projects(Project.all, Date.new(2018, 3, 1)).to_f).to eq 2632.0 }
     end
 
@@ -150,7 +150,7 @@ RSpec.describe DemandsRepository, type: :repository do
 
       let!(:eigth_demand) { Fabricate :demand, project: second_project, commitment_date: Time.zone.today, discarded_at: Time.zone.today, effort_upstream: 54_321, effort_downstream: 15_223 }
 
-      it { expect(described_class.instance.demands_delivered_for_period(Demand.all, 4.days.ago, Time.zone.now)).to match_array [first_demand, second_demand] }
+      it { expect(described_class.instance.demands_delivered_for_period(Demand.all, 4.days.ago, Time.zone.now)).to match_array [first_demand, second_demand, eigth_demand] }
     end
 
     context 'with no demands' do
@@ -259,18 +259,29 @@ RSpec.describe DemandsRepository, type: :repository do
   end
 
   describe '#demand_state_query' do
-    before { travel_to Time.zone.local(2018, 4, 5, 10, 0, 0) }
+    it 'filters according to the query' do
+      travel_to Time.zone.local(2018, 4, 5, 10, 0, 0) do
+        first_demand = Fabricate :demand, external_id: 'hhh', demand_title: 'foo', demand_type: :feature, class_of_service: :standard, created_date: 2.days.ago, commitment_date: nil, end_date: nil
+        second_demand = Fabricate :demand, demand_title: 'foo cassini', demand_type: :bug, class_of_service: :expedite, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil
+        third_demand = Fabricate :demand, demand_title: 'cassini foo', demand_type: :feature, class_of_service: :intangible, created_date: 5.days.ago, commitment_date: nil, end_date: 1.day.ago
+        fourth_demand = Fabricate :demand, demand_title: 'xpto', demand_type: :chore, class_of_service: :standard, created_date: 10.days.ago, commitment_date: 5.days.ago, end_date: Time.zone.today
+        fifth_demand = Fabricate :demand, demand_title: 'xpto', demand_type: :ui, class_of_service: :fixed_date, created_date: 1.month.ago, commitment_date: nil, end_date: nil
+        sixth_demand = Fabricate :demand, demand_title: 'voyager sas', demand_type: :feature, class_of_service: :standard, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil
+        seventh_demand = Fabricate :demand, demand_title: 'sas', demand_type: :performance_improvement, class_of_service: :expedite, created_date: 2.days.ago, commitment_date: 2.days.ago, end_date: 1.day.ago
+        eigth_demand = Fabricate :demand, demand_title: 'sas', demand_type: :wireframe, class_of_service: :fixed_date, created_date: 3.days.ago, commitment_date: 1.day.ago, end_date: Time.zone.today
+        ninth_demand = Fabricate :demand, demand_title: 'sas', demand_type: :wireframe, class_of_service: :fixed_date, created_date: 3.days.ago, commitment_date: 1.day.ago, end_date: Time.zone.today, discarded_at: Time.zone.now
 
-    after { travel_back }
-
-    include_context 'demand data for filters'
-
-    it { expect(described_class.instance.demand_state_query(Demand.all, '')).to eq Demand.all }
-    it { expect(described_class.instance.demand_state_query(Demand.none, '')).to eq [] }
-    it { expect(described_class.instance.demand_state_query(Demand.all, 'wip')).to match_array [second_demand, sixth_demand] }
-    it { expect(described_class.instance.demand_state_query(Demand.all, 'delivered')).to match_array [third_demand, fourth_demand, seventh_demand, eigth_demand, ninth_demand] }
-    it { expect(described_class.instance.demand_state_query(Demand.all, 'not_committed')).to match_array [first_demand, fifth_demand] }
-    it { expect(described_class.instance.demand_state_query(Demand.all, %w[not_committed wip])).to match_array [first_demand, fifth_demand, second_demand, sixth_demand] }
+        expect(described_class.instance.demand_state_query(Demand.all, '')).to eq Demand.all
+        expect(described_class.instance.demand_state_query(Demand.none, '')).to eq []
+        expect(described_class.instance.demand_state_query(Demand.all, 'wip')).to match_array [second_demand, sixth_demand]
+        expect(described_class.instance.demand_state_query(Demand.all, 'delivered')).to match_array [third_demand, fourth_demand, seventh_demand, eigth_demand, ninth_demand]
+        expect(described_class.instance.demand_state_query(Demand.all, 'not_committed')).to match_array [first_demand, fifth_demand]
+        expect(described_class.instance.demand_state_query(Demand.all, %w[not_committed wip])).to match_array [first_demand, fifth_demand, second_demand, sixth_demand]
+        expect(described_class.instance.demand_state_query(Demand.all, ['discarded'])).to eq [ninth_demand]
+        expect(described_class.instance.demand_state_query(Demand.all, %w[discarded delivered])).to eq [ninth_demand]
+        expect(described_class.instance.demand_state_query(Demand.all, %w[not_discarded delivered])).to match_array [third_demand, fourth_demand, seventh_demand, eigth_demand]
+      end
+    end
   end
 
   describe '#demand_type_query' do
@@ -347,7 +358,19 @@ RSpec.describe DemandsRepository, type: :repository do
     it { expect(described_class.instance.wip_count(Demand.all.map(&:id), 2.weeks.ago)).to eq 0 }
   end
 
+  describe '#remaining_backlog_to_date' do
+    it 'returns the valid demands for the date' do
+      travel_to Time.zone.local(2021, 6, 2, 16, 0, 0) do
+        Fabricate :demand, external_id: 'hhh', demand_title: 'foo', demand_type: :feature, class_of_service: :standard, created_date: 3.days.ago, commitment_date: nil, end_date: nil, discarded_at: nil
+        Fabricate :demand, external_id: 'hhh', demand_title: 'foo', demand_type: :feature, class_of_service: :standard, created_date: 4.days.ago, commitment_date: 1.day.ago, end_date: nil, discarded_at: nil
+        Fabricate :demand, external_id: 'hhh', demand_title: 'foo', demand_type: :feature, class_of_service: :standard, created_date: 4.days.ago, commitment_date: 1.day.ago, end_date: 1.day.ago, discarded_at: Time.zone.now
+
+        expect(described_class.instance.remaining_backlog_to_date(Demand.all.map(&:id), Time.zone.now)).to eq 1
+        expect(described_class.instance.remaining_backlog_to_date(Demand.all.map(&:id), 2.days.ago)).to eq 3
+      end
+    end
+  end
+
   pending '#bugs_opened_until_limit_date'
   pending '#bugs_closed_until_limit_date'
-  pending '#remaining_backlog_to_date'
 end

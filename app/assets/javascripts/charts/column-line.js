@@ -24,7 +24,10 @@ function buildColumnLineChart(columnDiv) {
                 color: '#808080'
             }],
             stackLabels: {
-                enabled: true
+                enabled: true,
+                formatter: function() {
+                    return Highcharts.numberFormat(this.total, columnDiv.data('decimals'), ',');
+                }
             },
             opposite: true
         }, {
@@ -55,8 +58,9 @@ function buildColumnLineChart(columnDiv) {
         },
         plotOptions: {
             column: {
+                stacking: columnDiv.data('stacking'),
                 dataLabels: {
-                    enabled: true,
+                    enabled: columnDiv.data('stacking') !== "normal",
                     color: 'black',
                     formatter: function () {
                         return Highcharts.numberFormat(this.y, columnDiv.data('decimals'), ',', '.');

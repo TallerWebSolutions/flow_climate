@@ -24,24 +24,26 @@ RSpec.describe DemandBlock, type: :model do
 
   context 'callbacks' do
     describe '#before_save' do
-      before { travel_to Time.zone.local(2018, 5, 18, 10, 0, 0) }
-
-      after { travel_back }
-
       let(:stage) { Fabricate :stage }
       let(:demand) { Fabricate :demand }
       let(:demand_block) { Fabricate :demand_block, demand: demand, block_time: Time.zone.yesterday }
 
-      context 'when there is unblock_time' do
-        before { demand_block.update(unblock_time: Time.zone.now) }
-
-        it { expect(demand_block.reload.block_working_time_duration).to eq 12 }
+      context 'with a unblock_time' do
+        it 'computes the correct working time using the unblock value' do
+          travel_to Time.zone.local(2021, 5, 26, 15, 46) do
+            demand_block.update(block_time: 2.days.ago, unblock_time: 1.day.ago)
+            expect(demand_block.reload.block_working_time_duration).to eq 6
+          end
+        end
       end
 
       context 'when there is no unblock_time' do
-        before { demand_block.update(block_time: Time.zone.now) }
-
-        it { expect(demand_block.reload.block_working_time_duration).to eq nil }
+        it 'uses current time' do
+          travel_to Time.zone.local(2021, 5, 24, 15, 46) do
+            demand_block.update(block_time: 3.hours.ago, unblock_time: nil)
+            expect(demand_block.reload.block_working_time_duration).to eq 3
+          end
+        end
       end
 
       context 'when there is a demand current stage' do

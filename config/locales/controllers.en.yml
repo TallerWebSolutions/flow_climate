@@ -50,6 +50,7 @@ en:
     destroy:
       confirm: "You are about to delete a record. Are you sure?"
       success: "Excluded"
+      confirm_physical: "You are about to detroy physically a record. Are you sure?"
     period: "Period"
     throughput: "Throughput (items/week)"
     delivered: "Delivered"
@@ -312,6 +313,8 @@ en:
       inconsistent_demands_count: "Qty Inconsistent Demands"
       active_projects: "Active Projects"
       average_speed: "Average Speed"
+      consumed_hours_role: "Consumed Hours by Role"
+      consumed_hours_role_in_month: "Consumed Hours by Role in Month"
     show:
       initial_scope: "Initial Scope"
       last_team: "Current team"
@@ -494,7 +497,7 @@ en:
       risk_evolution_in_time_team_based: "Operational Math Risk Evolution - Team Data"
       quality_block_per_demand: "blocks per demand"
       throughput_hours_six_months:
-        title: "Projects' Hours per Month - Last 3 months"
+        title: "Projects' Hours per Month - Last 6 months"
     project_risk_alert_table: "Risk alerts to the project"
     portfolio_bulletin:
       red_projects: "Red Alert Projects"
@@ -717,6 +720,7 @@ en:
       consolidations: "Consolidations"
       memberships:
         blank: "No role in the team %{team_name}"
+      efforts_tab: "Efforts"
     sync:
       enqueued: "Your request was enqueued. It will be processed soon."
       done: "The sync is done."
@@ -769,7 +773,7 @@ en:
       std_throughput: "STD Throughput"
       avg_touch: "Average Touch (hours)"
       avg_queue: "Average Queue (hours)"
-      avg_work_hours_per_demand: "Avg Work Hours per Demand"
+      avg_work_hours_per_demand: "Hours per Demand (HpD)"
     filter:
       grouping:
         title: "Grouped By"
@@ -784,6 +788,8 @@ en:
         work_in_progress: "Work in Progress"
         delivered_demands: "Delivered"
         not_started: "Not Started"
+        discarded_demands: "Discarded"
+        not_discarded_demands: "Not Discarded"
       demand_type:
         title: "Demand Type"
         all_types: "All Types"
@@ -811,6 +817,8 @@ en:
     score_research:
       title: "Score Research"
       go_to_list: "Go to the list"
+    destroy:
+      tip: "Delete demand permanentely"
   navbar:
     details: "Details"
     charts: "Project Charts"
@@ -947,6 +955,13 @@ en:
     in_month: "In Month"
     in_quarter: "In Quarter"
     in_year: "In Year"
+    effort_development: "Effort Development"
+    effort_design: "Effort Design"
+    effort_management: "Effort Management"
+    effort_design_month: "Design Effort In Month"
+    effort_development_month: "Development Hours in Month"
+    effort_management_month: "Management Hours in Month"
+    total_effort_month: "Total Effort in Month"
   finances_params:
     edit:
       title: "Edit Financial Information"
@@ -1420,3 +1435,6 @@ en:
   replenishing_consolidations:
     index:
       title: "Replenishing"
+  demand_efforts:
+    index:
+      title: "Efforts"

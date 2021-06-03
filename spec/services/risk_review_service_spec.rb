@@ -5,11 +5,11 @@ RSpec.describe RiskReviewService, type: :service do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
     let(:product) { Fabricate :product, customer: customer }
-    let!(:project) { Fabricate :project, company: company, products: [product] }
-    let!(:stage) { Fabricate :stage, company: company, projects: [project], end_point: true }
 
     it 'creates the risk review data' do
       travel_to Time.zone.local(2020, 10, 19, 10, 0, 0) do
+        project = Fabricate :project, company: company, products: [product]
+        stage = Fabricate :stage, company: company, projects: [project], end_point: true
         risk_review = Fabricate :risk_review, product: product, meeting_date: Time.zone.today
         other_risk_review = Fabricate :risk_review, product: product, meeting_date: Time.zone.tomorrow
 
@@ -48,8 +48,8 @@ RSpec.describe RiskReviewService, type: :service do
         expect(risk_review.reload.demand_blocks).to match_array [first_block, third_block, second_block, fourth_block]
         expect(risk_review.reload.flow_impacts).to match_array [first_impact, third_impact, second_impact, fourth_impact, fifth_impact]
         expect(risk_review.reload.weekly_avg_blocked_time.count).to eq 2
-        expect(risk_review.reload.weekly_avg_blocked_time[0]).to be_within(3000).of 153_000
-        expect(risk_review.reload.weekly_avg_blocked_time[1]).to be_within(3000).of 153_000
+        expect(risk_review.reload.weekly_avg_blocked_time[0]).to eq 7.5
+        expect(risk_review.reload.weekly_avg_blocked_time[1]).to eq 7.5
       end
     end
   end

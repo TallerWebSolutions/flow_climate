@@ -34,6 +34,7 @@ class ItemAssignment < ApplicationRecord
   belongs_to :demand
   belongs_to :membership
 
+  has_many :demand_efforts, dependent: :destroy
   validates :demand, :membership, presence: true
 
   validates :demand, uniqueness: { scope: %i[membership start_time], message: I18n.t('item_assignment.validations.demand_unique') }

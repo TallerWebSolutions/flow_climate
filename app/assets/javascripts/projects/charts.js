@@ -61,7 +61,17 @@ if (projectQualityBlockPerDemand.length !== 0) {
     buildLineChart(projectQualityBlockPerDemand);
 }
 
-const projectHoursConsumed = $("#project-dashboard-hours-per-demand-column-line");
+const projectHoursConsumed = $("#project-dashboard-hours-consumed-stream-column-line");
 if (projectHoursConsumed.length !== 0) {
     buildColumnLineChart(projectHoursConsumed);
+}
+
+const projectHoursConsumedRole = $("#project-dashboard-hours-consumed-role-column-line");
+if (projectHoursConsumedRole.length !== 0) {
+    buildColumnLineChart(projectHoursConsumedRole);
+}
+
+const projectHoursConsumedRoleMonth = $("#project-dashboard-hours-consumed-role-month-column-line");
+if (projectHoursConsumedRoleMonth.length !== 0) {
+    buildColumnLineChart(projectHoursConsumedRoleMonth);
 }

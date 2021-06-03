@@ -25,7 +25,7 @@ module Jira
 
       process_labels(demand, jira_issue_changelog['values'])
 
-      demand.update_effort!(false)
+      DemandEffortService.instance.build_efforts_to_demand(demand)
     end
 
     private

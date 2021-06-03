@@ -190,6 +190,9 @@ pt-BR:
       demand_score_matrix:
         one: Matriz de Pontuação da Demanda
         other: Matrizes de Pontuação da Demanda
+      demand_effort:
+        one: Esforço de Demanda
+        other: Esforços de Demanda
     attributes:
       user:
         first_name: Nome
@@ -666,7 +669,23 @@ pt-BR:
         answer_value: Valor da Resposta
         description: Descrição
       demand_score_matrix:
-        score_matrix_question: Pergunta da Matriz
+        score_matrix_question: "Pergunta da Matriz"
+      demand_effort:
+        demand: "Demanda"
+        demand_transition: "Transição de Demanda"
+        item_assignment: "Atribuição de Item"
+        effort_value: "Valor"
+        start_time_to_computation: "Início dos Dados"
+        finish_time_to_computation: "Fim dos Dados"
+        management_percentage: "% Gestão"
+        stage_percentage: "% Etapa"
+        pairing_percentage: "% Par"
+        total_blocked: "Tempo Bloqueado"
+        automatic_update: "Automático?"
+        main_effort_in_transition: "Principal?"
+        stage: "Etapa"
+        who: "Quem"
+        member_role: "Função"
   product:
     name:
       uniqueness: "Não deve repetir nome de produto para o mesmo cliente."

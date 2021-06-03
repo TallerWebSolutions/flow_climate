@@ -82,7 +82,7 @@ module Flow
       build_upstream_data_array(demands_delivered_upstream)
       build_downstream_data_array(demands_delivered_downstream)
       build_throughput_per_period_data_array(demands_delivered_upstream, demands_delivered_downstream)
-      build_bugs_data_array(demands_in_period.kept.bug.count, demands_delivered_to_date.kept.bug.count, demands_in_period.kept.count)
+      build_bugs_data_array(demands_in_period.bug.count, demands_delivered_to_date.bug.count, demands_in_period.count)
     end
 
     def build_products_flow_data(bottom_limit_date, upper_limit_date, demands_in_period)

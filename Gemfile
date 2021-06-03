@@ -25,7 +25,6 @@ gem 'jira-ruby', require: false
 gem 'jquery-rails'
 gem 'kaminari'
 gem 'mini_magick'
-gem 'newrelic_rpm'
 gem 'oj'
 gem 'pg'
 gem 'rollbar'
@@ -73,6 +72,7 @@ group :test do
 end
 
 group :production do
+  gem 'newrelic_rpm'
   gem 'puma'
   gem 'rails_12factor'
 end

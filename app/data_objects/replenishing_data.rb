@@ -46,7 +46,7 @@ class ReplenishingData
     @project_data_to_replenish = []
     @running_projects.each do |project|
       project_info_hash = build_project_hash(project)
-      throughput_grouped_per_week_hash = build_throughput_per_period_array(project.demands.kept, project.start_date.beginning_of_week, 1.week.ago.end_of_week, project.initial_scope)
+      throughput_grouped_per_week_hash = build_throughput_per_period_array(project.demands, project.start_date.beginning_of_week, 1.week.ago.end_of_week, project.initial_scope)
 
       project_info_hash = project_info_hash.merge(build_stats_info(project, throughput_grouped_per_week_hash))
       project_info_hash = project_info_hash.merge(build_qty_items_info(project))

@@ -58,7 +58,8 @@ class DemandBlock < ApplicationRecord
 
   delegate :name, to: :blocker, prefix: true
 
-  before_save :update_computed_fields!
+  before_save :update_computed_fields
+  after_save :update_blocked_time_in_demand
 
   def csv_array
     [
@@ -96,10 +97,13 @@ class DemandBlock < ApplicationRecord
 
   private
 
-  def update_computed_fields!
-    self.block_working_time_duration = TimeService.instance.compute_working_hours_for_dates(block_time, unblock_time) if unblock_time.present?
+  def update_computed_fields
+    end_time = unblock_time || Time.zone.now
+    self.block_working_time_duration = TimeService.instance.compute_working_hours_for_dates(block_time, end_time)
     self.stage = demand.stage_at(block_time)
+  end
 
-    demand.send(:compute_and_update_automatic_fields)
+  def update_blocked_time_in_demand
+    demand.update(total_bloked_working_time: demand.demand_blocks.sum(&:block_working_time_duration))
   end
 end

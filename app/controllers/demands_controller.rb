@@ -7,7 +7,7 @@ class DemandsController < DemandsListController
 
   before_action :assign_company
   before_action :assign_demand, only: %i[edit update show synchronize_jira destroy destroy_physically score_research]
-  before_action :assign_project, except: %i[demands_csv search_demands show destroy destroy_physically score_research index demands_list_by_ids demands_charts]
+  before_action :assign_project, except: %i[demands_csv search_demands show destroy destroy_physically score_research index demands_list_by_ids demands_charts synchronize_jira]
 
   def new
     @demand = Demand.new(project: @project)
@@ -53,6 +53,7 @@ class DemandsController < DemandsListController
     @paged_demand_blocks = @demand_blocks.page(params[:page])
     @demand_transitions = @demand.demand_transitions.includes([:stage]).order(:last_time_in)
     @demand_comments = @demand.demand_comments.includes([:team_member]).order(:comment_date)
+    @demand_efforts = @demand.demand_efforts.order(:start_time_to_computation)
 
     compute_flow_efficiency
     compute_stream_percentages
@@ -71,7 +72,7 @@ class DemandsController < DemandsListController
   def synchronize_jira
     jira_account = @company.jira_accounts.first
     demand_url = company_project_demand_url(@demand.project.company, @demand.project, @demand)
-    Jira::ProcessJiraIssueJob.perform_later(jira_account, @project, @demand.external_id, current_user.email, current_user.full_name, demand_url)
+    Jira::ProcessJiraIssueJob.perform_later(jira_account, @demand.project, @demand.external_id, current_user.email, current_user.full_name, demand_url)
     flash[:notice] = I18n.t('general.enqueued')
     redirect_to company_demand_path(@company, @demand)
   end
@@ -155,27 +156,27 @@ class DemandsController < DemandsListController
                    end
 
     @demands = if @demand_fitness == 'overserved'
-                 demandable.overserved_demands[:value].kept
+                 demandable.overserved_demands[:value]
                elsif @demand_fitness == 'underserved'
-                 demandable.underserved_demands[:value].kept
+                 demandable.underserved_demands[:value]
                elsif @demand_fitness == 'f4p'
-                 demandable.fit_for_purpose_demands[:value].kept
+                 demandable.fit_for_purpose_demands[:value]
                elsif @demand_state == 'discarded'
                  demandable.demands.discarded
                elsif @demand_type.present?
-                 demandable.demands.where(demand_type: @demand_type).kept
+                 demandable.demands.where(demand_type: @demand_type)
                elsif @demand_state == 'delivered'
-                 demandable.demands.kept.finished
+                 demandable.demands.finished
                elsif @demand_state == 'backlog'
-                 Demand.where(id: demandable.demands.not_started.map(&:id)).kept
+                 Demand.where(id: demandable.demands.not_started.map(&:id))
                elsif @demand_state == 'upstream'
-                 Demand.where(id: demandable.upstream_demands.map(&:id)).kept
+                 Demand.where(id: demandable.upstream_demands.map(&:id))
                elsif @demand_state == 'downstream'
-                 demandable.demands.in_wip.kept
+                 demandable.demands.in_wip
                elsif @demand_state == 'unscored'
-                 demandable.demands.unscored_demands.kept
+                 demandable.demands.unscored_demands
                else
-                 demandable.demands.kept
+                 demandable.demands
                end
   end
   # rubocop:enable Metrics/AbcSize

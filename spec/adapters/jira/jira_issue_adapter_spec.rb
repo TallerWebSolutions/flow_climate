@@ -231,6 +231,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
           let!(:jira_issue_changelog) { file_fixture('issue_changelog_paginated_page_one.json').read }
 
           it 'creates the members' do
+            expect(DemandEffortService.instance).to(receive(:build_efforts_to_demand)).once.with(demand)
             described_class.instance.process_jira_issue_changelog(jira_account, JSON.parse(jira_issue_changelog), demand)
             expect(Demand.last.memberships.size).to eq 2
             expect(Demand.last.memberships.map(&:team_member_name)).to match_array %w[team_member other_team_member]
