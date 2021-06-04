@@ -10,7 +10,7 @@ class DemandsRepository
   def remaining_backlog_to_date(demands_ids, analysed_date)
     demands = demands_list_data(demands_ids).opened_before_date(analysed_date)
 
-    demands.where('(demands.end_date IS NULL OR demands.end_date > :analysed_date) AND (demands.commitment_date IS NULL OR demands.commitment_date > :analysed_date) AND (demands.discarded_at IS NULL OR demands.discarded_at > :analysed_date)', analysed_date: analysed_date).count
+    demands.where('(demands.end_date IS NULL OR demands.end_date > :analysed_date) AND (demands.commitment_date IS NULL OR demands.commitment_date > :analysed_date) AND (demands.discarded_at IS NULL OR demands.discarded_at < :analysed_date)', analysed_date: analysed_date).count
   end
 
   def committed_demands_to_period(demands, week, year)

@@ -366,7 +366,7 @@ RSpec.describe DemandsRepository, type: :repository do
         Fabricate :demand, external_id: 'hhh', demand_title: 'foo', demand_type: :feature, class_of_service: :standard, created_date: 4.days.ago, commitment_date: 1.day.ago, end_date: 1.day.ago, discarded_at: Time.zone.now
 
         expect(described_class.instance.remaining_backlog_to_date(Demand.all.map(&:id), Time.zone.now)).to eq 1
-        expect(described_class.instance.remaining_backlog_to_date(Demand.all.map(&:id), 2.days.ago)).to eq 3
+        expect(described_class.instance.remaining_backlog_to_date(Demand.all.map(&:id), 2.days.ago)).to eq 2
       end
     end
   end
