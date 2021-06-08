@@ -12,10 +12,11 @@ RSpec.describe DemandEffortService, type: :service do
         Fabricate :stage_project_config, stage: stage, project: project, compute_effort: true, stage_percentage: 100, management_percentage: 20, pairing_percentage: 50
         Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: Time.zone.parse('2021-05-24 10:51'), last_time_out: Time.zone.parse('2021-05-24 12:51')
         Fabricate :item_assignment, demand: demand, start_time: Time.zone.parse('2021-05-24 10:51'), finish_time: Time.zone.parse('2021-05-24 12:51')
+        Fabricate :item_assignment, demand: demand, start_time: Time.zone.parse('2021-05-24 10:51'), finish_time: Time.zone.parse('2021-05-24 11:11')
 
         described_class.instance.build_efforts_to_demand(demand)
 
-        expect(DemandEffort.all.count).to eq 1
+        expect(DemandEffort.all.count).to eq 2
         expect(DemandEffort.all.sum(&:effort_value)).to eq 2.4
         expect(demand.reload.effort_development).to eq 2.4
         expect(demand.reload.effort_design).to eq 0
