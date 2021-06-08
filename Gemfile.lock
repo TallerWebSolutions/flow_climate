@@ -92,7 +92,6 @@ GEM
       statsd-ruby (~> 1.1)
     bcrypt (3.1.16)
     bindex (0.8.1)
-    brakeman (5.0.3)
     builder (3.2.4)
     bullet (6.1.4)
       activesupport (>= 3.0.0)
@@ -438,7 +437,6 @@ DEPENDENCIES
   annotate
   attr_encrypted
   barnes
-  brakeman
   bullet
   bundler
   carrierwave
@@ -496,4 +494,4 @@ RUBY VERSION
    ruby 3.0.1p64
 
 BUNDLED WITH
-   2.2.17
+   2.2.19
