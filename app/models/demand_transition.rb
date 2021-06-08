@@ -167,8 +167,9 @@ class DemandTransition < ApplicationRecord
 
   def check_project_wip
     project = demand.project
-    return if project.demands.in_wip.count <= project.max_work_in_progress
+    demands_in_wip = project.demands.kept.in_wip(Time.zone.now)
+    return if demands_in_wip.count <= project.max_work_in_progress
 
-    ProjectBrokenWipLog.where(project: project, project_wip: project.max_work_in_progress, demands_ids: project.demands.in_wip.map(&:id)).first_or_create
+    ProjectBrokenWipLog.where(project: project, project_wip: project.max_work_in_progress, demands_ids: demands_in_wip.map(&:id)).first_or_create
   end
 end

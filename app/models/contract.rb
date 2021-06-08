@@ -60,7 +60,7 @@ class Contract < ApplicationRecord
   end
 
   def current_hours_per_demand
-    demands_finished = customer.demands.kept.finished.finished_after_date(start_date).finished_until_date(end_date)
+    demands_finished = customer.demands.not_discarded_until(end_date).finished_after_date(start_date).finished_until_date(end_date)
     return 0 if demands_finished.blank?
 
     demands_finished.filter_map(&:total_effort).sum / demands_finished.count
@@ -71,7 +71,7 @@ class Contract < ApplicationRecord
   end
 
   def remaining_work(date = Time.zone.today.end_of_month)
-    delivered_to_date = demands.kept.where('end_date BETWEEN :start_date AND :end_date', start_date: start_date, end_date: date).count
+    delivered_to_date = demands.to_end_dates(start_date, date).count
 
     estimated_scope - delivered_to_date
   end
@@ -92,16 +92,17 @@ class Contract < ApplicationRecord
 
   def flow_pressure(date = Time.zone.today.end_of_day)
     days_between = TimeService.instance.days_between_of(date, end_date)
-    return 0 if demands.not_committed.blank? || days_between.count.zero?
+    demands_not_committed = demands.kept.not_committed(Time.zone.now)
+    return 0 if demands_not_committed.blank? || days_between.count.zero?
 
-    demands.not_committed.count.to_f / days_between.count
+    demands_not_committed.count.to_f / days_between.count
   end
 
   def avg_hours_per_month
     end_date = [end_date, Time.zone.today].compact.min
     months = TimeService.instance.months_between_of(start_date, end_date)
 
-    demands.kept.finished.sum(&:total_effort) / months.count
+    demands.kept.finished_until_date(Time.zone.now).sum(&:total_effort) / months.count
   end
 
   private

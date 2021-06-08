@@ -10,7 +10,7 @@ module Consolidations
       end_of_day = cache_date.end_of_day
 
       demands = customer.exclusives_demands.where('demands.created_date <= :analysed_date', analysed_date: end_of_day)
-      demands_finished = demands.finished.where('demands.end_date <= :analysed_date', analysed_date: end_of_day).order(end_date: :asc)
+      demands_finished = demands.not_discarded_until(end_of_day).finished_until_date(end_of_day).order(end_date: :asc)
       demands_finished_in_month = demands.to_end_dates(cache_date.beginning_of_month, cache_date)
       demands_lead_time = demands_finished.map(&:leadtime).flatten.compact
       demands_lead_time_in_month = demands_finished_in_month.map(&:leadtime).flatten.compact

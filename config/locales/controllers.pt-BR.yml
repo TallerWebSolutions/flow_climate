@@ -124,7 +124,6 @@ pt-BR:
       one: "%{count} pontos"
       other: "%{count} pontos"
     demands: "demandas"
-    avg_speed_per_week: "%{speed_value} itens/semana"
     items_text: "%{items_count} item(ns)"
     flow: "Fluxo"
     class_of_service: "Classe de Serviço"
@@ -186,6 +185,7 @@ pt-BR:
     no_register: "Sem Registro"
     upstream: "Upstream"
     downstream: "Downstream"
+    discarded_demands: "Descartadas"
   header:
     logout: Sair
     sign_up: Cadastre-se

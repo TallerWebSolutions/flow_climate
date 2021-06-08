@@ -10,10 +10,11 @@
                downstream_demands: downstream_demands,
                initial_scope: customer.initial_scope,
                demands: customer.exclusives_demands.kept,
-               demands_delivered: customer.exclusives_demands.kept.finished,
+               discarded_demands_count: customer.exclusives_demands.discarded.count,
+               demands_delivered: customer.exclusives_demands.kept.finished_until_date(Time.zone.now),
                unscored_demands: unscored_demands,
                demands_blocks: demands_blocks,
-               remaining_backlog: customer.exclusives_demands.kept - customer.exclusives_demands.kept.finished,
+               remaining_backlog: customer.exclusives_demands.kept - customer.exclusives_demands.kept.finished_until_date(Time.zone.now),
                average_queue_time: customer.average_queue_time / 1.hour,
                average_touch_time: customer.average_touch_time / 1.hour,
                demands_lead_time_p95: Stats::StatisticsService.instance.percentile(95, customer.exclusives_demands.kept.finished_with_leadtime.map(&:leadtime_in_days)),
@@ -58,7 +59,7 @@
 
       <h4><%= I18n.t('demands.index.last_deliveries') %></h4>
 
-      <%= render 'demands/demands_short_table', company: company, demands: customer.exclusives_demands.includes([:company]).includes([:project]).kept.finished.order(end_date: :desc).first(5) %>
+      <%= render 'demands/demands_short_table', company: company, demands: customer.exclusives_demands.includes([:company]).includes([:project]).kept.finished_until_date(Time.zone.now).order(end_date: :desc).first(5) %>
     </div>
   </div>
   <hr>

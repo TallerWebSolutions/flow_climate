@@ -127,6 +127,7 @@ class ProjectsController < AuthenticatedController
 
   def closing_dashboard
     @project_summary = ProjectsSummaryData.new([@project])
+    @average_speed = DemandService.instance.average_speed(demands)
 
     respond_to { |format| format.js { render 'projects/closing_info' } }
   end
@@ -135,7 +136,7 @@ class ProjectsController < AuthenticatedController
     @project_summary = ProjectsSummaryData.new([@project])
     @x_axis = TimeService.instance.weeks_between_of(@project.start_date.beginning_of_week, @project.end_date.end_of_week)
     @work_item_flow_information = Flow::WorkItemFlowInformations.new(demands, @project.initial_scope, @x_axis.length, @x_axis.last, 'week')
-
+    @average_speed = DemandService.instance.average_speed(demands)
     build_work_item_flow_information
 
     respond_to { |format| format.js { render 'projects/status_report_dashboard' } }
@@ -194,8 +195,8 @@ class ProjectsController < AuthenticatedController
   end
 
   def assign_special_demands
-    @last_10_deliveries = demands.kept.finished.order(end_date: :desc).limit(10)
-    @unscored_demands = demands.unscored_demands.order(external_id: :asc)
+    @last_10_deliveries = demands.kept.finished_until_date(Time.zone.now).order(end_date: :desc).limit(10)
+    @unscored_demands = demands.kept.unscored_demands.order(external_id: :asc)
   end
 
   def build_project_consolidations

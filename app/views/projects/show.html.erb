@@ -103,11 +103,12 @@
                dashboard_name: @project.name,
                initial_scope: @project.initial_scope,
                demands: @project.demands.kept,
-               demands_delivered: @project.demands.kept.finished,
-               remaining_backlog: @project.demands.kept.not_started,
+               demands_delivered: @project.demands.kept.finished_until_date(Time.zone.now),
+               remaining_backlog: @project.demands.kept.not_started(Time.zone.now),
                upstream_demands: @project.upstream_demands,
-               downstream_demands: @project.demands.kept.in_wip,
+               downstream_demands: @project.demands.kept.in_wip(Time.zone.now),
                unscored_demands: @unscored_demands,
+               discarded_demands_count: @project.demands.discarded.count,
                demands_blocks: @demands_blocks,
                flow_pressure: @project.flow_pressure,
                average_speed: @average_speed,
@@ -151,6 +152,7 @@
   <%= javascript_include_tag 'charts/scatter' %>
   <%= javascript_include_tag 'charts/stacked_area' %>
   <%= javascript_include_tag 'charts/column-line' %>
+  <%= javascript_include_tag 'charts/donut' %>
 
   <%= javascript_include_tag 'stats_charts/statistics_charts' %>
 

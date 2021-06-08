@@ -358,19 +358,6 @@ RSpec.describe DemandsRepository, type: :repository do
     it { expect(described_class.instance.wip_count(Demand.all.map(&:id), 2.weeks.ago)).to eq 0 }
   end
 
-  describe '#remaining_backlog_to_date' do
-    it 'returns the valid demands for the date' do
-      travel_to Time.zone.local(2021, 6, 2, 16, 0, 0) do
-        Fabricate :demand, external_id: 'hhh', demand_title: 'foo', demand_type: :feature, class_of_service: :standard, created_date: 3.days.ago, commitment_date: nil, end_date: nil, discarded_at: nil
-        Fabricate :demand, external_id: 'hhh', demand_title: 'foo', demand_type: :feature, class_of_service: :standard, created_date: 4.days.ago, commitment_date: 1.day.ago, end_date: nil, discarded_at: nil
-        Fabricate :demand, external_id: 'hhh', demand_title: 'foo', demand_type: :feature, class_of_service: :standard, created_date: 4.days.ago, commitment_date: 1.day.ago, end_date: 1.day.ago, discarded_at: Time.zone.now
-
-        expect(described_class.instance.remaining_backlog_to_date(Demand.all.map(&:id), Time.zone.now)).to eq 1
-        expect(described_class.instance.remaining_backlog_to_date(Demand.all.map(&:id), 2.days.ago)).to eq 2
-      end
-    end
-  end
-
   pending '#bugs_opened_until_limit_date'
   pending '#bugs_closed_until_limit_date'
 end

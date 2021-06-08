@@ -285,95 +285,129 @@ RSpec.describe Project, type: :model do
     context 'and the start and finish dates are in different days' do
       let(:project) { Fabricate :project, initial_scope: 30, start_date: Time.zone.parse('2018-03-05 22:00'), end_date: Time.zone.parse('2018-03-07 10:00') }
 
-      context 'having demands' do
-        let!(:opened_bugs) { Fabricate.times(20, :demand, project: project, demand_type: :bug, created_date: Time.zone.parse('2018-03-05 22:00')) }
-        let!(:opened_features) { Fabricate.times(10, :demand, project: project, demand_type: :feature, created_date: Time.zone.parse('2018-03-06 22:00')) }
-        let!(:delivered_bugs) { Fabricate.times(5, :demand, project: project, demand_type: :bug, created_date: Time.zone.parse('2018-03-05 22:00'), end_date: Time.zone.parse('2018-03-07 10:00')) }
+      context 'with demands' do
+        context 'and specifying no date' do
+          it 'returns the flow pressure based on date and remaining work' do
+            travel_to Time.zone.local(2018, 3, 6, 10, 0, 0) do
+              team = Fabricate :team
+              project = Fabricate :project, team: team, initial_scope: 20, start_date: 2.weeks.ago, end_date: 2.weeks.from_now
 
-        context 'specifying no date' do
-          before { travel_to Time.zone.local(2018, 3, 6, 10, 0, 0) }
+              first_stage = Fabricate :stage, teams: [team], projects: [project], order: 0
+              second_stage = Fabricate :stage, teams: [team], projects: [project], order: 1
 
-          after { travel_back }
+              first_demand = Fabricate :demand, project: project, team: team, created_date: 4.days.ago
+              second_demand = Fabricate :demand, project: project, team: team, created_date: 3.days.ago
+              third_demand = Fabricate :demand, project: project, team: team, created_date: 2.days.ago, commitment_date: 1.day.ago, end_date: 1.hour.ago
+              fourth_demand = Fabricate :demand, project: project, team: team, created_date: 2.days.ago, discarded_at: 1.day.ago
 
-          it { expect(project.flow_pressure).to be_within(0.5).of(13.5) }
+              Fabricate :demand_transition, demand: first_demand, stage: first_stage, last_time_in: 3.days.ago, last_time_out: 1.day.ago
+              Fabricate :demand_transition, demand: second_demand, stage: first_stage, last_time_in: 3.days.ago, last_time_out: nil
+              Fabricate :demand_transition, demand: first_demand, stage: second_stage, last_time_in: 3.days.ago, last_time_out: nil
+              Fabricate :demand_transition, demand: third_demand, stage: second_stage, last_time_in: 3.days.ago, last_time_out: nil
+              Fabricate :demand_transition, demand: fourth_demand, stage: second_stage, last_time_in: 1.day.ago, last_time_out: nil
+
+              expect(project.flow_pressure).to eq 1.2666666666666666
+              expect(project.flow_pressure(Time.zone.parse('2018-03-05 22:00'))).to eq 1.1875
+            end
+          end
         end
 
-        context 'specifying a date' do
-          it { expect(project.flow_pressure(Time.zone.parse('2018-03-05 22:00'))).to be_within(0.5).of(8.1) }
-        end
+        context 'and date negotiations' do
+          it 'returns the pressure using the last valid deadline negotiated' do
+            travel_to Time.zone.local(2018, 3, 6, 10, 0, 0) do
+              team = Fabricate :team
+              project = Fabricate :project, initial_scope: 30, start_date: Time.zone.parse('2018-03-05 22:00'), end_date: Time.zone.parse('2018-03-12 10:00')
 
-        context 'having date negotiations' do
-          let(:project) { Fabricate :project, initial_scope: 30, start_date: Time.zone.parse('2018-03-05 22:00'), end_date: Time.zone.parse('2018-03-12 10:00') }
+              Fabricate :project_change_deadline_history, project: project, created_at: Time.zone.parse('2018-03-07 11:00'), previous_date: Time.zone.parse('2018-03-05 10:00'), new_date: Time.zone.parse('2018-03-06 23:00')
+              Fabricate :project_change_deadline_history, project: project, created_at: Time.zone.parse('2018-03-08 07:00'), previous_date: Time.zone.parse('2018-03-09 10:00'), new_date: Time.zone.parse('2018-03-10 22:00')
+              Fabricate :project_change_deadline_history, project: project, created_at: Time.zone.parse('2018-03-09 05:00'), previous_date: Time.zone.parse('2018-03-10 22:00'), new_date: Time.zone.parse('2018-03-12 22:00')
 
-          let!(:opened_bugs) { Fabricate.times(20, :demand, project: project, demand_type: :bug, created_date: Time.zone.parse('2018-03-05 22:00')) }
-          let!(:opened_features) { Fabricate.times(10, :demand, project: project, demand_type: :feature, created_date: Time.zone.parse('2018-03-06 22:00')) }
-          let!(:delivered_bugs) { Fabricate.times(5, :demand, project: project, demand_type: :bug, created_date: Time.zone.parse('2018-03-05 22:00'), end_date: Time.zone.parse('2018-03-07 10:00')) }
+              first_stage = Fabricate :stage, teams: [team], projects: [project], order: 0
+              second_stage = Fabricate :stage, teams: [team], projects: [project], order: 1
 
-          let!(:first_project_change_deadline_history) { Fabricate :project_change_deadline_history, project: project, created_at: Time.zone.parse('2018-03-07 11:00'), previous_date: Time.zone.parse('2018-03-05 10:00'), new_date: Time.zone.parse('2018-03-06 23:00') }
-          let!(:second_project_change_deadline_history) { Fabricate :project_change_deadline_history, project: project, created_at: Time.zone.parse('2018-03-08 07:00'), previous_date: Time.zone.parse('2018-03-09 10:00'), new_date: Time.zone.parse('2018-03-10 22:00') }
-          let!(:third_project_change_deadline_history) { Fabricate :project_change_deadline_history, project: project, created_at: Time.zone.parse('2018-03-09 05:00'), previous_date: Time.zone.parse('2018-03-10 22:00'), new_date: Time.zone.parse('2018-03-12 22:00') }
+              first_demand = Fabricate :demand, project: project, team: team, created_date: 4.days.ago
+              second_demand = Fabricate :demand, project: project, team: team, created_date: 3.days.ago
+              third_demand = Fabricate :demand, project: project, team: team, created_date: 2.days.ago, commitment_date: 1.day.ago, end_date: 1.hour.ago
+              fourth_demand = Fabricate :demand, project: project, team: team, created_date: 2.days.ago, discarded_at: 1.day.ago
 
-          it { expect(project.flow_pressure(Time.zone.parse('2018-03-08 10:00'))).to be_within(0.2).of(8.3) }
+              Fabricate :demand_transition, demand: first_demand, stage: first_stage, last_time_in: 3.days.ago, last_time_out: 1.day.ago
+              Fabricate :demand_transition, demand: second_demand, stage: first_stage, last_time_in: 3.days.ago, last_time_out: nil
+              Fabricate :demand_transition, demand: first_demand, stage: second_stage, last_time_in: 3.days.ago, last_time_out: nil
+              Fabricate :demand_transition, demand: third_demand, stage: second_stage, last_time_in: 3.days.ago, last_time_out: nil
+              Fabricate :demand_transition, demand: fourth_demand, stage: second_stage, last_time_in: 1.day.ago, last_time_out: nil
+
+              expect(project.flow_pressure).to eq 4.142857142857143
+            end
+          end
         end
       end
 
-      context 'having no demands' do
-        before { travel_to Time.zone.local(2018, 3, 6, 10, 0, 0) }
+      context 'with no demands' do
+        it 'returns the flow pressure based on initial scope' do
+          travel_to Time.zone.local(2018, 3, 6, 10, 0, 0) do
+            project = Fabricate :project, start_date: 2.weeks.ago, end_date: 2.weeks.from_now, initial_scope: 10
 
-        after { travel_back }
-
-        it { expect(project.flow_pressure).to be_within(0.9).of(11.6) }
+            expect(project.flow_pressure).to eq 0.6666666666666666
+          end
+        end
       end
     end
 
     context 'and the start and finish dates are in the same day' do
-      before { travel_to Time.zone.local(2018, 3, 6, 10, 0, 0) }
-
-      after { travel_back }
-
-      let(:project) { Fabricate :project, initial_scope: 30, start_date: Time.zone.today, end_date: Time.zone.today }
-
-      context 'having demands' do
-        let!(:opened_features) { Fabricate.times(10, :demand, project: project, demand_type: :feature, end_date: nil) }
-
-        it { expect(project.flow_pressure).to be_within(0.1).of(12.6) }
-      end
-
-      context 'having no demands' do
-        it { expect(project.flow_pressure).to be_within(0.1).of(18.9) }
+      it 'computes the flow pressure using the day' do
+        travel_to Time.zone.local(2018, 3, 6, 10, 0, 0) do
+          project = Fabricate :project, initial_scope: 30, start_date: Time.zone.today, end_date: Time.zone.today
+          expect(project.flow_pressure).to eq 30
+        end
       end
     end
   end
 
   describe '#relative_flow_pressure' do
     context 'and the start and finish dates are in different days' do
-      let(:project) { Fabricate :project, initial_scope: 30, start_date: Time.zone.parse('2018-03-05 22:00'), end_date: Time.zone.parse('2018-03-07 10:00') }
-
       context 'with demands' do
-        let!(:opened_bugs) { Fabricate.times(20, :demand, project: project, demand_type: :bug, created_date: Time.zone.parse('2018-03-05 22:00')) }
-        let!(:opened_features) { Fabricate.times(10, :demand, project: project, demand_type: :feature, created_date: Time.zone.parse('2018-03-06 22:00')) }
-        let!(:delivered_bugs) { Fabricate.times(5, :demand, project: project, demand_type: :bug, created_date: Time.zone.parse('2018-03-05 22:00'), end_date: Time.zone.parse('2018-03-07 10:00')) }
+        it 'returns the flow pressure related to the given total' do
+          travel_to Time.zone.local(2018, 3, 6, 10, 0, 0) do
+            team = Fabricate :team
+            project = Fabricate :project, team: team, initial_scope: 20, start_date: 2.weeks.ago, end_date: 2.weeks.from_now
 
-        before { travel_to Time.zone.local(2018, 3, 6, 10, 0, 0) }
+            first_stage = Fabricate :stage, teams: [team], projects: [project], order: 0
+            second_stage = Fabricate :stage, teams: [team], projects: [project], order: 1
 
-        after { travel_back }
+            first_demand = Fabricate :demand, project: project, team: team, created_date: 4.days.ago
+            second_demand = Fabricate :demand, project: project, team: team, created_date: 3.days.ago
+            third_demand = Fabricate :demand, project: project, team: team, created_date: 2.days.ago, commitment_date: 1.day.ago, end_date: 1.hour.ago
+            fourth_demand = Fabricate :demand, project: project, team: team, created_date: 2.days.ago, discarded_at: 1.day.ago
 
-        it { expect(project.relative_flow_pressure(80)).to be_within(0.5).of(16.9) }
+            Fabricate :demand_transition, demand: first_demand, stage: first_stage, last_time_in: 3.days.ago, last_time_out: 1.day.ago
+            Fabricate :demand_transition, demand: second_demand, stage: first_stage, last_time_in: 3.days.ago, last_time_out: nil
+            Fabricate :demand_transition, demand: first_demand, stage: second_stage, last_time_in: 3.days.ago, last_time_out: nil
+            Fabricate :demand_transition, demand: third_demand, stage: second_stage, last_time_in: 3.days.ago, last_time_out: nil
+            Fabricate :demand_transition, demand: fourth_demand, stage: second_stage, last_time_in: 1.day.ago, last_time_out: nil
+
+            expect(project.relative_flow_pressure(80)).to eq 1.583333333333333
+          end
+        end
       end
 
       context 'with no demands' do
-        before { travel_to Time.zone.local(2018, 3, 6, 10, 0, 0) }
-
-        after { travel_back }
-
-        it { expect(project.relative_flow_pressure(10)).to be_within(0.9).of(116.1) }
+        it 'returns the flow pressure based on initial scope' do
+          travel_to Time.zone.local(2018, 3, 6, 10, 0, 0) do
+            project = Fabricate :project, start_date: 2.weeks.ago, end_date: 2.weeks.from_now
+            expect(project.relative_flow_pressure(10)).to eq 20
+          end
+        end
       end
 
       context 'with no demands and no total pressure' do
+        let(:project) { Fabricate :project }
+
         it { expect(project.relative_flow_pressure(nil)).to eq 0 }
       end
 
       context 'with no demands and 0 as total pressure' do
+        let(:project) { Fabricate :project }
+
         it { expect(project.relative_flow_pressure(0)).to eq 0 }
       end
     end
@@ -475,41 +509,69 @@ RSpec.describe Project, type: :model do
 
   describe '#remaining_backlog' do
     context 'with demands' do
-      context 'with no date' do
-        include_context 'demands with effort'
-        it { expect(project.remaining_backlog).to eq 25 }
-      end
+      it 'returns the remaining backlog - not started work' do
+        team = Fabricate :team
+        project = Fabricate :project, team: team, initial_scope: 20
 
-      context 'with a date' do
-        include_context 'demands with effort'
-        it { expect(project.remaining_backlog(2.weeks.ago)).to eq 27 }
+        first_stage = Fabricate :stage, teams: [team], projects: [project], order: 0
+        second_stage = Fabricate :stage, teams: [team], projects: [project], order: 1
+
+        first_demand = Fabricate :demand, project: project, team: team, created_date: 4.days.ago
+        second_demand = Fabricate :demand, project: project, team: team, created_date: 3.days.ago
+        third_demand = Fabricate :demand, project: project, team: team, created_date: 2.days.ago, commitment_date: 1.day.ago, end_date: 1.hour.ago
+        fourth_demand = Fabricate :demand, project: project, team: team, created_date: 2.days.ago, discarded_at: 1.day.ago
+
+        Fabricate :demand_transition, demand: first_demand, stage: first_stage, last_time_in: 3.days.ago, last_time_out: 1.day.ago
+        Fabricate :demand_transition, demand: second_demand, stage: first_stage, last_time_in: 3.days.ago, last_time_out: nil
+        Fabricate :demand_transition, demand: first_demand, stage: second_stage, last_time_in: 3.days.ago, last_time_out: nil
+        Fabricate :demand_transition, demand: third_demand, stage: second_stage, last_time_in: 3.days.ago, last_time_out: nil
+        Fabricate :demand_transition, demand: fourth_demand, stage: second_stage, last_time_in: 1.day.ago, last_time_out: nil
+
+        expect(project.remaining_backlog).to eq 17
+        expect(project.remaining_backlog(2.days.ago)).to eq 18
       end
     end
 
-    context 'having no demands' do
+    context 'with no demands' do
       let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.week.ago, end_date: 1.week.from_now }
 
       it { expect(project.remaining_backlog).to eq project.initial_scope }
     end
   end
 
-  describe '#percentage_remaining_backlog' do
-    context 'having demands' do
-      context 'specifying no date' do
-        include_context 'demands with effort'
-        it { expect(project.percentage_remaining_backlog).to eq 0.896551724137931 }
-      end
+  describe '#percentage_remaining_work' do
+    context 'with demands' do
+      it 'returns the percentage of remaining work' do
+        travel_to Time.zone.local(2018, 3, 6, 10, 0, 0) do
+          team = Fabricate :team
+          project = Fabricate :project, team: team, initial_scope: 20
 
-      context 'specifying a date' do
-        include_context 'demands with effort'
-        it { expect(project.percentage_remaining_backlog(2.weeks.ago)).to eq 0.9655172413793104 }
+          first_stage = Fabricate :stage, teams: [team], projects: [project], order: 0
+          second_stage = Fabricate :stage, teams: [team], projects: [project], order: 1
+
+          first_demand = Fabricate :demand, project: project, team: team, created_date: 3.weeks.ago, commitment_date: 8.days.ago
+          second_demand = Fabricate :demand, project: project, team: team, created_date: 3.weeks.ago, commitment_date: 9.days.ago
+          third_demand = Fabricate :demand, project: project, team: team, created_date: 2.weeks.ago, commitment_date: 10.days.ago
+          fourth_demand = Fabricate :demand, project: project, team: team, created_date: 2.weeks.ago, commitment_date: 10.days.ago
+          Fabricate :demand, project: project, team: team, created_date: Time.zone.now, commitment_date: Time.zone.now, end_date: 2.days.ago
+          Fabricate :demand, project: project, team: team, created_date: 4.weeks.ago, commitment_date: nil, end_date: nil, discarded_at: 2.weeks.ago
+
+          Fabricate :demand_transition, demand: first_demand, stage: first_stage, last_time_in: 3.days.ago, last_time_out: 1.day.ago
+          Fabricate :demand_transition, demand: second_demand, stage: first_stage, last_time_in: 3.days.ago, last_time_out: nil
+          Fabricate :demand_transition, demand: first_demand, stage: second_stage, last_time_in: 3.days.ago, last_time_out: nil
+          Fabricate :demand_transition, demand: third_demand, stage: second_stage, last_time_in: 3.days.ago, last_time_out: nil
+          Fabricate :demand_transition, demand: fourth_demand, stage: second_stage, last_time_in: 1.day.ago, last_time_out: nil
+
+          expect(project.percentage_remaining_work).to eq 0.9473684210526315
+          expect(project.percentage_remaining_work(2.weeks.ago)).to eq 1
+        end
       end
     end
 
-    context 'having no demands' do
-      let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.week.ago, end_date: 1.week.from_now }
+    context 'with no demands' do
+      let(:project) { Fabricate :project, initial_scope: 0, start_date: 1.week.ago, end_date: 1.week.from_now }
 
-      it { expect(project.percentage_remaining_backlog).to eq 1 }
+      it { expect(project.percentage_remaining_work).to eq 0 }
     end
   end
 
@@ -793,13 +855,20 @@ RSpec.describe Project, type: :model do
   describe '#total_throughput_until' do
     let!(:project) { Fabricate :project, end_date: 4.weeks.from_now, initial_scope: 30 }
 
-    context 'having data for last week' do
-      let!(:opened_bugs) { Fabricate.times(20, :demand, project: project, demand_type: :bug, created_date: 1.week.ago) }
-      let!(:opened_features) { Fabricate.times(10, :demand, project: project, demand_type: :feature, created_date: 3.weeks.ago) }
-      let!(:delivered_bugs) { Fabricate.times(5, :demand, project: project, demand_type: :bug, created_date: 2.weeks.ago, end_date: 1.week.ago) }
-      let!(:delivered_features) { Fabricate.times(14, :demand, project: project, demand_type: :feature, created_date: 2.weeks.ago, end_date: 2.weeks.ago) }
+    context 'with data for last week' do
+      it 'returns the TH to date' do
+        team = Fabricate :team
+        project = Fabricate :project, team: team, initial_scope: 20
 
-      it { expect(project.total_throughput_until(2.weeks.ago)).to eq 14 }
+        Fabricate :demand, project: project, team: team, created_date: 4.days.ago, end_date: nil
+        Fabricate :demand, project: project, team: team, created_date: 4.days.ago, end_date: 3.days.ago
+        Fabricate :demand, project: project, team: team, created_date: 3.days.ago, end_date: 2.days.ago, discarded_at: 1.day.ago
+        Fabricate :demand, project: project, team: team, created_date: 2.days.ago, commitment_date: 1.day.ago, end_date: 1.hour.ago
+
+        expect(project.total_throughput_until(1.day.ago)).to eq 1
+        expect(project.total_throughput_until(30.hours.ago)).to eq 2
+        expect(project.total_throughput_until(30.minutes.ago)).to eq 2
+      end
     end
 
     context 'having no data' do
@@ -1315,56 +1384,57 @@ RSpec.describe Project, type: :model do
     end
   end
 
-  describe '#average_speed_per_week' do
-    context 'with demands' do
-      let(:project) { Fabricate :project, status: :executing, start_date: Time.zone.today, end_date: 4.weeks.from_now, qty_hours: 2000 }
-      let!(:demands) { Fabricate.times(40, :demand, project: project, commitment_date: 5.days.ago, end_date: 2.days.ago) }
-      let!(:opened_demands) { Fabricate.times(15, :demand, project: project, end_date: nil) }
-
-      it { expect(project.average_speed_per_week).to eq 35.00000000000005 }
-    end
-
-    context 'with no demands' do
-      let(:project) { Fabricate :project, status: :finished, start_date: Time.zone.today, end_date: 4.weeks.from_now, qty_hours: 2000 }
-
-      it { expect(project.average_speed_per_week).to eq 0 }
-    end
-  end
-
   describe '#average_demand_aging' do
-    before { travel_to Time.zone.local(2019, 10, 18, 10, 16, 0) }
-
-    after { travel_back }
-
     context 'with demands' do
-      let(:project) { Fabricate :project, status: :executing, start_date: Time.zone.today, end_date: 4.weeks.from_now, qty_hours: 2000 }
-      let!(:demands) { Fabricate.times(10, :demand, project: project, created_date: 1.day.ago, end_date: nil) }
-      let!(:older_demands) { Fabricate.times(10, :demand, project: project, created_date: 3.days.ago, end_date: 2.days.from_now) }
+      it 'returns the average aging' do
+        travel_to Time.zone.local(2018, 5, 21, 10, 0, 0) do
+          team = Fabricate :team
+          project = Fabricate :project, team: team, initial_scope: 20
 
-      it { expect(project.average_demand_aging.round(2)).to be_within(0.2).of(2.5) }
+          Fabricate :demand, project: project, team: team, created_date: 4.days.ago
+          Fabricate :demand, project: project, team: team, created_date: 3.days.ago
+          Fabricate :demand, project: project, team: team, created_date: 2.days.ago, commitment_date: 1.day.ago, end_date: 1.hour.ago
+          Fabricate :demand, project: project, team: team, created_date: 2.days.ago, discarded_at: 1.day.ago
+
+          expect(project.average_demand_aging).to eq 2.986111111111111
+        end
+      end
     end
 
     context 'with no demands' do
-      let(:project) { Fabricate :project, status: :finished, start_date: Time.zone.today, end_date: 4.weeks.from_now, qty_hours: 2000 }
+      it 'returns zero' do
+        project = Fabricate :project, initial_scope: 20
 
-      it { expect(project.average_demand_aging).to eq 0 }
+        expect(project.average_demand_aging).to eq 0
+      end
     end
   end
 
   describe '#quality' do
     context 'with data' do
-      include_context 'demands with effort'
-      it { expect(project.quality).to eq 0.75 }
+      it 'returns the features percentage' do
+        team = Fabricate :team
+        project = Fabricate :project, team: team
+
+        Fabricate :demand, project: project, team: team, created_date: 4.days.ago, demand_type: :feature
+        Fabricate :demand, project: project, team: team, created_date: 3.days.ago, demand_type: :feature
+        Fabricate :demand, project: project, team: team, created_date: 2.days.ago, demand_type: :chore
+        Fabricate :demand, project: project, team: team, created_date: 2.days.ago, demand_type: :bug
+        Fabricate :demand, project: project, team: team, created_date: 2.days.ago, demand_type: :bug, discarded_at: 1.day.ago
+
+        expect(project.quality).to eq 0.75
+      end
     end
 
     context 'with no bugs' do
       let!(:project) { Fabricate :project, end_date: 4.weeks.from_now, initial_scope: 30 }
-      let!(:demands) { Fabricate.times(10, :demand, project: project, created_date: 1.day.ago, end_date: nil, demand_type: :feature) }
+      let!(:first_demand) { Fabricate(:demand, project: project, created_date: 1.day.ago, end_date: nil, demand_type: :feature) }
+      let!(:second_demand) { Fabricate(:demand, project: project, created_date: 1.day.ago, end_date: nil, demand_type: :chore) }
 
       it { expect(project.quality).to eq 1 }
     end
 
-    context 'with no data' do
+    context 'with no demands' do
       let!(:project) { Fabricate :project, end_date: 4.weeks.from_now, initial_scope: 30 }
 
       it { expect(project.quality).to eq 0 }
@@ -1378,23 +1448,27 @@ RSpec.describe Project, type: :model do
 
   describe '#remaining_work' do
     it 'returns the remaining item for the specified date' do
-      travel_to Time.zone.local(2020, 7, 13, 15, 21, 0) do
-        analysed_date = 1.day.ago
-        project = Fabricate :project, status: :executing, start_date: Time.zone.today, end_date: 4.weeks.from_now
+      team = Fabricate :team
+      project = Fabricate :project, team: team, initial_scope: 20
 
-        allow(project).to(receive(:initial_scope)).and_return(5)
+      first_stage = Fabricate :stage, teams: [team], projects: [project], order: 0
+      second_stage = Fabricate :stage, teams: [team], projects: [project], order: 1
 
-        expect(DemandsRepository.instance).to(receive(:remaining_backlog_to_date)).with(any_args, Time.zone.now.end_of_day).and_return(10)
-        expect(DemandsRepository.instance).to(receive(:wip_count)).with(any_args, Time.zone.now.end_of_day).and_return(8)
+      first_demand = Fabricate :demand, project: project, team: team, created_date: 3.weeks.ago, commitment_date: 8.days.ago, end_date: 1.week.ago, demand_type: :bug
+      second_demand = Fabricate :demand, project: project, team: team, created_date: 3.weeks.ago, commitment_date: 9.days.ago, end_date: 1.week.ago
+      third_demand = Fabricate :demand, project: project, team: team, created_date: 2.weeks.ago, commitment_date: 10.days.ago, end_date: 2.days.ago
+      fourth_demand = Fabricate :demand, project: project, team: team, created_date: 2.weeks.ago, commitment_date: 10.days.ago, end_date: 1.day.ago
+      Fabricate :demand, project: project, team: team, created_date: Time.zone.now, commitment_date: Time.zone.now, end_date: nil
+      Fabricate :demand, project: project, team: team, created_date: 4.weeks.ago, commitment_date: nil, end_date: nil, discarded_at: 2.weeks.ago
 
-        expect(project.remaining_work).to eq 23
+      Fabricate :demand_transition, demand: first_demand, stage: first_stage, last_time_in: 3.days.ago, last_time_out: 1.day.ago
+      Fabricate :demand_transition, demand: second_demand, stage: first_stage, last_time_in: 3.days.ago, last_time_out: nil
+      Fabricate :demand_transition, demand: first_demand, stage: second_stage, last_time_in: 3.days.ago, last_time_out: nil
+      Fabricate :demand_transition, demand: third_demand, stage: second_stage, last_time_in: 3.days.ago, last_time_out: nil
+      Fabricate :demand_transition, demand: fourth_demand, stage: second_stage, last_time_in: 1.day.ago, last_time_out: nil
 
-        allow(project).to(receive(:initial_scope)).and_return(5)
-        expect(DemandsRepository.instance).to(receive(:remaining_backlog_to_date)).with(any_args, analysed_date.end_of_day).and_return(10)
-        expect(DemandsRepository.instance).to(receive(:wip_count)).with(any_args, analysed_date.end_of_day).and_return(8)
-
-        expect(project.remaining_work(analysed_date)).to eq 23
-      end
+      expect(project.remaining_work).to eq 19
+      expect(project.remaining_work(2.weeks.ago)).to eq 18
     end
   end
 
@@ -1418,10 +1492,8 @@ RSpec.describe Project, type: :model do
     context 'with data' do
       it 'returns the ideal values to burn the scope' do
         travel_to Time.zone.local(2020, 12, 2, 10, 0, 0) do
-          project = Fabricate :project, start_date: Date.new(2020, 8, 2), end_date: Date.new(2021, 1, 2)
-          Fabricate.times(10, :demand, project: project, created_date: 4.days.ago, end_date: 2.days.ago)
-          Fabricate.times(50, :demand, project: project, created_date: 4.days.ago, end_date: nil)
-          expect(project.current_weekly_scope_ideal_burnup).to eq [2.608695652173913, 5.217391304347826, 7.826086956521739, 10.434782608695652, 13.043478260869566, 15.652173913043478, 18.26086956521739, 20.869565217391305, 23.47826086956522, 26.086956521739133, 28.695652173913043, 31.304347826086957, 33.91304347826087, 36.52173913043478, 39.130434782608695, 41.73913043478261, 44.34782608695652, 46.95652173913044, 49.56521739130435, 52.173913043478265, 54.78260869565217, 57.391304347826086, 60.0]
+          project = Fabricate :project, start_date: Date.new(2020, 8, 2), end_date: Date.new(2021, 1, 2), initial_scope: 30
+          expect(project.current_weekly_scope_ideal_burnup).to eq [1.3043478260869565, 2.608695652173913, 3.9130434782608696, 5.217391304347826, 6.521739130434783, 7.826086956521739, 9.130434782608695, 10.434782608695652, 11.73913043478261, 13.043478260869566, 14.347826086956522, 15.652173913043478, 16.956521739130434, 18.26086956521739, 19.565217391304348, 20.869565217391305, 22.17391304347826, 23.47826086956522, 24.782608695652176, 26.086956521739133, 27.391304347826086, 28.695652173913043, 30.0]
         end
       end
     end

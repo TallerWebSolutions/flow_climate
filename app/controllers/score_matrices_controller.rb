@@ -54,7 +54,7 @@ class ScoreMatricesController < AuthenticatedController
   end
 
   def assign_backlog_demands
-    @backlog_demands = @score_matrix.product.demands.not_committed
+    @backlog_demands = @score_matrix.product.demands.kept.not_committed(Time.zone.now)
   end
 
   def assign_score_matrix

@@ -460,7 +460,7 @@ RSpec.describe Company, type: :model do
         Fabricate :demand, project: third_project, created_date: 1.week.ago, end_date: 1.day.ago, demand_type: :feature
         Fabricate :demand, project: third_project, created_date: 1.week.ago, end_date: 2.days.ago, demand_type: :feature
 
-        expect(company.top_three_throughput(1.day.ago)).to eq [third_project, second_project, first_project]
+        expect(company.top_three_throughput(1.day.ago)).to match_array [third_project, second_project, first_project]
       end
     end
   end
