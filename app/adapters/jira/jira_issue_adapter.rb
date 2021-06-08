@@ -87,7 +87,7 @@ module Jira
     def process_labels(demand, jira_issue_changelog)
       labels_field = jira_issue_changelog.map { |inside_hash| inside_hash['items'].select { |h| h['field'] == 'labels' } }.reject(&:blank?).flatten
       new_labels_to_demand = labels_field.map { |label_field| label_field['toString']&.split(' ') }
-      demand.update(demand_tags: new_labels_to_demand.flatten)
+      demand.update(demand_tags: new_labels_to_demand.flatten.uniq)
     end
 
     def read_transitions(demand, issue_changelog)
@@ -188,6 +188,9 @@ module Jira
 
     def responsible_hash_processment(demand, history_hash)
       responsible_item_processment(demand, history_hash)
+
+      # due to a bug when a user is deactivated in the Jira
+      demand.item_assignments.open_assignments.each { |open_assignment| open_assignment.update(finish_time: open_assignment.membership.end_date.beginning_of_day) if open_assignment.membership.end_date.present? }
     end
 
     def responsible_item_processment(demand, history_hash)
