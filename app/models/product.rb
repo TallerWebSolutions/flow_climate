@@ -48,7 +48,7 @@ class Product < ApplicationRecord
   def percentage_complete
     return 0 unless demands.count.positive?
 
-    demands.kept.finished.count.to_f / demands.kept.count
+    demands.kept.finished_until_date(Time.zone.now).count.to_f / demands.kept.count
   end
 
   def total_portfolio_demands
@@ -70,11 +70,11 @@ class Product < ApplicationRecord
   end
 
   def remaining_backlog
-    demands.kept.not_finished.count
+    demands.kept.not_finished(Time.zone.now).count
   end
 
   def delivered_scope
-    demands.kept.finished.count
+    demands.kept.finished_until_date(Time.zone.now).count
   end
 
   def total_flow_pressure

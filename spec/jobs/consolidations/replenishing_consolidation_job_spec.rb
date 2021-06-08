@@ -37,7 +37,7 @@ RSpec.describe Consolidations::ReplenishingConsolidationJob do
         expect(new_consolidations.count).to eq 2
 
         expect(new_consolidations.map(&:consolidation_date)).to eq [Time.zone.today, Time.zone.today]
-        expect(new_consolidations.map(&:flow_pressure)).to match_array [3.054545454545462, 2.400000000000006]
+        expect(new_consolidations.map(&:flow_pressure)).to match_array [5.25, 3.25]
         expect(new_consolidations.map(&:customer_happiness)).to match_array [0.131578947368421, 0.131578947368421]
         expect(new_consolidations.map(&:leadtime_80)).to match_array [259_200, 172_800]
         expect(new_consolidations.map(&:max_work_in_progress)).to match_array [5, 3]
@@ -45,8 +45,8 @@ RSpec.describe Consolidations::ReplenishingConsolidationJob do
         expect(new_consolidations.map(&:project_based_risks_to_deadline)).to match_array [0.27, 0.875]
         expect(new_consolidations.map(&:project_throughput_data)).to match_array [[0, 9, 0], [0, 0, 10, 5]]
         expect(new_consolidations.map(&:qty_selected_last_week)).to match_array [7, 9]
-        expect(new_consolidations.map(&:qty_using_pressure)).to match_array [3.359999999999999, 2.64]
-        expect(new_consolidations.map(&:relative_flow_pressure)).to match_array [55.99999999999999, 44]
+        expect(new_consolidations.map(&:qty_using_pressure)).to match_array [2.294117647058823, 3.705882352941177]
+        expect(new_consolidations.map(&:relative_flow_pressure)).to match_array [38.23529411764706, 61.76470588235294]
         expect(new_consolidations.map(&:team_based_montecarlo_80_percent)).to eq [7.600000000000001, 7.600000000000001]
         expect(new_consolidations.map(&:team_based_odds_to_deadline)).to eq [1, 1]
         expect(new_consolidations.map(&:team_monte_carlo_weeks_max)).to eq [12, 12]

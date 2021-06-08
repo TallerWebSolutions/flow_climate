@@ -57,11 +57,15 @@ RSpec.describe PortfolioUnit, type: :model do
     end
 
     context 'with demands' do
-      let!(:portfolio_unit_demands) { Fabricate.times(5, :demand, portfolio_unit: portfolio_unit, end_date: nil) }
-      let!(:child_portfolio_unit_demands) { Fabricate.times(7, :demand, portfolio_unit: child_portfolio_unit, end_date: 1.day.from_now) }
-      let!(:other_child_portfolio_unit_demands) { Fabricate.times(3, :demand, portfolio_unit: other_child_portfolio_unit, end_date: nil) }
+      it 'returns the percentage complete based on the demands' do
+        Fabricate.times(2, :demand, portfolio_unit: other_child_portfolio_unit, end_date: nil, discarded_at: nil)
 
-      it { expect(portfolio_unit.percentage_complete).to eq 0.4666666666666667 }
+        Fabricate :demand, portfolio_unit: portfolio_unit, end_date: nil, discarded_at: nil
+        Fabricate :demand, portfolio_unit: child_portfolio_unit, end_date: 1.day.ago, discarded_at: nil
+        Fabricate :demand, portfolio_unit: portfolio_unit, end_date: nil, discarded_at: 1.day.ago
+
+        expect(portfolio_unit.percentage_complete).to eq 0.25
+      end
     end
   end
 

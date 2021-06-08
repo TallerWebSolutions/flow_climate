@@ -68,7 +68,7 @@ class PortfolioUnit < ApplicationRecord
   def percentage_complete
     return 0 unless total_portfolio_demands.count.positive?
 
-    total_portfolio_demands.finished.count.to_f / total_portfolio_demands.count
+    total_portfolio_demands.kept.finished_until_date(Time.zone.now).count.to_f / total_portfolio_demands.count
   end
 
   def total_cost

@@ -40,7 +40,7 @@ class RiskReviewService
   def build_avg_blocked_time(demands, array_of_dates)
     avg_blocked_time = []
     array_of_dates.each do |date|
-      demands_finished = demands.finished_until_date(date.end_of_day)
+      demands_finished = demands.not_discarded_until(date.end_of_day).finished_until_date(date.end_of_day)
       avg_blocked_time << demands_finished.filter_map(&:total_bloked_working_time).sum / demands_finished.count
     end
 

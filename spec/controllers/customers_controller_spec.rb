@@ -245,29 +245,27 @@ RSpec.describe CustomersController, type: :controller do
     end
 
     describe 'GET #show' do
-      before { travel_to Time.zone.local(2020, 5, 7, 10, 0, 0) }
-
-      after { travel_back }
-
       let(:customer) { Fabricate :customer, company: company }
 
       context 'with valid data' do
         it 'assigns the instance variable and renders the template' do
-          contract = Fabricate :contract, customer: customer, end_date: 1.day.from_now
-          other_contract = Fabricate :contract, customer: customer, end_date: 2.days.from_now
-          Fabricate :contract, end_date: 3.days.from_now
+          travel_to Time.zone.local(2020, 5, 7, 10, 0, 0) do
+            contract = Fabricate :contract, customer: customer, end_date: 1.day.from_now
+            other_contract = Fabricate :contract, customer: customer, end_date: 2.days.from_now
+            Fabricate :contract, end_date: 3.days.from_now
 
-          first_consolidation = Fabricate :customer_consolidation, customer: customer, consolidation_date: 2.days.ago, last_data_in_month: true
-          second_consolidation = Fabricate :customer_consolidation, customer: customer, consolidation_date: 3.days.ago, last_data_in_month: true
-          Fabricate :customer_consolidation, customer: customer, consolidation_date: 4.days.ago, last_data_in_month: false
+            first_consolidation = Fabricate :customer_consolidation, customer: customer, consolidation_date: 2.days.ago, last_data_in_month: true
+            second_consolidation = Fabricate :customer_consolidation, customer: customer, consolidation_date: 3.days.ago, last_data_in_month: true
+            Fabricate :customer_consolidation, customer: customer, consolidation_date: 4.days.ago, last_data_in_month: false
 
-          get :show, params: { company_id: company, id: customer }
+            get :show, params: { company_id: company, id: customer }
 
-          expect(response).to render_template :show
-          expect(assigns(:company)).to eq company
-          expect(assigns(:customer)).to eq customer
-          expect(assigns(:contracts)).to eq [other_contract, contract]
-          expect(assigns(:customer_consolidations)).to eq [second_consolidation, first_consolidation]
+            expect(response).to render_template :show
+            expect(assigns(:company)).to eq company
+            expect(assigns(:customer)).to eq customer
+            expect(assigns(:contracts)).to eq [other_contract, contract]
+            expect(assigns(:customer_consolidations)).to eq [second_consolidation, first_consolidation]
+          end
         end
       end
 

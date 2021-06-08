@@ -124,7 +124,7 @@ class ReplenishingData
     qty_items_hash = {}
     qty_items_hash[:qty_using_pressure] = compute_qty_using_pressure(project)
     qty_items_hash[:qty_selected_last_week] = DemandsRepository.instance.committed_demands_to_period(project.demands, 1.week.ago.to_date.cweek, 1.week.ago.to_date.cwyear).count
-    qty_items_hash[:work_in_progress] = project.demands.in_wip.count
+    qty_items_hash[:work_in_progress] = project.demands.kept.in_wip(Time.zone.now).count
     qty_items_hash
   end
 

@@ -46,11 +46,11 @@ module Flow
     private
 
     def start_population_date
-      [@demands.kept.finished.filter_map(&:end_date).min, 1.year.ago].compact.max
+      [@demands.kept.finished_until_date(Time.zone.now).filter_map(&:end_date).min, 1.year.ago].compact.max
     end
 
     def end_population_date
-      [@demands.kept.finished.map(&:end_date).max, Time.zone.today].compact.min
+      [@demands.kept.finished_until_date(Time.zone.now).map(&:end_date).max, Time.zone.today].compact.min
     end
 
     def sum_efforts_in_demand_transitions(assignment, effort_stage)

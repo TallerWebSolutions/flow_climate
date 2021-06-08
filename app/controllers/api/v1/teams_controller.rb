@@ -12,7 +12,7 @@ module Api
 
       def items_in_wip
         team = @company.teams.find(params[:id])
-        team_demands_in_wip = team.demands.kept.in_wip
+        team_demands_in_wip = team.demands.kept.in_wip(Time.zone.now)
 
         render json: { status: 'SUCCESS', message: I18n.t('teams.items_in_wip.message'), data: team_demands_in_wip.map(&:to_hash) }, status: :ok
       end

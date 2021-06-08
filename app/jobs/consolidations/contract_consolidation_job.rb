@@ -20,7 +20,7 @@ module Consolidations
           contract_based_montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(contract.remaining_work(end_of_month), demands_chart_adapter.throughput_chart_data.last(20), 500)
           risk_to_date = 1 - Stats::StatisticsService.instance.compute_odds_to_deadline(contract.remaining_weeks(end_of_month), contract_based_montecarlo_durations)
 
-          demands_finished = contract.demands.finished.finished_after_date(contract_start).finished_until_date(start_date)
+          demands_finished = contract.demands.kept.finished_after_date(contract_start).finished_until_date(start_date)
           real_hours_per_demand = if demands_finished.count.positive?
                                     demands_finished.map(&:total_effort).compact.sum / demands_finished.count
                                   else

@@ -166,13 +166,13 @@ class DemandsController < DemandsListController
                elsif @demand_type.present?
                  demandable.demands.where(demand_type: @demand_type)
                elsif @demand_state == 'delivered'
-                 demandable.demands.finished
+                 demandable.demands.finished_until_date(Time.zone.now)
                elsif @demand_state == 'backlog'
-                 Demand.where(id: demandable.demands.not_started.map(&:id))
+                 Demand.where(id: demandable.demands.not_started(Time.zone.now).map(&:id))
                elsif @demand_state == 'upstream'
                  Demand.where(id: demandable.upstream_demands.map(&:id))
                elsif @demand_state == 'downstream'
-                 demandable.demands.in_wip
+                 demandable.demands.in_wip(Time.zone.now)
                elsif @demand_state == 'unscored'
                  demandable.demands.unscored_demands
                else
@@ -200,7 +200,7 @@ class DemandsController < DemandsListController
   def build_demands_objects
     @demands_ids = @paged_demands.map(&:id)
     @demands = @paged_demands.except(:limit, :offset)
-    @unscored_demands = @project.demands.unscored_demands.order(external_id: :asc)
+    @unscored_demands = @project.demands.kept.unscored_demands.order(external_id: :asc)
   end
 
   def compute_flow_efficiency

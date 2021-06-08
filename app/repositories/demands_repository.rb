@@ -7,20 +7,14 @@ class DemandsRepository
     demands_list_data(demands_ids).opened_before_date(analysed_date)
   end
 
-  def remaining_backlog_to_date(demands_ids, analysed_date)
-    demands = demands_list_data(demands_ids).opened_before_date(analysed_date)
-
-    demands.where('(demands.end_date IS NULL OR demands.end_date > :analysed_date) AND (demands.commitment_date IS NULL OR demands.commitment_date > :analysed_date) AND (demands.discarded_at IS NULL OR demands.discarded_at > :analysed_date)', analysed_date: analysed_date).count
-  end
-
   def committed_demands_to_period(demands, week, year)
     demands.where('EXTRACT(WEEK FROM commitment_date) = :week AND EXTRACT(YEAR FROM commitment_date) = :year', week: week, year: year)
   end
 
   def wip_count(demands_ids, date = Time.zone.now)
-    demands = demands_list_data(demands_ids).kept.opened_before_date(date)
+    demands = demands_list_data(demands_ids).opened_before_date(date)
 
-    demands.where('(demands.end_date IS NULL OR demands.end_date > :analysed_date) AND (demands.commitment_date <= :analysed_date)', analysed_date: date.end_of_day).count
+    demands.where('(demands.end_date IS NULL OR demands.end_date > :analysed_date) AND (demands.commitment_date <= :analysed_date) AND (demands.discarded_at IS NULL OR demands.discarded_at > :analysed_date)', analysed_date: date.end_of_day).count
   end
 
   def demands_delivered_grouped_by_projects_to_period(demands, start_period, end_period)
@@ -94,10 +88,10 @@ class DemandsRepository
                        end
 
     filtered_demands_ids = []
-    filtered_demands_ids << filtered_demands.not_started.map(&:id) if demand_state.include?('not_started')
-    filtered_demands_ids << filtered_demands.not_committed.map(&:id) if demand_state.include?('not_committed')
-    filtered_demands_ids << filtered_demands.in_wip.map(&:id) if demand_state.include?('wip')
-    filtered_demands_ids << filtered_demands.finished.map(&:id) if demand_state.include?('delivered')
+    filtered_demands_ids << filtered_demands.not_started(Time.zone.now).map(&:id) if demand_state.include?('not_started')
+    filtered_demands_ids << filtered_demands.not_committed(Time.zone.now).map(&:id) if demand_state.include?('not_committed')
+    filtered_demands_ids << filtered_demands.in_wip(Time.zone.now).map(&:id) if demand_state.include?('wip')
+    filtered_demands_ids << filtered_demands.finished_until_date(Time.zone.now).map(&:id) if demand_state.include?('delivered')
 
     return filtered_demands if filtered_demands_ids.blank?
 

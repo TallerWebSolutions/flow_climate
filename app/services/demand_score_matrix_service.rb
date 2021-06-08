@@ -31,9 +31,9 @@ class DemandScoreMatrixService
 
   def demands_list(demand)
     if demand.not_committed?
-      demand.product.demands.kept.not_committed.order(demand_score: :desc)
+      demand.product.demands.kept.not_committed(Time.zone.now).order(demand_score: :desc)
     else
-      demand.product.demands.kept.order(demand_score: :desc)
+      demand.product.demands.opened_before_date(Time.zone.now).order(demand_score: :desc)
     end
   end
 

@@ -13,7 +13,7 @@ module Flow
     def hours_flow_behaviour(analysed_date)
       return if demands.blank?
 
-      demands_finished_until_date = @demands.finished_until_date(analysed_date) # query
+      demands_finished_until_date = @demands.not_discarded_until(analysed_date).finished_until_date(analysed_date) # query
 
       build_hours_data_array(demands_finished_until_date)
       build_queue_touch_hash(demands_finished_until_date)

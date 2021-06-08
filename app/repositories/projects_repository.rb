@@ -14,7 +14,7 @@ class ProjectsRepository
   end
 
   def finish_project(project, finish_date = Time.zone.now)
-    project.demands.not_finished.each { |demand| demand.update(end_date: finish_date) }
+    project.demands.kept.not_finished(Time.zone.now).each { |demand| demand.update(end_date: finish_date) }
     project.update(status: :finished, end_date: finish_date)
   end
 end

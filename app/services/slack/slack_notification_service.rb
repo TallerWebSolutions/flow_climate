@@ -45,7 +45,7 @@ module Slack
     end
 
     def notify_wip_demands(slack_notifier, team)
-      demands_in_wip = team.demands.kept.in_wip.sort_by(&:flow_percentage_concluded).reverse
+      demands_in_wip = team.demands.kept.in_wip(Time.zone.now).sort_by(&:flow_percentage_concluded).reverse
 
       slack_notifier.ping(I18n.t('slack_configurations.notifications.qty_demands_in_wip', team_name: team.name, in_wip: demands_in_wip.count))
 
@@ -66,7 +66,7 @@ module Slack
     end
 
     def notify_beyond_expected_time_in_stage(slack_notifier, team)
-      demands_in_wip = team.demands.kept.in_wip.sort_by(&:flow_percentage_concluded).reverse
+      demands_in_wip = team.demands.kept.in_wip(Time.zone.now).sort_by(&:flow_percentage_concluded).reverse
       demands_beyond_time = demands_in_wip.select(&:beyond_limit_time?)
 
       return if demands_beyond_time.blank?

@@ -25,7 +25,7 @@ class DeviseCustomersController < ApplicationController
   end
 
   def customer_demands
-    @customer_demands ||= @customer.exclusives_demands.finished.order(:end_date)
+    @customer_demands ||= @customer.exclusives_demands.kept.finished_until_date(Time.zone.now).order(:end_date)
   end
 
   def start_date

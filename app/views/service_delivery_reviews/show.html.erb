@@ -168,7 +168,7 @@
       <div id="service-delivery-review-leadtime-control-chart"
            class="flow-chart"
            data-title=''
-           data-xcategories='<%= @service_delivery_review.demands.finished.order(:end_date).map(&:external_id).to_json %>'
+           data-xcategories='<%= @service_delivery_review.demands.kept.finished_until_date(Time.zone.now).order(:end_date).map(&:external_id).to_json %>'
            data-xtitle='<%= I18n.t('general.demands') %>'
            data-ytitle='<%= I18n.t('general.days') %>'
            data-prefix=''
@@ -177,7 +177,7 @@
            data-topthreshold='<%= @service_delivery_review.lead_time_top_threshold.to_f / 1.day %>'
            data-bottomthresholdtext='<%= "#{I18n.t('activerecord.attributes.service_delivery_review.lead_time_bottom_threshold')}: #{I18n.t('general.days_text', count: number_with_precision(@service_delivery_review.lead_time_bottom_threshold.to_f / 1.day), precision: 2)}" %>'
            data-topthresholdtext='<%= "#{I18n.t('activerecord.attributes.service_delivery_review.lead_time_top_threshold')}: #{I18n.t('general.days_text', count: number_with_precision(@service_delivery_review.lead_time_top_threshold.to_f / 1.day, precision: 2))}" %>'
-           data-series='<%= [{ type: 'scatter', yAxis: 1, name: I18n.t('general.demands'), data: @service_delivery_review.demands.finished.order(:end_date).map { |demand| { name: demand.external_id, y: (demand.leadtime.to_f / 1.day), end_date: I18n.l(demand.end_date, format: :short) } } }].to_json %>'
+           data-series='<%= [{ type: 'scatter', yAxis: 1, name: I18n.t('general.demands'), data: @service_delivery_review.demands.kept.finished_until_date(Time.zone.now).order(:end_date).map { |demand| { name: demand.external_id, y: (demand.leadtime.to_f / 1.day), end_date: I18n.l(demand.end_date, format: :short) } } }].to_json %>'
            data-decimals='2'>
       </div>
     </div>

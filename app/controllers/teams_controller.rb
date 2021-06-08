@@ -8,11 +8,12 @@ class TeamsController < DemandsListController
 
   def show
     build_cache_object
+    assign_demands_lists
 
-    @unscored_demands = charts_demands.unscored_demands.order(external_id: :asc)
     @demands_blocks = @team.demand_blocks.order(block_time: :desc)
     @flow_pressure = @team.flow_pressure
     @average_speed = DemandService.instance.average_speed(charts_demands)
+
     build_charts_data(charts_demands)
   end
 
@@ -114,6 +115,12 @@ class TeamsController < DemandsListController
   end
 
   private
+
+  def assign_demands_lists
+    @demands = @team.demands.opened_before_date(Time.zone.now)
+    @demands_delivered = @team.demands.kept.finished_until_date(Time.zone.now)
+    @unscored_demands = charts_demands.unscored_demands.order(external_id: :asc)
+  end
 
   def build_cache_object
     @team_consolidations = @team.team_consolidations.weekly_data.where('consolidation_date >= :limit_date', limit_date: 6.months.ago).order(:consolidation_date)

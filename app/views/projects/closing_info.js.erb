@@ -4,7 +4,7 @@ var closingInfoDiv = $("#closing-info-div").modal({
     keyboard: false
 });
 
-closingInfoDiv.html("<%= escape_javascript(render 'projects/dashboards/closing_dashboard', project: @project, project_summary: @project_summary) %>");
+closingInfoDiv.html("<%= escape_javascript(render 'projects/dashboards/closing_dashboard', project: @project, project_summary: @project_summary, average_speed: @average_speed) %>");
 
 closingInfoDiv.modal("show");
 

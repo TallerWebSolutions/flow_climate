@@ -60,7 +60,7 @@ class Team < ApplicationRecord
   end
 
   def lead_time(start_date, end_date, percentile = 80)
-    Stats::StatisticsService.instance.percentile(percentile, demands.finished.to_end_dates(start_date, end_date).map(&:leadtime))
+    Stats::StatisticsService.instance.percentile(percentile, demands.to_end_dates(start_date, end_date).map(&:leadtime))
   end
 
   def failure_load
@@ -93,7 +93,7 @@ class Team < ApplicationRecord
 
   def percentage_idle_members
     active_memberships_count = memberships.active.count
-    not_finished_demands = demands.kept.not_finished
+    not_finished_demands = demands.kept.not_finished(Time.zone.now)
 
     return 0 if not_finished_demands.blank? || active_memberships_count.zero?
 
@@ -117,7 +117,7 @@ class Team < ApplicationRecord
   end
 
   def end_date
-    demands.kept.finished.order(:end_date).last&.end_date&.to_date || Time.zone.today
+    demands.kept.finished_until_date(Time.zone.now).order(:end_date).last&.end_date&.to_date || Time.zone.today
   end
 
   private

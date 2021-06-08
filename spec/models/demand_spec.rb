@@ -76,14 +76,6 @@ RSpec.describe Demand, type: :model do
     let(:team) { Fabricate :team, company: company }
     let(:project) { Fabricate :project, company: company, team: team }
 
-    describe '.finished' do
-      let!(:first_demand) { Fabricate :demand, project: project, end_date: Time.zone.now }
-      let!(:second_demand) { Fabricate :demand, project: project, end_date: Time.zone.now }
-      let!(:third_demand) { Fabricate :demand, project: project, end_date: nil }
-
-      it { expect(described_class.finished).to match_array [first_demand, second_demand] }
-    end
-
     describe '.finished_with_leadtime' do
       let!(:first_demand) { Fabricate :demand, project: project, end_date: Time.zone.now, leadtime: 2 }
       let!(:second_demand) { Fabricate :demand, project: project, end_date: Time.zone.now, leadtime: 3 }
@@ -116,7 +108,7 @@ RSpec.describe Demand, type: :model do
       let!(:second_demand) { Fabricate :demand, project: project, end_date: nil }
       let!(:third_demand) { Fabricate :demand, project: project, end_date: Time.zone.now }
 
-      it { expect(described_class.not_finished).to match_array [first_demand, second_demand] }
+      it { expect(described_class.not_finished(Time.zone.now)).to match_array [first_demand, second_demand] }
     end
 
     describe '.in_wip' do
@@ -124,7 +116,7 @@ RSpec.describe Demand, type: :model do
       let!(:second_demand) { Fabricate :demand, project: project, commitment_date: Time.zone.now, end_date: nil }
       let!(:third_demand) { Fabricate :demand, project: project, commitment_date: Time.zone.now, end_date: nil }
 
-      it { expect(described_class.in_wip.map(&:id)).to match_array [second_demand.id, third_demand.id] }
+      it { expect(described_class.in_wip(Time.zone.now).map(&:id)).to match_array [second_demand.id, third_demand.id] }
     end
 
     describe '.in_flow' do
@@ -136,7 +128,7 @@ RSpec.describe Demand, type: :model do
       let!(:second_demand_transition) { Fabricate :demand_transition, demand: first_demand }
       let!(:third_demand_transition) { Fabricate :demand_transition, demand: second_demand }
 
-      it { expect(described_class.in_flow.map(&:id)).to match_array [first_demand.id] }
+      it { expect(described_class.in_flow(Time.zone.now).map(&:id)).to match_array [first_demand.id] }
     end
 
     describe '.to_dates' do
@@ -227,19 +219,27 @@ RSpec.describe Demand, type: :model do
       let!(:second_demand) { Fabricate :demand, project: project, commitment_date: Time.zone.now, end_date: nil }
       let!(:third_demand) { Fabricate :demand, project: project, commitment_date: nil, end_date: nil }
 
-      it { expect(described_class.not_committed.map(&:id)).to match_array [third_demand.id] }
+      it { expect(described_class.not_committed(Time.zone.now).map(&:id)).to match_array [third_demand.id] }
     end
 
     describe '.not_started' do
-      let(:first_stage) { Fabricate :stage, teams: [team], projects: [project], order: 0 }
-      let(:second_stage) { Fabricate :stage, teams: [team], projects: [project], order: 1 }
+      it 'returns the demands in backlog in the date' do
+        first_stage = Fabricate :stage, teams: [team], projects: [project], order: 0
+        second_stage = Fabricate :stage, teams: [team], projects: [project], order: 1
 
-      let!(:first_demand) { Fabricate :demand, team: team, project: project, current_stage: first_stage, demand_title: 'first_demand' }
-      let!(:second_demand) { Fabricate :demand, team: team, project: project, current_stage: first_stage, demand_title: 'second_demand' }
-      let!(:third_demand) { Fabricate :demand, team: team, project: project, current_stage: second_stage, demand_title: 'third_demand' }
-      let!(:fourth_demand) { Fabricate :demand, team: team, project: project, current_stage: nil, demand_title: 'fourth_demand' }
+        first_demand = Fabricate :demand, team: team, project: project, current_stage: first_stage, demand_title: 'first_demand'
+        second_demand = Fabricate :demand, team: team, project: project, current_stage: first_stage, demand_title: 'second_demand'
+        third_demand = Fabricate :demand, team: team, project: project, current_stage: second_stage, demand_title: 'third_demand'
+        Fabricate :demand, team: team, project: project, current_stage: nil, demand_title: 'fourth_demand'
 
-      it { expect(described_class.not_started.map(&:demand_title)).to match_array [first_demand.demand_title, second_demand.demand_title] }
+        Fabricate :demand_transition, demand: first_demand, stage: first_stage, last_time_in: 3.days.ago, last_time_out: 1.day.ago
+        Fabricate :demand_transition, demand: second_demand, stage: first_stage, last_time_in: 3.days.ago, last_time_out: nil
+        Fabricate :demand_transition, demand: first_demand, stage: second_stage, last_time_in: 3.days.ago, last_time_out: nil
+        Fabricate :demand_transition, demand: third_demand, stage: second_stage, last_time_in: 3.days.ago, last_time_out: nil
+
+        expect(described_class.not_started(Time.zone.now).map(&:demand_title)).to eq [second_demand.demand_title]
+        expect(described_class.not_started(2.days.ago).map(&:demand_title)).to match_array [first_demand.demand_title, second_demand.demand_title]
+      end
     end
 
     describe '.opened_before_date' do

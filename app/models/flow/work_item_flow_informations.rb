@@ -75,7 +75,7 @@ module Flow
     private
 
     def build_flow_data(bottom_limit_date, upper_limit_date, demands_in_period)
-      demands_delivered_to_date = demands_in_period.finished_after_date(bottom_limit_date).finished_until_date(upper_limit_date)
+      demands_delivered_to_date = demands_in_period.not_discarded_until(upper_limit_date).finished_after_date(bottom_limit_date).finished_until_date(upper_limit_date)
       demands_delivered_upstream = demands_delivered_to_date.finished_in_upstream
       demands_delivered_downstream = demands_delivered_to_date.finished_in_downstream
 
@@ -86,7 +86,7 @@ module Flow
     end
 
     def build_products_flow_data(bottom_limit_date, upper_limit_date, demands_in_period)
-      demands_delivered_to_date = demands_in_period.finished_after_date(bottom_limit_date).finished_until_date(upper_limit_date).count
+      demands_delivered_to_date = demands_in_period.not_discarded_until(upper_limit_date).finished_after_date(bottom_limit_date).finished_until_date(upper_limit_date).count
 
       @products_throughput_per_period << (demands_delivered_to_date - @accumulated_products_throughput.last.to_i)
 

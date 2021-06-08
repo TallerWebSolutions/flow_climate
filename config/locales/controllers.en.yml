@@ -124,7 +124,6 @@ en:
       one: "%{count} point"
       other: "%{count} points"
     demands: "demands"
-    avg_speed_per_week: "%{speed_value} items/week"
     items_text: "%{items_count} item(ns)"
     flow: "Flow"
     class_of_service: "Class of Service"
@@ -186,6 +185,7 @@ en:
     no_register: "No Register"
     upstream: "Upstream"
     downstream: "Downstream"
+    discarded_demands: "Discarded"
   header:
     logout: Logout
     explore: Explore

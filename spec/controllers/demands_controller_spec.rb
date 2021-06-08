@@ -1428,6 +1428,7 @@ RSpec.describe DemandsController, type: :controller do
             Fabricate :demand, company: company, product: product, team: team, project: project, demand_title: 'bar foo', demand_type: :feature, class_of_service: :intangible, created_date: Time.zone.local(2019, 1, 19, 10, 0, 0), commitment_date: nil, end_date: Time.zone.local(2019, 1, 23, 10, 0, 0), effort_downstream: 0, effort_upstream: 10
             Fabricate :demand, company: company, product: product, team: team, project: project, current_stage: second_stage, demand_title: 'xpto', demand_type: :chore, class_of_service: :standard, created_date: Time.zone.local(2019, 1, 14, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 19, 10, 0, 0), end_date: Time.zone.local(2019, 1, 24, 10, 0, 0), effort_downstream: 10, effort_upstream: 20
 
+            expect(Demand).to(receive(:not_started)).once.and_return(Demand.where(id: [first_demand.id, second_demand.id]))
             get :demands_list_by_ids, params: { company_id: company, object_type: 'Project', object_id: project.id, demand_state: 'backlog', demand_fitness: '', demand_type: '' }
 
             expect(response).to render_template 'demands/index'

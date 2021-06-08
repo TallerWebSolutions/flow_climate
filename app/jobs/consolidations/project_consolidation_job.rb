@@ -7,30 +7,32 @@ module Consolidations
     def perform(project, cache_date = Time.zone.today)
       end_of_day = cache_date.end_of_day
 
-      demands = project.demands.where('demands.created_date <= :analysed_date', analysed_date: end_of_day)
-      demands_finished = demands.finished.where('demands.end_date <= :analysed_date', analysed_date: end_of_day).order(end_date: :asc)
+      demands = project.demands.where('demands.created_date <= :limit_date', limit_date: end_of_day)
+      demands_finished = demands.not_discarded_until(end_of_day).finished_until_date(end_of_day).order(end_date: :asc)
+      demands_discarded = demands.where('discarded_at <= :limit_date', limit_date: end_of_day)
       demands_finished_in_month = project.demands.to_end_dates(cache_date.beginning_of_month, cache_date)
+      demands_discarded_in_month = project.demands.where('discarded_at BETWEEN :upper_limit_date AND :lower_limit_date', upper_limit_date: cache_date.beginning_of_month, lower_limit_date: cache_date)
       demands_lead_time = demands_finished.map(&:leadtime).flatten.compact
       demands_lead_time_in_month = demands_finished_in_month.map(&:leadtime).flatten.compact
 
-      demands_efforts = DemandEffort.where(id: demands_finished.map { |demand| demand.demand_efforts.map(&:id) }.flatten)
-      demands_efforts_in_month = DemandEffort.where(id: demands_finished_in_month.map { |demand| demand.demand_efforts.map(&:id) }.flatten)
+      demands_to_efforts = Demand.where(id: demands_finished.map(&:id) + demands_discarded.map(&:id))
+      demands_to_efforts_in_month = Demand.where(id: demands_finished.map(&:id) + demands_discarded_in_month.map(&:id))
 
       lead_time_histogram_data = Stats::StatisticsService.instance.leadtime_histogram_hash(demands_lead_time)
       lead_time_histogram_bins = lead_time_histogram_data.keys
 
       data_start_date = 12.weeks.ago
 
-      consolidation_period = TimeService.instance.weeks_between_of(data_start_date.end_of_week, cache_date.end_of_week)
+      consolidation_period_for_montecarlo = TimeService.instance.weeks_between_of(data_start_date.end_of_week, cache_date.end_of_week)
 
       team = project.team
 
-      project_work_item_flow_information = Flow::WorkItemFlowInformations.new(project.demands, project.initial_scope, consolidation_period.length, consolidation_period.last, 'week')
-      team_work_item_flow_information = Flow::WorkItemFlowInformations.new(team.demands, team.projects.map(&:initial_scope).compact.sum, consolidation_period.length, consolidation_period.last, 'week')
+      project_work_item_flow_information = Flow::WorkItemFlowInformations.new(project.demands, project.initial_scope, consolidation_period_for_montecarlo.length, consolidation_period_for_montecarlo.last, 'week')
+      team_work_item_flow_information = Flow::WorkItemFlowInformations.new(team.demands, team.projects.map(&:initial_scope).compact.sum, consolidation_period_for_montecarlo.length, consolidation_period_for_montecarlo.last, 'week')
 
-      consolidation_period.each_with_index do |analysed_date, distribution_index|
-        project_work_item_flow_information.work_items_flow_behaviour(consolidation_period.first, analysed_date, distribution_index, true)
-        team_work_item_flow_information.work_items_flow_behaviour(consolidation_period.first, analysed_date, distribution_index, true)
+      consolidation_period_for_montecarlo.each_with_index do |analysed_date, distribution_index|
+        project_work_item_flow_information.work_items_flow_behaviour(consolidation_period_for_montecarlo.first, analysed_date, distribution_index, true)
+        team_work_item_flow_information.work_items_flow_behaviour(consolidation_period_for_montecarlo.first, analysed_date, distribution_index, true)
       end
 
       project_based_montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(project.remaining_work(end_of_day), project_work_item_flow_information.throughput_array_for_monte_carlo.last(12), 500)
@@ -54,7 +56,7 @@ module Consolidations
                            last_data_in_month: (cache_date.to_date) == (cache_date.to_date.end_of_month),
                            last_data_in_year: (cache_date.to_date) == (cache_date.to_date.end_of_year),
                            wip_limit: project.max_work_in_progress,
-                           current_wip: demands.in_wip,
+                           current_wip: demands.not_discarded_until(end_of_day).in_wip(end_of_day),
                            demands_ids: demands.map(&:id),
                            demands_finished_ids: demands_finished.map(&:id),
                            project_throughput: demands_finished.count,
@@ -97,18 +99,18 @@ module Consolidations
                            code_needed_blocks_count: code_needed_blocks_count,
                            code_needed_blocks_per_demand: code_needed_blocks_per_demand,
                            project_scope_hours: project.qty_hours,
-                           project_throughput_hours: demands_finished.sum(&:total_effort),
-                           project_throughput_hours_upstream: demands_finished.sum(&:effort_upstream),
-                           project_throughput_hours_downstream: demands_finished.sum(&:effort_downstream),
-                           project_throughput_hours_in_month: demands_finished_in_month.sum(&:total_effort),
-                           project_throughput_hours_upstream_in_month: demands_finished_in_month.sum(&:effort_upstream),
-                           project_throughput_hours_downstream_in_month: demands_finished_in_month.sum(&:effort_downstream),
-                           project_throughput_hours_development: demands_efforts.developer_efforts.sum(&:effort_value),
-                           project_throughput_hours_design: demands_efforts.designer_efforts.sum(&:effort_value),
-                           project_throughput_hours_management: demands_efforts.manager_efforts.sum(&:effort_value),
-                           project_throughput_hours_development_in_month: demands_efforts_in_month.developer_efforts.sum(&:effort_value),
-                           project_throughput_hours_design_in_month: demands_efforts_in_month.designer_efforts.sum(&:effort_value),
-                           project_throughput_hours_management_in_month: demands_efforts_in_month.manager_efforts.sum(&:effort_value)
+                           project_throughput_hours: demands_to_efforts.sum(&:total_effort),
+                           project_throughput_hours_upstream: demands_to_efforts.sum(&:effort_upstream),
+                           project_throughput_hours_downstream: demands_to_efforts.sum(&:effort_downstream),
+                           project_throughput_hours_in_month: demands_to_efforts_in_month.sum(&:total_effort),
+                           project_throughput_hours_upstream_in_month: demands_to_efforts_in_month.sum(&:effort_upstream),
+                           project_throughput_hours_downstream_in_month: demands_to_efforts_in_month.sum(&:effort_downstream),
+                           project_throughput_hours_development: demands_to_efforts.sum(&:effort_development),
+                           project_throughput_hours_design: demands_to_efforts.sum(&:effort_design),
+                           project_throughput_hours_management: demands_to_efforts.sum(&:effort_management),
+                           project_throughput_hours_development_in_month: demands_to_efforts_in_month.sum(&:effort_development),
+                           project_throughput_hours_design_in_month: demands_to_efforts_in_month.sum(&:effort_design),
+                           project_throughput_hours_management_in_month: demands_to_efforts_in_month.sum(&:effort_management)
       )
 
     end

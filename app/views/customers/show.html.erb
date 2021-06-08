@@ -29,7 +29,7 @@
            object_type: 'Customer',
            object_id: @customer.id,
            upstream_demands: @customer.upstream_demands,
-           downstream_demands: @customer.demands.kept.in_wip,
+           downstream_demands: @customer.demands.kept.in_wip(Time.zone.now),
            user_invite: @user_invite,
            customer_consolidations: @customer_consolidations,
            contracts: @contracts,

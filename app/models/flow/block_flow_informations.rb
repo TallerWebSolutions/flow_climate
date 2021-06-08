@@ -14,7 +14,7 @@ module Flow
     def blocks_flow_behaviour(analysed_date)
       return if @demands.blank?
 
-      demands_finished_until_date = @demands.finished_until_date(analysed_date) # query
+      demands_finished_until_date = @demands.not_discarded_until(analysed_date).finished_until_date(analysed_date) # query
 
       build_block_flow_info(demands_finished_until_date)
     end

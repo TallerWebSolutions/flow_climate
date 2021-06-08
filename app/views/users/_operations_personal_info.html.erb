@@ -8,7 +8,7 @@
     </tr>
     <tr>
       <td><b><%= I18n.t('general.delivered') %></b></td>
-      <td><%= link_to I18n.t('general.demands_text', count: demands.kept.finished.count), demands_list_by_ids_company_demands_path(company, object_type: object_type, object_id: object_id, demand_state: 'delivered', demand_fitness: '', demand_type: '' ), target: '_blank' %></td>
+      <td><%= link_to I18n.t('general.demands_text', count: demands.kept.finished_until_date(Time.zone.now).count), demands_list_by_ids_company_demands_path(company, object_type: object_type, object_id: object_id, demand_state: 'delivered', demand_fitness: '', demand_type: '' ), target: '_blank' %></td>
     </tr>
     <tr>
       <td><b><%= I18n.t('general.bugs') %></b></td>

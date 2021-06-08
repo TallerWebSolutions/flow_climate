@@ -37,7 +37,7 @@ class DemandService
   end
 
   def average_speed(demands)
-    demands_finished = demands.kept.finished
+    demands_finished = demands.kept.finished_until_date(Time.zone.now)
     min_date = demands_finished.filter_map(&:end_date).min
     max_date = demands_finished.filter_map(&:end_date).max
 

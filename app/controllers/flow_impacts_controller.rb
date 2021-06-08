@@ -7,12 +7,12 @@ class FlowImpactsController < AuthenticatedController
 
   def new
     @flow_impact = FlowImpact.new(project: @project, impact_date: Time.zone.now)
-    @demands_for_impact_form = @project.demands.in_flow.order(:external_id)
+    @demands_for_impact_form = @project.demands.kept.in_flow(Time.zone.now).order(:external_id)
   end
 
   def create
     @flow_impact = FlowImpact.new(flow_impact_params.merge(project: @project, user: current_user))
-    @demands_for_impact_form = @project.demands.in_flow.order(:external_id)
+    @demands_for_impact_form = @project.demands.kept.in_flow(Time.zone.now).order(:external_id)
 
     if @flow_impact.save
       flash[:notice] = I18n.t('flow_impacts.create.success')
@@ -36,7 +36,7 @@ class FlowImpactsController < AuthenticatedController
   end
 
   def demands_to_project
-    @demands_to_direct_link = @project.demands.not_finished.order(:external_id)
+    @demands_to_direct_link = @project.demands.kept.not_finished(Time.zone.now).order(:external_id)
 
     respond_to { |format| format.js { render 'flow_impacts/demands_to_project' } }
   end
@@ -62,7 +62,7 @@ class FlowImpactsController < AuthenticatedController
 
   def update
     @flow_impact.update(flow_impact_params)
-    @demands_for_impact_form = @flow_impact.project.demands.in_flow
+    @demands_for_impact_form = @flow_impact.project.demands.kept.in_flow(Time.zone.now)
 
     redirect_to company_project_flow_impacts_path(@company, @project)
   end

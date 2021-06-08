@@ -174,7 +174,7 @@ class Project < ApplicationRecord
     last_consolidation = project_consolidations.order(:consolidation_date).last
     return last_consolidation.project_throughput_hours if last_consolidation.present?
 
-    demands.finished.sum(&:total_effort)
+    demands.kept.finished_until_date(Time.zone.now).sum(&:total_effort)
   end
 
   def last_week_scope
@@ -192,10 +192,10 @@ class Project < ApplicationRecord
   end
 
   def flow_pressure(date = Time.zone.now)
-    return 0.0 if no_pressure_set(date)
+    return 0 if no_pressure_set(date)
 
     days = remaining_days_to_period(date) || total_days
-    remaining_backlog(date).to_f / days
+    remaining_work(date).to_f / days
   end
 
   def relative_flow_pressure(total_pressure)
@@ -205,25 +205,25 @@ class Project < ApplicationRecord
   end
 
   def total_throughput
-    demands.kept.finished.count
+    demands.kept.finished_until_date(Time.zone.now).count
   end
 
   def total_throughput_for(date = Time.zone.today)
-    demands.kept.finished.where('EXTRACT(week FROM end_date) = :week AND EXTRACT(year FROM end_date) = :year', week: date.to_date.cweek, year: date.to_date.cwyear).count
+    demands.kept.finished_until_date(Time.zone.now).where('EXTRACT(week FROM end_date) = :week AND EXTRACT(year FROM end_date) = :year', week: date.to_date.cweek, year: date.to_date.cwyear).count
   end
 
   def total_throughput_until(date)
     return total_throughput if date.blank?
 
-    demands.kept.finished_until_date(date).count
+    demands.not_discarded_until(date).finished_until_date(date).count
   end
 
   def total_hours_upstream
-    demands.kept.finished.sum(&:effort_upstream)
+    demands.kept.finished_until_date(Time.zone.now).sum(&:effort_upstream)
   end
 
   def total_hours_downstream
-    demands.kept.finished.sum(&:effort_downstream)
+    demands.kept.finished_until_date(Time.zone.now).sum(&:effort_downstream)
   end
 
   def total_hours_consumed
@@ -241,20 +241,18 @@ class Project < ApplicationRecord
   end
 
   def remaining_backlog(date = Time.zone.now)
-    DemandsRepository.instance.remaining_backlog_to_date(demands.map(&:id), date.end_of_day) + initial_scope
+    demands.not_discarded_until(date.end_of_day).not_started(date.end_of_day).count + initial_scope
   end
 
   def remaining_work(date = Time.zone.now)
-    backlog = DemandsRepository.instance.remaining_backlog_to_date(demands.map(&:id), date.end_of_day) + initial_scope
-    wip = DemandsRepository.instance.wip_count(demands.map(&:id), date.end_of_day)
-
-    backlog + wip
+    demands.opened_before_date(date).not_discarded_until(date).not_finished(date).count + initial_scope
   end
 
-  def percentage_remaining_backlog(date = Time.zone.now)
-    return 0 unless (demands.kept.count + initial_scope).positive?
+  def percentage_remaining_work(date = Time.zone.now)
+    total_demands_count = demands.opened_before_date(date.end_of_day).count + initial_scope
+    return 0 unless total_demands_count.positive?
 
-    (remaining_backlog(date).to_f + demands.in_wip.count) / (demands.kept.count + initial_scope)
+    remaining_work(date.end_of_day) / total_demands_count.to_f
   end
 
   def required_hours
@@ -318,12 +316,12 @@ class Project < ApplicationRecord
   end
 
   def leadtime_for_class_of_service(class_of_service, desired_percentile = 80)
-    demands_in_class_of_service = demands.kept.send(class_of_service).finished
+    demands_in_class_of_service = demands.send(class_of_service).finished_until_date(Time.zone.now)
     Stats::StatisticsService.instance.percentile(desired_percentile, demands_in_class_of_service.map(&:leadtime))
   end
 
   def general_leadtime(percentile = 80)
-    Stats::StatisticsService.instance.percentile(percentile, demands.finished.map(&:leadtime))
+    Stats::StatisticsService.instance.percentile(percentile, demands.finished_until_date(Time.zone.now).map(&:leadtime))
   end
 
   def active_kept_closed_blocks
@@ -381,12 +379,6 @@ class Project < ApplicationRecord
     Stats::StatisticsService.instance.compute_percentage(total_demands.bug.count, (total_demands.count - total_demands.bug.count))
   end
 
-  def average_speed_per_week
-    return 0 if demands.kept.finished.count.zero? || past_weeks.zero?
-
-    demands.kept.finished.count / past_weeks
-  end
-
   def demands_of_class_of_service(class_of_service = :standard)
     demands.kept.send(class_of_service)
   end
@@ -423,7 +415,7 @@ class Project < ApplicationRecord
   end
 
   def delivered_scope
-    @delivered_scope ||= demands.kept.finished.count
+    @delivered_scope ||= demands.finished_until_date(Time.zone.now).count
   end
 
   def last_weekly_throughput(qty_data_points)
@@ -511,14 +503,14 @@ class Project < ApplicationRecord
     errors.add(:hour_value, I18n.t('project.validations.no_value'))
   end
 
-  def remaining_days_to_period(from_date = Time.zone.now)
-    end_date_for_from_date = end_date.end_of_day
+  def remaining_days_to_period(from_date = Time.zone.today)
+    end_date_for_from_date = end_date
     last_deadline_change = project_change_deadline_histories.where('created_at <= :limit_date', limit_date: from_date.utc).order(:created_at).last
-    end_date_for_from_date = last_deadline_change.new_date.end_of_day if last_deadline_change.present?
+    end_date_for_from_date = last_deadline_change.new_date if last_deadline_change.present?
 
-    start_date_limit = [start_date.beginning_of_day, from_date].max
+    start_date_limit = [start_date, from_date.to_date].max
     return 0 if end_date_for_from_date < start_date_limit
 
-    ((end_date_for_from_date - start_date_limit) / 1.day) + 1
+    (end_date_for_from_date - start_date_limit) + 1
   end
 end

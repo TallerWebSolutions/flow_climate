@@ -18,12 +18,12 @@
             <div class="stamp-content"><%= number_to_currency(project.current_cost, decimal: 2) %></div>
           </div>
           <div class="col-xs-3 center">
-            <div class="stamp-title"><%= I18n.t('projects.show.closing_info.hours') %></div>
+            <div class="stamp-title"><%= I18n.t('projects.show.charts.total_effort') %></div>
             <div class="stamp-content"><%= I18n.t('general.hours_text', count: number_with_precision(project.total_hours_consumed, precision: 2)) %></div>
           </div>
           <div class="col-xs-3 center">
             <div class="stamp-title"><%= I18n.t('projects.show.closing_info.average_speed_per_week') %></div>
-            <div class="stamp-content"><%= I18n.t('general.avg_speed_per_week', speed_value: number_with_precision(project.average_speed_per_week, precision: 2)) %></div>
+            <div class="stamp-content"><%= I18n.t('general.demands_per_day', count: number_with_precision(average_speed, precision: 3)) %></div>
           </div>
           <div class="col-xs-3 center">
             <div class="stamp-title"><%= I18n.t('projects.show.status_report.average_demand_aging') %></div>
@@ -105,7 +105,7 @@
             <div class="stamp-title"><%= I18n.t('projects.show.status_report.remaining_scope') %></div>
             <div class="stamp-content">
               <%= I18n.t('general.items_text', items_count: project.remaining_backlog) %>
-              <sup><%= number_to_percentage(project.percentage_remaining_backlog * 100, precision: 2) %></sup>
+              <sup><%= number_to_percentage(project.percentage_remaining_work * 100, precision: 2) %></sup>
             </div>
           </div>
           <div class="col-xs-3 center">

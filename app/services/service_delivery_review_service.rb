@@ -8,7 +8,7 @@ class ServiceDeliveryReviewService
     demands = Demand.where(id: demands.map(&:id))
     demands.map { |demand| demand.update(service_delivery_review: service_delivery_review) }
 
-    bugs_opened_in_period = product.demands.kept.bug.where('created_date BETWEEN :start_date AND :end_date', start_date: demands.finished.map(&:end_date).min, end_date: service_delivery_review.meeting_date)
+    bugs_opened_in_period = product.demands.kept.bug.where('created_date BETWEEN :start_date AND :end_date', start_date: demands.finished_until_date(service_delivery_review.meeting_date).map(&:end_date).min, end_date: service_delivery_review.meeting_date)
     service_delivery_review.update(bugs_ids: bugs_opened_in_period.map(&:id))
   end
 

@@ -16,7 +16,7 @@ module Consolidations
       demands_in_semester = team.demands.where('demands.created_date BETWEEN :bottom_limit AND :upper_limit', bottom_limit: TimeService.instance.beginning_of_semester(end_of_day), upper_limit: end_of_day)
       demands_in_year = team.demands.where('demands.created_date BETWEEN :bottom_limit AND :upper_limit', bottom_limit: end_of_day.beginning_of_year, upper_limit: end_of_day)
 
-      demands_finished = demands.finished.where('demands.end_date <= :analysed_date', analysed_date: end_of_day).order(end_date: :asc)
+      demands_finished = demands.finished_until_date(end_of_day).order(end_date: :asc)
       demands_finished_in_week = demands.to_end_dates(cache_date.beginning_of_week, cache_date)
       demands_finished_in_month = demands.to_end_dates(cache_date.beginning_of_month, cache_date)
       demands_finished_in_quarter = demands_in_quarter.to_end_dates(cache_date.beginning_of_quarter, cache_date)

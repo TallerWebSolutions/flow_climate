@@ -101,6 +101,6 @@ class Customer < ApplicationRecord
   end
 
   def end_date
-    exclusives_demands.kept.finished.order(:end_date).last&.end_date&.to_date || Time.zone.today
+    exclusives_demands.kept.finished_until_date(Time.zone.now).order(:end_date).last&.end_date&.to_date || Time.zone.today
   end
 end
