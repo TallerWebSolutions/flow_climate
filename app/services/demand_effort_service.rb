@@ -11,7 +11,9 @@ class DemandEffortService
     demand.demand_transitions.each do |transition|
       next unless transition.stage_compute_effort_to_project?
 
-      assignments_in_dates = demand.item_assignments.for_dates(transition.last_time_in, transition.last_time_out)
+      end_date_for_assignment = [transition.last_time_out, Time.zone.now].compact.min
+
+      assignments_in_dates = demand.item_assignments.for_dates(transition.last_time_in, end_date_for_assignment)
       top_effort_assignment = assignments_in_dates.max_by { |assign_in_date| assign_in_date.working_hours_until(transition.last_time_in, transition.last_time_out) }
 
       assignments_in_dates.each do |assignment|
