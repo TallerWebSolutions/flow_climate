@@ -35,7 +35,6 @@ gem 'uglifier'
 gem 'yui-compressor'
 
 group :test, :development do
-  gem 'brakeman'
   gem 'bullet'
   gem 'database_cleaner'
   gem 'fabrication'

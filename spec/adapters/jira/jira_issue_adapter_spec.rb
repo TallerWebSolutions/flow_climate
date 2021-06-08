@@ -220,6 +220,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
 
             updated_demand = Demand.last
             expect(updated_demand.memberships).to match_array [membership, other_membership]
+            expect(updated_demand.item_assignments.open_assignments).to eq []
           end
         end
 
