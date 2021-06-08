@@ -244,7 +244,7 @@ module Jira
 
     def define_membership(history_date, team, responsible_name)
       team_member = TeamMember.where(company: team.company).where('lower(name) = :member_name', member_name: responsible_name.downcase).first
-      membership = Membership.where(team_member: team_member, team: team).active_for_date(history_date).first
+      membership = Membership.where(team_member: team_member, team: team).first
 
       team_member = TeamMember.create(company: team.company, name: responsible_name.downcase) if team_member.blank?
       membership = Membership.create(team: team, team_member: team_member, start_date: history_date) if membership.blank?
