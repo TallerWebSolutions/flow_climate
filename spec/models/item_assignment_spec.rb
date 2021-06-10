@@ -307,11 +307,11 @@ RSpec.describe ItemAssignment, type: :model do
 
       first_assignment = Fabricate :item_assignment, membership: first_membership, demand: first_demand, start_time: 9.days.ago, finish_time: nil
       second_assignment = Fabricate :item_assignment, membership: first_membership, demand: second_demand, start_time: 3.days.ago, finish_time: nil
-      third_assignment = Fabricate :item_assignment, membership: first_membership, demand: fourth_demand, start_time: 3.days.ago, finish_time: nil
       fourth_assignment = Fabricate :item_assignment, membership: first_membership, demand: fifth_demand, start_time: 3.days.ago, finish_time: nil, discarded_at: Time.zone.now
+      Fabricate :item_assignment, membership: first_membership, demand: fourth_demand, start_time: 3.days.ago, finish_time: nil
       Fabricate :item_assignment, membership: first_membership, demand: third_demand, start_time: 3.days.ago, finish_time: Time.zone.now
 
-      expect(first_assignment.membership_open_assignments).to match_array [first_assignment, second_assignment, third_assignment, fourth_assignment]
+      expect(first_assignment.membership_open_assignments).to match_array [first_assignment, second_assignment, fourth_assignment]
     end
   end
 end

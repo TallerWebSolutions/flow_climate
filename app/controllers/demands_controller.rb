@@ -163,6 +163,8 @@ class DemandsController < DemandsListController
                  demandable.fit_for_purpose_demands[:value]
                elsif @demand_state == 'discarded'
                  demandable.demands.discarded
+               elsif @demand_state == 'not_discarded'
+                 demandable.demands.kept
                elsif @demand_type.present?
                  demandable.demands.where(demand_type: @demand_type)
                elsif @demand_state == 'delivered'

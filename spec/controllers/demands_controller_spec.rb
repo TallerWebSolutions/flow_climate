@@ -1520,6 +1520,21 @@ RSpec.describe DemandsController, type: :controller do
             expect(assigns(:demands)).to match_array [first_demand, second_demand]
           end
         end
+
+        context 'and query by not discarded' do
+          it 'assigns the instance variable and renders the template' do
+            first_demand = Fabricate :demand, company: company, team: team, product: product, project: project, demand_score: 12
+            second_demand = Fabricate :demand, company: company, product: product, team: team, project: project, demand_score: 2
+            Fabricate :demand, company: company, team: team, product: product, project: project, discarded_at: 1.day.ago
+            Fabricate :demand, company: company, product: product, team: team, project: project, discarded_at: Time.zone.now
+
+            get :demands_list_by_ids, params: { company_id: company, object_type: 'Project', object_id: project.id, demand_state: 'not_discarded', demand_fitness: '', demand_type: '' }
+
+            expect(response).to render_template 'demands/index'
+            expect(assigns(:company)).to eq company
+            expect(assigns(:demands)).to match_array [first_demand, second_demand]
+          end
+        end
       end
 
       context 'passing invalid parameters' do

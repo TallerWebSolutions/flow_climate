@@ -104,6 +104,6 @@ class DemandBlock < ApplicationRecord
   end
 
   def update_blocked_time_in_demand
-    demand.update(total_bloked_working_time: demand.demand_blocks.sum(&:block_working_time_duration))
+    demand.update(total_bloked_working_time: demand.demand_blocks.filter_map(&:block_working_time_duration).sum)
   end
 end

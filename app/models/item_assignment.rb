@@ -41,7 +41,7 @@ class ItemAssignment < ApplicationRecord
 
   scope :for_dates, ->(start_date, end_date) { where('(start_time <= :end_date AND finish_time >= :start_date) OR (start_time <= :end_date AND finish_time IS NULL) OR (finish_time >= :start_date AND :end_date IS NULL) OR (start_time <= :start_date AND finish_time IS NULL)', start_date: start_date, end_date: end_date) }
   scope :not_for_membership, ->(membership) { where.not('item_assignments.membership_id' => membership.id) }
-  scope :open_assignments, -> { where(finish_time: nil) }
+  scope :open_assignments, -> { joins(:demand).where(finish_time: nil, demands: { end_date: nil }) }
 
   delegate :team_member_name, to: :membership
 

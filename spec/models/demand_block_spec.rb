@@ -26,13 +26,15 @@ RSpec.describe DemandBlock, type: :model do
     describe '#before_save' do
       let(:stage) { Fabricate :stage }
       let(:demand) { Fabricate :demand }
-      let(:demand_block) { Fabricate :demand_block, demand: demand, block_time: Time.zone.yesterday }
 
-      context 'with a unblock_time' do
+      context 'with an unblock_time' do
         it 'computes the correct working time using the unblock value' do
           travel_to Time.zone.local(2021, 5, 26, 15, 46) do
+            demand_block = Fabricate :demand_block, demand: demand, block_time: 1.day.ago
             demand_block.update(block_time: 2.days.ago, unblock_time: 1.day.ago)
+
             expect(demand_block.reload.block_working_time_duration).to eq 6
+            expect(demand.reload.total_bloked_working_time).to eq 6
           end
         end
       end
@@ -40,15 +42,30 @@ RSpec.describe DemandBlock, type: :model do
       context 'when there is no unblock_time' do
         it 'uses current time' do
           travel_to Time.zone.local(2021, 5, 24, 15, 46) do
+            demand_block = Fabricate :demand_block, demand: demand, block_time: 1.day.ago
             demand_block.update(block_time: 3.hours.ago, unblock_time: nil)
             expect(demand_block.reload.block_working_time_duration).to eq 3
+            expect(demand.reload.total_bloked_working_time).to eq 6
+          end
+        end
+      end
+
+      context 'when there is no block_working_time_duration' do
+        it 'uses current time' do
+          travel_to Time.zone.local(2021, 5, 24, 15, 46) do
+            demand_block = Fabricate :demand_block, demand: demand, block_time: 1.day.ago
+            allow_any_instance_of(described_class).to(receive(:block_working_time_duration)).and_return(nil)
+            demand_block.update(block_time: 3.hours.ago, unblock_time: nil)
+            expect(demand_block.reload.block_working_time_duration).to eq nil
+            expect(demand.reload.total_bloked_working_time).to eq 0.0
           end
         end
       end
 
       context 'when there is a demand current stage' do
         it 'associates the stage to the block' do
-          expect(demand).to(receive(:stage_at).twice.and_return(stage))
+          demand_block = Fabricate :demand_block, demand: demand, block_time: 1.day.ago
+          expect(demand).to(receive(:stage_at).once.and_return(stage))
           demand_block.update(block_time: Time.zone.now)
           expect(demand_block.reload.stage).to eq stage
         end
