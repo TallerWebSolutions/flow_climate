@@ -10,7 +10,7 @@
   <tr>
     <td><b><%= I18n.t('general.created_demands') %></b></td>
     <% if demands.count.positive? %>
-      <td><%= link_to I18n.t('general.demands_text', count: demands.count), demands_list_by_ids_company_demands_path(company, object_type: object_type, object_id: object_id, demand_type: '', demand_state: '', demand_fitness: '' ), target: '_blank' %></td>
+      <td><%= link_to I18n.t('general.demands_text', count: demands.count), demands_list_by_ids_company_demands_path(company, object_type: object_type, object_id: object_id, demand_type: '', demand_state: 'not_discarded', demand_fitness: '' ), target: '_blank' %></td>
     <% else %>
       <%= I18n.t('general.demands_text', count: demands.count) %>
     <% end %>
