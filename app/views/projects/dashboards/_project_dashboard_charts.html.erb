@@ -206,17 +206,17 @@
     <div id="project-dashboard-hours-consumed-role-month-column-line"
          class="flow-chart"
          data-title=""
-         data-xcategories="<%= dashboard_project_consolidations.map(&:consolidation_date).to_json %>"
+         data-xcategories="<%= dashboard_project_consolidations_for_months.map(&:consolidation_date).to_json %>"
          data-xtitle=""
          data-ytitle="<%= I18n.t('general.hours') %>"
          data-prefix=""
          data-suffix=""
          data-tooltipsuffix="<%= I18n.t('general.hours') %>"
          data-datalabelsuffix="<%= I18n.t('general.hours') %>"
-         data-series="<%= [{ type: 'column', visible: true, name: I18n.t('charts.effort_design_month'), data: dashboard_project_consolidations.map { |consolidation| consolidation.project_throughput_hours_design_in_month.to_f } },
-                           { type: 'column', visible: true, name: I18n.t('charts.effort_development_month'), data: dashboard_project_consolidations.map { |consolidation| consolidation.project_throughput_hours_development_in_month.to_f } },
-                           { type: 'column', visible: true, name: I18n.t('charts.effort_management_month'), data: dashboard_project_consolidations.map { |consolidation| consolidation.project_throughput_hours_management_in_month.to_f } },
-                           { type: 'column', visible: false, name: I18n.t('charts.total_effort_month'), data: dashboard_project_consolidations.map { |consolidation| consolidation.project_throughput_hours_in_month.to_f } }].to_json %>"
+         data-series="<%= [{ type: 'column', visible: true, name: I18n.t('charts.effort_design_month'), data: dashboard_project_consolidations_for_months.map { |consolidation| consolidation.project_throughput_hours_design_in_month.to_f } },
+                           { type: 'column', visible: true, name: I18n.t('charts.effort_development_month'), data: dashboard_project_consolidations_for_months.map { |consolidation| consolidation.project_throughput_hours_development_in_month.to_f } },
+                           { type: 'column', visible: true, name: I18n.t('charts.effort_management_month'), data: dashboard_project_consolidations_for_months.map { |consolidation| consolidation.project_throughput_hours_management_in_month.to_f } },
+                           { type: 'column', visible: false, name: I18n.t('charts.total_effort_month'), data: dashboard_project_consolidations_for_months.map { |consolidation| consolidation.project_throughput_hours_in_month.to_f } }].to_json %>"
          data-decimals="2">
     </div>
 

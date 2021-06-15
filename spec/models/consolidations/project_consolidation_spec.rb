@@ -194,4 +194,18 @@ RSpec.describe Consolidations::ProjectConsolidation, type: :model do
       it { expect(consolidation.lead_time_range_month).to eq 0 }
     end
   end
+
+  describe '#last_data_for_month?' do
+    it 'returns true if it is the last data in month' do
+      travel_to Time.zone.local(2021, 6, 15, 10, 0, 0) do
+        first_consolidation = Fabricate :project_consolidation, consolidation_date: 2.days.ago, last_data_in_month: false
+        second_consolidation = Fabricate :project_consolidation, consolidation_date: Time.zone.today, last_data_in_month: false
+        third_consolidation = Fabricate :project_consolidation, consolidation_date: 1.day.ago, last_data_in_month: true
+
+        expect(first_consolidation.last_data_for_month?).to be false
+        expect(second_consolidation.last_data_for_month?).to be true
+        expect(third_consolidation.last_data_for_month?).to be true
+      end
+    end
+  end
 end

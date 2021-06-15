@@ -206,6 +206,7 @@ class ProjectsController < AuthenticatedController
     last_consolidation = project_consolidations.last
     append_current_data(last_consolidation)
     @dashboard_project_consolidations = @all_project_consolidations.after_date(10.weeks.ago)
+    @dashboard_project_consolidations_for_months = project_consolidations.order(:consolidation_date).select(&:last_data_for_month?)
   end
 
   def append_current_data(last_consolidation)
