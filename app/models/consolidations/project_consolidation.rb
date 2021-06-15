@@ -138,6 +138,10 @@ module Consolidations
       @lead_time_expedite ||= Stats::StatisticsService.instance.percentile(percentil, expedite_demands)
     end
 
+    def last_data_for_month?
+      last_data_in_month? || consolidation_date == Time.zone.today
+    end
+
     private
 
     def demands

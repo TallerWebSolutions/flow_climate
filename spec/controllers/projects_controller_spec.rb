@@ -132,12 +132,12 @@ RSpec.describe ProjectsController, type: :controller do
             travel_to Time.zone.local(2020, 12, 6, 10, 0, 0) do
               first_project = Fabricate :project, company: company, customers: [customer], products: [product], start_date: 15.weeks.ago, end_date: Time.zone.today
 
-              first_consolidation = Fabricate :project_consolidation, consolidation_date: 10.weeks.ago, project: first_project, operational_risk: 0.875, last_data_in_week: true
-              second_consolidation = Fabricate :project_consolidation, consolidation_date: 9.weeks.ago, project: first_project, operational_risk: 0.875, last_data_in_week: true
+              first_consolidation = Fabricate :project_consolidation, consolidation_date: 10.weeks.ago, project: first_project, operational_risk: 0.875, last_data_in_week: true, last_data_in_month: true
+              second_consolidation = Fabricate :project_consolidation, consolidation_date: 9.weeks.ago, project: first_project, operational_risk: 0.875, last_data_in_week: true, last_data_in_month: true
 
-              third_consolidation = Fabricate :project_consolidation, consolidation_date: 8.weeks.ago, project: first_project, operational_risk: 0.375, last_data_in_week: true
+              third_consolidation = Fabricate :project_consolidation, consolidation_date: 8.weeks.ago, project: first_project, operational_risk: 0.375, last_data_in_week: true, last_data_in_month: false
 
-              fourth_consolidation = Fabricate :project_consolidation, consolidation_date: 7.weeks.ago, project: first_project, operational_risk: 0.375, last_data_in_week: false
+              fourth_consolidation = Fabricate :project_consolidation, consolidation_date: 7.weeks.ago, project: first_project, operational_risk: 0.375, last_data_in_week: false, last_data_in_month: true
 
               first_stage = Fabricate :stage, company: company, projects: [first_project], order: 1
               second_stage = Fabricate :stage, company: company, projects: [first_project], order: 0
@@ -163,6 +163,8 @@ RSpec.describe ProjectsController, type: :controller do
               expect(assigns(:stages_list)).to eq [second_stage, first_stage]
               expect(assigns(:average_speed)).to eq 2
               expect(assigns(:all_project_consolidations)).to eq [first_consolidation, second_consolidation, third_consolidation, fourth_consolidation]
+              expect(assigns(:dashboard_project_consolidations)).to eq [first_consolidation, second_consolidation, third_consolidation, fourth_consolidation]
+              expect(assigns(:dashboard_project_consolidations_for_months)).to eq [first_consolidation, second_consolidation, fourth_consolidation]
             end
           end
         end
