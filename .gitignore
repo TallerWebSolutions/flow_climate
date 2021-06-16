@@ -23,6 +23,7 @@ coverage/*
 
 .byebug_history
 
+./dump.rdb
 dump.rdb
 
 logfile

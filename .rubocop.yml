@@ -130,5 +130,8 @@ RSpec/ScatteredSetup:
 RSpec/MultipleMemoizedHelpers:
   Enabled: false
 
+RSpec/IdenticalEqualityAssertion:
+  Enabled: false
+
 Naming/VariableNumber:
   Enabled: false
