@@ -16,6 +16,7 @@ module Jira
       process_product_changes(jira_issue_changelog(jira_issue))
       read_comments(demand, jira_issue.attrs)
       define_contract(demand, jira_account, jira_issue.attrs)
+      read_portfolio_unit(demand, jira_issue)
 
       demand
     end
@@ -57,8 +58,6 @@ module Jira
 
       read_blocks(demand, jira_issue_changelog)
       read_transitions(demand, jira_issue_changelog)
-
-      read_portfolio_unit(demand, jira_issue_changelog)
     end
 
     def read_blocks(demand, jira_issue_changelog)
@@ -229,16 +228,16 @@ module Jira
       Slack::SlackNotificationService.instance.notify_item_assigned(item_assignment)
     end
 
-    def read_portfolio_unit(demand, jira_issue_changelog)
+    def read_portfolio_unit(demand, jira_issue)
       product = demand.product
       portfolio_unit = product.portfolio_units.first
 
       return if portfolio_unit.blank?
 
-      unit_history = sort_histories_fields(jira_issue_changelog, portfolio_unit.jira_portfolio_unit_config.jira_field_name).last
-      return if unit_history.try(:[], 'toString').blank?
+      jira_portfolio_unit = jira_issue.attrs['fields'][portfolio_unit.jira_portfolio_unit_config.jira_field_name]
+      return if jira_portfolio_unit.blank?
 
-      portfolio_unit = product.portfolio_units.find_by('LOWER(name) = :name', name: unit_history['toString'].downcase)
+      portfolio_unit = product.portfolio_units.find_by('LOWER(name) = :name', name: jira_portfolio_unit.downcase)
       demand.update(portfolio_unit: portfolio_unit)
     end
 
