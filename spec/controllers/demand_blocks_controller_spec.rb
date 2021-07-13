@@ -48,7 +48,7 @@ RSpec.describe DemandBlocksController, type: :controller do
   context 'authenticated as gold' do
     let(:plan) { Fabricate :plan, plan_type: :gold }
     let(:user) { Fabricate :user, first_name: 'zzz' }
-    let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true, paid: true, finish_at: 1.week.from_now }
+    let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true, paid: true, start_at: 1.week.ago, finish_at: 1.week.from_now }
 
     before { sign_in user }
 
@@ -360,6 +360,7 @@ RSpec.describe DemandBlocksController, type: :controller do
       context 'valid parameters' do
         it 'calls the to_csv and responds success' do
           travel_to Time.zone.local(2021, 5, 26, 10, 0) do
+            allow(UserPlan).to(receive(:valid_plans)).and_return([user_plan])
             demand_block = Fabricate :demand_block, demand: demand, block_time: 1.day.ago, unblock_time: nil
             get :demand_blocks_csv, params: { company_id: company, demand_blocks_ids: [demand_block.id].join(',') }, format: :csv
             expect(response).to have_http_status :ok

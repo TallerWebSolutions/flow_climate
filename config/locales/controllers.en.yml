@@ -1009,6 +1009,8 @@ en:
       average_time_per_block: "Tempo Médio por Bloqueio"
       total_blocks: "Total"
       total_time: "Total Time"
+      notified_blocked: "Block Notified?"
+      notified_unblocked: "Unblock Notification?"
     edit:
       title: "Edit Block"
     charts:

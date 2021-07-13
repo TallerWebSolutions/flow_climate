@@ -1088,6 +1088,8 @@ pt-BR:
       average_time_per_block: "Tempo Médio por Bloqueio"
       total_blocks: "Total"
       total_time: "Tempo Total"
+      notified_blocked: "Bloqueio Notificado?"
+      notified_unblocked: "Desbloqueio Notificado?"
     edit:
       title: "Editar Bloqueio"
     charts:

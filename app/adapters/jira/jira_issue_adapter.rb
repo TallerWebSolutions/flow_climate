@@ -21,8 +21,8 @@ module Jira
       demand
     end
 
-    def process_jira_issue_changelog(jira_account, jira_issue_changelog, demand)
-      read_demand_details(demand, jira_account, jira_issue_changelog)
+    def process_jira_issue_changelog(jira_account, jira_issue_changelog, demand, demand_creator)
+      read_demand_details(demand, jira_account, jira_issue_changelog, demand_creator)
 
       process_labels(demand, jira_issue_changelog['values'])
 
@@ -53,11 +53,11 @@ module Jira
                     external_url: build_jira_url(jira_account, demand.external_id), commitment_date: nil, discarded_at: nil)
     end
 
-    def read_demand_details(demand, jira_account, jira_issue_changelog)
+    def read_demand_details(demand, jira_account, jira_issue_changelog, demand_creator)
       read_responsibles_info(demand, jira_account, jira_issue_changelog)
 
       read_blocks(demand, jira_issue_changelog)
-      read_transitions(demand, jira_issue_changelog)
+      read_transitions(demand, jira_issue_changelog, demand_creator)
     end
 
     def read_blocks(demand, jira_issue_changelog)
@@ -89,7 +89,7 @@ module Jira
       demand.update(demand_tags: new_labels_to_demand.flatten.uniq)
     end
 
-    def read_transitions(demand, issue_changelog)
+    def read_transitions(demand, issue_changelog, demand_creator)
       backlog_transition_date = demand.created_date
 
       first_stage_in_the_flow = demand.first_stage_in_the_flow
@@ -99,9 +99,13 @@ module Jira
 
       first_transitions.where.not(stage: backlog_transition_date).map(&:destroy) if first_transitions.count > 1
 
-      create_from_transition(demand, first_stage_in_the_flow.integration_id, backlog_transition_date)
+      from_transition = create_from_transition(demand, first_stage_in_the_flow.integration_id, backlog_transition_date)
+      from_transition.update(team_member: demand_creator)
 
       read_transition_history(demand, issue_changelog)
+    rescue ActiveRecord::RecordNotUnique
+      Jira::JiraApiError.create(demand: demand)
+      nil
     end
 
     def read_transition_history(demand, issue_changelog)
@@ -112,7 +116,7 @@ module Jira
         to_transition_date = history['created'].to_datetime
         from_transition_date = previous_transition(demand, to_transition_date)&.last_time_in || from_transition_date
         from_transition = create_from_transition(demand, history['from'], from_transition_date)
-        create_to_transition(demand, from_transition, history['to'], to_transition_date, build_author(demand.team, history, :developer))
+        create_to_transition(demand, from_transition, history['to'], to_transition_date, MembershipsRepository.instance.find_or_create_by_name(demand.team, history['author']['displayName'], :developer, from_transition_date).team_member)
         from_transition_date = to_transition_date
       end
     end
@@ -124,9 +128,6 @@ module Jira
     def create_from_transition(demand, from_stage_id, transition_date)
       stage_from = demand.project.stages.find_by(integration_id: from_stage_id)
       DemandTransition.where(demand: demand, stage: stage_from, last_time_in: transition_date).first_or_create
-    rescue ActiveRecord::RecordNotUnique
-      Jira::JiraApiError.create(demand: demand)
-      nil
     end
 
     def create_to_transition(demand, from_transistion, to_stage_id, to_transition_date, author)
@@ -141,9 +142,6 @@ module Jira
       demand_transition.save
 
       Slack::SlackNotificationService.instance.notify_demand_state_changed(stage_to, demand, demand_transition)
-    rescue ActiveRecord::RecordNotUnique
-      Jira::JiraApiError.create(demand: demand)
-      nil
     rescue ArgumentError
       Rails.logger.error('Invalid Slack API - ArgumentError')
       nil
@@ -153,9 +151,10 @@ module Jira
       return if jira_issue['fields']['comment'].blank?
 
       comments = jira_issue['fields']['comment']['comments']
-      comments.each do |comment|
-        comment_author = build_author(demand.team, comment, :developer)
-        DemandComment.where(demand: demand, team_member: comment_author, comment_text: comment['body'], comment_date: comment['created']).first_or_create
+      comments.each do |comment_hash|
+        author_display_name = comment_hash['author']['displayName']
+        membership = MembershipsRepository.instance.find_or_create_by_name(demand.team, author_display_name, :developer, comment_hash['created'])
+        DemandComment.where(demand: demand, team_member: membership.team_member, comment_text: comment_hash['body'], comment_date: comment_hash['created']).first_or_create
       end
     end
 
@@ -270,13 +269,11 @@ module Jira
     def process_demand_block(demand, history, history_item)
       created = history['created']
 
-      author = build_author(demand.team, history, :developer)
+      membership = MembershipsRepository.instance.find_or_create_by_name(demand.team, history['author']['displayName'], :developer, created)
 
-      return if author.blank?
+      return persist_block!(demand, membership.team_member, created) if block_history?(history_item)
 
-      return persist_block!(demand, author, created) if block_history?(history_item)
-
-      persist_unblock!(demand, author, created) if unblock_history?(history_item)
+      persist_unblock!(demand, membership.team_member, created) if unblock_history?(history_item)
     end
 
     def unblock_history?(history_item)
@@ -285,27 +282,6 @@ module Jira
 
     def block_history?(history_item)
       history_item['toString'].casecmp('impediment').zero? || history_item['toString'].casecmp('impedimento').zero?
-    end
-
-    def build_author(team, history, member_role)
-      author_display_name = history['author']['displayName']
-
-      return if author_display_name.blank?
-
-      team_member = define_team_member(author_display_name, team)
-      membership = Membership.where(team: team, team_member: team_member).first_or_initialize
-      membership.update(member_role: member_role, start_date: Time.zone.today) unless membership.persisted?
-
-      team_member.update(name: author_display_name)
-      membership.save
-
-      team_member
-    end
-
-    def define_team_member(author_display_name, team)
-      team_member = TeamMember.where(company: team.company).where('lower(name) LIKE :author_name', author_name: "%#{author_display_name.downcase}%").first_or_initialize
-      team_member.update(start_date: Time.zone.today, name: author_display_name) unless team_member.persisted?
-      team_member
     end
 
     def build_jira_url(jira_account, issue_key)
