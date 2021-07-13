@@ -2,6 +2,7 @@
 
 class AddColumnAbbreviationToCompany < ActiveRecord::Migration[5.1]
   def change
-    add_column :companies, :abbreviation, :string, index: true, null: false
+    add_column :companies, :abbreviation, :string, null: false
+    add_index :companies, :abbreviation
   end
 end

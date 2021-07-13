@@ -2,6 +2,7 @@
 
 class AddFixVersionNameToProjectJiraConfig < ActiveRecord::Migration[5.2]
   def change
-    add_column :project_jira_configs, :fix_version_name, :string, index: true
+    add_column :project_jira_configs, :fix_version_name, :string
+    add_index :project_jira_configs, :fix_version_name
   end
 end
