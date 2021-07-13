@@ -53,6 +53,8 @@
         <th><%= DemandBlock.human_attribute_name :unblock_time %></th>
         <th><%= DemandBlock.human_attribute_name :stage_when_unblocked %></th>
         <th class="center"><%= DemandBlock.human_attribute_name :active %></th>
+        <th class="center"><%= I18n.t('demand_blocks.index.notified_blocked') %></th>
+        <th class="center"><%= I18n.t('demand_blocks.index.notified_unblocked') %></th>
         <th><%= DemandBlock.human_attribute_name :block_reason %></th>
       </tr>
     </thead>

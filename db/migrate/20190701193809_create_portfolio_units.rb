@@ -17,7 +17,8 @@ class CreatePortfolioUnits < ActiveRecord::Migration[5.2]
 
     add_index :portfolio_units, %i[name product_id], unique: true
 
-    add_column :demands, :portfolio_unit_id, :integer, index: true
+    add_column :demands, :portfolio_unit_id, :integer
+    add_index :demands, :portfolio_unit_id
     add_foreign_key :demands, :portfolio_units, column: :portfolio_unit_id
   end
 end

@@ -23,7 +23,8 @@ class CreateContracts < ActiveRecord::Migration[6.0]
     add_foreign_key :contracts, :products, column: :product_id
     add_foreign_key :contracts, :contracts, column: :contract_id
 
-    add_column :customers, :customer_id, :integer, index: true
+    add_column :customers, :customer_id, :integer
+    add_index :customers, :customer_id
     add_foreign_key :customers, :customers, column: :customer_id
   end
 end

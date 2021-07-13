@@ -18,7 +18,8 @@ class CreateCompanies < ActiveRecord::Migration[5.1]
     add_foreign_key :companies_users, :users, column: :user_id
     add_foreign_key :companies_users, :companies, column: :company_id
 
-    add_column :users, :last_company_id, :integer, null: true, index: true
+    add_column :users, :last_company_id, :integer, null: true
+    add_index :users, :last_company_id
     add_foreign_key :users, :companies, column: :last_company_id
   end
 end

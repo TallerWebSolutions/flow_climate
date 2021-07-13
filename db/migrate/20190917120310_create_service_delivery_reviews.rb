@@ -26,7 +26,8 @@ class CreateServiceDeliveryReviews < ActiveRecord::Migration[6.0]
 
     add_index :service_delivery_reviews, %i[meeting_date product_id], unique: true
 
-    add_column :demands, :service_delivery_review_id, :integer, index: true
+    add_column :demands, :service_delivery_review_id, :integer
+    add_index :demands, :service_delivery_review_id
     add_foreign_key :demands, :service_delivery_reviews, column: :service_delivery_review_id
   end
 end

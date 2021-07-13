@@ -12,13 +12,14 @@ module Jira
       if jira_issue.attrs.present?
         product = Jira::JiraReader.instance.read_product(jira_issue.attrs, jira_account)
         demand = Jira::JiraIssueAdapter.instance.process_issue(jira_account, jira_issue, product, project)
+        creator = MembershipsRepository.instance.find_or_create_by_name(demand.team, jira_issue.attrs['fields']['creator']['displayName'])
 
         max_results = 100
         start_at = 0
         new_page = true
         while new_page
           jira_issue_changelog = jira_con.request_issue_changelog(issue_key, start_at, max_results)
-          Jira::JiraIssueAdapter.instance.process_jira_issue_changelog(jira_account, jira_issue_changelog, demand)
+          Jira::JiraIssueAdapter.instance.process_jira_issue_changelog(jira_account, jira_issue_changelog, demand, creator.team_member)
 
           start_at += 100
           new_page = !jira_issue_changelog['isLast']

@@ -41,6 +41,5 @@ module FlowControl
     config.action_mailer.delivery_method = :smtp
 
     require 'sidekiq/web'
-    Sidekiq::Web.disable :sessions
   end
 end

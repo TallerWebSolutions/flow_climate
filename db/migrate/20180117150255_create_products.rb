@@ -11,7 +11,8 @@ class CreateProducts < ActiveRecord::Migration[5.1]
 
     add_foreign_key :products, :customers, column: :customer_id
 
-    add_column :projects, :product_id, :integer, index: true
+    add_column :projects, :product_id, :integer
+    add_index :projects, :product_id
     add_foreign_key :projects, :products, column: :product_id
   end
 end

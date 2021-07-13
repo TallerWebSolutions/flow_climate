@@ -2,7 +2,8 @@
 
 class AddCustomerToDemand < ActiveRecord::Migration[6.0]
   def change
-    add_column :demands, :customer_id, :integer, index: true
+    add_column :demands, :customer_id, :integer
+    add_index :demands, :customer_id
 
     add_foreign_key :demands, :customers, columm: :customer_id
 

@@ -18,10 +18,12 @@ class CreateRiskReviews < ActiveRecord::Migration[5.2]
 
     add_index :risk_reviews, %i[meeting_date product_id], unique: true
 
-    add_column :demands, :risk_review_id, :integer, index: true
+    add_column :demands, :risk_review_id, :integer
+    add_index :demands, :risk_review_id
     add_foreign_key :demands, :risk_reviews, column: :risk_review_id
 
-    add_column :demand_blocks, :risk_review_id, :integer, index: true
+    add_column :demand_blocks, :risk_review_id, :integer
+    add_index :demand_blocks, :risk_review_id
     add_foreign_key :demand_blocks, :risk_reviews, column: :risk_review_id
   end
 end

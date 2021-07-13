@@ -11,27 +11,29 @@ Have the ultimate management tools in your hands!
 
 ## Using:
 - Sendgrid to send emails
-- Airbrake to monitor production errors
+- Rollbar to monitor production errors
 - RSpec as test framework
 - Fabrication as factory for specs
 - Faker to generate fake data
 
 ## How to build the environment
 
-- Install rvm or rbenv - the main development team is using *rvm*
-- If you choose rvm then 
-    - Install the correct version (the examples will use the ruby-3.0.1)
-        - `rvm install ruby-3.0.1` 
-    - Create the gemset to the project under the correct version
-        - In the project folder run: 
-            - `rvm use 3.0.1@flow_climate --create`
-            - `rvm --ruby-version use 3.0.1`
-            - `gem install bundler -v 1.17.3`
-            - `bundle install`
-- Install PostgreSQL v. 10
+- Install PostgreSQL v. 13.3
 - Start postgresql
     - Example on macOS (brew instalation): `pg_ctl -D /usr/local/var/postgres start`
-- Check `database.yml` for further configuration
+- Check `config/database.yml` for further information
+- You may need to install the `lipq-dev` on Linux environments
+    - `sudo apt install postgresql libpq-dev`
+- Install rvm or rbenv - the main development team is using *rvm*
+- If you choose rvm then 
+      - Install the correct version (the examples will use the ruby-3.0.1)
+  - `rvm install ruby-3.0.1` 
+      - Create the gemset to the project under the correct version
+  - In the project folder run: 
+  - `rvm use 3.0.1@flow_climate --create`
+  - `rvm --ruby-version use 3.0.1`
+  - `gem install bundler`
+  - `bundle install`
 - In the project folder run:
     - `rake db:create`
     - `rake db:migrate`
