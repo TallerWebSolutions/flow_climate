@@ -1,7 +1,6 @@
 en:
   general:
     buttons:
-      delete_confirmation: Are you sure?
       back: Back
       show: Show
       cancel: Cancel

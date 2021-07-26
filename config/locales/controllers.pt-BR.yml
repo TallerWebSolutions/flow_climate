@@ -1,7 +1,6 @@
 pt-BR:
   general:
     buttons:
-      delete_confirmation: Tem certeza?
       back: Voltar
       show: Exibir
       cancel: Cancelar

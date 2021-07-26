@@ -424,7 +424,7 @@ RSpec.describe Demand, type: :model do
   end
 
   describe '#csv_array' do
-    context 'having no stages' do
+    context 'with no stages' do
       let(:product) { Fabricate :product, name: 'Flow Climate' }
 
       let(:portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'Statistics' }
@@ -433,11 +433,16 @@ RSpec.describe Demand, type: :model do
       let!(:demand_with_portfolio_unit) { Fabricate :demand, product: product, portfolio_unit: child_portfolio_unit }
       let!(:demand) { Fabricate :demand, product: product, demand_score: 10.5, effort_downstream: 0, end_date: Time.zone.today }
 
-      it { expect(demand.csv_array).to eq [demand.id, demand.portfolio_unit_name, demand.current_stage&.name, demand.project.id, demand.project.name, demand.external_id, demand.demand_title, demand.demand_type, demand.class_of_service, '10,5', demand.effort_downstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.effort_upstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.created_date&.iso8601, demand.commitment_date&.iso8601, demand.end_date&.iso8601] }
-      it { expect(demand_with_portfolio_unit.csv_array).to eq [demand_with_portfolio_unit.id, demand_with_portfolio_unit.portfolio_unit_name, demand_with_portfolio_unit.current_stage&.name, demand_with_portfolio_unit.project.id, demand_with_portfolio_unit.project.name, demand_with_portfolio_unit.external_id, demand_with_portfolio_unit.demand_title, demand_with_portfolio_unit.demand_type, demand_with_portfolio_unit.class_of_service, '0,0', demand_with_portfolio_unit.effort_downstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand_with_portfolio_unit.effort_upstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand_with_portfolio_unit.created_date&.iso8601, demand_with_portfolio_unit.commitment_date&.iso8601, demand_with_portfolio_unit.end_date&.iso8601] }
+      before do
+        allow(demand).to(receive(:partial_leadtime)).and_return(1)
+        allow(demand_with_portfolio_unit).to(receive(:partial_leadtime)).and_return(2)
+      end
+
+      it { expect(demand.csv_array).to eq [demand.id, demand.portfolio_unit_name, demand.current_stage&.name, demand.project.id, demand.project.name, demand.external_id, demand.demand_title, demand.demand_type, demand.class_of_service, '10,5', demand.effort_downstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.effort_upstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), '1,0', demand.created_date&.iso8601, demand.commitment_date&.iso8601, demand.end_date&.iso8601] }
+      it { expect(demand_with_portfolio_unit.csv_array).to eq [demand_with_portfolio_unit.id, demand_with_portfolio_unit.portfolio_unit_name, demand_with_portfolio_unit.current_stage&.name, demand_with_portfolio_unit.project.id, demand_with_portfolio_unit.project.name, demand_with_portfolio_unit.external_id, demand_with_portfolio_unit.demand_title, demand_with_portfolio_unit.demand_type, demand_with_portfolio_unit.class_of_service, '0,0', demand_with_portfolio_unit.effort_downstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand_with_portfolio_unit.effort_upstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), '2,0', demand_with_portfolio_unit.created_date&.iso8601, demand_with_portfolio_unit.commitment_date&.iso8601, demand_with_portfolio_unit.end_date&.iso8601] }
     end
 
-    context 'having a stage and no end date' do
+    context 'with a stage and no end date' do
       let(:company) { Fabricate :company }
       let(:customer) { Fabricate :customer, company: company }
       let(:product) { Fabricate :product, customer: customer }
@@ -447,7 +452,9 @@ RSpec.describe Demand, type: :model do
       let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage }
       let!(:demand) { Fabricate :demand, product: product, project: project, demand_score: 10.5, effort_downstream: 0 }
 
-      it { expect(demand.csv_array).to eq [demand.id, demand.portfolio_unit_name, demand.current_stage&.name, demand.project.id, demand.project.name, demand.external_id, demand.demand_title, demand.demand_type, demand.class_of_service, '10,5', demand.effort_downstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.effort_upstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.created_date&.iso8601, demand.commitment_date&.iso8601, nil] }
+      before { allow(demand).to(receive(:partial_leadtime)).and_return(1) }
+
+      it { expect(demand.csv_array).to eq [demand.id, demand.portfolio_unit_name, demand.current_stage&.name, demand.project.id, demand.project.name, demand.external_id, demand.demand_title, demand.demand_type, demand.class_of_service, '10,5', demand.effort_downstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.effort_upstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), '1,0', demand.created_date&.iso8601, demand.commitment_date&.iso8601, nil] }
     end
   end
 
