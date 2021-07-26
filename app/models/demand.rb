@@ -152,7 +152,8 @@ class Demand < ApplicationRecord
       class_of_service,
       decimal_value_to_csv(demand_score),
       decimal_value_to_csv(effort_downstream),
-      decimal_value_to_csv(effort_upstream)
+      decimal_value_to_csv(effort_upstream),
+      decimal_value_to_csv(partial_leadtime)
     ] + build_date_values_array
   end
 
