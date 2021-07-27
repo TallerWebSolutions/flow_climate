@@ -192,27 +192,36 @@ RSpec.describe Contract, type: :model do
 
   describe '#avg_hours_per_month' do
     let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:other_customer) { Fabricate :customer, company: company }
 
-    it 'returns the flow_pressure in date' do
-      customer = Fabricate :customer, company: company
-      other_customer = Fabricate :customer, company: company
+    context 'with contract in the present' do
+      it 'returns the flow_pressure in date' do
+        contract = Fabricate :contract, customer: customer, start_date: 2.months.ago, end_date: 3.weeks.from_now, hours_per_demand: 10
+        other_contract = Fabricate :contract, customer: customer, start_date: 1.month.ago, end_date: 5.weeks.from_now, hours_per_demand: 10
+        empty_contract = Fabricate :contract, customer: customer, start_date: 2.months.ago, end_date: 3.weeks.from_now
+        past_contract = Fabricate :contract, customer: customer, start_date: 2.months.ago, end_date: 3.weeks.ago
 
-      contract = Fabricate :contract, customer: customer, start_date: 2.months.ago, end_date: 3.weeks.from_now, hours_per_demand: 10
-      other_contract = Fabricate :contract, customer: customer, start_date: 1.month.ago, end_date: 5.weeks.from_now, hours_per_demand: 10
-      empty_contract = Fabricate :contract, customer: customer, start_date: 2.months.ago, end_date: 3.weeks.from_now
-      past_contract = Fabricate :contract, customer: customer, start_date: 2.months.ago, end_date: 3.weeks.ago
+        Fabricate :demand, customer: customer, contract: contract, demand_type: :feature, created_date: 3.weeks.ago, commitment_date: 17.days.ago, end_date: 2.weeks.ago, effort_downstream: 30, effort_upstream: 10
+        Fabricate.times(40, :demand, customer: customer, contract: contract, demand_type: :feature, created_date: 3.weeks.ago, commitment_date: nil, end_date: nil, effort_downstream: 30, effort_upstream: 10)
+        Fabricate :demand, customer: customer, contract: contract, demand_type: :bug, created_date: 2.weeks.ago, commitment_date: 18.days.ago, end_date: 1.week.ago, effort_downstream: 2, effort_upstream: 18
+        Fabricate :demand, customer: customer, contract: contract, demand_type: :bug, created_date: 2.weeks.ago, commitment_date: 18.days.ago, end_date: nil, effort_downstream: 2, effort_upstream: 18
+        Fabricate :demand, customer: customer, contract: contract, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago, effort_downstream: 43, effort_upstream: 49
+        Fabricate :demand, customer: customer, contract: contract, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: nil, effort_downstream: 43, effort_upstream: 49
+        Fabricate :demand, customer: other_customer, contract: other_contract, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago, effort_downstream: 38, effort_upstream: 15
 
-      Fabricate :demand, customer: customer, contract: contract, demand_type: :feature, created_date: 3.weeks.ago, commitment_date: 17.days.ago, end_date: 2.weeks.ago, effort_downstream: 30, effort_upstream: 10
-      Fabricate.times(40, :demand, customer: customer, contract: contract, demand_type: :feature, created_date: 3.weeks.ago, commitment_date: nil, end_date: nil, effort_downstream: 30, effort_upstream: 10)
-      Fabricate :demand, customer: customer, contract: contract, demand_type: :bug, created_date: 2.weeks.ago, commitment_date: 18.days.ago, end_date: 1.week.ago, effort_downstream: 2, effort_upstream: 18
-      Fabricate :demand, customer: customer, contract: contract, demand_type: :bug, created_date: 2.weeks.ago, commitment_date: 18.days.ago, end_date: nil, effort_downstream: 2, effort_upstream: 18
-      Fabricate :demand, customer: customer, contract: contract, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago, effort_downstream: 43, effort_upstream: 49
-      Fabricate :demand, customer: customer, contract: contract, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: nil, effort_downstream: 43, effort_upstream: 49
-      Fabricate :demand, customer: other_customer, contract: other_contract, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago, effort_downstream: 38, effort_upstream: 15
+        expect(contract.avg_hours_per_month).to be_within(0.1).of 50.6
+        expect(empty_contract.avg_hours_per_month).to eq 0
+        expect(past_contract.avg_hours_per_month).to eq 0
+      end
 
-      expect(contract.avg_hours_per_month).to be_within(0.1).of 50.6
-      expect(empty_contract.avg_hours_per_month).to eq 0
-      expect(past_contract.avg_hours_per_month).to eq 0
+      context 'with contract in the present' do
+        it 'returns the flow_pressure in date' do
+          contract = Fabricate :contract, customer: customer, start_date: 2.months.from_now, end_date: 3.months.from_now, hours_per_demand: 10
+
+          expect(contract.avg_hours_per_month).to eq 0
+        end
+      end
     end
   end
 end

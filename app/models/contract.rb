@@ -99,6 +99,8 @@ class Contract < ApplicationRecord
   end
 
   def avg_hours_per_month
+    return 0 if start_date >= Time.zone.today
+
     end_date = [end_date, Time.zone.today].compact.min
     months = TimeService.instance.months_between_of(start_date, end_date)
 
