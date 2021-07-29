@@ -339,7 +339,7 @@ RSpec.describe UsersController, type: :controller do
               expect(assigns(:companies_list)).to eq [other_company, company]
 
               expect(assigns(:member_teams)).to eq [team]
-              expect(assigns(:member_projects)).to eq [project, other_project]
+              expect(assigns(:member_projects)).to match_array [project, other_project]
 
               expect(assigns(:projects_quality)).to eq(other_project => [0.6], project => [0.85])
               expect(assigns(:projects_leadtime)[project]).to eq [2.3]
