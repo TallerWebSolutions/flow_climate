@@ -21,10 +21,10 @@ class RiskReviewService
     start_date = demands.filter_map(&:end_date).min
     array_of_dates = TimeService.instance.weeks_between_of(start_date, risk_review.meeting_date)
 
-    risk_review.update(weekly_avg_blocked_time: build_avg_blocked_time(demands, array_of_dates))
+    risk_review.update(weekly_avg_blocked_time: build_avg_blocked_time(risk_review, array_of_dates))
 
     array_of_dates = TimeService.instance.months_between_of(start_date, risk_review.meeting_date)
-    risk_review.update(monthly_avg_blocked_time: build_avg_blocked_time(demands, array_of_dates))
+    risk_review.update(monthly_avg_blocked_time: build_avg_blocked_time(risk_review, array_of_dates))
   end
 
   def update_flow_impacts(product, risk_review)
@@ -34,14 +34,14 @@ class RiskReviewService
 
   def update_blocks(product, risk_review)
     demand_blocks = product.demand_blocks.kept.where('demand_blocks.unblock_time <= :end_date AND demand_blocks.risk_review_id IS NULL', end_date: risk_review.meeting_date.end_of_day)
-    demand_blocks.map { |block| block.update(risk_review: risk_review) }
+    demand_blocks.map { |block| block.update(risk_review: risk_review) if block.total_blocked_time > 1.hour }
   end
 
-  def build_avg_blocked_time(demands, array_of_dates)
+  def build_avg_blocked_time(risk_review, array_of_dates)
     avg_blocked_time = []
     array_of_dates.each do |date|
-      demands_finished = demands.not_discarded_until(date.end_of_day).finished_until_date(date.end_of_day)
-      avg_blocked_time << demands_finished.filter_map(&:total_bloked_working_time).sum / demands_finished.count
+      blocks = risk_review.demand_blocks.where('unblock_time <= :limit_date', limit_date: date.end_of_day)
+      avg_blocked_time << blocks.filter_map(&:total_blocked_time).sum / blocks.map(&:demand).uniq.count
     end
 
     avg_blocked_time

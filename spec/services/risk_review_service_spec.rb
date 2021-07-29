@@ -33,6 +33,7 @@ RSpec.describe RiskReviewService, type: :service do
         second_block = Fabricate :demand_block, demand: first_demand, risk_review: nil, block_time: 30.hours.ago, unblock_time: 26.hours.ago
         third_block = Fabricate :demand_block, demand: second_demand, risk_review: risk_review, block_time: 34.hours.ago, unblock_time: 26.hours.ago
         fourth_block = Fabricate :demand_block, demand: third_demand, risk_review: nil, block_time: 6.days.ago, unblock_time: 4.days.ago
+        Fabricate :demand_block, demand: third_demand, risk_review: nil, block_time: 30.minutes.ago, unblock_time: Time.zone.now
         Fabricate :demand_block, demand: third_demand, risk_review: nil, block_time: 2.days.ago, unblock_time: Time.zone.tomorrow
         Fabricate :demand_block, demand: sixth_demand, risk_review: nil, discarded_at: Time.zone.yesterday
 
@@ -48,8 +49,11 @@ RSpec.describe RiskReviewService, type: :service do
         expect(risk_review.reload.demand_blocks).to match_array [first_block, third_block, second_block, fourth_block]
         expect(risk_review.reload.flow_impacts).to match_array [first_impact, third_impact, second_impact, fourth_impact, fifth_impact]
         expect(risk_review.reload.weekly_avg_blocked_time.count).to eq 2
-        expect(risk_review.reload.weekly_avg_blocked_time[0]).to eq 7.5
-        expect(risk_review.reload.weekly_avg_blocked_time[1]).to eq 7.5
+        expect(risk_review.reload.weekly_avg_blocked_time[0]).to eq 129_600.0
+        expect(risk_review.reload.weekly_avg_blocked_time[1]).to eq 129_600.0
+
+        expect(risk_review.reload.monthly_avg_blocked_time.count).to eq 1
+        expect(risk_review.reload.monthly_avg_blocked_time[0]).to eq 129_600.0
       end
     end
   end
