@@ -348,12 +348,6 @@ RSpec.describe FlowImpactsController, type: :controller do
           it { expect(response).to have_http_status :not_found }
         end
 
-        context 'project' do
-          before { put :update, params: { company_id: company, project_id: 'foo', id: flow_impact } }
-
-          it { expect(response).to have_http_status :not_found }
-        end
-
         context 'company' do
           context 'not found' do
             before { put :update, params: { company_id: 'foo', project_id: project, id: flow_impact } }

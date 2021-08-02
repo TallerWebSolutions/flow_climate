@@ -2,7 +2,7 @@
 
 class FlowImpactsController < AuthenticatedController
   before_action :assign_company
-  before_action :assign_project, except: %i[new_direct_link create_direct_link]
+  before_action :assign_project, except: %i[new_direct_link create_direct_link edit update]
   before_action :assign_flow_impact, only: %i[destroy edit update show]
 
   def new
@@ -57,6 +57,7 @@ class FlowImpactsController < AuthenticatedController
   end
 
   def edit
+    @project = @flow_impact.project
     @demands_for_impact_form = @flow_impact.project.demands.kept.order(:external_id)
   end
 
@@ -64,7 +65,7 @@ class FlowImpactsController < AuthenticatedController
     @flow_impact.update(flow_impact_params)
     @demands_for_impact_form = @flow_impact.project.demands.kept.in_flow(Time.zone.now)
 
-    redirect_to company_project_flow_impacts_path(@company, @project)
+    redirect_to company_project_flow_impacts_path(@company, @flow_impact.project)
   end
 
   def show; end
