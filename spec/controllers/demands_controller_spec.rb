@@ -795,6 +795,17 @@ RSpec.describe DemandsController, type: :controller do
             end
 
             context 'and passing the filter by the demand type' do
+              context 'all_type' do
+                it 'returns all demands' do
+                  first_demand = Fabricate :demand, company: company, product: product, project: first_project, external_id: 'hhh', demand_title: 'foo', demand_type: :feature, class_of_service: :standard, created_date: Time.zone.local(2019, 1, 22, 10, 0, 0), commitment_date: nil, end_date: nil, effort_downstream: 20, effort_upstream: 0, demand_tags: %w[aaa ccc sbbrubles]
+                  second_demand = Fabricate :demand, company: company, product: product, project: first_project, demand_title: 'foo bar', demand_type: :bug, class_of_service: :expedite, created_date: Time.zone.local(2019, 1, 23, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 24, 10, 0, 0), end_date: nil, effort_downstream: 0, effort_upstream: 0, demand_tags: %w[sbbrubles xpto]
+
+                  get :search_demands, params: { company_id: company, session_demands_key: 'bar', start_date: start_date, end_date: end_date, demand_type: 'all_types' }
+                  expect(response).to render_template 'demands/index'
+                  expect(assigns(:demands).map(&:id)).to match_array [first_demand.id, second_demand.id]
+                end
+              end
+
               context 'feature' do
                 it 'returns the feature demands' do
                   first_demand = Fabricate :demand, company: company, product: product, project: first_project, external_id: 'hhh', demand_title: 'foo', demand_type: :feature, class_of_service: :standard, created_date: Time.zone.local(2019, 1, 22, 10, 0, 0), commitment_date: nil, end_date: nil, effort_downstream: 20, effort_upstream: 0, demand_tags: %w[aaa ccc sbbrubles]
@@ -926,7 +937,7 @@ RSpec.describe DemandsController, type: :controller do
               end
             end
 
-            context 'and passing the filter by the class of service' do
+            context 'and passing the filter by class of service' do
               context 'standard' do
                 it 'returns the standard demands' do
                   travel_to Time.zone.local(2019, 1, 24, 10, 0, 0) do
