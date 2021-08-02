@@ -165,7 +165,7 @@ class DemandsController < DemandsListController
                  demandable.demands.discarded
                elsif @demand_state == 'not_discarded'
                  demandable.demands.kept
-               elsif @demand_type.present?
+               elsif @demand_type.present? && @demand_type.exclude?('all_types')
                  demandable.demands.where(demand_type: @demand_type)
                elsif @demand_state == 'delivered'
                  demandable.demands.finished_until_date(Time.zone.now)
