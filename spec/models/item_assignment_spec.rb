@@ -177,41 +177,32 @@ RSpec.describe ItemAssignment, type: :model do
       let(:company) { Fabricate :company }
       let(:team) { Fabricate :team, company: company }
 
-      let(:customer) { Fabricate :customer, company: company }
-      let(:product) { Fabricate :product, customer: customer }
-      let(:project) { Fabricate :project, products: [product], team: team, company: company }
+      let(:project) { Fabricate :project, team: team, company: company }
 
       it 'computes the pull interval after saving' do
         travel_to Time.zone.local(2020, 6, 17, 10, 0, 0) do
-          analysis_stage = Fabricate :stage, company: company, projects: [project], teams: [team], name: 'analysis_stage', commitment_point: false, end_point: false, queue: false, stage_type: :analysis
-          commitment_stage = Fabricate :stage, company: company, projects: [project], teams: [team], name: 'commitment_stage', commitment_point: true, end_point: false, queue: false, stage_type: :development
-          Fabricate :stage, company: company, projects: [project], teams: [team], name: 'end_stage', commitment_point: false, end_point: true, queue: false, stage_type: :development
-
           first_team_member = Fabricate :team_member, company: company, name: 'first_member'
           second_team_member = Fabricate :team_member, company: company, name: 'second_member'
 
           first_membership = Fabricate :membership, team: team, team_member: first_team_member, member_role: :developer
           second_membership = Fabricate :membership, team: team, team_member: second_team_member, member_role: :developer
 
-          first_demand = Fabricate :demand, company: company, team: team, project: project
-          second_demand = Fabricate :demand, company: company, team: team, project: project
+          first_demand = Fabricate :demand, company: company, team: team, project: project, created_date: 3.days.ago, commitment_date: 2.days.ago, end_date: 1.day.ago
+          second_demand = Fabricate :demand, company: company, team: team, project: project, created_date: 4.days.ago, commitment_date: 2.days.ago, end_date: nil
+          third_demand = Fabricate :demand, company: company, team: team, project: project, created_date: 4.days.ago, commitment_date: 2.days.ago, end_date: nil
+          fourth_demand = Fabricate :demand, company: company, team: team, project: project, created_date: 4.days.ago, commitment_date: 2.days.ago, end_date: nil
 
-          Fabricate :demand_transition, stage: commitment_stage, demand: first_demand, last_time_in: 10.days.ago, last_time_out: 5.days.ago
-          Fabricate :demand_transition, stage: analysis_stage, demand: first_demand, last_time_in: 119.hours.ago, last_time_out: 105.hours.ago
-          Fabricate :demand_transition, stage: analysis_stage, demand: second_demand, last_time_in: 11.days.ago, last_time_out: 4.days.ago
-
-          first_assignment = Fabricate :item_assignment, membership: first_membership, demand: first_demand, start_time: 11.days.ago, finish_time: 1.week.ago
-          second_assignment = Fabricate :item_assignment, membership: first_membership, demand: second_demand, start_time: 5.days.ago, finish_time: 1.hour.ago
+          first_assignment = Fabricate :item_assignment, membership: first_membership, demand: first_demand, start_time: 11.days.ago, finish_time: nil
+          second_assignment = Fabricate :item_assignment, membership: first_membership, demand: second_demand, start_time: 5.hours.ago, finish_time: 1.hour.ago
           third_assignment = Fabricate :item_assignment, membership: second_membership, demand: second_demand, start_time: 10.days.ago, finish_time: 5.days.ago
+          fourth_assignment = Fabricate :item_assignment, membership: second_membership, demand: third_demand, start_time: 4.days.ago, finish_time: nil
+          fifth_assignment = Fabricate :item_assignment, membership: second_membership, demand: fourth_demand, start_time: 9.days.ago, finish_time: nil
 
-          first_assignment.save
           expect(first_assignment.reload.pull_interval).to eq 0
-
-          second_assignment.save
-          expect(second_assignment.reload.pull_interval).to eq 172_800
-
-          third_assignment.save
+          expect(second_assignment.reload.pull_interval).to eq 68_400
           expect(third_assignment.reload.pull_interval).to eq 0
+          expect(fourth_assignment.reload.pull_interval).to eq 86_400
+          expect(fifth_assignment.reload.pull_interval).to eq 0
         end
       end
     end
