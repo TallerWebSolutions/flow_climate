@@ -71,14 +71,6 @@ class DemandTransition < ApplicationRecord
     TimeService.instance.compute_working_hours_for_dates(last_time_in, out_time)
   end
 
-  def effort_in_transition
-    stage_config = stage.stage_project_configs.find_by(project: demand.project)
-    return 0 if stage_config.blank?
-
-    last_time_out_to_effort = last_time_out || Time.zone.now
-    compute_assignments_effort(last_time_in, last_time_out_to_effort, stage_config.stage_percentage_decimal, stage_config.pairing_percentage_decimal) * (1 + stage_config.management_percentage_decimal)
-  end
-
   def work_time_blocked_in_transition
     last_time_out_to_block = last_time_out || Time.zone.now
     demand.demand_blocks.kept.closed.active.for_date_interval(last_time_in, last_time_out_to_block).filter_map(&:block_working_time_duration).sum
@@ -107,25 +99,6 @@ class DemandTransition < ApplicationRecord
   end
 
   private
-
-  def compute_assignments_effort(start_date, end_date, stage_percentage, pairing_percentage)
-    total_blocked = work_time_blocked_in_transition * stage_percentage
-    assignments_in_dates = demand.item_assignments.for_dates(start_date, end_date)
-    return [(assignments_in_dates.sum { |assign_in_date| assign_in_date.working_hours_until(start_date, end_date) } - total_blocked), 0].max * stage_percentage unless assignments_in_dates.count > 1
-
-    compute_paired_effort(assignments_in_dates, start_date, end_date, pairing_percentage)
-  end
-
-  def compute_paired_effort(assignments_in_dates, start_date, end_date, pairing_percentage)
-    top_effort_assignment = assignments_in_dates.max_by { |assign_in_date| assign_in_date.working_hours_until(start_date, end_date) }
-    top_effort_membership = top_effort_assignment.membership
-
-    return top_effort_assignment.working_hours_until(start_date, end_date) if top_effort_membership.blank?
-
-    pairing_assignments = assignments_in_dates.joins(:membership).where(memberships: { member_role: top_effort_membership.member_role }).to_a.delete_if { |assignment| assignment.membership == top_effort_membership }
-
-    top_effort_assignment.working_hours_until(start_date, end_date) + pairing_assignments.sum { |assignments_in_date| assignments_in_date.working_hours_until(start_date, end_date) } * pairing_percentage
-  end
 
   def set_demand_dates
     if stage.commitment_point?

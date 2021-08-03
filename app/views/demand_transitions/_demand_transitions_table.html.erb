@@ -22,7 +22,6 @@
         <th><%= DemandTransition.human_attribute_name :last_time_out %></th>
         <th><%= I18n.t('demand_transitions.total_time_in_transition') %></th>
         <th><%= I18n.t('demand_transitions.working_time_in_transition') %></th>
-        <th><%= I18n.t('demand_transitions.effort_time_in_transition') %></th>
         <th><%= I18n.t('demand_transitions.block_time_in_transition') %></th>
         <th></th>
       </tr>
@@ -36,7 +35,6 @@
           <td><%= I18n.l(transition.last_time_out, format: :short) if transition.last_time_out.present? %></td>
           <td><%= time_distance_in_words(transition.total_seconds_in_transition) %></td>
           <td><%= "#{transition.working_time_in_transition} h" %></td>
-          <td><%= "#{number_with_precision(transition.effort_in_transition, precision: 2)} h" %></td>
           <td><%= "#{transition.work_time_blocked_in_transition} h" %></td>
           <td>
             <%= link_to edit_company_demand_demand_transition_path(company, demand, transition), remote: true do %>

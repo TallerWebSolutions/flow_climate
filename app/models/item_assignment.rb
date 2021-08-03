@@ -41,7 +41,7 @@ class ItemAssignment < ApplicationRecord
 
   scope :for_dates, ->(start_date, end_date) { where('(start_time <= :end_date AND finish_time >= :start_date) OR (start_time <= :end_date AND finish_time IS NULL) OR (finish_time >= :start_date AND :end_date IS NULL) OR (start_time <= :start_date AND finish_time IS NULL)', start_date: start_date, end_date: end_date) }
   scope :not_for_membership, ->(membership) { where.not('item_assignments.membership_id' => membership.id) }
-  scope :open_assignments, -> { joins(:demand).where(finish_time: nil, demands: { end_date: nil }) }
+  scope :open_assignments, -> { joins(:demand).where(finish_time: nil, demands: { end_date: nil, discarded_at: nil }) }
 
   delegate :team_member_name, to: :membership
 
@@ -87,26 +87,15 @@ class ItemAssignment < ApplicationRecord
   end
 
   def compute_pull_interval
-    previous_assignment
-
-    if @previous_assignment.blank?
+    if previous_assignment.blank?
       self.pull_interval = 0
     else
-      previous_assignment_finish_time = assignment_finish_time(@previous_assignment)
-      self.pull_interval = if previous_assignment_finish_time.present? && start_time > previous_assignment_finish_time
+      previous_assignment_finish_time = [previous_assignment.finish_time, previous_assignment.demand.end_date, Time.zone.now].compact.min
+      self.pull_interval = if start_time > previous_assignment_finish_time
                              start_time - previous_assignment_finish_time
                            else
                              0
                            end
     end
-  end
-
-  def assignment_finish_time(assignment)
-    transitions_during_assignment = assignment.demand.demand_transitions_at(assignment.start_time)
-    transition_finished_time = transitions_during_assignment.filter_map(&:last_time_out).max
-
-    return nil if transition_finished_time.blank? && assignment.finish_time.blank?
-
-    [assignment.finish_time, transition_finished_time].compact.min
   end
 end
