@@ -57,7 +57,7 @@ class StageProjectConfigsController < AuthenticatedController
     stage = @stage_project_config.stage
     transitions = stage.demand_transitions.joins(demand: :project).where('demands.project_id' => project.id)
     demands = transitions.map(&:demand).flatten.uniq
-    demands.map { |demand| demand.update_effort!(params['recompute_manual_efforts'] == '1') }
+    demands.map { |demand| DemandEffortService.instance.build_efforts_to_demand(demand) if !demand.manual_effort? || params['recompute_manual_efforts'] == '1' }
   end
 
   def replicate_to_other_projects
