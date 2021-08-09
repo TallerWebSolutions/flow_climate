@@ -340,6 +340,7 @@ RSpec.describe ItemAssignment, type: :model do
         expect(fourth_assignment.pairing_assignment?(first_assignment)).to be true
         expect(second_assignment.pairing_assignment?(fifth_assignment)).to be true
         expect(fifth_assignment.pairing_assignment?(second_assignment)).to be true
+        expect(fifth_assignment.pairing_assignment?(fifth_assignment)).to be false
       end
     end
   end
