@@ -95,6 +95,10 @@ class DemandBlock < ApplicationRecord
     demand.stage_at(unblock_time)
   end
 
+  def transition_when_blocked
+    demand.demand_transitions_at(block_time).first
+  end
+
   private
 
   def update_computed_fields
