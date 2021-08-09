@@ -76,13 +76,21 @@ class ItemAssignment < ApplicationRecord
     membership.item_assignments.open_assignments
   end
 
-  def pairing_assignment?(assignment)
-    (demand == assignment.demand) &&
-      (assignment.start_time.between?(start_time, finish_time) ||
-        (assignment.finish_time.blank? || finish_time.blank? || assignment.finish_time.between?(assignment.start_time, assignment.finish_time)))
+  def pairing_assignment?(other_assignment)
+    valid_finish_time = [finish_time, Time.zone.now].compact.min
+    valid_other_finish_time = [finish_time, Time.zone.now].compact.min
+    (demand == other_assignment.demand) && (assignment_contains_other(other_assignment, valid_finish_time) || other_contains_assignment(other_assignment, valid_other_finish_time))
   end
 
   private
+
+  def assignment_contains_other(other_assignment, valid_finish_time)
+    other_assignment.start_time.between?(start_time, valid_finish_time)
+  end
+
+  def other_contains_assignment(other_assignment, valid_other_finish_time)
+    start_time.between?(other_assignment.start_time, valid_other_finish_time)
+  end
 
   def compute_assignment_effort
     membership_flow_information = Flow::MembershipFlowInformation.new(membership)
