@@ -305,4 +305,33 @@ RSpec.describe ItemAssignment, type: :model do
       expect(first_assignment.membership_open_assignments).to match_array [first_assignment, second_assignment, fourth_assignment]
     end
   end
+
+  describe '#pairing_assignment?' do
+    let(:company) { Fabricate :company }
+    let(:team) { Fabricate :team, company: company }
+
+    let(:project) { Fabricate :project, team: team, company: company }
+
+    it 'computes the pull interval after saving' do
+      travel_to Time.zone.local(2020, 6, 17, 10, 0, 0) do
+        first_team_member = Fabricate :team_member, company: company, name: 'first_member'
+        second_team_member = Fabricate :team_member, company: company, name: 'second_member'
+
+        first_membership = Fabricate :membership, team: team, team_member: first_team_member, member_role: :developer
+        second_membership = Fabricate :membership, team: team, team_member: second_team_member, member_role: :developer
+
+        first_demand = Fabricate :demand, company: company, team: team, project: project, created_date: 3.days.ago, commitment_date: 2.days.ago, end_date: 1.day.ago
+        second_demand = Fabricate :demand, company: company, team: team, project: project, created_date: 4.days.ago, commitment_date: 2.days.ago, end_date: nil
+
+        first_assignment = Fabricate :item_assignment, membership: first_membership, demand: first_demand, start_time: 11.days.ago, finish_time: nil
+        second_assignment = Fabricate :item_assignment, membership: first_membership, demand: second_demand, start_time: 5.hours.ago, finish_time: 1.hour.ago
+        third_assignment = Fabricate :item_assignment, membership: second_membership, demand: second_demand, start_time: 4.hours.ago, finish_time: 2.hours.ago
+
+        expect(second_assignment.pairing_assignment?(third_assignment)).to be true
+        expect(third_assignment.pairing_assignment?(second_assignment)).to be true
+        expect(first_assignment.pairing_assignment?(second_assignment)).to be false
+        expect(first_assignment.pairing_assignment?(third_assignment)).to be false
+      end
+    end
+  end
 end

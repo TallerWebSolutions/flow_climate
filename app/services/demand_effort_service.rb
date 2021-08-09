@@ -4,6 +4,8 @@ class DemandEffortService
   include Singleton
 
   # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/CyclomaticComplexity
   def build_efforts_to_demand(demand)
     demand.demand_transitions.each do |transition|
       next unless transition.stage_compute_effort_to_project?
@@ -21,7 +23,9 @@ class DemandEffortService
 
         next unless demand_effort.automatic_update?
 
-        compute_and_save_effort(assignment, demand, demand_effort, end_date, start_date, top_effort_assignment, transition)
+        main_assignment = (assignment == top_effort_assignment) || !top_effort_assignment.pairing_assignment?(assignment)
+
+        compute_and_save_effort(demand_effort, end_date, start_date, main_assignment, transition)
       end
     end
 
@@ -30,32 +34,36 @@ class DemandEffortService
     update_demand_effort_caches(demand)
   end
   # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/CyclomaticComplexity
 
   private
 
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
-  def compute_and_save_effort(assignment, demand, demand_effort, end_date, start_date, top_effort_assignment, transition)
-    main_assignment = assignment == top_effort_assignment
+  def compute_and_save_effort(demand_effort, end_date, start_date, main_assignment, transition)
     stage_percentage = transition.stage_percentage_to_project
     pairing_percentage = transition.stage_pairing_percentage_to_project
     pairing_percentage = 1 if main_assignment
     management_percentage = transition.stage_management_percentage_to_project
 
-    total_blocked_in_assignment = demand.demand_blocks.kept.closed.active.for_date_interval(start_date, end_date).sum do |demand_block|
-      start_date_to_block = [start_date, demand_block.block_time].compact.max
-      end_date_to_block = [end_date, demand_block.unblock_time].compact.min
+    demand_effort_in_transition = if (end_date - start_date) > 20.minutes
+                                    (TimeService.instance.compute_working_hours_for_dates(start_date, end_date) * (1 + management_percentage) * stage_percentage)
+                                  else
+                                    0
+                                  end
 
-      TimeService.instance.compute_working_hours_for_dates(start_date_to_block, end_date_to_block) * pairing_percentage * (1 + management_percentage) * stage_percentage
-    end
+    demand_effort_in_transition *= pairing_percentage unless main_assignment
 
-    effort_total = if (end_date - start_date) > 20.minutes
-                     (TimeService.instance.compute_working_hours_for_dates(start_date, end_date) * pairing_percentage * (1 + management_percentage) * stage_percentage) - total_blocked_in_assignment
-                   else
-                     0
-                   end
+    total_transition_time = transition.total_seconds_in_transition
+    total_blocked_in_transition_time = transition.time_blocked_in_transition
+    work_time_blocked_in_transition = transition.work_time_blocked_in_transition
 
-    demand_effort.update(effort_value: effort_total, total_blocked: total_blocked_in_assignment, stage_percentage: stage_percentage,
+    blocked_effort = work_time_blocked_in_transition * (total_blocked_in_transition_time.to_f / total_transition_time)
+
+    effort_total = demand_effort_in_transition - blocked_effort
+
+    demand_effort.update(effort_value: effort_total, total_blocked: blocked_effort, stage_percentage: stage_percentage,
                          management_percentage: management_percentage, pairing_percentage: pairing_percentage, main_effort_in_transition: main_assignment,
                          start_time_to_computation: start_date, finish_time_to_computation: end_date)
   end

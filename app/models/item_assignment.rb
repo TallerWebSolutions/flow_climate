@@ -76,6 +76,12 @@ class ItemAssignment < ApplicationRecord
     membership.item_assignments.open_assignments
   end
 
+  def pairing_assignment?(assignment)
+    (demand == assignment.demand) &&
+      (assignment.start_time.between?(start_time, finish_time) ||
+        (assignment.finish_time.blank? || finish_time.blank? || assignment.finish_time.between?(assignment.start_time, assignment.finish_time)))
+  end
+
   private
 
   def compute_assignment_effort
