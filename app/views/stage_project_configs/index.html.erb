@@ -57,6 +57,10 @@
               <td><%= I18n.t('datetime.distance_in_words.x_seconds.other', count: stage_config.max_seconds_in_stage) %></td>
 
               <td>
+                <%= link_to edit_company_stage_stage_project_config_path(@company, stage_config.stage, stage_config), target: '_blank' do %>
+                  <i class="fas fa-edit"></i>
+                <% end %>
+
                 <%= link_to company_project_stage_project_config_path(@company, @project, stage_config), data: { confirm: I18n.t('general.destroy.confirm') }, method: :delete do %>
                   <i class="fa fa-times" aria-hidden="true"></i>
                 <% end %>
