@@ -27,7 +27,7 @@
 <% end %>
 
 <div class="row">
-  <div class="col-xs-6 col-xs-offset-3">
+  <div class="col-xs-12">
     <div>
       <% if @project.stages.empty? %>
         <div class="no-data">
@@ -39,6 +39,10 @@
           <tr>
             <th><%= Stage.human_attribute_name(:order) %></th>
             <th><%= Stage.human_attribute_name(:name) %></th>
+            <th><%= StageProjectConfig.human_attribute_name(:stage_percentage) %></th>
+            <th><%= StageProjectConfig.human_attribute_name(:pairing_percentage) %></th>
+            <th><%= StageProjectConfig.human_attribute_name(:management_percentage) %></th>
+            <th><%= StageProjectConfig.human_attribute_name(:max_seconds_in_stage) %></th>
             <th></th>
           </tr>
           </thead>
@@ -47,6 +51,10 @@
             <tr>
               <td><%= stage_config.stage.order %></td>
               <td><%= stage_config.stage.name %></td>
+              <td><%= number_to_percentage(stage_config.stage_percentage, precision: 0) %></td>
+              <td><%= number_to_percentage(stage_config.pairing_percentage, precision: 0) %></td>
+              <td><%= number_to_percentage(stage_config.management_percentage, precision: 0) %></td>
+              <td><%= I18n.t('datetime.distance_in_words.x_seconds.other', count: stage_config.max_seconds_in_stage) %></td>
 
               <td>
                 <%= link_to company_project_stage_project_config_path(@company, @project, stage_config), data: { confirm: I18n.t('general.destroy.confirm') }, method: :delete do %>

@@ -193,11 +193,13 @@ RSpec.describe StageProjectConfigsController, type: :controller do
 
     describe 'GET #index' do
       let(:other_stage) { Fabricate :stage, company: company, order: 0 }
+      let(:disabled_stage) { Fabricate :stage, company: company, order: -1 }
 
       context 'passing parameters' do
         it 'assigns the instance variable and renders the template' do
           config = Fabricate :stage_project_config, stage: stage, project: project
           other_config = Fabricate :stage_project_config, stage: other_stage, project: project
+          Fabricate :stage_project_config, stage: disabled_stage, project: project
           Fabricate :stage_project_config, stage: stage
 
           get :index, params: { company_id: company, project_id: project }

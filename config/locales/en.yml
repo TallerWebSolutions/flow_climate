@@ -43,6 +43,9 @@ en:
       year:
         one: year
         other: year
+    distance_in_words:
+      x_seconds:
+        other: "%{count} seconds"
   general:
     connector:
       and: "and"
