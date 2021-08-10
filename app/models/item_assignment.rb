@@ -77,9 +77,11 @@ class ItemAssignment < ApplicationRecord
   end
 
   def pairing_assignment?(other_assignment)
+    return false if other_assignment == self || demand != other_assignment.demand
+
     valid_finish_time = [finish_time, Time.zone.now].compact.min
-    valid_other_finish_time = [finish_time, Time.zone.now].compact.min
-    (demand == other_assignment.demand) && (assignment_contains_other(other_assignment, valid_finish_time) || other_contains_assignment(other_assignment, valid_other_finish_time))
+    valid_other_finish_time = [other_assignment.finish_time, Time.zone.now].compact.min
+    assignment_contains_other(other_assignment, valid_finish_time) || other_contains_assignment(other_assignment, valid_other_finish_time)
   end
 
   private
