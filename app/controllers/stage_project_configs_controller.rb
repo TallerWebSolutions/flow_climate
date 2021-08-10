@@ -24,7 +24,7 @@ class StageProjectConfigsController < AuthenticatedController
 
   def index
     @projects_to_copy_stages_from = (@company.projects - [@project]).sort_by(&:name)
-    @stages_config_list = @project.stage_project_configs.joins(:stage).order('stages.order, stages.name')
+    @stages_config_list = @project.stage_project_configs.joins(:stage).where('stages.order >= 0').order('stages.order, stages.name')
   end
 
   def destroy
