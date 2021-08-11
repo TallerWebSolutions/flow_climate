@@ -43,12 +43,12 @@
           <% end %>
         </td>
         <td><%= I18n.t('general.demands_text', count: replenishing_consolidation.project.remaining_backlog) %></td>
-        <td><%= number_with_precision(replenishing_consolidation.flow_pressure, precision: 3) %></td>
+        <td><%= number_with_precision(replenishing_consolidation.flow_pressure, precision: 3) %><i class="fas <%= replenishing_consolidation.increased_pressure? ? 'fa-arrow-up' : 'fa-arrow-down' %>"></i></td>
         <td><%= number_to_percentage(replenishing_consolidation.relative_flow_pressure, precision: 2) %></td>
         <td><%= I18n.t('general.demands_text', count: number_with_precision(replenishing_consolidation.qty_using_pressure, precision: 1)) %></td>
-        <td><%= I18n.t('general.days_text', count: number_with_precision(replenishing_consolidation.leadtime_80 / 1.day, precision: 3)) %></td>
+        <td><%= I18n.t('general.days_text', count: number_with_precision(replenishing_consolidation.leadtime_80 / 1.day, precision: 3)) %><i class="fas <%= replenishing_consolidation.increased_pressure? ? 'fa-arrow-up' : 'fa-arrow-down' %>"></i></td>
         <td><%= I18n.t('general.demands_text', count: replenishing_consolidation.qty_selected_last_week) %></td>
-        <td><%= I18n.t('general.demands_text', count: replenishing_consolidation.work_in_progress) %></td>
+        <td><%= I18n.t('general.demands_text', count: replenishing_consolidation.work_in_progress) %><i class="fas <%= replenishing_consolidation.increased_work_in_progress? ? 'fa-arrow-up' : 'fa-arrow-down' %>"></i></td>
         <td><%= I18n.t('general.weeks_text', count: number_with_precision(replenishing_consolidation.montecarlo_80_percent, precision: 1)) %></td>
         <td>
           <% if replenishing_consolidation.customer_happiness > 2 %>

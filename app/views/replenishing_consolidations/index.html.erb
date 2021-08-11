@@ -27,13 +27,13 @@
     <div class="col-xs-3 summary-card-frame">
       <div class="summary-card-content">
         <p class="summary-card-title"><%= I18n.t('projects.replenishing.average_throughput') %></p>
-        <p class="summary-card-value"><%= @replenishing_consolidations.last.average_team_throughput %></p>
+        <p class="summary-card-value"><%= @replenishing_consolidations.last.average_team_throughput %><i class="fas <%= @replenishing_consolidations.last.increased_avg_throughtput? ? 'fa-arrow-up' : 'fa-arrow-down' %>"></i></p>
       </div>
     </div>
     <div class="col-xs-3 summary-card-frame">
       <div class="summary-card-content">
         <p class="summary-card-title"><%= I18n.t('projects.replenishing.last_four_weeks_lead_time') %></p>
-        <p class="summary-card-value"><%= number_with_precision(@replenishing_consolidations.last.team_lead_time, precision: 2) %></p>
+        <p class="summary-card-value"><%= number_with_precision(@replenishing_consolidations.last.team_lead_time, precision: 2) %><i class="fas <%= @replenishing_consolidations.last.increased_team_lead_time? ? 'fa-arrow-up' : 'fa-arrow-down' %>"></i></p>
       </div>
     </div>
     <div class="col-xs-3 summary-card-frame">
@@ -44,10 +44,15 @@
     </div>
   </div>
 
-  <%= render 'teams/replenishing_table', company: @company, projects_to_replenish: @replenishing_consolidations %>
+  <%= render 'replenishing_consolidations/replenishing_table', company: @company, projects_to_replenish: @replenishing_consolidations %>
 
 <% else %>
   <div class="no-data">
     <%= I18n.t('general.no_data', missing_data: I18n.t('general.data').downcase) %>
   </div>
+<% end %>
+
+<% content_for :javascript do %>
+  <%= javascript_include_tag 'components/components' %>
+  <%= javascript_include_tag 'replenishing_consolidations/index' %>
 <% end %>

@@ -57,5 +57,41 @@ module Consolidations
     def project_throughput_data_mode
       Stats::StatisticsService.instance.mode(project_throughput_data)
     end
+
+    def increased_pressure?
+      return false if last_consolidation.blank?
+
+      last_consolidation.flow_pressure < flow_pressure
+    end
+
+    def increased_leadtime_80?
+      return false if last_consolidation.blank?
+
+      last_consolidation.leadtime_80 < leadtime_80
+    end
+
+    def increased_work_in_progress?
+      return false if last_consolidation.blank?
+
+      last_consolidation.work_in_progress < work_in_progress
+    end
+
+    def increased_avg_throughtput?
+      return false if last_consolidation.blank?
+
+      last_consolidation.average_team_throughput < average_team_throughput
+    end
+
+    def increased_team_lead_time?
+      return false if last_consolidation.blank?
+
+      last_consolidation.team_lead_time < team_lead_time
+    end
+
+    private
+
+    def last_consolidation
+      Consolidations::ReplenishingConsolidation.where('consolidation_date < :limit_date', limit_date: consolidation_date).order(:consolidation_date).last
+    end
   end
 end
