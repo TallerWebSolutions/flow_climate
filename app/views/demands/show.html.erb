@@ -101,7 +101,12 @@
 </div>
 
 <div id="content-block" class="tabcontent">
-  <%= render 'demand_blocks/demand_blocks_data', company: @company, demand: @demand, demand_blocks_list: @demand_blocks, demand_blocks_ids: @demand_blocks.map(&:id).join(','), paged_demand_blocks: @paged_demand_blocks %>
+  <%= render 'demand_blocks/demand_blocks_table',
+             company: @company,
+             demand_blocks_list: @demand_blocks,
+             demands_count: 1,
+             demand_blocks_ids: @demand_blocks.map(&:id).join(','),
+             paged_demand_blocks: @paged_demand_blocks %>
 </div>
 
 <div id="content-comments" class="tabcontent">

@@ -55,8 +55,12 @@ class DemandBlock < ApplicationRecord
   scope :open, -> { where(unblock_time: nil) }
   scope :closed, -> { where.not(unblock_time: nil) }
   scope :active, -> { where(active: true) }
+  scope :inactive, -> { unscoped.where(active: false) }
+  scope :for_active_projects, -> { joins(demand: :project).where(project: { status: Project.statuses[:executing] }) }
+  scope :for_inactive_projects, -> { joins(demand: :project).where.not(project: { status: Project.statuses[:executing] }) }
 
   delegate :name, to: :blocker, prefix: true
+  delegate :project_id, to: :demand, prefix: false
 
   before_save :update_computed_fields
   after_save :update_blocked_time_in_demand

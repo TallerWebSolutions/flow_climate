@@ -27,6 +27,7 @@ class RiskReviewsController < AuthenticatedController
 
   def show
     @demand_blocks = @risk_review.demand_blocks.order(:block_time)
+    @demands_count = @risk_review.demands.count
     @paged_demand_blocks = @risk_review.demand_blocks.order(:block_time).page(page_param)
   end
 

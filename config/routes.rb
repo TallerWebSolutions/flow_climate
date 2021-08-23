@@ -284,7 +284,7 @@ Rails.application.routes.draw do
       collection do
         get :demand_blocks_csv
 
-        get :search
+        post :search
       end
     end
 

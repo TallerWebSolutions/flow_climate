@@ -91,6 +91,7 @@ RSpec.describe RiskReviewsController, type: :controller do
             expect(response).to render_template :show
             expect(assigns(:risk_review)).to eq risk_review
             expect(assigns(:demand_blocks)).to eq [demand_block]
+            expect(assigns(:demands_count)).to eq risk_review.demands.count
             expect(assigns(:paged_demand_blocks)).to eq [demand_block]
           end
         end

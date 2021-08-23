@@ -8,4 +8,8 @@ module DemandBlocksHelper
   def stage_options(stages, selected_value)
     options_for_select(stages.map { |stage| [stage.name, stage.id] }, selected_value)
   end
+
+  def project_options(projects, selected_value)
+    options_for_select(projects.order(end_date: :desc).map { |project| [project.name, project.id] }, selected_value)
+  end
 end
