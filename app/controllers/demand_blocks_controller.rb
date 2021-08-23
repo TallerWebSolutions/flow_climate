@@ -34,8 +34,10 @@ class DemandBlocksController < AuthenticatedController
   end
 
   def index
-    @demand_blocks = @company.demand_blocks.order(block_time: :desc)
+    @demand_blocks_ids = @company.demand_blocks.unscoped.map(&:id)
+    @demand_blocks = @company.demand_blocks.for_active_projects.active.order(block_time: :desc)
     @paged_demand_blocks = @demand_blocks.page(page_param)
+    demands_count
   end
 
   def demand_blocks_csv
@@ -53,18 +55,26 @@ class DemandBlocksController < AuthenticatedController
   def search
     @demand_blocks_ids = params[:demand_blocks_ids].split(',')
     @demand_blocks = DemandBlock.where(id: @demand_blocks_ids.map(&:to_i))
+    @demand_blocks = build_projects_active_query(@demand_blocks)
+    @demand_blocks = build_blocks_active_query(@demand_blocks)
     @demand_blocks = build_date_query(@demand_blocks)
     @demand_blocks = build_type_query(@demand_blocks)
     @demand_blocks = build_member_query(@demand_blocks)
     @demand_blocks = build_stage_query(@demand_blocks)
+    @demand_blocks = build_project_query(@demand_blocks)
     @demand_blocks = build_ordering_query(@demand_blocks)
 
     @paged_demand_blocks = @demand_blocks.page(page_param)
+    demands_count
 
     render 'demand_blocks/index'
   end
 
   private
+
+  def demands_count
+    @demands_count ||= @demand_blocks.map(&:demand).uniq.count
+  end
 
   def build_date_query(demand_blocks)
     return demand_blocks if params[:blocks_start_date].blank? || params[:blocks_end_date].blank?
@@ -82,6 +92,24 @@ class DemandBlocksController < AuthenticatedController
     return demand_blocks if params[:blocks_team_member].blank?
 
     demand_blocks.where('(blocker_id = :member_id) OR (unblocker_id = :member_id)', member_id: params[:blocks_team_member])
+  end
+
+  def build_project_query(demand_blocks)
+    return demand_blocks if params[:blocks_project].blank?
+
+    demand_blocks.joins(demand: :project).where(demand: { project_id: params[:blocks_project].to_i })
+  end
+
+  def build_projects_active_query(demand_blocks)
+    return demand_blocks.for_active_projects if params[:finished_projects].blank?
+
+    demand_blocks.for_inactive_projects
+  end
+
+  def build_blocks_active_query(demand_blocks)
+    return demand_blocks.active if params[:inactive_blocks].blank?
+
+    demand_blocks.inactive
   end
 
   def build_stage_query(demand_blocks)

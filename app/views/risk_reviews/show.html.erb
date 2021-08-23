@@ -137,8 +137,9 @@
   <%= render 'demand_blocks/demand_blocks_table',
              company: @company,
              demand_blocks_list: @demand_blocks,
-             paged_demand_blocks: @paged_demand_blocks,
-             demand_blocks_ids: @risk_review.demand_blocks.order(:block_time).map(&:id).join(',')
+             demands_count: @demands_count,
+             demand_blocks_ids: @demand_blocks.map(&:id),
+             paged_demand_blocks: @paged_demand_blocks
   %>
 </div>
 

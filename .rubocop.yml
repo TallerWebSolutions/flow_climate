@@ -69,6 +69,7 @@ Metrics/ClassLength:
     - 'app/controllers/companies_controller.rb'
     - 'app/controllers/teams_controller.rb'
     - 'app/controllers/users_controller.rb'
+    - 'app/controllers/demand_blocks_controller.rb'
     - 'app/services/slack/slack_notification_service.rb'
     - 'app/adapters/**/*'
     - 'app/readers/**/*'

@@ -22,6 +22,11 @@ RSpec.describe DemandBlock, type: :model do
     it { is_expected.to validate_presence_of :block_type }
   end
 
+  context 'delegations' do
+    it { is_expected.to delegate_method(:name).to(:blocker).with_prefix }
+    it { is_expected.to delegate_method(:project_id).to(:demand) }
+  end
+
   context 'callbacks' do
     describe '#before_save' do
       let(:stage) { Fabricate :stage }
@@ -98,12 +103,38 @@ RSpec.describe DemandBlock, type: :model do
       it { expect(described_class.closed).to match_array [second_demand_block, third_demand_block] }
     end
 
-    describe '.active' do
-      let!(:first_demand_block) { Fabricate :demand_block, active: true }
-      let!(:second_demand_block) { Fabricate :demand_block, active: true }
-      let!(:third_demand_block) { Fabricate :demand_block, active: false }
+    describe '.for_active_projects' do
+      let!(:first_project) { Fabricate :project, status: :executing }
+      let!(:second_project) { Fabricate :project, status: :finished }
+      let!(:first_demand) { Fabricate :demand, project: first_project }
+      let!(:second_demand) { Fabricate :demand, project: second_project }
 
-      it { expect(described_class.active).to match_array [first_demand_block, second_demand_block] }
+      let!(:first_demand_block) { Fabricate :demand_block, demand: first_demand }
+      let!(:second_demand_block) { Fabricate :demand_block, demand: first_demand }
+      let!(:third_demand_block) { Fabricate :demand_block, demand: second_demand }
+
+      it { expect(described_class.for_active_projects).to match_array [first_demand_block, second_demand_block] }
+    end
+
+    describe '.for_inactive_projects' do
+      let!(:first_project) { Fabricate :project, status: :executing }
+      let!(:second_project) { Fabricate :project, status: :finished }
+      let!(:first_demand) { Fabricate :demand, project: first_project }
+      let!(:second_demand) { Fabricate :demand, project: second_project }
+
+      let!(:first_demand_block) { Fabricate :demand_block, demand: first_demand }
+      let!(:second_demand_block) { Fabricate :demand_block, demand: first_demand }
+      let!(:third_demand_block) { Fabricate :demand_block, demand: second_demand }
+
+      it { expect(described_class.for_inactive_projects).to match_array [third_demand_block] }
+    end
+
+    describe '.inactive' do
+      let!(:first_demand_block) { Fabricate :demand_block, active: false }
+      let!(:second_demand_block) { Fabricate :demand_block, active: false }
+      let!(:third_demand_block) { Fabricate :demand_block, active: true }
+
+      it { expect(described_class.inactive).to match_array [first_demand_block, second_demand_block] }
     end
   end
 

@@ -77,11 +77,11 @@
   </tr>
   <tr>
     <td><b><%= I18n.t('teams.show.average_queue_time') %></b></td>
-    <td><%= I18n.t('general.days_text', count: number_with_precision(average_queue_time, precision: 2)) %></td>
+    <td><%= I18n.t('general.hours_text', count: number_with_precision(average_queue_time, precision: 2)) %></td>
   </tr>
   <tr>
     <td><b><%= I18n.t('teams.show.average_touch_time') %></b></td>
-    <td><%= I18n.t('general.days_text', count: number_with_precision(average_touch_time, precision: 2)) %></td>
+    <td><%= I18n.t('general.hours_text', count: number_with_precision(average_touch_time, precision: 2)) %></td>
   </tr>
   <tr>
     <td><b><%= I18n.t('teams.show.lead_time_p95') %></b></td>

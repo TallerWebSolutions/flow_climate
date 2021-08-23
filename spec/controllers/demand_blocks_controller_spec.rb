@@ -38,8 +38,8 @@ RSpec.describe DemandBlocksController, type: :controller do
       it { expect(response).to redirect_to new_user_session_path }
     end
 
-    describe 'GET #search' do
-      before { get :search, params: { company_id: 'foo' } }
+    describe 'POST #search' do
+      before { post :search, params: { company_id: 'foo' } }
 
       it { expect(response).to redirect_to new_user_session_path }
     end
@@ -324,24 +324,34 @@ RSpec.describe DemandBlocksController, type: :controller do
     describe 'GET #index' do
       let(:company) { Fabricate :company, users: [user] }
       let(:customer) { Fabricate :customer, company: company }
-      let!(:project) { Fabricate :project, customers: [customer] }
-      let(:demand) { Fabricate :demand, company: company, project: project }
-      let!(:demand_block) { Fabricate :demand_block, demand: demand, active: true, block_time: 1.day.ago }
-      let!(:other_demand_block) { Fabricate :demand_block, demand: demand, active: true, block_time: Time.zone.now }
 
       context 'passing valid parameters' do
-        before { get :index, params: { company_id: company } }
-
         it 'assigns the instance variable and renders the template' do
+          project = Fabricate :project, customers: [customer], status: :executing
+          other_project = Fabricate :project, customers: [customer], status: :finished
+          demand = Fabricate :demand, company: company, project: project
+          other_demand = Fabricate :demand, company: company, project: other_project
+
+          first_demand_block = Fabricate :demand_block, demand: demand, active: true, block_time: 1.day.ago
+          second_demand_block = Fabricate :demand_block, demand: demand, active: true, block_time: Time.zone.now
+          third_demand_block = Fabricate :demand_block, demand: other_demand, active: true, block_time: Time.zone.now
+          fourth_demand_block = Fabricate :demand_block, demand: demand, active: false, block_time: Time.zone.now
+
+          get :index, params: { company_id: company }
+
           expect(project).to eq project
           expect(company).to eq company
-          expect(assigns(:demand_blocks)).to eq [other_demand_block, demand_block]
-          expect(assigns(:paged_demand_blocks)).to eq [other_demand_block, demand_block]
+          expect(assigns(:demand_blocks)).to eq [second_demand_block, first_demand_block]
+          expect(assigns(:demands_count)).to eq 1
+          expect(assigns(:demand_blocks_ids)).to match_array [first_demand_block.id, second_demand_block.id, third_demand_block.id, fourth_demand_block.id]
+          expect(assigns(:paged_demand_blocks)).to eq [second_demand_block, first_demand_block]
           expect(response).to render_template 'demand_blocks/index'
         end
       end
 
       context 'passing invalid' do
+        let(:project) { Fabricate :project, customers: [customer], status: :executing }
+
         context 'company' do
           before { get :index, params: { company_id: 'foo', project_id: project } }
 
@@ -395,91 +405,124 @@ RSpec.describe DemandBlocksController, type: :controller do
       end
     end
 
-    describe 'GET #search' do
+    describe 'POST #search' do
       let(:company) { Fabricate :company, users: [user] }
       let(:customer) { Fabricate :customer, company: company }
 
       let(:stage) { Fabricate :stage, company: company, name: 'zzz' }
       let(:other_stage) { Fabricate :stage, company: company, name: 'aaa' }
 
-      let!(:first_project) { Fabricate :project, customers: [customer], stages: [stage, other_stage], status: :maintenance, start_date: 6.days.ago, end_date: Time.zone.today }
+      let!(:first_project) { Fabricate :project, customers: [customer], stages: [stage, other_stage], status: :executing, start_date: 6.days.ago, end_date: Time.zone.today }
       let!(:second_project) { Fabricate :project, customers: [customer], stages: [stage, other_stage], status: :executing, start_date: 6.days.ago, end_date: Time.zone.today }
+      let!(:third_project) { Fabricate :project, customers: [customer], stages: [stage, other_stage], status: :finished, start_date: 6.days.ago, end_date: Time.zone.today }
 
-      context 'having data' do
-        context 'passing valid parameters' do
-          let!(:first_demand) { Fabricate :demand, project: first_project, company: company }
-          let!(:second_demand) { Fabricate :demand, project: second_project, company: company }
+      context 'with data' do
+        let!(:first_demand) { Fabricate :demand, project: first_project, company: company }
+        let!(:second_demand) { Fabricate :demand, project: second_project, company: company }
+        let!(:third_demand) { Fabricate :demand, project: third_project, company: company }
 
-          let!(:first_demand_transition) { Fabricate :demand_transition, demand: first_demand, stage: stage, last_time_in: 7.days.ago, last_time_out: 3.days.ago }
-          let!(:second_demand_transition) { Fabricate :demand_transition, demand: first_demand, stage: other_stage, last_time_in: 2.days.ago, last_time_out: Time.zone.now }
+        let!(:first_demand_transition) { Fabricate :demand_transition, demand: first_demand, stage: stage, last_time_in: 7.days.ago, last_time_out: 3.days.ago }
+        let!(:second_demand_transition) { Fabricate :demand_transition, demand: first_demand, stage: other_stage, last_time_in: 2.days.ago, last_time_out: Time.zone.now }
 
-          let(:team_member) { Fabricate :team_member, company: company, name: 'zzz' }
-          let(:other_team_member) { Fabricate :team_member, company: company, name: 'aaa' }
+        let(:team_member) { Fabricate :team_member, company: company, name: 'zzz' }
+        let(:other_team_member) { Fabricate :team_member, company: company, name: 'aaa' }
 
-          let!(:first_block) { Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'first_block', block_time: 1.hour.ago, unblock_time: Time.zone.today, active: true }
-          let!(:second_block) { Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: other_team_member, block_reason: 'second_block', block_time: 3.days.ago, unblock_time: 2.days.ago, active: true }
-          let!(:third_block) { Fabricate :demand_block, demand: second_demand, block_type: :specification_needed, blocker: other_team_member, unblocker: other_team_member, block_reason: 'third_block', block_time: 5.days.ago, unblock_time: 4.days.ago, active: true }
-          let!(:fourth_block) { Fabricate :demand_block, demand: first_demand, block_type: :specification_needed, blocker: other_team_member, unblocker: other_team_member, block_reason: 'fourth_block', block_time: 4.days.ago, unblock_time: Time.zone.yesterday, active: true }
-          let!(:fifth_block) { Fabricate :demand_block, demand: first_demand, block_type: :waiting_external_supplier, blocker: other_team_member, unblocker: team_member, block_reason: 'fifth_block', block_time: 5.days.ago, unblock_time: 3.days.ago, active: true }
-          let!(:sixth_block) { Fabricate :demand_block, demand: second_demand, block_type: :waiting_external_supplier, blocker: team_member, unblocker: team_member, block_reason: 'sixth_block', block_time: 6.days.ago, unblock_time: 5.days.ago, active: true }
-          let!(:seventh_block) { Fabricate :demand_block, demand: second_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'seventh_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: Time.zone.today }
+        let!(:first_block) { Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'first_block', block_time: 1.hour.ago, unblock_time: Time.zone.today, active: true }
+        let!(:second_block) { Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: other_team_member, block_reason: 'second_block', block_time: 3.days.ago, unblock_time: 2.days.ago, active: true }
+        let!(:third_block) { Fabricate :demand_block, demand: second_demand, block_type: :specification_needed, blocker: other_team_member, unblocker: other_team_member, block_reason: 'third_block', block_time: 5.days.ago, unblock_time: 4.days.ago, active: true }
+        let!(:fourth_block) { Fabricate :demand_block, demand: first_demand, block_type: :specification_needed, blocker: other_team_member, unblocker: other_team_member, block_reason: 'fourth_block', block_time: 4.days.ago, unblock_time: Time.zone.yesterday, active: true }
+        let!(:fifth_block) { Fabricate :demand_block, demand: first_demand, block_type: :waiting_external_supplier, blocker: other_team_member, unblocker: team_member, block_reason: 'fifth_block', block_time: 5.days.ago, unblock_time: 3.days.ago, active: true }
+        let!(:sixth_block) { Fabricate :demand_block, demand: second_demand, block_type: :waiting_external_supplier, blocker: team_member, unblocker: team_member, block_reason: 'sixth_block', block_time: 6.days.ago, unblock_time: 5.days.ago, active: true }
+        let!(:seventh_block) { Fabricate :demand_block, demand: second_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'seventh_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: Time.zone.today }
+        let!(:eigth_block) { Fabricate :demand_block, demand: third_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'eigth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: nil }
+        let!(:ninth_block) { Fabricate :demand_block, demand: third_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'ninth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: nil }
+        let!(:tenth_block) { Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'tenth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: false, discarded_at: nil }
 
-          context 'no start nor end dates nor period provided' do
+        context 'and valid parameters' do
+          context 'no filters are provided' do
             it 'builds the statistic adapter and renders the view using the dates in project to a monthly period' do
-              get :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(',') }
+              post :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(',') }
               expect(response).to render_template 'demand_blocks/index'
               expect(assigns(:demand_blocks)).to eq [first_block, second_block, fourth_block, fifth_block, third_block, sixth_block, seventh_block]
+              expect(assigns(:demands_count)).to eq 2
             end
           end
 
-          context 'and a start and end dates are provided' do
-            it 'builds the block list and render the template' do
-              get :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_start_date: 2.days.ago, blocks_end_date: Time.zone.today }
-              expect(response).to have_http_status :ok
+          context 'and a filter by start and end dates are provided' do
+            it 'builds the block list and renders the template' do
+              post :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_start_date: 2.days.ago.to_date, blocks_end_date: Time.zone.today }
+              expect(response).to render_template 'demand_blocks/index'
               expect(assigns(:demand_blocks)).to eq [first_block, second_block, fourth_block]
-              expect(response).to render_template 'demand_blocks/index'
+              expect(assigns(:demands_count)).to eq 1
             end
           end
 
-          context 'and a type was provided' do
-            it 'builds the block list and render the template' do
-              get :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_type: 1 }
-              expect(response).to have_http_status :ok
+          context 'and a filter by type was provided' do
+            it 'builds the block list and renders the template' do
+              post :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_type: 1 }
+              expect(response).to render_template 'demand_blocks/index'
               expect(assigns(:demand_blocks)).to eq [fourth_block, third_block]
-              expect(response).to render_template 'demand_blocks/index'
+              expect(assigns(:demands_count)).to eq 2
             end
           end
 
-          context 'and a team member was provided' do
+          context 'and a filter by team member was provided' do
             it 'builds the block list and render the template' do
-              get :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_team_member: other_team_member.id }
-              expect(response).to have_http_status :ok
+              post :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_team_member: other_team_member.id }
+              expect(response).to render_template 'demand_blocks/index'
               expect(assigns(:demand_blocks)).to eq [second_block, fourth_block, fifth_block, third_block]
-              expect(response).to render_template 'demand_blocks/index'
+              expect(assigns(:demands_count)).to eq 2
             end
           end
 
-          context 'and a stage was provided' do
-            it 'builds the block list and render the template' do
-              get :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_stage: stage.id }
-              expect(response).to have_http_status :ok
-              expect(assigns(:demand_blocks)).to eq [fourth_block, fifth_block]
+          context 'and a filter by stage was provided' do
+            it 'builds the block list and renders the template' do
+              post :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_stage: stage.id }
               expect(response).to render_template 'demand_blocks/index'
+              expect(assigns(:demand_blocks)).to eq [fourth_block, fifth_block]
+              expect(assigns(:demands_count)).to eq 1
+            end
+          end
+
+          context 'and a filter by project was provided' do
+            it 'builds the block list and renders the template' do
+              post :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_project: first_project.id }
+              expect(response).to render_template 'demand_blocks/index'
+              expect(assigns(:demand_blocks)).to eq [first_block, second_block, fourth_block, fifth_block]
+              expect(assigns(:demands_count)).to eq 1
+            end
+          end
+
+          context 'and a filter by finished projects was provided' do
+            it 'builds the block list and renders the template' do
+              post :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), finished_projects: true }
+              expect(response).to render_template 'demand_blocks/index'
+              expect(assigns(:demand_blocks)).to match_array [eigth_block, ninth_block]
+              expect(assigns(:demands_count)).to eq 1
+            end
+          end
+
+          context 'and a filter by inactive blocks was provided' do
+            it 'builds the block list and renders the template' do
+              post :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), inactive_blocks: 'yes' }
+              expect(assigns(:demand_blocks)).to eq [tenth_block]
+              expect(response).to render_template 'demand_blocks/index'
+              expect(assigns(:demands_count)).to eq 1
             end
           end
 
           context 'and all filters are provided' do
-            it 'builds the block list and render the template' do
-              get :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_stage: stage.id, blocks_team_member: other_team_member.id, blocks_start_date: 2.days.ago, blocks_end_date: Time.zone.today }
-              expect(response).to have_http_status :ok
-              expect(assigns(:demand_blocks)).to eq [fourth_block]
+            it 'builds the block list and renders the template' do
+              post :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_stage: stage.id, blocks_team_member: other_team_member.id, blocks_start_date: 2.days.ago, blocks_end_date: Time.zone.today }
               expect(response).to render_template 'demand_blocks/index'
+              expect(assigns(:demand_blocks)).to eq [fourth_block]
+              expect(assigns(:demands_count)).to eq 1
             end
           end
 
           context 'and an ordering by blocker is requested' do
-            it 'builds the block list and render the template' do
-              get :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_team_member: other_team_member.id, blocks_ordering: :member_name }
+            it 'builds the block list and renders the template' do
+              post :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_team_member: other_team_member.id, blocks_ordering: :member_name }
               expect(response).to have_http_status :ok
               expect(assigns(:demand_blocks)).to match_array [second_block, third_block, fourth_block, fifth_block]
               expect(response).to render_template 'demand_blocks/index'
@@ -488,7 +531,7 @@ RSpec.describe DemandBlocksController, type: :controller do
 
           context 'and an ordering by block time is requested' do
             it 'builds the block list and render the template' do
-              get :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_team_member: other_team_member.id, blocks_ordering: :block_time }
+              post :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_team_member: other_team_member.id, blocks_ordering: :block_time }
               expect(response).to have_http_status :ok
               expect(assigns(:demand_blocks)).to eq [second_block, fourth_block, fifth_block, third_block]
               expect(response).to render_template 'demand_blocks/index'
@@ -497,9 +540,9 @@ RSpec.describe DemandBlocksController, type: :controller do
         end
       end
 
-      context 'having no data' do
+      context 'with no data' do
         it 'render the template with empty data' do
-          get :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_start_date: 2.days.ago, blocks_end_date: Time.zone.today }
+          post :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_start_date: 2.days.ago, blocks_end_date: Time.zone.today }
           expect(assigns(:demand_blocks)).to eq []
           expect(response).to render_template 'demand_blocks/index'
         end

@@ -1084,11 +1084,15 @@ pt-BR:
         start_date: "Data inicial"
         end_date: "Fim"
         block_type: "Tipo"
+        project: "Projetos"
+        finished_projects: "Em Projetos Finalizados"
+        inactive_blocks: "Bloqueios inativos"
       average_time_per_block: "Tempo Médio por Bloqueio"
       total_blocks: "Total"
       total_time: "Tempo Total"
       notified_blocked: "Bloqueio Notificado?"
       notified_unblocked: "Desbloqueio Notificado?"
+      average_time_blocked_per_demand: "Tempo bloqueado por demanda"
     edit:
       title: "Editar Bloqueio"
     charts:

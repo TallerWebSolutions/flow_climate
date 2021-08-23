@@ -8,7 +8,12 @@
   </div>
 </div>
 
-<%= render 'demand_blocks/demand_blocks_table', company: @company, demand_blocks_list: @demand_blocks, paged_demand_blocks: @paged_demand_blocks %>
+<%= render 'demand_blocks/demand_blocks_table',
+           company: @company,
+           demand_blocks_list: @demand_blocks,
+           demands_count: @demands_count,
+           demand_blocks_ids: @demand_blocks_ids.join(','),
+           paged_demand_blocks: @paged_demand_blocks %>
 
 <div class="modal fade" id="edit-block-form" tabindex="-1" role="dialog" aria-labelledby="edit-block-form" aria-hidden="true"></div>
 

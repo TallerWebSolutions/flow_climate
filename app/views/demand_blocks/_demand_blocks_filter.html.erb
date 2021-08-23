@@ -1,6 +1,6 @@
-<%= form_tag search_company_demand_blocks_path(company.id), method: :get do %>
+<%= form_tag search_company_demand_blocks_path(company.id), method: :post do %>
 
-  <%= hidden_field_tag :demand_blocks_ids, demand_blocks.map(&:id).join(',') %>
+  <%= hidden_field_tag :demand_blocks_ids, demand_blocks_ids %>
 
   <div class="row">
     <div class="col-xs-3 form-group">
@@ -22,15 +22,30 @@
   </div>
 
   <div class="row relative-row">
-    <div class="col-xs-4 form-group">
+    <div class="col-xs-3 form-group">
       <%= label_tag I18n.t('demand_blocks.index.filter.stage'), nil, class: 'control-label' %>
       <%= select_tag :blocks_stage, stage_options(Stage.where(id: demand_blocks.map(&:stage_id).flatten), params[:blocks_stage]), include_blank: I18n.t('general.select'), class: 'form-control' %>
     </div>
-    <div class="col-xs-4 form-group">
+    <div class="col-xs-3 form-group">
+      <%= label_tag I18n.t('demand_blocks.index.filter.project'), nil, class: 'control-label' %>
+      <%= select_tag :blocks_project, project_options(Project.where(id: demand_blocks.map(&:project_id).flatten), params[:blocks_project]), include_blank: I18n.t('general.select'), class: 'form-control' %>
+    </div>
+    <div class="col-xs-2 form-group">
       <%= label_tag I18n.t('demand_blocks.index.filter.ordering'), nil, class: 'control-label' %>
       <%= select_tag :blocks_ordering, options_for_select([[DemandBlock.human_attribute_name(:block_time), 'block_time'], [DemandBlock.human_attribute_name(:blocker), 'member_name']], params[:blocks_ordering]), include_blank: I18n.t('general.select'), class: 'form-control' %>
     </div>
-    <div class="col-xs-4 form-group bottom-button">
+    <div class='col-xs-3 form-group'>
+      <p>
+        <%= check_box_tag :finished_projects, 'yes', params[:finished_projects] == 'yes' %>
+        <%= label_tag I18n.t('demand_blocks.index.filter.finished_projects'), nil, class: 'control-label' %>
+      </p>
+
+      <p>
+        <%= check_box_tag :inactive_blocks, 'yes', params[:inactive_blocks] == 'yes' %>
+        <%= label_tag I18n.t('demand_blocks.index.filter.inactive_blocks'), nil, class: 'control-label' %>
+      </p>
+    </div>
+    <div class="col-xs-1 form-group bottom-button">
       <%= submit_tag I18n.t('general.search'), class: 'btn btn-sm btn-primary' %>
     </div>
   </div>

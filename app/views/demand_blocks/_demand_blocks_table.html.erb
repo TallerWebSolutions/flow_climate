@@ -1,5 +1,5 @@
 <div class="table-filter">
-  <%= render 'demand_blocks/demand_blocks_filter', company: company, demand_blocks: demand_blocks_list %>
+  <%= render 'demand_blocks/demand_blocks_filter', company: company, demand_blocks: demand_blocks_list, demand_blocks_ids: demand_blocks_ids %>
 </div>
 
 <% if demand_blocks_list.empty? %>
@@ -10,29 +10,41 @@
   </div>
 <% else %>
   <div class="row bottom-spaced-component">
-    <div class="col-xs-4 summary-card-frame">
+    <div class="col-xs-2 summary-card-frame">
       <div class="summary-card-content">
         <p class="summary-card-title"><%= I18n.t('demand_blocks.index.total_blocks') %></p>
         <p class="summary-card-value"><%= demand_blocks_list.count %></p>
       </div>
     </div>
-    <div class="col-xs-4 summary-card-frame">
+    <div class="col-xs-2 summary-card-frame">
+      <div class="summary-card-content">
+        <p class="summary-card-title"><%= Demand.model_name.human(count: 2) %></p>
+        <p class="summary-card-value"><%= demands_count %></p>
+      </div>
+    </div>
+    <div class="col-xs-2 summary-card-frame">
       <div class="summary-card-content">
         <p class="summary-card-title"><%= I18n.t('demand_blocks.index.total_time') %></p>
         <p class="summary-card-value"><%= I18n.t('general.hours_text', count: number_with_precision((demand_blocks_list.sum(&:total_blocked_time) / 1.hour), precision: 2)) %></p>
       </div>
     </div>
-    <div class="col-xs-4 summary-card-frame">
+    <div class="col-xs-3 summary-card-frame">
       <div class="summary-card-content">
         <p class="summary-card-title"><%= I18n.t('demand_blocks.index.average_time_per_block') %></p>
         <p class="summary-card-value"><%= I18n.t('general.hours_text', count: number_with_precision((demand_blocks_list.sum(&:total_blocked_time) / 1.hour) / demand_blocks_list.count, precision: 2)) %></p>
+      </div>
+    </div>
+    <div class="col-xs-3 summary-card-frame">
+      <div class="summary-card-content">
+        <p class="summary-card-title"><%= I18n.t('demand_blocks.index.average_time_blocked_per_demand') %></p>
+        <p class="summary-card-value"><%= I18n.t('general.hours_text', count: number_with_precision((demand_blocks_list.sum(&:total_blocked_time) / 1.hour) / demands_count, precision: 2)) %></p>
       </div>
     </div>
   </div>
 
   <div class="row">
     <div class="col-xs-12 form-group">
-      <%= link_to I18n.t('general.download_csv'), demand_blocks_csv_company_demand_blocks_path(company, demand_blocks_ids: demand_blocks_list.map(&:id), format: :csv), class: 'btn btn-sm btn-success pull-right' %>
+      <%= link_to I18n.t('general.download_csv'), demand_blocks_csv_company_demand_blocks_path(company, demand_blocks_ids: demand_blocks_ids, format: :csv), class: 'btn btn-sm btn-success pull-right' %>
     </div>
   </div>
 
@@ -70,9 +82,9 @@
         <td></td>
         <td></td>
         <td></td>
+        <td></td>
         <td><%= time_distance_in_words(demand_blocks_list.map(&:total_blocked_time).compact.sum) %>
         <td><%= "#{demand_blocks_list.map(&:block_working_time_duration).compact.sum} h" %></td>
-        <td></td>
         <td></td>
         <td></td>
         <td></td>
