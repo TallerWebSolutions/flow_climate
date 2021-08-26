@@ -100,7 +100,7 @@ RSpec.describe DemandService, type: :service do
         Fabricate :demand, demand_type: :chore, class_of_service: :expedite, created_date: 12.days.ago, end_date: 3.days.ago
         Fabricate :demand, demand_type: :chore, class_of_service: :expedite, created_date: 12.days.ago, end_date: nil
 
-        expect(described_class.instance.average_speed(Demand.all)).to eq 2
+        expect(described_class.instance.average_speed(Demand.all)).to eq 1.0
       end
     end
 
