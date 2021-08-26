@@ -39,11 +39,11 @@ class DemandService
   def average_speed(demands)
     demands_finished = demands.kept.finished_until_date(Time.zone.now)
     min_date = demands_finished.filter_map(&:end_date).min
-    max_date = demands_finished.filter_map(&:end_date).max
+    return 0 if min_date.blank?
 
-    return 0 if min_date.blank? || max_date.blank?
+    max_date = max_date(demands_finished)
 
-    difference_in_days = (max_date.to_date - min_date.to_date).to_i
+    difference_in_days = (max_date.to_date - min_date.to_date).to_i + 1
 
     demands_finished.count / difference_in_days.to_f
   end
@@ -61,5 +61,11 @@ class DemandService
     demands = team.demands.kept.finished_with_leadtime.finished_after_date(limit_date).where(demand_type: demand.demand_type, class_of_service: demand.class_of_service)
 
     Stats::StatisticsService.instance.percentile(80, demands.map(&:leadtime))
+  end
+
+  private
+
+  def max_date(demands_finished)
+    [demands_finished.filter_map(&:end_date).max, Time.zone.now.end_of_day].compact.max
   end
 end

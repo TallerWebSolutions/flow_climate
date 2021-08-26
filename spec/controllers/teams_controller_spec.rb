@@ -129,7 +129,7 @@ RSpec.describe TeamsController, type: :controller do
 
             expect(assigns(:work_item_flow_information)).to be_a Flow::WorkItemFlowInformations
             expect(assigns(:statistics_flow_information)).to be_a Flow::StatisticsFlowInformations
-            expect(assigns(:average_speed)).to eq 2.0
+            expect(assigns(:average_speed)).to eq 1.3333333333333333
           end
         end
 

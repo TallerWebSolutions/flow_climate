@@ -161,7 +161,7 @@ RSpec.describe ProjectsController, type: :controller do
               expect(assigns(:last_10_deliveries).map(&:external_id)).to eq %w[zzz ccc]
               expect(assigns(:demands_blocks)).to eq [second_block, first_block]
               expect(assigns(:stages_list)).to eq [second_stage, first_stage]
-              expect(assigns(:average_speed)).to eq 2
+              expect(assigns(:average_speed)).to eq 0.6666666666666666
               expect(assigns(:all_project_consolidations)).to eq [first_consolidation, second_consolidation, third_consolidation, fourth_consolidation]
               expect(assigns(:dashboard_project_consolidations)).to eq [first_consolidation, second_consolidation, third_consolidation, fourth_consolidation]
               expect(assigns(:dashboard_project_consolidations_for_months)).to eq [first_consolidation, second_consolidation, fourth_consolidation]
