@@ -107,7 +107,7 @@ class TeamsController < DemandsListController
     end_date = @team.end_date
 
     cache_date_arrays = TimeService.instance.days_between_of(start_date, end_date)
-    cache_date_arrays.each { |cache_date| Consolidations::TeamConsolidationJob.perform_later(@team, cache_date) }
+    cache_date_arrays.each { |cache_date| Consolidations::TeamConsolidationJob.perform_later(@team, cache_date.beginning_of_day) }
 
     flash[:notice] = I18n.t('general.enqueued')
 

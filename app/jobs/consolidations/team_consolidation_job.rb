@@ -4,24 +4,25 @@ module Consolidations
   class TeamConsolidationJob < ApplicationJob
     queue_as :consolidations
 
-    def perform(team, cache_date = Time.zone.today)
+    def perform(team, cache_date = Time.zone.now)
       return if cache_date < Date.new(2018, 1, 1)
 
+      beginning_of_day = cache_date.beginning_of_day
       end_of_day = cache_date.end_of_day
 
       demands = team.demands.where('demands.created_date <= :analysed_date', analysed_date: end_of_day)
-      demands_in_week = team.demands.where('demands.created_date BETWEEN :bottom_limit AND :upper_limit', bottom_limit: end_of_day.beginning_of_week, upper_limit: end_of_day)
-      demands_in_month = team.demands.where('demands.created_date BETWEEN :bottom_limit AND :upper_limit', bottom_limit: end_of_day.beginning_of_month, upper_limit: end_of_day)
-      demands_in_quarter = team.demands.where('demands.created_date BETWEEN :bottom_limit AND :upper_limit', bottom_limit: end_of_day.beginning_of_quarter, upper_limit: end_of_day)
-      demands_in_semester = team.demands.where('demands.created_date BETWEEN :bottom_limit AND :upper_limit', bottom_limit: TimeService.instance.beginning_of_semester(end_of_day), upper_limit: end_of_day)
-      demands_in_year = team.demands.where('demands.created_date BETWEEN :bottom_limit AND :upper_limit', bottom_limit: end_of_day.beginning_of_year, upper_limit: end_of_day)
+      demands_in_week = team.demands.where('demands.created_date BETWEEN :bottom_limit AND :upper_limit', bottom_limit: beginning_of_day.beginning_of_week, upper_limit: end_of_day)
+      demands_in_month = team.demands.where('demands.created_date BETWEEN :bottom_limit AND :upper_limit', bottom_limit: beginning_of_day.beginning_of_month, upper_limit: end_of_day)
+      demands_in_quarter = team.demands.where('demands.created_date BETWEEN :bottom_limit AND :upper_limit', bottom_limit: beginning_of_day.beginning_of_quarter, upper_limit: end_of_day)
+      demands_in_semester = team.demands.where('demands.created_date BETWEEN :bottom_limit AND :upper_limit', bottom_limit: TimeService.instance.beginning_of_semester(beginning_of_day), upper_limit: end_of_day)
+      demands_in_year = team.demands.where('demands.created_date BETWEEN :bottom_limit AND :upper_limit', bottom_limit: beginning_of_day.beginning_of_year, upper_limit: end_of_day)
 
       demands_finished = demands.finished_until_date(end_of_day).order(end_date: :asc)
-      demands_finished_in_week = demands.to_end_dates(cache_date.beginning_of_week, cache_date)
-      demands_finished_in_month = demands.to_end_dates(cache_date.beginning_of_month, cache_date)
-      demands_finished_in_quarter = demands_in_quarter.to_end_dates(cache_date.beginning_of_quarter, cache_date)
-      demands_finished_in_semester = demands_in_semester.to_end_dates(TimeService.instance.beginning_of_semester(cache_date), cache_date)
-      demands_finished_in_year = demands_in_year.to_end_dates(cache_date.beginning_of_year, cache_date)
+      demands_finished_in_week = demands.to_end_dates(beginning_of_day.beginning_of_week, end_of_day)
+      demands_finished_in_month = demands.to_end_dates(beginning_of_day.beginning_of_month, end_of_day)
+      demands_finished_in_quarter = demands.to_end_dates(beginning_of_day.beginning_of_quarter, end_of_day)
+      demands_finished_in_semester = demands.to_end_dates(TimeService.instance.beginning_of_semester(beginning_of_day), end_of_day)
+      demands_finished_in_year = demands.to_end_dates(beginning_of_day.beginning_of_year, end_of_day)
 
       demands_lead_time = demands_finished.map(&:leadtime).flatten.compact
       demands_lead_time_in_week = demands_finished_in_week.map(&:leadtime).flatten.compact
@@ -81,7 +82,7 @@ module Consolidations
       hours_per_demand_in_semester = DemandService.instance.hours_per_demand(demands_finished_in_semester)
       hours_per_demand_in_year = DemandService.instance.hours_per_demand(demands_finished_in_year)
 
-      consolidation = Consolidations::TeamConsolidation.where(team: team, consolidation_date: cache_date).first_or_initialize
+      consolidation = Consolidations::TeamConsolidation.where(team: team, consolidation_date: cache_date.to_date).first_or_initialize
 
       flow_efficiency = DemandService.instance.flow_efficiency(demands_finished)
       flow_efficiency_in_month = DemandService.instance.flow_efficiency(demands_finished_in_month)
@@ -89,7 +90,7 @@ module Consolidations
       flow_efficiency_in_semester = DemandService.instance.flow_efficiency(demands_finished_in_semester)
       flow_efficiency_in_year = DemandService.instance.flow_efficiency(demands_finished_in_year)
 
-      consolidation.update(consolidation_date: cache_date,
+      consolidation.update(consolidation_date: cache_date.to_date,
                            last_data_in_week: (cache_date.to_date) == (cache_date.to_date.end_of_week),
                            last_data_in_month: (cache_date.to_date) == (cache_date.to_date.end_of_month),
                            last_data_in_year: (cache_date.to_date) == (cache_date.to_date.end_of_year),
