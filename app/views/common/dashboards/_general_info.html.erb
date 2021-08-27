@@ -62,7 +62,7 @@
   <tr>
     <td><b><%= I18n.t('demand_blocks.index.title') %></b></td>
     <% if demands_blocks.count.positive? %>
-      <td><%= link_to I18n.t('general.demand_blocks_text', count: demands_blocks.count), search_company_demand_blocks_path(company, demand_blocks_ids: demands_blocks.map(&:id).join(',')), target: '_blank' %></td>
+      <td><%= link_to I18n.t('general.demand_blocks_text', count: demands_blocks.count), search_company_demand_blocks_path(company, demand_blocks_ids: demands_blocks.map(&:id).join(',')), target: '_blank', method: :post %></td>
     <% else %>
       <td><%= I18n.t('general.demand_blocks_text', count: demands_blocks.count) %></td>
     <% end %>
