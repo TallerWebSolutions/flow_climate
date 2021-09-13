@@ -6,8 +6,6 @@ RSpec.describe ProjectsRepository, type: :repository do
 
   before { travel_to Time.zone.local(2018, 4, 13, 10, 0, 0) }
 
-  after { travel_back }
-
   describe '#add_query_to_projects_in_status' do
     let(:other_customer) { Fabricate :customer }
     let(:team) { Fabricate :team, company: company }

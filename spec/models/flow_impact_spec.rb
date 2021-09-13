@@ -26,8 +26,6 @@ RSpec.describe FlowImpact, type: :model do
   describe '#to_hash' do
     before { travel_to Time.zone.local(2019, 10, 17, 11, 20, 0) }
 
-    after { travel_back }
-
     let(:project) { Fabricate :project }
 
     context 'with a demand' do

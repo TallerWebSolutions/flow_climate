@@ -427,7 +427,7 @@ class Project < ApplicationRecord
     previous_element = 0
     last_throughputs = []
     throughputs.each do |th|
-      last_throughputs << previous_element - th unless previous_element.zero?
+      last_throughputs << (previous_element - th) unless previous_element.zero?
 
       previous_element = th
     end
@@ -438,14 +438,14 @@ class Project < ApplicationRecord
   def current_weekly_scope_ideal_burnup
     period = TimeService.instance.weeks_between_of(start_date, end_date)
     ideal_per_period = []
-    period.each_with_index { |_date, index| ideal_per_period << (backlog_count_for.to_f / period.size) * (index + 1) }
+    period.each_with_index { |_date, index| ideal_per_period << ((backlog_count_for.to_f / period.size) * (index + 1)) }
     ideal_per_period
   end
 
   def current_weekly_hours_ideal_burnup
     period = TimeService.instance.weeks_between_of(start_date, end_date)
     ideal_per_period = []
-    period.each_with_index { |_date, index| ideal_per_period << (qty_hours.to_f / period.size) * (index + 1) }
+    period.each_with_index { |_date, index| ideal_per_period << ((qty_hours.to_f / period.size) * (index + 1)) }
     ideal_per_period
   end
 

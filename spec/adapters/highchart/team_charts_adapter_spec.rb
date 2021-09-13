@@ -3,8 +3,6 @@
 RSpec.describe Highchart::TeamChartsAdapter, type: :service do
   before { travel_to Time.zone.local(2018, 2, 20, 10, 0, 0) }
 
-  after { travel_back }
-
   describe '#average_demand_cost' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }

@@ -239,6 +239,21 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
             expect(Demand.last.memberships.map(&:team_member_name)).to match_array %w[team_member other_team_member]
           end
         end
+
+        context 'item assignment throws StaleObjectError' do
+          let(:demand) { Fabricate :demand, company: company, team: team, external_id: 'CRE-726' }
+          let!(:team_member) { Fabricate :team_member, company: company, jira_account_user_email: 'foo', jira_account_id: 'xpto', name: 'team_member' }
+          let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
+          
+          let(:jira_issue_changelog) { file_fixture('issue_changelog_paginated_page_one.json').read }
+
+          it 'registers the error in the logger and does not halt the demana' do
+            allow_any_instance_of(ItemAssignment).to receive(:save).and_raise(ActiveRecord::StaleObjectError)
+            expect(Rails.logger).to(receive(:warn)).at_least(1).time
+
+            described_class.instance.process_jira_issue_changelog(jira_account, JSON.parse(jira_issue_changelog), demand, team_member)
+          end
+        end
       end
 
       context 'when there no custom field registered' do
@@ -324,6 +339,15 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
           it 'registers the error in the logger and does not halt the demana' do
             allow_any_instance_of(Slack::SlackNotificationService).to receive(:notify_demand_state_changed).and_raise(ArgumentError)
             expect(Rails.logger).to(receive(:error)).exactly(11).times
+
+            described_class.instance.process_jira_issue_changelog(jira_account, JSON.parse(jira_issue_changelog), demand, creator)
+          end
+        end
+
+        context 'demand transition throws StaleObjectError' do
+          it 'registers the error in the logger and does not halt the demana' do
+            allow_any_instance_of(DemandTransition).to receive(:save).and_raise(ActiveRecord::StaleObjectError)
+            expect(Rails.logger).to(receive(:warn)).at_least(10).times
 
             described_class.instance.process_jira_issue_changelog(jira_account, JSON.parse(jira_issue_changelog), demand, creator)
           end

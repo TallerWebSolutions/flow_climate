@@ -249,8 +249,6 @@ RSpec.describe DemandTransition, type: :model do
     context 'when there is no last_time_out' do
       before { travel_to Time.zone.local(2018, 3, 20, 10, 0, 0) }
 
-      after { travel_back }
-
       let(:demand_transition) { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: Time.zone.parse('2018-03-13 12:00:00'), last_time_out: nil }
 
       it { expect(demand_transition.total_seconds_in_transition).to eq 597_600.0 }
@@ -259,8 +257,6 @@ RSpec.describe DemandTransition, type: :model do
 
   describe '#working_time_in_transition' do
     before { travel_to Time.zone.local(2018, 3, 20, 10, 0, 0) }
-
-    after { travel_back }
 
     let(:project) { Fabricate :project }
     let(:stage) { Fabricate :stage, commitment_point: true, end_point: false, projects: [project] }
@@ -281,8 +277,6 @@ RSpec.describe DemandTransition, type: :model do
 
   describe '#work_time_blocked_in_transition' do
     before { travel_to Time.zone.local(2018, 3, 7, 10, 0, 0) }
-
-    after { travel_back }
 
     let(:project) { Fabricate :project }
     let(:stage) { Fabricate :stage, commitment_point: true, end_point: false }
@@ -310,8 +304,6 @@ RSpec.describe DemandTransition, type: :model do
 
   describe '#time_blocked_in_transition' do
     before { travel_to Time.zone.local(2018, 3, 7, 10, 0, 0) }
-
-    after { travel_back }
 
     let(:project) { Fabricate :project }
     let(:stage) { Fabricate :stage, commitment_point: true, end_point: false }

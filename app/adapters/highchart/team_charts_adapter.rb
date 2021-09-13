@@ -36,7 +36,7 @@ module Highchart
 
     def build_operational_loss(hours_available_array, hours_consumed_array)
       operational_loss = []
-      (0..(hours_available_array.size - 1)).each { |index| operational_loss << 100 - ((hours_consumed_array[index].to_f / hours_available_array[index]) * 100) }
+      (0..(hours_available_array.size - 1)).each { |index| operational_loss << (100 - ((hours_consumed_array[index].to_f / hours_available_array[index]) * 100)) }
       operational_loss
     end
   end

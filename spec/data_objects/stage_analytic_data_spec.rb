@@ -10,8 +10,6 @@ RSpec.describe StageAnalyticData, type: :data_object do
   describe '.initialize' do
     before { travel_to Time.zone.local(2018, 5, 29, 18, 25, 0) }
 
-    after { travel_back }
-
     context 'and the stage has transitions with duration' do
       subject(:stage_analytic_data) { described_class.new(stage) }
 

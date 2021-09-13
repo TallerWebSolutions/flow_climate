@@ -22,8 +22,6 @@ RSpec.describe FinancialInformation, type: :model do
   describe '#throughput_in_month' do
     before { travel_to Date.new(2018, 10, 25) }
 
-    after { travel_back }
-
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
     let(:project) { Fabricate :project, company: company, customers: [customer], start_date: 2.months.ago, end_date: 3.months.from_now }
@@ -78,8 +76,6 @@ RSpec.describe FinancialInformation, type: :model do
   describe '#income_per_hour' do
     before { travel_to Date.new(2018, 11, 19) }
 
-    after { travel_back }
-
     include_context 'demands with effort for finances'
 
     let!(:finances) { Fabricate :financial_information, company: company, finances_date: 1.month.ago, income_total: 20.4, expenses_total: 12.2 }
@@ -89,8 +85,6 @@ RSpec.describe FinancialInformation, type: :model do
 
   describe '#cost_per_hour' do
     before { travel_to Date.new(2018, 11, 19) }
-
-    after { travel_back }
 
     include_context 'demands with effort for finances'
 
@@ -102,8 +96,6 @@ RSpec.describe FinancialInformation, type: :model do
   describe '#project_delivered_hours' do
     before { travel_to Date.new(2018, 11, 19) }
 
-    after { travel_back }
-
     include_context 'demands with effort for finances'
 
     let!(:finances) { Fabricate :financial_information, company: company, finances_date: 1.month.ago, income_total: 20.4, expenses_total: 12.2 }
@@ -113,8 +105,6 @@ RSpec.describe FinancialInformation, type: :model do
 
   describe '#hours_per_demand' do
     before { travel_to Date.new(2018, 11, 19) }
-
-    after { travel_back }
 
     include_context 'demands with effort for finances'
 

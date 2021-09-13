@@ -100,7 +100,7 @@ module Jira
       first_transitions.where.not(stage: backlog_transition_date).map(&:destroy) if first_transitions.count > 1
 
       from_transition = create_from_transition(demand, first_stage_in_the_flow.integration_id, backlog_transition_date)
-      from_transition.update(team_member: demand_creator)
+      from_transition&.update(team_member: demand_creator)
 
       read_transition_history(demand, issue_changelog)
     rescue ActiveRecord::RecordNotUnique
@@ -127,24 +127,31 @@ module Jira
 
     def create_from_transition(demand, from_stage_id, transition_date)
       stage_from = demand.project.stages.find_by(integration_id: from_stage_id)
-      DemandTransition.where(demand: demand, stage: stage_from, last_time_in: transition_date).first_or_create
+      DemandTransition.transaction { DemandTransition.where(demand: demand, stage: stage_from, last_time_in: transition_date).first_or_create }
+    rescue ActiveRecord::StaleObjectError
+      Rails.logger.warn('DemandTransition locked')
+      nil
     end
 
     def create_to_transition(demand, from_transistion, to_stage_id, to_transition_date, author)
       return if from_transistion.blank?
 
-      from_transistion.with_lock { from_transistion.update(last_time_out: to_transition_date) }
+      DemandTransition.transaction do
+        from_transistion.with_lock { from_transistion.update(last_time_out: to_transition_date) }
 
-      stage_to = demand.project.stages.find_by(integration_id: to_stage_id)
-      demand_transition = DemandTransition.where(demand: demand, stage: stage_to, last_time_in: to_transition_date).first_or_initialize
-      demand_transition.team_member = author
+        stage_to = demand.project.stages.find_by(integration_id: to_stage_id)
+        demand_transition = DemandTransition.where(demand: demand, stage: stage_to, last_time_in: to_transition_date).first_or_initialize
+        demand_transition.team_member = author
 
-      demand_transition.save
+        demand_transition.save
 
-      Slack::SlackNotificationService.instance.notify_demand_state_changed(stage_to, demand, demand_transition)
+        Slack::SlackNotificationService.instance.notify_demand_state_changed(stage_to, demand, demand_transition)
+      end
     rescue ArgumentError
       Rails.logger.error('Invalid Slack API - ArgumentError')
       nil
+    rescue ActiveRecord::StaleObjectError
+      Rails.logger.warn('DemandTransition locked')
     end
 
     def read_comments(demand, jira_issue)
@@ -216,15 +223,15 @@ module Jira
     def read_assigned_responsibles(demand, history_date, responsible_name)
       membership = define_membership(history_date, demand.team, responsible_name)
 
-      already_assigned = demand.item_assignments.where(membership: membership, finish_time: nil)
+      ItemAssignment.transaction do
+        item_assignment = demand.item_assignments.where(membership: membership, start_time: history_date).first_or_create
 
-      return if already_assigned.present?
+        item_assignment.update(finish_time: nil)
 
-      item_assignment = demand.item_assignments.where(membership: membership, start_time: history_date).first_or_create
-
-      item_assignment.update(finish_time: nil)
-
-      Slack::SlackNotificationService.instance.notify_item_assigned(item_assignment)
+        Slack::SlackNotificationService.instance.notify_item_assigned(item_assignment)
+      end
+    rescue ActiveRecord::StaleObjectError
+      Rails.logger.warn('ItemAssignment locked')
     end
 
     def read_portfolio_unit(demand, jira_issue)

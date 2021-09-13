@@ -3,8 +3,6 @@
 RSpec.describe Highchart::DemandsChartsAdapter, type: :data_object do
   before { travel_to Time.zone.local(2018, 9, 3, 12, 20, 31) }
 
-  after { travel_back }
-
   let(:start_date) { 6.months.ago }
   let(:end_date) { Time.zone.today }
 

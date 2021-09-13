@@ -157,8 +157,6 @@ RSpec.describe DemandBlock, type: :model do
   describe '#total_blocked_time' do
     before { travel_to Time.zone.local(2019, 1, 10, 10, 0, 0) }
 
-    after { travel_back }
-
     context 'when it was unblocked' do
       let(:demand_block) { Fabricate :demand_block, active: true, block_time: 1.day.ago, unblock_time: Time.zone.now }
 

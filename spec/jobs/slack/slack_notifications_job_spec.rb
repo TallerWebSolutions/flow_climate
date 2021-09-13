@@ -13,8 +13,6 @@ RSpec.describe Slack::SlackNotificationsJob, type: :active_job do
   context 'having projects to collect data' do
     before { travel_to Time.zone.local(2019, 6, 12, 10, 0, 0) }
 
-    after { travel_back }
-
     let(:first_user) { Fabricate :user }
 
     let!(:company) { Fabricate :company, users: [first_user] }

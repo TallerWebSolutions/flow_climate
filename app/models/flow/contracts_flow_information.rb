@@ -115,17 +115,17 @@ module Flow
     def add_value_to_burnup_arrays(date, hour_value, index, demands_delivered_to_date)
       total_effort = demands_delivered_to_date.map(&:total_effort).flatten.sum.to_f
 
-      @financial_ideal << @financial_ideal_slice * (index + 1)
-      @financial_current << total_effort * hour_value if date <= @limit_date
+      @financial_ideal << (@financial_ideal_slice * (index + 1))
+      @financial_current << (total_effort * hour_value) if date <= @limit_date
       @financial_total << @total_financial_value
 
-      @hours_ideal << @hours_ideal_slice * (index + 1)
+      @hours_ideal << (@hours_ideal_slice * (index + 1))
       @hours_current << total_effort if date <= @limit_date
       @hours_total << @total_hours_value
     end
 
     def add_value_to_scope_burnup(date, index, total_demands_delivered_to_date)
-      @scope_ideal << @scope_ideal_slice * (index + 1)
+      @scope_ideal << (@scope_ideal_slice * (index + 1))
       @scope_current << total_demands_delivered_to_date if date <= @limit_date
       @scope_total << @total_scope_value
     end

@@ -19,8 +19,6 @@ RSpec.describe Highchart::HighchartAdapter, type: :data_object do
 
         before { travel_to Time.zone.local(2018, 5, 30, 10, 0, 0) }
 
-        after { travel_back }
-
         it 'do the math and provides the correct information' do
           expect(chart_data.x_axis).to eq [Date.new(2018, 2, 25), Date.new(2018, 3, 4), Date.new(2018, 3, 11), Date.new(2018, 3, 18), Date.new(2018, 3, 25)]
           expect(chart_data.x_axis_index).to eq [1, 2, 3, 4, 5]

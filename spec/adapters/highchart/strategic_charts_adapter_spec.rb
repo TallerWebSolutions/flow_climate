@@ -3,8 +3,6 @@
 RSpec.describe Highchart::StrategicChartsAdapter, type: :service do
   before { travel_to Time.zone.local(2018, 2, 20, 10, 0, 0) }
 
-  after { travel_back }
-
   describe '.active_projects_count_per_month' do
     let(:company) { Fabricate :company }
     let!(:first_financial_information) { Fabricate :financial_information, company: company, finances_date: 3.months.ago, expenses_total: 300 }

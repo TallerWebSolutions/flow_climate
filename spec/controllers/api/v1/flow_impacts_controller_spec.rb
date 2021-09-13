@@ -64,8 +64,6 @@ RSpec.describe Api::V1::FlowImpactsController, type: :controller do
   describe 'GET #opened_impacts' do
     before { travel_to Time.zone.local(2019, 10, 17, 11, 20, 0) }
 
-    after { travel_back }
-
     let(:company) { Fabricate :company }
     let!(:project) { Fabricate :project, company: company }
 

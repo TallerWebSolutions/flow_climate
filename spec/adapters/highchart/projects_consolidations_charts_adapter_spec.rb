@@ -3,8 +3,6 @@
 RSpec.describe Highchart::ProjectsConsolidationsChartsAdapter, type: :service do
   before { travel_to Time.zone.local(2018, 2, 20, 10, 0, 0) }
 
-  after { travel_back }
-
   describe '#lead_time_data_range_evolution' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }

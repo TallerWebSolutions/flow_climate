@@ -121,14 +121,14 @@ module Stats
       population_slice = population[rank.floor, 2]
       lower = population_slice[0]
       upper = population_slice[1]
-      lower + (upper - lower) * (rank - rank.floor)
+      lower + ((upper - lower) * (rank - rank.floor))
     end
 
     def variance(population_array)
       return 0 if population_array.size == 1
 
       mean = population_array.sum / population_array.count.to_f
-      sum = population_array.inject(0) { |accum, i| accum + (i - mean)**2 }
+      sum = population_array.inject(0) { |accum, i| accum + ((i - mean)**2) }
       sum / (population_array.length - 1).to_f
     end
   end

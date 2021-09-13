@@ -113,8 +113,6 @@ RSpec.describe Team, type: :model do
   describe '#consumed_hours_in_month' do
     before { travel_to Time.zone.local(2018, 4, 6, 10, 0, 0) }
 
-    after { travel_back }
-
     let(:team) { Fabricate :team }
 
     context 'having data' do
@@ -129,8 +127,6 @@ RSpec.describe Team, type: :model do
 
   describe '#lead_time' do
     before { travel_to Time.zone.local(2018, 4, 6, 10, 0, 0) }
-
-    after { travel_back }
 
     let(:team) { Fabricate :team }
 

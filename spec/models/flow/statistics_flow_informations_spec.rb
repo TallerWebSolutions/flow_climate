@@ -3,8 +3,6 @@
 RSpec.describe Flow::StatisticsFlowInformations, type: :model do
   before { travel_to Time.zone.local(2019, 5, 7, 18, 35, 0) }
 
-  after { travel_back }
-
   shared_context 'demand data' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }

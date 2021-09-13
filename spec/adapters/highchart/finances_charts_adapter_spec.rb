@@ -4,8 +4,6 @@ RSpec.describe Highchart::FinancesChartsAdapter, type: :data_object do
   context 'having finances informations' do
     before { travel_to Time.zone.local(2018, 9, 3, 12, 20, 31) }
 
-    after { travel_back }
-
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
 

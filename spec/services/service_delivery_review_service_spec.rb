@@ -3,8 +3,6 @@
 RSpec.describe ServiceDeliveryReviewService, type: :service do
   before { travel_to Time.zone.local(2018, 3, 27, 10, 0, 0) }
 
-  after { travel_back }
-
   describe '#associate_demands_data' do
     let(:product) { Fabricate :product }
     let!(:project) { Fabricate :project, products: [product] }
