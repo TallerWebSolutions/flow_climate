@@ -3,8 +3,6 @@
 RSpec.describe TeamService, type: :service do
   before { travel_to Time.zone.local(2018, 6, 20, 10, 0, 0) }
 
-  after { travel_back }
-
   describe '#compute_average_demand_cost_to_team' do
     let(:company) { Fabricate :company }
     let!(:team) { Fabricate :team, company: company }

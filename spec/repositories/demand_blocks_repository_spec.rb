@@ -101,8 +101,6 @@ RSpec.describe DemandBlocksRepository, type: :repository do
   describe '#blocks_duration_per_stage' do
     before { travel_to Time.zone.local(2018, 3, 6, 10, 0, 0) }
 
-    after { travel_back }
-
     let(:company) { Fabricate :company }
 
     let(:team) { Fabricate :team, company: company }
@@ -154,8 +152,6 @@ RSpec.describe DemandBlocksRepository, type: :repository do
 
   describe '#blocks_count_per_stage' do
     before { travel_to Time.zone.local(2018, 3, 6, 10, 0, 0) }
-
-    after { travel_back }
 
     let(:company) { Fabricate :company }
 

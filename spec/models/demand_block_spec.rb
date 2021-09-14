@@ -2,7 +2,7 @@
 
 RSpec.describe DemandBlock, type: :model do
   context 'enums' do
-    it { is_expected.to define_enum_for(:block_type).with_values(coding_needed: 0, specification_needed: 1, waiting_external_supplier: 2, customer_low_urgency: 3, integration_needed: 4, customer_unavailable: 5, other_demand_dependency: 6, external_dependency: 7, other_demand_priority: 8, waiting_for_code_review: 9, budget_approval: 10, waiting_deploy_window: 11, infrastructure: 12) }
+    it { is_expected.to define_enum_for(:block_type).with_values(coding_needed: 0, specification_needed: 1, waiting_external_supplier: 2, customer_low_urgency: 3, integration_needed: 4, customer_unavailable: 5, other_demand_dependency: 6, external_dependency: 7, other_demand_priority: 8, waiting_for_code_review: 9, budget_approval: 10, waiting_deploy_window: 11, infrastructure: 12, scope_changed: 13) }
   end
 
   context 'associations' do
@@ -156,8 +156,6 @@ RSpec.describe DemandBlock, type: :model do
 
   describe '#total_blocked_time' do
     before { travel_to Time.zone.local(2019, 1, 10, 10, 0, 0) }
-
-    after { travel_back }
 
     context 'when it was unblocked' do
       let(:demand_block) { Fabricate :demand_block, active: true, block_time: 1.day.ago, unblock_time: Time.zone.now }

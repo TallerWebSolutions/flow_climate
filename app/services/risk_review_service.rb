@@ -41,7 +41,7 @@ class RiskReviewService
     avg_blocked_time = []
     array_of_dates.each do |date|
       blocks = risk_review.demand_blocks.where('unblock_time <= :limit_date', limit_date: date.end_of_day)
-      avg_blocked_time << blocks.filter_map(&:total_blocked_time).sum / blocks.map(&:demand).uniq.count
+      avg_blocked_time << (blocks.filter_map(&:total_blocked_time).sum / blocks.map(&:demand).uniq.count)
     end
 
     avg_blocked_time

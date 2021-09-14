@@ -76,8 +76,6 @@ RSpec.describe Consolidations::ProjectConsolidation, type: :model do
   describe '#lead_time_feature' do
     before { travel_to Time.zone.local(2019, 10, 17, 10, 0, 0) }
 
-    after { travel_back }
-
     include_context 'demands with lead time'
 
     context 'with data' do
@@ -128,8 +126,6 @@ RSpec.describe Consolidations::ProjectConsolidation, type: :model do
   describe '#lead_time_standard' do
     before { travel_to Time.zone.local(2019, 10, 17, 10, 0, 0) }
 
-    after { travel_back }
-
     include_context 'demands with lead time'
 
     context 'with data' do
@@ -147,8 +143,6 @@ RSpec.describe Consolidations::ProjectConsolidation, type: :model do
 
   describe '#lead_time_fixed_date' do
     before { travel_to Time.zone.local(2019, 10, 17, 10, 0, 0) }
-
-    after { travel_back }
 
     include_context 'demands with lead time'
 

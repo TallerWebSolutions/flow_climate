@@ -33,7 +33,7 @@ module Flow
       demands_in_period = DemandsRepository.instance.known_scope_to_date(@demands_ids, analysed_date) # query
       demands_in_product = DemandsRepository.instance.known_scope_to_date(@demands_ids_in_products, analysed_date).order(:end_date) # query
 
-      @scope_per_period << demands_in_period.count + @uncertain_scope
+      @scope_per_period << (demands_in_period.count + @uncertain_scope)
       build_ideal_burn_segment(distribution_index)
 
       build_flow_data(start_population_date, analysed_date, demands_in_period) if add_data_to_chart == true
@@ -94,7 +94,7 @@ module Flow
     end
 
     def build_ideal_burn_segment(index)
-      @ideal_per_period << (@current_scope.to_f / @period_size) * (index + 1)
+      @ideal_per_period << ((@current_scope.to_f / @period_size) * (index + 1))
     end
 
     def build_throughput_per_period_data_array(demands_delivered_upstream, demands_delivered_downstream)
@@ -115,13 +115,13 @@ module Flow
     end
 
     def build_bugs_data_array(bugs_created_until_date_count, bugs_finished_until_date_count, demands_created_until_date_count)
-      @bugs_opened_data_array << bugs_created_until_date_count - @accumulated_bugs_opened_data_array.last.to_i
-      @bugs_closed_data_array << bugs_finished_until_date_count - @accumulated_bugs_closed_data_array.last.to_i
+      @bugs_opened_data_array << (bugs_created_until_date_count - @accumulated_bugs_opened_data_array.last.to_i)
+      @bugs_closed_data_array << (bugs_finished_until_date_count - @accumulated_bugs_closed_data_array.last.to_i)
 
       @accumulated_bugs_opened_data_array << bugs_created_until_date_count
       @accumulated_bugs_closed_data_array << bugs_finished_until_date_count
 
-      @bugs_share_data_array << (bugs_created_until_date_count.to_f / demands_created_until_date_count) * 100
+      @bugs_share_data_array << ((bugs_created_until_date_count.to_f / demands_created_until_date_count) * 100)
     end
 
     def start_attributes

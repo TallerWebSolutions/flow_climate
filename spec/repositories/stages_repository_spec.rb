@@ -21,8 +21,6 @@ RSpec.describe StagesRepository, type: :repository do
   describe '#qty_hits_by_weekday' do
     before { travel_to Time.zone.local(2018, 5, 29, 18, 25, 0) }
 
-    after { travel_back }
-
     let(:demand) { Fabricate :demand, project: project }
     let(:other_demand) { Fabricate :demand, project: project }
 
@@ -41,8 +39,6 @@ RSpec.describe StagesRepository, type: :repository do
 
   describe '#qty_hits_by_day' do
     before { travel_to Time.zone.local(2018, 5, 29, 18, 25, 0) }
-
-    after { travel_back }
 
     let(:demand) { Fabricate :demand, project: project }
     let(:other_demand) { Fabricate :demand, project: project }
@@ -63,8 +59,6 @@ RSpec.describe StagesRepository, type: :repository do
   describe '#qty_hits_by_hour' do
     before { travel_to Time.zone.local(2018, 5, 29, 18, 25, 0) }
 
-    after { travel_back }
-
     let(:demand) { Fabricate :demand, project: project }
     let(:other_demand) { Fabricate :demand, project: project }
 
@@ -83,8 +77,6 @@ RSpec.describe StagesRepository, type: :repository do
 
   describe '#average_seconds_in_stage_per_month' do
     before { travel_to Time.zone.local(2018, 5, 29, 18, 25, 0) }
-
-    after { travel_back }
 
     let(:demand) { Fabricate :demand, project: project }
     let(:other_demand) { Fabricate :demand, project: project }

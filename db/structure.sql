@@ -1246,7 +1246,8 @@ CREATE TABLE public.demand_transitions (
     updated_at timestamp without time zone NOT NULL,
     discarded_at timestamp without time zone,
     transition_notified boolean DEFAULT false NOT NULL,
-    team_member_id integer
+    team_member_id integer,
+    lock_version integer
 );
 
 
@@ -1534,7 +1535,8 @@ CREATE TABLE public.item_assignments (
     assignment_for_role boolean DEFAULT false,
     membership_id integer NOT NULL,
     pull_interval numeric DEFAULT 0.0,
-    assignment_notified boolean DEFAULT false NOT NULL
+    assignment_notified boolean DEFAULT false NOT NULL,
+    lock_version integer
 );
 
 
@@ -6519,6 +6521,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210430222819'),
 ('20210513135325'),
 ('20210518140127'),
-('20210519163200');
+('20210519163200'),
+('20210913214858');
 
 

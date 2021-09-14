@@ -5,8 +5,6 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
 
   before { travel_to Time.zone.local(2020, 3, 19, 10, 0, 0) }
 
-  after { travel_back }
-
   let(:first_user) { Fabricate :user }
 
   let!(:company) { Fabricate :company, users: [first_user] }

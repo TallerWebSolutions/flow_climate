@@ -105,8 +105,6 @@ RSpec.describe Project, type: :model do
   context 'scopes' do
     before { travel_to Time.zone.local(2019, 10, 24, 10, 0, 0) }
 
-    after { travel_back }
-
     let!(:first_project) { Fabricate :project, status: :waiting, start_date: Time.zone.today, end_date: Time.zone.tomorrow }
     let!(:second_project) { Fabricate :project, status: :waiting, start_date: 3.days.ago, end_date: 2.days.ago }
     let!(:third_project) { Fabricate :project, status: :executing, start_date: 1.month.ago, end_date: 3.days.from_now }
@@ -235,8 +233,6 @@ RSpec.describe Project, type: :model do
 
   describe '#percentage_remaining_days' do
     before { travel_to Time.zone.local(2018, 9, 18, 10, 0, 0) }
-
-    after { travel_back }
 
     context 'total_days is higher than 0' do
       let(:project) { Fabricate :project, start_date: 1.day.ago, end_date: 1.day.from_now }
@@ -480,8 +476,6 @@ RSpec.describe Project, type: :model do
   describe '#avg_hours_per_demand' do
     before { travel_to Date.new(2018, 11, 19) }
 
-    after { travel_back }
-
     context 'having data' do
       include_context 'demands with effort'
       it { expect(project.avg_hours_per_demand).to eq 90.0 }
@@ -578,8 +572,6 @@ RSpec.describe Project, type: :model do
   describe '#total_hours_upstream' do
     before { travel_to Date.new(2018, 11, 19) }
 
-    after { travel_back }
-
     context 'having data' do
       include_context 'demands with effort'
       it { expect(project.total_hours_upstream).to eq 150 }
@@ -594,8 +586,6 @@ RSpec.describe Project, type: :model do
 
   describe '#total_hours_downstream' do
     before { travel_to Date.new(2018, 11, 19) }
-
-    after { travel_back }
 
     context 'having data' do
       include_context 'demands with effort'
@@ -612,8 +602,6 @@ RSpec.describe Project, type: :model do
   describe '#total_hours_consumed' do
     before { travel_to Date.new(2018, 11, 19) }
 
-    after { travel_back }
-
     context 'having data' do
       include_context 'demands with effort'
       it { expect(project.total_hours_consumed.to_f).to eq 270 }
@@ -628,8 +616,6 @@ RSpec.describe Project, type: :model do
 
   describe '#remaining_hours' do
     before { travel_to Date.new(2018, 11, 19) }
-
-    after { travel_back }
 
     context 'having data' do
       include_context 'demands with effort'
@@ -646,8 +632,6 @@ RSpec.describe Project, type: :model do
   describe '#required_hours' do
     before { travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) }
 
-    after { travel_back }
-
     context 'having data' do
       include_context 'demands with effort'
       it { expect(project.required_hours).to eq 2250.0 }
@@ -662,8 +646,6 @@ RSpec.describe Project, type: :model do
 
   describe '#required_hours_per_available_hours' do
     before { travel_to Date.new(2018, 11, 19) }
-
-    after { travel_back }
 
     context 'having data' do
       include_context 'demands with effort'
@@ -693,8 +675,6 @@ RSpec.describe Project, type: :model do
   describe '#total_throughput_for' do
     before { travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) }
 
-    after { travel_back }
-
     context 'having data' do
       include_context 'demands with effort'
       it { expect(project.total_throughput_for(Time.zone.today)).to eq 2 }
@@ -709,8 +689,6 @@ RSpec.describe Project, type: :model do
 
   describe '#backlog_growth_rate' do
     before { travel_to Date.new(2018, 11, 19) }
-
-    after { travel_back }
 
     context 'having data' do
       include_context 'demands with effort'
@@ -727,8 +705,6 @@ RSpec.describe Project, type: :model do
   describe '#money_per_deadline' do
     before { travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) }
 
-    after { travel_back }
-
     context 'having data' do
       include_context 'demands with effort'
       it { expect(project.money_per_deadline.to_f).to be_within(0.01).of(10_172.04) }
@@ -744,8 +720,6 @@ RSpec.describe Project, type: :model do
   describe '#backlog_growth_throughput_rate' do
     before { travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) }
 
-    after { travel_back }
-
     context 'having data' do
       include_context 'demands with effort'
       it { expect(project.backlog_growth_throughput_rate).to eq 0.5 }
@@ -760,8 +734,6 @@ RSpec.describe Project, type: :model do
 
   describe '#current_cost' do
     before { travel_to Time.zone.local(2018, 3, 6, 10, 0, 0) }
-
-    after { travel_back }
 
     context 'having cost' do
       include_context 'demands with effort'
@@ -949,8 +921,6 @@ RSpec.describe Project, type: :model do
   describe '#average_block_duration' do
     before { travel_to Time.zone.local(2018, 5, 21, 10, 0, 0) }
 
-    after { travel_back }
-
     let(:project) { Fabricate :project }
 
     context 'having blocks' do
@@ -977,8 +947,6 @@ RSpec.describe Project, type: :model do
   describe '#leadtime_for_class_of_service' do
     before { travel_to Time.zone.local(2018, 5, 21, 10, 0, 0) }
 
-    after { travel_back }
-
     let(:project) { Fabricate :project }
 
     context 'having demands' do
@@ -1000,8 +968,6 @@ RSpec.describe Project, type: :model do
 
   describe '#general_leadtime' do
     before { travel_to Time.zone.local(2018, 5, 21, 10, 0, 0) }
-
-    after { travel_back }
 
     let(:project) { Fabricate :project }
 

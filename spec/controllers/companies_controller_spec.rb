@@ -3,8 +3,6 @@
 RSpec.describe CompaniesController, type: :controller do
   before { travel_to Time.zone.local(2018, 9, 3, 12, 20, 31) }
 
-  after { travel_back }
-
   context 'unauthenticated' do
     describe 'GET #index' do
       before { get :index }

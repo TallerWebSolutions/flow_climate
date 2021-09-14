@@ -108,8 +108,6 @@ RSpec.describe DemandsRepository, type: :repository do
   describe '#delivered_hours_in_month_for_projects' do
     before { travel_to Time.zone.local(2018, 4, 5, 10, 0, 0) }
 
-    after { travel_back }
-
     let(:first_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
     let(:second_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
     let(:third_project) { Fabricate :project, start_date: 2.months.ago, end_date: 2.months.from_now }
@@ -287,8 +285,6 @@ RSpec.describe DemandsRepository, type: :repository do
   describe '#demand_type_query' do
     before { travel_to Time.zone.local(2018, 4, 5, 10, 0, 0) }
 
-    after { travel_back }
-
     include_context 'demand data for filters'
 
     it { expect(described_class.instance.demand_type_query(Demand.all, '')).to eq Demand.all }
@@ -298,8 +294,6 @@ RSpec.describe DemandsRepository, type: :repository do
 
   describe '#class_of_service_query' do
     before { travel_to Time.zone.local(2018, 4, 5, 10, 0, 0) }
-
-    after { travel_back }
 
     include_context 'demand data for filters'
 
@@ -338,8 +332,6 @@ RSpec.describe DemandsRepository, type: :repository do
   describe '#lead_time_zone_count' do
     before { travel_to Time.zone.local(2018, 4, 5, 10, 0, 0) }
 
-    after { travel_back }
-
     include_context 'demand data for filters'
 
     it { expect(described_class.instance.lead_time_zone_count(Demand.all, 86_400.0, nil)).to eq 2 }
@@ -349,8 +341,6 @@ RSpec.describe DemandsRepository, type: :repository do
 
   describe '#wip_count' do
     before { travel_to Time.zone.local(2018, 4, 5, 10, 0, 0) }
-
-    after { travel_back }
 
     include_context 'demand data for filters'
 

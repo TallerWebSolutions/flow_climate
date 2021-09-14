@@ -12,8 +12,6 @@ RSpec.describe ChartsController, type: :controller do
   context 'authenticated' do
     before { travel_to Time.zone.local(2018, 4, 6, 10, 0, 0) }
 
-    after { travel_back }
-
     let(:user) { Fabricate :user }
     before { sign_in user }
 

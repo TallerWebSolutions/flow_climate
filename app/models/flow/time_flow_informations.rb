@@ -36,8 +36,8 @@ module Flow
       queue_time = demands_finished_until_date.sum(&:total_queue_time).to_f / 1.hour
       touch_time = demands_finished_until_date.sum(&:total_touch_time).to_f / 1.hour
 
-      @queue_time << queue_time - @queue_time.sum
-      @touch_time << touch_time - @touch_time.sum
+      @queue_time << (queue_time - @queue_time.sum)
+      @touch_time << (touch_time - @touch_time.sum)
 
       build_average_flow_times
 
@@ -45,16 +45,16 @@ module Flow
     end
 
     def build_average_flow_times
-      @average_queue_time << @queue_time.compact.sum / @demands.kept.count
-      @average_touch_time << @touch_time.compact.sum / @demands.kept.count
+      @average_queue_time << (@queue_time.compact.sum / @demands.kept.count)
+      @average_touch_time << (@touch_time.compact.sum / @demands.kept.count)
     end
 
     def build_hours_data_array(demands_delivered)
       hours_delivered_in_upstream = demands_delivered.sum(&:effort_upstream).to_f
       hours_delivery_in_downstream = demands_delivered.sum(&:effort_downstream).to_f
 
-      @hours_delivered_upstream << hours_delivered_in_upstream - @hours_delivered_upstream.sum
-      @hours_delivered_downstream << hours_delivery_in_downstream - @hours_delivered_downstream.sum
+      @hours_delivered_upstream << (hours_delivered_in_upstream - @hours_delivered_upstream.sum)
+      @hours_delivered_downstream << (hours_delivery_in_downstream - @hours_delivered_downstream.sum)
 
       @hours_per_demand << ((hours_delivered_in_upstream + hours_delivery_in_downstream) / demands_delivered.count).to_f
     end

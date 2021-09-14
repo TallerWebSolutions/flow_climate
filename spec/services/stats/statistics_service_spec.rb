@@ -3,8 +3,6 @@
 RSpec.describe Stats::StatisticsService, type: :service do
   before { travel_to Time.zone.local(2018, 4, 12, 10, 0, 0) }
 
-  after { travel_back }
-
   describe '#percentile' do
     let(:empty_population) { [] }
 

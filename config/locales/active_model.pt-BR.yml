@@ -421,6 +421,7 @@ pt-BR:
             budget_approval: Aprovação de Orçamento
             waiting_deploy_window: Aguardando Janela de Deploy
             infrastructure: Infraestrutura
+            scope_changed: Mudança de Escopo
       project_change_deadline_history:
         project: Projeto
         user: Usuário

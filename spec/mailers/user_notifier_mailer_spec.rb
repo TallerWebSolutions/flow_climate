@@ -3,8 +3,6 @@
 RSpec.describe UserNotifierMailer, type: :mailer do
   before { travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) }
 
-  after { travel_back }
-
   shared_context 'projects to alerts notifications tests' do
     let!(:company) { Fabricate :company, users: [first_user, second_user, third_user] }
     let(:customer) { Fabricate :customer, company: company }

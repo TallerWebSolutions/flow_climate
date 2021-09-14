@@ -4,8 +4,6 @@ RSpec.describe DemandService, type: :service do
   describe '#lead_time_breakdown' do
     before { travel_to Time.zone.local(2019, 9, 19, 10, 0, 0) }
 
-    after { travel_back }
-
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
     let(:product) { Fabricate :product, customer: customer }
