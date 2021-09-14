@@ -224,6 +224,10 @@ module Jira
       membership = define_membership(history_date, demand.team, responsible_name)
 
       ItemAssignment.transaction do
+        already_assigned = demand.item_assignments.where(membership: membership, finish_time: nil)
+
+        return if already_assigned.present?
+
         item_assignment = demand.item_assignments.where(membership: membership, start_time: history_date).first_or_create
 
         item_assignment.update(finish_time: nil)
