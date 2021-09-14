@@ -83,7 +83,7 @@ module Consolidations
     end
 
     def increased_team_lead_time?
-      return false if last_consolidation.blank?
+      return false if last_consolidation.blank? || last_consolidation.team_lead_time.blank? || team_lead_time.blank?
 
       last_consolidation.team_lead_time < team_lead_time
     end

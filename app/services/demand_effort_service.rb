@@ -44,7 +44,7 @@ class DemandEffortService
   def compute_and_save_effort(demand_effort, end_date, start_date, main_assignment, transition)
     stage_percentage = transition.stage_percentage_to_project
     pairing_percentage = transition.stage_pairing_percentage_to_project
-    pairing_percentage = 1 if main_assignment
+
     management_percentage = transition.stage_management_percentage_to_project
 
     demand_effort_in_transition = if (end_date - start_date) > 20.minutes
@@ -59,9 +59,10 @@ class DemandEffortService
     total_blocked_in_transition_time = transition.time_blocked_in_transition
     work_time_blocked_in_transition = transition.work_time_blocked_in_transition
 
-    blocked_effort = work_time_blocked_in_transition * (total_blocked_in_transition_time.to_f / total_transition_time)
+    blocked_effort = 0
+    blocked_effort = work_time_blocked_in_transition * (total_blocked_in_transition_time.to_f / total_transition_time) if demand_effort_in_transition.positive?
 
-    effort_total = demand_effort_in_transition - blocked_effort
+    effort_total = demand_effort_in_transition - (blocked_effort * (1 + management_percentage) * stage_percentage)
 
     demand_effort.update(effort_value: effort_total, total_blocked: blocked_effort, stage_percentage: stage_percentage,
                          management_percentage: management_percentage, pairing_percentage: pairing_percentage, main_effort_in_transition: main_assignment,

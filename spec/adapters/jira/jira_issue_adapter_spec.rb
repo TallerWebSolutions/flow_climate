@@ -244,7 +244,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
           let(:demand) { Fabricate :demand, company: company, team: team, external_id: 'CRE-726' }
           let!(:team_member) { Fabricate :team_member, company: company, jira_account_user_email: 'foo', jira_account_id: 'xpto', name: 'team_member' }
           let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
-          
+
           let(:jira_issue_changelog) { file_fixture('issue_changelog_paginated_page_one.json').read }
 
           it 'registers the error in the logger and does not halt the demana' do
