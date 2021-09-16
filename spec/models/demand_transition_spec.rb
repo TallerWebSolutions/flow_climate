@@ -265,13 +265,13 @@ RSpec.describe DemandTransition, type: :model do
     context 'when there is last_time_out' do
       let(:demand_transition) { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: Time.zone.parse('2018-03-15 12:00:00'), last_time_out: Time.zone.parse('2018-03-19 12:00:00') }
 
-      it { expect(demand_transition.working_time_in_transition).to eq 12 }
+      it { expect(demand_transition.working_time_in_transition).to eq 8 }
     end
 
     context 'when there is no last_time_out' do
       let(:demand_transition) { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: Time.zone.parse('2018-03-13 12:00:00'), last_time_out: nil }
 
-      it { expect(demand_transition.working_time_in_transition).to eq 30 }
+      it { expect(demand_transition.working_time_in_transition).to eq 18 }
     end
   end
 

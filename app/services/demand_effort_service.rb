@@ -16,16 +16,16 @@ class DemandEffortService
       top_effort_assignment = assignments_in_dates.max_by { |assign_in_date| assign_in_date.working_hours_until(transition.last_time_in, transition.last_time_out) }
 
       assignments_in_dates.each do |assignment|
-        start_date = [assignment.start_time, transition.last_time_in].compact.max
-        end_date = [assignment.finish_time, transition.last_time_out, Time.zone.now].compact.min
-
         demand_effort = DemandEffort.where(demand_transition: transition, item_assignment: assignment, demand: transition.demand).first_or_initialize
 
         next unless demand_effort.automatic_update?
 
-        main_assignment = (assignment == top_effort_assignment) || !top_effort_assignment.pairing_assignment?(assignment)
+        start_day = assignment.start_time.to_date
+        end_day = assignment.finish_time.to_date
 
-        compute_and_save_effort(demand_effort, end_date, start_date, main_assignment, transition)
+        (start_day..end_day).map do |day_to_effort|
+          compute_and_save_effort(demand_effort, day_to_effort, assignment, top_effort_assignment, transition)
+        end
       end
     end
 
@@ -41,23 +41,43 @@ class DemandEffortService
 
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
-  def compute_and_save_effort(demand_effort, end_date, start_date, main_assignment, transition)
+  def compute_and_save_effort(demand_effort, day_to_effort, assignment, top_effort_assignment, transition)
+    start_time = [assignment.start_time, transition.last_time_in].compact.max
+    start_date = [start_time, day_to_effort.beginning_of_day].max
+
+    end_time = [assignment.finish_time, transition.last_time_out, Time.zone.now].compact.min
+    end_date = [end_time, day_to_effort.end_of_day].min
+
+    hours_in_assignment = ((end_time - start_time) / 1.hour).to_i
+
+    previous_efforts_to_day = assignment.demand.demand_efforts.joins(item_assignment: :membership).where(item_assignment: { membership: assignment.membership }).for_day(day_to_effort)
+    previous_efforts_to_day -= [demand_effort]
+
+    efforts_value_to_day = previous_efforts_to_day.sum(&:effort_value)
+
+    demand_effort_in_transition = if hours_in_assignment > 6
+                                    TimeService.instance.compute_working_hours_for_dates(start_date, end_date)
+                                  elsif efforts_value_to_day >= 6
+                                    0
+                                  else
+                                    hours_in_assignment
+                                  end
+
+    main_assignment = (assignment == top_effort_assignment) || !top_effort_assignment.pairing_assignment?(assignment)
+
     stage_percentage = transition.stage_percentage_to_project
     pairing_percentage = transition.stage_pairing_percentage_to_project
 
     management_percentage = transition.stage_management_percentage_to_project
 
-    demand_effort_in_transition = if (end_date - start_date) > 20.minutes
-                                    (TimeService.instance.compute_working_hours_for_dates(start_date, end_date) * (1 + management_percentage) * stage_percentage)
-                                  else
-                                    0
-                                  end
+    demand_effort_in_transition = demand_effort_in_transition * (1 + management_percentage) * stage_percentage
 
     demand_effort_in_transition *= pairing_percentage unless main_assignment
 
     total_transition_time = transition.total_seconds_in_transition
     total_blocked_in_transition_time = transition.time_blocked_in_transition
     work_time_blocked_in_transition = transition.work_time_blocked_in_transition
+    work_time_blocked_in_transition = [work_time_blocked_in_transition, demand_effort_in_transition].min
 
     blocked_effort = 0
     blocked_effort = work_time_blocked_in_transition * (total_blocked_in_transition_time.to_f / total_transition_time) if demand_effort_in_transition.positive?

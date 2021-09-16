@@ -75,7 +75,7 @@ class TimeService
     initial_time = start_time
     total_hours = 0
     while initial_time < end_time
-      total_hours += 1 unless initial_time.saturday? || initial_time.sunday?
+      total_hours += 1 unless initial_time.saturday? || initial_time.sunday? || out_of_work_time?(initial_time)
       initial_time += 1.hour
     end
     return total_hours if total_hours <= 6
@@ -93,5 +93,9 @@ class TimeService
     hours_to_compute = 6 if hours_to_compute > 6
 
     (qtd_completed_days * 6) + hours_to_compute
+  end
+
+  def out_of_work_time?(initial_time)
+    initial_time.hour >= 21 || initial_time.hour <= 7
   end
 end

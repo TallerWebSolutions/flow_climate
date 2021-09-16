@@ -929,7 +929,7 @@ RSpec.describe Project, type: :model do
       let!(:demand_block) { Fabricate :demand_block, demand: demand, block_time: 1.day.ago, unblock_time: 1.day.from_now }
       let!(:other_demand_block) { Fabricate :demand_block, demand: demand, block_time: 1.day.ago, unblock_time: 2.days.from_now }
 
-      it { expect(project.average_block_duration.to_f).to eq 15 }
+      it { expect(project.average_block_duration.to_f).to eq 8 }
     end
 
     context 'having no demands' do
