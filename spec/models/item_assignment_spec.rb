@@ -88,8 +88,8 @@ RSpec.describe ItemAssignment, type: :model do
     let(:item_assignment) { Fabricate :item_assignment, start_time: 2.days.ago }
     let(:other_item_assignment) { Fabricate :item_assignment, start_time: 3.days.ago, finish_time: 1.day.ago }
 
-    it { expect(item_assignment.working_hours_until).to eq 12 }
-    it { expect(other_item_assignment.working_hours_until).to eq 6 }
+    it { expect(item_assignment.working_hours_until).to eq 6 }
+    it { expect(other_item_assignment.working_hours_until).to eq 2 }
   end
 
   describe '#stages_during_assignment' do
@@ -159,7 +159,7 @@ RSpec.describe ItemAssignment, type: :model do
           second_assignment = Fabricate :item_assignment, membership: second_membership, demand: second_demand, start_time: 10.days.ago, finish_time: 5.days.ago
 
           first_assignment.save
-          expect(first_assignment.reload.item_assignment_effort).to eq 30
+          expect(first_assignment.reload.item_assignment_effort).to eq 18
           expect(first_assignment.reload.assignment_for_role).to be true
 
           second_assignment.save

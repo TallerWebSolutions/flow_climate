@@ -50,6 +50,8 @@ class DemandEffort < ApplicationRecord
   scope :designer_efforts, -> { joins(item_assignment: :membership).where(memberships: { member_role: :designer }) }
   scope :manager_efforts, -> { joins(item_assignment: :membership).where(memberships: { member_role: :manager }) }
 
+  scope :for_day, ->(day) { where('start_time_to_computation BETWEEN :bottom_limit AND :upper_limit', bottom_limit: day.beginning_of_day, upper_limit: day.end_of_day) }
+
   def who
     item_assignment.team_member_name
   end

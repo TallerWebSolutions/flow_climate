@@ -72,5 +72,9 @@ RSpec.describe DemandEffort, type: :model do
     describe '.developer_efforts' do
       it { expect(described_class.developer_efforts).to match_array [upstream_demand_effort, other_upstream_demand_effort] }
     end
+
+    describe '.for_day' do
+      it { expect(described_class.for_day(Date.new(2021, 5, 24))).to match_array described_class.all }
+    end
   end
 end
