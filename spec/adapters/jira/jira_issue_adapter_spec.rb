@@ -345,9 +345,44 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
         end
 
         context 'demand transition throws StaleObjectError' do
-          it 'registers the error in the logger and does not halt the demana' do
+          it 'registers the error in the logger and does not halt the demand' do
             allow_any_instance_of(DemandTransition).to receive(:save).and_raise(ActiveRecord::StaleObjectError)
-            expect(Rails.logger).to(receive(:warn)).at_least(10).times
+            expect(Rails.logger).to(receive(:warn)).at_least(:once)
+
+            described_class.instance.process_jira_issue_changelog(jira_account, JSON.parse(jira_issue_changelog), demand, creator)
+          end
+        end
+
+        context 'demand transition throws StaleObjectError in the transition save' do
+          it 'registers the error in the logger and does not halt the demand when updating transition' do
+            call_count = 0
+            allow_any_instance_of(DemandTransition).to receive(:save) do
+              call_count += 1
+              call_count == 2 ? raise(ActiveRecord::StaleObjectError) : DemandTransition.new
+            end
+            expect(Rails.logger).to(receive(:warn)).at_least(:once)
+
+            described_class.instance.process_jira_issue_changelog(jira_account, JSON.parse(jira_issue_changelog), demand, creator)
+          end
+
+          it 'registers the error in the logger and does not halt the demand to from transition' do
+            call_count = 0
+            allow_any_instance_of(DemandTransition).to receive(:save) do
+              call_count += 1
+              call_count == 3 ? raise(ActiveRecord::StaleObjectError) : DemandTransition.new
+            end
+            expect(Rails.logger).to(receive(:warn)).at_least(:once)
+
+            described_class.instance.process_jira_issue_changelog(jira_account, JSON.parse(jira_issue_changelog), demand, creator)
+          end
+
+          it 'registers the error in the logger and does not halt the demand when saving to transition' do
+            call_count = 0
+            allow_any_instance_of(DemandTransition).to receive(:save) do
+              call_count += 1
+              call_count == 4 ? raise(ActiveRecord::StaleObjectError) : DemandTransition.new
+            end
+            expect(Rails.logger).to(receive(:warn)).at_least(:once)
 
             described_class.instance.process_jira_issue_changelog(jira_account, JSON.parse(jira_issue_changelog), demand, creator)
           end

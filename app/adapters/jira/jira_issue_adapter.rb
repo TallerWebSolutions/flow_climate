@@ -106,6 +106,9 @@ module Jira
     rescue ActiveRecord::RecordNotUnique
       Jira::JiraApiError.create(demand: demand)
       nil
+    rescue ActiveRecord::StaleObjectError
+      Rails.logger.warn('DemandTransition locked')
+      nil
     end
 
     def read_transition_history(demand, issue_changelog)
@@ -128,9 +131,6 @@ module Jira
     def create_from_transition(demand, from_stage_id, transition_date)
       stage_from = demand.project.stages.find_by(integration_id: from_stage_id)
       DemandTransition.transaction { DemandTransition.where(demand: demand, stage: stage_from, last_time_in: transition_date).first_or_create }
-    rescue ActiveRecord::StaleObjectError
-      Rails.logger.warn('DemandTransition locked')
-      nil
     end
 
     def create_to_transition(demand, from_transistion, to_stage_id, to_transition_date, author)
@@ -150,8 +150,6 @@ module Jira
     rescue ArgumentError
       Rails.logger.error('Invalid Slack API - ArgumentError')
       nil
-    rescue ActiveRecord::StaleObjectError
-      Rails.logger.warn('DemandTransition locked')
     end
 
     def read_comments(demand, jira_issue)
