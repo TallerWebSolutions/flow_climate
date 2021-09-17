@@ -6,6 +6,7 @@ class DemandEffortService
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/PerceivedComplexity
   def build_efforts_to_demand(demand)
     demand.demand_transitions.each do |transition|
       next unless transition.stage_compute_effort_to_project?
@@ -21,7 +22,7 @@ class DemandEffortService
         next unless demand_effort.automatic_update?
 
         start_day = assignment.start_time.to_date
-        end_day = assignment.finish_time.to_date
+        end_day = (assignment.finish_time || Time.zone.now).to_date
 
         (start_day..end_day).map do |day_to_effort|
           compute_and_save_effort(demand_effort, day_to_effort, assignment, top_effort_assignment, transition)
@@ -36,6 +37,7 @@ class DemandEffortService
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength
   # rubocop:enable Metrics/CyclomaticComplexity
+  # rubocop:enable Metrics/PerceivedComplexity
 
   private
 
