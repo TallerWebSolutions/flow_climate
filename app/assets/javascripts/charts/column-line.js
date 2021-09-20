@@ -23,12 +23,6 @@ function buildColumnLineChart(columnDiv) {
                 width: 1,
                 color: '#808080'
             }],
-            stackLabels: {
-                enabled: true,
-                formatter: function() {
-                    return Highcharts.numberFormat(this.total, columnDiv.data('decimals'), ',');
-                }
-            },
             opposite: true
         }, {
             title: {
@@ -40,7 +34,10 @@ function buildColumnLineChart(columnDiv) {
                 color: '#808080'
             }],
             stackLabels: {
-                enabled: true
+                enabled: true,
+                formatter: function () {
+                    return Highcharts.numberFormat(this.total, columnDiv.data('decimals'), ',', '.');
+                }
             }
         }],
         tooltip: {
@@ -61,8 +58,9 @@ function buildColumnLineChart(columnDiv) {
                 stacking: columnDiv.data('stacking'),
                 dataLabels: {
                     enabled: columnDiv.data('stacking') !== "normal",
-                    color: 'black',
                     formatter: function () {
+                        console.log('decimals');
+                        console.log(columnDiv.data('decimals'));
                         return Highcharts.numberFormat(this.y, columnDiv.data('decimals'), ',', '.');
                     }
                 }
@@ -74,6 +72,7 @@ function buildColumnLineChart(columnDiv) {
                         let firstPoint = this.series.data[0];
                         let lastPoint = this.series.data[this.series.data.length - 1];
 
+                        console.log('decimals');
                         if ((this.point.category === firstPoint.category && this.point.y === firstPoint.y) || (this.point.category === lastPoint.category  && this.point.y === lastPoint.y)) {
                             return `<span style='color: ${this.color}'>${columnDiv.data('prefix') + Highcharts.numberFormat(this.y, columnDiv.data("decimals"), ",", ".") + " " + columnDiv.data('datalabelsuffix')}</span>`;
                         }

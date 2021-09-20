@@ -47,7 +47,7 @@ class ContractsController < AuthenticatedController
   end
 
   def show
-    @contracts_flow_information = Flow::ContractsFlowInformation.new(@contract, 'month')
+    @contracts_flow_information = Flow::ContractsFlowInformation.new(@contract)
   end
 
   def update_consolidations

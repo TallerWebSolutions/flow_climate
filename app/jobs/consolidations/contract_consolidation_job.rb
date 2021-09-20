@@ -12,7 +12,7 @@ module Consolidations
       while start_date <= end_date
         end_of_month = start_date.end_of_month
 
-        demands = contract.demands.where('demands.created_date <= :analysed_date', analysed_date: end_of_month)
+        demands = contract.demands.opened_before_date(end_of_month)
 
         if demands.present?
           demands_chart_adapter = Highchart::DemandsChartsAdapter.new(demands, contract_start, end_of_month, 'week')
