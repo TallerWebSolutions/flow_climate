@@ -26,7 +26,8 @@ RSpec.describe DemandEffort, type: :model do
 
       let!(:demand_effort) { Fabricate :demand_effort, demand: demand, item_assignment: item_assignment, demand_transition: demand_transition }
 
-      it { expect(Fabricate.build(:demand_effort, demand: demand, item_assignment: item_assignment, demand_transition: demand_transition)).not_to be_valid }
+      it { expect(Fabricate.build(:demand_effort, demand: demand, item_assignment: item_assignment, demand_transition: demand_transition, start_time_to_computation: demand_effort.start_time_to_computation)).not_to be_valid }
+      it { expect(Fabricate.build(:demand_effort, demand: demand, item_assignment: item_assignment, demand_transition: demand_transition)).to be_valid }
       it { expect(Fabricate.build(:demand_effort, demand: demand, demand_transition: demand_transition)).to be_valid }
       it { expect(Fabricate.build(:demand_effort, demand: demand, item_assignment: item_assignment)).to be_valid }
       it { expect(Fabricate.build(:demand_effort)).to be_valid }

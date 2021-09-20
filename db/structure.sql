@@ -4348,7 +4348,7 @@ CREATE UNIQUE INDEX idx_customers_devise_customer_unique ON public.customers_dev
 -- Name: idx_demand_efforts_unique; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX idx_demand_efforts_unique ON public.demand_efforts USING btree (item_assignment_id, demand_transition_id);
+CREATE UNIQUE INDEX idx_demand_efforts_unique ON public.demand_efforts USING btree (item_assignment_id, demand_transition_id, start_time_to_computation);
 
 
 --
@@ -6522,6 +6522,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210513135325'),
 ('20210518140127'),
 ('20210519163200'),
-('20210913214858');
+('20210913214858'),
+('20210920220915');
 
 

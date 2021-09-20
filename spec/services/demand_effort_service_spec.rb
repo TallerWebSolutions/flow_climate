@@ -158,8 +158,8 @@ RSpec.describe DemandEffortService, type: :service do
         allow(Time.zone).to(receive(:now)).and_return(Time.zone.local(2021, 5, 25, 10, 58, 0))
         described_class.instance.build_efforts_to_demand(demand)
 
-        expect(DemandEffort.all.count).to eq 8
-        expect(DemandEffort.all.sum(&:effort_value).to_f).to eq 10.2
+        expect(DemandEffort.all.count).to eq 10
+        expect(DemandEffort.all.sum(&:effort_value).to_f).to eq 20.4
       end
     end
 

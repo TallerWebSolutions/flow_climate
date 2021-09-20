@@ -4,9 +4,7 @@ class DemandEffortService
   include Singleton
 
   # rubocop:disable Metrics/AbcSize
-  # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/CyclomaticComplexity
-  # rubocop:disable Metrics/PerceivedComplexity
   def build_efforts_to_demand(demand)
     demand.demand_transitions.each do |transition|
       next unless transition.stage_compute_effort_to_project?
@@ -17,15 +15,11 @@ class DemandEffortService
       top_effort_assignment = assignments_in_dates.max_by { |assign_in_date| assign_in_date.working_hours_until(transition.last_time_in, transition.last_time_out) }
 
       assignments_in_dates.each do |assignment|
-        demand_effort = DemandEffort.where(demand_transition: transition, item_assignment: assignment, demand: transition.demand).first_or_initialize
-
-        next unless demand_effort.automatic_update?
-
         start_day = assignment.start_time.to_date
         end_day = (assignment.finish_time || Time.zone.now).to_date
 
         (start_day..end_day).map do |day_to_effort|
-          compute_and_save_effort(demand_effort, day_to_effort, assignment, top_effort_assignment, transition)
+          compute_and_save_effort(day_to_effort, assignment, top_effort_assignment, transition)
         end
       end
     end
@@ -35,20 +29,23 @@ class DemandEffortService
     update_demand_effort_caches(demand)
   end
   # rubocop:enable Metrics/AbcSize
-  # rubocop:enable Metrics/MethodLength
   # rubocop:enable Metrics/CyclomaticComplexity
-  # rubocop:enable Metrics/PerceivedComplexity
 
   private
 
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
-  def compute_and_save_effort(demand_effort, day_to_effort, assignment, top_effort_assignment, transition)
+  # rubocop:disable Metrics/PerceivedComplexity
+  # rubocop:disable Metrics/CyclomaticComplexity
+  def compute_and_save_effort(day_to_effort, assignment, top_effort_assignment, transition)
     start_time = [assignment.start_time, transition.last_time_in].compact.max
     start_date = [start_time, day_to_effort.beginning_of_day].max
 
     end_time = [assignment.finish_time, transition.last_time_out, Time.zone.now].compact.min
     end_date = [end_time, day_to_effort.end_of_day].min
+
+    demand_effort = DemandEffort.where(demand_transition: transition, item_assignment: assignment, demand: transition.demand, start_time_to_computation: start_date).first_or_initialize
+    return unless demand_effort.automatic_update?
 
     hours_in_assignment = ((end_time - start_time) / 1.hour).to_i
 
@@ -92,6 +89,8 @@ class DemandEffortService
   end
   # rubocop:enable Metrics/MethodLength
   # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/PerceivedComplexity
+  # rubocop:enable Metrics/CyclomaticComplexity
 
   def update_demand_effort_caches(demand)
     effort_upstream = demand.demand_efforts.upstream_efforts.sum(&:effort_value)
