@@ -9,15 +9,15 @@ module Flow
                 :quality_info, :quality_info_month, :lead_time_info, :throughput_info, :hours_blocked_per_deliver_info,
                 :effort_info, :effort_info_month
 
-    def initialize(contract, data_interval = 'month')
+    def initialize(contract)
       @contract = contract
       super(contract.demands)
 
       @financial_burnup = {}
 
-      build_dates_array(data_interval)
-      build_dates_limit_now_array(data_interval)
-      build_limit_date(data_interval)
+      build_dates_array
+      build_dates_limit_now_array
+      build_limit_date
       build_arrays
 
       build_hours_finances_constants
@@ -194,35 +194,21 @@ module Flow
       @effort_hours_info_month << demands_delivered_in_month.map(&:total_effort).flatten.compact.sum.to_f
     end
 
-    def build_dates_array(data_interval)
-      @dates_array = dates_interval(data_interval, @contract.start_date, @contract.end_date)
+    def build_dates_array
+      @dates_array = dates_interval(@contract.start_date, @contract.end_date)
     end
 
-    def build_dates_limit_now_array(data_interval)
+    def build_dates_limit_now_array
       end_date = [@contract.end_date, Time.zone.now.end_of_month].min
-      @dates_limit_now_array = dates_interval(data_interval, @contract.start_date, end_date)
+      @dates_limit_now_array = dates_interval(@contract.start_date, end_date)
     end
 
-    def dates_interval(data_interval, start_date, end_date)
-      case data_interval
-      when 'day'
-        TimeService.instance.days_between_of(start_date, end_date)
-      when 'week'
-        TimeService.instance.weeks_between_of(start_date, end_date)
-      else
-        TimeService.instance.months_between_of(start_date, end_date)
-      end
+    def dates_interval(start_date, end_date)
+      TimeService.instance.months_between_of(start_date, end_date)
     end
 
-    def build_limit_date(data_interval)
-      @limit_date = case data_interval
-                    when 'day'
-                      Time.zone.today.end_of_day
-                    when 'week'
-                      Time.zone.today.end_of_week
-                    else
-                      Time.zone.today.end_of_month
-                    end
+    def build_limit_date
+      @limit_date = Time.zone.today.end_of_month
     end
 
     def build_arrays
