@@ -41,7 +41,7 @@ class DemandEffort < ApplicationRecord
   validates :item_assignment, :demand_transition, :demand, :effort_value, :start_time_to_computation, :finish_time_to_computation,
             :management_percentage, :pairing_percentage, :stage_percentage, :total_blocked, presence: true
 
-  validates :item_assignment, uniqueness: { scope: :demand_transition }
+  validates :item_assignment, uniqueness: { scope: %i[demand_transition start_time_to_computation] }
 
   scope :upstream_efforts, -> { joins(demand_transition: :stage).where(stages: { stage_stream: :upstream }) }
   scope :downstream_efforts, -> { joins(demand_transition: :stage).where(stages: { stage_stream: :downstream }) }
