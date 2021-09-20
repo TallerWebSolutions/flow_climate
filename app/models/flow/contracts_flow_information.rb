@@ -105,11 +105,11 @@ module Flow
     end
 
     def demands_delivered_in_month(date)
-      @demands.not_discarded_until(date.end_of_month).finished_until_date(date.end_of_month).finished_after_date(date.beginning_of_month)
+      @demands.not_discarded_until(date.end_of_month).to_end_dates(date.beginning_of_month, date.end_of_month)
     end
 
     def demands_delivered_to_date(date)
-      @demands.not_discarded_until(date).finished_until_date(date).finished_after_date(@contract.start_date)
+      @demands.not_discarded_until(date.end_of_month).to_end_dates(@contract.start_date.beginning_of_month, date.end_of_month)
     end
 
     def add_value_to_burnup_arrays(date, hour_value, index, demands_delivered_to_date)

@@ -73,7 +73,7 @@ RSpec.describe Flow::ContractsFlowInformation do
 
             contract_flow = described_class.new(contract, 'day')
 
-            expect(contract_flow.build_financial_burnup).to eq([{ name: I18n.t('charts.burnup.scope'), data: [100_000, 100_000, 100_000, 100_000, 100_000] }, { name: I18n.t('charts.burnup.current'), data: [0.0, 5000.0, 5000.0, 17_500.0, 23_500.0] }, { name: I18n.t('charts.burnup.ideal'), data: [20_000, 40_000, 60_000, 80_000, 100_000] }])
+            expect(contract_flow.build_financial_burnup).to eq([{ name: I18n.t('charts.burnup.scope'), data: [100_000, 100_000, 100_000, 100_000, 100_000] }, { name: I18n.t('charts.burnup.current'), data: [5000.0, 5000.0, 17_500.0, 23_500.0, 23_500.0] }, { name: I18n.t('charts.burnup.ideal'), data: [20_000, 40_000, 60_000, 80_000, 100_000] }])
           end
         end
       end
