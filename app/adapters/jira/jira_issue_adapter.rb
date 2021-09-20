@@ -203,6 +203,8 @@ module Jira
 
       to_array.each { |to_responsible| read_assigned_responsibles(demand, history_hash['created'].to_datetime, to_responsible.strip) } if to_array.present?
       unassigment_history.each { |from_responsible| read_unassigned_responsibles(demand, history_hash['created'].to_datetime, from_responsible.strip) } if unassigment_history.present?
+    rescue ActiveRecord::StaleObjectError
+      Rails.logger.warn('ItemAssignment locked')
     end
 
     def responsible_string_processment(responsible_string)
@@ -232,8 +234,6 @@ module Jira
 
         Slack::SlackNotificationService.instance.notify_item_assigned(item_assignment)
       end
-    rescue ActiveRecord::StaleObjectError
-      Rails.logger.warn('ItemAssignment locked')
     end
 
     def read_portfolio_unit(demand, jira_issue)
