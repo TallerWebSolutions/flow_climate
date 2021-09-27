@@ -20,6 +20,8 @@ RSpec.describe DemandEffortService, type: :service do
 
         expect(DemandEffort.all.count).to eq 2
         expect(DemandEffort.all.sum(&:effort_value)).to eq 2.4
+        expect(DemandEffort.all.sum(&:effort_with_blocks)).to eq 2.4
+        expect(DemandEffort.all.sum(&:total_blocked)).to eq 0
         expect(demand.reload.effort_development).to eq 2.4
         expect(demand.reload.effort_design).to eq 0
         expect(demand.reload.effort_management).to eq 0
@@ -125,13 +127,14 @@ RSpec.describe DemandEffortService, type: :service do
         described_class.instance.build_efforts_to_demand(demand)
 
         expect(DemandEffort.all.count).to eq 2
-        expect(DemandEffort.all.sum(&:effort_value)).to be_within(0.01).of(3.8)
-        expect(DemandEffort.all.sum(&:total_blocked)).to be_within(0.01).of(1.83)
-        expect(demand.reload.effort_upstream).to eq 1.8
-        expect(demand.reload.effort_downstream).to be_within(0.1).of(2.0)
-        expect(demand.reload.effort_development).to be_within(0.1).of(3.8)
-        expect(demand.reload.effort_design).to eq 0
-        expect(demand.reload.effort_management).to eq 0
+        expect(DemandEffort.all.sum(&:effort_value).to_f).to eq 3.599999999999999
+        expect(DemandEffort.all.sum(&:total_blocked).to_f).to eq 2.4
+        expect(DemandEffort.all.sum(&:effort_with_blocks).to_f).to eq 6.0
+        expect(demand.reload.effort_upstream.to_f).to eq 1.2
+        expect(demand.reload.effort_downstream.to_f).to eq 2.399999999999999
+        expect(demand.reload.effort_development.to_f).to eq 3.599999999999999
+        expect(demand.reload.effort_design.to_f).to eq 0
+        expect(demand.reload.effort_management.to_f).to eq 0
       end
     end
 

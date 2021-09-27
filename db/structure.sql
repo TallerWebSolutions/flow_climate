@@ -1176,7 +1176,8 @@ CREATE TABLE public.demand_efforts (
     stage_percentage numeric DEFAULT 0.0 NOT NULL,
     total_blocked numeric DEFAULT 0.0 NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    effort_with_blocks numeric DEFAULT 0.0
 );
 
 
@@ -6523,6 +6524,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210518140127'),
 ('20210519163200'),
 ('20210913214858'),
-('20210920220915');
+('20210920220915'),
+('20210927183909');
 
 

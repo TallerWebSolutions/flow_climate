@@ -27,7 +27,7 @@ RSpec.describe DeviseCustom::DeviseCustomers::RegistrationsController, type: :co
       let(:customer) { Fabricate :customer }
       let!(:user_invite) { Fabricate :user_invite, invite_object_id: customer.id, invite_email: 'foo@bar.com', invite_status: :pending, invite_type: :customer }
 
-      it 'signs in the user, adds the  redirects to the boards index' do
+      it 'signs in the user, adds the redirects to the boards index' do
         expect_any_instance_of(Devise::RegistrationsController).to receive(:sign_up).once.and_call_original
         post :create, params: { devise_customer: { first_name: 'Xpto', last_name: 'Bla', email: 'foo@bar.com', password: 'abc123', password_confirmation: 'abc123' } }
 

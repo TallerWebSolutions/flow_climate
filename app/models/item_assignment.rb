@@ -10,6 +10,7 @@
 #  discarded_at           :datetime
 #  finish_time            :datetime
 #  item_assignment_effort :decimal(, )      default(0.0), not null
+#  lock_version           :integer
 #  pull_interval          :decimal(, )      default(0.0)
 #  start_time             :datetime         not null
 #  created_at             :datetime         not null
