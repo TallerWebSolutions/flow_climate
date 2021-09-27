@@ -283,6 +283,9 @@ module Jira
       return persist_block!(demand, membership.team_member, created) if block_history?(history_item)
 
       persist_unblock!(demand, membership.team_member, created) if unblock_history?(history_item)
+    rescue ActiveRecord::StaleObjectError
+      Rails.logger.warn('DemandBlock locked')
+      nil
     end
 
     def unblock_history?(history_item)

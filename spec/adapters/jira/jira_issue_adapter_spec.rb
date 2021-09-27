@@ -440,6 +440,23 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
           expect(demand_block.reload.block_reason).to eq 'xpto'
         end
       end
+
+      context 'and it throws StaleObjectError' do
+        it 'adds warning in the log' do
+          Fabricate :demand_block, demand: demand, block_time: '2021-04-19 17:51:20.104000000 -0300', block_reason: 'xpto'
+
+          call_count = 0
+          allow_any_instance_of(DemandBlock).to receive(:save) do
+            call_count += 1
+            call_count == 1 ? raise(ActiveRecord::StaleObjectError) : DemandBlock.new
+          end
+
+          expect(Rails.logger).to(receive(:warn)).once
+
+          described_class.instance.process_issue(jira_account, jira_issue, product, first_project)
+          described_class.instance.process_jira_issue_changelog(jira_account, JSON.parse(jira_issue_changelog), demand, creator)
+        end
+      end
     end
   end
 end

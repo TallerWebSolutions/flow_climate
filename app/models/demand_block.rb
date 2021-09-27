@@ -11,6 +11,7 @@
 #  block_type                  :integer          default("coding_needed"), not null
 #  block_working_time_duration :decimal(, )
 #  discarded_at                :datetime
+#  lock_version                :integer
 #  unblock_reason              :string
 #  unblock_time                :datetime
 #  created_at                  :datetime         not null

@@ -1099,7 +1099,8 @@ CREATE TABLE public.demand_blocks (
     unblocker_id integer,
     unblock_reason character varying,
     risk_review_id integer,
-    block_working_time_duration numeric
+    block_working_time_duration numeric,
+    lock_version integer
 );
 
 
@@ -6525,6 +6526,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210519163200'),
 ('20210913214858'),
 ('20210920220915'),
-('20210927183909');
+('20210927183909'),
+('20210927200741');
 
 
