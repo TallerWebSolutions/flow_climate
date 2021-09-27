@@ -1363,7 +1363,7 @@ RSpec.describe DemandsController, type: :controller do
           end
         end
 
-        context 'and query by overserved ' do
+        context 'and query by overserved' do
           it 'assigns the instance variable and renders the template' do
             sdr = Fabricate :service_delivery_review, product: product, lead_time_bottom_threshold: 432_001
 

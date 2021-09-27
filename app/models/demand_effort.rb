@@ -7,6 +7,7 @@
 #  id                         :bigint           not null, primary key
 #  automatic_update           :boolean          default(TRUE), not null
 #  effort_value               :decimal(, )      default(0.0), not null
+#  effort_with_blocks         :decimal(, )      default(0.0)
 #  finish_time_to_computation :datetime         not null
 #  main_effort_in_transition  :boolean          default(FALSE), not null
 #  management_percentage      :decimal(, )      default(0.0), not null
@@ -22,7 +23,7 @@
 #
 # Indexes
 #
-#  idx_demand_efforts_unique                     (item_assignment_id,demand_transition_id) UNIQUE
+#  idx_demand_efforts_unique                     (item_assignment_id,demand_transition_id,start_time_to_computation) UNIQUE
 #  index_demand_efforts_on_demand_id             (demand_id)
 #  index_demand_efforts_on_demand_transition_id  (demand_transition_id)
 #  index_demand_efforts_on_item_assignment_id    (item_assignment_id)

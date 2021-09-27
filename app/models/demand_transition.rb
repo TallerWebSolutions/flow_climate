@@ -8,6 +8,7 @@
 #  discarded_at        :datetime
 #  last_time_in        :datetime         not null
 #  last_time_out       :datetime
+#  lock_version        :integer
 #  transition_notified :boolean          default(FALSE), not null
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null

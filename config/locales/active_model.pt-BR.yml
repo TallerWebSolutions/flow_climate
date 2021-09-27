@@ -677,6 +677,7 @@ pt-BR:
         demand_transition: "Transição de Demanda"
         item_assignment: "Atribuição de Item"
         effort_value: "Valor"
+        effort_with_blocks: "Esforço com Bloqueios"
         start_time_to_computation: "Início dos Dados"
         finish_time_to_computation: "Fim dos Dados"
         management_percentage: "% Gestão"
