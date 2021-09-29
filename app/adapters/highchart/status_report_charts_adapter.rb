@@ -42,6 +42,7 @@ module Highchart
 
     private
 
+    # TODO: remove duplication with StatusReportChartsAdapter
     def build_cfd_hash(demands_ids, stages, bottom_limit_date)
       demands_stages_count = {}
 
