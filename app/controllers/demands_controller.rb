@@ -120,7 +120,7 @@ class DemandsController < DemandsListController
 
   def demands_list_by_ids
     @demands = []
-    build_search_for_demands if object_type.present? && params[:object_id].present?
+    build_search_for_demands if object_type.present? && params[:flow_object_id].present?
 
     @paged_demands = @demands.page(page_param) if @demands.present?
 
@@ -145,7 +145,7 @@ class DemandsController < DemandsListController
   # rubocop:disable Metrics/PerceivedComplexity
   # rubocop:disable Metrics/MethodLength
   def build_search_for_demands
-    demandable = object_type.constantize.find(object_id)
+    demandable = object_type.constantize.find(flow_object_id)
 
     @demand_fitness = params[:demand_fitness]
     @demand_state = params[:demand_state]
@@ -185,8 +185,8 @@ class DemandsController < DemandsListController
   # rubocop:enable Metrics/PerceivedComplexity
   # rubocop:enable Metrics/MethodLength
 
-  def object_id
-    @object_id ||= params[:object_id]&.to_s || @company.id
+  def flow_object_id
+    @flow_object_id ||= params[:flow_object_id]&.to_s || @company.id
   end
 
   def object_type
@@ -228,7 +228,7 @@ class DemandsController < DemandsListController
   end
 
   def demand_params
-    params.require(:demand).permit(:team_id, :product_id, :customer_id, :external_id, :demand_type, :downstream, :manual_effort, :class_of_service, :effort_upstream, :effort_downstream, :created_date, :commitment_date, :end_date, :demand_score, :external_url, :object_type, :object_id, :demand_state, :demand_fitness)
+    params.require(:demand).permit(:team_id, :product_id, :customer_id, :external_id, :demand_type, :downstream, :manual_effort, :class_of_service, :effort_upstream, :effort_downstream, :created_date, :commitment_date, :end_date, :demand_score, :external_url, :object_type, :flow_object_id, :demand_state, :demand_fitness)
   end
 
   def assign_project

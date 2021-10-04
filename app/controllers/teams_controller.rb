@@ -197,7 +197,7 @@ class TeamsController < DemandsListController
   end
 
   def build_chart_objects
-    @array_of_dates.each_with_index do |analysed_date, _distribution_index|
+    @array_of_dates.each do |analysed_date|
       @work_item_flow_information.build_cfd_hash(@array_of_dates.first.beginning_of_week, analysed_date)
     end
   end
