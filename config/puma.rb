@@ -23,7 +23,7 @@ environment ENV.fetch('RAILS_ENV', 'development')
 # Workers do not work on JRuby or Windows (both of which do not support
 # processes).
 #
-workers Figaro.env.web_concurrency || 3
+workers ENV.fetch('WEB_CONCURRENCY', 0)
 preload_app!
 
 # Use the `preload_app!` method when specifying a `workers` number.
