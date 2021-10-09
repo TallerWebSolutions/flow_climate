@@ -14,8 +14,8 @@ test:
   <<: *default
   database: flowcontrol_test
   host: localhost
-  username:
-  password:
+  username: postgres
+  password: postgres
 
 production:
   <<: *default
