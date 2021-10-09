@@ -5,18 +5,21 @@ class DemandEffortService
 
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/MethodLength
   def build_efforts_to_demand(demand)
-    demand.demand_transitions.each do |transition|
+    demand.demand_transitions.order(:last_time_in).each do |transition|
+      demand.demand_efforts.map(&:destroy)
+
       next unless transition.stage_compute_effort_to_project?
 
       end_date_for_assignment = [transition.last_time_out, Time.zone.now].compact.min
 
-      assignments_in_dates = demand.item_assignments.for_dates(transition.last_time_in, end_date_for_assignment)
+      assignments_in_dates = demand.item_assignments.for_dates(transition.last_time_in, end_date_for_assignment).order(:start_time)
       top_effort_assignment = assignments_in_dates.max_by { |assign_in_date| assign_in_date.working_hours_until(transition.last_time_in, transition.last_time_out) }
 
       assignments_in_dates.each do |assignment|
-        start_day = assignment.start_time.to_date
-        end_day = (assignment.finish_time || Time.zone.now).to_date
+        start_day = [assignment.start_time.to_date, transition.last_time_in].max.to_date
+        end_day = [assignment.finish_time, transition.last_time_out, Time.zone.now].compact.min.to_date
 
         (start_day..end_day).map do |day_to_effort|
           compute_and_save_effort(day_to_effort, assignment, top_effort_assignment, transition)
@@ -30,6 +33,7 @@ class DemandEffortService
   end
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/CyclomaticComplexity
+  # rubocop:enable Metrics/MethodLength
 
   private
 
@@ -37,15 +41,15 @@ class DemandEffortService
   # rubocop:disable Metrics/MethodLength
   def compute_and_save_effort(day_to_effort, assignment, top_effort_assignment, transition)
     start_time = [assignment.start_time, transition.last_time_in].compact.max
-    start_date = [start_time, day_to_effort.beginning_of_day].max
+    effort_start_date = [start_time, day_to_effort.beginning_of_day].max
 
     end_time = [assignment.finish_time, transition.last_time_out, Time.zone.now].compact.min
     end_date = [end_time, day_to_effort.end_of_day].min
 
-    demand_effort = DemandEffort.where(demand_transition: transition, item_assignment: assignment, demand: transition.demand, start_time_to_computation: start_date).first_or_initialize
+    demand_effort = DemandEffort.where(demand_transition: transition, item_assignment: assignment, demand: transition.demand, start_time_to_computation: effort_start_date).first_or_initialize
     return unless demand_effort.automatic_update?
 
-    hours_in_assignment = ((end_time - start_time) / 1.hour).to_i
+    hours_in_assignment = ((end_date - effort_start_date) / 1.hour).to_i
 
     demand = assignment.demand
     previous_efforts_to_day = demand.demand_efforts.joins(item_assignment: :membership).where(item_assignment: { membership: assignment.membership }).for_day(day_to_effort)
@@ -54,7 +58,7 @@ class DemandEffortService
     previous_efforts_value_to_day = previous_efforts_to_day.sum(&:effort_value)
 
     demand_effort_in_transition = if hours_in_assignment > 6
-                                    TimeService.instance.compute_working_hours_for_dates(start_date, end_date)
+                                    TimeService.instance.compute_working_hours_for_dates(effort_start_date, end_date)
                                   elsif previous_efforts_value_to_day >= 6
                                     0
                                   else
@@ -70,7 +74,7 @@ class DemandEffortService
 
     effort_total = demand_effort_in_transition * (1 + management_percentage) * stage_percentage
 
-    effort_blocked_in_transition = effort_blocked_into_time(demand, start_date, end_date)
+    effort_blocked_in_transition = effort_blocked_into_time(demand, effort_start_date, end_date)
     effort_blocked_in_transition = effort_blocked_in_transition * (1 + management_percentage) * stage_percentage
 
     unless main_assignment
@@ -82,7 +86,7 @@ class DemandEffortService
 
     demand_effort.update(effort_value: effort_without_blocks, effort_with_blocks: effort_total, total_blocked: effort_blocked_in_transition, stage_percentage: stage_percentage,
                          management_percentage: management_percentage, pairing_percentage: pairing_percentage, main_effort_in_transition: main_assignment,
-                         start_time_to_computation: start_date, finish_time_to_computation: end_date)
+                         start_time_to_computation: effort_start_date, finish_time_to_computation: end_date)
   end
 
   def effort_blocked_into_time(demand, start_date, end_date)

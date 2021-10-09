@@ -24,14 +24,19 @@ RSpec.describe StagesRepository, type: :repository do
     let(:demand) { Fabricate :demand, project: project }
     let(:other_demand) { Fabricate :demand, project: project }
 
-    context 'having transitions' do
+    context 'with transitions' do
       include_context 'transitions to hits'
 
-      it { expect(described_class.instance.qty_hits_by_weekday(stage, :last_time_in)).to eq({ 0.0 => 1, 1.0 => 1, 2.0 => 1, 4.0 => 1, 5.0 => 1, 6.0 => 1 }) }
-      it { expect(described_class.instance.qty_hits_by_weekday(stage, :last_time_out)).to eq(1.0 => 2, 2.0 => 2, 3.0 => 1) }
+      it 'returns with the hits to each weekday' do
+        expect(described_class.instance.qty_hits_by_weekday(stage, :last_time_in).keys).to eq [0.0, 1.0, 2.0, 4.0, 5.0, 6.0]
+        expect(described_class.instance.qty_hits_by_weekday(stage, :last_time_in).values).to eq [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+
+        expect(described_class.instance.qty_hits_by_weekday(stage, :last_time_out).keys).to eq [1.0, 2.0, 3.0]
+        expect(described_class.instance.qty_hits_by_weekday(stage, :last_time_out).values).to eq [2.0, 2.0, 1.0]
+      end
     end
 
-    context 'having no transitions' do
+    context 'with no transitions' do
       it { expect(described_class.instance.qty_hits_by_weekday(stage, :last_time_in)).to eq({}) }
       it { expect(described_class.instance.qty_hits_by_weekday(stage, :last_time_out)).to eq({}) }
     end
@@ -46,8 +51,12 @@ RSpec.describe StagesRepository, type: :repository do
     context 'having transitions' do
       include_context 'transitions to hits'
 
-      it { expect(described_class.instance.qty_hits_by_day(stage, :last_time_in)).to eq({ 24.0 => 1, 25.0 => 1, 26.0 => 1, 27.0 => 1, 28.0 => 1, 29.0 => 1 }) }
-      it { expect(described_class.instance.qty_hits_by_day(stage, :last_time_out)).to eq(28.0 => 2, 29.0 => 2, 30.0 => 1) }
+      it 'returns with the hits' do
+        expect(described_class.instance.qty_hits_by_day(stage, :last_time_out).keys).to eq [28.0, 29.0, 30.0]
+        expect(described_class.instance.qty_hits_by_day(stage, :last_time_out).values).to eq [2, 2, 1]
+        expect(described_class.instance.qty_hits_by_day(stage, :last_time_in).keys).to eq [24.0, 25.0, 26.0, 27.0, 28.0, 29.0]
+        expect(described_class.instance.qty_hits_by_day(stage, :last_time_in).values).to eq [1, 1, 1, 1, 1, 1]
+      end
     end
 
     context 'having no transitions' do
@@ -65,8 +74,13 @@ RSpec.describe StagesRepository, type: :repository do
     context 'having transitions' do
       include_context 'transitions to hits'
 
-      it { expect(described_class.instance.qty_hits_by_hour(stage, :last_time_in)).to eq(21.0 => 6) }
-      it { expect(described_class.instance.qty_hits_by_hour(stage, :last_time_out)).to eq({ 3.0 => 1, 20.0 => 2, 21.0 => 2 }) }
+      it 'returns the hits by hour' do
+        expect(described_class.instance.qty_hits_by_hour(stage, :last_time_in).keys).to eq [21.0]
+        expect(described_class.instance.qty_hits_by_hour(stage, :last_time_in).values).to eq [6]
+
+        expect(described_class.instance.qty_hits_by_hour(stage, :last_time_out).keys).to eq [3.0, 20.0, 21.0]
+        expect(described_class.instance.qty_hits_by_hour(stage, :last_time_out).values).to eq [1, 2, 2]
+      end
     end
 
     context 'having no transitions' do
