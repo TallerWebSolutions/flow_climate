@@ -29,7 +29,7 @@
 <%= render 'layouts/load_spinner' %>
 
 <div id="user-dashboard-tab">
-  <%= render 'users/user_dashboard_company_tab', company: @company, user: @user, object_type: 'TeamMember', object_id: @user.team_member,
+  <%= render 'users/user_dashboard_company_tab', company: @company, user: @user, object_type: 'TeamMember', flow_object_id: @user.team_member,
              member_teams: @member_teams, demand_blocks: @demand_blocks,
              member_projects: @member_projects, pairing_chart: @pairing_chart, statistics_information: @statistics_information, array_of_dates: @array_of_dates,
              projects_quality: @projects_quality, projects_leadtime: @projects_leadtime, projects_risk: @projects_risk,

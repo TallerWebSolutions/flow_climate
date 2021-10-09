@@ -2,11 +2,11 @@
   <tbody>
     <tr>
       <td><b><%= ServiceDeliveryReview.human_attribute_name :demands %></b></td>
-      <td><%= link_to service_delivery_review.demands.kept.count, demands_list_by_ids_company_demands_path(company, object_type: 'ServiceDeliveryReview', object_id: service_delivery_review.id, demand_state: '', demand_fitness: '', demand_type: ''), target: '_blank' %></td>
+      <td><%= link_to service_delivery_review.demands.kept.count, demands_list_by_ids_company_demands_path(company, object_type: 'ServiceDeliveryReview', flow_object_id: service_delivery_review.id, demand_state: '', demand_fitness: '', demand_type: ''), target: '_blank' %></td>
     </tr>
     <tr>
       <td><b><%= I18n.t('service_delivery_reviews.show.discarded_demands_label') %></b></td>
-      <td><%= link_to service_delivery_review.demands.discarded.count, demands_list_by_ids_company_demands_path(company, object_type: 'ServiceDeliveryReview', object_id: service_delivery_review.id, demand_state: 'delivered', demand_fitness: '', demand_type: '' ), target: '_blank' %></td>
+      <td><%= link_to service_delivery_review.demands.discarded.count, demands_list_by_ids_company_demands_path(company, object_type: 'ServiceDeliveryReview', flow_object_id: service_delivery_review.id, demand_state: 'delivered', demand_fitness: '', demand_type: '' ), target: '_blank' %></td>
     </tr>
     <tr>
       <td><b><%= t('general.leadtime_p80_label') %></b></td>
@@ -14,7 +14,7 @@
     </tr>
     <tr>
       <td><b><%= I18n.t('service_delivery_reviews.show.bugs_label') %></b></td>
-      <td><%= link_to "#{service_delivery_review.demands.bug.count} (#{number_to_percentage(service_delivery_review.bug_percentage, precision: 2)})", demands_list_by_ids_company_demands_path(company, object_type: 'ServiceDeliveryReview', object_id: service_delivery_review.id, demand_state: '', demand_fitness: '', demand_type: 'bug' ), target: '_blank' %></td>
+      <td><%= link_to "#{service_delivery_review.demands.bug.count} (#{number_to_percentage(service_delivery_review.bug_percentage, precision: 2)})", demands_list_by_ids_company_demands_path(company, object_type: 'ServiceDeliveryReview', flow_object_id: service_delivery_review.id, demand_state: '', demand_fitness: '', demand_type: 'bug' ), target: '_blank' %></td>
     </tr>
     <% if service_delivery_review.demands.present? %>
       <tr>
@@ -27,15 +27,15 @@
       </tr>
       <tr>
         <td><b><%= 'Overserved' %></b></td>
-        <td><%= link_to "#{service_delivery_review.overserved_demands[:value].count} (#{number_to_percentage(service_delivery_review.overserved_demands[:share] * 100, precision: 2)})", demands_list_by_ids_company_demands_path(company, object_type: 'ServiceDeliveryReview', object_id: service_delivery_review.id, demand_state: '', demand_fitness: 'overserved', demand_type: '' ), target: '_blank' %></td>
+        <td><%= link_to "#{service_delivery_review.overserved_demands[:value].count} (#{number_to_percentage(service_delivery_review.overserved_demands[:share] * 100, precision: 2)})", demands_list_by_ids_company_demands_path(company, object_type: 'ServiceDeliveryReview', flow_object_id: service_delivery_review.id, demand_state: '', demand_fitness: 'overserved', demand_type: '' ), target: '_blank' %></td>
       </tr>
       <tr>
         <td><b><%= 'Underserved' %></b></td>
-        <td><%= link_to "#{service_delivery_review.underserved_demands[:value].count} (#{number_to_percentage(service_delivery_review.underserved_demands[:share] * 100, precision: 2)})", demands_list_by_ids_company_demands_path(company, object_type: 'ServiceDeliveryReview', object_id: service_delivery_review.id, demand_state: '', demand_fitness: 'underserved', demand_type: '' ), target: '_blank' %></td>
+        <td><%= link_to "#{service_delivery_review.underserved_demands[:value].count} (#{number_to_percentage(service_delivery_review.underserved_demands[:share] * 100, precision: 2)})", demands_list_by_ids_company_demands_path(company, object_type: 'ServiceDeliveryReview', flow_object_id: service_delivery_review.id, demand_state: '', demand_fitness: 'underserved', demand_type: '' ), target: '_blank' %></td>
       </tr>
       <tr>
         <td><b><%= 'Fit For Purpose' %></b></td>
-        <td><%= link_to "#{service_delivery_review.fit_for_purpose_demands[:value].count} (#{number_to_percentage(service_delivery_review.fit_for_purpose_demands[:share] * 100, precision: 2)})", demands_list_by_ids_company_demands_path(company, object_type: 'ServiceDeliveryReview', object_id: service_delivery_review.id, demand_state: '', demand_fitness: 'f4p', demand_type: '' ), target: '_blank' %></td>
+        <td><%= link_to "#{service_delivery_review.fit_for_purpose_demands[:value].count} (#{number_to_percentage(service_delivery_review.fit_for_purpose_demands[:share] * 100, precision: 2)})", demands_list_by_ids_company_demands_path(company, object_type: 'ServiceDeliveryReview', flow_object_id: service_delivery_review.id, demand_state: '', demand_fitness: 'f4p', demand_type: '' ), target: '_blank' %></td>
       </tr>
     <% end %>
   </tbody>

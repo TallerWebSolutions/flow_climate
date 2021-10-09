@@ -10,19 +10,19 @@
   <tr>
     <td><b><%= I18n.t('general.created_demands') %></b></td>
     <% if demands.count.positive? %>
-      <td><%= link_to I18n.t('general.demands_text', count: demands.count), demands_list_by_ids_company_demands_path(company, object_type: object_type, object_id: object_id, demand_type: '', demand_state: 'not_discarded', demand_fitness: '' ), target: '_blank' %></td>
+      <td><%= link_to I18n.t('general.demands_text', count: demands.count), demands_list_by_ids_company_demands_path(company, object_type: object_type, flow_object_id: flow_object_id, demand_type: '', demand_state: 'not_discarded', demand_fitness: '' ), target: '_blank' %></td>
     <% else %>
       <%= I18n.t('general.demands_text', count: demands.count) %>
     <% end %>
   </tr>
   <tr>
     <td><b><%= I18n.t('general.delivered') %></b></td>
-    <td><%= link_to I18n.t('general.demands_text', count: demands_delivered.count), demands_list_by_ids_company_demands_path(company, object_type: object_type, object_id: object_id, demand_type: '', demand_state: 'delivered', demand_fitness: '' ), target: '_blank' %></td>
+    <td><%= link_to I18n.t('general.demands_text', count: demands_delivered.count), demands_list_by_ids_company_demands_path(company, object_type: object_type, flow_object_id: flow_object_id, demand_type: '', demand_state: 'delivered', demand_fitness: '' ), target: '_blank' %></td>
   </tr>
   <tr>
     <td><b><%= I18n.t('projects.index.remaining_backlog') %></b></td>
     <% if remaining_backlog.count.positive? %>
-      <td><%= link_to I18n.t('general.demands_text', count: remaining_backlog.count), demands_list_by_ids_company_demands_path(company, object_type: object_type, object_id: object_id, demand_type: '', demand_state: 'backlog', demand_fitness: ''), target: '_blank' %></td>
+      <td><%= link_to I18n.t('general.demands_text', count: remaining_backlog.count), demands_list_by_ids_company_demands_path(company, object_type: object_type, flow_object_id: flow_object_id, demand_type: '', demand_state: 'backlog', demand_fitness: ''), target: '_blank' %></td>
     <% else %>
       <td><%= I18n.t('general.demands_text', count: remaining_backlog.count) %></td>
     <% end %>
@@ -30,7 +30,7 @@
   <tr>
     <td><b><%= I18n.t('general.upstream') %></b></td>
     <% if upstream_demands.count.positive? %>
-      <td><%= link_to I18n.t('general.demands_text', count: upstream_demands.count), demands_list_by_ids_company_demands_path(company, object_type: object_type, object_id: object_id, demand_type: '', demand_state: 'upstream', demand_fitness: ''), target: '_blank' %></td>
+      <td><%= link_to I18n.t('general.demands_text', count: upstream_demands.count), demands_list_by_ids_company_demands_path(company, object_type: object_type, flow_object_id: flow_object_id, demand_type: '', demand_state: 'upstream', demand_fitness: ''), target: '_blank' %></td>
     <% else %>
       <td><%= link_to I18n.t('general.demands_text', count: upstream_demands.count) %></td>
     <% end %>
@@ -38,7 +38,7 @@
   <tr>
     <td><b><%= I18n.t('general.downstream') %></b></td>
     <% if downstream_demands.count.positive? %>
-      <td><%= link_to I18n.t('general.demands_text', count: downstream_demands.count), demands_list_by_ids_company_demands_path(company, object_type: object_type, object_id: object_id, demand_type: '', demand_state: 'downstream', demand_fitness: ''), target: '_blank' %></td>
+      <td><%= link_to I18n.t('general.demands_text', count: downstream_demands.count), demands_list_by_ids_company_demands_path(company, object_type: object_type, flow_object_id: flow_object_id, demand_type: '', demand_state: 'downstream', demand_fitness: ''), target: '_blank' %></td>
     <% else %>
       <td><%= I18n.t('general.demands_text', count: downstream_demands.count) %></td>
     <% end %>
@@ -46,7 +46,7 @@
   <tr>
     <td><b><%= I18n.t('general.discarded_demands') %></b></td>
     <% if discarded_demands_count.positive? %>
-      <td><%= link_to I18n.t('general.demands_text', count: discarded_demands_count), demands_list_by_ids_company_demands_path(company, object_type: object_type, object_id: object_id, demand_type: '', demand_state: 'discarded', demand_fitness: '' ), target: '_blank' %></td>
+      <td><%= link_to I18n.t('general.demands_text', count: discarded_demands_count), demands_list_by_ids_company_demands_path(company, object_type: object_type, flow_object_id: flow_object_id, demand_type: '', demand_state: 'discarded', demand_fitness: '' ), target: '_blank' %></td>
     <% else %>
       <td><%= I18n.t('general.demands_text', count: discarded_demands_count) %></td>
     <% end %>
@@ -54,7 +54,7 @@
   <tr>
     <td><b><%= I18n.t('projects.show.unscored_demands.title') %></b></td>
     <% if discarded_demands_count.positive? %>
-      <td><%= link_to I18n.t('general.demands_text', count: unscored_demands.count), demands_list_by_ids_company_demands_path(company, object_type: object_type, object_id: object_id, demand_type: '', demand_state: 'unscored', demand_fitness: ''), target: '_blank' %></td>
+      <td><%= link_to I18n.t('general.demands_text', count: unscored_demands.count), demands_list_by_ids_company_demands_path(company, object_type: object_type, flow_object_id: flow_object_id, demand_type: '', demand_state: 'unscored', demand_fitness: ''), target: '_blank' %></td>
     <% else %>
       <td><%= I18n.t('general.demands_text', count: unscored_demands.count) %></td>
     <% end %>

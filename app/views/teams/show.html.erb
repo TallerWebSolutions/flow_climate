@@ -71,7 +71,7 @@
              company: @company,
              team: @team,
              object_type: 'Team',
-             object_id: @team.id,
+             flow_object_id: @team.id,
              upstream_demands: @team.upstream_demands,
              downstream_demands: @team.demands.kept.in_wip(Time.zone.now),
              slack_configurations: @slack_configurations,
