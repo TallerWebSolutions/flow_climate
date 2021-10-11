@@ -27,6 +27,14 @@ module Jira
       process_labels(demand, jira_issue_changelog['values'])
 
       DemandEffortService.instance.build_efforts_to_demand(demand)
+    rescue ActiveRecord::RecordNotUnique
+      Rails.logger.warn('Record not unique')
+      Jira::JiraApiError.create(demand: demand)
+      nil
+    rescue ActiveRecord::StaleObjectError
+      Rails.logger.warn('Register locked')
+      Jira::JiraApiError.create(demand: demand)
+      nil
     end
 
     private
@@ -103,12 +111,6 @@ module Jira
       from_transition&.update(team_member: demand_creator)
 
       read_transition_history(demand, issue_changelog)
-    rescue ActiveRecord::RecordNotUnique
-      Jira::JiraApiError.create(demand: demand)
-      nil
-    rescue ActiveRecord::StaleObjectError
-      Rails.logger.warn('DemandTransition locked')
-      nil
     end
 
     def read_transition_history(demand, issue_changelog)
@@ -203,8 +205,6 @@ module Jira
 
       to_array.each { |to_responsible| read_assigned_responsibles(demand, history_hash['created'].to_datetime, to_responsible.strip) } if to_array.present?
       unassigment_history.each { |from_responsible| read_unassigned_responsibles(demand, history_hash['created'].to_datetime, from_responsible.strip) } if unassigment_history.present?
-    rescue ActiveRecord::StaleObjectError
-      Rails.logger.warn('ItemAssignment locked')
     end
 
     def responsible_string_processment(responsible_string)
@@ -283,9 +283,6 @@ module Jira
       return persist_block!(demand, membership.team_member, created) if block_history?(history_item)
 
       persist_unblock!(demand, membership.team_member, created) if unblock_history?(history_item)
-    rescue ActiveRecord::StaleObjectError
-      Rails.logger.warn('DemandBlock locked')
-      nil
     end
 
     def unblock_history?(history_item)

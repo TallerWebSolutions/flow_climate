@@ -105,7 +105,7 @@ module Slack
 
       slack_configuration = SlackConfiguration.find_by(team: demand.team, info_type: :demand_state_changed, active: true)
 
-      unless slack_configuration.present? && slack_configuration.notify_stage?(stage)
+      unless slack_configuration.present? && stage.present? && slack_configuration.notify_stage?(stage)
         demand_transition.update(transition_notified: true)
 
         return

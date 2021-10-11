@@ -89,6 +89,8 @@ class DemandEffortService
                          start_time_to_computation: effort_start_date, finish_time_to_computation: end_date)
   end
 
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
   def effort_blocked_into_time(demand, start_date, end_date)
     demand_blocks_into_effort_time = demand.demand_blocks.active.for_date_interval(start_date, end_date)
 
@@ -102,8 +104,6 @@ class DemandEffortService
     end
   end
 
-  # rubocop:enable Metrics/MethodLength
-  # rubocop:enable Metrics/AbcSize
   def update_demand_effort_caches(demand)
     effort_upstream = demand.demand_efforts.upstream_efforts.sum(&:effort_value)
     effort_downstream = demand.demand_efforts.downstream_efforts.sum(&:effort_value)
