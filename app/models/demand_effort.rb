@@ -9,6 +9,7 @@
 #  effort_value               :decimal(, )      default(0.0), not null
 #  effort_with_blocks         :decimal(, )      default(0.0)
 #  finish_time_to_computation :datetime         not null
+#  lock_version               :integer
 #  main_effort_in_transition  :boolean          default(FALSE), not null
 #  management_percentage      :decimal(, )      default(0.0), not null
 #  pairing_percentage         :decimal(, )      default(0.0), not null

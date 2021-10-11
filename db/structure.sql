@@ -1178,7 +1178,8 @@ CREATE TABLE public.demand_efforts (
     total_blocked numeric DEFAULT 0.0 NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    effort_with_blocks numeric DEFAULT 0.0
+    effort_with_blocks numeric DEFAULT 0.0,
+    lock_version integer
 );
 
 
@@ -6527,6 +6528,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210913214858'),
 ('20210920220915'),
 ('20210927183909'),
-('20210927200741');
+('20210927200741'),
+('20211011222247');
 
 
