@@ -96,7 +96,7 @@ class DemandEffortService
 
     demand_blocks_into_effort_time.sum do |block|
       start_block = [block.block_time, start_date].max
-      end_block = [block.unblock_time, end_date].min
+      end_block = [block.unblock_time, end_date].compact.min
 
       TimeService.instance.compute_working_hours_for_dates(start_block, end_block)
     end
