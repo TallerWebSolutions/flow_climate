@@ -39,8 +39,6 @@ class DemandEffortService
 
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
-  # rubocop:disable Metrics/CyclomaticComplexity
-  # rubocop:disable Metrics/PerceivedComplexity
   def compute_and_save_effort(day_to_effort, assignment, top_effort_assignment, transition)
     start_time = [assignment.start_time, transition.last_time_in].compact.max
     effort_start_date = [start_time, day_to_effort.beginning_of_day].max
@@ -90,11 +88,9 @@ class DemandEffortService
                          management_percentage: management_percentage, pairing_percentage: pairing_percentage, main_effort_in_transition: main_assignment,
                          start_time_to_computation: effort_start_date, finish_time_to_computation: end_date)
   end
+
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength
-  # rubocop:enable Metrics/CyclomaticComplexity
-  # rubocop:enable Metrics/PerceivedComplexity
-
   def effort_blocked_into_time(demand, start_date, end_date)
     demand_blocks_into_effort_time = demand.demand_blocks.active.for_date_interval(start_date, end_date)
 
