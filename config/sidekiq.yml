@@ -3,7 +3,7 @@ staging:
 development:
   :concurrency: 5
 production:
-  :concurrency: 3
+  :concurrency: 2
 queues:
   - ['default', 1]
   - ['generators', 1]
