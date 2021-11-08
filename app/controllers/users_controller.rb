@@ -79,7 +79,7 @@ class UsersController < AuthenticatedController
   def assign_team_member_dependencies
     @pairing_chart = {}
     @teams = []
-    return if @user.team_member.blank? || @company.role_for_user(@user).manager?
+    return if @user.team_member.blank? || @company.role_for_user(@user)&.manager?
 
     @member_teams = @user.team_member.teams.order(:name)
     @demand_blocks = @user.team_member.demand_blocks.order(block_time: :desc).first(5)
