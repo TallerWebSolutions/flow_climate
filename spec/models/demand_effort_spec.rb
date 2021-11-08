@@ -38,10 +38,9 @@ RSpec.describe DemandEffort, type: :model do
     let(:upstream_stage) { Fabricate :stage, stage_stream: :upstream }
     let(:downstream_stage) { Fabricate :stage, stage_stream: :downstream }
     let(:demand) { Fabricate :demand }
-    let(:upstream_transition) { Fabricate :demand_transition, stage: upstream_stage, demand: demand, last_time_in: Time.zone.parse('2021-05-24 10:51'), last_time_out: Time.zone.parse('2021-05-24 15:51') }
-    let(:other_upstream_transition) { Fabricate :demand_transition, stage: upstream_stage, demand: demand, last_time_in: Time.zone.parse('2021-05-24 10:51'), last_time_out: Time.zone.parse('2021-05-24 15:51') }
-    let(:downstream_transition) { Fabricate :demand_transition, stage: downstream_stage, demand: demand, last_time_in: Time.zone.parse('2021-05-24 10:51'), last_time_out: Time.zone.parse('2021-05-24 15:51') }
-    let(:other_downstream_transition) { Fabricate :demand_transition, stage: downstream_stage, demand: demand, last_time_in: Time.zone.parse('2021-05-24 10:51'), last_time_out: Time.zone.parse('2021-05-24 15:51') }
+
+    let(:upstream_transition) { Fabricate :demand_transition, stage: upstream_stage, demand: demand, last_time_in: Time.zone.parse('2021-05-23 10:51'), last_time_out: Time.zone.parse('2021-05-24 18:51') }
+    let(:downstream_transition) { Fabricate :demand_transition, stage: downstream_stage, demand: demand, last_time_in: Time.zone.parse('2021-05-21 10:51'), last_time_out: Time.zone.parse('2021-05-23 15:51') }
 
     let(:development_membership) { Fabricate :membership, member_role: :developer }
     let(:other_development_membership) { Fabricate :membership, member_role: :developer }
@@ -56,11 +55,11 @@ RSpec.describe DemandEffort, type: :model do
     let(:other_designer_assignment) { Fabricate :item_assignment, demand: demand, membership: other_designer_membership, start_time: Time.zone.parse('2021-05-24 10:51'), finish_time: Time.zone.parse('2021-05-24 15:51') }
     let(:management_assignment) { Fabricate :item_assignment, demand: demand, membership: management_membership, start_time: Time.zone.parse('2021-05-24 10:51'), finish_time: Time.zone.parse('2021-05-24 15:51') }
 
-    let(:upstream_demand_effort) { Fabricate :demand_effort, demand: demand, demand_transition: upstream_transition, item_assignment: development_assignment }
-    let(:other_upstream_demand_effort) { Fabricate :demand_effort, demand: demand, demand_transition: upstream_transition, item_assignment: other_development_assignment }
+    let!(:upstream_demand_effort) { Fabricate :demand_effort, demand: demand, demand_transition: upstream_transition, item_assignment: development_assignment, start_time_to_computation: Time.zone.parse('2021-05-24 15:51') }
+    let!(:other_upstream_demand_effort) { Fabricate :demand_effort, demand: demand, demand_transition: upstream_transition, item_assignment: other_development_assignment, start_time_to_computation: Time.zone.parse('2021-05-23 15:51') }
 
-    let(:downstream_demand_effort) { Fabricate :demand_effort, demand: demand, demand_transition: downstream_transition, item_assignment: designer_assignment }
-    let(:other_downstream_demand_effort) { Fabricate :demand_effort, demand: demand, demand_transition: downstream_transition, item_assignment: other_designer_assignment }
+    let!(:downstream_demand_effort) { Fabricate :demand_effort, demand: demand, demand_transition: downstream_transition, item_assignment: designer_assignment, start_time_to_computation: Time.zone.parse('2021-05-22 15:51') }
+    let!(:other_downstream_demand_effort) { Fabricate :demand_effort, demand: demand, demand_transition: downstream_transition, item_assignment: other_designer_assignment, start_time_to_computation: Time.zone.parse('2021-05-21 15:51') }
 
     describe '.upstream_efforts' do
       it { expect(described_class.upstream_efforts).to match_array [upstream_demand_effort, other_upstream_demand_effort] }
@@ -75,7 +74,11 @@ RSpec.describe DemandEffort, type: :model do
     end
 
     describe '.for_day' do
-      it { expect(described_class.for_day(Date.new(2021, 5, 24))).to match_array described_class.all }
+      it { expect(described_class.for_day(Date.new(2021, 5, 24))).to eq [upstream_demand_effort] }
+    end
+
+    describe '.to_dates' do
+      it { expect(described_class.to_dates(Date.new(2021, 5, 22).beginning_of_day, Date.new(2021, 5, 24).end_of_day)).to match_array [downstream_demand_effort, other_upstream_demand_effort, upstream_demand_effort] }
     end
   end
 end

@@ -16,8 +16,8 @@ module Consolidations
       demands_lead_time_in_month = demands_finished_in_month.map(&:leadtime).flatten.compact
 
       demands_ids_to_efforts = demands.map(&:id) + demands_discarded.map(&:id)
-      demand_efforts = DemandEffort.where(demand_id: demands_ids_to_efforts).where('start_time_to_computation BETWEEN :start_date AND :end_date', start_date: start_date, end_date: cache_date)
-      demand_efforts_accumulated = DemandEffort.where(demand_id: demands_ids_to_efforts).where('start_time_to_computation <= :end_date', end_date: cache_date)
+      demand_efforts = DemandEffort.where(demand_id: demands_ids_to_efforts).to_dates(start_date, cache_date)
+      demand_efforts_accumulated = DemandEffort.where(demand_id: demands_ids_to_efforts).until_date(cache_date)
 
       lead_time_histogram_data = Stats::StatisticsService.instance.leadtime_histogram_hash(demands_lead_time)
       lead_time_histogram_bins = lead_time_histogram_data.keys

@@ -21,22 +21,25 @@ RSpec.describe Flow::ContractsFlowInformation do
           project = Fabricate :project, customers: [customer], products: [product]
           contract = Fabricate :contract, customer: customer, total_value: 1_000_000, total_hours: 20_000, start_date: 3.months.ago, end_date: 1.month.from_now
 
-          Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: Time.zone.now, effort_upstream: 10, effort_downstream: 30)
-          Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: 1.month.ago, effort_upstream: 40, effort_downstream: 10)
-          Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: 3.months.ago, effort_upstream: 0, effort_downstream: 50)
-          Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: 4.months.ago, effort_upstream: 100, effort_downstream: 300)
+          demand = Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: Time.zone.now, effort_upstream: 10, effort_downstream: 30)
+
+          Fabricate :demand_effort, demand: demand, start_time_to_computation: Time.zone.now, effort_value: 50
+          Fabricate :demand_effort, demand: demand, start_time_to_computation: 1.month.ago, effort_value: 30
+
+          Fabricate :demand_effort, demand: demand, start_time_to_computation: 3.months.ago, effort_value: 60
+          Fabricate :demand_effort, demand: demand, start_time_to_computation: 4.months.ago, effort_value: 10
 
           contract_flow = described_class.new(contract)
 
           expect(contract_flow.dates_array).to eq [Date.new(2020, 3, 31), Date.new(2020, 4, 30), Date.new(2020, 5, 31), Date.new(2020, 6, 30), Date.new(2020, 7, 31)]
           expect(contract_flow.dates_limit_now_array).to eq [Date.new(2020, 3, 31), Date.new(2020, 4, 30), Date.new(2020, 5, 31), Date.new(2020, 6, 30)]
 
-          expect(contract_flow.build_financial_burnup).to eq([{ name: I18n.t('charts.burnup.scope'), data: [1_000_000, 1_000_000, 1_000_000, 1_000_000, 1_000_000] }, { name: I18n.t('charts.burnup.current'), data: [2500.0, 2500.0, 5000.0, 7000.0] }, { name: I18n.t('charts.burnup.ideal'), data: [200_000, 400_000, 600_000, 800_000, 1_000_000] }])
+          expect(contract_flow.build_financial_burnup).to eq([{ name: I18n.t('charts.burnup.scope'), data: [1_000_000, 1_000_000, 1_000_000, 1_000_000, 1_000_000] }, { name: I18n.t('charts.burnup.current'), data: [0.0, 0.0, 0.0, 2000.0] }, { name: I18n.t('charts.burnup.ideal'), data: [200_000, 400_000, 600_000, 800_000, 1_000_000] }])
 
-          expect(contract_flow.delivered_demands_count).to eq 3
-          expect(contract_flow.remaining_backlog_count).to eq 663
-          expect(contract_flow.consumed_hours).to eq 140
-          expect(contract_flow.remaining_hours).to eq 19_860
+          expect(contract_flow.delivered_demands_count).to eq 1
+          expect(contract_flow.remaining_backlog_count).to eq 665
+          expect(contract_flow.consumed_hours).to eq 150
+          expect(contract_flow.remaining_hours).to eq 19_850
         end
       end
     end
@@ -59,14 +62,17 @@ RSpec.describe Flow::ContractsFlowInformation do
           project = Fabricate :project, customers: [customer], products: [product]
           contract = Fabricate :contract, customer: customer, total_value: 100_000, total_hours: 2000, start_date: 3.months.ago, end_date: 1.month.from_now
 
-          Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: Time.zone.now, effort_upstream: 10, effort_downstream: 30)
-          Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: 1.month.ago, effort_upstream: 40, effort_downstream: 10)
-          Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: 3.months.ago, effort_upstream: 0, effort_downstream: 50)
-          Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: 4.months.ago, effort_upstream: 100, effort_downstream: 300)
+          demand = Fabricate :demand, company: company, product: product, customer: customer, project: project, contract: contract, end_date: Time.zone.now, effort_upstream: 10, effort_downstream: 30
+
+          Fabricate :demand_effort, demand: demand, start_time_to_computation: Time.zone.now, effort_value: 50
+          Fabricate :demand_effort, demand: demand, start_time_to_computation: 1.month.ago, effort_value: 30
+
+          Fabricate :demand_effort, demand: demand, start_time_to_computation: 3.months.ago, effort_value: 60
+          Fabricate :demand_effort, demand: demand, start_time_to_computation: 4.months.ago, effort_value: 10
 
           contract_flow = described_class.new(contract)
 
-          expect(contract_flow.build_hours_burnup).to eq([{ name: I18n.t('charts.burnup.scope'), data: [2000, 2000, 2000, 2000, 2000] }, { name: I18n.t('charts.burnup.current'), data: [50.0, 50.0, 100.0, 140.0] }, { name: I18n.t('charts.burnup.ideal'), data: [400, 800, 1200, 1600, 2000] }])
+          expect(contract_flow.build_hours_burnup).to eq([{ name: I18n.t('charts.burnup.scope'), data: [2000, 2000, 2000, 2000, 2000] }, { name: I18n.t('charts.burnup.current'), data: [0.0, 0.0, 0.0, 40.0] }, { name: I18n.t('charts.burnup.ideal'), data: [400, 800, 1200, 1600, 2000] }])
         end
       end
     end
@@ -355,14 +361,17 @@ RSpec.describe Flow::ContractsFlowInformation do
           project = Fabricate :project, customers: [customer], products: [product]
           contract = Fabricate :contract, customer: customer, total_value: 100_000, total_hours: 2000, hours_per_demand: 30, start_date: 3.months.ago, end_date: 1.month.from_now
 
-          Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, demand_type: :feature, commitment_date: 2.days.ago, end_date: Time.zone.now)
-          Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, demand_type: :bug, commitment_date: 35.days.ago, end_date: 1.month.ago)
-          Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, demand_type: :bug, commitment_date: 102.days.ago, end_date: 3.months.ago)
-          Fabricate(:demand, company: company, product: product, customer: customer, project: project, contract: contract, demand_type: :feature, commitment_date: 134.days.ago, end_date: 4.months.ago)
+          demand = Fabricate :demand, company: company, product: product, customer: customer, project: project, contract: contract, demand_type: :feature, commitment_date: 2.days.ago, end_date: Time.zone.now
+
+          Fabricate :demand_effort, demand: demand, start_time_to_computation: Time.zone.now, effort_value: 50
+          Fabricate :demand_effort, demand: demand, start_time_to_computation: 1.month.ago, effort_value: 30
+
+          Fabricate :demand_effort, demand: demand, start_time_to_computation: 3.months.ago, effort_value: 60
+          Fabricate :demand_effort, demand: demand, start_time_to_computation: 4.months.ago, effort_value: 10
 
           contract_flow = described_class.new(contract)
 
-          expect(contract_flow.build_effort_info).to eq([{ type: 'column', yAxis: 1, name: I18n.t('general.dashboards.hours_delivered'), data: [90.0, 0.0, 90.0, 90.0] }, { type: 'spline', name: I18n.t('general.dashboards.hours_delivered_acc'), data: [90.0, 90.0, 180.0, 270.0] }])
+          expect(contract_flow.build_effort_info).to eq([{ type: 'column', yAxis: 1, name: I18n.t('general.dashboards.hours_delivered'), data: [60.0, 0.0, 30.0, 50.0] }, { type: 'spline', name: I18n.t('general.dashboards.hours_delivered_acc'), data: [70.0, 70.0, 100.0, 150.0] }])
         end
       end
     end
