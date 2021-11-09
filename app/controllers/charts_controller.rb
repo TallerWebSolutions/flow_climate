@@ -55,4 +55,10 @@ class ChartsController < AuthenticatedController
     @leadtime_confidence = params[:leadtime_confidence].to_i
     @leadtime_confidence = 80 unless @leadtime_confidence.positive?
   end
+
+  def projects_ids
+    return [] if params[:projects_ids].blank?
+
+    params[:projects_ids].split(',')
+  end
 end
