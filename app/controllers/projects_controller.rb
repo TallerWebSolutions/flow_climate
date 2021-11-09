@@ -151,7 +151,7 @@ class ProjectsController < AuthenticatedController
   def search_projects
     @target_name = params[:target_name]
 
-    @projects = build_projects_search(projects_ids, params[:projects_filter_start_date], params[:projects_filter_end_date], params[:project_status], params[:project_name])
+    @projects = build_projects_search(params[:projects_filter_start_date], params[:projects_filter_end_date], params[:project_status], params[:project_name])
     @unpaged_projects = @projects.except(:limit, :offset)
 
     @projects_summary = ProjectsSummaryData.new(@unpaged_projects)
@@ -238,8 +238,8 @@ class ProjectsController < AuthenticatedController
     end
   end
 
-  def build_projects_search(projects_ids, start_date, end_date, project_status, project_name)
-    projects = Project.where(id: projects_ids)
+  def build_projects_search(start_date, end_date, project_status, project_name)
+    projects = @company.projects
     projects = projects.where('name ILIKE :name', name: "%#{project_name.tr(' ', '%')}%") if project_name.present?
     projects = projects.where(status: project_status) if project_status.present?
     projects = projects.where('start_date >= :start_date', start_date: start_date) if start_date.present?

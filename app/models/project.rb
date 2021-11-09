@@ -60,6 +60,7 @@ class Project < ApplicationRecord
   has_many :stages, through: :stage_project_configs
   has_many :flow_impacts, dependent: :destroy
   has_many :project_consolidations, dependent: :destroy, class_name: 'Consolidations::ProjectConsolidation'
+  has_many :replenishing_consolidations, dependent: :destroy, class_name: 'Consolidations::ReplenishingConsolidation'
   has_many :user_project_roles, dependent: :destroy
   has_many :users, through: :user_project_roles
   has_many :project_broken_wip_logs, dependent: :destroy

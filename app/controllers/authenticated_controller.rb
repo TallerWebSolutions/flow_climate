@@ -46,10 +46,4 @@ class AuthenticatedController < ApplicationController
   def build_limit_date(date)
     [date, 4.weeks.ago].compact.max.to_date
   end
-
-  def projects_ids
-    return [] if params[:projects_ids].blank?
-
-    params[:projects_ids].split(',')
-  end
 end
