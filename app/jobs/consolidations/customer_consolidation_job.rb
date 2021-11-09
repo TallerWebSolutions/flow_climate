@@ -15,6 +15,7 @@ module Consolidations
       demands_lead_time = demands_finished.map(&:leadtime).flatten.compact
       demands_lead_time_in_month = demands_finished_in_month.map(&:leadtime).flatten.compact
 
+
       lead_time_p80 = Stats::StatisticsService.instance.percentile(80, demands_lead_time)
       lead_time_p80_in_month = Stats::StatisticsService.instance.percentile(80, demands_lead_time_in_month)
 

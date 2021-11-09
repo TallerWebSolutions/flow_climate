@@ -2,7 +2,7 @@
 
 module Flow
   class TimeFlowInformations < SystemFlowInformation
-    attr_reader :hours_delivered_upstream, :hours_delivered_downstream, :hours_per_demand, :queue_time, :touch_time, :flow_efficiency,
+    attr_reader :hours_delivered_upstream, :hours_delivered_downstream, :queue_time, :touch_time, :flow_efficiency,
                 :average_queue_time, :average_touch_time
 
     def initialize(demands)
@@ -15,7 +15,7 @@ module Flow
 
       demands_finished_until_date = @demands.not_discarded_until(analysed_date).finished_until_date(analysed_date) # query
 
-      build_hours_data_array(demands_finished_until_date)
+      build_hours_data_array(analysed_date)
       build_queue_touch_hash(demands_finished_until_date)
     end
 
@@ -49,14 +49,15 @@ module Flow
       @average_touch_time << (@touch_time.compact.sum / @demands.kept.count)
     end
 
-    def build_hours_data_array(demands_delivered)
-      hours_delivered_in_upstream = demands_delivered.sum(&:effort_upstream).to_f
-      hours_delivery_in_downstream = demands_delivered.sum(&:effort_downstream).to_f
+    def build_hours_data_array(analysed_date)
+      demands_ids_to_efforts = @demands.map(&:id)
+      demand_efforts_accumulated = DemandEffort.where(demand_id: demands_ids_to_efforts).until_date(analysed_date)
+
+      hours_delivered_in_upstream = demand_efforts_accumulated.upstream_efforts.sum(&:effort_value).to_f
+      hours_delivery_in_downstream = demand_efforts_accumulated.downstream_efforts.sum(&:effort_value).to_f
 
       @hours_delivered_upstream << (hours_delivered_in_upstream - @hours_delivered_upstream.sum)
       @hours_delivered_downstream << (hours_delivery_in_downstream - @hours_delivered_downstream.sum)
-
-      @hours_per_demand << ((hours_delivered_in_upstream + hours_delivery_in_downstream) / demands_delivered.count).to_f
     end
   end
 end

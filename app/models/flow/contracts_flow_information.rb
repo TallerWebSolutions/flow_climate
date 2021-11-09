@@ -100,7 +100,7 @@ module Flow
         add_value_to_throughput_chart(date, demands_delivered_to_date)
         add_value_to_hours_blocked_per_deliver_chart(date, demands_delivered_to_date)
         add_value_to_external_dependency_chart(date, demands_delivered_to_date)
-        add_value_to_effort_hours_info_chart(date, demands_delivered_to_date, demands_delivered_in_month)
+        add_value_to_effort_hours_info_chart(date)
       end
     end
 
@@ -124,9 +124,9 @@ module Flow
       @hours_total << @total_hours_value
     end
 
-    def add_value_to_scope_burnup(date, index, total_demands_delivered_to_date)
+    def add_value_to_scope_burnup(date, index, count_demands_delivered_to_date)
       @scope_ideal << (@scope_ideal_slice * (index + 1))
-      @scope_current << total_demands_delivered_to_date if date <= @limit_date
+      @scope_current << count_demands_delivered_to_date if date <= @limit_date
       @scope_total << @total_scope_value
     end
 
@@ -187,11 +187,14 @@ module Flow
                                    end
     end
 
-    def add_value_to_effort_hours_info_chart(date, demands_delivered_to_date, demands_delivered_in_month)
+    def add_value_to_effort_hours_info_chart(date)
       return if date > @limit_date
 
-      @effort_hours_info << demands_delivered_to_date.map(&:total_effort).flatten.compact.sum.to_f
-      @effort_hours_info_month << demands_delivered_in_month.map(&:total_effort).flatten.compact.sum.to_f
+      efforts_delivered_until_date = DemandEffort.where(demand_id: @demands.map(&:id)).until_date(date)
+      efforts_delivered_to_month = DemandEffort.where(demand_id: @demands.map(&:id)).to_dates(date.beginning_of_month, date.end_of_month)
+
+      @effort_hours_info << efforts_delivered_until_date.map(&:effort_value).flatten.compact.sum.to_f
+      @effort_hours_info_month << efforts_delivered_to_month.map(&:effort_value).flatten.compact.sum.to_f
     end
 
     def build_dates_array
@@ -246,7 +249,7 @@ module Flow
       @total_hours_value = @contract.total_hours
       @hours_ideal_slice = @total_hours_value / @dates_array.count
 
-      @consumed_hours = demands_finished_for_contracts.sum(&:total_effort)
+      @consumed_hours = efforts_for_contract.sum(&:effort_value)
       @remaining_hours = @total_hours_value - @consumed_hours
     end
 
@@ -254,12 +257,16 @@ module Flow
       @total_scope_value = @contract.estimated_scope
       @scope_ideal_slice = @total_scope_value / @dates_array.count.to_f
 
-      @delivered_demands_count = demands_finished_for_contracts.count
+      @delivered_demands_count = demands_finished_for_contract.count
       @remaining_backlog_count = @total_scope_value - @delivered_demands_count
     end
 
-    def demands_finished_for_contracts
-      @demands_finished_for_contracts ||= @demands.not_discarded_until(@contract.start_date).finished_until_date(@contract.end_date).finished_after_date(@contract.start_date)
+    def demands_finished_for_contract
+      @demands_finished_for_contract ||= @demands.not_discarded_until(@contract.start_date).finished_until_date(@contract.end_date).finished_after_date(@contract.start_date)
+    end
+
+    def efforts_for_contract
+      @demand_efforts = DemandEffort.where(demand_id: @demands.map(&:id))
     end
   end
 end
