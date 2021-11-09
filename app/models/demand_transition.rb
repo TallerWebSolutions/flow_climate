@@ -61,7 +61,7 @@ class DemandTransition < ApplicationRecord
   after_save :check_project_wip
 
   def total_seconds_in_transition
-    out_time = [last_time_out, Time.zone.now].compact.min
+    out_time = last_time_out || Time.zone.now
 
     out_time - last_time_in
   end
