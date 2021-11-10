@@ -23,6 +23,10 @@ class AuthenticatedController < ApplicationController
     @company_customers = @company.customers.order(name: :asc)
   end
 
+  def assign_demand
+    @demand = @company.demands.friendly.find(params[:demand_id]&.downcase)
+  end
+
   def render_products_for_customer(render_file, customer_id)
     @products = []
     customer = Customer.find_by(id: customer_id)

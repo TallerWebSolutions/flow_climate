@@ -42,7 +42,7 @@ RSpec.describe DemandTransitionsController, type: :controller do
     let(:customer) { Fabricate :customer, company: company }
     let(:team) { Fabricate :team, company: company }
     let(:project) { Fabricate :project, customers: [customer], team: team }
-    let!(:demand) { Fabricate :demand, project: project, team: team }
+    let!(:demand) { Fabricate :demand, company: company, project: project, team: team }
     let!(:stage) { Fabricate :stage, company: company, projects: [project] }
 
     before { sign_in user }
@@ -132,7 +132,7 @@ RSpec.describe DemandTransitionsController, type: :controller do
 
         context 'with wip limit broken' do
           let(:project) { Fabricate :project, customers: [customer], team: team, max_work_in_progress: 0 }
-          let!(:demand) { Fabricate :demand, project: project, team: team }
+          let!(:demand) { Fabricate :demand, company: company, project: project, team: team }
 
           context 'with no broken wip log created yet' do
             before { post :create, params: { company_id: company, demand_id: demand, demand_transition: { stage_id: stage, last_time_in: 3.days.ago, last_time_out: 1.day.ago } }, xhr: true }
@@ -170,7 +170,7 @@ RSpec.describe DemandTransitionsController, type: :controller do
     end
 
     describe 'GET #edit' do
-      let!(:first_demand) { Fabricate :demand, project: project, team: team }
+      let!(:first_demand) { Fabricate :demand, company: company, project: project, team: team }
 
       let!(:first_transition) { Fabricate :demand_transition, demand: demand }
 
@@ -210,7 +210,7 @@ RSpec.describe DemandTransitionsController, type: :controller do
     end
 
     describe 'PUT #update' do
-      let!(:first_demand) { Fabricate :demand, project: project, team: team }
+      let!(:first_demand) { Fabricate :demand, company: company, project: project, team: team }
 
       let!(:first_transition) { Fabricate :demand_transition, demand: demand }
 

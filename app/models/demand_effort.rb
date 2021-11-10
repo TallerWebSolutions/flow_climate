@@ -56,6 +56,21 @@ class DemandEffort < ApplicationRecord
   scope :to_dates, ->(start_date, end_date) { where('start_time_to_computation BETWEEN :start_date AND :end_date', start_date: start_date, end_date: end_date) }
   scope :until_date, ->(limit_date) { where('start_time_to_computation <= :limit_date', limit_date: limit_date) }
 
+  def csv_array
+    [
+      demand.external_id,
+      start_time_to_computation&.iso8601,
+      finish_time_to_computation&.iso8601,
+      effort_value.to_f,
+      effort_with_blocks.to_f,
+      total_blocked.to_f,
+      management_percentage_value,
+      pairing_percentage_value,
+      stage_percentage_value,
+      main_effort_in_transition
+    ]
+  end
+
   def who
     item_assignment.team_member_name
   end
@@ -66,5 +81,19 @@ class DemandEffort < ApplicationRecord
 
   def member_role
     item_assignment.membership.member_role
+  end
+
+  private
+
+  def stage_percentage_value
+    stage_percentage.to_f * 100
+  end
+
+  def pairing_percentage_value
+    pairing_percentage.to_f * 100
+  end
+
+  def management_percentage_value
+    management_percentage.to_f * 100
   end
 end

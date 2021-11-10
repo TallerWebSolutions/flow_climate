@@ -274,6 +274,8 @@ Rails.application.routes.draw do
 
       resources :demand_transitions, except: %i[destroy index]
       resources :item_assignments, only: :destroy
+
+      resources :demand_efforts, only: :index
     end
 
     controller :charts do
