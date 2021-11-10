@@ -134,10 +134,6 @@ class DemandBlocksController < AuthenticatedController
     @project = Project.find(params[:project_id])
   end
 
-  def assign_demand
-    @demand = Demand.friendly.find(params[:demand_id])
-  end
-
   def assign_demand_block
     @demand_block = @demand.demand_blocks.unscoped.find(params[:id])
   end

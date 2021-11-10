@@ -81,4 +81,24 @@ RSpec.describe DemandEffort, type: :model do
       it { expect(described_class.to_dates(Date.new(2021, 5, 22).beginning_of_day, Date.new(2021, 5, 24).end_of_day)).to match_array [downstream_demand_effort, other_upstream_demand_effort, upstream_demand_effort] }
     end
   end
+
+  describe '#csv_array' do
+    context 'with no stages' do
+      it 'returns the array with values' do
+        demand = Fabricate :demand
+        demand_effort = Fabricate :demand_effort, demand: demand
+
+        expect(demand_effort.csv_array).to eq [demand.external_id,
+                                               demand_effort.start_time_to_computation&.iso8601,
+                                               demand_effort.finish_time_to_computation&.iso8601,
+                                               demand_effort.effort_value.to_f,
+                                               demand_effort.effort_with_blocks.to_f,
+                                               demand_effort.total_blocked.to_f,
+                                               demand_effort.management_percentage,
+                                               demand_effort.pairing_percentage,
+                                               demand_effort.stage_percentage,
+                                               demand_effort.main_effort_in_transition]
+      end
+    end
+  end
 end

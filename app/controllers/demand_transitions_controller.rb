@@ -59,10 +59,6 @@ class DemandTransitionsController < AuthenticatedController
     @stage = Stage.find(params[:stage_id])
   end
 
-  def assign_demand
-    @demand = Demand.friendly.find(params[:demand_id])
-  end
-
   def assign_demand_transition
     @demand_transition = DemandTransition.find(params[:id])
   end

@@ -56,7 +56,7 @@ RSpec.describe DemandBlocksController, type: :controller do
       let(:company) { Fabricate :company, users: [user] }
       let(:customer) { Fabricate :customer, company: company }
       let!(:project) { Fabricate :project, customers: [customer] }
-      let(:demand) { Fabricate :demand, project: project }
+      let(:demand) { Fabricate :demand, company: company, project: project }
       let(:demand_block) { Fabricate :demand_block, demand: demand, active: false }
 
       context 'passing valid parameters' do
@@ -99,7 +99,7 @@ RSpec.describe DemandBlocksController, type: :controller do
       let(:company) { Fabricate :company, users: [user] }
       let(:customer) { Fabricate :customer, company: company }
       let!(:project) { Fabricate :project, customers: [customer] }
-      let(:demand) { Fabricate :demand, project: project }
+      let(:demand) { Fabricate :demand, company: company, project: project }
       let(:demand_block) { Fabricate :demand_block, demand: demand, active: true }
 
       context 'passing valid parameters' do
@@ -142,7 +142,7 @@ RSpec.describe DemandBlocksController, type: :controller do
       let(:company) { Fabricate :company, users: [user] }
       let(:customer) { Fabricate :customer, company: company }
       let!(:project) { Fabricate :project, customers: [customer] }
-      let(:demand) { Fabricate :demand, project: project }
+      let(:demand) { Fabricate :demand, company: company, project: project }
       let(:demand_block) { Fabricate :demand_block, demand: demand, active: true }
 
       context 'with valid parameters' do
@@ -235,7 +235,7 @@ RSpec.describe DemandBlocksController, type: :controller do
 
       let(:customer) { Fabricate :customer, company: company }
       let(:project) { Fabricate :project, customers: [customer], team: team }
-      let(:demand) { Fabricate :demand, project: project, team: team }
+      let(:demand) { Fabricate :demand, company: company, project: project, team: team }
       let(:demand_block) { Fabricate :demand_block, demand: demand, active: true }
 
       context 'passing valid parameters' do
