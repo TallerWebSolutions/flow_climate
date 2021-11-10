@@ -32,7 +32,7 @@ class RiskReview < ApplicationRecord
 
   has_many :demands, dependent: :nullify
   has_many :demand_blocks, dependent: :nullify
-  has_many :flow_impacts, dependent: :nullify
+  has_many :flow_events, dependent: :nullify
   has_many :risk_review_action_items, dependent: :destroy
 
   validates :company, :product, :lead_time_outlier_limit, :meeting_date, presence: true
@@ -56,10 +56,10 @@ class RiskReview < ApplicationRecord
     demand_blocks.count.to_f / demands.count
   end
 
-  def impacts_per_demand
+  def events_per_demand
     return 0 unless demands.count.positive?
 
-    flow_impacts.count.to_f / demands.count
+    flow_events.count.to_f / demands.count
   end
 
   def bug_percentage

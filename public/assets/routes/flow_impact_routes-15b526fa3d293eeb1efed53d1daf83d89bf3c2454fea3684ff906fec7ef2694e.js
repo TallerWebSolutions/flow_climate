@@ -6,4 +6,4 @@ function getFlowEvents(companyId, projectId, projectsIds) {
         type: "GET",
         data: `projects_ids=${projectsIds}&project_id=${projectId}`
     });
-}
+};

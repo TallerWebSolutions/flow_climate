@@ -17,13 +17,13 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :projects, only: :show do
-        resources :flow_impacts, only: %i[new create] do
-          get :opened_impacts, on: :collection
-        end
-      end
+      resources :projects, only: :show
 
       resources :demands, only: :show
+
+      resources :flow_events, only: %i[new create] do
+        get :opened_events, on: :collection
+      end
     end
   end
 
@@ -205,10 +205,6 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :flow_impacts do
-        get :demands_to_project, on: :collection
-      end
-
       resources :stage_project_configs, only: %i[index destroy]
       resources :project_risk_alerts, only: %i[index]
 
@@ -296,11 +292,6 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :flow_impacts do
-      collection do
-        get :new_direct_link
-        post :create_direct_link
-      end
-    end
+    resources :flow_events
   end
 end

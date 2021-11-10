@@ -1,0 +1,40 @@
+<% if flow_events.present? %>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th></th>
+        <th><%= FlowEvent.human_attribute_name :user %></th>
+        <th><%= FlowEvent.human_attribute_name :event_type %></th>
+        <th><%= FlowEvent.human_attribute_name :event_size %></th>
+        <th><%= FlowEvent.human_attribute_name :project %></th>
+        <th><%= FlowEvent.human_attribute_name :event_date %></th>
+        <th><%= FlowEvent.human_attribute_name :event_end_date %></th>
+        <th><%= FlowEvent.human_attribute_name :event_description %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% flow_events.each do |flow_event| %>
+        <tr>
+          <td>
+            <%= link_to company_flow_event_path(company, flow_event), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
+              <i class="fa fa-times" title='<%= I18n.t('flow_events.destroy.tooltip') %>'></i>
+            <% end %>
+
+            <%= link_to edit_company_flow_event_path(company, flow_event) do %>
+              <i class="fas fa-edit" title='<%= I18n.t('flow_events.edit.tooltip') %>'></i>
+            <% end %>
+          </td>
+          <td><%= flow_event.user&.full_name %></td>
+          <td><%= link_to I18n.t("activerecord.attributes.flow_event.enums.event_type.#{flow_event.event_type}"), company_flow_event_path(company, flow_event) %></td>
+          <td><%= I18n.t("activerecord.attributes.flow_event.enums.event_size.#{flow_event.event_size}") %></td>
+          <td><%= flow_event.project.name %></td>
+          <td><%= I18n.l(flow_event.event_date, format: :short) %></td>
+          <td><%= I18n.l(flow_event.event_end_date, format: :short) if flow_event.event_end_date.present? %></td>
+          <td><%= flow_event.event_description %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <%= render 'layouts/no_data', missing_data: FlowEvent.model_name.human(count: 2).downcase %>
+<% end %>

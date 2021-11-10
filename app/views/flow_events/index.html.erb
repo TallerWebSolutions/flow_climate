@@ -1,0 +1,19 @@
+<div class="row bottom-spaced-component">
+  <div class="col-xs-12">
+    <ul class="breadcrumb">
+      <li><%= link_to I18n.t('general.home.title'), root_path %></li>
+      <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
+      <li><%= FlowEvent.model_name.human(count: 2) %></li>
+    </ul>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-12">
+    <%= link_to I18n.t('flow_events.new.title'), new_company_flow_event_path(@company), class: 'btn btn-success pull-right' %>
+  </div>
+</div>
+
+<div id="flow-events-table">
+  <%= render 'flow_events/flow_events_table', company: @company, flow_events: @flow_events %>
+</div>

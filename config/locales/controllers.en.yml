@@ -141,7 +141,7 @@ en:
     leadtime_p80_label: "Lead time (p80)"
     demand_blocks: "block(s)"
     pull_transaction: "Pull Transaction"
-    demand_impact: "impact"
+    demand_event: "event"
     projects_count:
       one: "%{count} Project"
       other: "%{count} Projects"
@@ -797,8 +797,8 @@ en:
         all_classes: "All Classes"
       block_categories:
         title: "Demand Blocks"
-      impact_categories:
-        title: "Flow Impacts"
+      event_categories:
+        title: "Flow Events"
     grouped_by_stage:
       time_in_stage: "Time in Stage"
       hours_in_stage: "Hours in Stage"
@@ -836,7 +836,7 @@ en:
     products_list: "Products"
     statistics: ""
     demand_blocks: "Demands Blocks"
-    flow_impacts: "Flow Impacts"
+    flow_events: "Flow Events"
     jira: "Jira"
     stages: "Stages"
     portfolio_units: "Portfolio Units"
@@ -1227,21 +1227,18 @@ en:
         data_title: "Throughput"
         chart_title: "Throughput by Project for %{target_name}"
         xtitle: "Projects"
-  flow_impacts:
+  flow_events:
     new:
-      title: "New Impact"
+      title: "New Event"
     destroy:
-      tooltip: "Delete Impact"
+      tooltip: "Delete Event"
     create:
-      success: "Flow impact created."
-      error: "Problems were found while creating the Flow Impact"
+      success: "Flow event created."
+      error: "Problems were found while creating the Flow Event"
     edit:
-      tooltip: "Edit Impact"
+      tooltip: "Edit Event"
     index:
-      title:
-        zero: "%{count} Flow Impacts"
-        one: "%{count} Flow Impact"
-        other: "%{count} Flow Impacts"
+      title: "Flow Events"
   jira_accounts:
     new:
       title: "New Jira Account"
@@ -1306,8 +1303,8 @@ en:
       class_of_services:
         title: "Class of Services"
       demands_label: "Demands"
-      flow_impacts_label: "Flow Impacts"
-      impacts_per_demand_label: "Impact/Demand"
+      flow_events_label: "Flow Events"
+      events_per_demand_label: "Event/Demand"
       bugs_label: "Bugs"
       blocks_per_demand_label: "Blocks/Demand"
       projects_broken_wip: "Broken WiP Count"

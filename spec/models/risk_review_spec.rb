@@ -5,7 +5,7 @@ RSpec.describe RiskReview, type: :model do
     it { is_expected.to belong_to :company }
     it { is_expected.to belong_to :product }
     it { is_expected.to have_many(:demand_blocks).dependent(:nullify) }
-    it { is_expected.to have_many(:flow_impacts).dependent(:nullify) }
+    it { is_expected.to have_many(:flow_events).dependent(:nullify) }
     it { is_expected.to have_many(:demands).dependent(:nullify) }
     it { is_expected.to have_many(:risk_review_action_items).dependent(:destroy) }
   end
@@ -51,9 +51,9 @@ RSpec.describe RiskReview, type: :model do
     let!(:second_demand_block) { Fabricate :demand_block, demand: first_demand, risk_review: risk_review, block_time: Time.zone.parse('2018-03-06 10:00'), unblock_time: nil }
     let!(:third_demand_block) { Fabricate :demand_block, demand: second_demand, risk_review: risk_review, block_time: Time.zone.parse('2018-03-06 14:00'), unblock_time: Time.zone.parse('2018-03-06 15:00') }
 
-    let!(:first_flow_impact) { Fabricate :flow_impact, demand: first_demand, risk_review: risk_review, impact_date: Time.zone.parse('2018-03-05 23:00') }
-    let!(:second_flow_impact) { Fabricate :flow_impact, demand: first_demand, risk_review: risk_review, impact_date: Time.zone.parse('2018-03-06 10:00') }
-    let!(:third_flow_impact) { Fabricate :flow_impact, demand: second_demand, risk_review: risk_review, impact_date: Time.zone.parse('2018-03-06 14:00') }
+    let!(:first_flow_event) { Fabricate :flow_event, risk_review: risk_review, event_date: Time.zone.parse('2018-03-05 23:00') }
+    let!(:second_flow_event) { Fabricate :flow_event, risk_review: risk_review, event_date: Time.zone.parse('2018-03-06 10:00') }
+    let!(:third_flow_event) { Fabricate :flow_event, risk_review: risk_review, event_date: Time.zone.parse('2018-03-06 14:00') }
   end
 
   describe '#outlier_demands' do
@@ -83,12 +83,12 @@ RSpec.describe RiskReview, type: :model do
     end
   end
 
-  describe '#impacts_per_demand' do
+  describe '#events_per_demand' do
     include_context 'risk reviews data'
 
-    it 'returns the impacts per demand' do
-      expect(risk_review.impacts_per_demand).to eq 0.75
-      expect(other_risk_review.impacts_per_demand).to eq 0
+    it 'returns the events per demand' do
+      expect(risk_review.events_per_demand).to eq 0.75
+      expect(other_risk_review.events_per_demand).to eq 0
     end
   end
 

@@ -37,17 +37,17 @@ RSpec.describe RiskReviewService, type: :service do
         Fabricate :demand_block, demand: third_demand, risk_review: nil, block_time: 2.days.ago, unblock_time: Time.zone.tomorrow
         Fabricate :demand_block, demand: sixth_demand, risk_review: nil, discarded_at: Time.zone.yesterday
 
-        first_impact = Fabricate :flow_impact, project: project, demand: first_demand, risk_review: nil, impact_date: 2.days.ago
-        second_impact = Fabricate :flow_impact, project: project, demand: first_demand, risk_review: nil, impact_date: 26.hours.ago
-        third_impact = Fabricate :flow_impact, project: project, demand: second_demand, risk_review: risk_review, impact_date: 26.hours.ago
-        fourth_impact = Fabricate :flow_impact, project: project, demand: third_demand, risk_review: nil, impact_date: 4.days.ago
-        fifth_impact = Fabricate :flow_impact, project: project, demand: third_demand, risk_review: nil, impact_date: Time.zone.tomorrow
-        Fabricate :flow_impact, project: project, demand: sixth_demand, risk_review: nil, impact_date: 4.days.ago, discarded_at: Time.zone.yesterday
+        first_event = Fabricate :flow_event, project: project, risk_review: nil, event_date: 2.days.ago
+        second_event = Fabricate :flow_event, project: project, risk_review: nil, event_date: 26.hours.ago
+        third_event = Fabricate :flow_event, project: project, risk_review: risk_review, event_date: 26.hours.ago
+        fourth_event = Fabricate :flow_event, project: project, risk_review: nil, event_date: 4.days.ago
+        fifth_event = Fabricate :flow_event, project: project, risk_review: nil, event_date: Time.zone.tomorrow
+        Fabricate :flow_event, project: project, risk_review: nil, event_date: 4.days.ago, discarded_at: Time.zone.yesterday
 
         described_class.instance.associate_demands_data(product, risk_review)
         expect(risk_review.reload.demands).to match_array [first_demand, third_demand, second_demand, fourth_demand]
         expect(risk_review.reload.demand_blocks).to match_array [first_block, third_block, second_block, fourth_block]
-        expect(risk_review.reload.flow_impacts).to match_array [first_impact, third_impact, second_impact, fourth_impact, fifth_impact]
+        expect(risk_review.reload.flow_events).to match_array [first_event, third_event, second_event, fourth_event, fifth_event]
         expect(risk_review.reload.weekly_avg_blocked_time.count).to eq 2
         expect(risk_review.reload.weekly_avg_blocked_time[0]).to eq 129_600.0
         expect(risk_review.reload.weekly_avg_blocked_time[1]).to eq 129_600.0

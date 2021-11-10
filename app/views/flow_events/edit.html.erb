@@ -1,0 +1,14 @@
+<div class="row bottom-spaced-component">
+  <div class="col-xs-12">
+    <ul class="breadcrumb">
+      <li><%= link_to I18n.t('general.home.title'), root_path %></li>
+      <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
+      <li><%= link_to FlowEvent.model_name.human(count: 2), company_flow_events_path(@company) %></li>
+      <li><%= I18n.t('flow_events.new.title') %></li>
+    </ul>
+  </div>
+</div>
+
+<%= form_for @flow_event, url: company_flow_event_path(@company, @flow_event), method: :put, html: { class: 'standard-form' } do |f| %>
+  <%= render 'flow_events/form', f: f, company: @company, flow_event: @flow_event, demands_for_event_form: @demands_for_event_form %>
+<% end %>

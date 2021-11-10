@@ -71,49 +71,49 @@ RSpec.describe Consolidations::ReplenishingConsolidationJob do
   context 'with projects and no project consolidations' do
     it 'saves empty consolidations' do
       travel_to Time.zone.local(2020, 7, 8, 10, 0, 0) do
-        Fabricate :project, company: company, team: team, status: :executing, start_date: 4.weeks.ago, end_date: 3.days.from_now, max_work_in_progress: 3, initial_scope: 0
-        Fabricate :project, company: company, team: team, status: :executing, start_date: 3.weeks.ago, end_date: 3.days.from_now, max_work_in_progress: 5, initial_scope: 0
+        project = Fabricate :project, company: company, team: team, status: :executing, start_date: 3.weeks.ago, end_date: 3.days.from_now, max_work_in_progress: 5, initial_scope: 0
+        other_project = Fabricate :project, company: company, team: team, status: :executing, start_date: 4.weeks.ago, end_date: 3.days.from_now, max_work_in_progress: 3, initial_scope: 0
 
         described_class.perform_now
 
-        new_consolidations = Consolidations::ReplenishingConsolidation.all.order(:consolidation_date)
-        expect(new_consolidations.count).to eq 2
+        new_consolidation_project = Consolidations::ReplenishingConsolidation.where(project: project).order(:consolidation_date).first
+        new_consolidation_other_project = Consolidations::ReplenishingConsolidation.where(project: other_project).order(:consolidation_date).first
 
-        expect(new_consolidations[0].consolidation_date).to eq Time.zone.today
-        expect(new_consolidations[0].flow_pressure).to eq 0
-        expect(new_consolidations[0].customer_happiness).to eq 0
-        expect(new_consolidations[0].leadtime_80).to eq 0
-        expect(new_consolidations[0].max_work_in_progress).to eq 5
-        expect(new_consolidations[0].montecarlo_80_percent).to eq 0
-        expect(new_consolidations[0].project_based_risks_to_deadline).to eq 1
-        expect(new_consolidations[0].project_throughput_data).to eq []
-        expect(new_consolidations[0].qty_selected_last_week).to eq 0
-        expect(new_consolidations[0].qty_using_pressure).to eq 0
-        expect(new_consolidations[0].relative_flow_pressure).to eq 0
-        expect(new_consolidations[0].team_based_montecarlo_80_percent).to eq 0
-        expect(new_consolidations[0].team_based_odds_to_deadline).to eq 1
-        expect(new_consolidations[0].team_monte_carlo_weeks_max).to eq 0
-        expect(new_consolidations[0].team_monte_carlo_weeks_min).to eq 0
-        expect(new_consolidations[0].team_monte_carlo_weeks_std_dev).to eq 0
-        expect(new_consolidations[0].work_in_progress).to eq 0
+        expect(new_consolidation_project.consolidation_date).to eq Time.zone.today
+        expect(new_consolidation_project.flow_pressure).to eq 0
+        expect(new_consolidation_project.customer_happiness).to eq 0
+        expect(new_consolidation_project.leadtime_80).to eq 0
+        expect(new_consolidation_project.max_work_in_progress).to eq 5
+        expect(new_consolidation_project.montecarlo_80_percent).to eq 0
+        expect(new_consolidation_project.project_based_risks_to_deadline).to eq 1
+        expect(new_consolidation_project.project_throughput_data).to eq []
+        expect(new_consolidation_project.qty_selected_last_week).to eq 0
+        expect(new_consolidation_project.qty_using_pressure).to eq 0
+        expect(new_consolidation_project.relative_flow_pressure).to eq 0
+        expect(new_consolidation_project.team_based_montecarlo_80_percent).to eq 0
+        expect(new_consolidation_project.team_based_odds_to_deadline).to eq 1
+        expect(new_consolidation_project.team_monte_carlo_weeks_max).to eq 0
+        expect(new_consolidation_project.team_monte_carlo_weeks_min).to eq 0
+        expect(new_consolidation_project.team_monte_carlo_weeks_std_dev).to eq 0
+        expect(new_consolidation_project.work_in_progress).to eq 0
 
-        expect(new_consolidations[1].consolidation_date).to eq Time.zone.today
-        expect(new_consolidations[1].flow_pressure).to eq 0
-        expect(new_consolidations[1].customer_happiness).to eq 0
-        expect(new_consolidations[1].leadtime_80).to eq 0
-        expect(new_consolidations[1].max_work_in_progress).to eq 3
-        expect(new_consolidations[1].montecarlo_80_percent).to eq 0
-        expect(new_consolidations[1].project_based_risks_to_deadline).to eq 1
-        expect(new_consolidations[1].project_throughput_data).to eq []
-        expect(new_consolidations[1].qty_selected_last_week).to eq 0
-        expect(new_consolidations[1].qty_using_pressure).to eq 0
-        expect(new_consolidations[1].relative_flow_pressure).to eq 0
-        expect(new_consolidations[1].team_based_montecarlo_80_percent).to eq 0
-        expect(new_consolidations[1].team_based_odds_to_deadline).to eq 1
-        expect(new_consolidations[1].team_monte_carlo_weeks_max).to eq 0
-        expect(new_consolidations[1].team_monte_carlo_weeks_min).to eq 0
-        expect(new_consolidations[1].team_monte_carlo_weeks_std_dev).to eq 0
-        expect(new_consolidations[1].work_in_progress).to eq 0
+        expect(new_consolidation_other_project.consolidation_date).to eq Time.zone.today
+        expect(new_consolidation_other_project.flow_pressure).to eq 0
+        expect(new_consolidation_other_project.customer_happiness).to eq 0
+        expect(new_consolidation_other_project.leadtime_80).to eq 0
+        expect(new_consolidation_other_project.max_work_in_progress).to eq 3
+        expect(new_consolidation_other_project.montecarlo_80_percent).to eq 0
+        expect(new_consolidation_other_project.project_based_risks_to_deadline).to eq 1
+        expect(new_consolidation_other_project.project_throughput_data).to eq []
+        expect(new_consolidation_other_project.qty_selected_last_week).to eq 0
+        expect(new_consolidation_other_project.qty_using_pressure).to eq 0
+        expect(new_consolidation_other_project.relative_flow_pressure).to eq 0
+        expect(new_consolidation_other_project.team_based_montecarlo_80_percent).to eq 0
+        expect(new_consolidation_other_project.team_based_odds_to_deadline).to eq 1
+        expect(new_consolidation_other_project.team_monte_carlo_weeks_max).to eq 0
+        expect(new_consolidation_other_project.team_monte_carlo_weeks_min).to eq 0
+        expect(new_consolidation_other_project.team_monte_carlo_weeks_std_dev).to eq 0
+        expect(new_consolidation_other_project.work_in_progress).to eq 0
       end
     end
   end

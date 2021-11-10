@@ -14,9 +14,9 @@ en:
   demands:
     show:
       title: "Item Show"
-  flow_impacts:
-    opened_impacts:
-      title: "Opened impacts for the project %{project_name}"
+  flow_events:
+    opened_events:
+      title: "Opened events for the company %{company_name}"
   companies:
     api:
       company_details:

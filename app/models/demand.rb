@@ -90,7 +90,6 @@ class Demand < ApplicationRecord
   has_many :demand_blocks, dependent: :destroy
   has_many :demand_comments, dependent: :destroy
   has_many :item_assignments, dependent: :destroy
-  has_many :flow_impacts, dependent: :destroy
   has_many :demand_efforts, dependent: :destroy
 
   has_many :stages, -> { distinct }, through: :demand_transitions
@@ -318,7 +317,6 @@ class Demand < ApplicationRecord
     demand_blocks.discard_all
     demand_comments.discard_all
     item_assignments.discard_all
-    flow_impacts.discard_all
   end
 
   def undiscard_dependencies
@@ -326,7 +324,6 @@ class Demand < ApplicationRecord
     demand_blocks.undiscard_all
     demand_comments.undiscard_all
     item_assignments.undiscard_all
-    flow_impacts.undiscard_all
   end
 
   def decrease_uncertain_scope

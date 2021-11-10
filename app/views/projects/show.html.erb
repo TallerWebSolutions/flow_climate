@@ -64,8 +64,6 @@
       <li><%= link_to I18n.t('demands.new.title'), new_company_project_demand_path(@company, @project), class: 'nav-link dropdown-item' %></li>
       <li><%= link_to I18n.t('projects.actions.edit.title'), edit_company_project_path(@company, @project), class: 'nav-link dropdown-item' %></li>
       <li class="divider"></li>
-      <li><%= link_to I18n.t('flow_impacts.index.title', count: @project.flow_impacts.count), company_project_flow_impacts_path(@company, @project), class: 'nav-link dropdown-item' %></li>
-      <li class="divider"></li>
       <li><%= link_to I18n.t('jira_project_configs.index.title', count: @project.jira_project_configs.count), company_project_jira_project_configs_path(@company, @project), class: 'nav-link dropdown-item' %></li>
       <li><%= link_to I18n.t('stage_project_configs.index.title', count: @project.stages.count), company_project_stage_project_configs_path(@company, @project), class: 'nav-link dropdown-item' %></li>
       <li><%= link_to I18n.t('project_risk_configs.index.title', count: @project.project_risk_configs.count), company_project_project_risk_configs_path(@company, @project), class: 'nav-link dropdown-item' %></li>
@@ -163,7 +161,6 @@
 
   <%= javascript_include_tag 'routes/chart_routes' %>
   <%= javascript_include_tag 'routes/demand_routes' %>
-  <%= javascript_include_tag 'routes/flow_impact_routes' %>
 
   <%= javascript_include_tag 'demand_blocks/form_modal' %>
 

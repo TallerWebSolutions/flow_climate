@@ -27,12 +27,12 @@
       <td><%= number_with_precision(risk_review.blocks_per_demand, precision: 3) %></td>
     </tr>
     <tr>
-      <td><b><%= I18n.t('risk_reviews.show.flow_impacts_label') %></b></td>
-      <td><%= risk_review.flow_impacts.count %></td>
+      <td><b><%= I18n.t('risk_reviews.show.flow_events_label') %></b></td>
+      <td><%= risk_review.flow_events.count %></td>
     </tr>
     <tr>
-      <td><b><%= I18n.t('risk_reviews.show.impacts_per_demand_label') %></b></td>
-      <td><%= number_with_precision(risk_review.impacts_per_demand, precision: 3) %></td>
+      <td><b><%= I18n.t('risk_reviews.show.events_per_demand_label') %></b></td>
+      <td><%= number_with_precision(risk_review.events_per_demand, precision: 3) %></td>
     </tr>
     <tr>
       <td><b><%= I18n.t('risk_reviews.show.projects_broken_wip') %></b></td>

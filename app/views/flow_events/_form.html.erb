@@ -1,0 +1,38 @@
+<div class="row">
+  <div class='col-xs-4 col-xs-offset-4 form-group <%= 'has-error' if flow_event.errors[:event_date].present? %>'>
+    <%= f.label :event_date, class: 'control-label required' %>
+    <%= f.datetime_field :event_date, class: 'form-control' %>
+    <span class="help-block"><%= flow_event.errors[:event_date].join(', ') %></span>
+  </div>
+
+  <div class='col-xs-4 col-xs-offset-4 form-group'>
+    <%= f.label :event_end_date, class: 'control-label required' %>
+    <%= f.datetime_field :event_end_date, class: 'form-control' %>
+  </div>
+  <div class='col-xs-4 col-xs-offset-4 form-group <%= 'has-error' if flow_event.errors[:event_type].present? %>'>
+    <%= f.label :event_type, class: 'control-label' %>
+    <%= f.select :event_type, FlowEvent.event_types.map { |key, _value| [I18n.t("activerecord.attributes.flow_event.enums.event_type.#{key}"), key] }, { include_blank: I18n.t('general.select'), selected: flow_event.event_type }, class: 'form-control' %>
+    <span class="help-block"><%= flow_event.errors[:event_type].join(', ') %></span>
+  </div>
+
+  <div class='col-xs-4 col-xs-offset-4 form-group <%= 'has-error' if flow_event.errors[:event_size].present? %>'>
+    <%= f.label :event_size, class: 'control-label' %>
+    <%= f.select :event_size, FlowEvent.event_sizes.map { |key, _value| [I18n.t("activerecord.attributes.flow_event.enums.event_size.#{key}"), key] }, { include_blank: I18n.t('general.select'), selected: flow_event.event_size }, class: 'form-control' %>
+    <span class="help-block"><%= flow_event.errors[:event_size].join(', ') %></span>
+  </div>
+</div>
+
+<div class="row">
+  <div class='col-xs-4 col-xs-offset-4 form-group <%= 'has-error' if flow_event.errors[:event_description].present? %>'>
+    <%= f.label :event_description, class: 'control-label required' %>
+    <%= f.text_area :event_description, class: 'form-control' %>
+    <span class="help-block"><%= flow_event.errors[:event_description].join(', ') %></span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-4 col-xs-offset-4 form-group">
+    <%= f.submit I18n.t('general.buttons.save'), class: 'btn btn-success' %>
+    <%= link_to I18n.t('general.buttons.cancel'), company_flow_events_path(company), class: 'btn btn-danger' %>
+  </div>
+</div>
