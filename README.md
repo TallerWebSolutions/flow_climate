@@ -53,3 +53,12 @@ Have the ultimate management tools in your hands!
 
 - Run console: `rails c`
 - Run server: `rails s`
+
+# I've just updated the code, what to do?
+
+- Run `bundle install`
+- Run `rspec`
+
+**If there are pending migrations, run the command below:**
+
+- Run `RAILS_ENV=test rake db:migrate`
