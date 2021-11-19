@@ -456,6 +456,7 @@ pt-BR:
       flow_event:
         user: Criada por
         project: Projeto
+        team: Time
         event_type: Tipo do Evento
         event_size: Tamanho do Evento
         event_description: Descrição do Evento

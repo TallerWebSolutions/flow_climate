@@ -6,9 +6,20 @@
   </div>
 
   <div class='col-xs-4 col-xs-offset-4 form-group'>
-    <%= f.label :event_end_date, class: 'control-label required' %>
+    <%= f.label :event_end_date, class: 'control-label' %>
     <%= f.datetime_field :event_end_date, class: 'form-control' %>
   </div>
+
+  <div class='col-xs-4 col-xs-offset-4 form-group'>
+    <%= f.label :team, class: 'control-label' %>
+    <%= f.select :team_id, company.teams.order(:name).map { |team| [team.name, team.id] }, { include_blank: I18n.t('general.select'), selected: flow_event.team_id }, class: 'form-control', onchange: "searchTeamProjects(#{company.id}, this.value);" %>
+  </div>
+
+  <div class='col-xs-4 col-xs-offset-4 form-group'>
+    <%= f.label :project, class: 'control-label' %>
+    <%= f.select :project_id, [], { include_blank: I18n.t('general.select'), selected: flow_event.project_id }, class: 'form-control', disabled: :disabled %>
+  </div>
+
   <div class='col-xs-4 col-xs-offset-4 form-group <%= 'has-error' if flow_event.errors[:event_type].present? %>'>
     <%= f.label :event_type, class: 'control-label' %>
     <%= f.select :event_type, FlowEvent.event_types.map { |key, _value| [I18n.t("activerecord.attributes.flow_event.enums.event_type.#{key}"), key] }, { include_blank: I18n.t('general.select'), selected: flow_event.event_type }, class: 'form-control' %>
