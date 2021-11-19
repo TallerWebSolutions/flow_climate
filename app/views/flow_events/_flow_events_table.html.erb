@@ -6,6 +6,7 @@
         <th><%= FlowEvent.human_attribute_name :user %></th>
         <th><%= FlowEvent.human_attribute_name :event_type %></th>
         <th><%= FlowEvent.human_attribute_name :event_size %></th>
+        <th><%= FlowEvent.human_attribute_name :team %></th>
         <th><%= FlowEvent.human_attribute_name :project %></th>
         <th><%= FlowEvent.human_attribute_name :event_date %></th>
         <th><%= FlowEvent.human_attribute_name :event_end_date %></th>
@@ -27,6 +28,7 @@
           <td><%= flow_event.user&.full_name %></td>
           <td><%= link_to I18n.t("activerecord.attributes.flow_event.enums.event_type.#{flow_event.event_type}"), company_flow_event_path(company, flow_event) %></td>
           <td><%= I18n.t("activerecord.attributes.flow_event.enums.event_size.#{flow_event.event_size}") %></td>
+          <td><%= flow_event.team&.name %></td>
           <td><%= flow_event.project.name %></td>
           <td><%= I18n.l(flow_event.event_date, format: :short) %></td>
           <td><%= I18n.l(flow_event.event_end_date, format: :short) if flow_event.event_end_date.present? %></td>

@@ -100,20 +100,21 @@ RSpec.describe FlowEventsController, type: :controller do
     end
 
     describe 'POST #create' do
-      let!(:first_event) { Fabricate :flow_event, project: project, event_date: 1.day.ago }
-      let!(:second_event) { Fabricate :flow_event, project: project, event_date: 2.days.ago }
+      let(:team) { Fabricate :team, company: company }
+      let(:team_project) { Fabricate :project, team: team }
 
       context 'valid parameters' do
         it 'creates the event and renders the JS template' do
           event_end_date = 3.days.from_now
 
-          post :create, params: { company_id: company, flow_event: { project_id: project, event_type: :api_not_ready, event_size: :medium, event_description: 'foo bar', event_date: Time.zone.now.beginning_of_day, event_end_date: event_end_date } }
+          post :create, params: { company_id: company, flow_event: { team_id: team, project_id: team_project, event_type: :api_not_ready, event_size: :medium, event_description: 'foo bar', event_date: Time.zone.now.beginning_of_day, event_end_date: event_end_date } }
           expect(response).to redirect_to company_flow_events_path(company)
           created_event = assigns(:flow_event)
 
           expect(created_event).to be_persisted
           expect(created_event.user).to eq user
-          expect(created_event.project).to eq project
+          expect(created_event.team).to eq team
+          expect(created_event.project).to eq team_project
           expect(created_event.event_type).to eq 'api_not_ready'
           expect(created_event.event_size).to eq 'medium'
           expect(created_event.event_description).to eq 'foo bar'
@@ -221,18 +222,20 @@ RSpec.describe FlowEventsController, type: :controller do
     end
 
     describe 'PUT #update' do
+      let(:team) { Fabricate :team, company: company }
       let(:flow_event) { Fabricate :flow_event, project: project, user: user }
 
       context 'valid parameters' do
         let(:demand) { Fabricate :demand, project: project }
 
-        before { put :update, params: { company_id: company, id: flow_event, flow_event: { project_id: project, event_type: :api_not_ready, event_description: 'foo bar', event_date: Time.zone.local(2019, 4, 2, 12, 38, 0), end_date: Time.zone.local(2019, 4, 2, 15, 38, 0) } } }
+        before { put :update, params: { company_id: company, id: flow_event, flow_event: { team_id: team, project_id: project, event_type: :api_not_ready, event_description: 'foo bar', event_date: Time.zone.local(2019, 4, 2, 12, 38, 0), end_date: Time.zone.local(2019, 4, 2, 15, 38, 0) } } }
 
         it 'creates the event and renders the JS template' do
           expect(response).to redirect_to company_flow_events_path(company)
 
           expect(assigns(:flow_event)).to be_persisted
           expect(assigns(:flow_event).user).to eq user
+          expect(assigns(:flow_event).team).to eq team
           expect(assigns(:flow_event).project).to eq project
           expect(assigns(:flow_event).event_type).to eq 'api_not_ready'
           expect(assigns(:flow_event).event_description).to eq 'foo bar'
