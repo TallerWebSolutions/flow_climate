@@ -2,6 +2,7 @@
   <thead>
     <tr>
       <th>#</th>
+      <th><%= Team.model_name.human(count: 2) %></th>
       <th><%= TeamMember.human_attribute_name(:name) %></th>
       <th><%= Membership.human_attribute_name(:member_role) %></th>
       <th><%= ItemAssignment.human_attribute_name(:start_time) %></th>
@@ -18,6 +19,7 @@
     <% demand.item_assignments.includes([:membership]).order(:start_time).each do |assignment| %>
       <tr>
         <td><%= assignment.id %></td>
+        <td><%= assignment.membership.team.name %></td>
         <td><%= assignment.membership.team_member_name %></td>
         <td><%= I18n.t("activerecord.attributes.membership.enums.member_role.#{assignment.membership.member_role}") %></td>
         <td><%= I18n.l(assignment.start_time, format: :short) %></td>
