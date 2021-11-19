@@ -109,6 +109,12 @@ RSpec.describe ProjectsController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'GET #search_projects_by_team' do
+      before { get :search_projects_by_team, params: { company_id: 'foo', team_id: 'bar' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated as gold' do
@@ -1079,6 +1085,65 @@ RSpec.describe ProjectsController, type: :controller do
 
             it { expect(response).to have_http_status :not_found }
           end
+        end
+      end
+    end
+
+    describe 'GET #search_projects_by_team' do
+      context 'valid' do
+        let(:team) { Fabricate :team, company: company }
+
+        context 'with data' do
+          it 'responds with projects by team' do
+            first_project = Fabricate :project, company: company, team: team, name: 'zzz', status: :executing
+            second_project = Fabricate :project, company: company, team: team, name: 'bbb', status: :maintenance
+            third_project = Fabricate :project, company: company, team: team, name: 'ccc', status: :executing
+
+            Fabricate :project, company: company, team: team, status: :waiting
+            Fabricate :project, company: company, team: team, status: :finished
+            Fabricate :project, company: company, status: :executing
+
+            get :search_projects_by_team, params: { company_id: company, team_id: team }, xhr: true
+
+            expect(response).to have_http_status :ok
+            expect(response).to render_template 'flow_events/search_projects_by_team'
+            expect(assigns(:projects_by_team)).to eq [second_project, third_project, first_project]
+          end
+        end
+
+        context 'no data' do
+          before { get :search_projects_by_team, params: { company_id: company, team_id: team }, xhr: true }
+
+          it 'responds with projects by team' do
+            expect(response).to have_http_status :ok
+            expect(response).to render_template 'flow_events/search_projects_by_team'
+            expect(assigns(:projects_by_team)).to eq []
+          end
+        end
+      end
+
+      context 'invalid' do
+        context 'not permitted company' do
+          let(:other_company) { Fabricate :company }
+          let(:team) { Fabricate :team, company: other_company }
+
+          before { get :search_projects_by_team, params: { company_id: other_company, team_id: team }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'not found company' do
+          let(:team) { Fabricate :team }
+
+          before { get :search_projects_by_team, params: { company_id: 'foo', team_id: team }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'not found team' do
+          before { get :search_projects_by_team, params: { company_id: company, team_id: 'foo' }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
         end
       end
     end

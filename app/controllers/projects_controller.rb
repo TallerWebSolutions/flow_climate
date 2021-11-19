@@ -2,7 +2,7 @@
 
 class ProjectsController < AuthenticatedController
   before_action :assign_company
-  before_action :assign_project, except: %i[new create index search_projects running_projects_charts]
+  before_action :assign_project, except: %i[new create index search_projects running_projects_charts search_projects_by_team]
 
   def show
     assign_project_stages
@@ -157,6 +157,11 @@ class ProjectsController < AuthenticatedController
     @projects_summary = ProjectsSummaryData.new(@unpaged_projects)
 
     render 'projects/index'
+  end
+
+  def search_projects_by_team
+    @projects_by_team = @company.teams.find(params[:team_id]).projects.running.order(:name)
+    respond_to { |format| format.js { render 'flow_events/search_projects_by_team' } }
   end
 
   def running_projects_charts

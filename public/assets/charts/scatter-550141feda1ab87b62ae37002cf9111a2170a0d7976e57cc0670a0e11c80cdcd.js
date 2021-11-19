@@ -51,7 +51,7 @@ function buildScatterChart(scatterDiv) {
                     style: {
                         color: 'red'
                     },
-                    text: `percentile 60% (${parseFloat(scatterDiv.data('percentile60')).toFixed(2)} ${scatterDiv.data('tooltipsuffix')})`
+                    text: `percentile 65% (${parseFloat(scatterDiv.data('percentile65')).toFixed(2)} ${scatterDiv.data('tooltipsuffix')})`
                 }
             }]
         },
@@ -69,7 +69,7 @@ function buildScatterChart(scatterDiv) {
         plotOptions: {
             scatter: {
                 marker: {
-                    radius: 5,
+                    radius: 2,
                     states: {
                         hover: {
                             enabled: true,

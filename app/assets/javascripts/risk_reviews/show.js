@@ -10,9 +10,9 @@ if (donutRiskReviewBlockDiv.length !== 0) {
     buildDonutChart(donutRiskReviewBlockDiv);
 }
 
-let donutRiskReviewImpactDiv = $("#risk-review-impact-categories-donut");
-if (donutRiskReviewImpactDiv.length !== 0) {
-    buildDonutChart(donutRiskReviewImpactDiv);
+let donutRiskReviewEventDiv = $("#risk-review-event-categories-donut");
+if (donutRiskReviewEventDiv.length !== 0) {
+    buildDonutChart(donutRiskReviewEventDiv);
 }
 
 let lineAverageBlockedTimeInTime = $("#average-blocked-time-in-time");

@@ -1,0 +1,27 @@
+<div class="row bottom-spaced-component">
+  <div class="col-xs-12">
+    <ul class="breadcrumb">
+      <li><%= link_to I18n.t('general.home.title'), root_path %></li>
+      <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
+      <li><%= link_to Project.model_name.human(count: 2), company_projects_path(@company) %></li>
+      <li><%= link_to @flow_event.project.name, company_project_path(@company, @flow_event.project) %></li>
+      <li><%= FlowEvent.model_name.human %></li>
+    </ul>
+  </div>
+</div>
+
+<h3><%= I18n.t("activerecord.attributes.flow_event.enums.event_type.#{@flow_event.event_type}") %></h3>
+<h4><%= I18n.t("activerecord.attributes.flow_event.enums.event_size.#{@flow_event.event_size}") %></h4>
+
+<table class="table table-striped">
+  <tbody>
+    <tr>
+      <td><b><%= FlowEvent.human_attribute_name :event_description %></b></td>
+      <td><%= @flow_event.event_description %></td>
+    </tr>
+    <tr>
+      <td><b><%= FlowEvent.human_attribute_name :start_date %></b></td>
+      <td><%= I18n.l(@flow_event.event_date, format: :short) %></td>
+    </tr>
+  </tbody>
+</table>

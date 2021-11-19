@@ -124,9 +124,9 @@ pt-BR:
       user_plan:
         one: Plano do Usuário
         other: Planos do Usuário
-      flow_impact:
-        one: Impacto no Fluxo
-        other: Impactos no Fluxo
+      flow_event:
+        one: Evento
+        other: Eventos
       demand_comment:
         one: Comentário de Demanda
         other: Comentários de Demanda
@@ -453,23 +453,26 @@ pt-BR:
         paid: Pago?
         plan_value: Valor do Plano
         active: Ativo?
-      flow_impact:
+      flow_event:
         user: Criada por
         project: Projeto
-        impact_type: Tipo do Impacto
-        impact_size: Tamanho do Impacto
-        impact_description: Descrição do Impacto
+        team: Time
+        event_type: Tipo do Evento
+        event_size: Tamanho do Evento
+        event_description: Descrição do Evento
         demand: Demanda
-        impact_date: Data do Impacto
+        event_date: Data do Evento
+        event_end_date: Fim do Evento
         enums:
-          impact_type:
+          event_type:
             other_team_dependency: Dependência de outro time
             api_not_ready: API não está pronta
             customer_not_available: Cliente indisponível
             other_demand_dependency: Dependência de outra demanda
             fixes_out_of_scope: Ajustes fora do escopo
             external_service_unavailable: Serviço externo indisponível
-          impact_size:
+            day_off: Folga
+          event_size:
             small: Pequeno
             medium: Médio
             large: Grande
@@ -623,6 +626,8 @@ pt-BR:
             internal_process_change: Alteração Interna de Processo
             cadences_change: Alteração nas Cadências
             internal_comunication_change: Alteração na Comunicação Interna
+            training: Treinamento
+            guidance: Orientação
       user_invite:
         company: Empresa
         invite_type: Tipo do Convite

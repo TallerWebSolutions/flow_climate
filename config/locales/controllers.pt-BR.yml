@@ -141,7 +141,7 @@ pt-BR:
     leadtime_p80_label: "Lead time (p80)"
     demand_blocks: "bloqueio(s)"
     pull_transaction: "Pull Transaction"
-    demand_impact: "impacto"
+    flow_event: "Evento"
     projects_count:
       one: "%{count} Projeto"
       other: "%{count} Projetos"
@@ -876,8 +876,8 @@ pt-BR:
         all_classes: "Todas as Classes"
       block_categories:
         title: "Bloqueios de Demanda"
-      impact_categories:
-        title: "Impactos no Fluxo"
+      event_categories:
+        title: "Eventos no Fluxo"
     grouped_by_stage:
       time_in_stage: "Tempo na Etapa"
       hours_in_stage: "Horas na Etapa"
@@ -915,7 +915,7 @@ pt-BR:
     products_list: "Produtos"
     statistics: "Estatísticas"
     demand_blocks: "Bloqueios"
-    flow_impacts: "Impactos de Fluxo"
+    flow_events: "Eventos de Fluxo"
     jira: "Jira"
     stages: "Etapas"
     portfolio_units: "Unidades do Portfólio"
@@ -1196,23 +1196,20 @@ pt-BR:
         data_title: "Throughput"
         chart_title: "Throughput por Projeto para %{target_name}"
         xtitle: "Projetos"
-  flow_impacts:
+  flow_events:
     new:
-      title: "Novo Impacto"
+      title: "Novo Evento"
     destroy:
-      tooltip: "Excluir Impacto"
+      tooltip: "Excluir Evento"
     create:
-      success: "Impacto de fluxo criado."
-      error: "Problemas foram encontrados para salvar o Impacto"
+      success: "Evento de fluxo criado."
+      error: "Problemas foram encontrados para salvar o Evento"
     edit:
-      tooltip: "Editar Impacto"
+      tooltip: "Editar Evento"
     show:
-      impact_duration: "Duração do Impacto"
+      event_duration: "Duração do Evento"
     index:
-      title:
-        zero: "%{count} Impacto"
-        one: "%{count} Impacto"
-        other: "%{count} Impactos"
+      title: "Eventos"
   jira_accounts:
     new:
       title: "Nova Conta do Jira"
@@ -1277,8 +1274,8 @@ pt-BR:
       class_of_services:
         title: "Classes de Serviço"
       demands_label: "Demandas"
-      flow_impacts_label: "Impactos de Fluxo"
-      impacts_per_demand_label: "Impacto/Demanda"
+      flow_events_label: "Eventos de Fluxo"
+      events_per_demand_label: "Evento/Demanda"
       bugs_label: "Defeitos"
       blocks_per_demand_label: "Bloqueios/Demanda"
       projects_broken_wip: "Qty Quebras de WiP"

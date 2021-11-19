@@ -11,13 +11,8 @@ function buildColumnLineChart(columnDiv) {
             text: 'Source: Flow Climate'
         },
         xAxis: {
-            type: 'datetime',
-            dateTimeLabelFormats: { // don't display the dummy year
-                month: '%e. %b',
-                year: '%b'
-            },
             categories: columnDiv.data('xcategories'),
-            title: {text: columnDiv.data('xtitle')}
+            title: { text: columnDiv.data('xtitle') }
         },
         yAxis: [{
             title: {
@@ -28,9 +23,6 @@ function buildColumnLineChart(columnDiv) {
                 width: 1,
                 color: '#808080'
             }],
-            stackLabels: {
-                enabled: true
-            },
             opposite: true
         }, {
             title: {
@@ -42,11 +34,17 @@ function buildColumnLineChart(columnDiv) {
                 color: '#808080'
             }],
             stackLabels: {
-                enabled: true
+                enabled: true,
+                formatter: function () {
+                    return Highcharts.numberFormat(this.total, columnDiv.data('decimals'), ',', '.');
+                }
             }
         }],
         tooltip: {
-            enabled: false
+            enabled: true,
+            formatter: function () {
+                return Highcharts.numberFormat(this.y, columnDiv.data('decimals'), ',', '.');
+            }
         },
         legend: {
             type: 'line',
@@ -57,11 +55,13 @@ function buildColumnLineChart(columnDiv) {
         },
         plotOptions: {
             column: {
+                stacking: columnDiv.data('stacking'),
                 dataLabels: {
-                    enabled: true,
-                    color: 'black',
+                    enabled: columnDiv.data('stacking') !== "normal",
                     formatter: function () {
-                        return Highcharts.numberFormat(this.y, columnDiv.data('decimals'), '.');
+                        console.log('decimals');
+                        console.log(columnDiv.data('decimals'));
+                        return Highcharts.numberFormat(this.y, columnDiv.data('decimals'), ',', '.');
                     }
                 }
             },
@@ -72,6 +72,7 @@ function buildColumnLineChart(columnDiv) {
                         let firstPoint = this.series.data[0];
                         let lastPoint = this.series.data[this.series.data.length - 1];
 
+                        console.log('decimals');
                         if ((this.point.category === firstPoint.category && this.point.y === firstPoint.y) || (this.point.category === lastPoint.category  && this.point.y === lastPoint.y)) {
                             return `<span style='color: ${this.color}'>${columnDiv.data('prefix') + Highcharts.numberFormat(this.y, columnDiv.data("decimals"), ",", ".") + " " + columnDiv.data('datalabelsuffix')}</span>`;
                         }

@@ -157,16 +157,16 @@ en:
           custom_field_type:
             class_of_service: "Class of Service"
             responsibles: "Responsibles"
-      flow_impact:
+      flow_event:
         user: Created by
         project: Project
-        impact_type: Impact Type
-        impact_size: Impact Size
-        impact_description: Impact Description
+        event_type: Event Type
+        event_size: Event Size
+        event_description: Event Description
         demand: Demand
-        impact_date: Impact Date
+        event_date: Event Date
         enums:
-          impact_type:
+          event_type:
             other_team_dependency: Other team dependency
             api_not_ready: API is not ready
             customer_not_available: Customer unavailable
@@ -174,7 +174,7 @@ en:
             fixes_out_of_scope: Fixes outside scope
             external_service_unavailable: External service unavailable
             waiting_for_code_review: Waiting for code review
-          impact_size:
+          event_size:
             small: Small
             medium: Medium
             large: Large
@@ -288,9 +288,9 @@ en:
       lead_time_bottom_threshold: "Bottom threshold to lead time"
       quality_bottom_threshold: "Minimum share of defects"
       quality_top_threshold: "Maximum share of defects"
-  flow_impacts:
+  flow_events:
     show:
-      impact_duration: "Impact Duration"
+      event_duration: "Event Duration"
   user_company_role:
     validations:
       user_company: "You can't have the same user twice in the company."

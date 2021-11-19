@@ -50,19 +50,19 @@
   </div>
 
   <div class="col-xs-6">
-    <h4><%= I18n.t('demands.filter.impact_categories.title') %></h4>
+    <h4><%= I18n.t('demands.filter.event_categories.title') %></h4>
 
-    <% if @risk_review.flow_impacts.count.positive? %>
-      <div id="risk-review-impact-categories-donut"
+    <% if @risk_review.flow_events.count.positive? %>
+      <div id="risk-review-event-categories-donut"
            class="flow-chart"
            data-title=''
            data-seriesname=''
-           data-tooltipsuffix='<%= I18n.t('general.demand_impact') %>'
-           data-series='<%= FlowImpact.impact_types.map { |impact_type| { name: I18n.t("activerecord.attributes.flow_impact.enums.impact_type.#{impact_type[0]}"), y: @risk_review.flow_impacts.send(impact_type[0]).count } if @risk_review.flow_impacts.send(impact_type[0]).count.positive? }.compact.to_json %>'
+           data-tooltipsuffix='<%= I18n.t('general.flow_event') %>'
+           data-series='<%= FlowEvent.event_types.map { |event_type| { name: I18n.t("activerecord.attributes.flow_event.enums.event_type.#{event_type[0]}"), y: @risk_review.flow_events.send(event_type[0]).count } if @risk_review.flow_events.send(event_type[0]).count.positive? }.compact.to_json %>'
            data-decimals='0'>
       </div>
     <% else %>
-      <%= render 'layouts/no_data', missing_data: FlowImpact.model_name.human(count: 2).downcase %>
+      <%= render 'layouts/no_data', missing_data: FlowEvent.model_name.human(count: 2).downcase %>
     <% end %>
   </div>
 </div>
@@ -116,7 +116,7 @@
       <button class="tablinks" onclick="openTab(event, 'outlier-demands', 'tablinks', 'tabcontent')"><%= I18n.t('risk_reviews.show.outlier_demands_label') %></button>
       <button class="tablinks" onclick="openTab(event, 'bugs-list', 'tablinks', 'tabcontent')"><%= I18n.t('risk_reviews.show.bugs_label') %></button>
       <button class="tablinks" onclick="openTab(event, 'demand-blocks-table', 'tablinks', 'tabcontent')"><%= I18n.t('risk_reviews.show.demands_blocks_label') %></button>
-      <button class="tablinks" onclick="openTab(event, 'flow-impacts', 'tablinks', 'tabcontent')"><%= I18n.t('risk_reviews.show.flow_impacts_label') %></button>
+      <button class="tablinks" onclick="openTab(event, 'flow-events', 'tablinks', 'tabcontent')"><%= I18n.t('risk_reviews.show.flow_events_label') %></button>
     </div>
   </div>
 </div>
@@ -143,8 +143,8 @@
   %>
 </div>
 
-<div id="flow-impacts" class="tabcontent">
-  <%= render 'flow_impacts/flow_impacts_table', company: @company, flow_impacts: @risk_review.flow_impacts.order(impact_date: :desc) %>
+<div id="flow-events" class="tabcontent">
+  <%= render 'flow_events/flow_events_table', company: @company, flow_events: @risk_review.flow_events.order(event_date: :desc) %>
 </div>
 
 <% content_for :javascript do %>

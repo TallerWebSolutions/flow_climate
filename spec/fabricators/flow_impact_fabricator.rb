@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-Fabricator(:flow_impact) do
+Fabricator(:flow_event) do
+  company
   project
-  demand
 
-  impact_type { [0, 1, 2].sample }
-  impact_size { [0, 1, 2].sample }
-  impact_description { Faker::Lorem.sentences }
+  event_type { [0, 1, 2].sample }
+  event_size { [0, 1, 2].sample }
+  event_description { Faker::Lorem.sentences }
 
-  impact_date { 1.day.ago }
+  event_date { 1.day.ago }
 end

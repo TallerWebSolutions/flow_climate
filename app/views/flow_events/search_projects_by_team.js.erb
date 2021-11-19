@@ -1,0 +1,7 @@
+const projectSelect = $("#flow_event_project_id")
+
+projectSelect.html("<%= escape_javascript options_from_collection_for_select(@projects_by_team, :id, :name) %>");
+
+$("#general-loader").hide();
+
+projectSelect.removeAttr("disabled");

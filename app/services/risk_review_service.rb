@@ -10,7 +10,7 @@ class RiskReviewService
     demands = Demand.where(risk_review: risk_review)
 
     update_blocks(product, risk_review)
-    update_flow_impacts(product, risk_review)
+    update_flow_events(product, risk_review)
 
     update_block_avg_time(demands, risk_review)
   end
@@ -27,9 +27,9 @@ class RiskReviewService
     risk_review.update(monthly_avg_blocked_time: build_avg_blocked_time(risk_review, array_of_dates))
   end
 
-  def update_flow_impacts(product, risk_review)
-    flow_impacts = product.flow_impacts.kept.where('flow_impacts.risk_review_id' => nil)
-    flow_impacts.map { |impact| impact.update(risk_review: risk_review) }
+  def update_flow_events(product, risk_review)
+    flow_events = product.flow_events.kept.where('flow_events.risk_review_id' => nil)
+    flow_events.map { |event| event.update(risk_review: risk_review) }
   end
 
   def update_blocks(product, risk_review)

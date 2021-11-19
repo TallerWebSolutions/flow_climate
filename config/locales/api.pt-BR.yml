@@ -14,9 +14,9 @@ pt-BR:
   demands:
     show:
       title: "Show Item"
-  flow_impacts:
-    opened_impacts:
-      title: "Impactos abertos para o projeto %{project_name}"
+  flow_events:
+    opened_events:
+      title: "Eventos abertos para a empresa %{company_name}"
   companies:
     api:
       company_details:
