@@ -29,7 +29,7 @@
           <td><%= link_to I18n.t("activerecord.attributes.flow_event.enums.event_type.#{flow_event.event_type}"), company_flow_event_path(company, flow_event) %></td>
           <td><%= I18n.t("activerecord.attributes.flow_event.enums.event_size.#{flow_event.event_size}") %></td>
           <td><%= flow_event.team&.name %></td>
-          <td><%= flow_event.project.name %></td>
+          <td><%= flow_event.project&.name %></td>
           <td><%= I18n.l(flow_event.event_date, format: :short) %></td>
           <td><%= I18n.l(flow_event.event_end_date, format: :short) if flow_event.event_end_date.present? %></td>
           <td><%= flow_event.event_description %></td>
