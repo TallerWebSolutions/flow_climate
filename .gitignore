@@ -31,4 +31,5 @@ logfile
 /config/application.yml
 
 .ruby-gemset
+.ruby-version
 .idea/
