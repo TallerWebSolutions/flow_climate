@@ -1,9 +1,9 @@
 staging:
   :concurrency: 1
 development:
-  :concurrency: 5
+  :concurrency: <%= ENV['SIDEKIQ_THREADS'] || 5 %>
 production:
-  :concurrency: 2
+  :concurrency: <%= ENV['SIDEKIQ_THREADS'] || 2 %>
 queues:
   - ['default', 1]
   - ['generators', 1]
