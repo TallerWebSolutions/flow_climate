@@ -15,7 +15,7 @@ module Dashboards
 
         operations_dashboard_cache = OperationsDashboard.where(dashboard_date: cache_date, team_member: team_member).first_or_initialize
 
-        member_effort_and_pull = build_member_effort_chart(team_member, start_date_charts, cache_date)
+        member_effort_and_pull = build_member_effort_chart(team_member, cache_date)
 
         operations_dashboard_cache.update!(team_member: team_member,
                                           last_data_in_week: (cache_date.to_date) == (cache_date.to_date.end_of_week),
@@ -42,15 +42,15 @@ module Dashboards
 
     private
 
-    def build_member_effort_chart(team_member, start_date, cache_date)
+    def build_member_effort_chart(team_member, cache_date)
       membership_effort = []
       membership_pull_interval_average = []
 
       team_member.memberships.active.each do |membership|
         membership_service = Flow::MembershipFlowInformation.new(membership)
 
-        membership_effort << membership_service.compute_developer_effort(start_date, cache_date)
-        membership_pull_interval_average << membership_service.average_pull_interval(start_date, cache_date)
+        membership_effort << membership_service.compute_developer_effort(cache_date)
+        membership_pull_interval_average << membership_service.average_pull_interval(cache_date)
       end
 
       team_member_effort = membership_effort.compact.sum
