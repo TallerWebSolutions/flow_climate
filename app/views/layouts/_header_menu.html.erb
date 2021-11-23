@@ -10,7 +10,7 @@
     <span class="top-nav-bar-text"><%= link_to I18n.t('navbar.projects_list'), company_projects_path(company), class: 'nav-link top-nav-bar-item' %> | </span>
     <span class="top-nav-bar-text"><%= link_to I18n.t('navbar.demands'), company_demands_path(company), class: 'nav-link top-nav-bar-item' %> | </span>
     <span class="top-nav-bar-text"><%= link_to I18n.t('navbar.demand_blocks'), company_demand_blocks_path(company), class: 'nav-link top-nav-bar-item' %> | </span>
-    <span class="top-nav-bar-text"><%= link_to I18n.t('flow_events.index.title'), company_flow_events_path(@company), class: 'nav-link top-nav-bar-item' %></span>
+    <span class="top-nav-bar-text"><%= link_to I18n.t('flow_events.index.title'), company_flow_events_path(company), class: 'nav-link top-nav-bar-item' %></span>
   <% end %>
 </div>
 
