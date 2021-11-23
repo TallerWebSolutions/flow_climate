@@ -29,7 +29,7 @@
 </div>
 
 <div id="stamps" class="tab-container">
-  <%= render 'products/product_stamps', company: @company, product: @product, start_date: @start_date, end_date: @end_date, projects_ids: @product.projects.map(&:id).join(',') %>
+  <%= render 'products/product_stamps', company: @company, product: @product, start_date: @start_date, end_date: @end_date, projects_ids: @product.projects.map(&:id).join(','), score_matrix_questions: @score_matrix_questions %>
 </div>
 
 <%= render 'layouts/load_spinner' %>
