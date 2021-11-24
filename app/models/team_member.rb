@@ -43,6 +43,7 @@ class TeamMember < ApplicationRecord
 
   has_many :demands, -> { distinct }, through: :memberships
   has_many :projects, -> { distinct }, through: :demands
+  has_many :item_assignments, -> { distinct }, through: :memberships
 
   has_many :operations_dashboards, class_name: 'Dashboards::OperationsDashboard', dependent: :destroy
 
@@ -70,5 +71,25 @@ class TeamMember < ApplicationRecord
 
   def lead_time_max
     demands.kept.with_valid_leadtime.order(:leadtime).last
+  end
+
+  def first_delivery
+    demands.undiscarded.finished_until_date(Time.zone.now).order(:end_date).first
+  end
+
+  def last_delivery
+    demands.undiscarded.finished_until_date(Time.zone.now).order(:end_date).last
+  end
+
+  def first_assignment
+    item_assignments.undiscarded.order(:start_time).first
+  end
+
+  def last_assignment
+    item_assignments.undiscarded.order(:start_time).last
+  end
+
+  def weeks_for_first_delivery
+    (first_delivery.end_date.to_date - start_date).to_i / 7
   end
 end
