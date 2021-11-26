@@ -230,18 +230,37 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
   end
 
   describe '#notify_item_assigned' do
-    it 'calls slack notification method' do
-      demand = Fabricate :demand, team: team
-      team_member = Fabricate :team_member
-      membership = Fabricate :membership, team_member: team_member
-      item_assignment = Fabricate :item_assignment, membership: membership, demand: demand, assignment_notified: false
+    context 'with valid assignment' do
+      it 'calls slack notification method' do
+        demand = Fabricate :demand, team: team
+        team_member = Fabricate :team_member
+        membership = Fabricate :membership, team_member: team_member
+        item_assignment = Fabricate :item_assignment, membership: membership, demand: demand, assignment_notified: false
 
-      Fabricate :slack_configuration, team: team, info_type: :item_assigned, active: true
+        Fabricate :slack_configuration, team: team, info_type: :item_assigned, active: true
 
-      expect_any_instance_of(Slack::Notifier).to receive(:post)
+        expect_any_instance_of(Slack::Notifier).to receive(:post)
 
-      described_class.instance.notify_item_assigned(item_assignment)
-      expect(item_assignment.reload.assignment_notified?).to be true
+        described_class.instance.notify_item_assigned(item_assignment)
+        expect(item_assignment.reload.assignment_notified?).to be true
+      end
+    end
+
+    context 'with invalid assignment' do
+      it 'returns with nothing' do
+        demand = Fabricate :demand, team: team
+        team_member = Fabricate :team_member
+        membership = Fabricate :membership, team_member: team_member
+        dup_item_assignment = Fabricate.build :item_assignment, membership: membership, demand: demand, assignment_notified: false
+
+        allow(dup_item_assignment).to(receive(:valid?).and_return(false))
+
+        Fabricate :slack_configuration, team: team, info_type: :item_assigned, active: true
+
+        expect_any_instance_of(Slack::Notifier).not_to receive(:post)
+
+        described_class.instance.notify_item_assigned(dup_item_assignment)
+      end
     end
   end
 

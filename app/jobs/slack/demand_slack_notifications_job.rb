@@ -22,6 +22,8 @@ module Slack
     end
 
     def process_assignments(demand)
+      demand.item_assignments.select { |assignment| assignment.valid? == false }.map(&:destroy)
+
       demand.item_assignments.each do |assignment|
         next if assignment.assignment_notified?
         Slack::SlackNotificationService.instance.notify_item_assigned(assignment)
