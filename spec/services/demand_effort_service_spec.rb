@@ -118,21 +118,23 @@ RSpec.describe DemandEffortService, type: :service do
         Fabricate :stage_project_config, stage: stage, project: project, compute_effort: true, stage_percentage: 100, management_percentage: 20, pairing_percentage: 50
         Fabricate :stage_project_config, stage: other_stage, project: project, compute_effort: true, stage_percentage: 100, management_percentage: 20, pairing_percentage: 50
 
-        Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: Time.zone.parse('2021-05-24 10:51'), last_time_out: Time.zone.parse('2021-05-24 12:51')
-        Fabricate :demand_transition, demand: demand, stage: other_stage, last_time_in: Time.zone.parse('2021-05-24 12:51'), last_time_out: Time.zone.parse('2021-05-24 15:51')
-        Fabricate :item_assignment, demand: demand, start_time: Time.zone.parse('2021-05-24 10:51'), finish_time: Time.zone.parse('2021-05-24 15:51')
-        Fabricate :demand_block, demand: demand, block_time: Time.zone.parse('2021-05-24 13:51'), unblock_time: Time.zone.parse('2021-05-24 14:51')
-        Fabricate :demand_block, demand: demand, block_time: Time.zone.parse('2021-05-24 11:51'), unblock_time: Time.zone.parse('2021-05-24 12:51')
+        Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: Time.zone.parse('2021-05-24 10:51'), last_time_out: Time.zone.parse('2021-05-26 12:51')
+        Fabricate :demand_transition, demand: demand, stage: other_stage, last_time_in: Time.zone.parse('2021-05-26 12:51'), last_time_out: Time.zone.parse('2021-05-27 15:51')
+        Fabricate :item_assignment, demand: demand, start_time: Time.zone.parse('2021-05-24 10:51'), finish_time: Time.zone.parse('2021-05-24 20:51')
+        Fabricate :item_assignment, demand: demand, start_time: Time.zone.parse('2021-05-25 10:51'), finish_time: Time.zone.parse('2021-05-25 15:51')
+        Fabricate :demand_block, demand: demand, block_time: Time.zone.parse('2021-05-24 12:51'), unblock_time: Time.zone.parse('2021-05-24 14:51')
+        Fabricate :demand_block, demand: demand, block_time: Time.zone.parse('2021-05-24 13:52'), unblock_time: Time.zone.parse('2021-05-24 19:51')
+        Fabricate :demand_block, demand: demand, block_time: Time.zone.parse('2021-05-25 14:52'), unblock_time: Time.zone.parse('2021-05-25 15:52')
 
         described_class.instance.build_efforts_to_demand(demand)
 
         expect(DemandEffort.all.count).to eq 2
-        expect(DemandEffort.all.sum(&:effort_value).to_f).to eq 3.599999999999999
-        expect(DemandEffort.all.sum(&:total_blocked).to_f).to eq 2.4
-        expect(DemandEffort.all.sum(&:effort_with_blocks).to_f).to eq 6.0
-        expect(demand.reload.effort_upstream.to_f).to eq 1.2
-        expect(demand.reload.effort_downstream.to_f).to eq 2.399999999999999
-        expect(demand.reload.effort_development.to_f).to eq 3.599999999999999
+        expect(DemandEffort.all.map(&:effort_value).map(&:to_f)).to eq [0.0, 4.8]
+        expect(DemandEffort.all.map(&:total_blocked).map(&:to_f)).to eq [7.199999999999999, 1.2]
+        expect(DemandEffort.all.map(&:effort_with_blocks).map(&:to_f)).to eq [7.199999999999999, 6.0]
+        expect(demand.reload.effort_upstream.to_f).to eq 4.8
+        expect(demand.reload.effort_downstream.to_f).to eq 0
+        expect(demand.reload.effort_development.to_f).to eq 4.8
         expect(demand.reload.effort_design.to_f).to eq 0
         expect(demand.reload.effort_management.to_f).to eq 0
       end
