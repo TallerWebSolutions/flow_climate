@@ -135,6 +135,8 @@ module Slack
     end
 
     def notify_item_assigned(item_assignment)
+      return if item_assignment.valid? == false
+
       slack_configuration = SlackConfiguration.find_by(team: item_assignment.demand.team, info_type: 'item_assigned', active: true)
 
       if slack_configuration.blank?

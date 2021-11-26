@@ -52,7 +52,7 @@
   </tr>
   <tr>
     <td><b><%= Demand.human_attribute_name :end_date %></b></td>
-    <td><%= I18n.l(demand.end_date, format: :short) if demand.end_date.present? %></td>
+    <td><%= sanitize("#{I18n.l(demand.end_date, format: :short)} <b>(#{time_distance_in_words(demand.leadtime)})</b>") if demand.end_date.present? %></td>
   </tr>
   <% if demand.discarded_at.present? %>
     <tr>
