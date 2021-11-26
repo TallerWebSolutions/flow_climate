@@ -12,6 +12,7 @@
   <table class="table table-striped">
     <thead>
     <tr>
+      <th><%= DemandEffort.human_attribute_name :id %></th>
       <th><%= DemandEffort.human_attribute_name :demand %></th>
       <th><%= DemandEffort.human_attribute_name :who %></th>
       <th><%= DemandEffort.human_attribute_name :member_role %></th>
@@ -32,6 +33,7 @@
     <tbody>
     <% demand_efforts_list.each do |effort| %>
       <tr>
+        <td><%= effort.id %></td>
         <td><%= effort.demand.external_id %></td>
         <td><%= effort.who %></td>
         <td><%= I18n.t("activerecord.attributes.membership.enums.member_role.#{effort.member_role}") %></td>

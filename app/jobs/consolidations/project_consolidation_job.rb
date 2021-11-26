@@ -7,6 +7,8 @@ module Consolidations
     def perform(project, cache_date = Time.zone.today)
       end_of_day = cache_date.end_of_day
 
+      Consolidations::ProjectConsolidation.where('consolidation_date < :limit_date', limit_date: project.start_date).map(&:destroy)
+
       demands = project.demands.where('demands.created_date <= :limit_date', limit_date: end_of_day)
       demands_finished = demands.not_discarded_until(end_of_day).finished_until_date(end_of_day).order(end_date: :asc)
       demands_discarded = demands.where('discarded_at <= :limit_date', limit_date: end_of_day)
@@ -117,7 +119,6 @@ module Consolidations
                            project_throughput_hours_design_in_month: demand_efforts.designer_efforts.sum(&:effort_value),
                            project_throughput_hours_management_in_month: demand_efforts.manager_efforts.sum(&:effort_value)
       )
-
     end
 
     private
