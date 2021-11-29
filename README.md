@@ -62,3 +62,8 @@ Have the ultimate management tools in your hands!
 **If there are pending migrations, run the command below:**
 
 - Run `RAILS_ENV=test rake db:migrate`
+
+**To download the database from production environment:**
+
+- Run `rails db:drop`
+- Run `heroku pg:pull DATABASE_URL flowcontrol_development -a flowclimateapp`
