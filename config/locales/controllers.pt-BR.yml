@@ -1399,6 +1399,10 @@ pt-BR:
       title: "Pontuar Demandas"
       ordering: "Ordenar Pontuação"
   operations_dashboard:
+    lead_time_control_chart:
+      title: "Control Chart do Lead Time"
+    lead_time_histogram:
+      title: "Histograma do Lead Time"
     effort_chart:
       title: "Horas Úteis em Desenvolvimento"
     pull_interval:
