@@ -9,6 +9,12 @@ class TeamMembersController < AuthenticatedController
   def show
     assign_team_member_objects
     @member_demands = @team_member.demands
+    @member_finished_demands = @member_demands.finished_with_leadtime
+    statistics_service = Stats::StatisticsService.instance
+    demands_leadtimes = @member_finished_demands.map(&:leadtime)
+    @member_leadtime65 = statistics_service.percentile(65, demands_leadtimes)
+    @member_leadtime80 = statistics_service.percentile(80, demands_leadtimes)
+    @member_leadtime95 = statistics_service.percentile(95, demands_leadtimes)
     build_member_charts(@team_member)
 
     render :show

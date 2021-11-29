@@ -31,6 +31,28 @@
 </div>
 
 <div class="row equal-heights">
+  <div class="col-xs-6">
+    <h4><%= I18n.t('operations_dashboard.lead_time_control_chart.title') %></h4>
+    <div id="member-leadtime-control-chart"
+      class="flow-chart"
+      data-xcategories="<%= member_finished_demands.map(&:external_id) %>"
+      data-series="<%= [{ name: 'Lead time', color: 'rgb(51, 51, 255)', data: member_finished_demands.map { |demand| (demand.leadtime.to_f / 1.day).round(2) } }].to_json %>"
+      data-title=""
+      data-prefix=""
+      data-tooltipsuffix="<%= I18n.t('projects.charts.lead_time_chart.ylabel') %>"
+      data-percentile65="<%= (member_leadtime65 / 1.day).round(2) %>"
+      data-percentile80="<%= (member_leadtime80 / 1.day).round(2) %>"
+      data-percentile95="<%= (member_leadtime95 / 1.day).round(2) %>"
+    >
+    </div>
+  </div>
+
+  <div class="col-xs-6">
+    <h4><%= I18n.t('operations_dashboard.lead_time_histogram.title') %></h4>
+  </div>
+</div>
+
+<div class="row equal-heights">
   <% if operations_dashboards.present? %>
     <div class="col-xs-6">
       <%= render 'team_members/statistics_informations', dates_array: array_of_dates, operations_dashboards: operations_dashboards %>
