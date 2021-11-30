@@ -19,8 +19,13 @@ function buildOperationsCharts() {
     buildColumnChart(teamMemberThroughputDiv);
   }
 
-  const memberLeadTimeControlChart = $("#member-leadtime-control-chart");
+  const memberLeadTimeControlChart = $("#member-lead-time-control-chart");
   if (memberLeadTimeControlChart.length !== 0) {
     buildScatterChart(memberLeadTimeControlChart);
+  }
+
+  const memberLeadTimeHistogram = $("#member-lead-time-histogram");
+  if (memberLeadTimeHistogram.length !== 0) {
+    buildHistogramChart(memberLeadTimeHistogram);
   }
 }

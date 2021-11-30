@@ -49,19 +49,17 @@
 
   <div class="col-xs-6">
     <h4><%= I18n.t('operations_dashboard.lead_time_histogram.title') %></h4>
-    <div class="col-xs-6 bottom-spaced-component">
-      <div id="member-lead-time-histogram"
-        class="flow-chart"
-        data-title=""
-        data-xcategories="<%= member_lead_time_histogram_data.keys.map { |bin| (bin / 1.day).round(2) } %>"
-        data-xtitle="<%= I18n.t('projects.charts.xlabel.days') %>"
-        data-ytitle="<%= I18n.t('projects.charts.leadtime_histogram.ylabel') %>"
-        data-prefix=""
-        data-tooltipsuffix=""
-        data-datalabelsuffix=""
-        data-series="<%= [{ name: I18n.t('projects.charts.leadtime_histogram.ylabel'), data: member_lead_time_histogram_data.values }].to_json %>"
-        data-decimals="2">
-      </div>
+    <div id="member-lead-time-histogram"
+      class="flow-chart"
+      data-title=""
+      data-xcategories="<%= member_lead_time_histogram_data.keys.map { |bin| (bin / 1.day).round(2) } %>"
+      data-xtitle="<%= I18n.t('projects.charts.xlabel.days') %>"
+      data-ytitle="<%= I18n.t('projects.charts.leadtime_histogram.ylabel') %>"
+      data-prefix=""
+      data-tooltipsuffix=""
+      data-datalabelsuffix=""
+      data-series="<%= [{ name: I18n.t('projects.charts.leadtime_histogram.ylabel'), data: member_lead_time_histogram_data.values }].to_json %>"
+      data-decimals="2">
     </div>
   </div>
 </div>
