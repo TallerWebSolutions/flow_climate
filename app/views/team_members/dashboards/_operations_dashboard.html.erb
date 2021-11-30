@@ -40,9 +40,9 @@
       data-title=""
       data-prefix=""
       data-tooltipsuffix="<%= I18n.t('projects.charts.lead_time_chart.ylabel') %>"
-      data-percentile65="<%= (member_leadtime65 / 1.day).round(2) %>"
-      data-percentile80="<%= (member_leadtime80 / 1.day).round(2) %>"
-      data-percentile95="<%= (member_leadtime95 / 1.day).round(2) %>"
+      data-percentile65="<%= member_leadtime65.round(2) %>"
+      data-percentile80="<%= member_leadtime80.round(2) %>"
+      data-percentile95="<%= member_leadtime95.round(2) %>"
     >
     </div>
   </div>
