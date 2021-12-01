@@ -112,11 +112,11 @@ RSpec.describe TeamMembersController, type: :controller do
             third_demand,
             fourth_demand
           ]
-          expect(assigns(:member_leadtime65)).to be_within(0.01).of(30.95)
-          expect(assigns(:member_leadtime80)).to be_within(0.01).of(47.00)
-          expect(assigns(:member_leadtime95)).to be_within(0.01).of(65.00)
-          expect(assigns(:member_lead_time_histogram_data).keys.first.to_f).to be_within(0.01).of(3_348_000)
-          expect(assigns(:member_lead_time_histogram_data).keys.last.to_f).to be_within(0.01).of(5_205_600)
+          expect(assigns(:member_leadtime65)).to be_within(0.01).of(31.00)
+          expect(assigns(:member_leadtime80)).to be_within(0.01).of(46.60)
+          expect(assigns(:member_leadtime95)).to be_within(0.01).of(64.15)
+          expect(assigns(:member_lead_time_histogram_data).keys.first.to_f).to be_within(0.01).of(3_261_600)
+          expect(assigns(:member_lead_time_histogram_data).keys.last.to_f).to be_within(0.01).of(5_119_200)
           expect(assigns(:member_lead_time_histogram_data).values).to eq [3, 1]
         end
       end
