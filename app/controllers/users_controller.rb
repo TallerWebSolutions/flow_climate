@@ -81,12 +81,15 @@ class UsersController < AuthenticatedController
     @teams = []
     return if @user.team_member.blank? || @company.role_for_user(@user)&.manager?
 
+    build_member_attributes
+    build_demands_info(@user.team_member.demands)
+    build_member_effort_chart(@user.team_member)
+  end
+
+  def build_member_attributes
     @member_teams = @user.team_member.teams.order(:name)
     @demand_blocks = @user.team_member.demand_blocks.order(block_time: :desc).first(5)
     @member_projects = @user.team_member.projects.active.order(end_date: :desc).last(5)
-
-    build_demands_info(@user.team_member.demands)
-    build_member_effort_chart(@user.team_member)
   end
 
   def build_member_effort_chart(team_member)
