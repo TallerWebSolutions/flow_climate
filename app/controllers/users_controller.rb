@@ -25,14 +25,6 @@ class UsersController < AuthenticatedController
   end
 
   def show
-    @member_demands = @user.demands
-    @member_finished_demands = @member_demands.finished_with_leadtime
-    statistics_service = Stats::StatisticsService.instance
-    demands_leadtimes = @member_finished_demands.map(&:leadtime)
-    @member_leadtime65 = statistics_service.percentile(65, demands_leadtimes) / 1.day
-    @member_leadtime80 = statistics_service.percentile(80, demands_leadtimes) / 1.day
-    @member_leadtime95 = statistics_service.percentile(95, demands_leadtimes) / 1.day
-    @member_lead_time_histogram_data = statistics_service.leadtime_histogram_hash(demands_leadtimes)
     build_page_objects
   end
 
@@ -93,6 +85,7 @@ class UsersController < AuthenticatedController
     @demand_blocks = @user.team_member.demand_blocks.order(block_time: :desc).first(5)
     @member_projects = @user.team_member.projects.active.order(end_date: :desc).last(5)
 
+    build_demands_info(@user.team_member.demands)
     build_member_effort_chart(@user.team_member)
   end
 

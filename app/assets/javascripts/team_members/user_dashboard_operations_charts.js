@@ -26,6 +26,6 @@ function buildOperationsCharts() {
 
   const memberLeadTimeHistogram = $("#member-lead-time-histogram");
   if (memberLeadTimeHistogram.length !== 0) {
-    buildHistogramChart(memberLeadTimeHistogram);
+      buildColumnChart(memberLeadTimeHistogram);
   }
 }
