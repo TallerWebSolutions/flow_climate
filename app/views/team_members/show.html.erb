@@ -13,14 +13,21 @@
 </div>
 
 <%= render 'team_members/dashboards/operations_dashboard', company: @company, object_type: 'TeamMember', flow_object_id: @team_member.id,
-           name: @team_member.name, demands: @member_demands, team_member: @team_member,
-           member_teams: @member_teams, demand_blocks: @demand_blocks, member_projects: @member_projects, pairing_chart: @pairing_chart,
-           statistics_information: @statistics_information, array_of_dates: @array_of_dates,
-           population_period: @population_period, member_effort_chart: @member_effort_chart, demands_chart_adapter: @demands_chart_adapter,
-           member_pull_interval_average_chart: @member_pull_interval_average_chart,
-           operations_dashboards: @operations_dashboards %>
+  name: @team_member.name, demands: @member_demands, team_member: @team_member,
+  member_teams: @member_teams, demand_blocks: @demand_blocks, member_projects: @member_projects, pairing_chart: @pairing_chart,
+  statistics_information: @statistics_information, array_of_dates: @array_of_dates,
+  population_period: @population_period, member_effort_chart: @member_effort_chart, demands_chart_adapter: @demands_chart_adapter,
+  member_pull_interval_average_chart: @member_pull_interval_average_chart,
+  operations_dashboards: @operations_dashboards,
+  member_finished_demands: @member_finished_demands,
+  member_leadtime65: @member_leadtime65,
+  member_leadtime80: @member_leadtime80,
+  member_leadtime95: @member_leadtime95,
+  member_lead_time_histogram_data: @member_lead_time_histogram_data
+%>
 
 <% content_for :javascript do %>
+  <%= javascript_include_tag 'charts/scatter' %>
   <%= javascript_include_tag 'charts/column' %>
   <%= javascript_include_tag 'charts/line' %>
   <%= javascript_include_tag 'team_members/user_dashboard_operations_charts' %>

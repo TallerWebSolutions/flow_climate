@@ -84,27 +84,55 @@ RSpec.describe TeamMembersController, type: :controller do
       let!(:second_membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
 
       context 'valid parameters' do
-        before { get :show, params: { company_id: company.id, id: team_member }, xhr: true }
-
         it 'assigns the instance variables and renders the template' do
-          expect(response).to render_template 'team_members/show'
-          expect(assigns(:company)).to eq company
-          expect(assigns(:team_member)).to eq team_member
-          expect(assigns(:member_effort_chart)).to eq [{ data: [], name: team_member.name }]
-          expect(assigns(:member_pull_interval_average_chart)).to eq [{ data: [], name: team_member.name }]
+          travel_to Time.zone.local(2021, 12, 1, 10, 0, 0) do
+            first_demand = Fabricate :demand, team: team, commitment_date: 4.months.ago, end_date: 3.months.ago
+            second_demand = Fabricate :demand, team: team, commitment_date: 3.months.ago, end_date: 3.weeks.ago
+            third_demand = Fabricate :demand, team: team, commitment_date: 2.months.ago, end_date: 1.month.ago
+            fourth_demand = Fabricate :demand, team: team, commitment_date: 1.month.ago, end_date: 3.days.ago
+            fifth_demand = Fabricate :demand, team: team, commitment_date: 9.weeks.ago, end_date: 2.weeks.ago
+            sixth_demand = Fabricate :demand, team: team, commitment_date: 9.days.ago, end_date: nil
+
+            Fabricate :item_assignment, demand: first_demand, membership: first_membership
+            Fabricate :item_assignment, demand: second_demand, membership: first_membership
+            Fabricate :item_assignment, demand: third_demand, membership: first_membership
+            Fabricate :item_assignment, demand: fourth_demand, membership: first_membership
+            Fabricate :item_assignment, demand: fifth_demand
+            Fabricate :item_assignment, demand: sixth_demand, membership: first_membership
+
+            get :show, params: { company_id: company.id, id: team_member }
+
+            expect(response).to render_template 'team_members/show'
+            expect(assigns(:company)).to eq company
+            expect(assigns(:team_member)).to eq team_member
+            expect(assigns(:member_effort_chart)).to eq [{ data: [], name: team_member.name }]
+            expect(assigns(:member_pull_interval_average_chart)).to eq [{ data: [], name: team_member.name }]
+            expect(assigns(:member_finished_demands)).to match_array [
+              first_demand,
+              second_demand,
+              third_demand,
+              fourth_demand
+            ]
+            expect(assigns(:member_leadtime65)).to be_within(0.01).of(31.00)
+            expect(assigns(:member_leadtime80)).to be_within(0.01).of(46.60)
+            expect(assigns(:member_leadtime95)).to be_within(0.01).of(64.15)
+            expect(assigns(:member_lead_time_histogram_data).keys.first.to_f).to be_within(0.01).of(3_261_600)
+            expect(assigns(:member_lead_time_histogram_data).keys.last.to_f).to be_within(0.01).of(5_119_200)
+            expect(assigns(:member_lead_time_histogram_data).values).to eq [3, 1]
+          end
         end
       end
 
       context 'invalid' do
         context 'team_member' do
-          before { get :show, params: { company_id: company, id: 'foo' }, xhr: true }
+          before { get :show, params: { company_id: company, id: 'foo' } }
 
           it { expect(response).to have_http_status :not_found }
         end
 
         context 'company' do
           context 'non-existent' do
-            before { get :show, params: { company_id: 'foo', id: team_member }, xhr: true }
+            before { get :show, params: { company_id: 'foo', id: team_member } }
 
             it { expect(response).to have_http_status :not_found }
           end
@@ -112,7 +140,7 @@ RSpec.describe TeamMembersController, type: :controller do
           context 'not-permitted' do
             let(:company) { Fabricate :company, users: [] }
 
-            before { get :show, params: { company_id: company, id: team_member }, xhr: true }
+            before { get :show, params: { company_id: company, id: team_member } }
 
             it { expect(response).to have_http_status :not_found }
           end

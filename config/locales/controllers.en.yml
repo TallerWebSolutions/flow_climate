@@ -259,16 +259,6 @@ en:
         title: "Flow Pressure for %{target_name}"
       money_per_month:
         title: "Money Distribution by Competency for %{target_name}"
-    new:
-      title: "New Financial Information"
-    index:
-      title: "Financial Informations"
-      current_cost_per_hour: "Current Month Cost/Hour"
-      cost_per_hour: "Cost/Hour"
-      project_delivered_hours_count: "Delivered Hours (Projects)"
-      delivered_hours: "Hours Delivered (Operation)"
-      throughput: "Throughput"
-      hours_per_demand: "Hours/Demand"
   team_members:
     index:
       title: "Team members"
@@ -1419,6 +1409,10 @@ en:
       title: "Score Demands"
       ordering: "Order Score"
   operations_dashboard:
+    lead_time_control_chart:
+      title: "Lead Time Control Chart"
+    lead_time_histogram:
+      title: "Lead Time Histogram"
     effort_chart:
       title: "Working Hours in Development"
     pull_interval:

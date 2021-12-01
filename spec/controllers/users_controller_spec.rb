@@ -171,6 +171,20 @@ RSpec.describe UsersController, type: :controller do
               Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago, lead_time_min: 5, lead_time_max: 10, project_quality: 0.85, last_data_in_week: true, lead_time_p80: 2.3, operational_risk: 0.4, project_scope: 20, value_per_demand: 123, flow_pressure: 0.4
               Fabricate :project_consolidation, project: other_project, consolidation_date: 2.days.ago, lead_time_min: 5, lead_time_max: 10, project_quality: 0.6, last_data_in_week: true, lead_time_p80: 4.1, operational_risk: 0.7, project_scope: 10, value_per_demand: 32, flow_pressure: 0.7
 
+              # first_demand = Fabricate :demand, team: team, commitment_date: 4.months.ago, end_date: 3.months.ago
+              # second_demand = Fabricate :demand, team: team, commitment_date: 3.months.ago, end_date: 3.weeks.ago
+              # third_demand = Fabricate :demand, team: team, commitment_date: 2.months.ago, end_date: 1.month.ago
+              # fourth_demand = Fabricate :demand, team: team, commitment_date: 1.month.ago, end_date: 3.days.ago
+              # fifth_demand = Fabricate :demand, team: team, commitment_date: 9.weeks.ago, end_date: 2.weeks.ago
+              # sixth_demand = Fabricate :demand, team: team, commitment_date: 9.days.ago, end_date: nil
+
+              # Fabricate :item_assignment, demand: first_demand, membership: first_membership
+              # Fabricate :item_assignment, demand: second_demand, membership: first_membership
+              # Fabricate :item_assignment, demand: third_demand, membership: first_membership
+              # Fabricate :item_assignment, demand: fourth_demand, membership: first_membership
+              # Fabricate :item_assignment, demand: fifth_demand
+              # Fabricate :item_assignment, demand: sixth_demand, membership: first_membership
+
               allow_any_instance_of(Membership).to(receive(:demands_ids).and_return(Demand.all.map(&:id)))
 
               get :show, params: { id: user }
@@ -193,6 +207,18 @@ RSpec.describe UsersController, type: :controller do
 
               expect(assigns(:member_effort_chart)).to eq [{ data: [], name: first_team_member.name }]
               expect(assigns(:member_pull_interval_average_chart)).to eq [{ data: [], name: first_team_member.name }]
+
+              expect(assigns(:member_finished_demands)).to match_array [
+                first_demand,
+                second_demand,
+                third_demand
+              ]
+              expect(assigns(:member_leadtime65)).to be_within(0.01).of(130.10)
+              expect(assigns(:member_leadtime80)).to be_within(0.01).of(234.20)
+              expect(assigns(:member_leadtime95)).to be_within(0.01).of(338.29)
+              expect(assigns(:member_lead_time_histogram_data).keys.first.to_f).to be_within(0.01).of(8_445_600)
+              expect(assigns(:member_lead_time_histogram_data).keys.last.to_f).to be_within(0.01).of(24_300_000)
+              expect(assigns(:member_lead_time_histogram_data).values).to eq [2, 1]
 
               expect(response).to render_template :show
             end
