@@ -8,7 +8,7 @@ module Types
           description: 'Set of teams'
 
     def teams
-      Team.all
+      Team.preload(:company)
     end
   end
 end

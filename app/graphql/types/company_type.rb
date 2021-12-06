@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 module Types
-  class TeamType < Types::BaseObject
+  class CompanyType < Types::BaseObject
     field :id, ID, null: false
     field :name, String, null: false
-    field :company, Types::CompanyType, null: false
   end
 end

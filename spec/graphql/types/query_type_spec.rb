@@ -12,16 +12,21 @@ RSpec.describe Types::QueryType do
         teams {
           id
           name
+          company {
+            id
+            name
+          }
         }
       })
       end
 
-      it 'returns all items' do
-        Fabricate :team
-        Fabricate :team
+      it 'returns all teams' do
+        company = Fabricate :company
+        Fabricate :team, company: company
+        Fabricate :team, company: company
 
         expect(result.dig('data', 'teams')).to match_array(
-                                                 Team.all.map { |team| { 'id' => team.id.to_s, 'name' => team.name } }
+                                                 Team.all.map { |team| { 'id' => team.id.to_s, 'name' => team.name, company: { 'id' => company.id, 'name' => company.name } } }
         )
       end
     end
