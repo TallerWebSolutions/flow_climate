@@ -355,4 +355,27 @@ RSpec.describe Team, type: :model do
       expect(empty_team.end_date).to eq Time.zone.today
     end
   end
+
+  describe '#team_throughputs' do
+    context 'with data' do
+      it 'returns the throughputs array using the team consolidations' do
+        team = Fabricate :team
+
+        Fabricate :team_consolidation, team: team, consolidation_date: 2.days.ago, qty_demands_finished_upstream_in_week: 2, qty_demands_finished_downstream_in_week: 4
+        Fabricate :team_consolidation, team: team, consolidation_date: 1.day.ago, qty_demands_finished_upstream_in_week: 5, qty_demands_finished_downstream_in_week: 1
+        Fabricate :team_consolidation, team: team, consolidation_date: Time.zone.today, qty_demands_finished_upstream_in_week: 8, qty_demands_finished_downstream_in_week: 10
+
+        expect(team.team_throughputs).to eq [6, 6, 18]
+        expect(team.team_throughputs('consolidation_date', 'desc', 2)).to eq [18, 6]
+      end
+    end
+
+    context 'without data' do
+      it 'returns the throughputs array using the team consolidations' do
+        team = Fabricate :team
+
+        expect(team.team_throughputs).to eq []
+      end
+    end
+  end
 end
