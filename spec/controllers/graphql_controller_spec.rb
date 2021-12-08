@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 RSpec.describe GraphqlController, type: :controller do
-  it 'returns the query result' do
-    context 'with a valid team' do
+  context 'with a valid team' do
+    it 'returns the query result' do
       team = Fabricate :team
 
       query =
@@ -13,7 +15,7 @@ RSpec.describe GraphqlController, type: :controller do
       post :execute, params: { format: :json, query: query }
 
       expect(response).to have_http_status :ok
-      expect(JSON.parse(response.body)).to eq({ 'data' => { 'team' => { 'id' => team.id.to_s} } })
+      expect(JSON.parse(response.body)).to eq({ 'data' => { 'team' => { 'id' => team.id.to_s } } })
     end
   end
 

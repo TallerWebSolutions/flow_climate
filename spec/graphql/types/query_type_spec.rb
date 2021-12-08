@@ -12,7 +12,6 @@ RSpec.describe Types::QueryType do
         teams {
           id
           name
-          wipLimit
           company {
             id
             name
@@ -31,7 +30,6 @@ RSpec.describe Types::QueryType do
             {
               'id' => team.id.to_s,
               'name' => team.name,
-              'wipLimit' => team.max_work_in_progress,
               'company' => {
                 'id' => company.id.to_s,
                 'name' => company.name
@@ -48,25 +46,23 @@ RSpec.describe Types::QueryType do
         project = Fabricate :project, team: team
         other_project = Fabricate :project, team: team
 
-        Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago
-        second_consolidation = Fabricate :project_consolidation, project: project, consolidation_date: Time.zone.today
+        Fabricate :replenishing_consolidation, project: project, consolidation_date: 1.day.ago, team_throughput_data: [7, 10, 9], team_lead_time: 2.4, team_wip: 6
+        second_replenishing_consolidation = Fabricate :replenishing_consolidation, project: project, consolidation_date: Time.zone.today, team_throughput_data: [10, 9, 15], team_lead_time: 4.1, team_wip: 6
 
-        Fabricate :project_consolidation, project: other_project, consolidation_date: 1.day.ago
-        second_other_consolidation = Fabricate :project_consolidation, project: other_project, consolidation_date: Time.zone.today
-
-        Fabricate :team_consolidation, team: team, consolidation_date: 2.days.ago, qty_demands_finished_upstream_in_week: 2, qty_demands_finished_downstream_in_week: 4
-        Fabricate :team_consolidation, team: team, consolidation_date: 1.day.ago, qty_demands_finished_upstream_in_week: 5, qty_demands_finished_downstream_in_week: 1
-        Fabricate :team_consolidation, team: team, consolidation_date: Time.zone.today, qty_demands_finished_upstream_in_week: 8, qty_demands_finished_downstream_in_week: 10
+        Fabricate :replenishing_consolidation, project: other_project, consolidation_date: 1.day.ago, team_throughput_data: [7, 10, 9], team_lead_time: 2.4, team_wip: 6
+        second_other_replenishing_consolidation = Fabricate :replenishing_consolidation, project: other_project, consolidation_date: Time.zone.today, team_throughput_data: [10, 9, 15], team_lead_time: 4.1, team_wip: 6
 
         query =
           %(query {
         team(id: #{team.id}) {
           id
           name
-          wipLimit
-          teamThroughputs
-          projectConsolidations {
+          replenishingConsolidations(orderBy: "consolidation_date", direction: "asc", limit: 2) {
             id
+            teamThroughputData
+            averageTeamThroughput
+            teamLeadTime
+            teamWip
           }
         }
       })
@@ -75,12 +71,10 @@ RSpec.describe Types::QueryType do
         expect(result.dig('data', 'team')).to eq({
                                                    'id' => team.id.to_s,
                                                    'name' => team.name,
-                                                   'wipLimit' => team.max_work_in_progress,
-                                                   'teamThroughputs' => [6, 6, 18],
-                                                   'projectConsolidations' =>
+                                                   'replenishingConsolidations' =>
                                                      [
-                                                       { 'id' => second_consolidation.id.to_s },
-                                                       { 'id' => second_other_consolidation.id.to_s }
+                                                       { 'id' => second_replenishing_consolidation.id.to_s, 'teamThroughputData' => [10, 9, 15], 'averageTeamThroughput' => 11, 'teamLeadTime' => 4.1, 'teamWip' => 6 },
+                                                       { 'id' => second_other_replenishing_consolidation.id.to_s, 'teamThroughputData' => [10, 9, 15], 'averageTeamThroughput' => 11, 'teamLeadTime' => 4.1, 'teamWip' => 6 }
                                                      ]
                                                  })
       end

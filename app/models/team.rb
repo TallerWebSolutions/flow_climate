@@ -120,10 +120,6 @@ class Team < ApplicationRecord
     demands.kept.finished_until_date(Time.zone.now).order(:end_date).last&.end_date&.to_date || Time.zone.today
   end
 
-  def team_throughputs(order_by = 'consolidation_date', direction = 'asc', limit = 10)
-    team_consolidations.order(order_by => direction).limit(limit).map { |consolidation| consolidation.qty_demands_finished_upstream_in_week + consolidation.qty_demands_finished_downstream_in_week }
-  end
-
   private
 
   def assigned_count(not_finished_demands)
