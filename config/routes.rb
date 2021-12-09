@@ -3,6 +3,9 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
+  mount GraphiQL::Rails::Engine, at: '/graphiql', graphql_path: '/graphql' if Rails.env.development?
+  post '/graphql', to: 'graphql#execute'
+
   namespace 'api' do
     namespace 'v1' do
       resources :companies, only: :show do

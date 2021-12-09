@@ -18,7 +18,8 @@ namespace :statistics do
     Company.all.each do |company|
       company.projects.finishing_after(6.months.ago).each do |project|
         project.remove_outdated_consolidations
-        cache_date_arrays = TimeService.instance.days_between_of(project.start_date, Time.zone.today)
+        end_date = [project.end_date, Time.zone.today].min
+        cache_date_arrays = TimeService.instance.days_between_of(project.start_date, end_date)
         cache_date_arrays.each { |cache_date| Consolidations::ProjectConsolidationJob.perform_later(project, cache_date) }
       end
     end

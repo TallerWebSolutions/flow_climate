@@ -148,7 +148,7 @@ GEM
     erubi (1.10.0)
     erubis (2.7.0)
     execjs (2.8.1)
-    fabrication (2.22.0)
+    fabrication (2.23.0)
     faker (2.19.0)
       i18n (>= 1.6, < 2)
     ffi (1.15.4)
@@ -163,8 +163,14 @@ GEM
       sexp_processor (~> 4.4)
     friendly_id (5.4.2)
       activerecord (>= 4.0.0)
+    get_process_mem (0.2.7)
+      ffi (~> 1.0)
     globalid (1.0.0)
       activesupport (>= 5.0)
+    graphiql-rails (1.8.0)
+      railties
+      sprockets-rails
+    graphql (1.13.0)
     hashdiff (1.0.1)
     histogram (0.2.4.1)
     http-accept (1.7.0)
@@ -224,7 +230,7 @@ GEM
     multi_xml (0.6.0)
     multipart-post (2.1.1)
     netrc (0.11.0)
-    newrelic_rpm (8.1.0)
+    newrelic_rpm (8.2.0)
     nio4r (2.5.8)
     nokogiri (1.12.5)
       mini_portile2 (~> 2.6.1)
@@ -235,12 +241,15 @@ GEM
     parallel (1.21.0)
     parallel_tests (3.7.3)
       parallel
-    parser (3.0.3.0)
+    parser (3.0.3.1)
       ast (~> 2.4.1)
     pg (1.2.3)
     public_suffix (4.0.6)
     puma (5.5.2)
       nio4r (~> 2.0)
+    puma_worker_killer (0.3.1)
+      get_process_mem (~> 0.2)
+      puma (>= 2.7)
     racc (1.6.0)
     rack (2.2.3)
     rack-mini-profiler (2.3.3)
@@ -300,7 +309,7 @@ GEM
       ruby2ruby (~> 2.0.7)
       ruby_parser (~> 3.2)
       sexp_processor
-    regexp_parser (2.1.1)
+    regexp_parser (2.2.0)
     require_all (3.0.0)
     responders (3.0.1)
       actionpack (>= 5.0)
@@ -342,8 +351,10 @@ GEM
       rubocop-ast (>= 1.12.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 3.0)
-    rubocop-ast (1.13.0)
+    rubocop-ast (1.14.0)
       parser (>= 3.0.1.1)
+    rubocop-graphql (0.11.2)
+      rubocop (>= 0.87, < 2)
     rubocop-performance (1.12.0)
       rubocop (>= 1.7.0, < 2.0)
       rubocop-ast (>= 0.4.0)
@@ -449,6 +460,8 @@ DEPENDENCIES
   figaro
   flamegraph
   friendly_id
+  graphiql-rails
+  graphql
   histogram
   httparty
   jira-ruby
@@ -463,6 +476,7 @@ DEPENDENCIES
   parser
   pg
   puma
+  puma_worker_killer
   rack-mini-profiler
   rails
   rails-controller-testing
@@ -473,6 +487,7 @@ DEPENDENCIES
   rspec-rails
   rspec_junit_formatter
   rubocop
+  rubocop-graphql
   rubocop-performance
   rubocop-rails
   rubocop-rspec

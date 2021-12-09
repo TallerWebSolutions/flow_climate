@@ -19,6 +19,7 @@ gem 'devise'
 gem 'discard'
 gem 'figaro'
 gem 'friendly_id'
+gem 'graphql'
 gem 'histogram'
 gem 'httparty'
 gem 'jira-ruby', require: false
@@ -45,6 +46,7 @@ group :test, :development do
   gem 'rspec-collection_matchers'
   gem 'rspec-rails'
   gem 'rubocop'
+  gem 'rubocop-graphql'
   gem 'rubocop-performance'
   gem 'rubocop-rails'
   gem 'rubocop-rspec'
@@ -73,5 +75,7 @@ end
 group :production do
   gem 'newrelic_rpm'
   gem 'puma'
+  gem 'puma_worker_killer'
   gem 'rails_12factor'
 end
+gem 'graphiql-rails', group: :development

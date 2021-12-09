@@ -63,5 +63,6 @@ require 'barnes'
 before_fork do
   # worker specific setup
 
+  PumaWorkerKiller.enable_rolling_restart(4 * 3600)
   Barnes.start # Must have enabled worker mode for this to block to be called
 end

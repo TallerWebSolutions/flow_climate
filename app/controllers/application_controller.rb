@@ -13,6 +13,7 @@ class ApplicationController < ActionController::Base
     respond_to do |format|
       format.html { render 'layouts/404', status: :not_found, layout: false }
       format.js { render plain: '404 Not Found', status: :not_found }
+      format.json { render json: { errors: [{ message: 'Not found' }], data: {} }, status: :not_found }
       format.csv { render plain: '404 Not Found', status: :not_found }
     end
   end
