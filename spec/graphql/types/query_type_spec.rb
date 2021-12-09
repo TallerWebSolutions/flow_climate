@@ -43,14 +43,19 @@ RSpec.describe Types::QueryType do
     describe 'team' do
       it 'returns the team and its fields' do
         team = Fabricate :team
-        project = Fabricate :project, team: team
-        other_project = Fabricate :project, team: team
+        project = Fabricate :project, team: team, status: :executing, start_date: 4.days.ago, end_date: 1.day.from_now
+        other_project = Fabricate :project, team: team, status: :executing, start_date: 2.days.ago, end_date: 4.days.from_now
+        inactive_by_date_project = Fabricate :project, team: team, status: :executing, start_date: 2.days.ago, end_date: 1.day.ago
+        inactive_by_status_project = Fabricate :project, team: team, status: :finished, start_date: 2.days.ago, end_date: 1.day.ago
 
         Fabricate :replenishing_consolidation, project: project, consolidation_date: 1.day.ago, team_throughput_data: [7, 10, 9], team_lead_time: 2.4, team_wip: 6
         second_replenishing_consolidation = Fabricate :replenishing_consolidation, project: project, consolidation_date: Time.zone.today, team_throughput_data: [10, 9, 15], team_lead_time: 4.1, team_wip: 6
 
         Fabricate :replenishing_consolidation, project: other_project, consolidation_date: 1.day.ago, team_throughput_data: [7, 10, 9], team_lead_time: 2.4, team_wip: 6
         second_other_replenishing_consolidation = Fabricate :replenishing_consolidation, project: other_project, consolidation_date: Time.zone.today, team_throughput_data: [10, 9, 15], team_lead_time: 4.1, team_wip: 6
+
+        Fabricate :replenishing_consolidation, project: inactive_by_date_project, consolidation_date: 1.day.ago, team_throughput_data: [7, 10, 9], team_lead_time: 2.4, team_wip: 6
+        Fabricate :replenishing_consolidation, project: inactive_by_status_project, consolidation_date: 1.day.ago, team_throughput_data: [7, 10, 9], team_lead_time: 2.4, team_wip: 6
 
         query =
           %(query {
