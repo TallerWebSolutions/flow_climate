@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 allow do
-  origins 'example.com'
+  origins 'http://localhost:3000'
 
   resource '*',
            headers: :any,
