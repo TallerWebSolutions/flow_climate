@@ -66,15 +66,14 @@ before_fork do
   Barnes.start # Must have enabled worker mode for this to block to be called
 
   PumaWorkerKiller.config do |config|
-    config.ram           = 1024 # mb
-    config.frequency     = 5    # seconds
+    config.ram           = 1024
+    config.frequency     = 5
     config.percent_usage = 0.98
-    config.rolling_restart_frequency = 2 * 3600 # 12 hours in seconds, or 12.hours if using Rails
-    config.reaper_status_logs = true # setting this to false will not log lines like:
-    # PumaWorkerKiller: Consuming 54.34765625 mb with master and 2 workers.
+    config.rolling_restart_frequency = 2 * 3600
+    config.reaper_status_logs = true
 
-    config.pre_term = -> (worker) { puts "Worker #{worker.inspect} being killed" }
-    config.rolling_pre_term = -> (worker) { puts "Worker #{worker.inspect} being killed by rolling restart" }
+    config.pre_term = ->(worker) { Rails.logger.debug "Worker #{worker.inspect} being killed" }
+    config.rolling_pre_term = ->(worker) { Rails.logger.debug "Worker #{worker.inspect} being killed by rolling restart" }
   end
   PumaWorkerKiller.start
 end
