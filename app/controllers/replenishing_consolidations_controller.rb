@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ReplenishingConsolidationsController < AuthenticatedController
-  prepend_view_path "#{Rails.root}/app/spa/"
+  prepend_view_path "#{Rails.root}/public"
 
   before_action :assign_company
 
@@ -14,7 +14,7 @@ class ReplenishingConsolidationsController < AuthenticatedController
       @replenishing_consolidations << consolidation if consolidation.present?
     end
 
-    render 'build/index.html'
+    render 'spa-build/index.html'
   end
 
   def refresh_cache
