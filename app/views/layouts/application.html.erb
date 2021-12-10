@@ -1,4 +1,5 @@
 <% if params['controller'] == 'replenishing_consolidations' && params['action'] == 'index' %>
+  <%= csrf_meta_tags %>
   <%= yield %>
 <% else %>
   <!DOCTYPE html>
