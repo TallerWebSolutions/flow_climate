@@ -11,6 +11,8 @@ class ReplenishingConsolidationsController < AuthenticatedController
       consolidation = Consolidations::ReplenishingConsolidation.where(project: project).order(:consolidation_date).last
       @replenishing_consolidations << consolidation if consolidation.present?
     end
+
+    render 'spa/build/index.html'
   end
 
   def refresh_cache
