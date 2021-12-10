@@ -5,17 +5,12 @@ import {
   createHttpLink,
 } from "@apollo/client"
 import { ReactElement } from "react"
-
-// @ts-ignore: Object is possibly 'null'.
-const csrfToken: any = document.querySelector('meta[name=csrf-token]').getAttribute('content');
+import { useCookies } from "react-cookie"
 
 const httpLink = createHttpLink({
   uri: "http://localhost:3000/graphql",
   useGETForQueries: false,
   credentials: "same-origin",
-  headers: {
-    'X-CSRF-Token': csrfToken
-  }
 })
 
 const client = new ApolloClient({
@@ -28,6 +23,9 @@ type ApiProviderProps = {
 }
 
 const ApiProvider = ({ children }: ApiProviderProps) => {
+  const [cookies, setCookie, removeCookie] = useCookies(["_fc_session"])
+
+  console.log({ cookies, setCookie, removeCookie })
   return <ApolloProvider client={client}>{children}</ApolloProvider>
 }
 
