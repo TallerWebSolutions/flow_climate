@@ -1,8 +1,8 @@
+import { Fragment } from "react"
 import { Container } from "@mui/material"
 import { gql, useQuery } from "@apollo/client"
 
 import ReplenishmentTeamInfo from "../components/ReplenishmentTeamInfo"
-import { Fragment } from "react"
 
 const QUERY = gql`
   query Replenishment {
@@ -22,7 +22,7 @@ const Replenishment = () => {
 
   if (loading) return <Container>"carregando..."</Container>
 
-  console.log({ data })
+  console.log({ data, loading, error })
 
   return (
     <Container>
