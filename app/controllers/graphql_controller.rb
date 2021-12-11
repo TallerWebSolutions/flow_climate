@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class GraphqlController < AuthenticatedController
-
   def execute
     query = params[:query]
     operation_name = params[:operationName]

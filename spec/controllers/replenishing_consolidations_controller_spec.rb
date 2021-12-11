@@ -38,7 +38,7 @@ RSpec.describe ReplenishingConsolidationsController, type: :controller do
 
             get :index, params: { company_id: company, team_id: team }
 
-            expect(response).to render_template :index
+            expect(response).to render_template 'spa-build/index'
             expect(assigns(:replenishing_consolidations)).to match_array [other_project_consolidation, consolidation]
           end
         end
@@ -49,7 +49,7 @@ RSpec.describe ReplenishingConsolidationsController, type: :controller do
 
             get :index, params: { company_id: company, team_id: team }
 
-            expect(response).to render_template :index
+            expect(response).to render_template 'spa-build/index'
             expect(assigns(:replenishing_consolidations)).to eq []
           end
         end
