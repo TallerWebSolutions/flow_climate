@@ -9,6 +9,10 @@ const QUERY = gql`
     team(id: 1) {
       id
       name
+      teamThroughputData
+      averageTeamThroughput
+      teamLeadTime
+      teamWip
     }
   }
 `
@@ -22,13 +26,11 @@ const Replenishment = () => {
 
   if (loading) return <Container>"carregando..."</Container>
 
-  console.log({ data, loading, error })
-
   return (
     <Container>
       {!data?.teams && (
         <Fragment>
-          <ReplenishmentTeamInfo />
+          <ReplenishmentTeamInfo teamProps={ data }  />
         </Fragment>
       )}
     </Container>
