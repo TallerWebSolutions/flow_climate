@@ -1,15 +1,15 @@
 import { Card, CardContent, Typography, Grid } from "@mui/material"
 
 type ComparativeValue = {
-  value: Number
-  increased: Boolean
+  value: number
+  increased: boolean
 }
 
 export type TeamReplenishment = {
-  throughputData: Number[]
+  throughputData: number[]
   averageThroughput: ComparativeValue
   leadTime: ComparativeValue
-  wip: Number
+  wip: number
 }
 
 type ReplenishmentTeamInfoProps = {
@@ -17,7 +17,7 @@ type ReplenishmentTeamInfoProps = {
 }
 
 const ReplenishmentTeamInfo = ({ team }: ReplenishmentTeamInfoProps) => (
-  <Grid container spacing={2} justifyContent="space-around">
+  <Grid container spacing={2} justifyContent="space-around" my={2}>
     <Grid item>
       <Card>
         <CardContent>
