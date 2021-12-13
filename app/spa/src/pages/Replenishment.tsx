@@ -12,14 +12,6 @@ const QUERY = gql`
     team(id: 1) {
       id
       name
-      teamThroughputData
-      averageTeamThroughput
-      teamLeadTime
-      teamWip
-    }
-    project {
-      id
-      name
     }
   }
 `

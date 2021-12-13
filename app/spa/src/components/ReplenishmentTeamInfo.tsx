@@ -5,7 +5,7 @@ type ComparativeValue = {
   increased: Boolean
 }
 
-type TeamReplenishment = {
+export type TeamReplenishment = {
   throughputData: Number[]
   averageThroughput: ComparativeValue
   leadTime: ComparativeValue
@@ -24,7 +24,7 @@ const ReplenishmentTeamInfo = ({ team }: ReplenishmentTeamInfoProps) => (
           <Typography variant="h6" component="h5">
             Últimos Throughputs
           </Typography>
-          {team.throughputData.join(", ")}
+          {team.throughputData?.join(", ")}
           <Typography></Typography>
         </CardContent>
       </Card>
@@ -34,7 +34,7 @@ const ReplenishmentTeamInfo = ({ team }: ReplenishmentTeamInfoProps) => (
         <CardContent>
           <Typography variant="h6" component="h5">
             Th Médio 4 Semanas
-            <Typography>{team.averageThroughput.value}</Typography>
+            <Typography>{team.averageThroughput?.value}</Typography>
           </Typography>
         </CardContent>
       </Card>
@@ -45,7 +45,7 @@ const ReplenishmentTeamInfo = ({ team }: ReplenishmentTeamInfoProps) => (
           <Typography variant="h6" component="h5">
             Lead Time 4 semanas
           </Typography>
-          {team.leadTime.value.toFixed(3)}
+          {team.leadTime?.value?.toFixed(3)}
           <Typography></Typography>
         </CardContent>
       </Card>

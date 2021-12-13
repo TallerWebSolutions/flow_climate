@@ -19,11 +19,17 @@
     "isolatedModules": true,
     "noEmit": true,
     "noImplicitAny": true,
+    "noImplicitReturns": true,
     "noImplicitThis": true,
     "strictNullChecks": true,
     "jsx": "react-jsx"
   },
   "include": [
     "src"
+  ],
+  "exclude": [
+    "**/__tests__",
+    "**/*.test.ts",
+    "**/*.test.tsx"
   ]
 }
