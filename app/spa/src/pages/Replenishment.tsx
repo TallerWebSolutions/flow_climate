@@ -15,6 +15,12 @@ const QUERY = gql`
     }
   }
 `
+// throughputData
+// averageThroughput
+// increasedAvgThroughtput
+// leadTime
+// increasedLeadtime80
+// workInProgress
 
 const Replenishment = () => {
   const { data, loading, error } = useQuery(QUERY)
