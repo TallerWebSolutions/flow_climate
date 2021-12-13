@@ -3,6 +3,9 @@ import { Container } from "@mui/material"
 import { gql, useQuery } from "@apollo/client"
 
 import ReplenishmentTeamInfo from "../components/ReplenishmentTeamInfo"
+import ReplenishingProjectsInfo, {
+  Project,
+} from "../components/ReplenishmentProjectsInfo"
 
 const QUERY = gql`
   query Replenishment {
@@ -13,6 +16,10 @@ const QUERY = gql`
       averageTeamThroughput
       teamLeadTime
       teamWip
+    }
+    project {
+      id
+      name
     }
   }
 `
@@ -26,11 +33,14 @@ const Replenishment = () => {
 
   if (loading) return <Container>"carregando..."</Container>
 
+  const projects: Project[] = []
+
   return (
     <Container>
-      {!data?.teams && (
+      {data?.team && (
         <Fragment>
-          <ReplenishmentTeamInfo teamProps={ data }  />
+          <ReplenishmentTeamInfo team={data.team} />
+          <ReplenishingProjectsInfo projects={projects} />
         </Fragment>
       )}
     </Container>
