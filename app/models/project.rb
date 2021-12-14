@@ -205,6 +205,10 @@ class Project < ApplicationRecord
     (flow_pressure / total_pressure) * 100
   end
 
+  def relative_flow_pressure_in_replenishing_consolidation(date = Time.zone.today)
+    replenishing_consolidations.where(consolidation_date: date).order(:consolidation_date).last&.relative_flow_pressure || 0
+  end
+
   def total_throughput
     demands.kept.finished_until_date(Time.zone.now).count
   end
@@ -481,6 +485,19 @@ class Project < ApplicationRecord
   def remove_outdated_consolidations
     project_consolidations.where('consolidation_date < :limit_date', limit_date: start_date).map(&:destroy)
     project_consolidations.where('consolidation_date > :limit_date', limit_date: end_date).map(&:destroy)
+  end
+
+  def qty_selected_in_week(date = Time.zone.today)
+    DemandsRepository.instance.committed_demands_to_period(demands.kept, date.to_date.cweek, date.to_date.cwyear).count
+  end
+
+  def monte_carlo_p80(date = Time.zone.today)
+    ordered_consolidations = replenishing_consolidations.order(:consolidation_date)
+    (ordered_consolidations.where(consolidation_date: date).last || ordered_consolidations.last)&.montecarlo_80_percent || 0
+  end
+
+  def in_wip(date = Time.zone.today)
+    demands.kept.in_wip(date)
   end
 
   private
