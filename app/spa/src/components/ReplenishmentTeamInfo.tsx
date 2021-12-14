@@ -9,7 +9,7 @@ export type TeamReplenishment = {
   throughputData: number[]
   averageThroughput: ComparativeValue
   leadTime: ComparativeValue
-  wip: number
+  workInProgress: number
 }
 
 type ReplenishmentTeamInfoProps = {
@@ -55,7 +55,7 @@ const ReplenishmentTeamInfo = ({ team }: ReplenishmentTeamInfoProps) => (
         <CardContent>
           <Typography variant="h6" component="h5">
             Limite de WIP
-            <Typography>{team.wip}</Typography>
+            <Typography>{team.workInProgress}</Typography>
           </Typography>
         </CardContent>
       </Card>
