@@ -63,12 +63,26 @@ RSpec.describe Types::QueryType do
         team(id: #{team.id}) {
           id
           name
-          teamThroughputData
-          averageTeamThroughput
-          teamLeadTime
-          teamWip,
-          replenishingConsolidations {
+          throughputData
+          averageThroughput
+          increasedAvgThroughtput
+          leadTime
+          increasedLeadtime80
+          workInProgress,
+          lastReplenishingConsolidations(orderBy: "consolidation_date", direction: "asc", limit: 1) {
             id
+            project {
+              id
+              name
+              remainingWeeks
+              remainingBacklog
+              flowPressure
+              flowPressurePercentage
+              leadTimeP80
+              qtySelected
+              qtyInProgress
+              monteCarloP80
+            }
           }
         }
       })
@@ -77,13 +91,39 @@ RSpec.describe Types::QueryType do
           expect(result.dig('data', 'team')).to eq({
                                                      'id' => team.id.to_s,
                                                      'name' => team.name,
-                                                     'averageTeamThroughput' => 11.333333333333334,
-                                                     'teamThroughputData' => [10, 9, 15],
-                                                     'teamLeadTime' => 4.1,
-                                                     'teamWip' => 6,
-                                                     'replenishingConsolidations' => [
-                                                       { 'id' => replenishing_consolidation.id.to_s },
-                                                       { 'id' => other_replenishing_consolidation.id.to_s }
+                                                     'averageThroughput' => 11.333333333333334,
+                                                     'increasedAvgThroughtput' => true,
+                                                     'throughputData' => [10, 9, 15],
+                                                     'leadTime' => 4.1,
+                                                     'increasedLeadtime80' => false,
+                                                     'workInProgress' => 6,
+                                                     'lastReplenishingConsolidations' => [
+                                                       { 'id' => replenishing_consolidation.id.to_s,
+                                                         'project' => {
+                                                           'id' => project.id.to_s,
+                                                           'name' => project.name,
+                                                           'remainingWeeks' => project.remaining_weeks,
+                                                           'remainingBacklog' => project.remaining_backlog,
+                                                           'flowPressure' => project.flow_pressure.to_f,
+                                                           'flowPressurePercentage' => project.relative_flow_pressure_in_replenishing_consolidation.to_f,
+                                                           'qtySelected' => project.qty_selected_in_week,
+                                                           'leadTimeP80' => project.general_leadtime.to_f,
+                                                           'qtyInProgress' => project.in_wip.count,
+                                                           'monteCarloP80' => project.monte_carlo_p80.to_f
+                                                         } },
+                                                       { 'id' => other_replenishing_consolidation.id.to_s,
+                                                         'project' => {
+                                                           'id' => other_project.id.to_s,
+                                                           'name' => other_project.name,
+                                                           'remainingWeeks' => other_project.remaining_weeks,
+                                                           'remainingBacklog' => other_project.remaining_backlog,
+                                                           'flowPressure' => other_project.flow_pressure,
+                                                           'flowPressurePercentage' => other_project.relative_flow_pressure_in_replenishing_consolidation,
+                                                           'qtySelected' => other_project.qty_selected_in_week,
+                                                           'leadTimeP80' => other_project.general_leadtime,
+                                                           'qtyInProgress' => other_project.in_wip.count,
+                                                           'monteCarloP80' => other_project.monte_carlo_p80
+                                                         } }
                                                      ]
                                                    })
         end
@@ -100,11 +140,11 @@ RSpec.describe Types::QueryType do
         team(id: #{team.id}) {
           id
           name
-          teamThroughputData
-          averageTeamThroughput
-          teamLeadTime
-          teamWip,
-          replenishingConsolidations {
+          throughputData
+          averageThroughput
+          leadTime
+          workInProgress,
+          lastReplenishingConsolidations {
             id
           }
         }
@@ -114,11 +154,11 @@ RSpec.describe Types::QueryType do
           expect(result.dig('data', 'team')).to eq({
                                                      'id' => team.id.to_s,
                                                      'name' => team.name,
-                                                     'averageTeamThroughput' => nil,
-                                                     'teamLeadTime' => nil,
-                                                     'teamThroughputData' => nil,
-                                                     'teamWip' => nil,
-                                                     'replenishingConsolidations' => []
+                                                     'averageThroughput' => nil,
+                                                     'leadTime' => nil,
+                                                     'throughputData' => nil,
+                                                     'workInProgress' => nil,
+                                                     'lastReplenishingConsolidations' => []
                                                    })
         end
       end
