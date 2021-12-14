@@ -68,7 +68,7 @@ RSpec.describe Types::QueryType do
           increasedAvgThroughtput
           leadTime
           increasedLeadtime80
-          workInProgress,
+          workInProgress
           lastReplenishingConsolidations(orderBy: "consolidation_date", direction: "asc", limit: 1) {
             id
             project {

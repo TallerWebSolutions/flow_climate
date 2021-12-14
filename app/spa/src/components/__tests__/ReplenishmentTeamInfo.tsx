@@ -13,7 +13,7 @@ describe("components/ReplenishmentTeamInfo", () => {
         value: 20,
         increased: true,
       },
-      wip: 3,
+      workInProgress: 3,
     }
 
     render(<ReplenishmentTeamInfo team={team} />)
@@ -30,7 +30,7 @@ describe("components/ReplenishmentTeamInfo", () => {
         value: 20,
         increased: true,
       },
-      wip: 3,
+      workInProgress: 3,
     }
 
     const team2 = {
@@ -42,7 +42,7 @@ describe("components/ReplenishmentTeamInfo", () => {
         value: 20,
         increased: true,
       },
-      wip: 3,
+      workInProgress: 3,
     }
 
     const team3 = {
@@ -50,11 +50,11 @@ describe("components/ReplenishmentTeamInfo", () => {
         value: 20,
         increased: true,
       },
-      wip: 3,
+      workInProgress: 3,
     }
 
     const team4 = {
-      wip: 3,
+      workInProgress: 3,
     }
 
     const team5 = {}
