@@ -1,8 +1,9 @@
-import {normalizeTeamInfo} from "../Replenishment";
+// @ts-nocheck
+import {normalizeProjectInfo, normalizeTeamInfo} from "../Replenishment";
 
 describe("pages/Replenishment", () => {
-    describe("valid data from replenishings", () => {
-        it("should normalize query results to the component shape", () => {
+    describe("valid data for team info from replenishing", () => {
+        it("should normalize the team info into the query results to the component shape", () => {
             const expected = {
                 throughputData: [9, 2, 4, 6],
                 averageThroughput: {
@@ -17,6 +18,38 @@ describe("pages/Replenishment", () => {
             }
 
             expect(normalizeTeamInfo(data)).toEqual(expected)
+        })
+    })
+
+    describe("valid data for projects info from replenishing", () => {
+        it("should normalize the team info into the query results to the component shape", () => {
+            const expected =
+                [
+                    {
+                        name: "Redesign - Informações de Venda",
+                        remainingWeeks: 2,
+                        remainingBacklog: 9,
+                        flowPressure: 2,
+                        flowPressurePercentage: 0,
+                        leadTimeP80: 4366647.3092,
+                        qtySelected: 0,
+                        qtyInProgress: 1,
+                        monteCarloP80: 41
+                    },
+                    {
+                        name: "Daily Bugle - Matéria Fofoca e Editorias Políticas",
+                        remainingWeeks: 5,
+                        remainingBacklog: 7,
+                        flowPressure: 0.25,
+                        flowPressurePercentage: 0,
+                        leadTimeP80: 0,
+                        qtySelected: 0,
+                        qtyInProgress: 0,
+                        monteCarloP80: 0
+                    },
+                ]
+
+            expect(normalizeProjectInfo(data)).toEqual(expected)
         })
     })
 })
@@ -60,7 +93,7 @@ const data = {
                 "project": {
                     "__typename": "Project",
                     "id": "689",
-                    "name": "IstoÉ - Matéria Dinheiro e Editorias Rural",
+                    "name": "Daily Bugle - Matéria Fofoca e Editorias Políticas",
                     "remainingWeeks": 5,
                     "remainingBacklog": 7,
                     "flowPressure": 0.25,
@@ -69,57 +102,6 @@ const data = {
                     "qtySelected": 0,
                     "qtyInProgress": 0,
                     "monteCarloP80": 0
-                }
-            },
-            {
-                "__typename": "ReplenishingConsolidation",
-                "id": "28233",
-                "project": {
-                    "__typename": "Project",
-                    "id": "686",
-                    "name": "Pactera Edge Support",
-                    "remainingWeeks": 21,
-                    "remainingBacklog": 19,
-                    "flowPressure": 0.14383561643835616,
-                    "flowPressurePercentage": 0,
-                    "leadTimeP80": 339940.1788,
-                    "qtySelected": 0,
-                    "qtyInProgress": 1,
-                    "monteCarloP80": 96
-                }
-            },
-            {
-                "__typename": "ReplenishingConsolidation",
-                "id": "28234",
-                "project": {
-                    "__typename": "Project",
-                    "id": "685",
-                    "name": "IstoÉ Suporte",
-                    "remainingWeeks": 47,
-                    "remainingBacklog": 0,
-                    "flowPressure": 0,
-                    "flowPressurePercentage": 0,
-                    "leadTimeP80": 1481111.4258000003,
-                    "qtySelected": 0,
-                    "qtyInProgress": 1,
-                    "monteCarloP80": 13.2
-                }
-            },
-            {
-                "__typename": "ReplenishingConsolidation",
-                "id": "28237",
-                "project": {
-                    "__typename": "Project",
-                    "id": "664",
-                    "name": "CONECTE-SE",
-                    "remainingWeeks": 1,
-                    "remainingBacklog": 0,
-                    "flowPressure": 0,
-                    "flowPressurePercentage": 0,
-                    "leadTimeP80": 1494858,
-                    "qtySelected": 0,
-                    "qtyInProgress": 2,
-                    "monteCarloP80": 3
                 }
             }
         ]
