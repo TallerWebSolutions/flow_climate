@@ -4,7 +4,7 @@ import { gql, useQuery } from "@apollo/client"
 
 import ReplenishmentTeamInfo from "../components/ReplenishmentTeamInfo"
 import ReplenishingProjectsInfo, {
-  Project,
+    Project,
 } from "../components/ReplenishmentProjectsInfo"
 
 const QUERY = gql`
@@ -39,40 +39,56 @@ const QUERY = gql`
 
 export const normalizeTeamInfo = (data: any) => (
     {
-      throughputData: data.team.throughputData,
-      averageThroughput: {
-        value: data.team.averageThroughput,
-        increased: data.team.increasedAvgThroughtput
-      },
-      leadTime: {
-        value: data.team.leadTime,
-        increased: data.team.increasedLeadtime80
-      },
-      workInProgress: data.team.workInProgress
+        throughputData: data.team.throughputData,
+        averageThroughput: {
+            value: data.team.averageThroughput,
+            increased: data.team.increasedAvgThroughtput
+        },
+        leadTime: {
+            value: data.team.leadTime,
+            increased: data.team.increasedLeadtime80
+        },
+        workInProgress: data.team.workInProgress
     }
 )
 
+export const normalizeProjectInfo = (data: any) => (
+    data.team.lastReplenishingConsolidations.map(function (consolidation: any) {
+        return {
+            name: consolidation.project.name,
+            remainingWeeks: consolidation.project.remainingWeeks,
+            remainingBacklog: consolidation.project.remainingBacklog,
+            flowPressure: consolidation.project.flowPressure,
+            flowPressurePercentage: consolidation.project.flowPressurePercentage,
+            leadTimeP80: consolidation.project.leadTimeP80,
+            qtySelected: consolidation.project.qtySelected,
+            qtyInProgress: consolidation.project.qtyInProgress,
+            monteCarloP80: consolidation.project.monteCarloP80
+        }
+    })
+)
+
 const Replenishment = () => {
-  const { data, loading, error } = useQuery(QUERY)
+    const { data, loading, error } = useQuery(QUERY)
 
-  if (error) {
-    console.error(error)
-  }
+    if (error) {
+        console.error(error)
+    }
 
-  if (loading) return <Container>"carregando..."</Container>
+    if (loading) return <Container>"carregando..."</Container>
 
-  const projects: Project[] = []
+    const projects: Project[] = []
 
-  return (
-      <Container>
-        {data?.team && (
-            <Fragment>
-              <ReplenishmentTeamInfo team={normalizeTeamInfo(data)} />
-              <ReplenishingProjectsInfo projects={projects} />
-            </Fragment>
-        )}
-      </Container>
-  )
+    return (
+        <Container>
+            {data?.team && (
+                <Fragment>
+                    <ReplenishmentTeamInfo team={normalizeTeamInfo(data)} />
+                    <ReplenishingProjectsInfo projects={normalizeProjectInfo(data)} />
+                </Fragment>
+            )}
+        </Container>
+    )
 }
 
 export default Replenishment
