@@ -54,5 +54,10 @@
   "devDependencies": {
     "@types/jest": "^27.0.3"
   },
-  "proxy": "http://localhost:3000"
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "yarn test:all"
+    }
+  },
 }

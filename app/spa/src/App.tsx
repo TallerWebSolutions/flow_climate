@@ -6,7 +6,7 @@ const App = () => (
   <BrowserRouter>
     <Routes>
       <Route
-        path="/companies/taller/teams/:teamId/replenishing_consolidations"
+        path="/companies/:companyNickName/teams/:teamId/replenishing_consolidations"
         element={<Replenishment />}
       />
     </Routes>
