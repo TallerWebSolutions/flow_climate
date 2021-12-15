@@ -17,6 +17,10 @@ const QUERY = gql`
       leadTime
       increasedLeadtime80
       workInProgress
+      company {
+        id
+        name
+      }
       lastReplenishingConsolidations(
         orderBy: "consolidation_date"
         direction: "asc"
