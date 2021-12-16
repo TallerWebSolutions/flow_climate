@@ -61,6 +61,13 @@ RSpec.describe Types::QueryType do
 
           query =
             %(query {
+        me {
+          id
+          fullName
+          avatar {
+            imageSource
+          }
+        }
         team(id: #{team.id}) {
           id
           name
@@ -92,7 +99,21 @@ RSpec.describe Types::QueryType do
         }
       })
 
-          result = FlowClimateSchema.execute(query).as_json
+          user = Fabricate :user
+
+          context = {
+            current_user: user
+          }
+
+          result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
+          expect(result.dig('data', 'me')).to eq({
+                                                   'id' => user.id.to_s,
+                                                   'fullName' => user.full_name,
+                                                   'avatar' => {
+                                                     'imageSource' => user.avatar.url
+                                                   }
+                                                 })
+
           expect(result.dig('data', 'team')).to eq({
                                                      'id' => team.id.to_s,
                                                      'name' => team.name,

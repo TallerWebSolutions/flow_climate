@@ -14,12 +14,18 @@ module Types
       argument :id, Int
     end
 
+    field :me, Types::UserType, null: false
+
     def teams
       Team.preload(:company)
     end
 
     def team(id:)
       Team.find(id)
+    end
+
+    def me
+      context[:current_user]
     end
   end
 end
