@@ -31,9 +31,7 @@ const tableHeadStyles = {
   },
 }
 
-const ReplenishingProjectsInfo = ({
-  projects,
-}: ReplenishingProjectsInfoProps) => (
+const ReplenishingProjectsInfo = ({ projects }: ReplenishingProjectsInfoProps) => (
   <Box my={1}>
     <TableContainer>
       <Table>

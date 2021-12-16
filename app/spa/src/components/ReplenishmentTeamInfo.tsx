@@ -5,7 +5,7 @@ type ComparativeValue = {
   increased: boolean
 }
 
-export type TeamReplenishment = {
+type TeamReplenishment = {
   throughputData: number[]
   averageThroughput: ComparativeValue
   leadTime: ComparativeValue
