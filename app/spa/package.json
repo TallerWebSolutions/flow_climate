@@ -53,11 +53,5 @@
   },
   "devDependencies": {
     "@types/jest": "^27.0.3"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged",
-      "pre-push": "yarn test:all"
-    }
   }
 }
