@@ -48,84 +48,25 @@ const QUERY = gql`
 
 const Replenishment = () => {
   const { teamId, companyNickName } = useParams()
-  // const { data, loading, error } = useQuery(QUERY, {
-  //   variables: { teamId: Number(teamId) },
-  // })
+  const { data, loading, error } = useQuery(QUERY, {
+    variables: { teamId: Number(teamId) },
+  })
 
-  // if (error) {
-  //   console.error(error)
-  // }
+  if (error) {
+    console.error(error)
+  }
 
-  // if (loading) return <Container>"carregando..."</Container>
-
-  const mockedData = {
-    "team": {
-        "id": "1",
-        "name": "Vingadores",
-        company: {
-          name: "ACME Inc",
-          nickName: "acme"
-        },
-        "throughputData": [
-            9,
-            2,
-            4,
-            6
-        ],
-        "averageThroughput": 5.25,
-        "increasedAvgThroughtput": false,
-        "leadTime": 26.73062348611111,
-        "increasedLeadtime80": true,
-        "workInProgress": 13,
-        "lastReplenishingConsolidations": [
-            {
-                "__typename": "ReplenishingConsolidation",
-                "id": "28231",
-                "project": {
-                    "__typename": "Project",
-                    "id": "673",
-                    "name": "Redesign - Informações de Venda",
-                    "remainingWeeks": 2,
-                    "remainingBacklog": 9,
-                    "flowPressure": 2,
-                    "flowPressurePercentage": 0,
-                    "leadTimeP80": 4366647.3092,
-                    "qtySelected": 0,
-                    "qtyInProgress": 1,
-                    "monteCarloP80": 41
-                }
-            },
-            {
-                "__typename": "ReplenishingConsolidation",
-                "id": "28232",
-                "project": {
-                    "__typename": "Project",
-                    "id": "689",
-                    "name": "Daily Bugle - Matéria Fofoca e Editorias Políticas",
-                    "remainingWeeks": 5,
-                    "remainingBacklog": 7,
-                    "flowPressure": 0.25,
-                    "flowPressurePercentage": 0,
-                    "leadTimeP80": 0,
-                    "qtySelected": 0,
-                    "qtyInProgress": 0,
-                    "monteCarloP80": 0
-                }
-            }
-        ]
-    }
-}
-
+  if (loading) return <Container>"carregando..."</Container>
 
   return (
       <Fragment>
-        <Header companyName={mockedData.team.company.nickName} />
+        <Header companyName={data.team.company.nickName} />
       <Container>
-        {mockedData?.team && (
+        {data?.team && (
             <Fragment>
-              <BreadcrumbReplenishingInfo replenishingBreadcrumb={normalizeBreadcrumbReplenishing(companyNickName!, teamId!, mockedData)} />
-              <ReplenishmentTeamInfo team={normalizeTeamInfo(mockedData)} />
-              <ReplenishingProjectsInfo projects={normalizeProjectInfo(mockedData)} />
+              <BreadcrumbReplenishingInfo replenishingBreadcrumb={normalizeBreadcrumbReplenishing(companyNickName!, teamId!, data)} />
+              <ReplenishmentTeamInfo team={normalizeTeamInfo(data)} />
+              <ReplenishingProjectsInfo projects={normalizeProjectInfo(data)} />
             </Fragment>
         )}
       </Container>
