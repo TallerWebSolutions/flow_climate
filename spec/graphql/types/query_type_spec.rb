@@ -43,11 +43,12 @@ RSpec.describe Types::QueryType do
     describe 'team' do
       context 'with replenishing consolidations' do
         it 'returns the team and its fields' do
-          team = Fabricate :team
-          project = Fabricate :project, team: team, status: :executing, start_date: 4.days.ago, end_date: 1.day.from_now
-          other_project = Fabricate :project, team: team, status: :executing, start_date: 2.days.ago, end_date: 4.days.from_now
-          inactive_by_date_project = Fabricate :project, team: team, status: :executing, start_date: 2.days.ago, end_date: 1.day.ago
-          inactive_by_status_project = Fabricate :project, team: team, status: :finished, start_date: 2.days.ago, end_date: 1.day.ago
+          company = Fabricate :company
+          team = Fabricate :team, company: company
+          project = Fabricate :project, company: company, team: team, status: :executing, start_date: 4.days.ago, end_date: 1.day.from_now
+          other_project = Fabricate :project, company: company, team: team, status: :executing, start_date: 2.days.ago, end_date: 4.days.from_now
+          inactive_by_date_project = Fabricate :project, company: company, team: team, status: :executing, start_date: 2.days.ago, end_date: 1.day.ago
+          inactive_by_status_project = Fabricate :project, company: company, team: team, status: :finished, start_date: 2.days.ago, end_date: 1.day.ago
 
           Fabricate :replenishing_consolidation, project: project, consolidation_date: 1.day.ago, team_throughput_data: [7, 10, 9], team_lead_time: 2.4, team_wip: 6
           replenishing_consolidation = Fabricate :replenishing_consolidation, project: project, consolidation_date: Time.zone.today, team_throughput_data: [10, 9, 15], team_lead_time: 4.1, team_wip: 6
@@ -69,6 +70,10 @@ RSpec.describe Types::QueryType do
           leadTime
           increasedLeadtime80
           workInProgress
+          company {
+            id
+            name
+          }
           lastReplenishingConsolidations(orderBy: "consolidation_date", direction: "asc", limit: 1) {
             id
             project {
@@ -97,8 +102,13 @@ RSpec.describe Types::QueryType do
                                                      'leadTime' => 4.1,
                                                      'increasedLeadtime80' => false,
                                                      'workInProgress' => 6,
+                                                     'company' => {
+                                                       'id' => company.id.to_s,
+                                                       'name' => company.name
+                                                     },
                                                      'lastReplenishingConsolidations' => [
-                                                       { 'id' => replenishing_consolidation.id.to_s,
+                                                       {
+                                                         'id' => replenishing_consolidation.id.to_s,
                                                          'project' => {
                                                            'id' => project.id.to_s,
                                                            'name' => project.name,
@@ -110,8 +120,10 @@ RSpec.describe Types::QueryType do
                                                            'leadTimeP80' => project.general_leadtime.to_f,
                                                            'qtyInProgress' => project.in_wip.count,
                                                            'monteCarloP80' => project.monte_carlo_p80.to_f
-                                                         } },
-                                                       { 'id' => other_replenishing_consolidation.id.to_s,
+                                                         }
+                                                       },
+                                                       {
+                                                         'id' => other_replenishing_consolidation.id.to_s,
                                                          'project' => {
                                                            'id' => other_project.id.to_s,
                                                            'name' => other_project.name,
@@ -123,7 +135,8 @@ RSpec.describe Types::QueryType do
                                                            'leadTimeP80' => other_project.general_leadtime,
                                                            'qtyInProgress' => other_project.in_wip.count,
                                                            'monteCarloP80' => other_project.monte_carlo_p80
-                                                         } }
+                                                         }
+                                                       }
                                                      ]
                                                    })
         end
