@@ -9,6 +9,7 @@ import {
 import { Box } from "@mui/system"
 
 export type Project = {
+  id: number
   name: string
   remainingWeeks: number
   remainingBacklog: number
@@ -25,9 +26,9 @@ type ReplenishingProjectsInfoProps = {
 }
 
 const tableHeadStyles = {
-  backgroundColor: "black",
+  backgroundColor: "primary.main",
   th: {
-    color: "white",
+    color: "primary.contrastText",
   },
 }
 
@@ -49,8 +50,8 @@ const ReplenishingProjectsInfo = ({ projects }: ReplenishingProjectsInfoProps) =
           </TableRow>
         </TableHead>
         <TableBody>
-          {projects.map((project) => (
-            <TableRow>
+          {projects.map((project, index) => (
+            <TableRow key={`${project.id}__${index}`}>
               <TableCell>{project.name}</TableCell>
               <TableCell align="right">{project.remainingWeeks}</TableCell>
               <TableCell align="right">{project.remainingBacklog}</TableCell>

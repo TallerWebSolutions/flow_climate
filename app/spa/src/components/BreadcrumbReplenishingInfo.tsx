@@ -1,4 +1,4 @@
-import {Breadcrumbs, Link, Typography} from "@mui/material";
+import {Breadcrumbs, Box, Link, Typography} from "@mui/material";
 
 type BreadcrumbReplenishing = {
     companyName: string,
@@ -12,6 +12,8 @@ type BreadcrumbReplenishingProps = {
 }
 
 const BreadcrumbReplenishingInfo = ({ replenishingBreadcrumb }: BreadcrumbReplenishingProps) => (
+    <Box py={2}>
+
     <Breadcrumbs aria-label="breadcrumb">
         <Link
             underline="hover"
@@ -31,6 +33,7 @@ const BreadcrumbReplenishingInfo = ({ replenishingBreadcrumb }: BreadcrumbReplen
             Replenishing
         </Typography>
     </Breadcrumbs>
+    </Box>
 )
 
 export default BreadcrumbReplenishingInfo
