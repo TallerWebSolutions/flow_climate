@@ -17,7 +17,7 @@ type ReplenishmentTeamInfoProps = {
 }
 
 const ReplenishmentTeamInfo = ({ team }: ReplenishmentTeamInfoProps) => (
-  <Grid container spacing={2} justifyContent="space-around" my={2}>
+  <Grid container spacing={2} justifyContent="space-around" mb={2}>
     <Grid item>
       <Card>
         <CardContent>
