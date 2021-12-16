@@ -69,6 +69,7 @@ jobs:
           cd app/spa
           npm install
           npm run build
+          npm run test
 
       - name: Test & publish code coverage
         uses: paambaati/codeclimate-action@v2.7.5

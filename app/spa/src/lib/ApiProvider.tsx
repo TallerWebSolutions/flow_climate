@@ -6,11 +6,6 @@ import {
 } from "@apollo/client"
 import { ReactElement } from "react"
 
-// @ts-ignore: Object is possibly 'null'.
-const csrfToken: any = document
-  .querySelector("meta[name=csrf-token]")
-  ?.getAttribute("content")
-
 const httpLink = createHttpLink({
   uri: "http://localhost:3000/graphql",
   useGETForQueries: false,
