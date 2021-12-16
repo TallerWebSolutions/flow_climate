@@ -3,13 +3,12 @@
   "private": true,
   "version": "0.0.0",
   "dependencies": {
-    "husky": "^7.0.4",
     "react-scripts": "^4.0.3"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "cd app/spa && lint-staged",
-      "pre-push": "cd app/spa && npm run test"
-    }
+  "devDependencies": {
+    "husky": "^7.0.0"
+  },
+  "scripts": {
+    "prepare": "husky install"
   }
 }

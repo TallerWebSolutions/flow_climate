@@ -30,6 +30,12 @@
     "eject": "react-scripts eject",
     "type-check": "tsc --pretty --noEmit"
   },
+  "lint-staged": {
+    "*.@(ts|tsx)": [
+      "npm run lint",
+      "npm run format"
+    ]
+  },
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -52,6 +58,7 @@
     ]
   },
   "devDependencies": {
-    "@types/jest": "^27.0.3"
+    "@types/jest": "^27.0.3",
+    "lint-staged": "^12.1.2"
   }
 }
