@@ -26,9 +26,9 @@ type ReplenishingProjectsInfoProps = {
 }
 
 const tableHeadStyles = {
-  backgroundColor: "primary.main",
+  backgroundColor: "secondary.main",
   th: {
-    color: "primary.contrastText",
+    color: "secondary.contrastText",
   },
 }
 
