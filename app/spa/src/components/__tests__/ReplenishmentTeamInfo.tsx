@@ -4,7 +4,6 @@ import { render } from "@testing-library/react"
 import ReplenishmentTeamInfo from "../ReplenishmentTeamInfo"
 
 describe("components/ReplenishmentTeamInfo", () => {
-
   it("should render", () => {
     const team = {
       throughputData: [1, 2, 3, 4],
