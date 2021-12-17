@@ -11,7 +11,7 @@ const csrfToken = document
   ?.getAttribute("content")
 
 const httpLink = createHttpLink({
-  uri: "http://localhost:3000/graphql",
+  uri: "/graphql",
   useGETForQueries: false,
   credentials: "same-origin",
   headers: {
