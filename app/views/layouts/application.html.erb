@@ -1,45 +1,46 @@
 <% if params['controller'] == 'replenishing_consolidations' && params['action'] == 'index' %>
+  <%= favicon_link_tag 'favicon.png' %>
   <%= csrf_meta_tags %>
   <%= yield %>
 <% else %>
-  <!DOCTYPE html>
+<!DOCTYPE html>
   <html>
-    <head>
-      <%= favicon_link_tag 'favicon.png' %>
-      <title>Flow Climate - Mastering the flow management</title>
-      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+  <head>
+    <%= favicon_link_tag 'favicon.png' %>
+    <title>Flow Climate - Mastering the flow management</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 
-      <%= stylesheet_link_tag '//netdna.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css', media: 'all' %>
-      <%= stylesheet_link_tag 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.css', media: 'all' %>
-      <%= stylesheet_link_tag 'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css', media: 'all' %>
-      <%= stylesheet_link_tag 'https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css', media: 'all' %>
+    <%= stylesheet_link_tag '//netdna.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css', media: 'all' %>
+    <%= stylesheet_link_tag 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.css', media: 'all' %>
+    <%= stylesheet_link_tag 'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css', media: 'all' %>
+    <%= stylesheet_link_tag 'https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css', media: 'all' %>
 
-      <%= stylesheet_link_tag 'https://fonts.googleapis.com/css?family=Open+Sans|Ubuntu:500', media: 'all' %>
+    <%= stylesheet_link_tag 'https://fonts.googleapis.com/css?family=Open+Sans|Ubuntu:500', media: 'all' %>
 
-      <%= stylesheet_link_tag 'https://unpkg.com/treeflex/dist/css/treeflex.css', media: 'all' %>
+    <%= stylesheet_link_tag 'https://unpkg.com/treeflex/dist/css/treeflex.css', media: 'all' %>
 
-      <%= stylesheet_link_tag 'application', media: 'all' %>
+    <%= stylesheet_link_tag 'application', media: 'all' %>
 
-      <%= yield :stylesheet %>
-      <%= csrf_meta_tags %>
-    </head>
+    <%= yield :stylesheet %>
+    <%= csrf_meta_tags %>
+  </head>
 
-    <body>
-      <div class="container-fluid">
-        <%= render 'layouts/header', company: (@company || current_user&.last_company) %>
+  <body>
+  <div class="container-fluid">
+    <%= render 'layouts/header', company: (@company || current_user&.last_company) %>
 
-        <section class="alerts">
-          <%= notice %>
-          <%= alert %>
-          <%= error %>
-        </section>
+    <section class="alerts">
+      <%= notice %>
+      <%= alert %>
+      <%= error %>
+    </section>
 
-        <div class="page-body">
-          <%= yield %>
-        </div>
+    <div class="page-body">
+      <%= yield %>
+    </div>
 
-        <%= render 'layouts/footer' %>
-      </div>
-    </body>
+    <%= render 'layouts/footer' %>
+  </div>
+  </body>
   </html>
 <% end %>

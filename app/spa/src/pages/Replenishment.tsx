@@ -66,24 +66,24 @@ const Replenishment = () => {
   if (loading) return <Container>"carregando..."</Container>
 
   return (
-    <Fragment>
-      <Header companyName={data.team.company.slug} />
-      <Container>
-        {data?.team && (
-          <Fragment>
-            <BreadcrumbReplenishingInfo
-              replenishingBreadcrumb={normalizeBreadcrumbReplenishing(
-                companyNickName!,
-                teamId!,
-                data
-              )}
-            />
-            <ReplenishmentTeamInfo team={normalizeTeamInfo(data)} />
-            <ReplenishingProjectsInfo projects={normalizeProjectInfo(data)} />
-          </Fragment>
-        )}
-      </Container>
-    </Fragment>
+      <Fragment>
+        <Header companyName={data.team.company.slug} user={normalizeUser(data)} />
+        <Container>
+          {data?.team && (
+              <Fragment>
+                <BreadcrumbReplenishingInfo
+                    replenishingBreadcrumb={normalizeBreadcrumbReplenishing(
+                        companyNickName!,
+                        teamId!,
+                        data
+                    )}
+                />
+                <ReplenishmentTeamInfo team={normalizeTeamInfo(data)} />
+                <ReplenishingProjectsInfo projects={normalizeProjectInfo(data)} />
+              </Fragment>
+          )}
+        </Container>
+      </Fragment>
   )
 }
 
@@ -102,10 +102,10 @@ export const normalizeTeamInfo = (data: any) => ({
   workInProgress: data.team.workInProgress,
 })
 
-export const normalizeBreadcrumbReplenishing = (
-  companyNickName: String,
-  teamId: String,
-  data: any
+const normalizeBreadcrumbReplenishing = (
+    companyNickName: String,
+    teamId: String,
+    data: any
 ) => {
   const teamUrl = `/companies/${companyNickName}/teams/${teamId}`
   const companyUrl = `/companies/${companyNickName}/`
@@ -117,17 +117,26 @@ export const normalizeBreadcrumbReplenishing = (
   }
 }
 
-export const normalizeProjectInfo = (data: any) =>
-  data.team.lastReplenishingConsolidations.map(function (consolidation: any) {
-    return {
-      name: consolidation.project.name,
-      remainingWeeks: consolidation.project.remainingWeeks,
-      remainingBacklog: consolidation.project.remainingBacklog,
-      flowPressure: consolidation.project.flowPressure,
-      flowPressurePercentage: consolidation.project.flowPressurePercentage,
-      leadTimeP80: consolidation.project.leadTimeP80,
-      qtySelected: consolidation.project.qtySelected,
-      qtyInProgress: consolidation.project.qtyInProgress,
-      monteCarloP80: consolidation.project.monteCarloP80,
-    }
-  })
+const normalizeProjectInfo = (data: any) =>
+    data.team.lastReplenishingConsolidations.map(function (consolidation: any) {
+      return {
+        name: consolidation.project.name,
+        remainingWeeks: consolidation.project.remainingWeeks,
+        remainingBacklog: consolidation.project.remainingBacklog,
+        flowPressure: consolidation.project.flowPressure,
+        flowPressurePercentage: consolidation.project.flowPressurePercentage,
+        leadTimeP80: consolidation.project.leadTimeP80,
+        qtySelected: consolidation.project.qtySelected,
+        qtyInProgress: consolidation.project.qtyInProgress,
+        monteCarloP80: consolidation.project.monteCarloP80,
+      }
+    })
+
+const normalizeUser = (data: any) => {
+  return {
+    fullName: data.me.fullName,
+    avatarSource: data.me.avatar.imageSource
+  }
+}
+
+export const toImplementMessage = () => alert('trabalho em progresso...')
