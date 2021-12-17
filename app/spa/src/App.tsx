@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import ApiProvider from "./lib/ApiProvider"
+import ThemeProvider from "./lib/ThemeProvider"
 import Replenishment from "./pages/Replenishment"
 
 const App = () => (
@@ -15,7 +16,9 @@ const App = () => (
 
 const AppWithProviders = () => (
   <ApiProvider>
-    <App />
+    <ThemeProvider>
+      <App />
+    </ThemeProvider>
   </ApiProvider>
 )
 
