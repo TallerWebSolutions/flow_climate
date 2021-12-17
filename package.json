@@ -9,6 +9,8 @@
     "husky": "^7.0.0"
   },
   "scripts": {
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "heroku-prebuild": "cd spa && npm install && npm run build",
+    "start": "cd spa && npm start"
   }
 }
