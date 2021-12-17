@@ -17,7 +17,6 @@ const httpLink = createHttpLink({
   headers: {
     "Sec-Fetch-Mode": "cors",
     "Sec-Fetch-Dest": "empty",
-    cookie: "_fc_session=a819ed291458309f4baaf2201f2a2f6d",
     "X-CSRF-Token": csrfToken,
   },
 })
