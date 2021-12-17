@@ -3,4 +3,3 @@
 
 cd app/spa
 npx lint-staged
-prettier --write .

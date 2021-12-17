@@ -28,7 +28,9 @@
     "build": "PUBLIC_URL=/spa-build react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "type-check": "tsc --pretty --noEmit"
+    "type-check": "tsc --pretty --noEmit",
+    "lint": "eslint . --ext ts --ext tsx",
+    "format": "prettier --write ."
   },
   "lint-staged": {
     "*.@(ts|tsx)": [
@@ -59,6 +61,8 @@
   },
   "devDependencies": {
     "@types/jest": "^27.0.3",
-    "lint-staged": "^12.1.2"
+    "eslint": "^8.4.1",
+    "lint-staged": "^12.1.2",
+    "prettier": "^2.5.1"
   }
 }
