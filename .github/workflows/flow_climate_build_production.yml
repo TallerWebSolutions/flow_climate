@@ -28,17 +28,6 @@ jobs:
           bundle config path vendor/bundle
           bundle install --jobs 4 --retry 3
 
-      - name: Install spa dependencies
-        run: |
-          cd app/spa
-          npm install
-          npm run build
-          npm run test
-
-      - name: Run linters
-        run: |
-          bundle exec rubocop --parallel
-
   tests:
     name: Tests
     runs-on: ubuntu-latest
@@ -73,6 +62,12 @@ jobs:
           gem update --system --no-document
           bundle config path vendor/bundle
           bundle install --jobs 4 --retry 3
+      - name: Install spa dependencies
+        run: |
+          cd app/spa
+          npm install
+          npm run build
+          npm run test
 
       - name: Run specs
         env:
@@ -82,7 +77,7 @@ jobs:
           PG_USER: "postgres"
           PG_PASSWORD: "postgres"
           PG_PORT: ${{ job.services.postgres.ports['5432'] }}
-        run: bundle exec rspec
+        run: bundle exec rspec --fail-fast
 
   deploy-production:
     runs-on: ubuntu-latest
