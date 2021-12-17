@@ -61,7 +61,7 @@ const ReplenishingProjectsInfo = ({
                 {project.flowPressure.toFixed(2)}
               </TableCell>
               <TableCell align="right">
-                {project.flowPressurePercentage}
+                {project.flowPressurePercentage.toFixed(2)}
               </TableCell>
               <TableCell align="right">
                 {(project.leadTimeP80 / 86400).toFixed(2)}
