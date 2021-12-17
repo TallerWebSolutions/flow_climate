@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class GraphqlController < AuthenticatedController
-  protect_from_forgery with: :null_session
 
   def execute
     query = params[:query]

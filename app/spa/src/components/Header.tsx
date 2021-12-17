@@ -13,7 +13,7 @@ const buildLinks = (companyName: string) => ([
 const Header = ({companyName}: {companyName: string}) => <Box bgcolor="primary.dark" py={1}>
   <Container>
     <Box display='flex' alignItems="center">
-      <img src="/taller_logo.png" alt="Taller Logo" height={64} />
+      <img src="https://res.cloudinary.com/taller-digital/image/upload/v1599220860/2_taller_branco_horizontal.png" alt="Taller Logo" height={64} />
       {buildLinks(companyName).map((link, index) => (
         <Link sx={{textDecoration: 'none'}} px={2} key={link.name + index} href={link.href} color="primary.contrastText">{link.name}</Link>
       ))}
