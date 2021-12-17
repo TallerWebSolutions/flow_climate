@@ -1,4 +1,6 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-cd app/spa && npx lint-staged
+cd app/spa
+npx lint-staged
+prettier --write .
