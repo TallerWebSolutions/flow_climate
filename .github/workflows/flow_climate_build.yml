@@ -68,10 +68,12 @@ jobs:
         run: |
           cd app/spa
           npm install
+      - name: Run SPA build
           npm run build
+      - name: Run SPA tests
           npm run test
 
-      - name: Test & publish code coverage
+      - name: Test Rails & publish code coverage
         uses: paambaati/codeclimate-action@v2.7.5
         env:
           secret_key_32_encoded: "8L+WeHTWhNtEAvQzoRaYqYtl4VCwDMReh2SzicO/iCA=\n"
