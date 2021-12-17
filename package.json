@@ -10,7 +10,7 @@
   },
   "scripts": {
     "prepare": "husky install",
-    "heroku-prebuild": "cd spa && npm install && npm run build",
-    "start": "cd spa && npm start"
+    "heroku-prebuild": "cd app/spa && npm install && npm run build",
+    "start": "cd app/spa && npm start"
   }
 }
