@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ReplenishingConsolidationsController < AuthenticatedController
+  prepend_view_path Rails.root.join('public')
+
   before_action :assign_company
 
   def index
@@ -11,6 +13,8 @@ class ReplenishingConsolidationsController < AuthenticatedController
       consolidation = Consolidations::ReplenishingConsolidation.where(project: project).order(:consolidation_date).last
       @replenishing_consolidations << consolidation if consolidation.present?
     end
+
+    render 'spa-build/index'
   end
 
   def refresh_cache

@@ -59,8 +59,6 @@ function buildColumnLineChart(columnDiv) {
                 dataLabels: {
                     enabled: columnDiv.data('stacking') !== "normal",
                     formatter: function () {
-                        console.log('decimals');
-                        console.log(columnDiv.data('decimals'));
                         return Highcharts.numberFormat(this.y, columnDiv.data('decimals'), ',', '.');
                     }
                 }
@@ -72,7 +70,6 @@ function buildColumnLineChart(columnDiv) {
                         let firstPoint = this.series.data[0];
                         let lastPoint = this.series.data[this.series.data.length - 1];
 
-                        console.log('decimals');
                         if ((this.point.category === firstPoint.category && this.point.y === firstPoint.y) || (this.point.category === lastPoint.category  && this.point.y === lastPoint.y)) {
                             return `<span style='color: ${this.color}'>${columnDiv.data('prefix') + Highcharts.numberFormat(this.y, columnDiv.data("decimals"), ",", ".") + " " + columnDiv.data('datalabelsuffix')}</span>`;
                         }

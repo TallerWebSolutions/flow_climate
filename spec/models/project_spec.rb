@@ -410,6 +410,21 @@ RSpec.describe Project, type: :model do
     end
   end
 
+  describe '#relative_flow_pressure_in_replenishing_consolidation' do
+    it 'returns the relative flow pressure in the given week' do
+      travel_to Time.zone.local(2021, 12, 13, 10, 0, 0) do
+        project = Fabricate :project
+
+        Fabricate :replenishing_consolidation, project: project, consolidation_date: 6.days.ago, relative_flow_pressure: 2.8
+        Fabricate :replenishing_consolidation, project: project, consolidation_date: 5.days.ago, relative_flow_pressure: 5.9
+        Fabricate :replenishing_consolidation, project: project, consolidation_date: Time.zone.today, relative_flow_pressure: 0.2
+
+        expect(project.relative_flow_pressure_in_replenishing_consolidation).to eq 0.2
+        expect(project.relative_flow_pressure_in_replenishing_consolidation(6.days.ago)).to eq 2.8
+      end
+    end
+  end
+
   describe '#risk_color' do
     let(:project) { Fabricate :project, end_date: 4.weeks.from_now }
 
@@ -1526,6 +1541,54 @@ RSpec.describe Project, type: :model do
       before { project.remove_outdated_consolidations }
 
       it { expect(project.project_consolidations.reload.count).to eq 0 }
+    end
+  end
+
+  describe '#qty_selected_in_week' do
+    it 'returns the amount selected in the given week' do
+      travel_to Time.zone.local(2021, 12, 13, 10, 0, 0) do
+        project = Fabricate :project
+
+        Fabricate :demand, project: project, created_date: 2.weeks.ago, commitment_date: 9.days.ago, end_date: nil
+        Fabricate :demand, project: project, created_date: 6.days.ago, commitment_date: 5.days.ago, end_date: nil
+        Fabricate :demand, project: project, created_date: 6.days.ago, commitment_date: 4.days.ago, end_date: nil
+        Fabricate :demand, project: project, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil
+
+        expect(project.qty_selected_in_week).to eq 1
+        expect(project.qty_selected_in_week(1.week.ago)).to eq 2
+      end
+    end
+  end
+
+  describe '#in_wip' do
+    it 'returns the amount selected in the given week' do
+      travel_to Time.zone.local(2021, 12, 13, 10, 0, 0) do
+        project = Fabricate :project
+
+        Fabricate :demand, project: project, created_date: 2.weeks.ago, commitment_date: 9.days.ago, end_date: 1.day.ago
+        Fabricate :demand, project: project, created_date: 2.weeks.ago, commitment_date: 9.days.ago, end_date: nil
+        Fabricate :demand, project: project, created_date: 6.days.ago, commitment_date: 5.days.ago, end_date: nil
+        Fabricate :demand, project: project, created_date: 6.days.ago, commitment_date: 4.days.ago, end_date: nil
+        Fabricate :demand, project: project, created_date: 6.days.ago, commitment_date: 4.days.ago, end_date: 2.days.ago
+        Fabricate :demand, project: project, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil
+
+        expect(project.in_wip.count).to eq 3
+        expect(project.in_wip(1.week.ago).count).to eq 2
+      end
+    end
+  end
+
+  describe '#monte_carlo_p80' do
+    it 'returns the monte carlo value in the given week' do
+      travel_to Time.zone.local(2021, 12, 13, 10, 0, 0) do
+        project = Fabricate :project
+
+        Fabricate :replenishing_consolidation, project: project, consolidation_date: 1.week.ago, montecarlo_80_percent: 5.9
+        Fabricate :replenishing_consolidation, project: project, consolidation_date: Time.zone.today, montecarlo_80_percent: 0.2
+
+        expect(project.monte_carlo_p80).to eq 0.2
+        expect(project.monte_carlo_p80(1.week.ago)).to eq 5.9
+      end
     end
   end
 end

@@ -1,5 +1,10 @@
+<% if params['controller'] == 'replenishing_consolidations' && params['action'] == 'index' %>
+  <%= favicon_link_tag 'favicon.png' %>
+  <%= csrf_meta_tags %>
+  <%= yield %>
+<% else %>
 <!DOCTYPE html>
-<html>
+  <html>
   <head>
     <%= favicon_link_tag 'favicon.png' %>
     <title>Flow Climate - Mastering the flow management</title>
@@ -21,20 +26,21 @@
   </head>
 
   <body>
-    <div class="container-fluid">
-      <%= render 'layouts/header', company: (@company || current_user&.last_company) %>
+  <div class="container-fluid">
+    <%= render 'layouts/header', company: (@company || current_user&.last_company) %>
 
-      <section class="alerts">
-        <%= notice %>
-        <%= alert %>
-        <%= error %>
-      </section>
+    <section class="alerts">
+      <%= notice %>
+      <%= alert %>
+      <%= error %>
+    </section>
 
-      <div class="page-body">
-        <%= yield %>
-      </div>
-
-      <%= render 'layouts/footer' %>
+    <div class="page-body">
+      <%= yield %>
     </div>
+
+    <%= render 'layouts/footer' %>
+  </div>
   </body>
-</html>
+  </html>
+<% end %>

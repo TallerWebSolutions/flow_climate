@@ -1,6 +1,16 @@
 {
   "name": "flow_climate",
   "private": true,
-  "dependencies": {},
-  "version": "0.0.0"
+  "version": "0.0.0",
+  "dependencies": {
+    "react-scripts": "^4.0.3"
+  },
+  "devDependencies": {
+    "husky": "^7.0.0"
+  },
+  "scripts": {
+    "prepare": "husky install",
+    "heroku-prebuild": "cd app/spa && npm install && npm run build",
+    "start": "cd app/spa && npm start"
+  }
 }
