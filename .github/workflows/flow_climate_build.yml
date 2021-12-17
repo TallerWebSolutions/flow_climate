@@ -68,6 +68,7 @@ jobs:
         run: |
           cd app/spa
           npm install
+          npm run build
           npm run test
 
       - name: Test Rails & publish code coverage
