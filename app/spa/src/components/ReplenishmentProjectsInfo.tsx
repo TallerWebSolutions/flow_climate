@@ -32,7 +32,9 @@ const tableHeadStyles = {
   },
 }
 
-const ReplenishingProjectsInfo = ({ projects }: ReplenishingProjectsInfoProps) => (
+const ReplenishingProjectsInfo = ({
+  projects,
+}: ReplenishingProjectsInfoProps) => (
   <Box my={1}>
     <TableContainer>
       <Table>
@@ -55,11 +57,15 @@ const ReplenishingProjectsInfo = ({ projects }: ReplenishingProjectsInfoProps) =
               <TableCell>{project.name}</TableCell>
               <TableCell align="right">{project.remainingWeeks}</TableCell>
               <TableCell align="right">{project.remainingBacklog}</TableCell>
-              <TableCell align="right">{project.flowPressure.toFixed(2)}</TableCell>
+              <TableCell align="right">
+                {project.flowPressure.toFixed(2)}
+              </TableCell>
               <TableCell align="right">
                 {project.flowPressurePercentage}
               </TableCell>
-              <TableCell align="right">{(project.leadTimeP80 / 86400).toFixed(2)}</TableCell>
+              <TableCell align="right">
+                {(project.leadTimeP80 / 86400).toFixed(2)}
+              </TableCell>
               <TableCell align="right">{project.qtySelected}</TableCell>
               <TableCell align="right">{project.qtyInProgress}</TableCell>
               <TableCell align="right">{project.monteCarloP80}</TableCell>
