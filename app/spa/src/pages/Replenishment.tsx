@@ -10,6 +10,12 @@ import BreadcrumbReplenishingInfo from "../components/BreadcrumbReplenishingInfo
 
 const QUERY = gql`
   query Replenishment($teamId: Int!) {
+    me {
+      fullName
+      avatar {
+        imageSource
+      }
+    }
     team(id: $teamId) {
       id
       name
