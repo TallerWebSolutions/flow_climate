@@ -12,7 +12,7 @@
          data-suffix=""
          data-tooltipsuffix="<%= I18n.t('general.days') %>"
          data-datalabelsuffix=""
-         data-series="<%= [{ name: project.name, data: dashboard_project_consolidations.map { |consolidation| consolidation.lead_time_p80.to_f / 1.day } }].to_json %>"
+         data-series="<%= [{ name: project.name, data: all_project_consolidations.map { |consolidation| consolidation.lead_time_p80.to_f / 1.day } }].to_json %>"
          data-decimals="2">
     </div>
   </div>
@@ -67,14 +67,14 @@
     <div id="project-dashboard-quality-line"
          class="flow-chart"
          data-title=""
-         data-xcategories="<%= dashboard_project_consolidations.map(&:consolidation_date).to_json %>"
+         data-xcategories="<%= all_project_consolidations.map(&:consolidation_date).to_json %>"
          data-xtitle=""
          data-ytitle="%"
          data-prefix=""
          data-suffix=""
          data-tooltipsuffix="%"
          data-datalabelsuffix="%"
-         data-series="<%= [{ name: project.name, data: dashboard_project_consolidations.map { |consolidation| (1 - consolidation.project_quality.to_f) * 100 } }].to_json %>"
+         data-series="<%= [{ name: project.name, data: all_project_consolidations.map { |consolidation| (1 - consolidation.project_quality.to_f) * 100 } }].to_json %>"
          data-decimals="2">
     </div>
   </div>
@@ -86,14 +86,14 @@
     <div id="project-dashboard-quality-blocks-line"
          class="flow-chart"
          data-title=""
-         data-xcategories="<%= dashboard_project_consolidations.map(&:consolidation_date).to_json %>"
+         data-xcategories="<%= all_project_consolidations.map(&:consolidation_date).to_json %>"
          data-xtitle=""
          data-ytitle="<%= I18n.t('general.demand_blocks') %>"
          data-prefix=""
          data-suffix=""
          data-tooltipsuffix="<%= I18n.t('general.demand_blocks') %>"
          data-datalabelsuffix=""
-         data-series="<%= [{ name: project.name, data: dashboard_project_consolidations.map { |consolidation| consolidation.code_needed_blocks_count } }].to_json %>"
+         data-series="<%= [{ name: project.name, data: all_project_consolidations.map { |consolidation| consolidation.code_needed_blocks_count } }].to_json %>"
          data-decimals="0">
     </div>
   </div>
@@ -106,14 +106,14 @@
     <div id="project-dashboard-quality-blocks-per-demand-line"
          class="flow-chart"
          data-title=""
-         data-xcategories="<%= dashboard_project_consolidations.map(&:consolidation_date).to_json %>"
+         data-xcategories="<%= all_project_consolidations.map(&:consolidation_date).to_json %>"
          data-xtitle=""
          data-ytitle="<%= I18n.t('projects.charts.quality_block_per_demand') %>"
          data-prefix=""
          data-suffix=""
          data-tooltipsuffix="<%= I18n.t('general.demand_blocks') %>"
          data-datalabelsuffix=""
-         data-series="<%= [{ name: project.name, data: dashboard_project_consolidations.map { |consolidation| consolidation.code_needed_blocks_per_demand.to_f } }].to_json %>"
+         data-series="<%= [{ name: project.name, data: all_project_consolidations.map { |consolidation| consolidation.code_needed_blocks_per_demand.to_f } }].to_json %>"
          data-decimals="2">
     </div>
   </div>
@@ -124,14 +124,14 @@
     <div id="project-dashboard-flow-efficiency-line"
          class="flow-chart"
          data-title=""
-         data-xcategories="<%= dashboard_project_consolidations.map(&:consolidation_date).to_json %>"
+         data-xcategories="<%= all_project_consolidations.map(&:consolidation_date).to_json %>"
          data-xtitle=""
          data-ytitle="%"
          data-prefix=""
          data-suffix=""
          data-tooltipsuffix="%"
          data-datalabelsuffix="%"
-         data-series="<%= [{ name: project.name, data: dashboard_project_consolidations.map { |consolidation| consolidation.flow_efficiency.to_f } }].to_json %>"
+         data-series="<%= [{ name: project.name, data: all_project_consolidations.map { |consolidation| consolidation.flow_efficiency.to_f } }].to_json %>"
          data-decimals="2">
     </div>
   </div>
@@ -144,14 +144,14 @@
     <div id="project-dashboard-hours-per-demand-line"
          class="flow-chart"
          data-title=""
-         data-xcategories="<%= dashboard_project_consolidations.map(&:consolidation_date).to_json %>"
+         data-xcategories="<%= all_project_consolidations.map(&:consolidation_date).to_json %>"
          data-xtitle=""
          data-ytitle="<%= I18n.t('general.hours') %>"
          data-prefix=""
          data-suffix=""
          data-tooltipsuffix="<%= I18n.t('general.hours') %>"
          data-datalabelsuffix=""
-         data-series="<%= [{ name: project.name, data: dashboard_project_consolidations.map { |consolidation| consolidation.hours_per_demand.to_f } }].to_json %>"
+         data-series="<%= [{ name: project.name, data: all_project_consolidations.map { |consolidation| consolidation.hours_per_demand.to_f } }].to_json %>"
          data-decimals="2">
     </div>
   </div>
@@ -161,16 +161,16 @@
     <div id="project-dashboard-hours-consumed-stream-column-line"
          class="flow-chart"
          data-title=""
-         data-xcategories="<%= dashboard_project_consolidations.map(&:consolidation_date).to_json %>"
+         data-xcategories="<%= all_project_consolidations.map(&:consolidation_date).to_json %>"
          data-xtitle=""
          data-ytitle="<%= I18n.t('general.hours') %>"
          data-prefix=""
          data-suffix=""
          data-tooltipsuffix="<%= I18n.t('general.hours') %>"
          data-datalabelsuffix="<%= I18n.t('general.hours') %>"
-         data-series="<%= [{ type: 'column', visible: false, name: I18n.t('demands.index.effort_upstream'), data: dashboard_project_consolidations.map { |consolidation| consolidation.project_throughput_hours_upstream.to_f } },
-                           { type: 'column', visible: false, name: I18n.t('demands.index.effort_downstream'), data: dashboard_project_consolidations.map { |consolidation| consolidation.project_throughput_hours_downstream.to_f } },
-                           { type: 'spline', name: I18n.t('projects.show.charts.total_effort'), data: dashboard_project_consolidations.map { |consolidation| consolidation.project_throughput_hours.to_f } }].to_json %>"
+         data-series="<%= [{ type: 'column', visible: false, name: I18n.t('demands.index.effort_upstream'), data: all_project_consolidations.map { |consolidation| consolidation.project_throughput_hours_upstream.to_f } },
+                           { type: 'column', visible: false, name: I18n.t('demands.index.effort_downstream'), data: all_project_consolidations.map { |consolidation| consolidation.project_throughput_hours_downstream.to_f } },
+                           { type: 'spline', name: I18n.t('projects.show.charts.total_effort'), data: all_project_consolidations.map { |consolidation| consolidation.project_throughput_hours.to_f } }].to_json %>"
          data-decimals="2">
     </div>
   </div>
@@ -184,17 +184,17 @@
     <div id="project-dashboard-hours-consumed-role-column-line"
          class="flow-chart"
          data-title=""
-         data-xcategories="<%= dashboard_project_consolidations.map(&:consolidation_date).to_json %>"
+         data-xcategories="<%= all_project_consolidations.map(&:consolidation_date).to_json %>"
          data-xtitle=""
          data-ytitle="<%= I18n.t('general.hours') %>"
          data-prefix=""
          data-suffix=""
          data-tooltipsuffix="<%= I18n.t('general.hours') %>"
          data-datalabelsuffix="<%= I18n.t('general.hours') %>"
-         data-series="<%= [{ type: 'column', visible: true, name: I18n.t('charts.effort_design'), data: dashboard_project_consolidations.map { |consolidation| consolidation.project_throughput_hours_design.to_f } },
-                           { type: 'column', visible: true, name: I18n.t('charts.effort_development'), data: dashboard_project_consolidations.map { |consolidation| consolidation.project_throughput_hours_development.to_f } },
-                           { type: 'column', visible: true, name: I18n.t('charts.effort_management'), data: dashboard_project_consolidations.map { |consolidation| consolidation.project_throughput_hours_management.to_f } },
-                           { type: 'spline', visible: false, name: I18n.t('projects.show.charts.total_effort'), data: dashboard_project_consolidations.map { |consolidation| consolidation.project_throughput_hours.to_f } }].to_json %>"
+         data-series="<%= [{ type: 'column', visible: true, name: I18n.t('charts.effort_design'), data: all_project_consolidations.map { |consolidation| consolidation.project_throughput_hours_design.to_f } },
+                           { type: 'column', visible: true, name: I18n.t('charts.effort_development'), data: all_project_consolidations.map { |consolidation| consolidation.project_throughput_hours_development.to_f } },
+                           { type: 'column', visible: true, name: I18n.t('charts.effort_management'), data: all_project_consolidations.map { |consolidation| consolidation.project_throughput_hours_management.to_f } },
+                           { type: 'spline', visible: false, name: I18n.t('projects.show.charts.total_effort'), data: all_project_consolidations.map { |consolidation| consolidation.project_throughput_hours.to_f } }].to_json %>"
          data-decimals="2">
     </div>
 
