@@ -210,7 +210,6 @@ class ProjectsController < AuthenticatedController
     @all_project_consolidations = project_consolidations.weekly_data.order(:consolidation_date)
     last_consolidation = project_consolidations.last
     append_current_data(last_consolidation)
-    @dashboard_project_consolidations = @all_project_consolidations.after_date(10.weeks.ago)
     @dashboard_project_consolidations_for_months = project_consolidations.order(:consolidation_date).select(&:last_data_for_month?)
   end
 
@@ -221,8 +220,8 @@ class ProjectsController < AuthenticatedController
   end
 
   def build_charts_adapters
-    start_date = [@project.start_date, 8.weeks.ago].max
     end_date = [@project.end_date, Time.zone.today].min
+    start_date = end_date - 8.weeks
     @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(demands.kept, start_date, end_date, 'week')
     @status_report_data = Highchart::StatusReportChartsAdapter.new(demands, @project.start_date, end_date, 'week')
   end
