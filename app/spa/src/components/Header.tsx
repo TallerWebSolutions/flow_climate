@@ -30,7 +30,7 @@ const Header = ({ company, user }: { company: Company; user: User }) => {
     <Box bgcolor="secondary.dark" py={1}>
       <Container>
         <Box display="flex" alignItems="center" justifyContent="space-between">
-          <Link href="/">
+          <Link href="/" sx={{ display: "block" }}>
             <img
               src="https://res.cloudinary.com/taller-digital/image/upload/v1599220860/2_taller_branco_horizontal.png"
               alt="Taller Logo"
