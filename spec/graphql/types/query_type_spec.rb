@@ -45,19 +45,27 @@ RSpec.describe Types::QueryType do
         it 'returns the team and its fields' do
           company = Fabricate :company
           team = Fabricate :team, company: company
-          project = Fabricate :project, company: company, team: team, status: :executing, start_date: 4.days.ago, end_date: 1.day.from_now
-          other_project = Fabricate :project, company: company, team: team, status: :executing, start_date: 2.days.ago, end_date: 4.days.from_now
+          project = Fabricate :project, company: company, team: team, status: :executing, start_date: 4.days.ago, end_date: 1.day.from_now, max_work_in_progress: 2
+          other_project = Fabricate :project, company: company, team: team, status: :executing, start_date: 2.days.ago, end_date: 4.days.from_now, max_work_in_progress: 4
           inactive_by_date_project = Fabricate :project, company: company, team: team, status: :executing, start_date: 2.days.ago, end_date: 1.day.ago
           inactive_by_status_project = Fabricate :project, company: company, team: team, status: :finished, start_date: 2.days.ago, end_date: 1.day.ago
 
-          Fabricate :replenishing_consolidation, project: project, consolidation_date: 1.day.ago, team_throughput_data: [7, 10, 9], team_lead_time: 2.4, team_wip: 6
-          replenishing_consolidation = Fabricate :replenishing_consolidation, project: project, consolidation_date: Time.zone.today, team_throughput_data: [10, 9, 15], team_lead_time: 4.1, team_wip: 6
+          Fabricate :replenishing_consolidation, project: project, consolidation_date: 1.day.ago, team_throughput_data: [7, 10, 9], team_lead_time: 2.4, team_wip: 6, team_based_montecarlo_80_percent: 0.5, team_monte_carlo_weeks_max: 9, team_monte_carlo_weeks_min: 2, team_monte_carlo_weeks_std_dev: 2.1, team_based_odds_to_deadline: 0.9
+          replenishing_consolidation = Fabricate :replenishing_consolidation, project: project, consolidation_date: Time.zone.today, team_throughput_data: [10, 9, 15], team_lead_time: 4.1, team_wip: 6, team_based_montecarlo_80_percent: 0.2, team_monte_carlo_weeks_max: 7, team_monte_carlo_weeks_min: 4, team_monte_carlo_weeks_std_dev: 4.1, team_based_odds_to_deadline: 0.7
 
-          Fabricate :replenishing_consolidation, project: other_project, consolidation_date: 1.day.ago, team_throughput_data: [7, 10, 9], team_lead_time: 2.4, team_wip: 6
+          Fabricate :replenishing_consolidation, project: other_project, consolidation_date: 1.day.ago, team_throughput_data: [7, 10, 9], team_lead_time: 2.4, team_wip: 6, team_based_montecarlo_80_percent: 0.6, team_monte_carlo_weeks_max: 8, team_monte_carlo_weeks_min: 1, team_monte_carlo_weeks_std_dev: 4.1, team_based_odds_to_deadline: 0.5
           other_replenishing_consolidation = Fabricate :replenishing_consolidation, project: other_project, consolidation_date: Time.zone.today, team_throughput_data: [10, 9, 15], team_lead_time: 4.1, team_wip: 6
 
           Fabricate :replenishing_consolidation, project: inactive_by_date_project, consolidation_date: 1.day.ago, team_throughput_data: [7, 10, 9], team_lead_time: 2.4, team_wip: 6
           Fabricate :replenishing_consolidation, project: inactive_by_status_project, consolidation_date: 1.day.ago, team_throughput_data: [7, 10, 9], team_lead_time: 2.4, team_wip: 6
+
+          Fabricate :project_consolidation, project: project, consolidation_date: 3.days.ago, project_throughput: 7
+          Fabricate :project_consolidation, project: project, consolidation_date: 2.days.ago, project_throughput: 10
+          Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago, project_throughput: 20
+
+          Fabricate :project_consolidation, project: other_project, consolidation_date: 3.days.ago, project_throughput: 9
+          Fabricate :project_consolidation, project: other_project, consolidation_date: 2.days.ago, project_throughput: 13
+          Fabricate :project_consolidation, project: other_project, consolidation_date: 1.day.ago, project_throughput: 15
 
           query =
             %(query {
@@ -94,6 +102,15 @@ RSpec.describe Types::QueryType do
               qtySelected
               qtyInProgress
               monteCarloP80
+              workInProgressLimit
+              weeklyThroughputs
+              modeWeeklyTroughputs
+              stdDevWeeklyTroughputs
+              teamMonteCarloP80
+              teamMonteCarloWeeksMax
+              teamMonteCarloWeeksMin
+              teamMonteCarloWeeksStdDev
+              teamBasedOddsToDeadline
             }
           }
         }
@@ -140,7 +157,16 @@ RSpec.describe Types::QueryType do
                                                            'qtySelected' => project.qty_selected_in_week,
                                                            'leadTimeP80' => project.general_leadtime.to_f,
                                                            'qtyInProgress' => project.in_wip.count,
-                                                           'monteCarloP80' => project.monte_carlo_p80.to_f
+                                                           'monteCarloP80' => project.monte_carlo_p80.to_f,
+                                                           'workInProgressLimit' => project.max_work_in_progress,
+                                                           'weeklyThroughputs' => project.last_weekly_throughput,
+                                                           'modeWeeklyTroughputs' => 3,
+                                                           'stdDevWeeklyTroughputs' => 4.949747468305833,
+                                                           'teamMonteCarloP80' => 0.2,
+                                                           'teamMonteCarloWeeksMax' => 7.0,
+                                                           'teamMonteCarloWeeksMin' => 4.0,
+                                                           'teamMonteCarloWeeksStdDev' => 4.1,
+                                                           'teamBasedOddsToDeadline' => 0.7
                                                          }
                                                        },
                                                        {
@@ -155,7 +181,16 @@ RSpec.describe Types::QueryType do
                                                            'qtySelected' => other_project.qty_selected_in_week,
                                                            'leadTimeP80' => other_project.general_leadtime,
                                                            'qtyInProgress' => other_project.in_wip.count,
-                                                           'monteCarloP80' => other_project.monte_carlo_p80
+                                                           'monteCarloP80' => other_project.monte_carlo_p80,
+                                                           'workInProgressLimit' => other_project.max_work_in_progress,
+                                                           'weeklyThroughputs' => other_project.last_weekly_throughput,
+                                                           'modeWeeklyTroughputs' => 4,
+                                                           'stdDevWeeklyTroughputs' => 1.4142135623730951,
+                                                           'teamMonteCarloP80' => 10.1,
+                                                           'teamMonteCarloWeeksMax' => 20,
+                                                           'teamMonteCarloWeeksMin' => 4,
+                                                           'teamMonteCarloWeeksStdDev' => 1.2,
+                                                           'teamBasedOddsToDeadline' => 0.92
                                                          }
                                                        }
                                                      ]

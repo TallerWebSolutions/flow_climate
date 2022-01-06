@@ -13,10 +13,24 @@ module Types
     field :monte_carlo_p80, Float, null: false
     field :lead_time_p80, Float, null: false
 
+    field :work_in_progress_limit, Int, null: false
+    field :weekly_throughputs, [Int], null: false
+    field :mode_weekly_troughputs, Int, null: false
+    field :std_dev_weekly_troughputs, Float, null: false
+    field :team_monte_carlo_p80, Float, null: false
+    field :team_monte_carlo_weeks_max, Float, null: false
+    field :team_monte_carlo_weeks_min, Float, null: false
+    field :team_monte_carlo_weeks_std_dev, Float, null: false
+    field :team_based_odds_to_deadline, Float, null: false
+
     delegate :remaining_backlog, to: :object
     delegate :remaining_weeks, to: :object
     delegate :flow_pressure, to: :object
     delegate :monte_carlo_p80, to: :object
+    delegate :team_monte_carlo_p80, to: :object
+    delegate :team_monte_carlo_weeks_max, to: :object
+    delegate :team_monte_carlo_weeks_min, to: :object
+    delegate :team_based_odds_to_deadline, to: :object
 
     def qty_in_progress
       object.in_wip.count
@@ -32,6 +46,22 @@ module Types
 
     def lead_time_p80
       object.general_leadtime
+    end
+
+    def work_in_progress_limit
+      object.max_work_in_progress
+    end
+
+    def weekly_throughputs
+      object.last_weekly_throughput
+    end
+
+    def mode_weekly_troughputs
+      Stats::StatisticsService.instance.mode(weekly_throughputs)
+    end
+
+    def std_dev_weekly_troughputs
+      Stats::StatisticsService.instance.standard_deviation(weekly_throughputs)
     end
   end
 end

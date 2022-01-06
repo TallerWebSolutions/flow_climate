@@ -423,11 +423,12 @@ class Project < ApplicationRecord
     @delivered_scope ||= demands.finished_until_date(Time.zone.now).count
   end
 
-  def last_weekly_throughput(qty_data_points)
+  def last_weekly_throughput(qty_data_points = nil)
+    qty_data_points = project_consolidations.count if qty_data_points.blank?
     consolidations = project_consolidations.weekly_data.order(consolidation_date: :desc)
     consolidations = project_consolidations.order(consolidation_date: :desc) if consolidations.empty?
 
-    throughputs = consolidations.first(qty_data_points + 1).map(&:project_throughput).flatten
+    throughputs = consolidations.first(qty_data_points).map(&:project_throughput).flatten
 
     previous_element = 0
     last_throughputs = []
@@ -492,8 +493,27 @@ class Project < ApplicationRecord
   end
 
   def monte_carlo_p80(date = Time.zone.today)
-    ordered_consolidations = replenishing_consolidations.order(:consolidation_date)
-    (ordered_consolidations.where(consolidation_date: date).last || ordered_consolidations.last)&.montecarlo_80_percent || 0
+    replenishing_consolidations_to_date(date)&.montecarlo_80_percent || 0
+  end
+
+  def team_monte_carlo_p80(date = Time.zone.today)
+    replenishing_consolidations_to_date(date)&.team_based_montecarlo_80_percent || 0
+  end
+
+  def team_monte_carlo_weeks_max(date = Time.zone.today)
+    replenishing_consolidations_to_date(date)&.team_monte_carlo_weeks_max || 0
+  end
+
+  def team_monte_carlo_weeks_min(date = Time.zone.today)
+    replenishing_consolidations_to_date(date)&.team_monte_carlo_weeks_min || 0
+  end
+
+  def team_monte_carlo_weeks_std_dev(date = Time.zone.today)
+    replenishing_consolidations_to_date(date)&.team_monte_carlo_weeks_std_dev || 0
+  end
+
+  def team_based_odds_to_deadline(date = Time.zone.today)
+    replenishing_consolidations_to_date(date)&.team_based_odds_to_deadline || 0
   end
 
   def in_wip(date = Time.zone.today)
@@ -501,6 +521,11 @@ class Project < ApplicationRecord
   end
 
   private
+
+  def replenishing_consolidations_to_date(date)
+    ordered_consolidations = replenishing_consolidations.order(:consolidation_date)
+    (ordered_consolidations.where(consolidation_date: date).last || ordered_consolidations.last)
+  end
 
   def backlog_for(date = Time.zone.now)
     DemandsRepository.instance.known_scope_to_date(demands.map(&:id), date)

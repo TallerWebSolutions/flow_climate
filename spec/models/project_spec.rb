@@ -1591,4 +1591,18 @@ RSpec.describe Project, type: :model do
       end
     end
   end
+
+  describe '#team_monte_carlo_p80' do
+    it 'returns the monte carlo value in the given week' do
+      travel_to Time.zone.local(2021, 12, 13, 10, 0, 0) do
+        project = Fabricate :project
+
+        Fabricate :replenishing_consolidation, project: project, consolidation_date: 1.week.ago, team_based_monte_carlo_weeks_p80: 5.9
+        Fabricate :replenishing_consolidation, project: project, consolidation_date: Time.zone.today, team_based_monte_carlo_weeks_p80: 0.2
+
+        expect(project.team_monte_carlo_p80).to eq 0.2
+        expect(project.team_monte_carlo_p80(1.week.ago)).to eq 5.9
+      end
+    end
+  end
 end
