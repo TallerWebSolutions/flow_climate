@@ -66,7 +66,6 @@ RSpec.describe TeamMembersController, type: :controller do
   context 'authenticated' do
     let(:plan) { Fabricate :plan, plan_type: :gold }
     let(:user) { Fabricate :user, first_name: 'zzz' }
-    let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true, paid: true, finish_at: 1.week.from_now }
 
     before { sign_in user }
 
@@ -80,12 +79,11 @@ RSpec.describe TeamMembersController, type: :controller do
     describe 'GET #show' do
       let(:team) { Fabricate :team, company: company }
 
-      let!(:first_membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
-      let!(:second_membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
-
       context 'valid parameters' do
         it 'assigns the instance variables and renders the template' do
           travel_to Time.zone.local(2021, 12, 1, 10, 0, 0) do
+            first_membership = Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil
+            second_membership = Fabricate :membership, team: team, team_member: team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago
             first_demand = Fabricate :demand, team: team, commitment_date: 4.months.ago, end_date: 3.months.ago
             second_demand = Fabricate :demand, team: team, commitment_date: 3.months.ago, end_date: 3.weeks.ago
             third_demand = Fabricate :demand, team: team, commitment_date: 2.months.ago, end_date: 1.month.ago
