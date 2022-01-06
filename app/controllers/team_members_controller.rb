@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class TeamMembersController < AuthenticatedController
-  before_action :user_gold_check
-
   before_action :assign_company
   before_action :assign_team_member, only: %i[edit update destroy show associate_user dissociate_user pairings]
 
