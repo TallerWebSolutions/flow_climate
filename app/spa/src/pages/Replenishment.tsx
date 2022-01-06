@@ -11,6 +11,7 @@ import BreadcrumbReplenishingInfo from "../components/BreadcrumbReplenishingInfo
 const QUERY = gql`
   query Replenishment($teamId: Int!) {
     me {
+      id
       fullName
       avatar {
         imageSource
@@ -67,7 +68,7 @@ const Replenishment = () => {
 
   return (
     <Fragment>
-      <Header companyName={data.team.company.slug} user={normalizeUser(data)} />
+      <Header company={data.team.company} user={normalizeUser(data)} />
       <Container>
         {data?.team && (
           <Fragment>
@@ -134,6 +135,7 @@ export const normalizeProjectInfo = (data: any) =>
 
 const normalizeUser = (data: any) => {
   return {
+    id: data.me.id,
     fullName: data.me.fullName,
     avatarSource: data.me.avatar.imageSource,
   }
