@@ -1,5 +1,5 @@
 import { Fragment } from "react"
-import { Container } from "@mui/material"
+import { Backdrop, CircularProgress, Container } from "@mui/material"
 import { gql, useQuery } from "@apollo/client"
 
 import ReplenishmentTeamInfo from "../components/ReplenishmentTeamInfo"
@@ -73,7 +73,12 @@ const Replenishment = () => {
     console.error(error)
   }
 
-  if (loading) return <Container>"carregando..."</Container>
+  if (loading)
+    return (
+      <Backdrop open>
+        <CircularProgress color="secondary" />
+      </Backdrop>
+    )
 
   return (
     <Fragment>

@@ -52,7 +52,7 @@ const TableRow = ({ project }: { project: Project }) => {
 
   return (
     <Fragment>
-      <MaterialTableRow>
+      <MaterialTableRow sx={{ backgroundColor: "grey.200" }}>
         <TableCell>
           <IconButton
             aria-label="expand row"
@@ -79,7 +79,7 @@ const TableRow = ({ project }: { project: Project }) => {
       <MaterialTableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={10}>
           <Collapse in={open} timeout="auto" unmountOnExit>
-            <Table>
+            <Table sx={{ "td, th": { fontSize: ".7rem" } }}>
               <TableHead>
                 <MaterialTableRow>
                   <TableCell>Limite Wip</TableCell>
@@ -98,7 +98,9 @@ const TableRow = ({ project }: { project: Project }) => {
                   <TableCell>{project.lastWeekThroughput}</TableCell>
                   <TableCell>{`${project.qtyThroughputs} (${project.throughputsArray})`}</TableCell>
                   <TableCell>{project.modeWeeklyTroughputs}</TableCell>
-                  <TableCell>{project.stdDevWeeklyTroughputs}</TableCell>
+                  <TableCell>
+                    {project.stdDevWeeklyTroughputs.toFixed(2)}
+                  </TableCell>
                   <TableCell>{`${project.teamMonteCarloP80} semanas`}</TableCell>
                   <TableCell>{`${project.teamMonteCarloWeeksMin}/${
                     project.teamMonteCarloWeeksMax
