@@ -7,8 +7,6 @@ module Consolidations
     def perform(project, cache_date = Time.zone.today)
       end_of_day = cache_date.end_of_day
 
-      Consolidations::ProjectConsolidation.where('consolidation_date < :limit_date', limit_date: project.start_date).map(&:destroy)
-
       demands = project.demands.where('demands.created_date <= :limit_date', limit_date: end_of_day)
       demands_finished = demands.not_discarded_until(end_of_day).finished_until_date(end_of_day).order(end_date: :asc)
       demands_discarded = demands.where('discarded_at <= :limit_date', limit_date: end_of_day)
@@ -58,7 +56,7 @@ module Consolidations
         code_needed_blocks_per_demand = code_needed_blocks_count.to_f / demands_finished.count
       end
 
-      consolidation = Consolidations::ProjectConsolidation.where(project: project, consolidation_date: cache_date).first_or_initialize
+      consolidation = Consolidations::ProjectConsolidation.where(project: project, consolidation_date: cache_date).first_or_create
       consolidation.update(last_data_in_week: (cache_date.to_date) == (cache_date.to_date.end_of_week),
                            last_data_in_month: (cache_date.to_date) == (cache_date.to_date.end_of_month),
                            last_data_in_year: (cache_date.to_date) == (cache_date.to_date.end_of_year),

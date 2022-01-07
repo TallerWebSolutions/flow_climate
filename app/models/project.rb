@@ -430,10 +430,10 @@ class Project < ApplicationRecord
 
     throughputs = consolidations.first(qty_data_points).map(&:project_throughput).flatten
 
-    previous_element = 0
+    previous_element = -1
     last_throughputs = []
     throughputs.each do |th|
-      last_throughputs << (previous_element - th) unless previous_element.zero?
+      last_throughputs << (previous_element - th) unless previous_element == -1
 
       previous_element = th
     end

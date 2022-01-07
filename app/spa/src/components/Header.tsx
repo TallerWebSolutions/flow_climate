@@ -37,7 +37,7 @@ const Header = ({ company, user }: { company: Company; user: User }) => {
               height={64}
             />
           </Link>
-          {buildLinks(company.name).map((link, index) => (
+          {buildLinks(company.slug).map((link, index) => (
             <Link
               sx={{ textDecoration: "none" }}
               px={2}

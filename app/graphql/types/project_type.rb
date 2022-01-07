@@ -57,7 +57,7 @@ module Types
     end
 
     def mode_weekly_troughputs
-      Stats::StatisticsService.instance.mode(weekly_throughputs)
+      Stats::StatisticsService.instance.mode(weekly_throughputs) || 0
     end
 
     def std_dev_weekly_troughputs

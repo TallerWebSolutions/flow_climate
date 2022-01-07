@@ -23,6 +23,17 @@ export type Project = {
   qtySelected: number
   qtyInProgress: number
   monteCarloP80: number
+  workInProgressLimit: number
+  lastWeekThroughput: number
+  qtdThroughputs: number
+  throughputsArray: number[]
+  modeWeeklyTroughputs: number
+  stdDevWeeklyTroughputs: number
+  teamMonteCarloP80: number
+  teamMonteCarloWeeksMin: number
+  teamMonteCarloWeeksMax: number
+  teamMonteCarloWeeksStdDev: number
+  teamBasedOddsToDeadline: number
 }
 
 type ReplenishingProjectsInfoProps = {
@@ -77,20 +88,26 @@ const TableRow = ({ project }: { project: Project }) => {
                   <TableCell>Moda do throughput</TableCell>
                   <TableCell>Throughput std dev</TableCell>
                   <TableCell>Monte Carlo (80% - time)</TableCell>
-                  <TableCell>MC - Min/Max</TableCell>
+                  <TableCell>MC - Min/Max/Std Dev</TableCell>
                   <TableCell>Chances de data (time)</TableCell>
                 </MaterialTableRow>
               </TableHead>
               <TableBody>
                 <MaterialTableRow>
-                  <TableCell>10</TableCell>
-                  <TableCell>11</TableCell>
-                  <TableCell>32</TableCell>
-                  <TableCell>0</TableCell>
-                  <TableCell>21</TableCell>
-                  <TableCell>214</TableCell>
-                  <TableCell>11/12</TableCell>
-                  <TableCell>0</TableCell>
+                  <TableCell>{project.workInProgressLimit}</TableCell>
+                  <TableCell>{project.lastWeekThroughput}</TableCell>
+                  <TableCell>{`${project.qtdThroughputs} (${project.throughputsArray})`}</TableCell>
+                  <TableCell>{project.modeWeeklyTroughputs}</TableCell>
+                  <TableCell>{project.stdDevWeeklyTroughputs}</TableCell>
+                  <TableCell>{`${project.teamMonteCarloP80} semanas`}</TableCell>
+                  <TableCell>{`${project.teamMonteCarloWeeksMin}/${
+                    project.teamMonteCarloWeeksMax
+                  }/${project.teamMonteCarloWeeksStdDev.toFixed(
+                    2
+                  )}`}</TableCell>
+                  <TableCell>{`${
+                    project.teamBasedOddsToDeadline * 100
+                  }%`}</TableCell>
                 </MaterialTableRow>
               </TableBody>
             </Table>

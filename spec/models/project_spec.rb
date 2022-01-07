@@ -1597,11 +1597,67 @@ RSpec.describe Project, type: :model do
       travel_to Time.zone.local(2021, 12, 13, 10, 0, 0) do
         project = Fabricate :project
 
-        Fabricate :replenishing_consolidation, project: project, consolidation_date: 1.week.ago, team_based_monte_carlo_weeks_p80: 5.9
-        Fabricate :replenishing_consolidation, project: project, consolidation_date: Time.zone.today, team_based_monte_carlo_weeks_p80: 0.2
+        Fabricate :replenishing_consolidation, project: project, consolidation_date: 1.week.ago, team_based_montecarlo_80_percent: 5.9
+        Fabricate :replenishing_consolidation, project: project, consolidation_date: Time.zone.today, team_based_montecarlo_80_percent: 0.2
 
         expect(project.team_monte_carlo_p80).to eq 0.2
         expect(project.team_monte_carlo_p80(1.week.ago)).to eq 5.9
+      end
+    end
+  end
+
+  describe '#team_monte_carlo_weeks_max' do
+    it 'returns the monte carlo value in the given week' do
+      travel_to Time.zone.local(2021, 12, 13, 10, 0, 0) do
+        project = Fabricate :project
+
+        Fabricate :replenishing_consolidation, project: project, consolidation_date: 1.week.ago, team_monte_carlo_weeks_max: 5.9
+        Fabricate :replenishing_consolidation, project: project, consolidation_date: Time.zone.today, team_monte_carlo_weeks_max: 0.2
+
+        expect(project.team_monte_carlo_weeks_max).to eq 0.2
+        expect(project.team_monte_carlo_weeks_max(1.week.ago)).to eq 5.9
+      end
+    end
+  end
+
+  describe '#team_monte_carlo_weeks_min' do
+    it 'returns the monte carlo value in the given week' do
+      travel_to Time.zone.local(2021, 12, 13, 10, 0, 0) do
+        project = Fabricate :project
+
+        Fabricate :replenishing_consolidation, project: project, consolidation_date: 1.week.ago, team_monte_carlo_weeks_min: 5.9
+        Fabricate :replenishing_consolidation, project: project, consolidation_date: Time.zone.today, team_monte_carlo_weeks_min: 0.2
+
+        expect(project.team_monte_carlo_weeks_min).to eq 0.2
+        expect(project.team_monte_carlo_weeks_min(1.week.ago)).to eq 5.9
+      end
+    end
+  end
+
+  describe '#team_monte_carlo_weeks_std_dev' do
+    it 'returns the monte carlo value in the given week' do
+      travel_to Time.zone.local(2021, 12, 13, 10, 0, 0) do
+        project = Fabricate :project
+
+        Fabricate :replenishing_consolidation, project: project, consolidation_date: 1.week.ago, team_monte_carlo_weeks_std_dev: 5.9
+        Fabricate :replenishing_consolidation, project: project, consolidation_date: Time.zone.today, team_monte_carlo_weeks_std_dev: 0.2
+
+        expect(project.team_monte_carlo_weeks_std_dev).to eq 0.2
+        expect(project.team_monte_carlo_weeks_std_dev(1.week.ago)).to eq 5.9
+      end
+    end
+  end
+
+  describe '#team_based_odds_to_deadline' do
+    it 'returns the monte carlo value in the given week' do
+      travel_to Time.zone.local(2021, 12, 13, 10, 0, 0) do
+        project = Fabricate :project
+
+        Fabricate :replenishing_consolidation, project: project, consolidation_date: 1.week.ago, team_based_odds_to_deadline: 5.9
+        Fabricate :replenishing_consolidation, project: project, consolidation_date: Time.zone.today, team_based_odds_to_deadline: 0.2
+
+        expect(project.team_based_odds_to_deadline).to eq 0.2
+        expect(project.team_based_odds_to_deadline(1.week.ago)).to eq 5.9
       end
     end
   end

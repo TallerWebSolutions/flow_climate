@@ -48,6 +48,15 @@ const QUERY = gql`
           qtySelected
           qtyInProgress
           monteCarloP80
+          workInProgressLimit
+          weeklyThroughputs
+          modeWeeklyTroughputs
+          stdDevWeeklyTroughputs
+          teamMonteCarloP80
+          teamMonteCarloWeeksMax
+          teamMonteCarloWeeksMin
+          teamMonteCarloWeeksStdDev
+          teamBasedOddsToDeadline
         }
       }
     }
@@ -120,6 +129,9 @@ const normalizeBreadcrumbReplenishing = (
 
 export const normalizeProjectInfo = (data: any) =>
   data.team.lastReplenishingConsolidations.map(function (consolidation: any) {
+    const weeklyThroughputs = consolidation.project.weeklyThroughputs
+    const throughputsSize = weeklyThroughputs.length
+
     return {
       name: consolidation.project.name,
       remainingWeeks: consolidation.project.remainingWeeks,
@@ -130,6 +142,18 @@ export const normalizeProjectInfo = (data: any) =>
       qtySelected: consolidation.project.qtySelected,
       qtyInProgress: consolidation.project.qtyInProgress,
       monteCarloP80: consolidation.project.monteCarloP80,
+      workInProgressLimit: consolidation.project.workInProgressLimit,
+      lastWeekThroughput: weeklyThroughputs[throughputsSize - 1],
+      qtdThroughputs: throughputsSize,
+      throughputsArray: weeklyThroughputs,
+      modeWeeklyTroughputs: consolidation.project.modeWeeklyTroughputs,
+      stdDevWeeklyTroughputs: consolidation.project.stdDevWeeklyTroughputs,
+      teamMonteCarloP80: consolidation.project.teamMonteCarloP80,
+      teamMonteCarloWeeksMin: consolidation.project.teamMonteCarloWeeksMin,
+      teamMonteCarloWeeksMax: consolidation.project.teamMonteCarloWeeksMax,
+      teamMonteCarloWeeksStdDev:
+        consolidation.project.teamMonteCarloWeeksStdDev,
+      teamBasedOddsToDeadline: consolidation.project.teamBasedOddsToDeadline,
     }
   })
 
