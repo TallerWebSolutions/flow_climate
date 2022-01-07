@@ -26,12 +26,12 @@ Have the ultimate management tools in your hands!
 - You may need to install the `lipq-dev` on Linux environments
   - `sudo apt install postgresql libpq-dev`
 - Install rvm or rbenv - the main development team is using _rvm_
-- If you choose rvm then - Install the correct version (the examples will use the ruby-3.0.1)
-  - `rvm install ruby-3.0.1`
+- If you choose rvm then - Install the correct version (the examples will use the ruby-3.1.0)
+  - `rvm install ruby-3.1.0`
     - Create the gemset to the project under the correct version
   - In the project folder run:
-  - `rvm use 3.0.1@flow_climate --create`
-  - `rvm --ruby-version use 3.0.1`
+  - `rvm use 3.1.0@flow_climate --create`
+  - `rvm --ruby-version use 3.1.0`
   - `gem install bundler`
   - `bundle install`
   - copy the application.yml.example to application.yml
