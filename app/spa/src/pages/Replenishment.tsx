@@ -1,5 +1,5 @@
 import { Fragment } from "react"
-import { Container } from "@mui/material"
+import { Backdrop, CircularProgress, Container } from "@mui/material"
 import { gql, useQuery } from "@apollo/client"
 
 import ReplenishmentTeamInfo from "../components/ReplenishmentTeamInfo"
@@ -11,6 +11,7 @@ import BreadcrumbReplenishingInfo from "../components/BreadcrumbReplenishingInfo
 const QUERY = gql`
   query Replenishment($teamId: Int!) {
     me {
+      id
       fullName
       avatar {
         imageSource
@@ -47,6 +48,15 @@ const QUERY = gql`
           qtySelected
           qtyInProgress
           monteCarloP80
+          workInProgressLimit
+          weeklyThroughputs
+          modeWeeklyTroughputs
+          stdDevWeeklyTroughputs
+          teamMonteCarloP80
+          teamMonteCarloWeeksMax
+          teamMonteCarloWeeksMin
+          teamMonteCarloWeeksStdDev
+          teamBasedOddsToDeadline
         }
       }
     }
@@ -63,11 +73,16 @@ const Replenishment = () => {
     console.error(error)
   }
 
-  if (loading) return <Container>"carregando..."</Container>
+  if (loading)
+    return (
+      <Backdrop open>
+        <CircularProgress color="secondary" />
+      </Backdrop>
+    )
 
   return (
     <Fragment>
-      <Header companyName={data.team.company.slug} user={normalizeUser(data)} />
+      <Header company={data.team.company} user={normalizeUser(data)} />
       <Container>
         {data?.team && (
           <Fragment>
@@ -119,6 +134,9 @@ const normalizeBreadcrumbReplenishing = (
 
 export const normalizeProjectInfo = (data: any) =>
   data.team.lastReplenishingConsolidations.map(function (consolidation: any) {
+    const weeklyThroughputs = consolidation.project.weeklyThroughputs
+    const throughputsSize = weeklyThroughputs.length
+
     return {
       name: consolidation.project.name,
       remainingWeeks: consolidation.project.remainingWeeks,
@@ -129,11 +147,24 @@ export const normalizeProjectInfo = (data: any) =>
       qtySelected: consolidation.project.qtySelected,
       qtyInProgress: consolidation.project.qtyInProgress,
       monteCarloP80: consolidation.project.monteCarloP80,
+      workInProgressLimit: consolidation.project.workInProgressLimit,
+      lastWeekThroughput: weeklyThroughputs[throughputsSize - 1],
+      qtyThroughputs: throughputsSize,
+      throughputsArray: weeklyThroughputs,
+      modeWeeklyTroughputs: consolidation.project.modeWeeklyTroughputs,
+      stdDevWeeklyTroughputs: consolidation.project.stdDevWeeklyTroughputs,
+      teamMonteCarloP80: consolidation.project.teamMonteCarloP80,
+      teamMonteCarloWeeksMin: consolidation.project.teamMonteCarloWeeksMin,
+      teamMonteCarloWeeksMax: consolidation.project.teamMonteCarloWeeksMax,
+      teamMonteCarloWeeksStdDev:
+        consolidation.project.teamMonteCarloWeeksStdDev,
+      teamBasedOddsToDeadline: consolidation.project.teamBasedOddsToDeadline,
     }
   })
 
 const normalizeUser = (data: any) => {
   return {
+    id: data.me.id,
     fullName: data.me.fullName,
     avatarSource: data.me.avatar.imageSource,
   }

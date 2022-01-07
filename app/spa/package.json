@@ -6,7 +6,9 @@
     "@apollo/client": "^3.5.5",
     "@emotion/react": "^11.7.0",
     "@emotion/styled": "^11.6.0",
+    "@material-ui/core": "^4.12.3",
     "@material-ui/data-grid": "^4.0.0-alpha.37",
+    "@material-ui/icons": "^4.11.2",
     "@mui/material": "^5.2.3",
     "@testing-library/jest-dom": "^5.15.1",
     "@testing-library/react": "^11.2.7",
@@ -28,6 +30,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "PUBLIC_URL=/spa-build react-scripts build",
+    "build:watch": "npm run watch build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "type-check": "tsc --pretty --noEmit",
@@ -70,7 +73,10 @@
   },
   "watch": {
     "build": {
-      "patterns": ["src", "test"],
+      "patterns": [
+        "src",
+        "test"
+      ],
       "extensions": "ts,tsx",
       "quiet": false,
       "runOnChangeOnly": true

@@ -17,29 +17,32 @@ RSpec.describe Consolidations::ProjectConsolidationJob, type: :active_job do
     let(:team) { Fabricate :team, company: company }
 
     context 'with no user' do
-      it 'saves de consolidation and does not send the notification email' do
+      it 'saves the two consolidations and does not send the notification email' do
         # TODO: improve this spec
-        travel_to Time.zone.local(2019, 5, 14, 10, 0, 0) do
-          first_project = Fabricate :project, customers: [customer], team: team, start_date: 3.weeks.ago, end_date: Time.zone.today
-          second_project = Fabricate :project, customers: [customer], team: team, start_date: 3.weeks.ago, end_date: Time.zone.tomorrow
 
-          Fabricate :demand, project: first_project, commitment_date: 15.days.ago, end_date: 1.week.ago, effort_downstream: 200, effort_upstream: 10, created_date: 74.days.ago
-          Fabricate :demand, project: first_project, commitment_date: 14.days.ago, end_date: 1.week.ago, effort_downstream: 400, effort_upstream: 130, created_date: 65.days.ago
-          Fabricate :demand, project: first_project, commitment_date: 10.days.ago, end_date: 1.week.ago, effort_downstream: 100, effort_upstream: 20
+        base_date = Time.zone.local(2019, 5, 14, 10, 0, 0)
 
-          Fabricate :demand, project: first_project, commitment_date: 16.days.ago, end_date: 2.weeks.ago, effort_downstream: 200, effort_upstream: 10, created_date: 74.days.ago
-          Fabricate :demand, project: first_project, commitment_date: 17.days.ago, end_date: 2.weeks.ago, effort_downstream: 400, effort_upstream: 130, created_date: 65.days.ago
-          Fabricate :demand, project: second_project, commitment_date: 2.weeks.ago, end_date: 2.weeks.ago, effort_downstream: 100, effort_upstream: 20
+        expect(UserNotifierMailer).not_to(receive(:async_activity_finished))
 
-          expect(UserNotifierMailer).not_to(receive(:async_activity_finished))
-          described_class.perform_now(first_project)
+        first_project = Fabricate :project, customers: [customer], team: team, start_date: base_date - 3.weeks, end_date: Time.zone.today
+        second_project = Fabricate :project, customers: [customer], team: team, start_date: base_date - 3.weeks, end_date: Time.zone.tomorrow
 
-          expect(Consolidations::ProjectConsolidation.count).to eq 1
-        end
+        Fabricate :demand, project: first_project, commitment_date: base_date - 15.days, end_date: base_date - 1.week, effort_downstream: 200, effort_upstream: 10, created_date: base_date - 74.days
+        Fabricate :demand, project: first_project, commitment_date: base_date - 14.days, end_date: base_date - 1.week, effort_downstream: 400, effort_upstream: 130, created_date: base_date - 65.days
+        Fabricate :demand, project: first_project, commitment_date: base_date - 10.days, end_date: base_date - 1.week, effort_downstream: 100, effort_upstream: 20
+
+        Fabricate :demand, project: first_project, commitment_date: base_date - 16.days, end_date: base_date - 2.weeks, effort_downstream: 200, effort_upstream: 10, created_date: base_date - 74.days
+        Fabricate :demand, project: first_project, commitment_date: base_date - 17.days, end_date: base_date - 2.weeks, effort_downstream: 400, effort_upstream: 130, created_date: base_date - 65.days
+        Fabricate :demand, project: second_project, commitment_date: base_date - 2.weeks, end_date: base_date - 2.weeks, effort_downstream: 100, effort_upstream: 20
+
+        travel_to(base_date) { described_class.perform_now(first_project) }
+        travel_to(base_date + 1.day) { described_class.perform_now(first_project) }
+
+        expect(Consolidations::ProjectConsolidation.count).to eq 2
       end
     end
 
-    context 'with user' do
+    context 'with specific date' do
       it 'saves de consolidation and sends the notification email' do
         # TODO: improve this spec
 
