@@ -13,8 +13,6 @@ RSpec.describe Membership, type: :model do
   end
 
   context 'validations' do
-    it { is_expected.to validate_presence_of :team }
-    it { is_expected.to validate_presence_of :team_member }
     it { is_expected.to validate_presence_of :start_date }
 
     context 'unique active membership for team member' do

@@ -93,7 +93,7 @@ module Jira
       fix_version_name = read_fix_version_name(jira_issue_attrs)
 
       labels << fix_version_name
-      labels.reject(&:empty?)
+      labels.compact_blank
     end
 
     def read_fix_version_name(jira_issue_attrs)
@@ -150,11 +150,13 @@ module Jira
     end
 
     def create_history_for_class_of_service_changing(demand, change_date, from_class, to_class)
-      from_class_id = nil
-      from_class_id = Demand.class_of_services[read_class_of_service_string(from_class)] if from_class.present?
+      return if from_class.blank? || to_class.blank?
+
+      from_class_id = Demand.class_of_services[read_class_of_service_string(from_class)]
       to_class_id = Demand.class_of_services[read_class_of_service_string(to_class.downcase)]
 
-      History::ClassOfServiceChangeHistory.where(demand: demand, change_date: change_date, from_class_of_service: from_class_id, to_class_of_service: to_class_id).first_or_create
+      cos_change = History::ClassOfServiceChangeHistory.where(demand: demand, change_date: change_date, from_class_of_service: from_class_id, to_class_of_service: to_class_id).first_or_initialize
+      demand.class_of_service_change_histories << cos_change
     end
 
     def read_class_of_service_string(class_of_service_string)

@@ -8,8 +8,6 @@ RSpec.describe StageProjectConfig, type: :model do
 
   context 'validations' do
     context 'simple ones' do
-      it { is_expected.to validate_presence_of :project }
-      it { is_expected.to validate_presence_of :stage }
       it { is_expected.to validate_presence_of :stage_percentage }
       it { is_expected.to validate_presence_of :pairing_percentage }
       it { is_expected.to validate_presence_of :management_percentage }

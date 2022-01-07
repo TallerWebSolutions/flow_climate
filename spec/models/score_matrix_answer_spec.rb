@@ -7,7 +7,6 @@ RSpec.describe ScoreMatrixAnswer, type: :model do
 
   context 'validations' do
     context 'simple ones' do
-      it { is_expected.to validate_presence_of :score_matrix_question }
       it { is_expected.to validate_presence_of :description }
       it { is_expected.to validate_presence_of :answer_value }
     end

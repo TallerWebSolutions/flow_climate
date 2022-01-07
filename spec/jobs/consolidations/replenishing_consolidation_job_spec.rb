@@ -45,7 +45,7 @@ RSpec.describe Consolidations::ReplenishingConsolidationJob do
         expect(new_consolidations.map(&:project_based_risks_to_deadline)).to match_array [0.27, 0.875]
         expect(new_consolidations.map(&:project_throughput_data)).to match_array [[0, 9, 0], [0, 0, 10, 5]]
         expect(new_consolidations.map(&:qty_selected_last_week)).to match_array [7, 9]
-        expect(new_consolidations.map(&:qty_using_pressure)).to match_array [2.294117647058823, 3.705882352941177]
+        expect(new_consolidations.map(&:qty_using_pressure)).to match_array [2.294117647058823, 3.705882352941176]
         expect(new_consolidations.map(&:relative_flow_pressure)).to match_array [38.23529411764706, 61.76470588235294]
         expect(new_consolidations.map(&:team_based_montecarlo_80_percent)).to eq [7.600000000000001, 7.600000000000001]
         expect(new_consolidations.map(&:team_based_odds_to_deadline)).to eq [1, 1]

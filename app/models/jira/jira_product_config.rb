@@ -30,7 +30,7 @@ module Jira
 
     has_many :jira_project_configs, class_name: 'Jira::JiraProjectConfig', dependent: :destroy
 
-    validates :jira_product_key, :product, :company, presence: true
+    validates :jira_product_key, presence: true
 
     validates :jira_product_key, uniqueness: { scope: :product, message: I18n.t('jira_product_config.validations.jira_product_key_uniqueness.message') }
   end

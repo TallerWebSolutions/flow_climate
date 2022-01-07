@@ -2,15 +2,10 @@
 
 RSpec.describe ServiceDeliveryReview, type: :model do
   context 'associations' do
-    it { is_expected.to belong_to :company }
-    it { is_expected.to belong_to :product }
     it { is_expected.to have_many(:demands).dependent(:nullify) }
   end
 
   context 'validations' do
-    it { is_expected.to validate_presence_of :company }
-    it { is_expected.to validate_presence_of :product }
-
     context 'uniqueness' do
       let(:company) { Fabricate :company }
       let(:customer) { Fabricate :customer, company: company }

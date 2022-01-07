@@ -6,7 +6,6 @@ RSpec.describe ProjectBrokenWipLog, type: :model do
   end
 
   context 'validations' do
-    it { is_expected.to validate_presence_of :project }
     it { is_expected.to validate_presence_of :project_wip }
     it { is_expected.to validate_presence_of :demands_ids }
   end

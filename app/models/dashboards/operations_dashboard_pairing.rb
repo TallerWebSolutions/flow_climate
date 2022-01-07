@@ -28,7 +28,7 @@ module Dashboards
     belongs_to :pair, class_name: 'TeamMember'
     belongs_to :demand
 
-    validates :operations_dashboard, :pair, :pair_times, presence: true
+    validates :pair_times, presence: true
 
     scope :before_date, ->(date) { where('operations_dashboards.dashboard_date <= :date', date: date) }
     scope :for_team_member, ->(pair, team_member) { joins(operations_dashboard: :team_member).where(pair: pair, operations_dashboards: { team_member: team_member }) }

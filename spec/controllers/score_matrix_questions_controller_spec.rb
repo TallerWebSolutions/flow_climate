@@ -349,7 +349,7 @@ RSpec.describe ScoreMatrixQuestionsController, type: :controller do
           expect(updated_question.description).to eq 'bla'
           expect(updated_question.question_weight).to eq 10
 
-          expect(demand.reload.demand_score.to_f).to eq 1.538461538461539
+          expect(demand.reload.demand_score.to_f).to eq 1.538461538461538
 
           expect(response).to redirect_to company_product_path(company, product)
         end

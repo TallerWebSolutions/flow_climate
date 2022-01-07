@@ -11,7 +11,6 @@ RSpec.describe ProjectRiskConfig, type: :model do
   end
 
   context 'validations' do
-    it { is_expected.to validate_presence_of :project }
     it { is_expected.to validate_presence_of :risk_type }
     it { is_expected.to validate_presence_of :low_yellow_value }
     it { is_expected.to validate_presence_of :high_yellow_value }

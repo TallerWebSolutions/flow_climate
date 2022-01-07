@@ -11,9 +11,6 @@ RSpec.describe RiskReview, type: :model do
   end
 
   context 'validations' do
-    it { is_expected.to validate_presence_of :company }
-    it { is_expected.to validate_presence_of :product }
-
     context 'uniqueness' do
       let(:company) { Fabricate :company }
       let(:customer) { Fabricate :customer, company: company }
@@ -146,7 +143,7 @@ RSpec.describe RiskReview, type: :model do
         Fabricate :demand_block, demand: first_demand, risk_review: risk_review, block_time: Time.zone.parse('2018-03-06 10:00'), unblock_time: nil
         Fabricate :demand_block, demand: second_demand, risk_review: risk_review, block_time: Time.zone.parse('2018-03-06 14:00'), unblock_time: Time.zone.parse('2018-03-06 15:00')
 
-        expect(risk_review.avg_blocked_time_in_weeks).to eq({ chart: { data: [0.000555555555555556, 0.000833333333333333], name: I18n.t('risk_reviews.show.average_blocked_time') }, x_axis: [Time.zone.today.end_of_week] })
+        expect(risk_review.avg_blocked_time_in_weeks).to eq({ chart: { data: [0.0005555555555555556, 0.0008333333333333334], name: I18n.t('risk_reviews.show.average_blocked_time') }, x_axis: [Time.zone.today.end_of_week] })
         expect(other_risk_review.avg_blocked_time_in_weeks).to eq({ chart: { data: nil, name: I18n.t('risk_reviews.show.average_blocked_time') }, x_axis: [] })
       end
     end

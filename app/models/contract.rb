@@ -41,7 +41,7 @@ class Contract < ApplicationRecord
   has_many :demands, dependent: :nullify
   has_many :contract_estimation_change_histories, dependent: :destroy
 
-  validates :customer, :product, :start_date, :total_hours, :total_value, :renewal_period, :hours_per_demand, presence: true
+  validates :start_date, :total_hours, :total_value, :renewal_period, :hours_per_demand, presence: true
 
   scope :active, ->(date) { where('start_date <= :limit_date AND end_date >= :limit_date', limit_date: date) }
 

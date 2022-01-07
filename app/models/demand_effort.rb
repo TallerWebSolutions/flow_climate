@@ -40,7 +40,7 @@ class DemandEffort < ApplicationRecord
   belongs_to :item_assignment
   belongs_to :demand_transition
 
-  validates :item_assignment, :demand_transition, :demand, :effort_value, :start_time_to_computation, :finish_time_to_computation,
+  validates :effort_value, :start_time_to_computation, :finish_time_to_computation,
             :management_percentage, :pairing_percentage, :stage_percentage, :total_blocked, presence: true
 
   validates :item_assignment, uniqueness: { scope: %i[demand_transition start_time_to_computation] }

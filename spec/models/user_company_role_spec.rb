@@ -11,9 +11,6 @@ RSpec.describe UserCompanyRole, type: :model do
   end
 
   context 'validations' do
-    it { is_expected.to validate_presence_of :user }
-    it { is_expected.to validate_presence_of :company }
-
     context 'uniqueness' do
       let!(:company) { Fabricate :company }
       let!(:user) { Fabricate :user }

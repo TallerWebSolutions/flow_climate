@@ -31,7 +31,7 @@ class UserInvite < ApplicationRecord
 
   belongs_to :company
 
-  validates :company, :invite_type, :invite_email, :invite_object_id, :invite_status, presence: true
+  validates :invite_type, :invite_email, :invite_object_id, :invite_status, presence: true
 
   validate :same_invite?
 

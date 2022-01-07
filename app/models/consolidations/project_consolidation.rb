@@ -78,7 +78,7 @@ module Consolidations
   class ProjectConsolidation < ApplicationRecord
     belongs_to :project
 
-    validates :project, :consolidation_date, presence: true
+    validates :consolidation_date, presence: true
 
     scope :weekly_data, -> { where(last_data_in_week: true) }
     scope :for_project, ->(project) { where(project: project) }

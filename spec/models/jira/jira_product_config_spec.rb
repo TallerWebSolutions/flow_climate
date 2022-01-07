@@ -7,7 +7,6 @@ RSpec.describe Jira::JiraProductConfig, type: :model do
   end
 
   context 'validations' do
-    it { is_expected.to validate_presence_of :product }
     it { is_expected.to validate_presence_of :jira_product_key }
   end
 

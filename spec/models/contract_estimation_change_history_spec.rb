@@ -6,7 +6,6 @@ RSpec.describe ContractEstimationChangeHistory, type: :model do
   end
 
   context 'validations' do
-    it { is_expected.to validate_presence_of :contract }
     it { is_expected.to validate_presence_of :change_date }
     it { is_expected.to validate_presence_of :hours_per_demand }
   end

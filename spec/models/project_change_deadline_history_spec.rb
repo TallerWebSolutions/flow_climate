@@ -7,8 +7,6 @@ RSpec.describe ProjectChangeDeadlineHistory, type: :model do
   end
 
   context 'validations' do
-    it { is_expected.to validate_presence_of :project }
-    it { is_expected.to validate_presence_of :user }
     it { is_expected.to validate_presence_of :previous_date }
     it { is_expected.to validate_presence_of :new_date }
   end

@@ -33,8 +33,6 @@ RSpec.describe Demand, type: :model do
 
   context 'validations' do
     context 'simple ones' do
-      it { is_expected.to validate_presence_of :project }
-      it { is_expected.to validate_presence_of :team }
       it { is_expected.to validate_presence_of :external_id }
       it { is_expected.to validate_presence_of :created_date }
       it { is_expected.to validate_presence_of :demand_type }

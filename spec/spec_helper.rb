@@ -3,10 +3,9 @@
 ENV['RAILS_ENV'] ||= 'test'
 
 require 'simplecov'
-SimpleCov.start
-SimpleCov.minimum_coverage 100
 SimpleCov.start do
   add_filter 'config/initializers/rack_profiler.rb'
+  minimum_coverage 100
 end
 
 require File.expand_path('../config/environment', __dir__)

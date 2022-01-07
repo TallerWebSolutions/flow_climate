@@ -7,7 +7,6 @@ RSpec.describe UserInvite, type: :model do
 
   context 'validations' do
     context 'simple ones' do
-      it { is_expected.to validate_presence_of :company }
       it { is_expected.to validate_presence_of :invite_type }
       it { is_expected.to validate_presence_of :invite_status }
       it { is_expected.to validate_presence_of :invite_email }

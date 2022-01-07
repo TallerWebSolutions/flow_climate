@@ -90,7 +90,7 @@ module Consolidations
 
     scope :weekly_data, -> { where(last_data_in_week: true) }
 
-    validates :team, :consolidation_date, presence: true
+    validates :consolidation_date, presence: true
     validates :team, uniqueness: { scope: :consolidation_date }
   end
 end

@@ -17,7 +17,6 @@ RSpec.describe Customer, type: :model do
 
   context 'validations' do
     context 'simple ones' do
-      it { is_expected.to validate_presence_of :company }
       it { is_expected.to validate_presence_of :name }
     end
 

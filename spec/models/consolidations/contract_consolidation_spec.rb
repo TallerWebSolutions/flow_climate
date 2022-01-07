@@ -6,7 +6,6 @@ RSpec.describe Consolidations::ContractConsolidation, type: :model do
   end
 
   context 'validations' do
-    it { is_expected.to validate_presence_of :contract }
     it { is_expected.to validate_presence_of :consolidation_date }
     it { is_expected.to validate_presence_of :operational_risk_value }
   end

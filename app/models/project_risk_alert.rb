@@ -28,5 +28,5 @@ class ProjectRiskAlert < ApplicationRecord
   belongs_to :project
   belongs_to :project_risk_config
 
-  validates :project, :project_risk_config, :alert_color, :alert_value, presence: true
+  validates :alert_color, :alert_value, presence: true
 end

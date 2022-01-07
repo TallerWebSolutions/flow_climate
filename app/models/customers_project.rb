@@ -24,6 +24,4 @@
 class CustomersProject < ApplicationRecord
   belongs_to :customer
   belongs_to :project
-
-  validates :customer, :project, presence: true
 end

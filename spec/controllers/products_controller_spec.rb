@@ -155,7 +155,7 @@ RSpec.describe ProductsController, type: :controller do
         it 'does not create the product and re-render the template with the errors' do
           expect(Product.last).to be_nil
           expect(response).to render_template :new
-          expect(assigns(:product).errors.full_messages).to match_array ['Nome não pode ficar em branco', 'Cliente não pode ficar em branco']
+          expect(assigns(:product).errors.full_messages).to match_array ['Nome não pode ficar em branco']
         end
       end
     end
@@ -226,7 +226,7 @@ RSpec.describe ProductsController, type: :controller do
           it 'does not update the product and re-render the template with the errors' do
             expect(response).to render_template :edit
             expect(assigns(:company_customers)).to eq [other_customer, customer]
-            expect(assigns(:product).errors.full_messages).to match_array ['Cliente não pode ficar em branco', 'Nome não pode ficar em branco']
+            expect(assigns(:product).errors.full_messages).to match_array ['Nome não pode ficar em branco']
           end
         end
 

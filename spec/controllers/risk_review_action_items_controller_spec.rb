@@ -121,7 +121,7 @@ RSpec.describe RiskReviewActionItemsController, type: :controller do
 
             expect(RiskReviewActionItem.all.count).to eq 3
             expect(response).to render_template 'risk_review_action_items/create'
-            expect(assigns(:risk_review_action_item).errors.full_messages).to eq ['Responsável não pode ficar em branco', 'Dt Criação não pode ficar em branco', 'Tipo da Ação não pode ficar em branco', 'Descrição não pode ficar em branco', 'Prazo não pode ficar em branco']
+            expect(assigns(:risk_review_action_item).errors.full_messages).to eq ['Dt Criação não pode ficar em branco', 'Tipo da Ação não pode ficar em branco', 'Descrição não pode ficar em branco', 'Prazo não pode ficar em branco']
           end
 
           context 'risk review' do

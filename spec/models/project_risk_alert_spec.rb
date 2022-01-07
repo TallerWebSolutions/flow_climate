@@ -11,8 +11,6 @@ RSpec.describe ProjectRiskAlert, type: :model do
   end
 
   context 'validations' do
-    it { is_expected.to validate_presence_of :project }
-    it { is_expected.to validate_presence_of :project_risk_config }
     it { is_expected.to validate_presence_of :alert_color }
     it { is_expected.to validate_presence_of :alert_value }
   end

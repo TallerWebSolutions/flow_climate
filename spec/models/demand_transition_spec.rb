@@ -10,8 +10,6 @@ RSpec.describe DemandTransition, type: :model do
 
   context 'validations' do
     context 'simple ones' do
-      it { is_expected.to validate_presence_of :demand }
-      it { is_expected.to validate_presence_of :stage }
       it { is_expected.to validate_presence_of :last_time_in }
     end
 

@@ -22,8 +22,6 @@ class ScoreMatrix < ApplicationRecord
 
   has_many :score_matrix_questions, dependent: :destroy
 
-  validates :product, presence: true
-
   def total_weight
     score_matrix_questions.filter_map(&:question_weight).sum
   end

@@ -7,8 +7,6 @@ RSpec.describe Dashboards::OperationsDashboardPairing, type: :model do
   end
 
   context 'validations' do
-    it { is_expected.to validate_presence_of :operations_dashboard }
-    it { is_expected.to validate_presence_of :pair }
     it { is_expected.to validate_presence_of :pair_times }
   end
 end

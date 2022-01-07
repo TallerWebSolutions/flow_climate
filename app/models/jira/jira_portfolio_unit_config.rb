@@ -23,6 +23,6 @@ module Jira
   class JiraPortfolioUnitConfig < ApplicationRecord
     belongs_to :portfolio_unit
 
-    validates :jira_field_name, :portfolio_unit, presence: true
+    validates :jira_field_name, presence: true
   end
 end

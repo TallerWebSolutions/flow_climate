@@ -21,7 +21,5 @@
 module Jira
   class JiraApiError < ApplicationRecord
     belongs_to :demand
-
-    validates :demand, presence: true
   end
 end

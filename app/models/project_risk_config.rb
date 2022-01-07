@@ -20,7 +20,7 @@ class ProjectRiskConfig < ApplicationRecord
   belongs_to :project
   has_many :project_risk_alerts, dependent: :destroy
 
-  validates :project, :risk_type, :high_yellow_value, :low_yellow_value, presence: true
+  validates :risk_type, :high_yellow_value, :low_yellow_value, presence: true
 
   scope :active, -> { where active: true }
 

@@ -40,7 +40,7 @@ class Customer < ApplicationRecord
   has_many :customers_devise_customers, dependent: :destroy
   has_many :devise_customers, through: :customers_devise_customers, dependent: :destroy
 
-  validates :company, :name, presence: true
+  validates :name, presence: true
   validates :name, uniqueness: { scope: :company, message: I18n.t('customer.name.uniqueness') }
 
   def add_user(devise_customer)

@@ -29,6 +29,6 @@ class UserProjectRole < ApplicationRecord
   belongs_to :user
   belongs_to :project
 
-  validates :user, :project, :role_in_project, presence: true
+  validates :role_in_project, presence: true
   validates :user, uniqueness: { scope: :project }
 end

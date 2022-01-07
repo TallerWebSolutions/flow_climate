@@ -35,7 +35,7 @@ class RiskReview < ApplicationRecord
   has_many :flow_events, dependent: :nullify
   has_many :risk_review_action_items, dependent: :destroy
 
-  validates :company, :product, :lead_time_outlier_limit, :meeting_date, presence: true
+  validates :lead_time_outlier_limit, :meeting_date, presence: true
 
   validates :product, uniqueness: { scope: :meeting_date, message: I18n.t('risk_review.attributes.validations.product_uniqueness') }
 

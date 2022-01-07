@@ -27,7 +27,7 @@ module Jira
     belongs_to :project
     belongs_to :jira_product_config, class_name: 'Jira::JiraProductConfig'
 
-    validates :project, :fix_version_name, :jira_product_config, presence: true
+    validates :fix_version_name, presence: true
 
     validates :fix_version_name, uniqueness: { scope: :jira_product_config, message: I18n.t('jira_project_config.validations.fix_version_name_uniqueness.message') }
   end

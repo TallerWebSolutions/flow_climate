@@ -24,6 +24,4 @@
 class ProductsProject < ApplicationRecord
   belongs_to :product
   belongs_to :project
-
-  validates :product, :project, presence: true
 end

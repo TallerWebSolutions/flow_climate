@@ -27,5 +27,5 @@ class ProjectChangeDeadlineHistory < ApplicationRecord
   belongs_to :project
   belongs_to :user
 
-  validates :project, :user, :previous_date, :new_date, presence: true
+  validates :previous_date, :new_date, presence: true
 end

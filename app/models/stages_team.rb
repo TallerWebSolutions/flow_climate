@@ -24,6 +24,4 @@
 class StagesTeam < ApplicationRecord
   belongs_to :stage
   belongs_to :team
-
-  validates :stage, :team, presence: true
 end

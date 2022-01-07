@@ -28,8 +28,6 @@ class DemandScoreMatrix < ApplicationRecord
   belongs_to :demand
   belongs_to :score_matrix_answer
 
-  validates :user, :demand, :score_matrix_answer, presence: true
-
   validate :already_answered_question
 
   private

@@ -92,7 +92,7 @@ module Jira
     end
 
     def process_labels(demand, jira_issue_changelog)
-      labels_field = jira_issue_changelog.map { |inside_hash| inside_hash['items'].select { |h| h['field'] == 'labels' } }.reject(&:blank?).flatten
+      labels_field = jira_issue_changelog.map { |inside_hash| inside_hash['items'].select { |h| h['field'] == 'labels' } }.compact_blank.flatten
       new_labels_to_demand = labels_field.map { |label_field| label_field['toString']&.split(' ') }
       demand.update(demand_tags: new_labels_to_demand.flatten.uniq)
     end
@@ -320,7 +320,7 @@ module Jira
         filter_hash_for_field(field_name, history).flatten[0]&.merge('created' => history['created'], 'author' => { 'displayName' => history['author']['displayName'] })
       end
 
-      filtered_hash.reject(&:blank?).sort_by { |transition| transition['created'] }
+      filtered_hash.compact_blank.sort_by { |transition| transition['created'] }
     end
 
     def filter_hash_for_field(field_name, history)

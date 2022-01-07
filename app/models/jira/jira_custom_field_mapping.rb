@@ -27,7 +27,7 @@ module Jira
 
     belongs_to :jira_account, class_name: 'Jira::JiraAccount'
 
-    validates :jira_account, :custom_field_machine_name, :custom_field_type, presence: true
+    validates :custom_field_machine_name, :custom_field_type, presence: true
     validates :custom_field_type, uniqueness: { scope: :jira_account_id, message: I18n.t('jira_custom_field_mapping.uniqueness.custom_field_type') }
   end
 end

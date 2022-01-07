@@ -7,8 +7,7 @@ RSpec.describe Jira::JiraProjectConfig, type: :model do
   end
 
   context 'validations' do
-    it { is_expected.to validate_presence_of :project }
-    it { is_expected.to validate_presence_of :jira_product_config }
+    it { is_expected.to validate_presence_of :fix_version_name }
   end
 
   context 'uniqueness' do

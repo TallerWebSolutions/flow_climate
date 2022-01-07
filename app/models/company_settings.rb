@@ -23,5 +23,5 @@
 class CompanySettings < ApplicationRecord
   belongs_to :company
 
-  validates :company, :max_active_parallel_projects, :max_flow_pressure, presence: true
+  validates :max_active_parallel_projects, :max_flow_pressure, presence: true
 end

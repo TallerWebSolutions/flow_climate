@@ -28,5 +28,5 @@ class TeamResource < ApplicationRecord
   belongs_to :company
   has_many :team_resource_allocations, dependent: :destroy
 
-  validates :company, :resource_type, presence: true
+  validates :resource_type, presence: true
 end

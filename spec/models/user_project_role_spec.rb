@@ -11,8 +11,6 @@ RSpec.describe UserProjectRole, type: :model do
   end
 
   context 'validations' do
-    it { is_expected.to validate_presence_of :user }
-    it { is_expected.to validate_presence_of :project }
     it { is_expected.to validate_presence_of :role_in_project }
 
     it 'uniqueness of user and project' do

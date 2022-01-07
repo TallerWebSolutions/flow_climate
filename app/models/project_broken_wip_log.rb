@@ -23,5 +23,5 @@
 class ProjectBrokenWipLog < ApplicationRecord
   belongs_to :project
 
-  validates :project, :demands_ids, :project_wip, presence: true
+  validates :demands_ids, :project_wip, presence: true
 end

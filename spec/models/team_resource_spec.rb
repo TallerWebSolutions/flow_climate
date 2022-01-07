@@ -9,8 +9,4 @@ RSpec.describe TeamResource, type: :model do
     it { is_expected.to belong_to :company }
     it { is_expected.to have_many :team_resource_allocations }
   end
-
-  context 'validations' do
-    it { is_expected.to validate_presence_of :company }
-  end
 end

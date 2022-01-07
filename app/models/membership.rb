@@ -33,7 +33,7 @@ class Membership < ApplicationRecord
   has_many :item_assignments, dependent: :destroy
   has_many :demands, through: :item_assignments
 
-  validates :team, :team_member, :start_date, presence: true
+  validates :start_date, :member_role, presence: true
   validate :active_team_member_unique
 
   scope :active, -> { where('memberships.end_date' => nil) }

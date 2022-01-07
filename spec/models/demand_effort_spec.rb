@@ -8,9 +8,6 @@ RSpec.describe DemandEffort, type: :model do
   end
 
   context 'validations' do
-    it { is_expected.to validate_presence_of :item_assignment }
-    it { is_expected.to validate_presence_of :demand_transition }
-    it { is_expected.to validate_presence_of :demand }
     it { is_expected.to validate_presence_of :management_percentage }
     it { is_expected.to validate_presence_of :stage_percentage }
     it { is_expected.to validate_presence_of :pairing_percentage }

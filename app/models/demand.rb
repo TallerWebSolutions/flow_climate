@@ -98,7 +98,7 @@ class Demand < ApplicationRecord
   has_many :jira_api_errors, dependent: :destroy, class_name: 'Jira::JiraApiError'
   has_many :class_of_service_change_histories, class_name: 'History::ClassOfServiceChangeHistory', dependent: :destroy
 
-  validates :project, :created_date, :external_id, :demand_type, :class_of_service, :assignees_count, :team, presence: true
+  validates :created_date, :external_id, :demand_type, :class_of_service, :assignees_count, presence: true
   validates :external_id, uniqueness: { scope: :company_id, message: I18n.t('demand.validations.external_id_unique.message') }
 
   scope :opened_before_date, ->(date) { where('demands.created_date <= :analysed_date AND (demands.discarded_at IS NULL OR demands.discarded_at > :analysed_date)', analysed_date: date.end_of_day) }

@@ -7,8 +7,6 @@ RSpec.describe TeamResourceAllocation, type: :model do
   end
 
   context 'validations' do
-    it { is_expected.to validate_presence_of :team }
-    it { is_expected.to validate_presence_of :team_resource }
     it { is_expected.to validate_presence_of :start_date }
     it { is_expected.to validate_presence_of :monthly_payment }
   end

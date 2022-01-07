@@ -37,7 +37,7 @@ class ServiceDeliveryReview < ApplicationRecord
 
   has_many :demands, dependent: :nullify
 
-  validates :company, :product, :meeting_date, presence: true
+  validates :meeting_date, presence: true
 
   validates :meeting_date, uniqueness: { scope: :product, message: I18n.t('service_delivery_review.attributes.validations.product_uniqueness') }
 

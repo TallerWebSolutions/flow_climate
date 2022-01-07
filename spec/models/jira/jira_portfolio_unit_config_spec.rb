@@ -6,7 +6,6 @@ RSpec.describe Jira::JiraPortfolioUnitConfig, type: :model do
   end
 
   context 'validations' do
-    it { is_expected.to validate_presence_of :portfolio_unit }
     it { is_expected.to validate_presence_of :jira_field_name }
   end
 end

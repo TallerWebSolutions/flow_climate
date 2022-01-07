@@ -15,7 +15,6 @@ RSpec.describe PortfolioUnit, type: :model do
 
   context 'validations' do
     context 'with simple ones' do
-      it { is_expected.to validate_presence_of :product }
       it { is_expected.to validate_presence_of :portfolio_unit_type }
       it { is_expected.to validate_presence_of :name }
     end

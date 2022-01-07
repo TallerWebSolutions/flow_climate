@@ -34,8 +34,6 @@ RSpec.describe Project, type: :model do
 
   context 'validations' do
     context 'simple ones' do
-      it { is_expected.to validate_presence_of :company }
-      it { is_expected.to validate_presence_of :team }
       it { is_expected.to validate_presence_of :project_type }
       it { is_expected.to validate_presence_of :name }
       it { is_expected.to validate_presence_of :status }

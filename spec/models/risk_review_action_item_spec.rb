@@ -11,8 +11,6 @@ RSpec.describe RiskReviewActionItem, type: :model do
   end
 
   context 'validations' do
-    it { is_expected.to validate_presence_of :risk_review }
-    it { is_expected.to validate_presence_of :membership }
     it { is_expected.to validate_presence_of :created_date }
     it { is_expected.to validate_presence_of :action_type }
     it { is_expected.to validate_presence_of :description }

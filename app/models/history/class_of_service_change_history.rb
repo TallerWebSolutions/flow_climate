@@ -29,7 +29,7 @@ module History
 
     belongs_to :demand
 
-    validates :demand, :change_date, :to_class_of_service, presence: true
+    validates :change_date, :to_class_of_service, presence: true
     validates :demand, uniqueness: { scope: :change_date }
   end
 end

@@ -37,6 +37,6 @@ module Consolidations
   class ContractConsolidation < ApplicationRecord
     belongs_to :contract
 
-    validates :contract, :consolidation_date, :operational_risk_value, presence: true
+    validates :consolidation_date, :operational_risk_value, presence: true
   end
 end

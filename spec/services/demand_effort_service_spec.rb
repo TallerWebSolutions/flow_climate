@@ -97,17 +97,21 @@ RSpec.describe DemandEffortService, type: :service do
         Fabricate :stage_project_config, stage: stage, project: project, compute_effort: true, stage_percentage: 100, management_percentage: 20, pairing_percentage: 50
         Fabricate :stage_project_config, stage: other_stage, project: project, compute_effort: true, stage_percentage: 100, management_percentage: 20, pairing_percentage: 50
 
-        Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: Time.zone.parse('2021-05-24 10:51'), last_time_out: Time.zone.parse('2021-05-24 12:51')
-        Fabricate :demand_transition, demand: demand, stage: other_stage, last_time_in: Time.zone.parse('2021-05-24 12:51'), last_time_out: Time.zone.parse('2021-05-24 15:51')
-        Fabricate :item_assignment, demand: demand, start_time: Time.zone.parse('2021-05-24 10:51'), finish_time: Time.zone.parse('2021-05-24 15:51')
+        team_member = Fabricate :team_member, company: demand.company
+        membership = Fabricate :membership, team_member: team_member, team: demand.team
+
+        Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: Time.zone.parse('2021-05-24 10:51'), last_time_out: Time.zone.parse('2021-05-24 20:51')
+        Fabricate :demand_transition, demand: demand, stage: other_stage, last_time_in: Time.zone.parse('2021-05-24 21:51'), last_time_out: Time.zone.parse('2021-05-24 22:51')
+        Fabricate :item_assignment, demand: demand, membership: membership, start_time: Time.zone.parse('2021-05-24 10:51'), finish_time: Time.zone.parse('2021-05-24 16:51')
+        Fabricate :item_assignment, demand: demand, membership: membership, start_time: Time.zone.parse('2021-05-24 17:51'), finish_time: Time.zone.parse('2021-05-24 19:51')
 
         described_class.instance.build_efforts_to_demand(demand)
 
         expect(DemandEffort.all.count).to eq 2
-        expect(DemandEffort.all.sum(&:effort_value)).to eq 6
-        expect(demand.reload.effort_upstream).to eq 2.4
-        expect(demand.reload.effort_downstream).to eq 3.6
-        expect(demand.reload.effort_development).to eq 6
+        expect(DemandEffort.all.sum(&:effort_value)).to be_within(0.1).of(7.1)
+        expect(demand.reload.effort_upstream).to be_within(0.1).of(7.1)
+        expect(demand.reload.effort_downstream).to eq 0
+        expect(demand.reload.effort_development).to be_within(0.1).of(7.1)
         expect(demand.reload.effort_design).to eq 0
         expect(demand.reload.effort_management).to eq 0
       end
@@ -184,7 +188,7 @@ RSpec.describe DemandEffortService, type: :service do
         described_class.instance.build_efforts_to_demand(demand)
 
         expect(DemandEffort.all.count).to eq 2
-        expect(DemandEffort.all.sum(&:effort_value)).to eq 6.0
+        expect(DemandEffort.all.sum(&:effort_value)).to be_within(0.1).of(5.9)
         expect(demand.reload.effort_upstream).to eq previous_effort_upstream
         expect(demand.reload.effort_downstream).to eq previous_effort_downstream
       end

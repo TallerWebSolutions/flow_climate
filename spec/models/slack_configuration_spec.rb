@@ -11,7 +11,6 @@ RSpec.describe SlackConfiguration, type: :model do
 
   context 'validations' do
     context 'simple ones' do
-      it { is_expected.to validate_presence_of :team }
       it { is_expected.to validate_presence_of :room_webhook }
       it { is_expected.to validate_presence_of :weekday_to_notify }
     end

@@ -48,7 +48,7 @@ class DemandBlock < ApplicationRecord
 
   has_many :demand_block_notifications, dependent: :destroy, class_name: 'Notifications::DemandBlockNotification'
 
-  validates :demand, :demand_id, :blocker, :block_time, :block_type, presence: true
+  validates :block_time, :block_type, presence: true
 
   default_scope { where(active: true) }
 

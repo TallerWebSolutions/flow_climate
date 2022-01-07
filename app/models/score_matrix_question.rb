@@ -27,5 +27,5 @@ class ScoreMatrixQuestion < ApplicationRecord
 
   has_many :score_matrix_answers, dependent: :destroy
 
-  validates :description, :question_type, :score_matrix, :question_weight, presence: true
+  validates :description, :question_type, :question_weight, presence: true
 end

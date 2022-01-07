@@ -51,7 +51,7 @@ class DemandTransition < ApplicationRecord
   scope :after_date, ->(date) { where('last_time_in >= :limit_date', limit_date: date) }
   scope :for_date, ->(date) { where('(last_time_in <= :limit_date AND (last_time_out IS NULL OR last_time_out >= :limit_date)) OR (last_time_in > :limit_date AND (last_time_out IS NULL OR last_time_out <= :limit_date))', limit_date: date) }
 
-  validates :demand, :stage, :last_time_in, presence: true
+  validates :last_time_in, presence: true
   validate :same_stage_project?
 
   delegate :name, to: :stage, prefix: true, allow_nil: true

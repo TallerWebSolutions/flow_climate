@@ -6,10 +6,6 @@ RSpec.describe ScoreMatrix, type: :model do
     it { is_expected.to have_many :score_matrix_questions }
   end
 
-  context 'validations' do
-    it { is_expected.to validate_presence_of :product }
-  end
-
   describe '#total_weight' do
     let(:score_matrix) { Fabricate :score_matrix }
     let(:other_score_matrix) { Fabricate :score_matrix }

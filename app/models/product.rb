@@ -39,7 +39,7 @@ class Product < ApplicationRecord
   has_many :contracts, dependent: :restrict_with_error
   has_one :score_matrix, dependent: :destroy
 
-  validates :name, :customer, presence: true
+  validates :name, presence: true
   validates :name, uniqueness: { scope: :customer, message: I18n.t('product.name.uniqueness') }
 
   delegate :name, to: :customer, prefix: true

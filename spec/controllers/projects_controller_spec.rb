@@ -162,7 +162,7 @@ RSpec.describe ProjectsController, type: :controller do
               expect(assigns(:company)).to eq company
               expect(assigns(:project)).to eq first_project
               expect(assigns(:unscored_demands)).to eq [third_demand, second_demand]
-              expect(assigns(:lead_time_histogram_data).keys.map(&:to_f)).to eq [43_200.000000001]
+              expect(assigns(:lead_time_histogram_data).keys.map(&:to_f)).to eq [43_200.0]
               expect(assigns(:lead_time_histogram_data).values.map(&:to_f)).to eq [2]
               expect(assigns(:last_10_deliveries).map(&:external_id)).to eq %w[zzz ccc]
               expect(assigns(:demands_blocks)).to eq [second_block, first_block]
@@ -318,7 +318,7 @@ RSpec.describe ProjectsController, type: :controller do
           it 'does not create the project and re-render the template with the errors' do
             expect(Project.last).to be_nil
             expect(response).to render_template :new
-            expect(assigns(:project).errors.full_messages).to eq ['Time não pode ficar em branco', 'Qtd de Horas não pode ficar em branco', 'Tipo do Projeto não pode ficar em branco', 'Nome não pode ficar em branco', 'Status não pode ficar em branco', 'Início não pode ficar em branco', 'Fim não pode ficar em branco', 'Escopo inicial não pode ficar em branco', 'Valor do Projeto Valor ou Valor da hora é obrigatório', 'Valor da Hora Valor ou Valor da hora é obrigatório']
+            expect(assigns(:project).errors.full_messages).to eq ['Qtd de Horas não pode ficar em branco', 'Tipo do Projeto não pode ficar em branco', 'Nome não pode ficar em branco', 'Status não pode ficar em branco', 'Início não pode ficar em branco', 'Fim não pode ficar em branco', 'Escopo inicial não pode ficar em branco', 'Valor do Projeto Valor ou Valor da hora é obrigatório', 'Valor da Hora Valor ou Valor da hora é obrigatório']
             expect(assigns(:company_customers)).to eq [other_customer, customer]
           end
         end

@@ -15,8 +15,6 @@ RSpec.describe Contract, type: :model do
   end
 
   context 'validations' do
-    it { is_expected.to validate_presence_of :customer }
-    it { is_expected.to validate_presence_of :product }
     it { is_expected.to validate_presence_of :start_date }
     it { is_expected.to validate_presence_of :total_hours }
     it { is_expected.to validate_presence_of :renewal_period }

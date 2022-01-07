@@ -46,7 +46,7 @@ class FlowEvent < ApplicationRecord
   belongs_to :project
   belongs_to :risk_review
 
-  validates :company, :event_date, :event_type, :event_size, :event_description, presence: true
+  validates :event_date, :event_type, :event_size, :event_description, presence: true
 
   def to_hash
     {

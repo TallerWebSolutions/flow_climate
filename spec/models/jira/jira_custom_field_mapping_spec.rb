@@ -39,7 +39,6 @@ RSpec.describe Jira::JiraCustomFieldMapping, type: :model do
     end
 
     context 'simple ones' do
-      it { is_expected.to validate_presence_of :jira_account }
       it { is_expected.to validate_presence_of :custom_field_machine_name }
       it { is_expected.to validate_presence_of :custom_field_type }
     end

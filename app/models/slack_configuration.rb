@@ -32,7 +32,7 @@ class SlackConfiguration < ApplicationRecord
 
   belongs_to :team
 
-  validates :team, :room_webhook, :weekday_to_notify, presence: true
+  validates :room_webhook, :weekday_to_notify, presence: true
   validates :info_type, uniqueness: { scope: :team, message: I18n.t('slack_configuration.info_type.uniqueness') }
 
   validate :valid_room_uri?

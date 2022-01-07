@@ -11,8 +11,6 @@ RSpec.describe UserPlan, type: :model do
   end
 
   context 'validations' do
-    it { is_expected.to validate_presence_of :user }
-    it { is_expected.to validate_presence_of :plan }
     it { is_expected.to validate_presence_of :plan_billing_period }
     it { is_expected.to validate_presence_of :start_at }
     it { is_expected.to validate_presence_of :finish_at }

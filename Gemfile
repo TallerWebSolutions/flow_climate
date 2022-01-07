@@ -8,7 +8,7 @@ gem 'rails'
 
 gem 'bundler', require: false
 
-gem 'activerecord-session_store', git: 'https://github.com/rails/activerecord-session_store', branch: 'master'
+gem 'activerecord-session_store'
 gem 'addressable'
 gem 'attr_encrypted'
 gem 'barnes'
@@ -26,6 +26,7 @@ gem 'jira-ruby', require: false
 gem 'jquery-rails'
 gem 'kaminari'
 gem 'mini_magick'
+gem 'net-smtp'
 gem 'oj'
 gem 'pg'
 gem 'rollbar'
@@ -41,7 +42,6 @@ group :test, :development do
   gem 'fabrication'
   gem 'faker'
   gem 'parallel_tests'
-  gem 'parser'
   gem 'rails-controller-testing'
   gem 'rspec-collection_matchers'
   gem 'rspec-rails'
@@ -51,7 +51,7 @@ group :test, :development do
   gem 'rubocop-rails'
   gem 'rubocop-rspec'
   gem 'shoulda-matchers'
-  gem 'simplecov', '~> 0.16.1'
+  gem 'simplecov'
   gem 'webmock'
 end
 

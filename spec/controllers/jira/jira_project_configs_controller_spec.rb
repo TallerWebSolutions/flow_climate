@@ -105,7 +105,7 @@ RSpec.describe Jira::JiraProjectConfigsController, type: :controller do
           it 'does not create the project jira config' do
             expect(project.reload.jira_project_configs).to eq [jira_project_config]
             expect(response).to redirect_to company_project_jira_project_configs_path(company, project)
-            expect(assigns(:jira_project_config).errors.full_messages).to eq ['Fix Version ou Label no Jira não pode ficar em branco', 'Config do Produto não pode ficar em branco']
+            expect(assigns(:jira_project_config).errors.full_messages).to eq ['Fix Version ou Label no Jira não pode ficar em branco']
           end
         end
 

@@ -17,7 +17,6 @@ RSpec.describe Team, type: :model do
   end
 
   context 'validations' do
-    it { is_expected.to validate_presence_of :company }
     it { is_expected.to validate_presence_of :name }
     it { is_expected.to validate_presence_of :max_work_in_progress }
 

@@ -40,7 +40,7 @@ module Dashboards
 
     has_many :operations_dashboard_pairings, class_name: 'Dashboards::OperationsDashboardPairing', dependent: :destroy
 
-    validates :team_member, :dashboard_date, :bugs_count, :delivered_demands_count,
+    validates :dashboard_date, :bugs_count, :delivered_demands_count,
               :lead_time_max, :lead_time_min, :lead_time_p80, :projects_count, presence: true
   end
 end

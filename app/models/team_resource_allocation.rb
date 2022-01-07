@@ -28,5 +28,5 @@ class TeamResourceAllocation < ApplicationRecord
   belongs_to :team
   belongs_to :team_resource
 
-  validates :team, :team_resource, :start_date, :monthly_payment, presence: true
+  validates :start_date, :monthly_payment, presence: true
 end

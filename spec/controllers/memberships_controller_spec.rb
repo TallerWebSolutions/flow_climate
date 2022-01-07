@@ -120,7 +120,7 @@ RSpec.describe MembershipsController, type: :controller do
         it 'does not create the membership and re-render the template with the errors' do
           expect(Membership.all.count).to eq 3
           expect(response).to render_template 'memberships/create'
-          expect(assigns(:membership).errors.full_messages).to eq ['Team member não pode ficar em branco', 'Início não pode ficar em branco']
+          expect(assigns(:membership).errors.full_messages).to eq ['Início não pode ficar em branco', 'Função não pode ficar em branco']
         end
       end
     end
@@ -182,11 +182,11 @@ RSpec.describe MembershipsController, type: :controller do
 
       context 'passing invalid' do
         context 'membeership parameters' do
-          before { put :update, params: { company_id: company, team_id: team, id: membership, membership: { member_role: '', team_member_id: nil } }, xhr: true }
+          before { put :update, params: { company_id: company, team_id: team, id: membership, membership: { member_role: '', start_date: nil } }, xhr: true }
 
           it 'does not update the membership and re-render the template with the errors' do
             expect(response).to render_template 'memberships/update'
-            expect(assigns(:membership).errors.full_messages).to eq ['Team member não pode ficar em branco']
+            expect(assigns(:membership).errors.full_messages).to eq ['Início não pode ficar em branco', 'Função não pode ficar em branco']
           end
         end
 

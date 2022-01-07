@@ -8,9 +8,6 @@ RSpec.describe ItemAssignment, type: :model do
   end
 
   context 'validations' do
-    it { is_expected.to validate_presence_of :demand }
-    it { is_expected.to validate_presence_of :membership }
-
     context 'uniqueness' do
       let(:membership) { Fabricate :membership }
       let(:demand) { Fabricate :demand }

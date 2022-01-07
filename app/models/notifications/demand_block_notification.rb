@@ -25,7 +25,5 @@ module Notifications
     enum block_state: { blocked: 0, unblocked: 1 }
 
     belongs_to :demand_block
-
-    validates :demand_block, presence: true
   end
 end

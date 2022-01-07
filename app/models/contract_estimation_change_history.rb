@@ -19,5 +19,5 @@
 class ContractEstimationChangeHistory < ApplicationRecord
   belongs_to :contract
 
-  validates :contract, :change_date, :hours_per_demand, presence: true
+  validates :change_date, :hours_per_demand, presence: true
 end

@@ -12,7 +12,6 @@ RSpec.describe History::ClassOfServiceChangeHistory, type: :model do
 
   context 'validations' do
     context 'simple ones' do
-      it { is_expected.to validate_presence_of :demand }
       it { is_expected.to validate_presence_of :change_date }
       it { is_expected.to validate_presence_of :to_class_of_service }
     end

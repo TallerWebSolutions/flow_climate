@@ -29,5 +29,5 @@ class DemandComment < ApplicationRecord
   belongs_to :demand
   belongs_to :team_member
 
-  validates :demand, :comment_date, :comment_text, presence: true
+  validates :comment_date, :comment_text, presence: true
 end

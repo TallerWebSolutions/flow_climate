@@ -24,6 +24,4 @@
 class CustomersDeviseCustomer < ApplicationRecord
   belongs_to :customer
   belongs_to :devise_customer
-
-  validates :customer, :devise_customer, presence: true
 end

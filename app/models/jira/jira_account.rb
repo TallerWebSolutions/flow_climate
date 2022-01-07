@@ -32,7 +32,7 @@ module Jira
 
     attr_encrypted :api_token, key: Base64.decode64(Figaro.env.secret_key_32_encoded)
 
-    validates :username, :api_token, :base_uri, :company, :customer_domain, presence: true
+    validates :username, :api_token, :base_uri, :customer_domain, presence: true
     validates :customer_domain, :base_uri, uniqueness: true
 
     def responsibles_custom_field
