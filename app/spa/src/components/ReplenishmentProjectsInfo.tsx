@@ -25,7 +25,7 @@ export type Project = {
   monteCarloP80: number
   workInProgressLimit: number
   lastWeekThroughput: number
-  qtdThroughputs: number
+  qtyThroughputs: number
   throughputsArray: number[]
   modeWeeklyTroughputs: number
   stdDevWeeklyTroughputs: number
@@ -96,7 +96,7 @@ const TableRow = ({ project }: { project: Project }) => {
                 <MaterialTableRow>
                   <TableCell>{project.workInProgressLimit}</TableCell>
                   <TableCell>{project.lastWeekThroughput}</TableCell>
-                  <TableCell>{`${project.qtdThroughputs} (${project.throughputsArray})`}</TableCell>
+                  <TableCell>{`${project.qtyThroughputs} (${project.throughputsArray})`}</TableCell>
                   <TableCell>{project.modeWeeklyTroughputs}</TableCell>
                   <TableCell>{project.stdDevWeeklyTroughputs}</TableCell>
                   <TableCell>{`${project.teamMonteCarloP80} semanas`}</TableCell>

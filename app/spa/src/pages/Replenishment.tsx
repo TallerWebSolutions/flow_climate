@@ -144,7 +144,7 @@ export const normalizeProjectInfo = (data: any) =>
       monteCarloP80: consolidation.project.monteCarloP80,
       workInProgressLimit: consolidation.project.workInProgressLimit,
       lastWeekThroughput: weeklyThroughputs[throughputsSize - 1],
-      qtdThroughputs: throughputsSize,
+      qtyThroughputs: throughputsSize,
       throughputsArray: weeklyThroughputs,
       modeWeeklyTroughputs: consolidation.project.modeWeeklyTroughputs,
       stdDevWeeklyTroughputs: consolidation.project.stdDevWeeklyTroughputs,
