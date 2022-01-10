@@ -363,9 +363,8 @@ RSpec.describe DemandBlocksController, type: :controller do
     describe 'GET #demand_blocks_csv' do
       let(:company) { Fabricate :company, users: [user] }
 
-      let(:customer) { Fabricate :customer, company: company }
-      let(:project) { Fabricate :project, customers: [customer], start_date: 2.days.ago, end_date: Time.zone.today }
-      let!(:demand) { Fabricate :demand, project: project, end_date: Time.zone.now }
+      let(:project) { Fabricate :project, company: company, start_date: 2.days.ago, end_date: Time.zone.today }
+      let!(:demand) { Fabricate :demand, project: project, company: company, end_date: Time.zone.now }
 
       context 'valid parameters' do
         it 'calls the to_csv and responds success' do
