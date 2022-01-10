@@ -141,9 +141,9 @@ const Replenishing = () => {
             />
             <BreadcrumbReplenishingInfo
               replenishingBreadcrumb={normalizeBreadcrumbReplenishing(
-                companyNickName!,
-                teamId!,
-                data
+                data,
+                companyNickName,
+                teamId
               )}
             />
             <ReplenishingTeamInfo team={normalizeTeamInfo(data)} />
@@ -171,9 +171,9 @@ export const normalizeTeamInfo = (data: any) => ({
 })
 
 const normalizeBreadcrumbReplenishing = (
-  companyNickName: String,
-  teamId: String,
-  data: any
+  data: any,
+  companyNickName?: string,
+  teamId?: string
 ) => {
   const teamUrl = `/companies/${companyNickName}/teams/${teamId}`
   const companyUrl = `/companies/${companyNickName}/`
