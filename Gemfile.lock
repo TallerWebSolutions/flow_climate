@@ -224,6 +224,10 @@ GEM
     multi_json (1.15.0)
     multi_xml (0.6.0)
     multipart-post (2.1.1)
+    net-imap (0.2.2)
+      digest
+      net-protocol
+      strscan
     net-pop (0.1.1)
       digest
       net-protocol
@@ -411,6 +415,7 @@ GEM
     ssrf_filter (1.0.7)
     stackprof (0.2.17)
     statsd-ruby (1.5.0)
+    strscan (3.0.1)
     thor (1.2.1)
     thread_safe (0.3.6)
     timeout (0.2.0)
@@ -480,6 +485,7 @@ DEPENDENCIES
   listen
   memory_profiler
   mini_magick
+  net-imap
   net-pop
   net-smtp
   newrelic_rpm

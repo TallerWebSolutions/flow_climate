@@ -26,6 +26,7 @@ gem 'jira-ruby', require: false
 gem 'jquery-rails'
 gem 'kaminari'
 gem 'mini_magick'
+gem 'net-imap'
 gem 'net-pop'
 gem 'net-smtp'
 gem 'oj'
