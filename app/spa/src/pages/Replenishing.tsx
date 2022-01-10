@@ -1,6 +1,7 @@
 import { Fragment } from "react"
 import { Backdrop, CircularProgress, Container } from "@mui/material"
 import { gql, useQuery } from "@apollo/client"
+import CachedIcon from "@mui/icons-material/Cached"
 
 import ReplenishingTeamInfo from "../components/ReplenishingTeamInfo"
 import ReplenishingProjectsInfo from "../components/ReplenishingProjectsInfo"
@@ -37,6 +38,7 @@ const QUERY = gql`
         limit: 1
       ) {
         id
+        consolidationDate
         project {
           id
           name
@@ -108,6 +110,7 @@ const Replenishing = () => {
     <Fragment>
       <Header company={data?.team.company} user={normalizeUser(data)} />
       <Container>
+        <CachedIcon onClick={toImplementMessage} sx={{ cursor: "pointer" }} />
         {data?.team && (
           <Fragment>
             <BreadcrumbReplenishingInfo
@@ -150,9 +153,9 @@ const normalizeBreadcrumbReplenishing = (
   const companyUrl = `/companies/${companyNickName}/`
   return {
     companyName: data.team.company.name,
-    companyUrl: companyUrl,
+    companyUrl,
     teamName: data.team.name,
-    teamUrl: teamUrl,
+    teamUrl,
   }
 }
 
