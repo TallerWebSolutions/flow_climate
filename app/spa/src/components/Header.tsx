@@ -11,7 +11,7 @@ const buildLinks = (companyName: string) => [
   { name: "Eventos", href: `/companies/${companyName}/flow_events` },
 ]
 
-type User = {
+export type User = {
   id: string
   avatarSource: string
   fullName: string
@@ -24,7 +24,7 @@ type Company = {
 
 type HeaderProps = {
   company?: Company
-  user: User
+  user?: User
 }
 
 const Header = ({ company, user }: HeaderProps) => {
@@ -54,12 +54,14 @@ const Header = ({ company, user }: HeaderProps) => {
                 {link.name}
               </Link>
             ))}
-          <Avatar
-            alt={user.fullName}
-            src={user.avatarSource}
-            onClick={(e) => setAnchorEl(e.currentTarget)}
-            sx={{ cursor: "pointer" }}
-          />
+          {user && (
+            <Avatar
+              alt={user.fullName}
+              src={user.avatarSource}
+              onClick={(e) => setAnchorEl(e.currentTarget)}
+              sx={{ cursor: "pointer" }}
+            />
+          )}
           <Menu
             anchorEl={anchorEl}
             keepMounted
@@ -74,9 +76,11 @@ const Header = ({ company, user }: HeaderProps) => {
               horizontal: "right",
             }}
           >
-            <MenuItem component="a" href={`/users/${user.id}/edit`}>
-              Minha Conta
-            </MenuItem>
+            {user && (
+              <MenuItem component="a" href={`/users/${user.id}/edit`}>
+                Minha Conta
+              </MenuItem>
+            )}
             <MenuItem component="a" href="/users/activate_email_notifications">
               Ligar Notificações
             </MenuItem>

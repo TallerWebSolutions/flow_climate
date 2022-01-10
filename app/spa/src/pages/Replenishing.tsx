@@ -4,7 +4,7 @@ import { gql, useQuery } from "@apollo/client"
 
 import ReplenishingTeamInfo from "../components/ReplenishingTeamInfo"
 import ReplenishingProjectsInfo from "../components/ReplenishingProjectsInfo"
-import Header from "../components/Header"
+import Header, { User as HeaderUser } from "../components/Header"
 import { useParams } from "react-router-dom"
 import BreadcrumbReplenishingInfo from "../components/BreadcrumbReplenishingInfo"
 
@@ -74,8 +74,17 @@ type Team = {
   company: Company
 }
 
+type User = {
+  id: string
+  fullName: string
+  avatar: {
+    imageSource: string
+  }
+}
+
 type ReplenishingDTO = {
   team: Team
+  me: User
 }
 
 const Replenishing = () => {
@@ -177,12 +186,10 @@ export const normalizeProjectInfo = (data: any) =>
     }
   })
 
-const normalizeUser = (data: any) => {
-  return {
-    id: data.me.id,
-    fullName: data.me.fullName,
-    avatarSource: data.me.avatar.imageSource,
-  }
-}
+const normalizeUser = (data: ReplenishingDTO | undefined): HeaderUser => ({
+  id: data?.me.id || "",
+  fullName: data?.me.fullName || "",
+  avatarSource: data?.me.avatar.imageSource || "",
+})
 
 export const toImplementMessage = () => alert("trabalho em progresso...")
