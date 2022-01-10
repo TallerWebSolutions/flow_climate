@@ -1,7 +1,7 @@
 // @ts-nocheck
 
 import { render } from "@testing-library/react"
-import ReplenishmentTeamInfo from "../ReplenishmentTeamInfo"
+import ReplenishmentTeamInfo from "../ReplenishingTeamInfo"
 
 describe("components/ReplenishmentTeamInfo", () => {
   it("should render", () => {

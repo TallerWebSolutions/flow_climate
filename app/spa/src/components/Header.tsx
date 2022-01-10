@@ -22,7 +22,12 @@ type Company = {
   slug: string
 }
 
-const Header = ({ company, user }: { company: Company; user: User }) => {
+type HeaderProps = {
+  company?: Company
+  user: User
+}
+
+const Header = ({ company, user }: HeaderProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const handleClose = () => setAnchorEl(null)
 
@@ -37,17 +42,18 @@ const Header = ({ company, user }: { company: Company; user: User }) => {
               height={64}
             />
           </Link>
-          {buildLinks(company.slug).map((link, index) => (
-            <Link
-              sx={{ textDecoration: "none" }}
-              px={2}
-              key={link.name + index}
-              href={link.href}
-              color="secondary.contrastText"
-            >
-              {link.name}
-            </Link>
-          ))}
+          {company &&
+            buildLinks(company.slug).map((link, index) => (
+              <Link
+                sx={{ textDecoration: "none" }}
+                px={2}
+                key={link.name + index}
+                href={link.href}
+                color="secondary.contrastText"
+              >
+                {link.name}
+              </Link>
+            ))}
           <Avatar
             alt={user.fullName}
             src={user.avatarSource}
@@ -74,9 +80,11 @@ const Header = ({ company, user }: { company: Company; user: User }) => {
             <MenuItem component="a" href="/users/activate_email_notifications">
               Ligar Notificações
             </MenuItem>
-            <MenuItem component="a" href={`/companies/${company.slug}`}>
-              {company.name}
-            </MenuItem>
+            {company && (
+              <MenuItem component="a" href={`/companies/${company.slug}`}>
+                {company.name}
+              </MenuItem>
+            )}
             <MenuItem component="a" href="/users/admin_dashboard">
               Admin Dashboard
             </MenuItem>

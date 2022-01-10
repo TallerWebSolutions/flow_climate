@@ -2,14 +2,14 @@ import { Fragment } from "react"
 import { Backdrop, CircularProgress, Container } from "@mui/material"
 import { gql, useQuery } from "@apollo/client"
 
-import ReplenishmentTeamInfo from "../components/ReplenishmentTeamInfo"
-import ReplenishingProjectsInfo from "../components/ReplenishmentProjectsInfo"
+import ReplenishingTeamInfo from "../components/ReplenishingTeamInfo"
+import ReplenishingProjectsInfo from "../components/ReplenishingProjectsInfo"
 import Header from "../components/Header"
 import { useParams } from "react-router-dom"
 import BreadcrumbReplenishingInfo from "../components/BreadcrumbReplenishingInfo"
 
 const QUERY = gql`
-  query Replenishment($teamId: Int!) {
+  query Replenishing($teamId: Int!) {
     me {
       id
       fullName
@@ -63,9 +63,24 @@ const QUERY = gql`
   }
 `
 
-const Replenishment = () => {
+type Company = {
+  id: string
+  name: string
+  slug: string
+}
+
+type Team = {
+  id: string
+  company: Company
+}
+
+type ReplenishingDTO = {
+  team: Team
+}
+
+const Replenishing = () => {
   const { teamId, companyNickName } = useParams()
-  const { data, loading, error } = useQuery(QUERY, {
+  const { data, loading, error } = useQuery<ReplenishingDTO>(QUERY, {
     variables: { teamId: Number(teamId) },
   })
 
@@ -82,7 +97,7 @@ const Replenishment = () => {
 
   return (
     <Fragment>
-      <Header company={data.team.company} user={normalizeUser(data)} />
+      <Header company={data?.team.company} user={normalizeUser(data)} />
       <Container>
         {data?.team && (
           <Fragment>
@@ -93,7 +108,7 @@ const Replenishment = () => {
                 data
               )}
             />
-            <ReplenishmentTeamInfo team={normalizeTeamInfo(data)} />
+            <ReplenishingTeamInfo team={normalizeTeamInfo(data)} />
             <ReplenishingProjectsInfo projects={normalizeProjectInfo(data)} />
           </Fragment>
         )}
@@ -102,7 +117,7 @@ const Replenishment = () => {
   )
 }
 
-export default Replenishment
+export default Replenishing
 
 export const normalizeTeamInfo = (data: any) => ({
   throughputData: data.team.throughputData,

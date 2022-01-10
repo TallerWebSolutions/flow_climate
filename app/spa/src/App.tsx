@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet"
 
 import ApiProvider from "./lib/ApiProvider"
 import ThemeProvider from "./lib/ThemeProvider"
-import Replenishment from "./pages/Replenishment"
+import Replenishing from "./pages/Replenishing"
 
 const App = () => (
   <Fragment>
@@ -15,7 +15,7 @@ const App = () => (
       <Routes>
         <Route
           path="/companies/:companyNickName/teams/:teamId/replenishing_consolidations"
-          element={<Replenishment />}
+          element={<Replenishing />}
         />
       </Routes>
     </BrowserRouter>
