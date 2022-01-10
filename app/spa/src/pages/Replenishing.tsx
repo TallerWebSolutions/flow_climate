@@ -1,6 +1,6 @@
 import { Fragment } from "react"
 import { Backdrop, CircularProgress, Container } from "@mui/material"
-import { gql, useQuery } from "@apollo/client"
+import { gql, useQuery, useMutation } from "@apollo/client"
 import CachedIcon from "@mui/icons-material/Cached"
 
 import ReplenishingTeamInfo from "../components/ReplenishingTeamInfo"
@@ -65,6 +65,14 @@ const QUERY = gql`
   }
 `
 
+const GENERATE_REPLENISHING_MUTATION = gql`
+  mutation GenerateReplenishingCache($teamId: String!) {
+    generateReplenishingCache(teamId: $teamId) {
+      statusMessage
+    }
+  }
+`
+
 type Company = {
   id: string
   name: string
@@ -84,16 +92,22 @@ type User = {
   }
 }
 
-type ReplenishingDTO = {
-  team: Team
-  me: User
-}
+type ReplenishingDTO =
+  | {
+      team: Team
+      me: User
+    }
+  | undefined
 
 const Replenishing = () => {
   const { teamId, companyNickName } = useParams()
   const { data, loading, error } = useQuery<ReplenishingDTO>(QUERY, {
     variables: { teamId: Number(teamId) },
   })
+
+  const [generateReplenishingCache] = useMutation(
+    GENERATE_REPLENISHING_MUTATION
+  )
 
   if (error) {
     console.error(error)
@@ -110,9 +124,21 @@ const Replenishing = () => {
     <Fragment>
       <Header company={data?.team.company} user={normalizeUser(data)} />
       <Container>
-        <CachedIcon onClick={toImplementMessage} sx={{ cursor: "pointer" }} />
         {data?.team && (
           <Fragment>
+            <CachedIcon
+              onClick={() =>
+                generateReplenishingCache({
+                  variables: { teamId: data.team.id },
+                })
+              }
+              sx={{
+                cursor: "pointer",
+                display: "flex",
+                marginLeft: "auto",
+                marginTop: 1,
+              }}
+            />
             <BreadcrumbReplenishingInfo
               replenishingBreadcrumb={normalizeBreadcrumbReplenishing(
                 companyNickName!,
@@ -189,10 +215,8 @@ export const normalizeProjectInfo = (data: any) =>
     }
   })
 
-const normalizeUser = (data: ReplenishingDTO | undefined): HeaderUser => ({
+const normalizeUser = (data: ReplenishingDTO): HeaderUser => ({
   id: data?.me.id || "",
   fullName: data?.me.fullName || "",
   avatarSource: data?.me.avatar.imageSource || "",
 })
-
-export const toImplementMessage = () => alert("trabalho em progresso...")
