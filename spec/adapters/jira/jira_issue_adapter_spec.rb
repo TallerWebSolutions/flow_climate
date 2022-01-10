@@ -336,9 +336,27 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
         end
 
         context 'in demand transition to saving slack ArgumentError' do
-          it 'registers the error in the logger and does not halt the demana' do
-            allow_any_instance_of(Slack::SlackNotificationService).to receive(:notify_demand_state_changed).and_raise(ArgumentError)
-            expect(Rails.logger).to(receive(:error)).exactly(11).times
+          it 'registers the error in the logger and does not halt the demand' do
+            call_count = 0
+            allow_any_instance_of(Slack::SlackNotificationService).to receive(:notify_demand_state_changed) do
+              call_count += 1
+              call_count == 11 ? raise(ArgumentError) : DemandTransition.new
+            end
+
+            expect(Rails.logger).to(receive(:error)).once
+
+            described_class.instance.process_jira_issue_changelog(jira_account, JSON.parse(jira_issue_changelog), demand, creator)
+          end
+        end
+
+        context 'in demand transition to saving slack NotNullViolation' do
+          it 'registers the error in the logger and does not halt the demand' do
+            call_count = 0
+            allow_any_instance_of(DemandTransition).to receive(:save) do
+              call_count += 1
+              call_count == 4 ? raise(PG::NotNullViolation) : DemandTransition.new
+            end
+            expect(Rails.logger).to(receive(:error)).once
 
             described_class.instance.process_jira_issue_changelog(jira_account, JSON.parse(jira_issue_changelog), demand, creator)
           end

@@ -152,6 +152,9 @@ module Jira
     rescue ArgumentError
       Rails.logger.error('Invalid Slack API - ArgumentError')
       nil
+    rescue PG::NotNullViolation => e
+      Rails.logger.error("Invalid Demand Transition Record - Null Violation -> #{e.message}")
+      nil
     end
 
     def read_comments(demand, jira_issue)
