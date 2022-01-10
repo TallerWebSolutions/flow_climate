@@ -8,7 +8,6 @@ gem 'rails'
 
 gem 'bundler', require: false
 
-gem 'activerecord-session_store'
 gem 'addressable'
 gem 'attr_encrypted'
 gem 'barnes'

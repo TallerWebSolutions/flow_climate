@@ -407,6 +407,8 @@ RSpec.describe DemandBlocksController, type: :controller do
 
     describe 'POST #search' do
       let(:company) { Fabricate :company, users: [user] }
+      let(:other_company) { Fabricate :company }
+
       let(:customer) { Fabricate :customer, company: company }
 
       let(:stage) { Fabricate :stage, company: company, name: 'zzz' }
@@ -415,11 +417,13 @@ RSpec.describe DemandBlocksController, type: :controller do
       let!(:first_project) { Fabricate :project, customers: [customer], stages: [stage, other_stage], status: :executing, start_date: 6.days.ago, end_date: Time.zone.today }
       let!(:second_project) { Fabricate :project, customers: [customer], stages: [stage, other_stage], status: :executing, start_date: 6.days.ago, end_date: Time.zone.today }
       let!(:third_project) { Fabricate :project, customers: [customer], stages: [stage, other_stage], status: :finished, start_date: 6.days.ago, end_date: Time.zone.today }
+      let!(:other_company_project) { Fabricate :project, company: other_company, status: :executing, start_date: 6.days.ago, end_date: Time.zone.today }
 
       context 'with data' do
         let!(:first_demand) { Fabricate :demand, project: first_project, company: company }
         let!(:second_demand) { Fabricate :demand, project: second_project, company: company }
         let!(:third_demand) { Fabricate :demand, project: third_project, company: company }
+        let!(:other_company_demand) { Fabricate :demand, project: other_company_project, company: other_company }
 
         let!(:first_demand_transition) { Fabricate :demand_transition, demand: first_demand, stage: stage, last_time_in: 7.days.ago, last_time_out: 3.days.ago }
         let!(:second_demand_transition) { Fabricate :demand_transition, demand: first_demand, stage: other_stage, last_time_in: 2.days.ago, last_time_out: Time.zone.now }
@@ -437,6 +441,8 @@ RSpec.describe DemandBlocksController, type: :controller do
         let!(:eigth_block) { Fabricate :demand_block, demand: third_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'eigth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: nil }
         let!(:ninth_block) { Fabricate :demand_block, demand: third_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'ninth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: nil }
         let!(:tenth_block) { Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'tenth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: false, discarded_at: nil }
+
+        let!(:other_company_block) { Fabricate :demand_block, demand: other_company_demand, block_type: :coding_needed, block_reason: 'first_block', block_time: 1.hour.ago, unblock_time: Time.zone.today, active: true }
 
         context 'and valid parameters' do
           context 'no filters are provided' do

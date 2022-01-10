@@ -54,7 +54,7 @@ class DemandBlocksController < AuthenticatedController
 
   def search
     @demand_blocks_ids = params[:demand_blocks_ids].split(',')
-    @demand_blocks = DemandBlock.where(id: @demand_blocks_ids.map(&:to_i))
+    @demand_blocks = @company.demand_blocks.where(id: @demand_blocks_ids.map(&:to_i))
     @demand_blocks = build_projects_active_query(@demand_blocks)
     @demand_blocks = build_blocks_active_query(@demand_blocks)
     @demand_blocks = build_date_query(@demand_blocks)
