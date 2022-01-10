@@ -224,6 +224,10 @@ GEM
     multi_json (1.15.0)
     multi_xml (0.6.0)
     multipart-post (2.1.1)
+    net-pop (0.1.1)
+      digest
+      net-protocol
+      timeout
     net-protocol (0.1.2)
       io-wait
       timeout
@@ -476,6 +480,7 @@ DEPENDENCIES
   listen
   memory_profiler
   mini_magick
+  net-pop
   net-smtp
   newrelic_rpm
   oj
