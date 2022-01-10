@@ -46,11 +46,11 @@ group :test, :development do
   gem 'rails-controller-testing'
   gem 'rspec-collection_matchers'
   gem 'rspec-rails'
-  gem 'rubocop'
-  gem 'rubocop-graphql'
-  gem 'rubocop-performance'
-  gem 'rubocop-rails'
-  gem 'rubocop-rspec'
+  gem 'rubocop', '~> 1.24', require: false
+  gem 'rubocop-graphql', require: false
+  gem 'rubocop-performance', require: false
+  gem 'rubocop-rails', require: false
+  gem 'rubocop-rspec', require: false
   gem 'shoulda-matchers'
   gem 'simplecov'
   gem 'webmock'

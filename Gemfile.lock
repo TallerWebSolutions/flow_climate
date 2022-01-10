@@ -95,7 +95,7 @@ GEM
     cloudinary (1.21.0)
       aws_cf_signer
       rest-client (>= 2.0.0)
-    code_analyzer (0.4.5)
+    code_analyzer (0.5.2)
       sexp_processor
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
@@ -140,16 +140,19 @@ GEM
     fabrication (2.23.1)
     faker (2.19.0)
       i18n (>= 1.6, < 2)
-    ffi (1.15.4)
+    ffi (1.15.5)
     figaro (1.2.0)
       thor (>= 0.14.0, < 2)
     flamegraph (0.9.5)
-    flay (2.4.0)
+    flay (2.12.1)
+      erubis (~> 2.7.0)
+      path_expander (~> 1.0)
       ruby_parser (~> 3.0)
       sexp_processor (~> 4.0)
-    flog (4.2.0)
+    flog (4.6.4)
+      path_expander (~> 1.0)
       ruby_parser (~> 3.1, > 3.1.0)
-      sexp_processor (~> 4.4)
+      sexp_processor (~> 4.8)
     friendly_id (5.4.2)
       activerecord (>= 4.0.0)
     get_process_mem (0.2.7)
@@ -198,6 +201,9 @@ GEM
       activerecord
       kaminari-core (= 1.2.2)
     kaminari-core (1.2.2)
+    kwalify (0.7.2)
+    launchy (2.5.0)
+      addressable (~> 2.7)
     listen (3.7.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -218,7 +224,7 @@ GEM
     multi_json (1.15.0)
     multi_xml (0.6.0)
     multipart-post (2.1.1)
-    net-imap (0.2.2)
+    net-imap (0.2.3)
       digest
       net-protocol
       strscan
@@ -238,16 +244,15 @@ GEM
     nio4r (2.5.8)
     nokogiri (1.13.0-x86_64-darwin)
       racc (~> 1.4)
-    nokogiri (1.13.0-x86_64-linux)
-      racc (~> 1.4)
     oauth (0.5.8)
     oj (3.13.11)
     orm_adapter (0.5.0)
     parallel (1.21.0)
     parallel_tests (3.7.3)
       parallel
-    parser (3.1.0.0)
+    parser (3.0.3.2)
       ast (~> 2.4.1)
+    path_expander (1.1.0)
     pg (1.2.3)
     public_suffix (4.0.6)
     puma (5.5.2)
@@ -288,13 +293,13 @@ GEM
     rails_12factor (0.0.3)
       rails_serve_static_assets
       rails_stdout_logging
-    rails_best_practices (1.18.1)
+    rails_best_practices (1.22.1)
       activesupport
-      code_analyzer (>= 0.4.3)
+      code_analyzer (>= 0.5.2)
       erubis
       i18n
       json
-      require_all
+      require_all (~> 3.0)
       ruby-progressbar
     rails_serve_static_assets (0.0.5)
     rails_stdout_logging (0.0.5)
@@ -310,10 +315,10 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     redis (4.5.1)
-    reek (1.3.6)
-      ruby2ruby (~> 2.0.7)
-      ruby_parser (~> 3.2)
-      sexp_processor
+    reek (6.0.6)
+      kwalify (~> 0.7.0)
+      parser (~> 3.0.0)
+      rainbow (>= 2.0, < 4.0)
     regexp_parser (2.2.0)
     require_all (3.0.0)
     responders (3.0.1)
@@ -358,12 +363,12 @@ GEM
       unicode-display_width (>= 1.4.0, < 3.0)
     rubocop-ast (1.15.1)
       parser (>= 3.0.1.1)
-    rubocop-graphql (0.12.2)
+    rubocop-graphql (0.12.3)
       rubocop (>= 0.87, < 2)
     rubocop-performance (1.13.1)
       rubocop (>= 1.7.0, < 2.0)
       rubocop-ast (>= 0.4.0)
-    rubocop-rails (2.13.0)
+    rubocop-rails (2.13.1)
       activesupport (>= 4.2.0)
       rack (>= 1.1)
       rubocop (>= 1.7.0, < 2.0)
@@ -372,16 +377,18 @@ GEM
     ruby-progressbar (1.11.0)
     ruby-vips (2.1.4)
       ffi (~> 1.12)
-    ruby2ruby (2.0.8)
-      ruby_parser (~> 3.1)
-      sexp_processor (~> 4.0)
     ruby_parser (3.18.1)
       sexp_processor (~> 4.16)
-    rubycritic (0.0.16)
-      code_analyzer (= 0.4.5)
-      flay (= 2.4.0)
-      flog (= 4.2.0)
-      reek (= 1.3.6)
+    rubycritic (4.6.1)
+      flay (~> 2.8)
+      flog (~> 4.4)
+      launchy (>= 2.0.0)
+      parser (>= 2.6.0)
+      rainbow (~> 3.0)
+      reek (~> 6.0, < 7.0)
+      ruby_parser (~> 3.8)
+      simplecov (>= 0.17.0)
+      tty-which (~> 0.4.0)
       virtus (~> 1.0)
     sexp_processor (4.16.0)
     shoulda-matchers (5.1.0)
@@ -415,6 +422,7 @@ GEM
     timeout (0.2.0)
     traceroute (0.8.1)
       rails (>= 3.0.0)
+    tty-which (0.4.2)
     tzinfo (2.0.4)
       concurrent-ruby (~> 1.0)
     uglifier (4.2.0)
@@ -448,7 +456,6 @@ GEM
 
 PLATFORMS
   x86_64-darwin-21
-  x86_64-linux
 
 DEPENDENCIES
   addressable
@@ -496,7 +503,7 @@ DEPENDENCIES
   rspec-collection_matchers
   rspec-rails
   rspec_junit_formatter
-  rubocop
+  rubocop (~> 1.24)
   rubocop-graphql
   rubocop-performance
   rubocop-rails
