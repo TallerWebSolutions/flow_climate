@@ -111,7 +111,7 @@ module Jira
       from_transition&.update(team_member: demand_creator)
 
       read_transition_history(demand, issue_changelog)
-    rescue PG::NotNullViolation => e
+    rescue ActiveRecord::NotNullViolation => e
       Rails.logger.error("Invalid Demand Transition Record - Null Violation -> #{e.message}")
       nil
     end

@@ -350,8 +350,8 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
         end
 
         context 'in demand transition to saving slack NotNullViolation' do
-          it 'registers the error in the logger and does not halt the demand' do
-            allow_any_instance_of(DemandTransition).to(receive(:save)).and_raise(PG::NotNullViolation)
+          it 'registers the error in the logger and does not halt the demand saving' do
+            allow_any_instance_of(DemandTransition).to(receive(:save)).and_raise(ActiveRecord::NotNullViolation)
             expect(Rails.logger).to(receive(:error)).once
 
             described_class.instance.process_jira_issue_changelog(jira_account, JSON.parse(jira_issue_changelog), demand, creator)
