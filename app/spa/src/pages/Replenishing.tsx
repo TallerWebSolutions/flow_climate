@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react"
+import { Fragment, useEffect, useState } from "react"
 import { Backdrop, CircularProgress, Container, Box } from "@mui/material"
 import { gql, useQuery, useMutation } from "@apollo/client"
 import CachedIcon from "@mui/icons-material/Cached"
@@ -8,7 +8,7 @@ import ReplenishingProjectsInfo from "../components/ReplenishingProjectsInfo"
 import Header, { User as HeaderUser } from "../components/Header"
 import { useParams } from "react-router-dom"
 import BreadcrumbReplenishingInfo from "../components/BreadcrumbReplenishingInfo"
-import MessagesBox from "../components/MessagesBox"
+import MessagesBox, { Message } from "../components/MessagesBox"
 
 const QUERY = gql`
   query Replenishing($teamId: Int!) {
@@ -93,12 +93,20 @@ type User = {
   }
 }
 
-type ReplenishingDTO =
-  | {
-      team: Team
-      me: User
-    }
-  | undefined
+type ReplenishingResult = {
+  team: Team
+  me: User
+}
+
+type ReplenishingDTO = ReplenishingResult | undefined
+
+type ReplenishingCacheResult = {
+  generateReplenishingCache: {
+    statusMessage: string
+  }
+}
+
+type ReplenishingCacheDTO = ReplenishingCacheResult | undefined
 
 const Replenishing = () => {
   const { teamId, companyNickName } = useParams()
@@ -107,9 +115,24 @@ const Replenishing = () => {
   })
 
   const [generateReplenishingCache, { data: generateReplenishingCacheData }] =
-    useMutation(GENERATE_REPLENISHING_MUTATION)
+    useMutation<ReplenishingCacheDTO>(GENERATE_REPLENISHING_MUTATION)
 
-  const [messages, setMessages] = useState([])
+  const [messages, setMessages] = useState<Message[]>([])
+
+  useEffect(() => {
+    const generateReplenishingCacheMessage =
+      generateReplenishingCacheData?.generateReplenishingCache.statusMessage
+
+    if (generateReplenishingCacheMessage) {
+      setMessages((messages) => [
+        ...messages,
+        {
+          text: "Sua solicitação foi colocada na fila. Em poucos minutos estará pronta.",
+          severity: "info",
+        },
+      ])
+    }
+  }, [generateReplenishingCacheData?.generateReplenishingCache.statusMessage])
 
   if (error) {
     console.error(error)
@@ -146,6 +169,7 @@ const Replenishing = () => {
                     variables: { teamId: data.team.id },
                   })
                 }
+                sx={{ cursor: "pointer" }}
               />
             </Box>
             <ReplenishingTeamInfo team={normalizeTeamInfo(data)} />
