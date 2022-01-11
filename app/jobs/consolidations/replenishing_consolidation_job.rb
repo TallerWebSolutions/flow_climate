@@ -9,7 +9,10 @@ module Consolidations
         Company.all.each { |company| company.teams.each(&method(:replenishing_for_team)) }
       else
         team = Team.find_by(id: team_id)
-        replenishing_for_team(team)
+
+        return replenishing_for_team(team) if team.present?
+
+        Rails.logger.warn("Team not found to build the replenishing cache - Team id #{team_id}")
       end
     end
 
