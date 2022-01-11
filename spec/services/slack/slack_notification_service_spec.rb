@@ -308,5 +308,18 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
         expect(Notifications::DemandBlockNotification.all.count).to eq 1
       end
     end
+
+    context 'with exceptions' do
+      it 'logs the error' do
+        Fabricate :slack_configuration, team: team, info_type: :demand_blocked, active: true
+        demand = Fabricate :demand, team: team
+        demand_block = Fabricate :demand_block, demand: demand
+
+        allow_any_instance_of(Slack::Notifier).to(receive(:post)).and_raise(Slack::Notifier::APIError)
+        expect(Rails.logger).to(receive(:error)).once
+
+        described_class.instance.notify_item_blocked(demand_block, 'http://foo.com', 'http://bar.com', 'blocked')
+      end
+    end
   end
 end
