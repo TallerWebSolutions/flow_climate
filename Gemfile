@@ -58,11 +58,13 @@ end
 
 group :development do
   gem 'annotate'
+  gem 'debase', '~> 0.2.5.beta2'
   gem 'flamegraph'
   gem 'listen'
   gem 'memory_profiler'
   gem 'rack-mini-profiler', require: false
   gem 'rails_best_practices', require: false
+  gem 'ruby-debug-ide', '~> 0.7.3'
   gem 'rubycritic', require: false
   gem 'stackprof'
   gem 'traceroute'
