@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import { render } from "@testing-library/react"
 import ReplenishmentTeamInfo from "../ReplenishingTeamInfo"
 

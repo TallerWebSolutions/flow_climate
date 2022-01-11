@@ -1,5 +1,5 @@
-import { Fragment } from "react"
-import { Backdrop, CircularProgress, Container } from "@mui/material"
+import { Fragment, useState } from "react"
+import { Backdrop, CircularProgress, Container, Box } from "@mui/material"
 import { gql, useQuery, useMutation } from "@apollo/client"
 import CachedIcon from "@mui/icons-material/Cached"
 
@@ -8,6 +8,7 @@ import ReplenishingProjectsInfo from "../components/ReplenishingProjectsInfo"
 import Header, { User as HeaderUser } from "../components/Header"
 import { useParams } from "react-router-dom"
 import BreadcrumbReplenishingInfo from "../components/BreadcrumbReplenishingInfo"
+import MessagesBox from "../components/MessagesBox"
 
 const QUERY = gql`
   query Replenishing($teamId: Int!) {
@@ -105,9 +106,10 @@ const Replenishing = () => {
     variables: { teamId: Number(teamId) },
   })
 
-  const [generateReplenishingCache] = useMutation(
-    GENERATE_REPLENISHING_MUTATION
-  )
+  const [generateReplenishingCache, { data: generateReplenishingCacheData }] =
+    useMutation(GENERATE_REPLENISHING_MUTATION)
+
+  const [messages, setMessages] = useState([])
 
   if (error) {
     console.error(error)
@@ -126,30 +128,31 @@ const Replenishing = () => {
       <Container>
         {data?.team && (
           <Fragment>
-            <CachedIcon
-              onClick={() =>
-                generateReplenishingCache({
-                  variables: { teamId: data.team.id },
-                })
-              }
-              sx={{
-                cursor: "pointer",
-                display: "flex",
-                marginLeft: "auto",
-                marginTop: 1,
-              }}
-            />
-            <BreadcrumbReplenishingInfo
-              replenishingBreadcrumb={normalizeBreadcrumbReplenishing(
-                data,
-                companyNickName,
-                teamId
-              )}
-            />
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <BreadcrumbReplenishingInfo
+                replenishingBreadcrumb={normalizeBreadcrumbReplenishing(
+                  data,
+                  companyNickName,
+                  teamId
+                )}
+              />
+              <CachedIcon
+                onClick={() =>
+                  generateReplenishingCache({
+                    variables: { teamId: data.team.id },
+                  })
+                }
+              />
+            </Box>
             <ReplenishingTeamInfo team={normalizeTeamInfo(data)} />
             <ReplenishingProjectsInfo projects={normalizeProjectInfo(data)} />
           </Fragment>
         )}
+        <MessagesBox messages={messages} />
       </Container>
     </Fragment>
   )
