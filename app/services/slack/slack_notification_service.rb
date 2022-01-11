@@ -184,7 +184,6 @@ module Slack
       end
 
       Notifications::DemandBlockNotification.create(demand_block: demand_block, block_state: block_state)
-
     rescue Slack::Notifier::APIError => e
       Rails.logger.error("Invalid Slack API - #{e.message}")
     end
