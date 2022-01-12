@@ -23,6 +23,9 @@ module Types
     field :team_monte_carlo_weeks_std_dev, Float, null: false
     field :team_based_odds_to_deadline, Float, null: false
 
+    field :customers, [Types::CustomerType], null: true
+    field :products, [Types::ProductType], null: true
+
     delegate :remaining_backlog, to: :object
     delegate :remaining_weeks, to: :object
     delegate :flow_pressure, to: :object

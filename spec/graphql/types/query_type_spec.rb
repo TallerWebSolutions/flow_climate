@@ -45,7 +45,9 @@ RSpec.describe Types::QueryType do
         it 'returns the team and its fields' do
           company = Fabricate :company
           team = Fabricate :team, company: company
-          project = Fabricate :project, company: company, team: team, status: :executing, start_date: 4.days.ago, end_date: 1.day.from_now, max_work_in_progress: 2
+          customer = Fabricate :customer, company: company
+          product = Fabricate :product, customer: customer
+          project = Fabricate :project, company: company, customers: [customer], products: [product], team: team, status: :executing, start_date: 4.days.ago, end_date: 1.day.from_now, max_work_in_progress: 2
           other_project = Fabricate :project, company: company, team: team, status: :executing, start_date: 2.days.ago, end_date: 4.days.from_now, max_work_in_progress: 4
           inactive_by_date_project = Fabricate :project, company: company, team: team, status: :executing, start_date: 2.days.ago, end_date: 1.day.ago
           inactive_by_status_project = Fabricate :project, company: company, team: team, status: :finished, start_date: 2.days.ago, end_date: 1.day.ago
@@ -111,6 +113,12 @@ RSpec.describe Types::QueryType do
               teamMonteCarloWeeksMin
               teamMonteCarloWeeksStdDev
               teamBasedOddsToDeadline
+              customers {
+                name
+              }
+              products {
+                name
+              }
             }
           }
         }
@@ -166,7 +174,9 @@ RSpec.describe Types::QueryType do
                                                            'teamMonteCarloWeeksMax' => 7.0,
                                                            'teamMonteCarloWeeksMin' => 4.0,
                                                            'teamMonteCarloWeeksStdDev' => 4.1,
-                                                           'teamBasedOddsToDeadline' => 0.7
+                                                           'teamBasedOddsToDeadline' => 0.7,
+                                                           'customers' => [{ 'name' => customer.name }],
+                                                           'products' => [{ 'name' => product.name }]
                                                          }
                                                        },
                                                        {
@@ -190,7 +200,9 @@ RSpec.describe Types::QueryType do
                                                            'teamMonteCarloWeeksMax' => 20,
                                                            'teamMonteCarloWeeksMin' => 4,
                                                            'teamMonteCarloWeeksStdDev' => 1.2,
-                                                           'teamBasedOddsToDeadline' => 0.92
+                                                           'teamBasedOddsToDeadline' => 0.92,
+                                                           'customers' => [],
+                                                           'products' => []
                                                          }
                                                        }
                                                      ]
