@@ -53,31 +53,46 @@ const TableRow = ({ project }: { project: Project }) => {
   return (
     <Fragment>
       <MaterialTableRow sx={{ backgroundColor: "grey.200" }}>
-        <TableCell>
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            onClick={() => setOpen(!open)}
-          >
-            {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
-          </IconButton>
+        <TableCell colSpan={10}>
+          <Table>
+            <MaterialTableRow>
+              <TableCell>
+                <IconButton
+                  aria-label="expand row"
+                  size="small"
+                  onClick={() => setOpen(!open)}
+                >
+                  {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+                </IconButton>
+              </TableCell>
+              <TableCell>{project.name}</TableCell>
+              <Box
+                sx={{
+                  width: 3,
+                  height: 3,
+                  borderRadius: "50%",
+                  backgroundColor: "yellow",
+                }}
+              />
+              <TableCell>{project.remainingBacklog} demandas</TableCell>
+              <TableCell>{project.flowPressurePercentage}</TableCell>
+              <TableCell>{(project.leadTimeP80 / 86400).toFixed(2)}</TableCell>
+              <TableCell>{project.qtyInProgress} demandas</TableCell>
+              <TableCell>Início</TableCell>
+              <TableCell>Fim</TableCell>
+              <TableCell>{project.monteCarloP80}</TableCell>
+            </MaterialTableRow>
+            <MaterialTableRow>
+              <TableCell>Cliente</TableCell>
+              <TableCell>0,7</TableCell>
+              <TableCell />
+              <TableCell>{project.flowPressure.toFixed(2)}</TableCell>
+            </MaterialTableRow>
+          </Table>
         </TableCell>
-        <TableCell>{project.name}</TableCell>
-        <TableCell align="right">{project.remainingWeeks}</TableCell>
-        <TableCell align="right">{project.remainingBacklog}</TableCell>
-        <TableCell align="right">{project.flowPressure.toFixed(2)}</TableCell>
-        <TableCell align="right">
-          {project.flowPressurePercentage.toFixed(2)}
-        </TableCell>
-        <TableCell align="right">
-          {(project.leadTimeP80 / 86400).toFixed(2)}
-        </TableCell>
-        <TableCell align="right">{project.qtySelected}</TableCell>
-        <TableCell align="right">{project.qtyInProgress}</TableCell>
-        <TableCell align="right">{project.monteCarloP80}</TableCell>
       </MaterialTableRow>
       <MaterialTableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={10}>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Table sx={{ "td, th": { fontSize: ".7rem" } }}>
               <TableHead>
@@ -130,14 +145,14 @@ const ReplenishingProjectsInfo = ({
           <MaterialTableRow>
             <TableCell />
             <TableCell>Nome</TableCell>
-            <TableCell align="right">Semanas Restantes</TableCell>
-            <TableCell align="right">Backlog</TableCell>
-            <TableCell align="right">Pressão do Fluxo</TableCell>
-            <TableCell align="right">% Pressão do Fluxo</TableCell>
-            <TableCell align="right">Lead time (80%)</TableCell>
-            <TableCell align="right">Selecionadas</TableCell>
-            <TableCell align="right">WiP</TableCell>
-            <TableCell align="right">Monte Carlo (80%)</TableCell>
+            <TableCell>Fator</TableCell>
+            <TableCell>Backlog</TableCell>
+            <TableCell>Pressão do Fluxo</TableCell>
+            <TableCell>Lead time (80%)</TableCell>
+            <TableCell>WiP</TableCell>
+            <TableCell>Início</TableCell>
+            <TableCell>Fim</TableCell>
+            <TableCell>Monte Carlo (80%)</TableCell>
           </MaterialTableRow>
         </TableHead>
         <TableBody>
