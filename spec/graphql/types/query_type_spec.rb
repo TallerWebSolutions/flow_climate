@@ -93,9 +93,12 @@ RSpec.describe Types::QueryType do
           }
           lastReplenishingConsolidations(orderBy: "consolidation_date", direction: "asc", limit: 1) {
             id
+            customerHappiness
             project {
               id
               name
+              startDate
+              endDate
               remainingWeeks
               remainingBacklog
               flowPressure
@@ -155,9 +158,12 @@ RSpec.describe Types::QueryType do
                                                      'lastReplenishingConsolidations' => [
                                                        {
                                                          'id' => replenishing_consolidation.id.to_s,
+                                                         'customerHappiness' => 1.4,
                                                          'project' => {
                                                            'id' => project.id.to_s,
                                                            'name' => project.name,
+                                                           'startDate' => project.start_date.iso8601,
+                                                           'endDate' => project.end_date.iso8601,
                                                            'remainingWeeks' => project.remaining_weeks,
                                                            'remainingBacklog' => project.remaining_backlog,
                                                            'flowPressure' => project.flow_pressure.to_f,
@@ -181,9 +187,12 @@ RSpec.describe Types::QueryType do
                                                        },
                                                        {
                                                          'id' => other_replenishing_consolidation.id.to_s,
+                                                         'customerHappiness' => 1.4,
                                                          'project' => {
                                                            'id' => other_project.id.to_s,
                                                            'name' => other_project.name,
+                                                           'startDate' => other_project.start_date.iso8601,
+                                                           'endDate' => other_project.end_date.iso8601,
                                                            'remainingWeeks' => other_project.remaining_weeks,
                                                            'remainingBacklog' => other_project.remaining_backlog,
                                                            'flowPressure' => other_project.flow_pressure,

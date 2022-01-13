@@ -5,6 +5,7 @@ module Types
     field :id, ID, null: false
     field :consolidation_date, GraphQL::Types::ISO8601Date, null: false
     field :project, Types::ProjectType, null: false
+    field :customer_happiness, Float, null: false
 
     delegate :project, to: :object
 
