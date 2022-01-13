@@ -8,21 +8,25 @@
 #  name        :string           not null
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
-#  customer_id :integer          not null
+#  company_id  :integer          not null
+#  customer_id :integer
 #
 # Indexes
 #
+#  index_products_on_company_id            (company_id)
 #  index_products_on_customer_id           (customer_id)
 #  index_products_on_customer_id_and_name  (customer_id,name) UNIQUE
 #
 # Foreign Keys
 #
 #  fk_rails_252452a41b  (customer_id => customers.id)
+#  fk_rails_438d5b34ce  (company_id => companies.id)
 #
 
 class Product < ApplicationRecord
   include DemandsAggregator
 
+  belongs_to :company
   belongs_to :customer, counter_cache: true
 
   has_many :products_projects, dependent: :destroy
@@ -30,6 +34,7 @@ class Product < ApplicationRecord
   has_many :teams, -> { distinct }, through: :projects
   has_many :memberships, -> { distinct }, through: :teams
   has_many :jira_product_configs, class_name: 'Jira::JiraProductConfig', dependent: :destroy
+  has_one :azure_product_config, class_name: 'Azure::AzureProductConfig', dependent: :destroy
   has_many :portfolio_units, dependent: :destroy
   has_many :demands, dependent: :restrict_with_error
   has_many :demand_blocks, through: :demands

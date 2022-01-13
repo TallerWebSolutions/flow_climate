@@ -2,6 +2,7 @@
 
 RSpec.describe Product, type: :model do
   context 'associations' do
+    it { is_expected.to belong_to :company }
     it { is_expected.to belong_to :customer }
     it { is_expected.to have_many(:teams).through(:projects) }
     it { is_expected.to have_many(:memberships).through(:teams) }
@@ -14,7 +15,9 @@ RSpec.describe Product, type: :model do
     it { is_expected.to have_many(:risk_reviews).dependent(:destroy) }
     it { is_expected.to have_many(:service_delivery_reviews).dependent(:destroy) }
     it { is_expected.to have_many(:contracts).dependent(:restrict_with_error) }
+    it { is_expected.to have_many(:jira_product_configs).class_name('Jira::JiraProductConfig').dependent(:destroy) }
     it { is_expected.to have_one(:score_matrix).dependent(:destroy) }
+    it { is_expected.to have_one(:azure_product_config).class_name('Azure::AzureProductConfig').dependent(:destroy) }
   end
 
   context 'validations' do
