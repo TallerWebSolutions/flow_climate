@@ -12,6 +12,14 @@ import { KeyboardArrowUp, KeyboardArrowDown } from "@material-ui/icons"
 import { Box } from "@mui/system"
 import { Fragment, useState } from "react"
 
+type Customer = {
+  name: string
+}
+
+type Product = {
+  name: string
+}
+
 export type Project = {
   id: number
   name: string
@@ -34,6 +42,8 @@ export type Project = {
   teamMonteCarloWeeksMax: number
   teamMonteCarloWeeksStdDev: number
   teamBasedOddsToDeadline: number
+  customers: Customer[]
+  products: Product[]
 }
 
 type ReplenishingProjectsInfoProps = {
@@ -52,79 +62,89 @@ const TableRow = ({ project }: { project: Project }) => {
 
   return (
     <Fragment>
-      <MaterialTableRow sx={{ backgroundColor: "grey.200" }}>
-        <TableCell colSpan={10}>
-          <Table>
-            <MaterialTableRow>
-              <TableCell>
-                <IconButton
-                  aria-label="expand row"
-                  size="small"
-                  onClick={() => setOpen(!open)}
-                >
-                  {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
-                </IconButton>
-              </TableCell>
-              <TableCell>{project.name}</TableCell>
-              <Box
-                sx={{
-                  width: 3,
-                  height: 3,
-                  borderRadius: "50%",
-                  backgroundColor: "yellow",
-                }}
-              />
-              <TableCell>{project.remainingBacklog} demandas</TableCell>
-              <TableCell>{project.flowPressurePercentage}</TableCell>
-              <TableCell>{(project.leadTimeP80 / 86400).toFixed(2)}</TableCell>
-              <TableCell>{project.qtyInProgress} demandas</TableCell>
-              <TableCell>Início</TableCell>
-              <TableCell>Fim</TableCell>
-              <TableCell>{project.monteCarloP80}</TableCell>
-            </MaterialTableRow>
-            <MaterialTableRow>
-              <TableCell>Cliente</TableCell>
-              <TableCell>0,7</TableCell>
-              <TableCell />
-              <TableCell>{project.flowPressure.toFixed(2)}</TableCell>
-            </MaterialTableRow>
-          </Table>
+      <MaterialTableRow>
+        <TableCell>
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            onClick={() => setOpen(!open)}
+          >
+            {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+          </IconButton>
         </TableCell>
+        <TableCell>{project.name}</TableCell>
+        <TableCell>
+          <Box
+            sx={{
+              width: "24px",
+              height: "24px",
+              borderRadius: "50%",
+              backgroundColor: "yellow",
+            }}
+          />
+        </TableCell>
+        <TableCell>{project.remainingBacklog} demandas</TableCell>
+        <TableCell>{project.flowPressurePercentage}</TableCell>
+        <TableCell>{(project.leadTimeP80 / 86400).toFixed(2)}</TableCell>
+        <TableCell>{project.qtyInProgress} demandas</TableCell>
+        <TableCell>Início</TableCell>
+        <TableCell>Fim</TableCell>
+        <TableCell>{project.monteCarloP80}</TableCell>
       </MaterialTableRow>
       <MaterialTableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }}>
+        <TableCell />
+        <TableCell>
+          {project.customers.map(({ name }) => name).join(", ")}
+        </TableCell>
+        <TableCell>0,7</TableCell>
+        <TableCell />
+        <TableCell>{project.flowPressure.toFixed(2)}</TableCell>
+        <TableCell />
+        <TableCell>{project.workInProgressLimit}</TableCell>
+        <TableCell>Idade: X dias</TableCell>
+        <TableCell>Restante: X dias</TableCell>
+      </MaterialTableRow>
+      <MaterialTableRow>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={10}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Table sx={{ "td, th": { fontSize: ".7rem" } }}>
-              <TableHead>
-                <MaterialTableRow>
-                  <TableCell>Limite Wip</TableCell>
-                  <TableCell>TH última semana</TableCell>
-                  <TableCell>Qtd Throughputs</TableCell>
-                  <TableCell>Moda do throughput</TableCell>
-                  <TableCell>Throughput std dev</TableCell>
-                  <TableCell>Monte Carlo (80% - time)</TableCell>
-                  <TableCell>MC - Min/Max/Std Dev</TableCell>
-                  <TableCell>Chances de data (time)</TableCell>
-                </MaterialTableRow>
-              </TableHead>
               <TableBody>
                 <MaterialTableRow>
-                  <TableCell>{project.workInProgressLimit}</TableCell>
-                  <TableCell>{project.lastWeekThroughput}</TableCell>
-                  <TableCell>{`${project.qtyThroughputs} (${project.throughputsArray})`}</TableCell>
-                  <TableCell>{project.modeWeeklyTroughputs}</TableCell>
+                  <TableCell />
                   <TableCell>
-                    {project.stdDevWeeklyTroughputs.toFixed(2)}
+                    {project.products.map(({ name }) => name).join(", ")}
                   </TableCell>
-                  <TableCell>{`${project.teamMonteCarloP80} semanas`}</TableCell>
-                  <TableCell>{`${project.teamMonteCarloWeeksMin}/${
-                    project.teamMonteCarloWeeksMax
-                  }/${project.teamMonteCarloWeeksStdDev.toFixed(
-                    2
-                  )}`}</TableCell>
-                  <TableCell>{`${
-                    project.teamBasedOddsToDeadline * 100
-                  }%`}</TableCell>
+                  <TableCell colSpan={4}>Dados do projeto:</TableCell>
+                  <TableCell>Dados do time:</TableCell>
+                  <TableCell colSpan={2}>
+                    Mín: {project.teamMonteCarloWeeksMin}
+                  </TableCell>
+                  <TableCell>
+                    Monte Carlo 80%: {project.teamMonteCarloP80}
+                  </TableCell>
+                </MaterialTableRow>
+                <MaterialTableRow>
+                  <TableCell />
+                  <TableCell />
+                  <TableCell colSpan={4}>
+                    Throughputs: ({project.throughputsArray})
+                  </TableCell>
+                  <TableCell />
+                  <TableCell colSpan={2}>
+                    Máx: {project.teamMonteCarloWeeksMax}
+                  </TableCell>
+                  <TableCell>Desvio padrão: X</TableCell>
+                </MaterialTableRow>
+                <MaterialTableRow>
+                  <TableCell />
+                  <TableCell />
+                  <TableCell />
+                  <TableCell colSpan={5}>
+                    Selecionadas: {project.qtySelected}
+                  </TableCell>
+                  <TableCell>
+                    Chances da data: {project.teamBasedOddsToDeadline * 100}%
+                  </TableCell>
                 </MaterialTableRow>
               </TableBody>
             </Table>

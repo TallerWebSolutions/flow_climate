@@ -60,6 +60,14 @@ const QUERY = gql`
           teamMonteCarloWeeksMin
           teamMonteCarloWeeksStdDev
           teamBasedOddsToDeadline
+          customers {
+            id
+            name
+          }
+          products {
+            id
+            name
+          }
         }
       }
     }
@@ -119,10 +127,10 @@ const Replenishing = () => {
 
   const [messages, setMessages] = useState<Message[]>([])
 
-  useEffect(() => {
-    const generateReplenishingCacheMessage =
-      generateReplenishingCacheData?.generateReplenishingCache.statusMessage
+  const generateReplenishingCacheMessage =
+    generateReplenishingCacheData?.generateReplenishingCache.statusMessage
 
+  useEffect(() => {
     if (generateReplenishingCacheMessage) {
       setMessages((messages) => [
         ...messages,
@@ -132,7 +140,7 @@ const Replenishing = () => {
         },
       ])
     }
-  }, [generateReplenishingCacheData?.generateReplenishingCache.statusMessage])
+  }, [generateReplenishingCacheMessage])
 
   if (error) {
     console.error(error)
@@ -239,6 +247,8 @@ export const normalizeProjectInfo = (data: any) =>
       teamMonteCarloWeeksStdDev:
         consolidation.project.teamMonteCarloWeeksStdDev,
       teamBasedOddsToDeadline: consolidation.project.teamBasedOddsToDeadline,
+      customers: consolidation.project.customers,
+      products: consolidation.project.products,
     }
   })
 
