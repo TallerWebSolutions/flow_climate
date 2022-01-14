@@ -45,6 +45,8 @@ export type Project = {
   customers: Customer[]
   products: Product[]
   customerHappiness: number
+  startDate: string
+  endDate: string
 }
 
 type ReplenishingProjectsInfoProps = {
@@ -86,8 +88,8 @@ const TableRow = ({ project }: { project: Project }) => {
         <TableCell>{project.flowPressurePercentage}</TableCell>
         <TableCell>{(project.leadTimeP80 / 86400).toFixed(2)}</TableCell>
         <TableCell>{project.qtyInProgress} demandas</TableCell>
-        <TableCell>Início</TableCell>
-        <TableCell>Fim</TableCell>
+        <TableCell>{project.startDate}</TableCell>
+        <TableCell>{project.endDate}</TableCell>
         <TableCell>{project.monteCarloP80}</TableCell>
       </MaterialTableRow>
       <MaterialTableRow>
@@ -101,7 +103,7 @@ const TableRow = ({ project }: { project: Project }) => {
         <TableCell />
         <TableCell>{project.workInProgressLimit}</TableCell>
         <TableCell>Idade: X dias</TableCell>
-        <TableCell>Restante: X dias</TableCell>
+        <TableCell>Restante: {project.remainingWeeks} semanas</TableCell>
       </MaterialTableRow>
       <MaterialTableRow
         sx={{

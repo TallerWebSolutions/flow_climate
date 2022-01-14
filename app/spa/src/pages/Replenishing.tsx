@@ -51,6 +51,8 @@ const QUERY = gql`
           workInProgressLimit
           weeklyThroughputs
           modeWeeklyTroughputs
+          startDate
+          endDate
           stdDevWeeklyTroughputs
           teamMonteCarloP80
           teamMonteCarloWeeksMax
@@ -247,6 +249,8 @@ export const normalizeProjectInfo = (data: any) =>
       customers: consolidation.project.customers,
       products: consolidation.project.products,
       customerHappiness: consolidation.customerHappiness,
+      startDate: consolidation.project.startDate,
+      endDate: consolidation.project.endDate,
     }
   })
 
