@@ -33,7 +33,7 @@ const Header = ({ company, user }: HeaderProps) => {
 
   return (
     <Box bgcolor="secondary.dark" py={1}>
-      <Container>
+      <Container maxWidth="xl">
         <Box display="flex" alignItems="center" justifyContent="space-between">
           <Link href="/" sx={{ display: "block" }}>
             <img

@@ -40,6 +40,7 @@ const QUERY = gql`
         project {
           id
           name
+          aging
           remainingWeeks
           remainingBacklog
           flowPressure
@@ -50,7 +51,6 @@ const QUERY = gql`
           monteCarloP80
           workInProgressLimit
           weeklyThroughputs
-          modeWeeklyTroughputs
           startDate
           endDate
           stdDevWeeklyTroughputs
@@ -155,7 +155,7 @@ const Replenishing = () => {
   return (
     <Fragment>
       <Header company={data?.team.company} user={normalizeUser(data)} />
-      <Container>
+      <Container maxWidth="xl">
         {data?.team && (
           <Fragment>
             <Box
@@ -221,36 +221,9 @@ const normalizeBreadcrumbReplenishing = (
 
 export const normalizeProjectInfo = (data: any) =>
   data.team.lastReplenishingConsolidations.map(function (consolidation: any) {
-    const weeklyThroughputs = consolidation.project.weeklyThroughputs
-    const throughputsSize = weeklyThroughputs.length
-
     return {
-      name: consolidation.project.name,
-      remainingWeeks: consolidation.project.remainingWeeks,
-      remainingBacklog: consolidation.project.remainingBacklog,
-      flowPressure: consolidation.project.flowPressure,
-      flowPressurePercentage: consolidation.project.flowPressurePercentage,
-      leadTimeP80: consolidation.project.leadTimeP80,
-      qtySelected: consolidation.project.qtySelected,
-      qtyInProgress: consolidation.project.qtyInProgress,
-      monteCarloP80: consolidation.project.monteCarloP80,
-      workInProgressLimit: consolidation.project.workInProgressLimit,
-      lastWeekThroughput: weeklyThroughputs[throughputsSize - 1],
-      qtyThroughputs: throughputsSize,
-      throughputsArray: weeklyThroughputs,
-      modeWeeklyTroughputs: consolidation.project.modeWeeklyTroughputs,
-      stdDevWeeklyTroughputs: consolidation.project.stdDevWeeklyTroughputs,
-      teamMonteCarloP80: consolidation.project.teamMonteCarloP80,
-      teamMonteCarloWeeksMin: consolidation.project.teamMonteCarloWeeksMin,
-      teamMonteCarloWeeksMax: consolidation.project.teamMonteCarloWeeksMax,
-      teamMonteCarloWeeksStdDev:
-        consolidation.project.teamMonteCarloWeeksStdDev,
-      teamBasedOddsToDeadline: consolidation.project.teamBasedOddsToDeadline,
-      customers: consolidation.project.customers,
-      products: consolidation.project.products,
+      ...consolidation.project,
       customerHappiness: consolidation.customerHappiness,
-      startDate: consolidation.project.startDate,
-      endDate: consolidation.project.endDate,
     }
   })
 

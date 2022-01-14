@@ -33,8 +33,7 @@ export type Project = {
   monteCarloP80: number
   workInProgressLimit: number
   lastWeekThroughput: number
-  qtyThroughputs: number
-  throughputsArray: number[]
+  weeklyThroughputs: number[]
   modeWeeklyTroughputs: number
   stdDevWeeklyTroughputs: number
   teamMonteCarloP80: number
@@ -47,6 +46,7 @@ export type Project = {
   customerHappiness: number
   startDate: string
   endDate: string
+  aging: number
 }
 
 type ReplenishingProjectsInfoProps = {
@@ -54,15 +54,26 @@ type ReplenishingProjectsInfoProps = {
 }
 
 const getCustomerHappinessColor = (customerHappiness: number) =>
-  customerHappiness > 2 ? "green" : customerHappiness > 0.8 ? "yellow" : "red"
+  customerHappiness > 2
+    ? "success.main"
+    : customerHappiness > 0.8
+    ? "warning.main"
+    : "error.main"
 
 const TableRow = ({ project }: { project: Project }) => {
   const [open, setOpen] = useState(false)
 
   return (
     <Fragment>
-      <MaterialTableRow>
-        <TableCell>
+      <MaterialTableRow
+        sx={{
+          td: {
+            color: "primary.main",
+            paddingBottom: 0,
+          },
+        }}
+      >
+        <TableCell width={52}>
           <IconButton
             aria-label="expand row"
             size="small"
@@ -92,8 +103,8 @@ const TableRow = ({ project }: { project: Project }) => {
         <TableCell>{project.endDate}</TableCell>
         <TableCell>{project.monteCarloP80}</TableCell>
       </MaterialTableRow>
-      <MaterialTableRow>
-        <TableCell />
+      <MaterialTableRow sx={{ td: { color: "grey.600" } }}>
+        <TableCell width={52} />
         <TableCell>
           {project.customers.map(({ name }) => name).join(", ")}
         </TableCell>
@@ -102,7 +113,7 @@ const TableRow = ({ project }: { project: Project }) => {
         <TableCell>{project.flowPressure.toFixed(2)}</TableCell>
         <TableCell />
         <TableCell>{project.workInProgressLimit}</TableCell>
-        <TableCell>Idade: X dias</TableCell>
+        <TableCell>Idade: {project.aging} dias</TableCell>
         <TableCell>Restante: {project.remainingWeeks} semanas</TableCell>
       </MaterialTableRow>
       <MaterialTableRow
@@ -112,44 +123,51 @@ const TableRow = ({ project }: { project: Project }) => {
           borderBottomColor: "grey.400",
         }}
       >
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={10}>
+        <TableCell style={{ padding: 0 }} colSpan={10}>
           <Collapse in={open} timeout="auto" unmountOnExit>
-            <Table sx={{ "td, th": { fontSize: ".7rem" } }}>
+            <Table>
               <TableBody>
                 <MaterialTableRow>
-                  <TableCell />
-                  <TableCell>
+                  <TableCell width={52} />
+                  <TableCell sx={{ color: "grey.600" }}>
                     {project.products.map(({ name }) => name).join(", ")}
                   </TableCell>
-                  <TableCell colSpan={4}>Dados do projeto:</TableCell>
-                  <TableCell>Dados do time:</TableCell>
-                  <TableCell colSpan={2}>
+                  <TableCell sx={{ color: "primary.main" }} colSpan={4}>
+                    Dados do projeto:
+                  </TableCell>
+                  <TableCell sx={{ color: "primary.main" }}>
+                    Dados do time:
+                  </TableCell>
+                  <TableCell colSpan={2} sx={{ color: "grey.600" }}>
                     Mín: {project.teamMonteCarloWeeksMin}
                   </TableCell>
-                  <TableCell>
+                  <TableCell sx={{ color: "grey.600" }}>
                     Monte Carlo 80%: {project.teamMonteCarloP80}
                   </TableCell>
                 </MaterialTableRow>
                 <MaterialTableRow>
                   <TableCell />
                   <TableCell />
-                  <TableCell colSpan={4}>
-                    Throughputs: ({project.throughputsArray})
+                  <TableCell colSpan={4} sx={{ color: "grey.600" }}>
+                    Throughputs: ({project.weeklyThroughputs.join(", ")})
                   </TableCell>
                   <TableCell />
-                  <TableCell colSpan={2}>
+                  <TableCell colSpan={2} sx={{ color: "grey.600" }}>
                     Máx: {project.teamMonteCarloWeeksMax}
                   </TableCell>
-                  <TableCell>Desvio padrão: X</TableCell>
+                  <TableCell sx={{ color: "grey.600" }}>
+                    Desvio padrão:{" "}
+                    {project.teamMonteCarloWeeksStdDev.toFixed(2)}
+                  </TableCell>
                 </MaterialTableRow>
                 <MaterialTableRow>
                   <TableCell />
                   <TableCell />
                   <TableCell />
-                  <TableCell colSpan={5}>
+                  <TableCell colSpan={5} sx={{ color: "grey.600" }}>
                     Selecionadas: {project.qtySelected}
                   </TableCell>
-                  <TableCell>
+                  <TableCell sx={{ color: "grey.600" }}>
                     Chances da data: {project.teamBasedOddsToDeadline * 100}%
                   </TableCell>
                 </MaterialTableRow>
@@ -173,6 +191,7 @@ const ReplenishingProjectsInfo = ({
             backgroundColor: "primary.light",
             th: {
               color: "white",
+              paddingY: 2,
             },
           }}
         >
