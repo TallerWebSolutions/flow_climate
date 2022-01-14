@@ -6,6 +6,7 @@ module Types
     field :name, String, null: false
     field :start_date, GraphQL::Types::ISO8601Date, null: false
     field :end_date, GraphQL::Types::ISO8601Date, null: false
+    field :aging, Int, null: false
     field :remaining_weeks, Int, null: false
     field :remaining_backlog, Int, null: false
     field :flow_pressure, Float, null: false

@@ -99,6 +99,7 @@ RSpec.describe Types::QueryType do
               name
               startDate
               endDate
+              aging
               remainingWeeks
               remainingBacklog
               flowPressure
@@ -164,6 +165,7 @@ RSpec.describe Types::QueryType do
                                                            'name' => project.name,
                                                            'startDate' => project.start_date.iso8601,
                                                            'endDate' => project.end_date.iso8601,
+                                                           'aging' => project.aging,
                                                            'remainingWeeks' => project.remaining_weeks,
                                                            'remainingBacklog' => project.remaining_backlog,
                                                            'flowPressure' => project.flow_pressure.to_f,
@@ -193,6 +195,7 @@ RSpec.describe Types::QueryType do
                                                            'name' => other_project.name,
                                                            'startDate' => other_project.start_date.iso8601,
                                                            'endDate' => other_project.end_date.iso8601,
+                                                           'aging' => other_project.aging,
                                                            'remainingWeeks' => other_project.remaining_weeks,
                                                            'remainingBacklog' => other_project.remaining_backlog,
                                                            'flowPressure' => other_project.flow_pressure,
