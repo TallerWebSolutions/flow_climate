@@ -16,20 +16,16 @@ module Types
 
     field :work_in_progress, Int, null: true
 
-    field :last_replenishing_consolidations, [Types::ReplenishingConsolidationType], null: false do
-      argument :order_by, String, required: false
-      argument :direction, String, required: false
-      argument :limit, Int, required: false
-    end
+    field :last_replenishing_consolidations, [Types::ReplenishingConsolidationType], null: false
 
     field :projects, [Types::ProjectType], null: true
     field :active_projects, [Types::ProjectType], null: true
 
     delegate :projects, to: :object
 
-    def last_replenishing_consolidations(order_by: 'consolidation_date', direction: 'asc', limit: 5)
+    def last_replenishing_consolidations
       team_active_projects = active_projects
-      consolidations_ids = team_active_projects.map { |project| Consolidations::ReplenishingConsolidation.where(project: project).order(order_by => direction).last(limit).map(&:id).flatten }
+      consolidations_ids = team_active_projects.map { |project| Consolidations::ReplenishingConsolidation.where(project: project).order(consolidation_date: :asc).last(1).map(&:id).flatten }
 
       Consolidations::ReplenishingConsolidation.where(id: consolidations_ids.flatten.compact)
     end

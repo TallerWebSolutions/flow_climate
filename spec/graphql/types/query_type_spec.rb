@@ -91,7 +91,7 @@ RSpec.describe Types::QueryType do
             id
             name
           }
-          lastReplenishingConsolidations(orderBy: "consolidation_date", direction: "asc", limit: 1) {
+          lastReplenishingConsolidations {
             id
             customerHappiness
             project {
