@@ -28,5 +28,14 @@ module Azure
       Rails.logger.error(e)
       {}
     end
+
+    def work_item(work_item_id, azure_project_id)
+      HTTParty.get("#{@connection_parameters[:base_uri]}/#{azure_project_id}/_apis/wit/workitems/#{work_item_id}?$expand=all&api-version=6.1-preview.3",
+                   basic_auth: { username: @connection_parameters[:username], password: @connection_parameters[:password] },
+                   headers: { 'Content-Type' => 'application/json' })
+    rescue Errno::ECONNREFUSED, Net::ReadTimeout => e
+      Rails.logger.error(e)
+      {}
+    end
   end
 end

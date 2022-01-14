@@ -20,6 +20,7 @@ module Azure
   class AzureAccount < ApplicationRecord
     belongs_to :company
     has_many :azure_product_configs, class_name: 'Azure::AzureProductConfig', dependent: :destroy
+    has_many :azure_custom_fields, class_name: 'Azure::AzureCustomField', dependent: :destroy
 
     validates :azure_organization, :username, :password, presence: true
   end

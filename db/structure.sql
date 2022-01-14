@@ -60,6 +60,39 @@ ALTER SEQUENCE public.azure_accounts_id_seq OWNED BY public.azure_accounts.id;
 
 
 --
+-- Name: azure_custom_fields; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.azure_custom_fields (
+    id bigint NOT NULL,
+    azure_account_id integer NOT NULL,
+    custom_field_type integer DEFAULT 0 NOT NULL,
+    custom_field_name character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: azure_custom_fields_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.azure_custom_fields_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: azure_custom_fields_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.azure_custom_fields_id_seq OWNED BY public.azure_custom_fields.id;
+
+
+--
 -- Name: azure_product_configs; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2652,6 +2685,13 @@ ALTER TABLE ONLY public.azure_accounts ALTER COLUMN id SET DEFAULT nextval('publ
 
 
 --
+-- Name: azure_custom_fields id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.azure_custom_fields ALTER COLUMN id SET DEFAULT nextval('public.azure_custom_fields_id_seq'::regclass);
+
+
+--
 -- Name: azure_product_configs id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3134,6 +3174,14 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 ALTER TABLE ONLY public.azure_accounts
     ADD CONSTRAINT azure_accounts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: azure_custom_fields azure_custom_fields_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.azure_custom_fields
+    ADD CONSTRAINT azure_custom_fields_pkey PRIMARY KEY (id);
 
 
 --
@@ -5406,6 +5454,14 @@ ALTER TABLE ONLY public.customers
 
 
 --
+-- Name: azure_custom_fields fk_rails_4fe176e72d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.azure_custom_fields
+    ADD CONSTRAINT fk_rails_4fe176e72d FOREIGN KEY (azure_account_id) REFERENCES public.azure_accounts(id);
+
+
+--
 -- Name: slack_configurations fk_rails_52597683c1; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6129,6 +6185,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220113160252'),
 ('20220113202204'),
 ('20220113205250'),
-('20220113205638');
+('20220113205638'),
+('20220114200925');
 
 

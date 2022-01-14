@@ -4,6 +4,7 @@ RSpec.describe Azure::AzureAccount, type: :model do
   context 'associations' do
     it { is_expected.to belong_to :company }
     it { is_expected.to have_many(:azure_product_configs).dependent(:destroy) }
+    it { is_expected.to have_many(:azure_custom_fields).dependent(:destroy) }
   end
 
   context 'validations' do

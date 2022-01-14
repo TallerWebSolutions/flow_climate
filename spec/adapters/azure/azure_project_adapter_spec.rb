@@ -17,7 +17,7 @@ RSpec.describe Azure::AzureProjectAdapter do
 
           allow(HTTParty).to(receive(:get)).once { mocked_azure_return }
 
-          expect(described_class.instance.projects(azure_account)).to eq [product]
+          expect(described_class.new(azure_account).projects).to eq [product]
         end
       end
 
@@ -25,7 +25,7 @@ RSpec.describe Azure::AzureProjectAdapter do
         it 'creates the product and the azure config for it' do
           mocked_azure_return = file_fixture('azure_teams_list.json').read
           allow(HTTParty).to(receive(:get)).once { mocked_azure_return }
-          expect(described_class.instance.projects(azure_account)).to eq [Product.all.first]
+          expect(described_class.new(azure_account).projects).to eq [Product.all.first]
           expect(Azure::AzureTeam.all.count).not_to be_zero
           expect(Azure::AzureProject.all.count).not_to be_zero
           expect(Azure::AzureProductConfig.all.count).not_to be_zero
@@ -39,7 +39,7 @@ RSpec.describe Azure::AzureProjectAdapter do
         allow(HTTParty).to(receive(:get)).once { not_found_response }
 
         expect(Rails.logger).to(receive(:error)).once
-        expect(described_class.instance.projects(azure_account)).to eq []
+        expect(described_class.new(azure_account).projects).to eq []
       end
     end
   end
