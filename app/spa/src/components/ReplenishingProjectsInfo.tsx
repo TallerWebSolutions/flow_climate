@@ -44,18 +44,15 @@ export type Project = {
   teamBasedOddsToDeadline: number
   customers: Customer[]
   products: Product[]
+  customerHappiness: number
 }
 
 type ReplenishingProjectsInfoProps = {
   projects: Project[]
 }
 
-const tableHeadStyles = {
-  backgroundColor: "secondary.main",
-  th: {
-    color: "secondary.contrastText",
-  },
-}
+const getCustomerHappinessColor = (customerHappiness: number) =>
+  customerHappiness > 2 ? "green" : customerHappiness > 0.8 ? "yellow" : "red"
 
 const TableRow = ({ project }: { project: Project }) => {
   const [open, setOpen] = useState(false)
@@ -79,7 +76,9 @@ const TableRow = ({ project }: { project: Project }) => {
               width: "24px",
               height: "24px",
               borderRadius: "50%",
-              backgroundColor: "yellow",
+              backgroundColor: getCustomerHappinessColor(
+                project.customerHappiness
+              ),
             }}
           />
         </TableCell>
@@ -96,7 +95,7 @@ const TableRow = ({ project }: { project: Project }) => {
         <TableCell>
           {project.customers.map(({ name }) => name).join(", ")}
         </TableCell>
-        <TableCell>0,7</TableCell>
+        <TableCell>{project.customerHappiness.toFixed(2)}</TableCell>
         <TableCell />
         <TableCell>{project.flowPressure.toFixed(2)}</TableCell>
         <TableCell />
@@ -104,7 +103,13 @@ const TableRow = ({ project }: { project: Project }) => {
         <TableCell>Idade: X dias</TableCell>
         <TableCell>Restante: X dias</TableCell>
       </MaterialTableRow>
-      <MaterialTableRow>
+      <MaterialTableRow
+        sx={{
+          backgroundColor: "grey.A100",
+          borderBottom: "1px solid",
+          borderBottomColor: "grey.400",
+        }}
+      >
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={10}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Table sx={{ "td, th": { fontSize: ".7rem" } }}>
@@ -161,7 +166,14 @@ const ReplenishingProjectsInfo = ({
   <Box my={1}>
     <TableContainer>
       <Table>
-        <TableHead sx={tableHeadStyles}>
+        <TableHead
+          sx={{
+            backgroundColor: "primary.light",
+            th: {
+              color: "white",
+            },
+          }}
+        >
           <MaterialTableRow>
             <TableCell />
             <TableCell>Nome</TableCell>

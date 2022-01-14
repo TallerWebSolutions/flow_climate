@@ -33,13 +33,10 @@ const QUERY = gql`
         name
         slug
       }
-      lastReplenishingConsolidations(
-        orderBy: "consolidation_date"
-        direction: "asc"
-        limit: 1
-      ) {
+      lastReplenishingConsolidations {
         id
         consolidationDate
+        customerHappiness
         project {
           id
           name
@@ -249,6 +246,7 @@ export const normalizeProjectInfo = (data: any) =>
       teamBasedOddsToDeadline: consolidation.project.teamBasedOddsToDeadline,
       customers: consolidation.project.customers,
       products: consolidation.project.products,
+      customerHappiness: consolidation.customerHappiness,
     }
   })
 
