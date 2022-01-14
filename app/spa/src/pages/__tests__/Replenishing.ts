@@ -1,7 +1,7 @@
 // @ts-nocheck
-import { normalizeProjectInfo, normalizeTeamInfo } from "../Replenishment"
+import { normalizeProjectInfo, normalizeTeamInfo } from "../Replenishing"
 
-describe("pages/Replenishment", () => {
+describe("pages/Replenishing", () => {
   describe("valid data for team info from replenishing", () => {
     it("should normalize the team info into the query results to the component shape", () => {
       const expected = {
@@ -25,19 +25,20 @@ describe("pages/Replenishment", () => {
     it("should normalize the team info into the query results to the component shape", () => {
       const expected = [
         {
+          __typename: "Project",
+          id: "673",
           name: "Redesign - Informações de Venda",
+          customerHappiness: 1,
           remainingWeeks: 2,
           remainingBacklog: 9,
           flowPressure: 2,
           flowPressurePercentage: 0,
-          lastWeekThroughput: "3",
           leadTimeP80: 4366647.3092,
           qtySelected: 0,
           qtyInProgress: 1,
           monteCarloP80: 41,
           workInProgressLimit: 3,
-          throughputsArray: "2, 3, 5, 3",
-          qtyThroughputs: 10,
+          weeklyThroughputs: "2, 3, 5, 3",
           modeWeeklyTroughputs: 3,
           stdDevWeeklyTroughputs: 2.1,
           teamMonteCarloP80: 5,
@@ -47,7 +48,10 @@ describe("pages/Replenishment", () => {
           teamBasedOddsToDeadline: 0.9,
         },
         {
+          __typename: "Project",
+          id: "689",
           name: "Daily Bugle - Matéria Fofoca e Editorias Políticas",
+          customerHappiness: 2,
           remainingWeeks: 5,
           remainingBacklog: 7,
           flowPressure: 0.25,
@@ -57,10 +61,8 @@ describe("pages/Replenishment", () => {
           qtyInProgress: 0,
           monteCarloP80: 0,
           modeWeeklyTroughputs: 3,
-          lastWeekThroughput: "3",
           workInProgressLimit: 3,
-          throughputsArray: "2, 3, 5, 3",
-          qtyThroughputs: 10,
+          weeklyThroughputs: "2, 3, 5, 3",
           stdDevWeeklyTroughputs: 2.1,
           teamMonteCarloP80: 5,
           teamMonteCarloWeeksMax: 1,
@@ -88,6 +90,7 @@ const data = {
     lastReplenishingConsolidations: [
       {
         __typename: "ReplenishingConsolidation",
+        customerHappiness: 1,
         id: "28231",
         project: {
           __typename: "Project",
@@ -114,6 +117,7 @@ const data = {
       },
       {
         __typename: "ReplenishingConsolidation",
+        customerHappiness: 2,
         id: "28232",
         project: {
           __typename: "Project",
