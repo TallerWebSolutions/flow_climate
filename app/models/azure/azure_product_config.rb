@@ -20,7 +20,6 @@ module Azure
     belongs_to :product
     belongs_to :azure_account
 
-    has_many :azure_projects, class_name: 'Azure::AzureProject', dependent: :destroy
-    has_many :azure_teams, class_name: 'Azure::AzureTeam', dependent: :destroy
+    has_one :azure_team, class_name: 'Azure::AzureTeam', dependent: :destroy
   end
 end

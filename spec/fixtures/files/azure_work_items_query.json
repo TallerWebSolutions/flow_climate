@@ -1,0 +1,19 @@
+{
+  "queryType": "flat",
+  "queryResultType": "workItem",
+  "asOf": "2022-01-13T22:46:15.43Z",
+  "columns": [
+    {
+      "referenceName": "System.Id",
+      "name": "ID",
+      "url": "https://dev.azure.com/tallerdigital/_apis/wit/fields/System.Id"}],
+  "workItems": [
+    {
+      "id": 1,
+      "url": "https://dev.azure.com/tallerdigital/19dd7898-d318-4896-8797-afaf2320dcd3/_apis/wit/workItems/1"
+    }, {
+      "id": 2,
+      "url": "https://dev.azure.com/tallerdigital/19dd7898-d318-4896-8797-afaf2320dcd3/_apis/wit/workItems/2"
+    }
+  ]
+}

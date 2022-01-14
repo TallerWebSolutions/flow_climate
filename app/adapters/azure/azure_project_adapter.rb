@@ -5,24 +5,39 @@ module Azure
     include Singleton
 
     def projects(azure_account)
-      azure_api_return = AzureApiService.new(azure_account).projects
+      client = AzureApiService.new(azure_account)
+      teams_list_json = client.teams
 
       products = []
-      if azure_api_return.respond_to?(:code) && azure_api_return.code != 200
-        Rails.logger.error("[AzureAPI] Failed to request - #{azure_api_return.code}")
+      if teams_list_json.respond_to?(:code) && teams_list_json.code != 200
+        Rails.logger.error("[AzureAPI] Failed to request - #{teams_list_json.code}")
       else
-        projects_hash = JSON.parse(azure_api_return)
-        projects_hash['value'].each do |azure_value|
-          product_name = azure_value['name']
-          product_id = azure_value['id']
-
-          product_config = Azure::AzureProductConfig.find_by(azure_product_id: product_id, azure_product_name: product_name, azure_account: azure_account)
-
+        teams_hash = JSON.parse(teams_list_json)
+        teams_hash['value'].each do |azure_value|
+          product_config = process_azure_product(azure_account, azure_value)
           products << product_config.product
         end
       end
 
       products
+    end
+
+    private
+
+    def process_azure_product(azure_account, azure_value)
+      product_name = azure_value['projectName']
+      product_id = azure_value['projectId']
+      team_name = azure_value['name']
+      team_id = azure_value['id']
+
+      product = Product.where(name: product_name, company: azure_account.company).first_or_create
+
+      product_config = Azure::AzureProductConfig.where(azure_account: azure_account, product: product).first_or_create
+
+      azure_team = Azure::AzureTeam.where(team_name: team_name, team_id: team_id, azure_product_config: product_config).first_or_create
+      Azure::AzureProject.where(project_name: product_name, project_id: product_id, azure_team: azure_team).first_or_create
+
+      product_config
     end
   end
 end

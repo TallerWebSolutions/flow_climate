@@ -1,0 +1,13 @@
+{
+  "value": [
+    {
+      "id": "75359256-f8b4-4108-8f9c-4dbfb8975548",
+      "name": "FlowClimate Team",
+      "url": "https://dev.azure.com/tallerdigital/_apis/projects/19dd7898-d318-4896-8797-afaf2320dcd3/teams/75359256-f8b4-4108-8f9c-4dbfb8975548",
+      "description": "The default project team.",
+      "identityUrl": "https://spsprodsbr1.vssps.visualstudio.com/A9912b2c6-a9e9-448d-86a5-93334f90e66d/_apis/Identities/75359256-f8b4-4108-8f9c-4dbfb8975548",
+      "projectName": "FlowClimate",
+      "projectId": "19dd7898-d318-4896-8797-afaf2320dcd3"
+    }
+  ]
+}

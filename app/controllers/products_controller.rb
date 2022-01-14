@@ -41,7 +41,7 @@ class ProductsController < AuthenticatedController
 
   def create
     customer = Customer.find_by(id: product_params[:customer_id])
-    @product = Product.new(product_params.merge(customer: customer))
+    @product = Product.new(product_params.merge(customer: customer, company: @company))
     return redirect_to company_products_path(@company) if @product.save
 
     assign_customers

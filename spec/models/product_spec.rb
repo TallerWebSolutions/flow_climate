@@ -58,7 +58,6 @@ RSpec.describe Product, type: :model do
 
   context 'delegations' do
     it { is_expected.to delegate_method(:name).to(:customer).with_prefix }
-    it { is_expected.to delegate_method(:company).to(:customer) }
   end
 
   RSpec.shared_context 'context with no demands' do

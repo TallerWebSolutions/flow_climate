@@ -97,7 +97,7 @@ ALTER SEQUENCE public.azure_product_configs_id_seq OWNED BY public.azure_product
 
 CREATE TABLE public.azure_projects (
     id bigint NOT NULL,
-    azure_product_config_id integer NOT NULL,
+    azure_team_id integer NOT NULL,
     project_id character varying NOT NULL,
     project_name character varying NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
@@ -3758,10 +3758,10 @@ CREATE INDEX index_azure_product_configs_on_product_id ON public.azure_product_c
 
 
 --
--- Name: index_azure_projects_on_azure_product_config_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_azure_projects_on_azure_team_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_azure_projects_on_azure_product_config_id ON public.azure_projects USING btree (azure_product_config_id);
+CREATE INDEX index_azure_projects_on_azure_team_id ON public.azure_projects USING btree (azure_team_id);
 
 
 --
@@ -5886,6 +5886,14 @@ ALTER TABLE ONLY public.customers
 
 
 --
+-- Name: azure_projects fk_rails_f1091df050; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.azure_projects
+    ADD CONSTRAINT fk_rails_f1091df050 FOREIGN KEY (azure_team_id) REFERENCES public.azure_teams(id);
+
+
+--
 -- Name: demands fk_rails_fcc44c0e5d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5899,14 +5907,6 @@ ALTER TABLE ONLY public.demands
 
 ALTER TABLE ONLY public.risk_review_action_items
     ADD CONSTRAINT fk_rails_fdf17a6550 FOREIGN KEY (membership_id) REFERENCES public.memberships(id);
-
-
---
--- Name: azure_projects fk_rails_fede69488a; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.azure_projects
-    ADD CONSTRAINT fk_rails_fede69488a FOREIGN KEY (azure_product_config_id) REFERENCES public.azure_product_configs(id);
 
 
 --

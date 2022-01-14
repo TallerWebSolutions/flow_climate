@@ -22,6 +22,7 @@
 module Azure
   class AzureTeam < ApplicationRecord
     belongs_to :azure_product_config, class_name: 'Azure::AzureProductConfig'
+    has_one :azure_project, class_name: 'Azure::AzureProject', dependent: :destroy
 
     validates :team_name, :team_id, presence: true
   end
