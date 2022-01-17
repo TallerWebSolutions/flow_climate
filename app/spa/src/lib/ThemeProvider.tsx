@@ -17,6 +17,20 @@ const theme = createTheme({
       dark: "#140318",
     },
   },
+  typography: {
+    body1: {
+      fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
+      fontWeight: 400,
+      fontSize: "1rem",
+      lineHeight: 1.5,
+    },
+    body2: {
+      fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
+      fontWeight: 400,
+      fontSize: ".875rem",
+      lineHeight: 1.43,
+    },
+  },
   components: {
     MuiTableCell: {
       styleOverrides: {
@@ -24,6 +38,11 @@ const theme = createTheme({
           borderBottom: "none",
           padding: "8px",
         },
+      },
+    },
+    MuiLink: {
+      defaultProps: {
+        variant: "body2",
       },
     },
   },

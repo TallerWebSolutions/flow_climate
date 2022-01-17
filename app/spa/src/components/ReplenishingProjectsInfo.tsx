@@ -7,16 +7,19 @@ import {
   TableRow as MaterialTableRow,
   IconButton,
   Collapse,
+  Link,
 } from "@mui/material"
 import { KeyboardArrowUp, KeyboardArrowDown } from "@material-ui/icons"
 import { Box } from "@mui/system"
 import { Fragment, useState } from "react"
 
 type Customer = {
+  id: string
   name: string
 }
 
 type Product = {
+  id: string
   name: string
 }
 
@@ -51,6 +54,7 @@ export type Project = {
 
 type ReplenishingProjectsInfoProps = {
   projects: Project[]
+  companySlug: string
 }
 
 const getCustomerHappinessColor = (customerHappiness: number) =>
@@ -60,7 +64,9 @@ const getCustomerHappinessColor = (customerHappiness: number) =>
     ? "warning.main"
     : "error.main"
 
-const TableRow = ({ project }: { project: Project }) => {
+type TableRowProps = { project: Project; companySlug: string }
+
+const TableRow = ({ project, companySlug }: TableRowProps) => {
   const [open, setOpen] = useState(false)
 
   return (
@@ -82,7 +88,11 @@ const TableRow = ({ project }: { project: Project }) => {
             {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
           </IconButton>
         </TableCell>
-        <TableCell>{project.name}</TableCell>
+        <TableCell>
+          <Link href={`/companies/${companySlug}/projects/${project.id}`}>
+            {project.name}
+          </Link>
+        </TableCell>
         <TableCell>
           <Box
             sx={{
@@ -106,7 +116,11 @@ const TableRow = ({ project }: { project: Project }) => {
       <MaterialTableRow sx={{ td: { color: "grey.600" } }}>
         <TableCell width={52} />
         <TableCell>
-          {project.customers.map(({ name }) => name).join(", ")}
+          {project.customers.map(({ name, id }) => (
+            <Link href={`/companies/${companySlug}/customers/${id}`}>
+              {name}
+            </Link>
+          ))}
         </TableCell>
         <TableCell>{project.customerHappiness.toFixed(2)}</TableCell>
         <TableCell />
@@ -130,7 +144,11 @@ const TableRow = ({ project }: { project: Project }) => {
                 <MaterialTableRow>
                   <TableCell width={52} />
                   <TableCell sx={{ color: "grey.600" }}>
-                    {project.products.map(({ name }) => name).join(", ")}
+                    {project.products.map(({ name, id }) => (
+                      <Link href={`/companies/${companySlug}/products/${id}`}>
+                        {name}
+                      </Link>
+                    ))}
                   </TableCell>
                   <TableCell sx={{ color: "primary.main" }} colSpan={4}>
                     Dados do projeto:
@@ -182,6 +200,7 @@ const TableRow = ({ project }: { project: Project }) => {
 
 const ReplenishingProjectsInfo = ({
   projects,
+  companySlug,
 }: ReplenishingProjectsInfoProps) => (
   <Box my={1}>
     <TableContainer>
@@ -210,7 +229,11 @@ const ReplenishingProjectsInfo = ({
         </TableHead>
         <TableBody>
           {projects.map((project, index) => (
-            <TableRow project={project} key={`${project.id}__${index}`} />
+            <TableRow
+              project={project}
+              companySlug={companySlug}
+              key={`${project.id}__${index}`}
+            />
           ))}
         </TableBody>
       </Table>
