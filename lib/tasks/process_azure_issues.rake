@@ -3,6 +3,6 @@
 namespace :azure_api do
   desc 'Process Azure Issues'
   task process_azure_issues: :environment do
-    Azure::AzureSyncJob.perform_now
+    Azure::AzureSyncJob.perform_later
   end
 end
