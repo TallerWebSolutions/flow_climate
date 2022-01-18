@@ -72,6 +72,8 @@ jobs:
       - name: Run specs
         env:
           secret_key_32_encoded: "8L+WeHTWhNtEAvQzoRaYqYtl4VCwDMReh2SzicO/iCA=\n"
+          encryption_service_salt: ${{ secrets.ENCRYPTION_SERVICE_SALT }}
+          secret_key_base: ${{ secrets.SECRET_KEY_BASE }}
           RAILS_ENV: test
           PG_HOST: localhost
           PG_USER: "postgres"
