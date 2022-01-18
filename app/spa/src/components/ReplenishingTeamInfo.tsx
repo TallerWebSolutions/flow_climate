@@ -59,11 +59,12 @@ const ReplenishmentTeamInfo = ({ team }: ReplenishmentTeamInfoProps) => (
       <Card>
         <CustomCardContent title="Throughput" subtitle="Últimas quatro semanas">
           <Box display="flex">
-            {team.throughputData.map((th, index, list) => (
+            {team.throughputData?.map((th, index, list) => (
               <Fragment>
-                <Typography>{th}</Typography>
+                <Typography key={`value--${index}`}>{th}</Typography>
                 {index < list.length - 1 && (
                   <Divider
+                    key={`divider--${index}`}
                     variant="middle"
                     orientation="vertical"
                     flexItem
