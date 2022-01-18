@@ -14,7 +14,7 @@ type BreadcrumbReplenishingProps = {
 const BreadcrumbReplenishingInfo = ({
   replenishingBreadcrumb,
 }: BreadcrumbReplenishingProps) => (
-  <Box py={2}>
+  <Box py={3}>
     <Breadcrumbs aria-label="breadcrumb">
       <Link
         underline="hover"

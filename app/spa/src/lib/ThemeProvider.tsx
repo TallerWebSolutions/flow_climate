@@ -45,6 +45,16 @@ const theme = createTheme({
         variant: "body2",
       },
     },
+    MuiCard: {
+      defaultProps: {
+        variant: "outlined",
+      },
+      styleOverrides: {
+        root: {
+          borderRadius: 2,
+        },
+      },
+    },
   },
 })
 

@@ -1,4 +1,13 @@
-import { Card, CardContent, Typography, Grid } from "@mui/material"
+import {
+  Card,
+  CardContent,
+  Typography,
+  Grid,
+  Divider,
+  CardContentProps,
+} from "@mui/material"
+import { Box } from "@mui/system"
+import { Fragment } from "react"
 
 type ComparativeValue = {
   value: number
@@ -16,48 +25,72 @@ type ReplenishmentTeamInfoProps = {
   team: TeamReplenishment
 }
 
+type CustomCardContentProps = {
+  title: string
+  subtitle: string
+} & CardContentProps
+
+const CustomCardContent = ({
+  children,
+  title,
+  subtitle,
+  ...props
+}: CustomCardContentProps) => (
+  <CardContent {...props} sx={{ ":last-child": { paddingBottom: 2 } }}>
+    <Typography variant="h6" component="h6">
+      {title}
+    </Typography>
+    <Typography
+      variant="body2"
+      component="span"
+      color="grey.600"
+      mb={1}
+      display="block"
+    >
+      {subtitle}
+    </Typography>
+    {children}
+  </CardContent>
+)
+
 const ReplenishmentTeamInfo = ({ team }: ReplenishmentTeamInfoProps) => (
-  <Grid container spacing={2} justifyContent="space-around" mb={2}>
-    <Grid item>
+  <Grid container spacing={15} mb={4}>
+    <Grid item xs={4}>
       <Card>
-        <CardContent>
-          <Typography variant="h6" component="h5">
-            Últimos Throughputs
-          </Typography>
-          {team.throughputData?.join(", ")}
-          <Typography></Typography>
-        </CardContent>
+        <CustomCardContent title="Throughput" subtitle="Últimas quatro semanas">
+          <Box display="flex">
+            {team.throughputData.map((th, index, list) => (
+              <Fragment>
+                <Typography>{th}</Typography>
+                {index < list.length - 1 && (
+                  <Divider
+                    variant="middle"
+                    orientation="vertical"
+                    flexItem
+                    sx={{ marginX: 2 }}
+                  />
+                )}
+              </Fragment>
+            ))}
+          </Box>
+        </CustomCardContent>
       </Card>
     </Grid>
-    <Grid item>
+    <Grid item xs={4}>
       <Card>
-        <CardContent>
-          <Typography variant="h6" component="h5">
-            Th Médio 4 Semanas
-            <Typography>{team.averageThroughput?.value}</Typography>
-          </Typography>
-        </CardContent>
+        <CustomCardContent title="Lead Time" subtitle="Últimas quatro semanas">
+          <Typography>{team.leadTime?.value?.toFixed(2)}</Typography>
+        </CustomCardContent>
       </Card>
     </Grid>
-    <Grid item>
+    <Grid item xs={4}>
       <Card>
-        <CardContent>
-          <Typography variant="h6" component="h5">
-            Lead Time 4 semanas
-          </Typography>
-          {team.leadTime?.value?.toFixed(3)}
-          <Typography></Typography>
-        </CardContent>
-      </Card>
-    </Grid>
-    <Grid item>
-      <Card>
-        <CardContent>
-          <Typography variant="h6" component="h5">
-            Limite de WIP
-            <Typography>{team.workInProgress}</Typography>
-          </Typography>
-        </CardContent>
+        <CustomCardContent
+          title="Work in Progress"
+          subtitle="WiP máximo do time:"
+        >
+          <Typography>{team.workInProgress}</Typography>
+        </CustomCardContent>
       </Card>
     </Grid>
   </Grid>

@@ -1,5 +1,11 @@
 import { Fragment, useEffect, useState } from "react"
-import { Backdrop, CircularProgress, Container, Box } from "@mui/material"
+import {
+  Backdrop,
+  CircularProgress,
+  Container,
+  Box,
+  Typography,
+} from "@mui/material"
 import { gql, useQuery, useMutation } from "@apollo/client"
 import CachedIcon from "@mui/icons-material/Cached"
 
@@ -179,6 +185,9 @@ const Replenishing = () => {
                 sx={{ cursor: "pointer" }}
               />
             </Box>
+            <Typography component="h1" variant="h4" mb={3}>
+              Reabastecimento
+            </Typography>
             <ReplenishingTeamInfo team={normalizeTeamInfo(data)} />
             <ReplenishingProjectsInfo
               projects={normalizeProjectInfo(data)}

@@ -32,7 +32,7 @@ const Header = ({ company, user }: HeaderProps) => {
   const handleClose = () => setAnchorEl(null)
 
   return (
-    <Box bgcolor="secondary.dark" py={1}>
+    <Box py={1} sx={{ backgroundColor: "primary.light" }}>
       <Container maxWidth="xl">
         <Box display="flex" alignItems="center" justifyContent="space-between">
           <Link href="/" sx={{ display: "block" }}>
