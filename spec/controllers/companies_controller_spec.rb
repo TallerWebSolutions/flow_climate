@@ -123,6 +123,9 @@ RSpec.describe CompaniesController, type: :controller do
           let!(:first_account) { Fabricate :jira_account, company: company, created_at: 1.day.ago }
           let!(:second_account) { Fabricate :jira_account, company: company, created_at: 2.days.ago }
 
+          let!(:first_azure_account) { Fabricate :azure_account, company: company, created_at: 1.day.ago }
+          let!(:second_azure_account) { Fabricate :azure_account, company: company, created_at: 2.days.ago }
+
           let(:first_risk_config) { Fabricate :project_risk_config, project: first_project, risk_type: :no_money_to_deadline }
           let(:second_risk_config) { Fabricate :project_risk_config, project: first_project, risk_type: :backlog_growth_rate }
           let!(:first_alert) { Fabricate :project_risk_alert, project_risk_config: first_risk_config, project: first_project, alert_color: :green, created_at: Time.zone.now }
@@ -138,6 +141,7 @@ RSpec.describe CompaniesController, type: :controller do
             expect(assigns(:teams)).to eq [team, other_team]
             expect(assigns(:stages_list)).to eq [third_stage, second_stage, first_stage]
             expect(assigns(:jira_accounts_list)).to eq [second_account, first_account]
+            expect(assigns(:azure_accounts_list)).to eq [second_azure_account, first_azure_account]
             expect(assigns(:company_settings)).to be_a_new CompanySettings
             expect(assigns(:team_members)).to eq [team_member, other_team_member]
             expect(assigns(:team_resources)).to eq [other_team_resource, team_resource]

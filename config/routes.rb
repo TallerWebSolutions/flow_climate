@@ -113,6 +113,12 @@ Rails.application.routes.draw do
       get :risks_tab
     end
 
+    scope :azure do
+      resources :azure_accounts, only: [], module: 'azure' do
+        post :synchronize_azure, on: :collection
+      end
+    end
+
     resources :teams do
       resources :slack_configurations, except: :show do
         patch :toggle_active, on: :member

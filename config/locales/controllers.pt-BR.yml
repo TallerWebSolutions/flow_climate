@@ -921,6 +921,7 @@ pt-BR:
     portfolio_units: "Unidades do Portfólio"
     risk_reviews: "Revisões de Risco"
     service_delivery_reviews: "Service Delivery Review"
+    azure: "Azure"
   charts:
     xlabel:
       months: "Meses"
@@ -1424,3 +1425,6 @@ pt-BR:
   demand_efforts:
     index:
       title: "Esforços"
+  azure_accounts:
+    update:
+      title: "Sincronizar empresa com o Azure Devops"

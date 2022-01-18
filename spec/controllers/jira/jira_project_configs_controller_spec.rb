@@ -196,7 +196,7 @@ RSpec.describe Jira::JiraProjectConfigsController, type: :controller do
       let!(:jira_config) { Fabricate :jira_project_config, project: project }
 
       context 'passing valid parameters' do
-        it 'calls the services and the reader' do
+        it 'calls the job and enqueues the sync' do
           expect(Jira::ProcessJiraProjectJob).to receive(:perform_later).once
           put :synchronize_jira, params: { company_id: company, project_id: project, id: jira_config }, xhr: true
           expect(response).to render_template 'jira/jira_project_configs/synchronize_jira'
@@ -205,26 +205,18 @@ RSpec.describe Jira::JiraProjectConfigsController, type: :controller do
       end
 
       context 'invalid' do
+        let(:project) { Fabricate :project, customers: [customer] }
+
         context 'project' do
           before { put :synchronize_jira, params: { company_id: company, project_id: 'foo', id: jira_config }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end
 
-        context 'invalid' do
-          let(:project) { Fabricate :project, customers: [customer] }
+        context 'jira project config' do
+          before { put :synchronize_jira, params: { company_id: company, project_id: project, id: 'foo' }, xhr: true }
 
-          context 'project' do
-            before { put :synchronize_jira, params: { company_id: company, project_id: 'foo', id: jira_config }, xhr: true }
-
-            it { expect(response).to have_http_status :not_found }
-          end
-
-          context 'jira project config' do
-            before { put :synchronize_jira, params: { company_id: company, project_id: project, id: 'foo' }, xhr: true }
-
-            it { expect(response).to have_http_status :not_found }
-          end
+          it { expect(response).to have_http_status :not_found }
         end
 
         context 'company' do

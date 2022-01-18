@@ -15,7 +15,7 @@ class CompaniesController < AuthenticatedController
 
     assign_company_children
     assign_company_settings
-    assign_jira_accounts_list
+    assign_integration_accounts_list
     assign_projects
 
     build_query_dates
@@ -69,7 +69,7 @@ class CompaniesController < AuthenticatedController
     @company_settings = @company.company_settings
     @company_settings = CompanySettings.new(company: @company) if @company_settings.blank?
     @company_settings.update(company_settings_params)
-    assign_jira_accounts_list
+    assign_integration_accounts_list
     respond_to { |format| format.js { render 'companies/update_settings' } }
   end
 
@@ -126,8 +126,9 @@ class CompaniesController < AuthenticatedController
     @company_settings = @company.company_settings || CompanySettings.new(company: @company)
   end
 
-  def assign_jira_accounts_list
+  def assign_integration_accounts_list
     @jira_accounts_list = @company.jira_accounts.order(:created_at)
+    @azure_accounts_list = @company.azure_accounts.order(:created_at)
   end
 
   def assign_stages_list

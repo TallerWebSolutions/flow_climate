@@ -139,6 +139,9 @@ pt-BR:
       portfolio_unit:
         one: Unidade do Portfólio
         other: Unidades do Portfólio
+      azure/azure_account:
+        one: Conta no Azure Devops
+        other: Contas no Azure Devops
       jira/jira_account:
         one: Conta do Jira
         other: Contas do Jira
@@ -546,6 +549,9 @@ pt-BR:
             responsibles: Responsáveis
             customer: Cliente
             contract: Contrato
+      azure/azure_account:
+        azure_organization: Organização
+        username: Nome de Usuário
       project_consolidation:
         last_8_throughput_per_week_data: Throughput das últimas 8 Semanas
       membership:

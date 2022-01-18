@@ -832,6 +832,7 @@ en:
     portfolio_units: "Portfolio Units"
     risk_reviews: "Risk Reviews"
     service_delivery_reviews: "Service Delivery Review"
+    azure: "Azure"
   charts:
     xlabel:
       months: "Months"
@@ -1434,3 +1435,6 @@ en:
   demand_efforts:
     index:
       title: "Efforts"
+  azure_accounts:
+    update:
+      title: "Sync company with Azure Devops"

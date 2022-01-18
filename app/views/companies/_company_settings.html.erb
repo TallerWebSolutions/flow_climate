@@ -13,6 +13,7 @@
       <button class="tablinks company-config-tab" onclick="openTab(event, 'company-settings', 'tablinks', 'tabcontent')"><%= I18n.t('navbar.settings') %></button>
       <button class="tablinks" onclick="openTab(event, 'company-stages', 'tablinks', 'tabcontent')"><%= I18n.t('navbar.stages') %></button>
       <button class="tablinks" onclick="openTab(event, 'company-jira', 'tablinks', 'tabcontent')"><%= I18n.t('navbar.jira') %></button>
+      <button class="tablinks" onclick="openTab(event, 'company-azure', 'tablinks', 'tabcontent')"><%= I18n.t('navbar.azure') %></button>
     </div>
   </div>
 </div>
@@ -46,6 +47,12 @@
 
 <div id="company-jira" class="tabcontent">
   <div id="jira-accounts-table">
-    <%= render 'jira/jira_accounts/jira_accounts_table', company: @company, jira_accounts_list: jira_accounts_list %>
+    <%= render 'jira/jira_accounts/jira_accounts_table', company: company, jira_accounts_list: jira_accounts_list %>
+  </div>
+</div>
+
+<div id="company-azure" class="tabcontent">
+  <div id="jira-accounts-table">
+    <%= render 'azure/azure_accounts/azure_accounts_table', company: company, azure_accounts_list: azure_accounts_list %>
   </div>
 </div>
