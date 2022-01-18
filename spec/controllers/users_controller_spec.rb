@@ -124,7 +124,7 @@ RSpec.describe UsersController, type: :controller do
       let!(:company) { Fabricate :company, users: [user], name: 'zzz' }
       let!(:other_company) { Fabricate :company, users: [user], name: 'aaa' }
       let(:customer) { Fabricate :customer, company: company }
-      let(:product) { Fabricate :product, customer: customer }
+      let(:product) { Fabricate :product, company: company, customer: customer }
 
       let!(:project) { Fabricate :project, products: [product], name: 'project', status: :executing, company: company, start_date: Time.zone.local(2019, 12, 16, 14, 0, 0), end_date: Time.zone.local(2020, 1, 18, 14, 0, 0), value: 1000 }
       let!(:other_project) { Fabricate :project, products: [product], name: 'other_project', status: :executing, company: company, start_date: Time.zone.local(2019, 11, 16, 14, 0, 0), end_date: Time.zone.local(2020, 1, 17, 14, 0, 0), value: 3500 }

@@ -266,7 +266,7 @@ RSpec.describe StagesController, type: :controller do
           end
         end
 
-        context 'having dependencies' do
+        context 'with dependencies' do
           let(:project) { Fabricate :project }
           let!(:stage) { Fabricate :stage, company: company, projects: [project] }
           let(:demand) { Fabricate :demand, project: project }
@@ -310,8 +310,8 @@ RSpec.describe StagesController, type: :controller do
     describe 'GET #show' do
       let(:company) { Fabricate :company, users: [user] }
       let(:customer) { Fabricate :customer, company: company, name: 'aaa' }
-      let(:product) { Fabricate :product, customer: customer, name: 'aaa' }
-      let(:other_product) { Fabricate :product, customer: customer, name: 'zzz' }
+      let(:product) { Fabricate :product, company: company, customer: customer, name: 'aaa' }
+      let(:other_product) { Fabricate :product, company: company, customer: customer, name: 'zzz' }
       let(:stage) { Fabricate :stage, company: company }
 
       let!(:first_project) { Fabricate :project, company: company, customers: [customer], products: [product], stages: [stage], name: 'zzz' }

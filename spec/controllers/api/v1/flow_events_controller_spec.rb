@@ -4,7 +4,7 @@ RSpec.describe Api::V1::FlowEventsController, type: :controller do
   describe 'POST #create' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
-    let!(:product) { Fabricate :product, customer: customer }
+    let!(:product) { Fabricate :product, company: company, customer: customer }
     let!(:project) { Fabricate :project, company: company, products: [product] }
 
     let!(:headers) { { HTTP_API_TOKEN: company.api_token } }

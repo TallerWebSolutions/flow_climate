@@ -43,7 +43,7 @@ RSpec.describe ProjectRiskConfigsController, type: :controller do
     describe 'GET #new' do
       let(:company) { Fabricate :company, users: [user] }
       let(:customer) { Fabricate :customer, company: company, name: 'zzz' }
-      let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
+      let(:product) { Fabricate :product, company: company, customer: customer, name: 'zzz' }
       let!(:project) { Fabricate :project, customers: [customer], products: [product], end_date: 5.days.from_now }
 
       context 'passing valid IDs' do
@@ -83,7 +83,7 @@ RSpec.describe ProjectRiskConfigsController, type: :controller do
       let(:company) { Fabricate :company, users: [user] }
       let(:team) { Fabricate :team, company: company }
       let(:customer) { Fabricate :customer, company: company }
-      let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
+      let(:product) { Fabricate :product, company: company, customer: customer, name: 'zzz' }
       let!(:project) { Fabricate :project, customers: [customer], products: [product], end_date: 2.days.from_now }
 
       context 'passing valid parameters' do
@@ -126,7 +126,7 @@ RSpec.describe ProjectRiskConfigsController, type: :controller do
       let(:company) { Fabricate :company, users: [user] }
       let(:team) { Fabricate :team, company: company }
       let(:customer) { Fabricate :customer, company: company }
-      let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
+      let(:product) { Fabricate :product, company: company, customer: customer, name: 'zzz' }
       let!(:project) { Fabricate :project, customers: [customer], products: [product], end_date: 2.days.from_now }
       let(:project_risk_config) { Fabricate :project_risk_config, project: project, active: false }
 
@@ -158,7 +158,7 @@ RSpec.describe ProjectRiskConfigsController, type: :controller do
       let(:company) { Fabricate :company, users: [user] }
       let(:team) { Fabricate :team, company: company }
       let(:customer) { Fabricate :customer, company: company }
-      let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
+      let(:product) { Fabricate :product, company: company, customer: customer, name: 'zzz' }
       let!(:project) { Fabricate :project, customers: [customer], products: [product], end_date: 2.days.from_now }
       let(:project_risk_config) { Fabricate :project_risk_config, project: project, active: true }
 

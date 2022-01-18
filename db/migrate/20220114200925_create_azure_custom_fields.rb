@@ -10,6 +10,6 @@ class CreateAzureCustomFields < ActiveRecord::Migration[6.1]
       t.timestamps
     end
 
-    add_foreign_key :azure_custom_fields, :azure_accounts, column: :azure_account_id, index: true
+    add_foreign_key :azure_custom_fields, :azure_accounts, column: :azure_account_id
   end
 end

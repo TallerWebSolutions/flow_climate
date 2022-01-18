@@ -14,7 +14,7 @@ RSpec.describe Jira::ProcessJiraIssueJob, type: :active_job do
 
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
-    let(:product) { Fabricate :product, customer: customer }
+    let(:product) { Fabricate :product, company: company, customer: customer }
     let(:project) { Fabricate :project, end_date: Time.zone.iso8601('2018-02-16T23:01:46-02:00') }
     let(:team) { Fabricate :team }
     let(:demand) { Fabricate :demand, project: project }

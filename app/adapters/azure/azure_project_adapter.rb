@@ -2,17 +2,16 @@
 
 module Azure
   class AzureProjectAdapter < Azure::AzureAdapter
-    def projects
-      teams_list_json = client.teams
+    def products
+      teams_hash = client.teams
 
       products = []
-      if teams_list_json.respond_to?(:code) && teams_list_json.code != 200
-        Rails.logger.error("[AzureAPI] Failed to request - #{teams_list_json.code}")
+      if teams_hash.respond_to?(:code) && teams_hash.code != 200
+        Rails.logger.error("[AzureAPI] Failed to request - #{teams_hash.code}")
       else
-        teams_hash = JSON.parse(teams_list_json)
         teams_hash['value'].each do |azure_json_value|
           product_config = process_azure_product(azure_json_value)
-          products << product_config.product
+          products << product_config.product unless products.include?(product_config.product)
         end
       end
 
@@ -26,8 +25,11 @@ module Azure
       product_id = azure_value['projectId']
       team_name = azure_value['name']
       team_id = azure_value['id']
+      company = @azure_account.company
 
-      product = Product.where(name: product_name, company: @azure_account.company).first_or_create
+      Team.where(name: team_name, company: company).first_or_create
+
+      product = Product.where(name: product_name, company: company).first_or_create
 
       product_config = Azure::AzureProductConfig.where(azure_account: @azure_account, product: product).first_or_create
 

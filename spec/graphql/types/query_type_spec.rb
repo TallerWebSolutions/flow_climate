@@ -46,7 +46,7 @@ RSpec.describe Types::QueryType do
           company = Fabricate :company
           team = Fabricate :team, company: company
           customer = Fabricate :customer, company: company
-          product = Fabricate :product, customer: customer
+          product = Fabricate :product, company: company, customer: customer
           project = Fabricate :project, company: company, customers: [customer], products: [product], team: team, status: :executing, start_date: 4.days.ago, end_date: 1.day.from_now, max_work_in_progress: 2
           other_project = Fabricate :project, company: company, team: team, status: :executing, start_date: 2.days.ago, end_date: 4.days.from_now, max_work_in_progress: 4
           inactive_by_date_project = Fabricate :project, company: company, team: team, status: :executing, start_date: 2.days.ago, end_date: 1.day.ago

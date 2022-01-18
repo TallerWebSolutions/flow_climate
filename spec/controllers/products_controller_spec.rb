@@ -83,8 +83,8 @@ RSpec.describe ProductsController, type: :controller do
         let(:customer) { Fabricate :customer, company: company, name: 'zzz' }
         let(:other_customer) { Fabricate :customer, company: company, name: 'aaa' }
 
-        let!(:product) { Fabricate :product, customer: customer, name: 'zzz' }
-        let!(:other_product) { Fabricate :product, customer: other_customer, name: 'aaa' }
+        let!(:product) { Fabricate :product, company: company, customer: customer, name: 'zzz' }
+        let!(:other_product) { Fabricate :product, company: company, customer: other_customer, name: 'aaa' }
         let!(:other_company_product) { Fabricate :product }
 
         before { get :index, params: { company_id: company } }
@@ -164,7 +164,7 @@ RSpec.describe ProductsController, type: :controller do
       let(:customer) { Fabricate :customer, company: company, name: 'zzz' }
       let!(:other_customer) { Fabricate :customer, company: company, name: 'aaa' }
 
-      let(:product) { Fabricate :product, customer: customer }
+      let(:product) { Fabricate :product, company: company, customer: customer }
 
       context 'valid parameters' do
         before { get :edit, params: { company_id: company, id: product } }
@@ -206,7 +206,7 @@ RSpec.describe ProductsController, type: :controller do
       let(:customer) { Fabricate :customer, company: company, name: 'zzz' }
       let!(:other_customer) { Fabricate :customer, company: company, name: 'aaa' }
 
-      let(:product) { Fabricate :product, customer: customer }
+      let(:product) { Fabricate :product, company: company, customer: customer }
 
       context 'passing valid parameters' do
         before { put :update, params: { company_id: company, id: product, product: { customer_id: customer, name: 'foo' } } }
@@ -252,7 +252,7 @@ RSpec.describe ProductsController, type: :controller do
     describe 'GET #show' do
       let(:customer) { Fabricate :customer, company: company, name: 'zzz' }
 
-      let(:product) { Fabricate :product, customer: customer }
+      let(:product) { Fabricate :product, company: company, customer: customer }
 
       let!(:jira_product_config) { Fabricate :jira_product_config, product: product, jira_product_key: 'zzz' }
       let!(:other_jira_product_config) { Fabricate :jira_product_config, product: product, jira_product_key: 'aaa' }
@@ -273,7 +273,7 @@ RSpec.describe ProductsController, type: :controller do
         end
 
         context 'having no data' do
-          let(:empty_product) { Fabricate :product, customer: customer }
+          let(:empty_product) { Fabricate :product, company: company, customer: customer }
 
           before { get :show, params: { company_id: company, id: empty_product } }
 
@@ -308,7 +308,7 @@ RSpec.describe ProductsController, type: :controller do
 
         context 'a different company' do
           let(:other_company) { Fabricate :company, users: [user] }
-          let!(:product) { Fabricate :product, customer: customer }
+          let!(:product) { Fabricate :product, company: company, customer: customer }
 
           before { get :show, params: { company_id: other_company, id: product } }
 
@@ -323,9 +323,9 @@ RSpec.describe ProductsController, type: :controller do
 
       context 'valid parameters' do
         context 'having data' do
-          let!(:first_product) { Fabricate :product, customer: customer, name: 'zzz' }
-          let!(:second_product) { Fabricate :product, customer: customer, name: 'aaa' }
-          let!(:third_product) { Fabricate :product, name: 'aaa' }
+          let!(:first_product) { Fabricate :product, company: company, customer: customer, name: 'zzz' }
+          let!(:second_product) { Fabricate :product, company: company, customer: customer, name: 'aaa' }
+          let!(:third_product) { Fabricate :product, company: company, name: 'aaa' }
 
           before { get :products_for_customer, params: { company_id: company, customer_id: customer }, xhr: true }
 
@@ -371,7 +371,7 @@ RSpec.describe ProductsController, type: :controller do
     describe 'DELETE #destroy' do
       let(:company) { Fabricate :company, users: [user] }
       let(:customer) { Fabricate :customer, company: company }
-      let!(:product) { Fabricate :product, customer: customer }
+      let!(:product) { Fabricate :product, company: company, customer: customer }
 
       context 'passing valid ID' do
         context 'having no dependencies' do
@@ -424,8 +424,8 @@ RSpec.describe ProductsController, type: :controller do
     describe 'GET #portfolio_units_tab' do
       let(:customer) { Fabricate :customer, company: company }
 
-      let!(:first_product) { Fabricate :product, customer: customer }
-      let!(:second_product) { Fabricate :product, customer: customer }
+      let!(:first_product) { Fabricate :product, company: company, customer: customer }
+      let!(:second_product) { Fabricate :product, company: company, customer: customer }
 
       context 'with valid parameters' do
         context 'having data' do
@@ -479,8 +479,8 @@ RSpec.describe ProductsController, type: :controller do
     describe 'GET #projects_tab' do
       let(:customer) { Fabricate :customer, company: company }
 
-      let!(:first_product) { Fabricate :product, customer: customer }
-      let!(:second_product) { Fabricate :product, customer: customer }
+      let!(:first_product) { Fabricate :product, company: company, customer: customer }
+      let!(:second_product) { Fabricate :product, company: company, customer: customer }
 
       context 'with valid parameters' do
         context 'having data' do
@@ -537,8 +537,8 @@ RSpec.describe ProductsController, type: :controller do
     describe 'GET #portfolio_charts_tab' do
       let(:customer) { Fabricate :customer, company: company }
 
-      let!(:first_product) { Fabricate :product, customer: customer }
-      let!(:second_product) { Fabricate :product, customer: customer }
+      let!(:first_product) { Fabricate :product, company: company, customer: customer }
+      let!(:second_product) { Fabricate :product, company: company, customer: customer }
 
       context 'with valid parameters' do
         context 'having data' do
@@ -595,8 +595,8 @@ RSpec.describe ProductsController, type: :controller do
     describe 'GET #risk_reviews_tab' do
       let(:customer) { Fabricate :customer, company: company }
 
-      let!(:first_product) { Fabricate :product, customer: customer }
-      let!(:second_product) { Fabricate :product, customer: customer }
+      let!(:first_product) { Fabricate :product, company: company, customer: customer }
+      let!(:second_product) { Fabricate :product, company: company, customer: customer }
 
       context 'with valid parameters' do
         context 'having data' do
@@ -649,8 +649,8 @@ RSpec.describe ProductsController, type: :controller do
     describe 'GET #service_delivery_reviews_tab' do
       let(:customer) { Fabricate :customer, company: company }
 
-      let!(:first_product) { Fabricate :product, customer: customer }
-      let!(:second_product) { Fabricate :product, customer: customer }
+      let!(:first_product) { Fabricate :product, company: company, customer: customer }
+      let!(:second_product) { Fabricate :product, company: company, customer: customer }
 
       context 'with valid parameters' do
         context 'having data' do

@@ -5,6 +5,7 @@
 # Table name: demands
 #
 #  id                         :bigint           not null, primary key
+#  api_response               :json
 #  class_of_service           :integer          default("standard"), not null
 #  commitment_date            :datetime
 #  cost_to_project            :decimal(, )      default(0.0)
@@ -38,7 +39,7 @@
 #  external_id                :string           not null
 #  portfolio_unit_id          :integer
 #  product_id                 :integer
-#  project_id                 :integer          not null
+#  project_id                 :integer
 #  risk_review_id             :integer
 #  service_delivery_review_id :integer
 #  team_id                    :integer          not null
@@ -123,7 +124,7 @@ class Demand < ApplicationRecord
   scope :grouped_end_date_by_month, -> { where.not(demands: { end_date: nil }).order(end_date: :desc).group_by { |demand| [demand.end_date.to_date.cwyear, demand.end_date.to_date.month] } }
   scope :with_valid_leadtime, -> { where('demands.leadtime >= :leadtime_data_limit', leadtime_data_limit: 10.minutes.to_i) }
 
-  delegate :name, to: :project, prefix: true
+  delegate :name, to: :project, prefix: true, allow_nil: true
   delegate :name, to: :product, prefix: true, allow_nil: true
   delegate :name, to: :customer, prefix: true, allow_nil: true
   delegate :name, to: :portfolio_unit, prefix: true, allow_nil: true
@@ -307,7 +308,7 @@ class Demand < ApplicationRecord
   end
 
   def compute_cost_to_project
-    return 0 if project.hour_value.blank?
+    return 0 if project&.hour_value.blank?
 
     (effort_downstream + effort_upstream) * project.hour_value
   end
@@ -327,6 +328,8 @@ class Demand < ApplicationRecord
   end
 
   def decrease_uncertain_scope
+    return if project.blank?
+
     current_initial_scope = project.initial_scope
 
     return if current_initial_scope <= 0

@@ -18,7 +18,7 @@ RSpec.describe Azure::AzureApiService, type: :service do
     context 'when failure' do
       it 'returns an empty hash and logs the error' do
         allow(HTTParty).to(receive(:get)).and_raise(Errno::ECONNREFUSED)
-        expect(Rails.logger).to(receive(:error)).once
+        expect(Rails.logger).to(receive(:error)).exactly(5).times
 
         expect(described_class.new(azure_account).teams).to eq({})
       end
@@ -47,7 +47,7 @@ RSpec.describe Azure::AzureApiService, type: :service do
 
       it 'returns an empty hash and logs the error' do
         allow(HTTParty).to(receive(:post)).and_raise(Errno::ECONNREFUSED)
-        expect(Rails.logger).to(receive(:error)).once
+        expect(Rails.logger).to(receive(:error)).exactly(5).times
 
         expect(described_class.new(azure_account).work_items_ids(azure_product_config)).to eq({})
       end
@@ -76,7 +76,7 @@ RSpec.describe Azure::AzureApiService, type: :service do
 
       it 'returns an empty hash and logs the error' do
         allow(HTTParty).to(receive(:get)).and_raise(Errno::ECONNREFUSED)
-        expect(Rails.logger).to(receive(:error)).once
+        expect(Rails.logger).to(receive(:error)).exactly(5).times
 
         expect(described_class.new(azure_account).work_item(1, 'foo')).to eq({})
       end

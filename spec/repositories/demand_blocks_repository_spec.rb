@@ -205,9 +205,9 @@ RSpec.describe DemandBlocksRepository, type: :repository do
   describe '#demand_blocks_for_products' do
     let!(:company) { Fabricate :company }
     let!(:customer) { Fabricate :customer }
-    let!(:first_product) { Fabricate :product, customer: customer }
-    let!(:second_product) { Fabricate :product, customer: customer }
-    let!(:third_product) { Fabricate :product, customer: customer }
+    let!(:first_product) { Fabricate :product, company: company, customer: customer }
+    let!(:second_product) { Fabricate :product, company: company, customer: customer }
+    let!(:third_product) { Fabricate :product, company: company, customer: customer }
 
     context 'with data' do
       let!(:first_demand) { Fabricate :demand, product: first_product }

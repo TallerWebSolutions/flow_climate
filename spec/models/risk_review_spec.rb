@@ -14,7 +14,7 @@ RSpec.describe RiskReview, type: :model do
     context 'uniqueness' do
       let(:company) { Fabricate :company }
       let(:customer) { Fabricate :customer, company: company }
-      let(:product) { Fabricate :product, customer: customer }
+      let(:product) { Fabricate :product, company: company, customer: customer }
       let!(:risk_review) { Fabricate :risk_review, meeting_date: Time.zone.today, product: product }
       let!(:same_risk_review) { Fabricate.build :risk_review, meeting_date: Time.zone.today, product: product }
       let!(:other_date_risk_review) { Fabricate.build :risk_review, meeting_date: 2.days.from_now, product: product }

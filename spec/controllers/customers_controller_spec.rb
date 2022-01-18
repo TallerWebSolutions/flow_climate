@@ -316,7 +316,7 @@ RSpec.describe CustomersController, type: :controller do
         end
 
         context 'having dependencies' do
-          let!(:product) { Fabricate :product, customer: customer }
+          let!(:product) { Fabricate :product, company: company, customer: customer }
 
           before { delete :destroy, params: { company_id: company, id: customer } }
 

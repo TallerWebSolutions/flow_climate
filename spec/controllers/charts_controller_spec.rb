@@ -22,7 +22,7 @@ RSpec.describe ChartsController, type: :controller do
     let(:third_team_member) { Fabricate :team_member, teams: [team] }
 
     let(:customer) { Fabricate :customer, company: company }
-    let(:product) { Fabricate :product, customer: customer }
+    let(:product) { Fabricate :product, company: company, customer: customer }
 
     describe 'GET #build_strategic_charts' do
       let(:team) { Fabricate :team, company: company }

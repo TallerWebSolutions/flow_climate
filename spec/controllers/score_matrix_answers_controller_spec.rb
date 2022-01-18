@@ -24,7 +24,7 @@ RSpec.describe ScoreMatrixAnswersController, type: :controller do
 
     let(:company) { Fabricate :company, users: [user] }
     let(:customer) { Fabricate :customer, company: company }
-    let(:product) { Fabricate :product, customer: customer }
+    let(:product) { Fabricate :product, company: company, customer: customer }
     let!(:score_matrix) { Fabricate :score_matrix, product: product }
     let!(:score_matrix_question) { Fabricate :score_matrix_question, score_matrix: score_matrix }
 

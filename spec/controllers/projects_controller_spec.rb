@@ -129,7 +129,7 @@ RSpec.describe ProjectsController, type: :controller do
     let!(:other_customer) { Fabricate :customer, company: company, name: 'aaa' }
 
     describe 'GET #show' do
-      let!(:product) { Fabricate :product, customer: customer }
+      let!(:product) { Fabricate :product, company: company, customer: customer }
       let(:project) { Fabricate :project, company: company, customers: [customer], products: [product], start_date: 2.weeks.ago, end_date: Time.zone.today }
 
       context 'with data' do
@@ -232,7 +232,7 @@ RSpec.describe ProjectsController, type: :controller do
     describe 'GET #index' do
       context 'with projects' do
         let(:customer) { Fabricate :customer, company: company }
-        let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
+        let(:product) { Fabricate :product, company: company, customer: customer, name: 'zzz' }
 
         let!(:project) { Fabricate :project, company: company, customers: [customer], products: [product], end_date: 2.days.from_now }
         let!(:other_project) { Fabricate :project, company: company, customers: [customer], project_type: :consulting, end_date: 5.days.from_now }
@@ -285,8 +285,8 @@ RSpec.describe ProjectsController, type: :controller do
     end
 
     describe 'POST #create' do
-      let!(:product) { Fabricate :product, customer: customer, name: 'zzz' }
-      let!(:other_product) { Fabricate :product, customer: customer, name: 'aaa' }
+      let!(:product) { Fabricate :product, company: company, customer: customer, name: 'zzz' }
+      let!(:other_product) { Fabricate :product, company: company, customer: customer, name: 'aaa' }
       let!(:team) { Fabricate :team, company: company }
 
       context 'passing valid parameters' do
@@ -374,8 +374,8 @@ RSpec.describe ProjectsController, type: :controller do
     end
 
     describe 'PUT #update' do
-      let!(:product) { Fabricate :product, customer: customer, name: 'zzz' }
-      let!(:other_product) { Fabricate :product, customer: customer, name: 'aaa' }
+      let!(:product) { Fabricate :product, company: company, customer: customer, name: 'zzz' }
+      let!(:other_product) { Fabricate :product, company: company, customer: customer, name: 'aaa' }
       let(:project) { Fabricate :project, company: company, customers: [customer], products: [product], start_date: 1.day.ago, end_date: 7.weeks.from_now, initial_scope: 100 }
       let!(:team) { Fabricate :team, company: company }
 
@@ -731,8 +731,8 @@ RSpec.describe ProjectsController, type: :controller do
       let(:customer) { Fabricate :customer, company: company }
       let!(:project) { Fabricate :project, company: company }
 
-      let!(:product) { Fabricate :product, customer: customer, projects: [project] }
-      let!(:other_product) { Fabricate :product, customer: customer, projects: [project] }
+      let!(:product) { Fabricate :product, company: company, customer: customer, projects: [project] }
+      let!(:other_product) { Fabricate :product, company: company, customer: customer, projects: [project] }
 
       context 'passing valid parameters' do
         it 'associates the product and renders the template' do
@@ -778,8 +778,8 @@ RSpec.describe ProjectsController, type: :controller do
       let(:customer) { Fabricate :customer, company: company }
       let!(:project) { Fabricate :project, company: company }
 
-      let!(:product) { Fabricate :product, customer: customer, projects: [project] }
-      let!(:other_product) { Fabricate :product, customer: customer, projects: [project] }
+      let!(:product) { Fabricate :product, company: company, customer: customer, projects: [project] }
+      let!(:other_product) { Fabricate :product, company: company, customer: customer, projects: [project] }
 
       context 'passing valid parameters' do
         it 'assigns the instance variables and renders the template' do

@@ -303,7 +303,7 @@ RSpec.describe Demand, type: :model do
   context 'computed fields' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
-    let(:product) { Fabricate :product, customer: customer }
+    let(:product) { Fabricate :product, company: company, customer: customer }
 
     let(:first_project) { Fabricate :project, customers: [customer], products: [product], status: :executing, name: 'first_project', start_date: Date.new(2018, 2, 20), end_date: Date.new(2018, 4, 22), qty_hours: 1000, initial_scope: 10, value: 1000, hour_value: 10 }
 
@@ -422,7 +422,8 @@ RSpec.describe Demand, type: :model do
 
   describe '#csv_array' do
     context 'with no stages' do
-      let(:product) { Fabricate :product, name: 'Flow Climate' }
+      let(:company) { Fabricate :company }
+      let(:product) { Fabricate :product, company: company, name: 'Flow Climate' }
 
       let(:portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'Statistics' }
       let(:child_portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'Lead time', parent: portfolio_unit }
@@ -442,7 +443,7 @@ RSpec.describe Demand, type: :model do
     context 'with a stage and no end date' do
       let(:company) { Fabricate :company }
       let(:customer) { Fabricate :customer, company: company }
-      let(:product) { Fabricate :product, customer: customer }
+      let(:product) { Fabricate :product, company: company, customer: customer }
 
       let(:project) { Fabricate :project, products: [product] }
       let!(:stage) { Fabricate :stage, company: company, projects: [project], end_point: false, commitment_point: false, stage_stream: :downstream, order: 0 }
@@ -636,7 +637,8 @@ RSpec.describe Demand, type: :model do
   end
 
   describe '#product_tree' do
-    let(:product) { Fabricate :product, name: 'Flow Climate' }
+    let(:company) { Fabricate :company }
+    let(:product) { Fabricate :product, company: company, name: 'Flow Climate' }
 
     let(:portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'Statistics' }
     let(:child_portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'Lead time', parent: portfolio_unit }
@@ -652,7 +654,8 @@ RSpec.describe Demand, type: :model do
   end
 
   describe '#to_hash' do
-    let(:product) { Fabricate :product, name: 'Flow Climate' }
+    let(:company) { Fabricate :company }
+    let(:product) { Fabricate :product, company: company, name: 'Flow Climate' }
 
     let(:portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'Statistics' }
     let(:child_portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'Lead time', parent: portfolio_unit }

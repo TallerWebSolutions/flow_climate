@@ -3,7 +3,7 @@
 RSpec.describe Flow::ContractsFlowInformation do
   let(:company) { Fabricate :company }
   let(:customer) { Fabricate :customer, company: company }
-  let(:product) { Fabricate :product, customer: customer }
+  let(:product) { Fabricate :product, company: company, customer: customer }
 
   describe '#build_financial_burnup' do
     context 'with no demands' do
@@ -58,7 +58,7 @@ RSpec.describe Flow::ContractsFlowInformation do
     context 'with demands and contracts' do
       it 'builds the burnup with the correct information' do
         travel_to Time.zone.local(2020, 6, 24, 10, 0, 0) do
-          product = Fabricate :product, customer: customer
+          product = Fabricate :product, company: company, customer: customer
           project = Fabricate :project, customers: [customer], products: [product]
           contract = Fabricate :contract, customer: customer, total_value: 100_000, total_hours: 2000, start_date: 3.months.ago, end_date: 1.month.from_now
 
@@ -111,7 +111,7 @@ RSpec.describe Flow::ContractsFlowInformation do
     context 'with demands' do
       it 'builds the burnup with the correct information' do
         travel_to Time.zone.local(2020, 6, 24, 10, 0, 0) do
-          product = Fabricate :product, customer: customer
+          product = Fabricate :product, company: company, customer: customer
           project = Fabricate :project, customers: [customer], products: [product]
           contract = Fabricate :contract, customer: customer, total_value: 100_000, total_hours: 2000, hours_per_demand: 30, start_date: 3.months.ago, end_date: 1.month.from_now
 
@@ -141,7 +141,7 @@ RSpec.describe Flow::ContractsFlowInformation do
     context 'with demands' do
       it 'builds the quality info with the correct information' do
         travel_to Time.zone.local(2020, 6, 24, 10, 0, 0) do
-          product = Fabricate :product, customer: customer
+          product = Fabricate :product, company: company, customer: customer
           project = Fabricate :project, customers: [customer], products: [product]
           contract = Fabricate :contract, customer: customer, total_value: 100_000, total_hours: 2000, hours_per_demand: 30, start_date: 3.months.ago, end_date: 1.month.from_now
 
@@ -171,7 +171,7 @@ RSpec.describe Flow::ContractsFlowInformation do
     context 'with demands' do
       it 'builds the lead time info with the correct information' do
         travel_to Time.zone.local(2020, 6, 24, 10, 0, 0) do
-          product = Fabricate :product, customer: customer
+          product = Fabricate :product, company: company, customer: customer
           project = Fabricate :project, customers: [customer], products: [product]
           contract = Fabricate :contract, customer: customer, total_value: 100_000, total_hours: 2000, hours_per_demand: 30, start_date: 3.months.ago, end_date: 1.month.from_now
 
@@ -201,7 +201,7 @@ RSpec.describe Flow::ContractsFlowInformation do
     context 'with demands and contracts' do
       it 'builds the throughput info with the correct information' do
         travel_to Time.zone.local(2020, 6, 24, 10, 0, 0) do
-          product = Fabricate :product, customer: customer
+          product = Fabricate :product, company: company, customer: customer
           project = Fabricate :project, customers: [customer], products: [product]
           contract = Fabricate :contract, customer: customer, total_value: 100_000, total_hours: 2000, hours_per_demand: 30, start_date: 3.months.ago, end_date: 1.month.from_now
 
@@ -231,7 +231,7 @@ RSpec.describe Flow::ContractsFlowInformation do
     context 'with consolidations' do
       it 'builds the risk info with the correct information' do
         travel_to Time.zone.local(2020, 6, 24, 10, 0, 0) do
-          product = Fabricate :product, customer: customer
+          product = Fabricate :product, company: company, customer: customer
           contract = Fabricate :contract, customer: customer, product: product, total_value: 100_000, total_hours: 2000, hours_per_demand: 30, start_date: 3.months.ago, end_date: 1.month.from_now
 
           Fabricate :contract_consolidation, contract: contract, consolidation_date: Time.zone.today, operational_risk_value: 0.2
@@ -258,7 +258,7 @@ RSpec.describe Flow::ContractsFlowInformation do
     context 'with demands and no blocks' do
       it 'builds the hours blocked info with the correct information' do
         travel_to Time.zone.local(2020, 6, 24, 10, 0, 0) do
-          product = Fabricate :product, customer: customer
+          product = Fabricate :product, company: company, customer: customer
           project = Fabricate :project, customers: [customer], products: [product]
           contract = Fabricate :contract, customer: customer, total_value: 100_000, total_hours: 2000, hours_per_demand: 30, start_date: 3.months.ago, end_date: 1.month.from_now
 
@@ -277,7 +277,7 @@ RSpec.describe Flow::ContractsFlowInformation do
     context 'with demands and blocks' do
       it 'builds the hours blocked info with the correct information' do
         travel_to Time.zone.local(2020, 6, 24, 10, 0, 0) do
-          product = Fabricate :product, customer: customer
+          product = Fabricate :product, company: company, customer: customer
           project = Fabricate :project, customers: [customer], products: [product]
           contract = Fabricate :contract, customer: customer, total_value: 100_000, total_hours: 2000, hours_per_demand: 30, start_date: 3.months.ago, end_date: 1.month.from_now
 
@@ -310,7 +310,7 @@ RSpec.describe Flow::ContractsFlowInformation do
     context 'with demands and no blocks' do
       it 'builds the external dependency info with the correct information' do
         travel_to Time.zone.local(2020, 6, 24, 10, 0, 0) do
-          product = Fabricate :product, customer: customer
+          product = Fabricate :product, company: company, customer: customer
           project = Fabricate :project, customers: [customer], products: [product]
           contract = Fabricate :contract, customer: customer, total_value: 100_000, total_hours: 2000, hours_per_demand: 30, start_date: 3.months.ago, end_date: 1.month.from_now
 
@@ -329,7 +329,7 @@ RSpec.describe Flow::ContractsFlowInformation do
     context 'with demands and blocks' do
       it 'builds the throughput info with the correct information' do
         travel_to Time.zone.local(2020, 6, 24, 10, 0, 0) do
-          product = Fabricate :product, customer: customer
+          product = Fabricate :product, company: company, customer: customer
           project = Fabricate :project, customers: [customer], products: [product]
           contract = Fabricate :contract, customer: customer, total_value: 100_000, total_hours: 2000, hours_per_demand: 30, start_date: 3.months.ago, end_date: 1.month.from_now
 
@@ -357,7 +357,7 @@ RSpec.describe Flow::ContractsFlowInformation do
     context 'with demands' do
       it 'builds the external dependency info with the correct information' do
         travel_to Time.zone.local(2020, 6, 24, 10, 0, 0) do
-          product = Fabricate :product, customer: customer
+          product = Fabricate :product, company: company, customer: customer
           project = Fabricate :project, customers: [customer], products: [product]
           contract = Fabricate :contract, customer: customer, total_value: 100_000, total_hours: 2000, hours_per_demand: 30, start_date: 3.months.ago, end_date: 1.month.from_now
 

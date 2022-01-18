@@ -22,7 +22,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
   let!(:default_membership) { Fabricate :membership, team: team, team_member: default_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
   let!(:other_default_membership) { Fabricate :membership, team: team, team_member: other_company_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
 
-  let(:product) { Fabricate :product, customer: customer }
+  let(:product) { Fabricate :product, company: company, customer: customer }
 
   let!(:first_project) { Fabricate :project, company: company, team: team, customers: [customer], products: [product] }
 

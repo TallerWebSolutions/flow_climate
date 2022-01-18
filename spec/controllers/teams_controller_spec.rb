@@ -90,7 +90,7 @@ RSpec.describe TeamsController, type: :controller do
     let!(:third_membership) { Fabricate :membership, team: team, team_member: third_team_member, start_date: 1.week.ago, end_date: nil, member_role: :manager }
 
     let(:customer) { Fabricate :customer, company: company }
-    let(:product) { Fabricate :product, customer: customer }
+    let(:product) { Fabricate :product, company: company, customer: customer }
 
     shared_context 'demands to filters' do
       let!(:first_project) { Fabricate :project, products: [product], customers: [customer], team: team, status: :executing, start_date: 4.months.ago, end_date: Time.zone.today }

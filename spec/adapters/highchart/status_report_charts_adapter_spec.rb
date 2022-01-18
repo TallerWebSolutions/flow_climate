@@ -9,7 +9,7 @@ RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
       context 'with projects' do
         it 'does the math and provides the correct information' do
           travel_to Time.zone.local(2018, 5, 1, 10, 0, 0) do
-            product = Fabricate :product, customer: customer
+            product = Fabricate :product, company: company, customer: customer
             team = Fabricate :team, company: company
 
             first_project = Fabricate :project, team: team, customers: [customer], products: [product], status: :executing, name: 'first_project', start_date: Date.new(2018, 2, 20), end_date: Date.new(2018, 4, 22), qty_hours: 1000, initial_scope: 10

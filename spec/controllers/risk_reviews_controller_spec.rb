@@ -48,7 +48,7 @@ RSpec.describe RiskReviewsController, type: :controller do
 
     let(:company) { Fabricate :company, users: [user] }
     let(:customer) { Fabricate :customer, company: company }
-    let(:product) { Fabricate :product, customer: customer }
+    let(:product) { Fabricate :product, company: company, customer: customer }
 
     describe 'GET #new' do
       context 'valid parameters' do
@@ -188,7 +188,7 @@ RSpec.describe RiskReviewsController, type: :controller do
     describe 'DELETE #destroy' do
       let(:company) { Fabricate :company, users: [user] }
       let(:customer) { Fabricate :customer, company: company }
-      let!(:product) { Fabricate :product, customer: customer }
+      let!(:product) { Fabricate :product, company: company, customer: customer }
       let!(:risk_review) { Fabricate :risk_review, product: product }
       let!(:other_risk_review) { Fabricate :risk_review }
 

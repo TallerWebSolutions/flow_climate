@@ -2,7 +2,7 @@
 
 RSpec.describe Azure::AzureCustomField, type: :model do
   context 'enuns' do
-    it { is_expected.to define_enum_for(:custom_field_type).with_values(project_name: 0) }
+    it { is_expected.to define_enum_for(:custom_field_type).with_values(project_name: 0, team_name: 1) }
   end
 
   context 'associations' do

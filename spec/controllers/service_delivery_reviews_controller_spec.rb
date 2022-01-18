@@ -54,7 +54,7 @@ RSpec.describe ServiceDeliveryReviewsController, type: :controller do
 
     let(:company) { Fabricate :company, users: [user] }
     let(:customer) { Fabricate :customer, company: company }
-    let(:product) { Fabricate :product, customer: customer }
+    let(:product) { Fabricate :product, company: company, customer: customer }
 
     describe 'GET #new' do
       context 'valid parameters' do
@@ -199,7 +199,7 @@ RSpec.describe ServiceDeliveryReviewsController, type: :controller do
     describe 'DELETE #destroy' do
       let(:company) { Fabricate :company, users: [user] }
       let(:customer) { Fabricate :customer, company: company }
-      let!(:product) { Fabricate :product, customer: customer }
+      let!(:product) { Fabricate :product, company: company, customer: customer }
       let!(:service_delivery_review) { Fabricate :service_delivery_review, product: product }
       let!(:other_service_delivery_review) { Fabricate :service_delivery_review }
 

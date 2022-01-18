@@ -3,7 +3,7 @@
 RSpec.describe ReplenishingData, type: :data_objects do
   let(:company) { Fabricate :company }
   let(:customer) { Fabricate :customer, company: company }
-  let(:product) { Fabricate :product, customer: customer }
+  let(:product) { Fabricate :product, company: company, customer: customer }
 
   let(:team) { Fabricate :team, company: company, max_work_in_progress: 12 }
 

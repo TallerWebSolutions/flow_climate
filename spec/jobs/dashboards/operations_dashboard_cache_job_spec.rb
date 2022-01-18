@@ -15,7 +15,7 @@ RSpec.describe Dashboards::OperationsDashboardCacheJob do
     it 'generates the dashboard cache' do
       travel_to Time.zone.local(2020, 9, 29, 13, 0, 0) do
         customer = Fabricate :customer, company: company
-        product = Fabricate :product, customer: customer
+        product = Fabricate :product, company: company, customer: customer
         project = Fabricate :project, products: [product], team: team, company: company
         analysis_stage = Fabricate :stage, company: company, projects: [project], teams: [team], name: 'analysis_stage', commitment_point: false, end_point: false, queue: false, stage_type: :analysis
         commitment_stage = Fabricate :stage, company: company, projects: [project], teams: [team], name: 'commitment_stage', commitment_point: true, end_point: false, queue: false, stage_type: :development

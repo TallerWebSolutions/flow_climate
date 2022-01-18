@@ -12,7 +12,7 @@ RSpec.describe ServiceDeliveryReviewGeneratorJob, type: :active_job do
     let(:first_user) { Fabricate :user }
     let!(:company) { Fabricate :company, users: [first_user] }
     let(:customer) { Fabricate :customer, company: company }
-    let(:product) { Fabricate :product, customer: customer }
+    let(:product) { Fabricate :product, company: company, customer: customer }
 
     let!(:service_delivery_review) { Fabricate :risk_review, product: product }
 

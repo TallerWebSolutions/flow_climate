@@ -42,7 +42,7 @@ RSpec.describe FilterHelper, type: :helper do
   describe '#products_in_company_options' do
     let(:company) { Fabricate :company }
     let!(:customer) { Fabricate :customer, company: company }
-    let!(:product) { Fabricate :product, customer: customer }
+    let!(:product) { Fabricate :product, company: company, customer: customer }
 
     it { expect(helper.products_in_company_options(company, product.id)).to eq options_for_select([[product.name, product.id.to_s]], product.id) }
   end

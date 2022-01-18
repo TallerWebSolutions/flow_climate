@@ -95,7 +95,7 @@ RSpec.describe DemandsController, type: :controller do
     let(:company) { Fabricate :company, users: [user] }
     let(:customer) { Fabricate :customer, company: company }
     let(:team) { Fabricate :team, company: company }
-    let(:product) { Fabricate :product, customer: customer }
+    let(:product) { Fabricate :product, company: company, customer: customer }
     let(:project) { Fabricate :project, company: company, customers: [customer], products: [product] }
 
     shared_context 'demands for controller specs' do
@@ -316,7 +316,7 @@ RSpec.describe DemandsController, type: :controller do
       let(:company) { Fabricate :company, users: [user] }
 
       let(:customer) { Fabricate :customer, company: company }
-      let(:product) { Fabricate :product, customer: customer }
+      let(:product) { Fabricate :product, company: company, customer: customer }
       let(:project) { Fabricate :project, company: company, customers: [customer], products: [product] }
       let!(:demand) { Fabricate :demand, company: company, product: product, project: project, created_date: created_date }
 
@@ -599,8 +599,8 @@ RSpec.describe DemandsController, type: :controller do
       let(:team) { Fabricate :team, company: company }
       let(:other_team) { Fabricate :team, company: company }
 
-      let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
-      let(:other_product) { Fabricate :product, customer: other_customer, name: 'aaa' }
+      let(:product) { Fabricate :product, company: company, customer: customer, name: 'zzz' }
+      let(:other_product) { Fabricate :product, company: company, customer: other_customer, name: 'aaa' }
 
       let!(:first_project) { Fabricate :project, name: 'qqq', customers: [customer], products: [product], status: :executing, start_date: Time.zone.local(2018, 12, 24, 10, 0, 0), end_date: Time.zone.local(2019, 2, 3, 10, 0, 0) }
       let!(:second_project) { Fabricate :project, customers: [other_customer], products: [other_product], status: :executing, start_date: Time.zone.local(2019, 1, 9, 10, 0, 0), end_date: Time.zone.local(2019, 3, 15, 10, 0, 0) }
@@ -1572,8 +1572,8 @@ RSpec.describe DemandsController, type: :controller do
       let(:team) { Fabricate :team, company: company }
       let(:other_team) { Fabricate :team, company: company }
 
-      let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
-      let(:other_product) { Fabricate :product, customer: other_customer, name: 'aaa' }
+      let(:product) { Fabricate :product, company: company, customer: customer, name: 'zzz' }
+      let(:other_product) { Fabricate :product, company: company, customer: other_customer, name: 'aaa' }
 
       let!(:first_project) { Fabricate :project, name: 'qqq', customers: [customer], products: [product], status: :executing, start_date: Time.zone.local(2018, 12, 24, 10, 0, 0), end_date: Time.zone.local(2019, 2, 3, 10, 0, 0) }
       let!(:second_project) { Fabricate :project, customers: [other_customer], products: [other_product], status: :executing, start_date: Time.zone.local(2019, 1, 9, 10, 0, 0), end_date: Time.zone.local(2019, 3, 15, 10, 0, 0) }

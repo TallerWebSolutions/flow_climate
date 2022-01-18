@@ -9,7 +9,7 @@ RSpec.describe ProjectsRepository, type: :repository do
   describe '#add_query_to_projects_in_status' do
     let(:other_customer) { Fabricate :customer }
     let(:team) { Fabricate :team, company: company }
-    let!(:product) { Fabricate :product, customer: customer }
+    let!(:product) { Fabricate :product, company: company, customer: customer }
 
     context 'having data' do
       let!(:first_project) { Fabricate :project, company: company, customers: [customer], start_date: 1.week.ago, end_date: 2.months.from_now, status: :executing }

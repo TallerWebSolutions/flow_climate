@@ -30,7 +30,8 @@ RSpec.describe Product, type: :model do
 
       context 'uniqueness' do
         context 'same name in same customer' do
-          let!(:product) { Fabricate :product, customer: customer, name: 'zzz' }
+          let(:company) { Fabricate :company }
+          let!(:product) { Fabricate :product, company: company, customer: customer, name: 'zzz' }
           let!(:other_product) { Fabricate.build :product, customer: customer, name: 'zzz' }
 
           it 'does not accept the model' do
@@ -40,14 +41,16 @@ RSpec.describe Product, type: :model do
         end
 
         context 'different name in same customer' do
-          let!(:product) { Fabricate :product, customer: customer, name: 'zzz' }
-          let!(:other_product) { Fabricate.build :product, customer: customer, name: 'aaa' }
+          let(:company) { Fabricate :company }
+          let!(:product) { Fabricate :product, company: company, customer: customer, name: 'zzz' }
+          let!(:other_product) { Fabricate.build :product, company: company, customer: customer, name: 'aaa' }
 
           it { expect(other_product.valid?).to be true }
         end
 
         context 'same name in different customer' do
-          let!(:product) { Fabricate :product, customer: customer, name: 'zzz' }
+          let(:company) { Fabricate :company }
+          let!(:product) { Fabricate :product, company: company, customer: customer, name: 'zzz' }
           let!(:other_product) { Fabricate.build :product, name: 'zzz' }
 
           it { expect(other_product.valid?).to be true }
@@ -61,8 +64,9 @@ RSpec.describe Product, type: :model do
   end
 
   RSpec.shared_context 'context with no demands' do
-    let(:customer) { Fabricate :customer }
-    let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:product) { Fabricate :product, company: company, customer: customer, name: 'zzz' }
 
     let!(:active_project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 3.weeks.from_now, customers: [customer], products: [product], status: :executing }
     let!(:waiting_project) { Fabricate :project, start_date: 4.weeks.ago, end_date: 3.weeks.from_now, customers: [customer], products: [product], status: :waiting }
@@ -72,10 +76,11 @@ RSpec.describe Product, type: :model do
   end
 
   RSpec.shared_context 'consolidations variables data for product', shared_context: :metadata do
-    let(:product) { Fabricate :product, name: 'zzz' }
+    let(:company) { Fabricate :company }
+    let(:product) { Fabricate :product, company: company, name: 'zzz' }
     let!(:portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'ccc' }
 
-    let(:other_product) { Fabricate :product, name: 'zzz' }
+    let(:other_product) { Fabricate :product, company: company, name: 'zzz' }
 
     let!(:project) { Fabricate :project, start_date: Time.zone.local(2018, 10, 17, 10, 0, 0), end_date: Time.zone.local(2018, 12, 5, 10, 0, 0), customers: [product.customer], products: [product], value: 15_000, qty_hours: 5000, hour_value: 2.5 }
     let!(:nil_value_project) { Fabricate :project, start_date: Time.zone.local(2018, 10, 17, 10, 0, 0), customers: [product.customer], products: [product], status: :executing, value: nil }

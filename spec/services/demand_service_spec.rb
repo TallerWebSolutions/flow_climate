@@ -6,7 +6,7 @@ RSpec.describe DemandService, type: :service do
 
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
-    let(:product) { Fabricate :product, customer: customer }
+    let(:product) { Fabricate :product, company: company, customer: customer }
     let(:project) { Fabricate :project, products: [product], start_date: 3.weeks.ago, end_date: 1.week.from_now }
 
     let(:stage) { Fabricate :stage, company: company, commitment_point: false, end_point: false, order: 1, projects: [project], stage_stream: :downstream }

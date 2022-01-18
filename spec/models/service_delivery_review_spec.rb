@@ -9,7 +9,7 @@ RSpec.describe ServiceDeliveryReview, type: :model do
     context 'uniqueness' do
       let(:company) { Fabricate :company }
       let(:customer) { Fabricate :customer, company: company }
-      let(:product) { Fabricate :product, customer: customer }
+      let(:product) { Fabricate :product, company: company, customer: customer }
       let!(:service_delivery_review) { Fabricate :service_delivery_review, meeting_date: Time.zone.today, product: product }
       let!(:same_service_delivery_review) { Fabricate.build :service_delivery_review, meeting_date: Time.zone.today, product: product }
       let!(:other_date_service_delivery_review) { Fabricate.build :service_delivery_review, meeting_date: 2.days.from_now, product: product }
@@ -34,7 +34,7 @@ RSpec.describe ServiceDeliveryReview, type: :model do
   shared_context 'service delivery data' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
-    let(:product) { Fabricate :product, customer: customer }
+    let(:product) { Fabricate :product, company: company, customer: customer }
     let(:project) { Fabricate :project, products: [product] }
 
     let!(:service_delivery_review) { Fabricate :service_delivery_review, product: product, expedite_max_pull_time_sla: 2.hours.to_i, lead_time_bottom_threshold: 23.hours, lead_time_top_threshold: 120.hours }

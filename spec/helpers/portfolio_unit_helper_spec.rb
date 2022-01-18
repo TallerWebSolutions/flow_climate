@@ -18,7 +18,7 @@ RSpec.describe PortfolioUnitHelper, type: :helper do
     context 'with data' do
       subject(:html_output) { helper.build_portfolio_tree(product.portfolio_units.root_units) }
 
-      let(:product) { Fabricate :product, customer: customer }
+      let(:product) { Fabricate :product, company: company, customer: customer }
       let!(:portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'bla' }
       let!(:child_portfolio_unit) { Fabricate :portfolio_unit, product: product, parent: portfolio_unit, name: 'foo' }
       let!(:granchild_portfolio_unit) { Fabricate :portfolio_unit, product: product, parent: child_portfolio_unit, name: 'bar' }

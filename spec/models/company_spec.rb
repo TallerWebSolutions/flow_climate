@@ -6,10 +6,11 @@ RSpec.describe Company, type: :model do
     it { is_expected.to have_many(:user_company_roles) }
     it { is_expected.to have_many(:financial_informations).dependent(:restrict_with_error) }
     it { is_expected.to have_many(:customers).dependent(:restrict_with_error) }
-    it { is_expected.to have_many(:products).through(:customers) }
+    it { is_expected.to have_many(:products).dependent(:restrict_with_error) }
     it { is_expected.to have_many(:contracts).through(:customers) }
     it { is_expected.to have_many(:projects) }
     it { is_expected.to have_many(:jira_project_configs).through(:projects) }
+    it { is_expected.to have_many(:jira_product_configs).through(:products) }
     it { is_expected.to have_many(:demands) }
     it { is_expected.to have_many(:demand_blocks).through(:demands) }
     it { is_expected.to have_many(:team_members) }
@@ -59,7 +60,7 @@ RSpec.describe Company, type: :model do
   RSpec.shared_context 'demands with effort for company', shared_context: :metadata do
     let(:company) { Fabricate :company }
     let!(:customer) { Fabricate :customer, company: company }
-    let!(:product) { Fabricate :product, customer: customer }
+    let!(:product) { Fabricate :product, company: company, customer: customer }
     let!(:team) { Fabricate :team, company: company }
     let!(:team_member) { Fabricate :team_member, monthly_payment: 1200, end_date: nil }
 
@@ -151,8 +152,8 @@ RSpec.describe Company, type: :model do
     let(:customer) { Fabricate :customer, company: company }
     let(:other_customer) { Fabricate :customer, company: company }
 
-    let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
-    let(:other_product) { Fabricate :product, customer: other_customer, name: 'zzz' }
+    let(:product) { Fabricate :product, company: company, customer: customer, name: 'zzz' }
+    let(:other_product) { Fabricate :product, company: company, customer: other_customer, name: 'zzz' }
 
     let!(:waiting_project) { Fabricate :project, company: company, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :waiting }
     let!(:other_waiting_project) { Fabricate :project, company: company, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :waiting }
@@ -170,8 +171,8 @@ RSpec.describe Company, type: :model do
     let(:customer) { Fabricate :customer, company: company }
     let(:other_customer) { Fabricate :customer }
 
-    let(:product) { Fabricate :product, customer: customer, name: 'zzz' }
-    let(:other_product) { Fabricate :product, customer: other_customer, name: 'zzz' }
+    let(:product) { Fabricate :product, company: company, customer: customer, name: 'zzz' }
+    let(:other_product) { Fabricate :product, company: company, customer: other_customer, name: 'zzz' }
 
     let!(:first_project) { Fabricate :project, company: company, customers: [customer], products: [product], status: :executing, qty_hours: 1000, value: 100_000, hour_value: 100, start_date: 1.day.ago, end_date: 1.month.from_now }
     let!(:second_project) { Fabricate :project, company: company, customers: [customer], products: [product], status: :executing, qty_hours: 1000, value: 100_000, hour_value: 100, start_date: 1.day.ago, end_date: 1.month.from_now }
@@ -184,7 +185,7 @@ RSpec.describe Company, type: :model do
     context 'with finances' do
       let(:company) { Fabricate :company }
       let!(:customer) { Fabricate :customer, company: company }
-      let!(:product) { Fabricate :product, customer: customer }
+      let!(:product) { Fabricate :product, company: company, customer: customer }
       let!(:team) { Fabricate :team, company: company }
       let!(:team_member) { Fabricate :team_member, monthly_payment: 1200, end_date: nil }
 
@@ -245,7 +246,7 @@ RSpec.describe Company, type: :model do
   describe '#current_hours_per_demand' do
     let(:company) { Fabricate :company }
     let!(:customer) { Fabricate :customer, company: company }
-    let!(:product) { Fabricate :product, customer: customer }
+    let!(:product) { Fabricate :product, company: company, customer: customer }
     let!(:team) { Fabricate :team, company: company }
     let!(:team_member) { Fabricate :team_member, monthly_payment: 1200, end_date: nil }
 
@@ -307,7 +308,7 @@ RSpec.describe Company, type: :model do
   describe '#consumed_hours_in_month' do
     let(:company) { Fabricate :company }
     let!(:customer) { Fabricate :customer, company: company }
-    let!(:product) { Fabricate :product, customer: customer }
+    let!(:product) { Fabricate :product, company: company, customer: customer }
     let!(:team) { Fabricate :team, company: company }
     let!(:team_member) { Fabricate :team_member, monthly_payment: 1200, end_date: nil }
 
@@ -355,7 +356,7 @@ RSpec.describe Company, type: :model do
   describe '#throughput_in_month' do
     let(:company) { Fabricate :company }
     let!(:customer) { Fabricate :customer, company: company }
-    let!(:product) { Fabricate :product, customer: customer }
+    let!(:product) { Fabricate :product, company: company, customer: customer }
     let!(:team) { Fabricate :team, company: company }
     let!(:team_member) { Fabricate :team_member, monthly_payment: 1200, end_date: nil }
 
@@ -406,8 +407,8 @@ RSpec.describe Company, type: :model do
     let(:other_customer) { Fabricate :customer, company: company }
     let(:other_company_customer) { Fabricate :customer }
 
-    let!(:product) { Fabricate :product, customer: customer, name: 'zzz' }
-    let!(:other_product) { Fabricate :product, customer: other_customer, name: 'zzz' }
+    let!(:product) { Fabricate :product, company: company, customer: customer, name: 'zzz' }
+    let!(:other_product) { Fabricate :product, company: company, customer: other_customer, name: 'zzz' }
 
     it { expect(company.products_count).to eq 2 }
   end
@@ -520,7 +521,7 @@ RSpec.describe Company, type: :model do
   describe '#total_active_hours' do
     let(:company) { Fabricate :company }
     let!(:customer) { Fabricate :customer, company: company }
-    let!(:product) { Fabricate :product, customer: customer }
+    let!(:product) { Fabricate :product, company: company, customer: customer }
     let!(:team) { Fabricate :team, company: company }
     let!(:team_member) { Fabricate :team_member, monthly_payment: 1200, end_date: nil }
 
@@ -576,7 +577,7 @@ RSpec.describe Company, type: :model do
   describe '#total_active_consumed_hours' do
     let(:company) { Fabricate :company }
     let!(:customer) { Fabricate :customer, company: company }
-    let!(:product) { Fabricate :product, customer: customer }
+    let!(:product) { Fabricate :product, company: company, customer: customer }
     let!(:team) { Fabricate :team, company: company }
     let!(:team_member) { Fabricate :team_member, monthly_payment: 1200, end_date: nil }
 
@@ -671,10 +672,10 @@ RSpec.describe Company, type: :model do
 
     context 'with products and projects' do
       it 'returns the active products in the company' do
-        first_product = Fabricate :product, customer: customer
-        second_product = Fabricate :product, customer: customer
-        third_product = Fabricate :product, customer: customer
-        fourth_product = Fabricate :product, customer: customer
+        first_product = Fabricate :product, company: company, customer: customer
+        second_product = Fabricate :product, company: company, customer: customer
+        third_product = Fabricate :product, company: company, customer: customer
+        fourth_product = Fabricate :product, company: company, customer: customer
 
         Fabricate :project, company: company, products: [first_product], start_date: 4.weeks.ago, end_date: 4.days.from_now, status: :executing, qty_hours: 200
         Fabricate :project, company: company, products: [first_product], start_date: 4.weeks.ago, end_date: 4.days.from_now, status: :executing, qty_hours: 260

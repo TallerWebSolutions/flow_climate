@@ -76,7 +76,7 @@ RSpec.describe Membership, type: :model do
     let(:team) { Fabricate :team, company: company }
 
     let(:customer) { Fabricate :customer, company: company }
-    let(:product) { Fabricate :product, customer: customer }
+    let(:product) { Fabricate :product, company: company, customer: customer }
     let(:project) { Fabricate :project, products: [product], team: team, company: company }
 
     let!(:analysis_stage) { Fabricate :stage, company: company, projects: [project], teams: [team], name: 'analysis_stage', commitment_point: false, end_point: false, queue: false, stage_type: :analysis }

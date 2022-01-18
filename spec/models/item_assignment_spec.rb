@@ -94,7 +94,7 @@ RSpec.describe ItemAssignment, type: :model do
     let(:team) { Fabricate :team, company: company }
 
     let(:customer) { Fabricate :customer, company: company }
-    let(:product) { Fabricate :product, customer: customer }
+    let(:product) { Fabricate :product, company: company, customer: customer }
 
     it 'returns the correct stage' do
       travel_to Time.zone.local(2019, 8, 13, 10, 0, 0) do
@@ -130,7 +130,7 @@ RSpec.describe ItemAssignment, type: :model do
       let(:team) { Fabricate :team, company: company }
 
       let(:customer) { Fabricate :customer, company: company }
-      let(:product) { Fabricate :product, customer: customer }
+      let(:product) { Fabricate :product, company: company, customer: customer }
       let(:project) { Fabricate :project, products: [product], team: team, company: company }
 
       it 'computes the effort after saving' do
@@ -206,7 +206,7 @@ RSpec.describe ItemAssignment, type: :model do
     let(:team) { Fabricate :team, company: company }
 
     let(:customer) { Fabricate :customer, company: company }
-    let(:product) { Fabricate :product, customer: customer }
+    let(:product) { Fabricate :product, company: company, customer: customer }
     let(:project) { Fabricate :project, products: [product], team: team, company: company }
 
     it 'returns the stage where it was assigned at' do
@@ -237,7 +237,7 @@ RSpec.describe ItemAssignment, type: :model do
     let(:team) { Fabricate :team, company: company }
 
     let(:customer) { Fabricate :customer, company: company }
-    let(:product) { Fabricate :product, customer: customer }
+    let(:product) { Fabricate :product, company: company, customer: customer }
     let(:project) { Fabricate :project, products: [product], team: team, company: company }
 
     context 'with unpersisted assignment' do
@@ -276,7 +276,7 @@ RSpec.describe ItemAssignment, type: :model do
     let(:team) { Fabricate :team, company: company }
 
     let(:customer) { Fabricate :customer, company: company }
-    let(:product) { Fabricate :product, customer: customer }
+    let(:product) { Fabricate :product, company: company, customer: customer }
     let(:project) { Fabricate :project, products: [product], team: team, company: company }
 
     it 'returns the open and kept assignments' do

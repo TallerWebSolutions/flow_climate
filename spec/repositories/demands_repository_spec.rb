@@ -7,8 +7,8 @@ RSpec.describe DemandsRepository, type: :repository do
 
   let(:team) { Fabricate :team, company: company }
 
-  let(:product) { Fabricate :product, customer: customer }
-  let(:other_product) { Fabricate :product, customer: customer }
+  let(:product) { Fabricate :product, company: company, customer: customer }
+  let(:other_product) { Fabricate :product, company: company, customer: customer }
 
   let(:first_project) { Fabricate :project, company: company, customers: [customer], products: [product, other_product], team: team, start_date: 4.weeks.ago }
   let(:second_project) { Fabricate :project, company: company, customers: [customer], products: [product, other_product], team: team, start_date: 3.weeks.ago }
@@ -200,8 +200,8 @@ RSpec.describe DemandsRepository, type: :repository do
     let(:other_customer) { Fabricate :customer, company: company, name: 'other customer' }
     let(:team) { Fabricate :team, company: company }
 
-    let(:product) { Fabricate :product, customer: customer, name: 'flow climate' }
-    let(:other_product) { Fabricate :product, customer: customer, name: 'flow control' }
+    let(:product) { Fabricate :product, company: company, customer: customer, name: 'flow climate' }
+    let(:other_product) { Fabricate :product, company: company, customer: customer, name: 'flow control' }
 
     let!(:portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'command room' }
     let!(:other_portfolio_unit) { Fabricate :portfolio_unit, product: other_product, name: 'command center' }
@@ -228,8 +228,8 @@ RSpec.describe DemandsRepository, type: :repository do
         company = Fabricate :company
         customer = Fabricate :customer, company: company, name: 'customer'
         other_customer = Fabricate :customer, company: company, name: 'other customer'
-        product = Fabricate :product, customer: customer, name: 'flow climate'
-        other_product = Fabricate :product, customer: customer, name: 'flow control'
+        product = Fabricate :product, company: company, customer: customer, name: 'flow climate'
+        other_product = Fabricate :product, company: company, customer: customer, name: 'flow control'
         portfolio_unit = Fabricate :portfolio_unit, product: product, name: 'command room'
         other_portfolio_unit = Fabricate :portfolio_unit, product: other_product, name: 'command center'
         project = Fabricate :project, company: company, customers: [customer], products: [product, other_product], name: 'sbbrubles'

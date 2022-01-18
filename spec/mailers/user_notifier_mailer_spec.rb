@@ -6,7 +6,7 @@ RSpec.describe UserNotifierMailer, type: :mailer do
   shared_context 'projects to alerts notifications tests' do
     let!(:company) { Fabricate :company, users: [first_user, second_user, third_user] }
     let(:customer) { Fabricate :customer, company: company }
-    let(:product) { Fabricate :product, customer: customer }
+    let(:product) { Fabricate :product, company: company, customer: customer }
 
     let(:first_user) { Fabricate :user, email_notifications: true }
     let(:second_user) { Fabricate :user, email_notifications: true }

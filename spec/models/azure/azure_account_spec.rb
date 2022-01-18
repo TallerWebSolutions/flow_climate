@@ -10,6 +10,6 @@ RSpec.describe Azure::AzureAccount, type: :model do
   context 'validations' do
     it { is_expected.to validate_presence_of :azure_organization }
     it { is_expected.to validate_presence_of :username }
-    it { is_expected.to validate_presence_of :password }
+    it { is_expected.to validate_presence_of :encrypted_password }
   end
 end

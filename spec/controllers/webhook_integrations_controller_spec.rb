@@ -7,7 +7,7 @@ RSpec.describe WebhookIntegrationsController, type: :controller do
   describe 'POST #jira_webhook' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
-    let(:product) { Fabricate :product, customer: customer }
+    let(:product) { Fabricate :product, company: company, customer: customer }
 
     context 'when the content type is not application/json' do
       before { request.headers['Content-Type'] = 'text/plain' }
@@ -82,7 +82,7 @@ RSpec.describe WebhookIntegrationsController, type: :controller do
   describe 'POST #jira_delete_card_webhook' do
     let(:company) { Fabricate :company }
     let(:customer) { Fabricate :customer, company: company }
-    let(:product) { Fabricate :product, customer: customer }
+    let(:product) { Fabricate :product, company: company, customer: customer }
 
     let!(:jira_issue) { client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, project: { key: 'FC', self: 'http://bar.atlassian.com' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }], comment: { comments: [{ created: Time.zone.local(2019, 5, 27, 10, 0, 0).iso8601, body: 'comment example' }] }, fixVersions: [{ name: 'foo' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', from: 'first_stage', to: 'second_stage', created: '2018-07-08T22:34:47.440-0300' }, { id: '10038', from: 'third_stage', to: 'first_stage', created: '2018-07-06T09:40:43.886-0300' }] } }.with_indifferent_access) }
 

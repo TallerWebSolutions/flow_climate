@@ -17,7 +17,7 @@ RSpec.describe Consolidations::ContractConsolidationJob, type: :active_job do
   context 'with demands' do
     it 'saves de consolidation' do
       travel_to Time.zone.local(2020, 7, 8, 10, 0, 0) do
-        product = Fabricate :product, customer: customer
+        product = Fabricate :product, company: company, customer: customer
         contract = Fabricate :contract, customer: customer, product: product, total_value: 100_000, total_hours: 2000, hours_per_demand: 30, start_date: 3.months.ago, end_date: 1.month.from_now
 
         5.times { Fabricate :demand, customer: customer, contract: contract, created_date: 74.days.ago, commitment_date: 35.days.ago, end_date: 1.month.ago, effort_downstream: 200, effort_upstream: 10 }
@@ -44,7 +44,7 @@ RSpec.describe Consolidations::ContractConsolidationJob, type: :active_job do
   context 'with no demands' do
     it 'saves de consolidation' do
       travel_to Time.zone.local(2020, 7, 8, 10, 0, 0) do
-        product = Fabricate :product, customer: customer
+        product = Fabricate :product, company: company, customer: customer
         contract = Fabricate :contract, customer: customer, product: product, total_value: 100_000, total_hours: 2000, hours_per_demand: 30, start_date: 3.months.ago, end_date: 1.month.from_now
 
         described_class.perform_now(contract)

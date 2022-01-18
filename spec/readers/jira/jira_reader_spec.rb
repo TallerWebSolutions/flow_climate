@@ -13,7 +13,7 @@ RSpec.describe Jira::JiraReader do
   let!(:project) { Fabricate :project, company: company, customers: [customer], products: [product] }
 
   let(:customer) { Fabricate :customer, company: company, name: 'xpto of bla' }
-  let(:product) { Fabricate :product, customer: customer }
+  let(:product) { Fabricate :product, company: company, customer: customer }
   let!(:portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'Pre-PaiD virtual cArD' }
   let!(:jira_portfolio_unit_config) { Fabricate :jira_portfolio_unit_config, portfolio_unit: portfolio_unit, jira_field_name: 'module' }
 

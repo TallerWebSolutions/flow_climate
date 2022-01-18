@@ -27,7 +27,7 @@ RSpec.describe Jira::JiraProductConfigsController, type: :controller do
 
     let(:company) { Fabricate :company, users: [user] }
     let(:customer) { Fabricate :customer, company: company }
-    let!(:product) { Fabricate :product, customer: customer }
+    let!(:product) { Fabricate :product, company: company, customer: customer }
 
     describe 'GET #new' do
       context 'valid parameters' do
