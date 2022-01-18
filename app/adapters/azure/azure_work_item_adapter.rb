@@ -84,7 +84,7 @@ module Azure
       return nil if parent_id.blank?
 
       parent_response = client.work_item(parent_id, azure_project.project_id)
-      return nil if parent_response.blank?
+      return nil if parent_response.blank? || parent_response['fields'].blank? || parent_response['fields']['System.Title'].blank?
 
       product.portfolio_units.where(name: parent_response['fields']['System.Title'])
     end
