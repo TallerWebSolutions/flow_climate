@@ -14,8 +14,9 @@ RSpec.describe Azure::AzureSyncJob do
       expect_any_instance_of(Azure::AzureProjectAdapter).to(receive(:products)).once.and_return([product])
       expect_any_instance_of(Azure::AzureWorkItemAdapter).to(receive(:work_items_ids)).and_return([1, 2])
       expect_any_instance_of(Azure::AzureWorkItemAdapter).to(receive(:work_item)).twice
+      expect(UserNotifierMailer).to receive(:async_activity_finished).once.and_call_original
 
-      described_class.perform_now(azure_account)
+      described_class.perform_now(azure_account, 'bla', 'foo@bar.com')
     end
   end
 end

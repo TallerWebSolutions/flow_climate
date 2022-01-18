@@ -4,7 +4,8 @@ module Azure
   class AzureSyncJob < ApplicationJob
     queue_as :demand_update
 
-    def perform(azure_account)
+    def perform(azure_account, user_email, user_name)
+      started_time = Time.zone.now
       products = Azure::AzureProjectAdapter.new(azure_account).products
       work_item_adapter = Azure::AzureWorkItemAdapter.new(azure_account)
 
@@ -20,6 +21,10 @@ module Azure
           work_item_adapter.work_item(id, azure_product_config.azure_team.azure_project)
         end
       end
+
+      finished_time = Time.zone.now
+
+      UserNotifierMailer.async_activity_finished(user_email, user_name, AzureAccount.model_name.human.downcase, azure_account.id, started_time, finished_time, '').deliver
     end
   end
 end
