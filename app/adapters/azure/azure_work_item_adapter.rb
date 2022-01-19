@@ -46,6 +46,10 @@ module Azure
       work_item_type = work_item_response['fields']['System.WorkItemType']
       product = Product.find_by(name: azure_project.project_name, company: company) # PMO Marketing E2E
 
+      process_valid_area(work_item_type, product, work_item_response, team_custom_field, azure_project, company, project_custom_field) if work_item_response['fields']['System.AreaLevel1'].casecmp('pmo marketing e2e').zero? && work_item_response['fields']['System.AreaLevel2'].casecmp('e2e').zero?
+    end
+
+    def process_valid_area(work_item_type, product, work_item_response, team_custom_field, azure_project, company, project_custom_field)
       if work_item_type.casecmp('epic').zero?
         PortfolioUnit.where(product: product, name: work_item_response['fields']['System.CreatedDate'], portfolio_unit_type: :epic).first_or_create
       elsif work_item_type.casecmp('feature')
