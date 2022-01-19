@@ -7,9 +7,9 @@ import {
 const theme = createTheme({
   palette: {
     primary: {
-      light: "#523E57",
-      main: "#29172E",
-      dark: "#000004",
+      light: "#9674A2",
+      main: "#523E57",
+      dark: "#29172E",
     },
     secondary: {
       light: "#634C6B",

@@ -93,9 +93,15 @@ type Company = {
   slug: string
 }
 
+type ReplenishingConsolidation = {
+  id: string
+  consolidationDate: string
+}
+
 type Team = {
   id: string
   company: Company
+  lastReplenishingConsolidations: ReplenishingConsolidation[]
 }
 
 type User = {
@@ -176,6 +182,10 @@ const Replenishing = () => {
                   teamId
                 )}
               />
+              <Typography ml="auto" mr={1}>
+                Última atualização em{" "}
+                {data.team.lastReplenishingConsolidations[0].consolidationDate}
+              </Typography>
               <CachedIcon
                 onClick={() =>
                   generateReplenishingCache({

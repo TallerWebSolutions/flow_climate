@@ -32,7 +32,7 @@ const Header = ({ company, user }: HeaderProps) => {
   const handleClose = () => setAnchorEl(null)
 
   return (
-    <Box py={1} sx={{ backgroundColor: "primary.light" }}>
+    <Box py={1} sx={{ backgroundColor: "primary.main" }}>
       <Container maxWidth="xl">
         <Box display="flex" alignItems="center" justifyContent="space-between">
           <Link href="/" sx={{ display: "block" }}>
@@ -84,6 +84,7 @@ const Header = ({ company, user }: HeaderProps) => {
             <MenuItem component="a" href="/users/activate_email_notifications">
               Ligar Notificações
             </MenuItem>
+            <MenuItem component="a">Copiar API Token</MenuItem>
             {company && (
               <MenuItem component="a" href={`/companies/${company.slug}`}>
                 {company.name}
