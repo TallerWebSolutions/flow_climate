@@ -30,6 +30,20 @@ const theme = createTheme({
       fontSize: ".875rem",
       lineHeight: 1.43,
     },
+    subtitle1: {
+      fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
+      fontWeight: 500,
+      fontSize: "1rem",
+      lineHeight: 1.75,
+      color: "black",
+    },
+    subtitle2: {
+      fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
+      fontWeight: 500,
+      fontSize: ".875rem",
+      lineHeight: 1.57,
+      color: "black",
+    },
   },
   components: {
     MuiTableCell: {

@@ -182,7 +182,7 @@ const Replenishing = () => {
                   teamId
                 )}
               />
-              <Typography ml="auto" mr={1}>
+              <Typography ml="auto" mr={1} variant="subtitle2">
                 Última atualização em{" "}
                 {data.team.lastReplenishingConsolidations[0].consolidationDate}
               </Typography>
