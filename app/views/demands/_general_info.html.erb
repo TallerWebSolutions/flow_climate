@@ -36,7 +36,11 @@
   </tr>
   <tr>
     <td><b><%= Project.model_name.human %></b></td>
-    <td><%= link_to demand.project_name, company_project_path(company, demand.project) %></td>
+    <% if demand.project.present? %>
+      <td><%= link_to demand.project_name, company_project_path(company, demand.project) %></td>
+    <% else %>
+      <td></td>
+    <% end %>
   </tr>
   <tr>
     <td><b><%= Team.model_name.human %></b></td>

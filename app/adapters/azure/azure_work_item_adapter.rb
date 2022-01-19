@@ -48,7 +48,7 @@ module Azure
 
       if work_item_type.casecmp('epic').zero?
         PortfolioUnit.where(product: product, name: work_item_response['fields']['System.CreatedDate'], portfolio_unit_type: :epic).first_or_create
-      else
+      elsif work_item_type.casecmp('feature')
         team_name = work_item_response['fields'][team_custom_field.custom_field_name]
         team = Team.where('name ILIKE :team_name', team_name: "%#{team_name}%").where(company: company).first
         return if team_name.blank?

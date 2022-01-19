@@ -30,7 +30,11 @@
   <td><%= demand.product_name %></td>
 <% end %>
 <td><%= demand.portfolio_unit_name %></td>
-<td><%= link_to(demand.project_name, company_project_path(company, demand.project), target: :_blank) if demand.project.present? %></td>
+<% if demand.project.present? %>
+  <td><%= link_to(demand.project_name, company_project_path(company, demand.project), target: :_blank) if demand.project.present? %></td>
+<% else %>
+  <td></td>
+<% end %>
 <td><%= number_to_currency(demand.cost_to_project) %></td>
 <td><%= demand.current_stage&.name %></td>
 <td>
