@@ -54,7 +54,7 @@ const CustomCardContent = ({
 )
 
 const ReplenishmentTeamInfo = ({ team }: ReplenishmentTeamInfoProps) => (
-  <Grid container spacing={15} mb={4}>
+  <Grid container spacing={15} mb={4} sx={{ pointerEvents: "none" }}>
     <Grid item xs={4}>
       <Card>
         <CustomCardContent title="Throughput" subtitle="Últimas quatro semanas">
