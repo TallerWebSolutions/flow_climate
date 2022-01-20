@@ -44,26 +44,26 @@ module Azure
 
     def process_work_item(azure_project, company, work_item_response, project_custom_field, team_custom_field)
       work_item_type = work_item_response['fields']['System.WorkItemType']
-      product = Product.find_by(name: azure_project.project_name, company: company)
+      product = Product.find_by(name: azure_project.project_name, company: company) # PMO Marketing E2E
 
-      process_valid_area(work_item_type, product, work_item_response, team_custom_field, company, project_custom_field)
+      process_valid_area(work_item_type, product, work_item_response, team_custom_field, azure_project, company, project_custom_field)
     end
 
-    def process_valid_area(work_item_type, product, work_item_response, team_custom_field, company, project_custom_field)
+    def process_valid_area(work_item_type, product, work_item_response, team_custom_field, azure_project, company, project_custom_field)
       if work_item_type.casecmp('epic').zero?
-        PortfolioUnit.where(id: work_item_response['fields']['System.Id'], product: product, name: work_item_response['fields']['System.Title'], portfolio_unit_type: :epic).first_or_create
+        PortfolioUnit.where(product: product, name: work_item_response['fields']['System.Title'], portfolio_unit_type: :epic).first_or_create
       elsif work_item_type.casecmp('feature')
         team_name = work_item_response['fields'][team_custom_field.custom_field_name]
         team = Team.where('name ILIKE :team_name', team_name: "%#{team_name}%").where(company: company).first
         return if team_name.blank?
 
-        process_issue(company, product, project_custom_field, team, work_item_response)
+        process_issue(azure_project, company, product, project_custom_field, team, work_item_response)
       end
     end
 
-    def process_issue(company, product, project_custom_field, team, work_item_response)
+    def process_issue(azure_project, company, product, project_custom_field, team, work_item_response)
       project = project(company, project_custom_field, team, work_item_response)
-      portfolio_unit = parent(product, work_item_response)
+      portfolio_unit = parent(product, azure_project, work_item_response)
 
       demand = Demand.where(company: company, team: team, external_id: work_item_response['id'],
                             created_date: work_item_response['fields']['System.CreatedDate'],
@@ -83,11 +83,14 @@ module Azure
       project
     end
 
-    def parent(product, work_item_response)
+    def parent(product, azure_project, work_item_response)
       parent_id = work_item_response['fields']['System.Parent']
       return nil if parent_id.blank?
 
-      product.portfolio_units.where(id: parent_id)
+      parent_response = client.work_item(parent_id, azure_project.project_id)
+      return nil if parent_response.blank? || parent_response['fields'].blank? || parent_response['fields']['System.Title'].blank?
+
+      product.portfolio_units.where(name: parent_response['fields']['System.Title'])
     end
   end
 end
