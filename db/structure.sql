@@ -686,7 +686,8 @@ CREATE TABLE public.azure_accounts (
     encrypted_password character varying NOT NULL,
     azure_organization character varying NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    azure_work_item_query character varying
 );
 
 
@@ -6839,6 +6840,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220113205250'),
 ('20220113205638'),
 ('20220114200925'),
-('20220115003017');
+('20220115003017'),
+('20220120130408');
 
 

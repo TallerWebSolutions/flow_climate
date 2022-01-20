@@ -13,7 +13,7 @@ module Azure
         azure_product_config = product.azure_product_config
         work_items_ids = work_item_adapter.work_items_ids(azure_product_config)
 
-        Rails.logger.info("found #{work_items_ids.count} work items")
+        Rails.logger.info("[AzureAPI] found #{work_items_ids.count} work items")
 
         work_items_ids.sort.uniq.each do |id|
           next if azure_product_config.azure_team&.azure_project.blank?

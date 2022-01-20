@@ -18,7 +18,7 @@ RSpec.describe Company, type: :model do
     it { is_expected.to have_many(:teams).dependent(:restrict_with_error) }
     it { is_expected.to have_one(:company_settings).dependent(:destroy) }
     it { is_expected.to have_many(:jira_accounts).dependent(:destroy) }
-    it { is_expected.to have_many(:azure_accounts).dependent(:destroy).class_name('Azure::AzureAccount') }
+    it { is_expected.to have_one(:azure_account).dependent(:destroy).class_name('Azure::AzureAccount') }
     it { is_expected.to have_many(:stages).dependent(:restrict_with_error) }
     it { is_expected.to have_many(:team_resources).dependent(:destroy) }
     it { is_expected.to have_many(:flow_events).dependent(:destroy) }

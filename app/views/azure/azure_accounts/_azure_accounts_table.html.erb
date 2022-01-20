@@ -1,26 +1,26 @@
-<% if azure_accounts_list.present? %>
+<% if azure_account.present? %>
   <table class="table">
     <thead>
     <th><%= Azure::AzureAccount.human_attribute_name :azure_organization %></th>
     <th><%= Azure::AzureAccount.human_attribute_name :username %></th>
+    <th><%= Azure::AzureAccount.human_attribute_name :azure_work_item_query %></th>
     <th></th>
     </thead>
     <tbody>
-    <% azure_accounts_list.each do |account| %>
       <tr>
-        <td><%= account.azure_organization %></td>
-        <td><%= account.username %></td>
+        <td><%= azure_account.azure_organization %></td>
+        <td><%= azure_account.username %></td>
+        <td><%= azure_account.azure_work_item_query %></td>
         <td>
           <%= link_to synchronize_azure_company_azure_accounts_path(company), method: :post do %>
             <i class="fas fa-sync-alt" aria-hidden="true" title="<%= I18n.t('azure_accounts.update.title') %>"></i>
           <% end %>
         </td>
       </tr>
-    <% end %>
     </tbody>
   </table>
 <% else %>
   <div class="no-data">
-    <%= I18n.t('general.no_data', missing_data: I18n.t('activerecord.models.jira/jira_account', count: 2).downcase) %>
+    <%= I18n.t('general.no_data', missing_data: I18n.t('activerecord.models.azure/azure_account', count: 2).downcase) %>
   </div>
 <% end %>

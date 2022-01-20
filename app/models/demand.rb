@@ -5,7 +5,6 @@
 # Table name: demands
 #
 #  id                         :bigint           not null, primary key
-#  api_response               :json
 #  class_of_service           :integer          default("standard"), not null
 #  commitment_date            :datetime
 #  cost_to_project            :decimal(, )      default(0.0)

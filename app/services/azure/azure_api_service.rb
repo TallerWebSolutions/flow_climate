@@ -20,7 +20,7 @@ module Azure
       rescue Errno::ECONNREFUSED, Net::ReadTimeout, Errno::EHOSTUNREACH => e
         Rails.logger.error(e)
         if (retries += 1) < MAX_RETRIES
-          Rails.logger.error("retrying #{retries}/#{MAX_RETRIES}")
+          Rails.logger.error("[AzureAPI] retrying #{retries}/#{MAX_RETRIES}")
           retry
         end
         {}
@@ -30,7 +30,7 @@ module Azure
     def work_items_ids(azure_product_config)
       retries = 0
       begin
-        query = { 'query' => 'SELECT Id FROM WorkItems' }
+        query = azure_query(azure_product_config.azure_account)
         HTTParty.post("#{@connection_parameters[:base_uri]}/#{azure_product_config.azure_team.azure_project.project_id}/#{azure_product_config.azure_team.team_id}/_apis/wit/wiql?api-version=6.0",
                       body: query.to_json,
                       basic_auth: { username: @connection_parameters[:username], password: @connection_parameters[:password] },
@@ -38,7 +38,7 @@ module Azure
       rescue Errno::ECONNREFUSED, Net::ReadTimeout, Errno::EHOSTUNREACH => e
         Rails.logger.error(e)
         if (retries += 1) < MAX_RETRIES
-          Rails.logger.error("retrying #{retries}/#{MAX_RETRIES}")
+          Rails.logger.error("[AzureAPI] retrying #{retries}/#{MAX_RETRIES}")
           retry
         end
         {}
@@ -48,19 +48,27 @@ module Azure
     def work_item(work_item_id, azure_project_id)
       retries = 0
       begin
-        Rails.logger.info("processing work item ##{work_item_id}")
+        Rails.logger.info("[AzureAPI] processing work item ##{work_item_id}")
         HTTParty.get("#{@connection_parameters[:base_uri]}/#{azure_project_id}/_apis/wit/workitems/#{work_item_id}?$expand=all&api-version=6.1-preview.3",
                      basic_auth: { username: @connection_parameters[:username], password: @connection_parameters[:password] },
                      headers: { 'Content-Type' => 'application/json' })
       rescue Errno::ECONNREFUSED, Errno::ECONNRESET, Errno::EHOSTUNREACH, Net::ReadTimeout => e
-        error = "error -> #{e}\n[azure_item_id] #{work_item_id}"
+        error = "error -> #{e}\n[AzureAPI][azure_item_id] #{work_item_id}"
         Rails.logger.error(error)
         if (retries += 1) < MAX_RETRIES
-          Rails.logger.error("retrying #{retries}/#{MAX_RETRIES}")
+          Rails.logger.error("[AzureAPI] retrying #{retries}/#{MAX_RETRIES}")
           retry
         end
         {}
       end
+    end
+
+    private
+
+    def azure_query(azure_account)
+      select_clause = 'SELECT Id FROM WorkItems'
+      select_clause += " WHERE #{azure_account.azure_work_item_query}" if azure_account.azure_work_item_query.present?
+      { 'query' => select_clause }
     end
   end
 end

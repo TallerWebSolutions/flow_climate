@@ -3,8 +3,8 @@
 RSpec.describe Azure::AzureAccount, type: :model do
   context 'associations' do
     it { is_expected.to belong_to :company }
-    it { is_expected.to have_many(:azure_product_configs).dependent(:destroy) }
-    it { is_expected.to have_many(:azure_custom_fields).dependent(:destroy) }
+    it { is_expected.to have_many(:azure_product_configs).class_name('Azure::AzureProductConfig').dependent(:destroy) }
+    it { is_expected.to have_many(:azure_custom_fields).class_name('Azure::AzureCustomField').dependent(:destroy) }
   end
 
   context 'validations' do

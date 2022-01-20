@@ -128,7 +128,7 @@ class CompaniesController < AuthenticatedController
 
   def assign_integration_accounts_list
     @jira_accounts_list = @company.jira_accounts.order(:created_at)
-    @azure_accounts_list = @company.azure_accounts.order(:created_at)
+    @azure_account = @company.azure_account
   end
 
   def assign_stages_list

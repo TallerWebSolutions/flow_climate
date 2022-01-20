@@ -113,10 +113,8 @@ Rails.application.routes.draw do
       get :risks_tab
     end
 
-    scope :azure do
-      resources :azure_accounts, only: [], module: 'azure' do
-        post :synchronize_azure, on: :collection
-      end
+    resources :azure_accounts, only: [], module: 'azure' do
+      post :synchronize_azure, on: :collection
     end
 
     resources :teams do

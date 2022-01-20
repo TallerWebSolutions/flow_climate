@@ -552,6 +552,7 @@ pt-BR:
       azure/azure_account:
         azure_organization: Organização
         username: Nome de Usuário
+        azure_work_item_query: Query para Consultar os Work Items no Azure
       project_consolidation:
         last_8_throughput_per_week_data: Throughput das últimas 8 Semanas
       membership:
