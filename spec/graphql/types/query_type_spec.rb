@@ -94,6 +94,7 @@ RSpec.describe Types::QueryType do
           lastReplenishingConsolidations {
             id
             customerHappiness
+            createdAt
             project {
               id
               name
@@ -160,6 +161,7 @@ RSpec.describe Types::QueryType do
                                                        {
                                                          'id' => replenishing_consolidation.id.to_s,
                                                          'customerHappiness' => 1.4,
+                                                         'createdAt' => replenishing_consolidation.created_at.iso8601,
                                                          'project' => {
                                                            'id' => project.id.to_s,
                                                            'name' => project.name,
@@ -190,6 +192,7 @@ RSpec.describe Types::QueryType do
                                                        {
                                                          'id' => other_replenishing_consolidation.id.to_s,
                                                          'customerHappiness' => 1.4,
+                                                         'createdAt' => other_replenishing_consolidation.created_at.iso8601,
                                                          'project' => {
                                                            'id' => other_project.id.to_s,
                                                            'name' => other_project.name,
