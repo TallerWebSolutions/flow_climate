@@ -15,6 +15,7 @@ import Header, { User as HeaderUser } from "../components/Header"
 import { useParams } from "react-router-dom"
 import BreadcrumbReplenishingInfo from "../components/BreadcrumbReplenishingInfo"
 import MessagesBox, { Message } from "../components/MessagesBox"
+import { format } from "date-fns"
 
 const QUERY = gql`
   query Replenishing($teamId: Int!) {
@@ -43,6 +44,7 @@ const QUERY = gql`
         id
         consolidationDate
         customerHappiness
+        createdAt
         project {
           id
           name
@@ -96,6 +98,7 @@ type Company = {
 type ReplenishingConsolidation = {
   id: string
   consolidationDate: string
+  createdAt: string
 }
 
 type Team = {
@@ -184,7 +187,19 @@ const Replenishing = () => {
               />
               <Typography ml="auto" mr={1} variant="subtitle2">
                 Última atualização em{" "}
-                {data.team.lastReplenishingConsolidations[0].consolidationDate}
+                {format(
+                  new Date(
+                    data.team.lastReplenishingConsolidations[0].createdAt
+                  ),
+                  "d/m/y"
+                )}{" "}
+                às{" "}
+                {format(
+                  new Date(
+                    data.team.lastReplenishingConsolidations[0].createdAt
+                  ),
+                  "h:mm"
+                )}
               </Typography>
               <CachedIcon
                 onClick={() =>
