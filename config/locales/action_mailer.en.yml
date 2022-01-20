@@ -53,4 +53,7 @@ en:
       subject: "You were invited to %{customer_name}"
       invite: "You were invited to join the customer %{customer_name}."
       registration_link: "Follow the link to register"
-
+  company:
+    send_auth_token:
+      subject: "Your authentication token for the Flow Climate API"
+      message: "Here it is! Your authentication token: %{auth_token}"

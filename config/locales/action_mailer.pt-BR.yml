@@ -18,6 +18,7 @@ pt-BR:
       demand_effort_downstream: "esforço no downstream: "
       starting_title: "Projetos iniciando nesta semana:"
     no_top_three_flow_pressure: "Não foram encontrados projetos"
+    no_demands_delivered: "Nenhuma demanda entregue registrada na última semana"
     red_alert:
       subject: "[Ação Requerida] O projeto %{target_name} entrou em alerta vermelho."
     notify_new_red_alert:
@@ -33,6 +34,11 @@ pt-BR:
   plans:
     request:
       subject: "Um novo plano foi solicitado"
+    alert:
+      alreary_has_a_plan: "Você já tem um plano"
+    signature:
+      regards: "Atenciosamente"
+      flow_climate_team: "Time do Flow Climate"
   async_activity:
     notification:
       subject: "%{activity_title} - %{object_title} foi concluída."
@@ -46,3 +52,8 @@ pt-BR:
     user_invite_to_customer:
       subject: "Você foi convidado para %{customer_name}"
       invite: "Você foi convidado para se juntar ao cliente %{customer_name}."
+      registration_link: "Clique para se registrar"
+  company:
+    send_auth_token:
+      subject: "Seu token de autenticação para a API do Flow Climate"
+      message: "Aqui está! Seu token de autenticação: %{auth_token}"

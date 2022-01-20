@@ -129,4 +129,15 @@ RSpec.describe UserNotifierMailer, type: :mailer do
       expect(mail.body.encoded).to match 'http://foo.com.br'
     end
   end
+
+  # test send auth token
+  describe '#send_auth_token' do
+    subject(:mail) { described_class.send_auth_token(company, 'user@foo.com.br').deliver_now }
+    let!(:company) { Fabricate :company, api_token: '1234567890' }
+
+    it 'renders the email' do
+      expect(mail.subject).to eq I18n.t('company.send_auth_token.subject')
+      expect(mail.body.encoded).to match I18n.t('company.send_auth_token.message', auth_token: company.api_token)
+    end
+  end
 end

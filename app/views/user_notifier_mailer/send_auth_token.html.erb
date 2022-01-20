@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <p style="font-size: x-large"><%= I18n.t('devise.general.greetings', name: @user_name) %></p>
+    <p><%= I18n.t('company.send_auth_token.message', auth_token: @auth_token) %></p>
+  </body>
+
+  <%= render 'user_notifier_mailer/email_signature' %>
+</html>

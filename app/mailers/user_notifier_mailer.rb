@@ -60,6 +60,12 @@ class UserNotifierMailer < ApplicationMailer
     mail(to: user_email, subject: I18n.t('user_notifier_mailer.user_invite_to_customer.subject', customer_name: customer_name))
   end
 
+  def send_auth_token(company, user_email)
+    @auth_token = company.api_token
+    Rails.logger.info("Sending auth token to #{user_email}")
+    mail(to: user_email, subject: I18n.t('company.send_auth_token.subject'))
+  end
+
   private
 
   def assign_project_informations(company)
