@@ -3,7 +3,9 @@
     <ul class="breadcrumb">
       <li><%= link_to I18n.t('general.home.title'), root_path %></li>
       <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
-      <li><%= link_to @demand.project.name, company_project_path(@company, @demand.project) %></li>
+      <% if @demand.project.present? %>
+        <li><%= link_to @demand.project.name, company_project_path(@company, @demand.project) %></li>
+      <% end %>
       <li><%= @demand.external_id %></li>
     </ul>
   </div>
