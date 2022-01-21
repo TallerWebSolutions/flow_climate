@@ -15,7 +15,7 @@
     "System.IterationId":1,
     "System.IterationPath":"FlowClimate",
     "System.IterationLevel1":"FlowClimate",
-    "System.WorkItemType":"Issue",
+    "System.WorkItemType":"Feature",
     "System.State":"Doing",
     "System.Reason":"Started",
     "System.AssignedTo":{
