@@ -90,7 +90,7 @@ const GENERATE_REPLENISHING_MUTATION = gql`
 `
 
 type Company = {
-  id: string
+  id: number
   name: string
   slug: string
 }
@@ -130,6 +130,16 @@ type ReplenishingCacheResult = {
 
 type ReplenishingCacheDTO = ReplenishingCacheResult | undefined
 
+const useMessages = (): [Message[], (message: Message) => void] => {
+  const [messages, setMessages] = useState<Message[]>([])
+
+  const generateMessage = (message: Message) => {
+    setMessages((messages) => [...messages, message])
+  }
+
+  return [messages, generateMessage]
+}
+
 const Replenishing = () => {
   const { teamId, companyNickName = "" } = useParams()
   const { data, loading, error } = useQuery<ReplenishingDTO>(QUERY, {
@@ -139,22 +149,19 @@ const Replenishing = () => {
   const [generateReplenishingCache, { data: generateReplenishingCacheData }] =
     useMutation<ReplenishingCacheDTO>(GENERATE_REPLENISHING_MUTATION)
 
-  const [messages, setMessages] = useState<Message[]>([])
+  const [messages, generateMessage] = useMessages()
 
   const generateReplenishingCacheMessage =
     generateReplenishingCacheData?.generateReplenishingCache.statusMessage
 
   useEffect(() => {
     if (generateReplenishingCacheMessage) {
-      setMessages((messages) => [
-        ...messages,
-        {
-          text: "Sua solicitação foi colocada na fila. Em poucos minutos estará pronta.",
-          severity: "info",
-        },
-      ])
+      generateMessage({
+        text: "Sua solicitação foi colocada na fila. Em poucos minutos estará pronta.",
+        severity: "info",
+      })
     }
-  }, [generateReplenishingCacheMessage])
+  }, [generateReplenishingCacheMessage, generateMessage])
 
   if (error) {
     console.error(error)

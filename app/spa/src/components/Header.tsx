@@ -1,5 +1,7 @@
+import React from "react"
 import { Avatar, Box, Container, Link, Menu, MenuItem } from "@mui/material"
 import { useState } from "react"
+import { gql, useMutation } from "@apollo/client"
 
 const buildLinks = (companyName: string) => [
   { name: "Taller", href: `/companies/${companyName}` },
@@ -18,6 +20,7 @@ export type User = {
 }
 
 type Company = {
+  id: number
   name: string
   slug: string
 }
@@ -27,9 +30,19 @@ type HeaderProps = {
   user?: User
 }
 
+const SEND_API_TOKEN_MUTATION = gql`
+  mutation SendAuthToken($companyId: Int!) {
+    sendAuthToken(companyId: $companyId) {
+      statusMessage
+    }
+  }
+`
+
 const Header = ({ company, user }: HeaderProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const handleClose = () => setAnchorEl(null)
+
+  const [sendAuthTokenMutation] = useMutation(SEND_API_TOKEN_MUTATION)
 
   return (
     <Box py={1} sx={{ backgroundColor: "primary.main" }}>
@@ -84,11 +97,22 @@ const Header = ({ company, user }: HeaderProps) => {
             <MenuItem component="a" href="/users/activate_email_notifications">
               Ligar Notificações
             </MenuItem>
-            <MenuItem component="a">Copiar API Token</MenuItem>
             {company && (
-              <MenuItem component="a" href={`/companies/${company.slug}`}>
-                {company.name}
-              </MenuItem>
+              <React.Fragment>
+                <MenuItem
+                  onClick={() =>
+                    sendAuthTokenMutation({
+                      variables: { companyId: Number(company.id) },
+                    })
+                  }
+                  component="a"
+                >
+                  Solicitar API Token
+                </MenuItem>
+                <MenuItem component="a" href={`/companies/${company.slug}`}>
+                  {company.name}
+                </MenuItem>
+              </React.Fragment>
             )}
             <MenuItem component="a" href="/users/admin_dashboard">
               Admin Dashboard
