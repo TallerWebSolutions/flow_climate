@@ -16,7 +16,7 @@ RSpec.describe Azure::AzureAccountsController, type: :controller do
     let(:company) { Fabricate :company, users: [user] }
 
     describe 'POST #synchronize_azure' do
-      let(:azure_account) { Fabricate :azure_account, company: company }
+      let!(:azure_account) { Fabricate :azure_account, company: company }
 
       context 'passing valid parameters' do
         it 'calls the job to enqueue the sync' do
