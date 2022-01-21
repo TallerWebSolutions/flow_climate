@@ -51,8 +51,8 @@ module Azure
 
     def process_valid_area(work_item_type, product, work_item_response, team_custom_field, azure_project, company, project_custom_field)
       if work_item_type.casecmp('epic').zero?
-        PortfolioUnit.where(product: product, name: work_item_response['fields']['System.Title'], portfolio_unit_type: :epic).first_or_create
-      elsif work_item_type.casecmp('feature')
+        PortfolioUnit.where(product: product, name: work_item_response['fields']['System.Title'].strip, portfolio_unit_type: :epic).first_or_create
+      elsif work_item_type.casecmp('feature').zero?
         team_name = work_item_response['fields'][team_custom_field.custom_field_name]
         team = Team.where('name ILIKE :team_name', team_name: "%#{team_name}%").where(company: company).first
         return if team_name.blank?
@@ -69,7 +69,7 @@ module Azure
                             created_date: work_item_response['fields']['System.CreatedDate'],
                             product: product, project: project, portfolio_unit: portfolio_unit, demand_type: :feature).first_or_create
 
-      demand.update(demand_title: work_item_response['fields']['System.Title'], end_date: work_item_response['fields']['Microsoft.VSTS.Common.ClosedDate'])
+      demand.update(demand_title: work_item_response['fields']['System.Title'].strip, end_date: work_item_response['fields']['Microsoft.VSTS.Common.ClosedDate'])
       demand
     end
 
@@ -90,7 +90,7 @@ module Azure
       parent_response = client.work_item(parent_id, azure_project.project_id)
       return nil if parent_response.blank? || parent_response['fields'].blank? || parent_response['fields']['System.Title'].blank?
 
-      product.portfolio_units.where(name: parent_response['fields']['System.Title'])
+      product.portfolio_units.where(name: parent_response['fields']['System.Title'].strip).first
     end
   end
 end
