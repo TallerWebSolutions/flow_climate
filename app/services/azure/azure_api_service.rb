@@ -17,7 +17,7 @@ module Azure
         HTTParty.get("#{@connection_parameters[:base_uri]}/_apis/teams?api-version=6.1-preview.3",
                      basic_auth: { username: @connection_parameters[:username], password: @connection_parameters[:password] },
                      headers: { 'Content-Type' => 'application/json' })
-      rescue Errno::ECONNREFUSED, Net::ReadTimeout, Errno::EHOSTUNREACH => e
+      rescue Errno::ECONNREFUSED, Errno::ECONNRESET, Errno::EHOSTUNREACH, Errno::ENETUNREACH, Net::ReadTimeout => e
         Rails.logger.error(e)
         if (retries += 1) < MAX_RETRIES
           Rails.logger.error("[AzureAPI] retrying #{retries}/#{MAX_RETRIES}")
@@ -35,7 +35,7 @@ module Azure
                       body: query.to_json,
                       basic_auth: { username: @connection_parameters[:username], password: @connection_parameters[:password] },
                       headers: { 'Content-Type' => 'application/json' })
-      rescue Errno::ECONNREFUSED, Net::ReadTimeout, Errno::EHOSTUNREACH => e
+      rescue Errno::ECONNREFUSED, Errno::ECONNRESET, Errno::EHOSTUNREACH, Errno::ENETUNREACH, Net::ReadTimeout => e
         Rails.logger.error(e)
         if (retries += 1) < MAX_RETRIES
           Rails.logger.error("[AzureAPI] retrying #{retries}/#{MAX_RETRIES}")
@@ -52,7 +52,7 @@ module Azure
         HTTParty.get("#{@connection_parameters[:base_uri]}/#{azure_project_id}/_apis/wit/workitems/#{work_item_id}?$expand=all&api-version=6.1-preview.3",
                      basic_auth: { username: @connection_parameters[:username], password: @connection_parameters[:password] },
                      headers: { 'Content-Type' => 'application/json' })
-      rescue Errno::ECONNREFUSED, Errno::ECONNRESET, Errno::EHOSTUNREACH, Net::ReadTimeout => e
+      rescue Errno::ECONNREFUSED, Errno::ECONNRESET, Errno::EHOSTUNREACH, Errno::ENETUNREACH, Net::ReadTimeout => e
         error = "error -> #{e}\n[AzureAPI][azure_item_id] #{work_item_id}"
         Rails.logger.error(error)
         if (retries += 1) < MAX_RETRIES
