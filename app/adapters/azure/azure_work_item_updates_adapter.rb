@@ -1,0 +1,55 @@
+# frozen_string_literal: true
+
+module Azure
+  class AzureWorkItemUpdatesAdapter < Azure::AzureAdapter
+    def transitions(demand, azure_project_id)
+      work_item_updates_hash = client.work_item_updates(demand.external_id, azure_project_id)
+
+      transitions = []
+      if work_item_updates_hash.respond_to?(:code) && work_item_updates_hash.code != 200
+        Rails.logger.error("[AzureAPI] Failed to request azure item updates for ##{demand.external_id} - Reason: #{work_item_updates_hash.code}")
+      else
+        work_item_updates_hash['value'].each do |azure_json_value|
+          next if azure_json_value['fields'].blank? || azure_json_value['fields']['System.State'].blank?
+
+          demand_transition = read_transitions(azure_json_value, demand)
+          transitions << demand_transition unless transitions.include?(demand_transition)
+        end
+      end
+
+      transitions
+    end
+
+    private
+
+    # OPTIMIZE: move all reader methods to a AzureReader
+    def read_transitions(azure_json_value, demand)
+      to_stage_name = azure_json_value['fields']['System.State']['newValue']
+      company = azure_account.company
+      team_member = read_team_member(azure_json_value, company)
+
+      to_stage = Stage.where(company: company, name: to_stage_name, integration_id: azure_account.id).first_or_create
+      to_date = azure_json_value['fields']['System.ChangedDate']['newValue']
+      demand_transition = DemandTransition.where(demand: demand, stage: to_stage, team_member: team_member, last_time_in: to_date).first_or_create
+
+      read_from_transition(azure_json_value, company, demand, to_date)
+      demand_transition
+    end
+
+    def read_from_transition(azure_json_value, company, demand, to_date)
+      from_stage_name = azure_json_value['fields']['System.State']['oldValue']
+      return if from_stage_name.blank?
+
+      from_stage = Stage.where(company: company, name: from_stage_name).first
+      from_transition = DemandTransition.find_by(demand: demand, stage: from_stage)
+      from_transition.update(last_time_out: to_date)
+    end
+
+    def read_team_member(azure_json_value, company)
+      team_member = TeamMember.where(company: company, name: azure_json_value['revisedBy']['displayName']).first_or_create
+      user = azure_account.company.users.find_by(email: azure_json_value['revisedBy']['uniqueName'])
+      team_member.update(user: user)
+      team_member
+    end
+  end
+end

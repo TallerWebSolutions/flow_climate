@@ -19,6 +19,9 @@ module Azure
           next if azure_product_config.azure_team&.azure_project.blank?
 
           work_item_adapter.work_item(id, azure_product_config.azure_team.azure_project)
+
+          demand = Demand.find_by(external_id: id)
+          Azure::AzureWorkItemUpdatesAdapter.new(azure_account).transitions(demand, azure_product_config.azure_team.azure_project.project_id) if demand.present?
         end
       end
 

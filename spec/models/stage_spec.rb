@@ -18,7 +18,6 @@ RSpec.describe Stage, type: :model do
   end
 
   context 'validations' do
-    it { is_expected.to validate_presence_of :integration_id }
     it { is_expected.to validate_presence_of :name }
     it { is_expected.to validate_presence_of :stage_type }
     it { is_expected.to validate_presence_of :stage_stream }

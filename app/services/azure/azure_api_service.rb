@@ -63,6 +63,24 @@ module Azure
       end
     end
 
+    def work_item_updates(work_item_id, azure_project_id)
+      retries = 0
+      begin
+        Rails.logger.info("[AzureAPI] processing work item updates for ##{work_item_id}")
+        HTTParty.get("#{@connection_parameters[:base_uri]}/#{azure_project_id}/_apis/wit/workitems/#{work_item_id}/updates?api-version=6.1-preview.3",
+                     basic_auth: { username: @connection_parameters[:username], password: @connection_parameters[:password] },
+                     headers: { 'Content-Type' => 'application/json' })
+      rescue Errno::ECONNREFUSED, Errno::ECONNRESET, Errno::EHOSTUNREACH, Errno::ENETUNREACH, Net::ReadTimeout => e
+        error = "error -> #{e}\n[AzureAPI][azure_item_id] failed to get updates for #{work_item_id}"
+        Rails.logger.error(error)
+        if (retries += 1) < MAX_RETRIES
+          Rails.logger.error("[AzureAPI] retrying #{retries}/#{MAX_RETRIES}")
+          retry
+        end
+        {}
+      end
+    end
+
     private
 
     def azure_query(azure_account)

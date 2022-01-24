@@ -335,6 +335,32 @@ RSpec.describe DemandTransition, type: :model do
     end
   end
 
+  context 'callbacks' do
+    describe '#check_project_wip' do
+      context 'with project' do
+        it 'checks the wip count' do
+          project = Fabricate :project, max_work_in_progress: 1
+          Fabricate :demand, project: project, created_date: 2.days.ago, commitment_date: 1.day.ago, end_date: nil
+          demand = Fabricate :demand, project: project, created_date: 2.days.ago, commitment_date: 1.day.ago, end_date: nil
+          demand_transition = Fabricate.build :demand_transition, demand: demand
+
+          expect(ProjectBrokenWipLog).to(receive(:where)).once.and_call_original
+          demand_transition.save
+        end
+      end
+
+      context 'without project' do
+        it 'does not check the wip count' do
+          demand = Fabricate :demand, project: nil, created_date: 2.days.ago, commitment_date: 1.day.ago, end_date: nil
+          demand_transition = Fabricate.build :demand_transition, demand: demand
+
+          expect(ProjectBrokenWipLog).not_to(receive(:where))
+          demand_transition.save
+        end
+      end
+    end
+  end
+
   pending '#stage_compute_effort_to_project?'
   pending '#stage_percentage_to_project'
   pending '#stage_pairing_percentage_to_project'
