@@ -1,4 +1,4 @@
-# create mutation
+# frozen_string_literal: true
 
 module Mutations
   class SendAuthTokenMutation < Mutations::BaseMutation
