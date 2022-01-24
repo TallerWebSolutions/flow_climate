@@ -2,6 +2,7 @@ import React from "react"
 import { Avatar, Box, Container, Link, Menu, MenuItem } from "@mui/material"
 import { useState } from "react"
 import { gql, useMutation } from "@apollo/client"
+import { Message } from "./MessagesBox"
 
 const buildLinks = (companyName: string) => [
   { name: "Taller", href: `/companies/${companyName}` },
@@ -26,6 +27,7 @@ type Company = {
 }
 
 type HeaderProps = {
+  pushMessage: (message: Message) => void
   company?: Company
   user?: User
 }
@@ -38,11 +40,17 @@ const SEND_API_TOKEN_MUTATION = gql`
   }
 `
 
-const Header = ({ company, user }: HeaderProps) => {
+const Header = ({ company, user, pushMessage }: HeaderProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const handleClose = () => setAnchorEl(null)
 
-  const [sendAuthTokenMutation] = useMutation(SEND_API_TOKEN_MUTATION)
+  const [sendAuthTokenMutation] = useMutation(SEND_API_TOKEN_MUTATION, {
+    update: () =>
+      pushMessage({
+        text: "Token enviado com sucesso! Em poucos minutos estará disponível em seu e-mail.",
+        severity: "info",
+      }),
+  })
 
   return (
     <Box py={1} sx={{ backgroundColor: "primary.main" }}>
