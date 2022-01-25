@@ -1,0 +1,36 @@
+<div class="row">
+  <div class="col-xs-12">
+    <h3><%= I18n.t('tasks.index.title') %></h3>
+  </div>
+</div>
+
+<% if tasks_list.empty? %>
+  <%= render 'layouts/no_data', missing_data: Task.model_name.human.downcase %>
+<% else %>
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th><%= Task.human_attribute_name :demand_id %></th>
+      <th><%= Task.human_attribute_name :title %></th>
+      <th><%= Task.human_attribute_name :created_date %></th>
+      <th><%= Task.human_attribute_name :end_date %></th>
+      <th><%= Task.human_attribute_name :completion_time %></th>
+    </tr>
+    </thead>
+    <tbody>
+    <% tasks_list.each do |task| %>
+      <tr>
+        <td><%= task.demand_id %></td>
+        <td><%= task.title %></td>
+        <td><%= I18n.l(task.created_date, format: :short) %></td>
+        <% if task.end_date.present? %>
+          <td><%= I18n.l(task.end_date, format: :short) %></td>
+        <% else %>
+          <td></td>
+        <% end %>
+        <td><%= time_distance_in_words(task.seconds_to_complete) %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+<% end %>

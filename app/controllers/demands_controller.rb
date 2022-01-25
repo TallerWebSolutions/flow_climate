@@ -49,11 +49,7 @@ class DemandsController < DemandsListController
   end
 
   def show
-    @demand_blocks = @demand.demand_blocks.includes([:blocker]).includes([:unblocker]).includes([:stage]).order(:block_time)
-    @paged_demand_blocks = @demand_blocks.page(params[:page])
-    @demand_transitions = @demand.demand_transitions.includes([:stage]).order(:last_time_in)
-    @demand_comments = @demand.demand_comments.includes([:team_member]).order(:comment_date)
-    @demand_efforts = @demand.demand_efforts.order(:start_time_to_computation)
+    read_demand_children
 
     compute_flow_efficiency
     compute_stream_percentages
@@ -140,6 +136,15 @@ class DemandsController < DemandsListController
   end
 
   private
+
+  def read_demand_children
+    @demand_blocks = @demand.demand_blocks.includes([:blocker]).includes([:unblocker]).includes([:stage]).order(:block_time)
+    @paged_demand_blocks = @demand_blocks.page(params[:page])
+    @demand_transitions = @demand.demand_transitions.includes([:stage]).order(:last_time_in)
+    @demand_comments = @demand.demand_comments.includes([:team_member]).order(:comment_date)
+    @demand_efforts = @demand.demand_efforts.order(:start_time_to_computation)
+    @tasks_list = @demand.tasks.order(created_date: :desc)
+  end
 
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/PerceivedComplexity

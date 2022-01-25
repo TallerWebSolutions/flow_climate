@@ -34,6 +34,7 @@
       <button class="tablinks demand-tab" onclick="openTab(event, 'content-flow-efficiency', 'tablinks', 'tabcontent')"><%= I18n.t('demands.show.flow_efficiency_tab') %></button>
       <button class="tablinks demand-tab" onclick="openTab(event, 'content-transitions', 'tablinks', 'tabcontent')"><%= I18n.t('demands.show.transitions_tab') %></button>
       <button class="tablinks demand-tab" onclick="openTab(event, 'content-demand-efforts', 'tablinks', 'tabcontent')"><%= I18n.t('demands.show.efforts_tab') %></button>
+      <button class="tablinks demand-tab" onclick="openTab(event, 'content-demand-tasks', 'tablinks', 'tabcontent')"><%= I18n.t('demands.show.tasks_tab') %></button>
     </div>
   </div>
 </div>
@@ -131,9 +132,11 @@
 </div>
 
 <div id="content-demand-efforts" class="tabcontent">
-  <div id="demand-transitions-table">
-    <%= render 'demand_efforts/demand_efforts_table', company: @company, demand: @demand, demand_efforts_list: @demand_efforts %>
-  </div>
+  <%= render 'demand_efforts/demand_efforts_table', company: @company, demand: @demand, demand_efforts_list: @demand_efforts %>
+</div>
+
+<div id="content-demand-tasks" class="tabcontent">
+  <%= render 'tasks/tasks_table', company: @company, demand: @demand, tasks_list: @tasks_list %>
 </div>
 
 <div class="modal fade" id="edit-block-form" tabindex="-1" role="dialog" aria-labelledby="edit-block-form" aria-hidden="true"></div>

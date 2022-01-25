@@ -97,6 +97,7 @@ class Demand < ApplicationRecord
   has_many :demand_score_matrices, dependent: :destroy
   has_many :jira_api_errors, dependent: :destroy, class_name: 'Jira::JiraApiError'
   has_many :class_of_service_change_histories, class_name: 'History::ClassOfServiceChangeHistory', dependent: :destroy
+  has_many :tasks, dependent: :destroy
 
   validates :created_date, :external_id, :demand_type, :class_of_service, :assignees_count, presence: true
   validates :external_id, uniqueness: { scope: :company_id, message: I18n.t('demand.validations.external_id_unique.message') }

@@ -710,6 +710,7 @@ en:
       memberships:
         blank: "No role in the team %{team_name}"
       efforts_tab: "Efforts"
+      tasks_tab: "Tasks"
     sync:
       enqueued: "Your request was enqueued. It will be processed soon."
       done: "The sync is done."
@@ -1438,3 +1439,6 @@ en:
   azure_accounts:
     update:
       title: "Sync company with Azure Devops"
+  tasks:
+    index:
+      title: "Tasks"

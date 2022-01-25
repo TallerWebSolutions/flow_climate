@@ -393,6 +393,10 @@ RSpec.describe DemandsController, type: :controller do
           let!(:other_demand_effort) { Fabricate :demand_effort, demand: first_demand, start_time_to_computation: 2.days.ago }
           let!(:out_demand_effort) { Fabricate :demand_effort, start_time_to_computation: 2.days.ago }
 
+          let!(:task) { Fabricate :task, demand: first_demand, created_date: 1.day.ago }
+          let!(:other_task) { Fabricate :task, demand: first_demand, created_date: Time.zone.now }
+          let!(:out_task) { Fabricate :task }
+
           before { get :show, params: { company_id: company, id: first_demand } }
 
           it 'assigns the instance variable and renders the template' do
@@ -406,6 +410,7 @@ RSpec.describe DemandsController, type: :controller do
             expect(assigns(:downstream_percentage)).to eq 57.142857142857146
             expect(assigns(:demand_comments)).to eq [other_demand_comment, demand_comment]
             expect(assigns(:demand_efforts)).to eq [other_demand_effort, demand_effort]
+            expect(assigns(:tasks_list)).to eq [other_task, task]
             expect(assigns(:lead_time_breakdown)).to eq({})
           end
         end

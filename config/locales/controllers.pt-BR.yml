@@ -799,6 +799,7 @@ pt-BR:
       memberships:
         blank: "Sem papel no time %{team_name}"
       efforts_tab: "Esforços"
+      tasks_tab: "Tarefas"
     sync:
       enqueued: "Sua solicitação foi colocada na fila. Será processada em breve."
       done: "Sua sincronização foi realizada."
@@ -1428,3 +1429,6 @@ pt-BR:
   azure_accounts:
     update:
       title: "Sincronizar empresa com o Azure Devops"
+  tasks:
+    index:
+      title: "Tarefas"

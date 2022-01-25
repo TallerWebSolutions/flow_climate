@@ -196,6 +196,9 @@ pt-BR:
       demand_effort:
         one: Esforço de Demanda
         other: Esforços de Demanda
+      task:
+        one: Tarefa
+        other: Tarefas
     attributes:
       user:
         first_name: Nome
@@ -701,6 +704,12 @@ pt-BR:
         stage: "Etapa"
         who: "Quem"
         member_role: "Função"
+      task:
+        demand: "Demanda"
+        created_date: "Dt Criação"
+        end_date: "Dt Entrega"
+        seconds_to_complete: "Segundos para Finalizar"
+        completion_time: "Tempo para Concluir"
   product:
     name:
       uniqueness: "Não deve repetir nome de produto para o mesmo cliente."

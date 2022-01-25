@@ -2903,6 +2903,42 @@ ALTER SEQUENCE public.stages_teams_id_seq OWNED BY public.stages_teams.id;
 
 
 --
+-- Name: tasks; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tasks (
+    id bigint NOT NULL,
+    demand_id integer NOT NULL,
+    created_date timestamp without time zone NOT NULL,
+    title character varying NOT NULL,
+    external_id integer,
+    seconds_to_complete integer,
+    end_date timestamp without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: tasks_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tasks_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tasks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tasks_id_seq OWNED BY public.tasks.id;
+
+
+--
 -- Name: team_consolidations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3749,6 +3785,13 @@ ALTER TABLE ONLY public.stages_teams ALTER COLUMN id SET DEFAULT nextval('public
 
 
 --
+-- Name: tasks id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tasks ALTER COLUMN id SET DEFAULT nextval('public.tasks_id_seq'::regclass);
+
+
+--
 -- Name: team_consolidations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4432,6 +4475,14 @@ ALTER TABLE ONLY public.stages
 
 ALTER TABLE ONLY public.stages_teams
     ADD CONSTRAINT stages_teams_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: tasks tasks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tasks
+    ADD CONSTRAINT tasks_pkey PRIMARY KEY (id);
 
 
 --
@@ -5446,6 +5497,13 @@ CREATE INDEX index_stages_teams_on_team_id ON public.stages_teams USING btree (t
 
 
 --
+-- Name: index_tasks_on_demand_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_tasks_on_demand_id ON public.tasks USING btree (demand_id);
+
+
+--
 -- Name: index_team_consolidations_on_last_data_in_month; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6339,6 +6397,14 @@ ALTER TABLE ONLY public.memberships
 
 
 --
+-- Name: tasks fk_rails_ae3913c114; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tasks
+    ADD CONSTRAINT fk_rails_ae3913c114 FOREIGN KEY (demand_id) REFERENCES public.demands(id);
+
+
+--
 -- Name: demands fk_rails_b14b9efb68; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6841,6 +6907,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220113205638'),
 ('20220114200925'),
 ('20220115003017'),
-('20220120130408');
+('20220120130408'),
+('20220125153405');
 
 
