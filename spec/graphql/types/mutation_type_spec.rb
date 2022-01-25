@@ -32,27 +32,35 @@ RSpec.describe Types::MutationType do
   describe 'send auth token' do
     describe '.resolve' do
       let(:company) { Fabricate :company }
-      let(:mutation) do
-        %(mutation {
-            sendAuthToken(companyId: #{company.id}) {
-              statusMessage
-            }
-          })
-      end
 
       context 'when context has current user' do
+        let(:mutation) do
+          %(mutation {
+              me { id }
+              sendAuthToken(companyId: #{company.id}) {
+                statusMessage
+              }
+            })
+        end
         it 'succeeds to send the auth token to the user' do
+
           user = Fabricate :user
           context = {
             current_user: user
           }
           result = FlowClimateSchema.execute(mutation, variables: nil, context: context).as_json
-          puts result
           expect(result['data']['sendAuthToken']['statusMessage']).to eq('SUCCESS')
         end
       end
 
       context 'when context does not have current user' do
+        let(:mutation) do
+          %(mutation {
+              sendAuthToken(companyId: #{company.id}) {
+                statusMessage
+              }
+            })
+        end
         it 'fails to send the auth token to the user' do
           context = {
             current_user: nil
