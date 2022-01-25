@@ -133,6 +133,7 @@ RSpec.describe UserNotifierMailer, type: :mailer do
   # test send auth token
   describe '#send_auth_token' do
     subject(:mail) { described_class.send_auth_token(company, 'user@foo.com.br').deliver_now }
+
     let!(:company) { Fabricate :company, api_token: '1234567890' }
 
     it 'renders the email' do
