@@ -11,9 +11,9 @@ module Mutations
 
       if current_user.present?
         UserNotifierMailer.send_auth_token(company, current_user.email).deliver_now
-        { status_message: "SUCCESS" }
+        { status_message: 'SUCCESS' }
       else
-        { status_message: "FAIL" }
+        { status_message: 'FAIL' }
       end
     end
   end
