@@ -36,38 +36,50 @@ module Azure
       if work_item_response.respond_to?(:code) && work_item_response.code != 200
         Rails.logger.error("[AzureAPI] Failed to request - #{work_item_response.code}")
       else
-        process_work_item(azure_project, company, work_item_response, project_custom_field, team_custom_field)
+        read_work_item(azure_project, company, work_item_response, project_custom_field, team_custom_field)
       end
     end
 
     private
 
-    def process_work_item(azure_project, company, work_item_response, project_custom_field, team_custom_field)
-      work_item_type = work_item_response['fields']['System.WorkItemType']
+    def read_work_item(azure_project, company, work_item_response, project_custom_field, team_custom_field)
       product = Product.find_by(name: azure_project.project_name, company: company) # PMO Marketing E2E
 
-      process_valid_area(work_item_type, product, work_item_response, team_custom_field, azure_project, company, project_custom_field)
+      process_valid_area(product, work_item_response, team_custom_field, azure_project, company, project_custom_field)
     end
 
-    def process_valid_area(work_item_type, product, work_item_response, team_custom_field, azure_project, company, project_custom_field)
-      if work_item_type.casecmp('epic').zero?
-        PortfolioUnit.where(product: product, name: work_item_response['fields']['System.Title'].strip, portfolio_unit_type: :epic).first_or_create
-      elsif work_item_type.casecmp('feature').zero?
-        team_name = work_item_response['fields'][team_custom_field.custom_field_name]
-        team = Team.where('name ILIKE :team_name', team_name: "%#{team_name}%").where(company: company).first
-        return if team_name.blank?
+    def process_valid_area(product, work_item_response, team_custom_field, azure_project, company, project_custom_field)
+      team_name = work_item_response['fields'][team_custom_field.custom_field_name]
+      return if team_name.blank?
 
-        process_issue(azure_project, company, product, project_custom_field, team, work_item_response)
+      team = Team.where('name ILIKE :team_name', team_name: "%#{team_name}%").where(company: company).first
+
+      work_item_type = work_item_response['fields']['System.WorkItemType']
+      if work_item_type.casecmp('epic').zero?
+        read_epic(product, project_custom_field, team, work_item_response)
+      elsif work_item_type.casecmp('feature').zero?
+        read_feature(product, azure_project, work_item_response, project_custom_field, team)
       end
     end
 
-    def process_issue(azure_project, company, product, project_custom_field, team, work_item_response)
+    def read_feature(product, azure_project, work_item_response, project_custom_field, team)
+      parent_response = client.work_item(work_item_response['fields']['System.Parent'], azure_project.project_id)
+      return if parent_response.blank?
+
+      demand = read_epic(product, project_custom_field, team, parent_response)
+
+      task = Task.where(demand: demand, external_id: work_item_response['id']).first_or_initialize
+      task.update(title: work_item_response['fields']['System.Title'], created_date: work_item_response['fields']['System.CreatedDate'],
+                  end_date: work_item_response['fields']['Microsoft.VSTS.Common.ClosedDate'])
+    end
+
+    def read_epic(product, project_custom_field, team, work_item_response)
+      company = product.company
       project = project(company, project_custom_field, team, work_item_response)
-      portfolio_unit = parent(product, azure_project, work_item_response)
 
       demand = Demand.where(company: company, team: team, external_id: work_item_response['id'],
                             created_date: work_item_response['fields']['System.CreatedDate'],
-                            product: product, project: project, portfolio_unit: portfolio_unit, demand_type: :feature).first_or_create
+                            product: product, project: project, demand_type: :feature).first_or_create
 
       demand.update(demand_title: work_item_response['fields']['System.Title'].strip, end_date: work_item_response['fields']['Microsoft.VSTS.Common.ClosedDate'])
       demand
@@ -81,16 +93,6 @@ module Azure
       project = Project.where(name: project_name, company: company, team: team).first_or_create
       project.update(qty_hours: 0, project_type: :outsourcing, status: :executing, start_date: Time.zone.today, end_date: 3.months.from_now, initial_scope: 0, value: 0, hour_value: 0)
       project
-    end
-
-    def parent(product, azure_project, work_item_response)
-      parent_id = work_item_response['fields']['System.Parent']
-      return nil if parent_id.blank?
-
-      parent_response = client.work_item(parent_id, azure_project.project_id)
-      return nil if parent_response.blank? || parent_response['fields'].blank? || parent_response['fields']['System.Title'].blank?
-
-      product.portfolio_units.where(name: parent_response['fields']['System.Title'].strip).first
     end
   end
 end

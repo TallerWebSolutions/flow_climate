@@ -15,6 +15,7 @@
     "System.IterationId": 1,
     "System.IterationPath": "FlowClimate",
     "System.IterationLevel1": "FlowClimate",
+    "Custom.TeamName":"Great Team",
     "System.WorkItemType": "Epic",
     "System.State": "To Do",
     "System.Reason": "Added to backlog",

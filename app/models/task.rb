@@ -26,4 +26,12 @@ class Task < ApplicationRecord
   belongs_to :demand
 
   validates :title, :created_date, presence: true
+
+  before_save :compute_time_to_deliver
+
+  private
+
+  def compute_time_to_deliver
+    self.seconds_to_complete = (end_date - created_date).to_i if end_date.present?
+  end
 end
