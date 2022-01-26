@@ -42,8 +42,8 @@ RSpec.describe Types::MutationType do
               }
             })
         end
-        it 'succeeds to send the auth token to the user' do
 
+        it 'succeeds to send the auth token to the user' do
           user = Fabricate :user
           context = {
             current_user: user
@@ -61,6 +61,7 @@ RSpec.describe Types::MutationType do
               }
             })
         end
+
         it 'fails to send the auth token to the user' do
           context = {
             current_user: nil
