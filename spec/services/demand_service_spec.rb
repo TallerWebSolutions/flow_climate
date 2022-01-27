@@ -68,7 +68,7 @@ RSpec.describe DemandService, type: :service do
           Fabricate :demand, demand_type: :feature, class_of_service: :expedite, created_date: 2.days.ago, end_date: 1.day.ago, effort_upstream: 40, effort_downstream: 35
           Fabricate :demand, demand_type: :chore, class_of_service: :expedite, created_date: 12.days.ago, end_date: 3.days.ago, effort_upstream: 100, effort_downstream: 110
 
-          expect(described_class.instance.hours_per_demand(Demand.all)).to eq 87
+          expect(described_class.instance.hours_per_demand(Demand.all)).to eq 86.25
         end
       end
     end
