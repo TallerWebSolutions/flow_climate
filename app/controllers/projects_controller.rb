@@ -194,7 +194,9 @@ class ProjectsController < AuthenticatedController
   end
 
   def tasks_tab
-    @tasks_charts_adapter = Highchart::TasksChartsAdapter.new(@project.tasks.map(&:id), @project.start_date, @project.end_date)
+    tasks = Task.where(id: @project.tasks.map(&:id)).order(:created_date)
+    @tasks_charts_adapter = Highchart::TasksChartsAdapter.new(tasks.map(&:id), @project.start_date, @project.end_date)
+    @burnup_adapter = Highchart::BurnupAdapter.new(tasks, @project.start_date, @project.end_date)
 
     respond_to { |format| format.js { render 'projects/dashboards/tasks_dashboard' } }
   end

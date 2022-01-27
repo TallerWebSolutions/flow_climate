@@ -1290,7 +1290,6 @@ RSpec.describe ProjectsController, type: :controller do
       end
     end
 
-
     describe 'GET #tasks_tab' do
       let(:project) { Fabricate :project, company: company, customers: [customer] }
 
@@ -1305,6 +1304,7 @@ RSpec.describe ProjectsController, type: :controller do
 
             expect(response).to render_template 'projects/dashboards/tasks_dashboard'
             expect(assigns(:tasks_charts_adapter).tasks_in_chart).to eq [other_task, task]
+            expect(assigns(:burnup_adapter).work_items).to eq [other_task, task]
             expect(assigns(:company)).to eq company
             expect(assigns(:project)).to eq project
           end

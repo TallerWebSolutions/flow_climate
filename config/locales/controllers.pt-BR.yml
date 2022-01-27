@@ -1008,6 +1008,7 @@ pt-BR:
       scope: "Escopo"
       ideal: "Ideal"
       current: "Atual"
+      title: "Burn-up"
     lead_time:
       text: "Lead time"
     histogram:

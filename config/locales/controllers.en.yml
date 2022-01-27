@@ -919,6 +919,7 @@ en:
       scope: "Scope"
       ideal: "Ideal"
       current: "Current"
+      title: "Burn-up"
     lead_time:
       text: "Lead time"
     histogram:

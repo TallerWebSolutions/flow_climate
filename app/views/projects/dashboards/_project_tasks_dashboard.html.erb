@@ -1,7 +1,7 @@
 
-<% if tasks_chart_adapter.x_axis.present? %>
-  <div class="row">
-    <div class="col-xs-6">
+<div class="row">
+  <div class="col-xs-6">
+    <% if tasks_chart_adapter.x_axis.present? %>
       <div id="project-dashboard-tasks-flow-data-column"
            class="flow-chart"
            data-title="<%= I18n.t('demands.charts.flow_data') %>"
@@ -18,8 +18,27 @@
            data-stacking=""
            data-decimals="0">
       </div>
-    </div>
+    <% else %>
+      <% render 'layouts/no_data', missing_data: I18n.t('general.data') %>
+    <% end %>
   </div>
-<% else %>
-  <% render 'layouts/no_data', missing_data: I18n.t('general.data') %>
-<% end %>
+
+  <div class="col-xs-6">
+    <% if burnup_adapter.x_axis.present? %>
+      <div id="project-burnup-tasks"
+           class="flow-chart"
+           data-title='<%= I18n.t('charts.burnup.title') %>'
+           data-weeks='<%= burnup_adapter.x_axis.to_json %>'
+           data-xtitle='<%= I18n.t('general.weeks') %>'
+           data-ytitle='<%= Task.model_name.human(count: 2) %>'
+           data-tooltipsuffix='<%= Task.model_name.human(count: 2) %>'
+           data-prefix=''
+           data-ideal='<%= burnup_adapter.ideal_burn %>'
+           data-current='<%= burnup_adapter.current_burn %>'
+           data-scope='<%= burnup_adapter.scope %>'>
+      </div>
+    <% else %>
+      <% render 'layouts/no_data', missing_data: I18n.t('general.data') %>
+    <% end %>
+  </div>
+</div>
