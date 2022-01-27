@@ -1,21 +1,25 @@
 
-<div class="row">
-  <div class="col-xs-6">
-    <div id="project-dashboard-tasks-flow-data-column"
-         class="flow-chart"
-         data-title="<%= I18n.t('demands.charts.flow_data') %>"
-         data-xcategories="<%= tasks_chart_adapter.x_axis.map(&:to_s).to_json %>"
-         data-xtitle="<%= I18n.t('general.period') %>"
-         data-ytitle="<%= I18n.t('demands.charts.demands.title') %>"
-         data-prefix=""
-         data-tooltipsuffix="<%= I18n.t('projects.charts.throughput.tooltipsufix') %>"
-         data-datalabelsuffix=""
-         data-series="<%= [
-                            { name: I18n.t('demands.charts.creation_date'), data: tasks_chart_adapter.creation_chart_data },
-                            { name: I18n.t('general.delivered'), data: tasks_chart_adapter.throughput_chart_data }
-                          ].to_json %>"
-         data-stacking=""
-         data-decimals="0">
+<% if tasks_chart_adapter.x_axis.present? %>
+  <div class="row">
+    <div class="col-xs-6">
+      <div id="project-dashboard-tasks-flow-data-column"
+           class="flow-chart"
+           data-title="<%= I18n.t('demands.charts.flow_data') %>"
+           data-xcategories="<%= tasks_chart_adapter.x_axis.map(&:to_s).to_json %>"
+           data-xtitle="<%= I18n.t('general.period') %>"
+           data-ytitle="<%= I18n.t('demands.charts.demands.title') %>"
+           data-prefix=""
+           data-tooltipsuffix="<%= I18n.t('projects.charts.throughput.tooltipsufix') %>"
+           data-datalabelsuffix=""
+           data-series="<%= [
+                              { name: I18n.t('demands.charts.creation_date'), data: tasks_chart_adapter.creation_chart_data },
+                              { name: I18n.t('general.delivered'), data: tasks_chart_adapter.throughput_chart_data }
+                            ].to_json %>"
+           data-stacking=""
+           data-decimals="0">
+      </div>
     </div>
   </div>
-</div>
+<% else %>
+  <% render 'layouts/no_data', missing_data: I18n.t('general.data') %>
+<% end %>

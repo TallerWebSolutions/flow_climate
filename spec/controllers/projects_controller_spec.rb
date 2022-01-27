@@ -111,7 +111,13 @@ RSpec.describe ProjectsController, type: :controller do
     end
 
     describe 'GET #search_projects_by_team' do
-      before { get :search_projects_by_team, params: { company_id: 'foo', team_id: 'bar' } }
+      before { get :search_projects_by_team, params: { company_id: 'foo' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
+
+    describe 'GET #tasks_tab' do
+      before { get :tasks_tab, params: { company_id: 'foo', id: 'bar' } }
 
       it { expect(response).to redirect_to new_user_session_path }
     end
@@ -1277,6 +1283,63 @@ RSpec.describe ProjectsController, type: :controller do
             let(:company) { Fabricate :company, users: [] }
 
             before { get :statistics_tab, params: { company_id: company, id: project } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
+
+
+    describe 'GET #tasks_tab' do
+      let(:project) { Fabricate :project, company: company, customers: [customer] }
+
+      context 'valid parameters' do
+        context 'with data' do
+          it 'assigns the instance variables and renders the template' do
+            demand = Fabricate :demand, project: project
+            task = Fabricate :task, demand: demand, created_date: Time.zone.now
+            other_task = Fabricate :task, demand: demand, created_date: 1.day.ago
+
+            get :tasks_tab, params: { company_id: company, id: project }, xhr: true
+
+            expect(response).to render_template 'projects/dashboards/tasks_dashboard'
+            expect(assigns(:tasks_charts_adapter).tasks_in_chart).to eq [other_task, task]
+            expect(assigns(:company)).to eq company
+            expect(assigns(:project)).to eq project
+          end
+        end
+
+        context 'with no data' do
+          it 'assigns the instance variables and renders the empty template' do
+            get :tasks_tab, params: { company_id: company, id: project }, xhr: true
+
+            expect(response).to render_template 'projects/dashboards/tasks_dashboard'
+            expect(response).to render_template 'layouts/_no_data'
+            expect(assigns(:company)).to eq company
+            expect(assigns(:project)).to eq project
+          end
+        end
+      end
+
+      context 'invalid' do
+        context 'project' do
+          before { get :tasks_tab, params: { company_id: company, id: 'foo' }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'company' do
+          context 'non-existent' do
+            before { get :tasks_tab, params: { company_id: 'foo', id: project }, xhr: true }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'not-permitted' do
+            let(:company) { Fabricate :company, users: [] }
+
+            before { get :tasks_tab, params: { company_id: company, id: project }, xhr: true }
 
             it { expect(response).to have_http_status :not_found }
           end
