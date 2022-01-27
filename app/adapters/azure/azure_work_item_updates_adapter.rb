@@ -28,12 +28,17 @@ module Azure
       company = azure_account.company
       team_member = read_team_member(azure_json_value, company)
 
-      to_stage = Stage.where(company: company, name: to_stage_name, integration_id: azure_account.id).first_or_create
       to_date = azure_json_value['fields']['System.ChangedDate']['newValue']
-      demand_transition = DemandTransition.where(demand: demand, stage: to_stage, team_member: team_member, last_time_in: to_date).first_or_create
+      demand_transition = DemandTransition.where(demand: demand, stage: read_stage(company, demand, to_stage_name), team_member: team_member, last_time_in: to_date).first_or_create
 
       read_from_transition(azure_json_value, company, demand, to_date)
       demand_transition
+    end
+
+    def read_stage(company, demand, to_stage_name)
+      to_stage = Stage.where(company: company, name: to_stage_name, integration_id: azure_account.id).first_or_create
+      to_stage.projects << demand.project unless demand.project.blank? || to_stage.projects.include?(to_stage)
+      to_stage
     end
 
     def read_from_transition(azure_json_value, company, demand, to_date)

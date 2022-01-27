@@ -9,33 +9,7 @@ RSpec.describe DemandTransition, type: :model do
   end
 
   context 'validations' do
-    context 'simple ones' do
-      it { is_expected.to validate_presence_of :last_time_in }
-    end
-
-    context 'complex ones' do
-      context 'same_stage_project?' do
-        let(:project) { Fabricate :project }
-        let!(:stage) { Fabricate :stage, stage_stream: :downstream, projects: [project] }
-        let!(:other_stage) { Fabricate :stage, stage_stream: :upstream }
-        let(:demand) { Fabricate :demand, project: project }
-
-        context 'having the same stage' do
-          let(:demand_transition) { Fabricate.build :demand_transition, stage: stage, demand: demand }
-
-          it { expect(demand_transition.valid?).to be true }
-        end
-
-        context 'having other stage' do
-          let(:demand_transition) { Fabricate.build :demand_transition, stage: stage }
-
-          it 'responds invalid' do
-            expect(demand_transition.valid?).to be false
-            expect(demand_transition.errors[:stage]).to eq ['A etapa deve ser a mesma do projeto da demanda']
-          end
-        end
-      end
-    end
+    it { is_expected.to validate_presence_of :last_time_in }
   end
 
   context 'scopes' do

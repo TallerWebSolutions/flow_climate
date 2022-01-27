@@ -52,7 +52,6 @@ class DemandTransition < ApplicationRecord
   scope :for_date, ->(date) { where('(last_time_in <= :limit_date AND (last_time_out IS NULL OR last_time_out >= :limit_date)) OR (last_time_in > :limit_date AND (last_time_out IS NULL OR last_time_out <= :limit_date))', limit_date: date) }
 
   validates :last_time_in, presence: true
-  validate :same_stage_project?
 
   delegate :name, to: :stage, prefix: true, allow_nil: true
 
@@ -131,12 +130,6 @@ class DemandTransition < ApplicationRecord
   def current_stage
     first_stage = demand.team.stages.order(:order).first
     demand.demand_transitions.includes(:stage).order(:last_time_in)&.last&.stage || first_stage
-  end
-
-  def same_stage_project?
-    return if stage.blank? || stage.projects.include?(demand.project) || stage.projects.blank?
-
-    errors.add(:stage, I18n.t('activerecord.errors.models.demand_transition.stage.not_same'))
   end
 
   def check_project_wip
