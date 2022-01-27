@@ -2,7 +2,7 @@ let project = $("#project-tasks-dashboard");
 
 $("#project-demands-dashboard").hide();
 project.show();
-project.html("<%= escape_javascript(render 'projects/dashboards/project_tasks_dashboard', company: @company, tasks_chart_adapter: @tasks_charts_adapter, burnup_adapter: @burnup_adapter) %>")
+project.html("<%= escape_javascript(render 'projects/dashboards/project_tasks_dashboard', company: @company, tasks_chart_adapter: @tasks_charts_adapter, burnup_adapter: @burnup_adapter, project_consolidations: @project_consolidations) %>")
 
 const projectFlowTasksDataColumn = $("#project-dashboard-tasks-flow-data-column");
 if (projectFlowTasksDataColumn.length !== 0) {
@@ -12,6 +12,11 @@ if (projectFlowTasksDataColumn.length !== 0) {
 const projectTaskBurnup = $("#project-burnup-tasks");
 if (projectTaskBurnup.length !== 0) {
     buildBurnupChart(projectTaskBurnup);
+}
+
+const projectTaskBasedDeadlineRisk = $("#project-dashboard-risk-evolution");
+if (projectTaskBasedDeadlineRisk.length !== 0) {
+    buildLineChart(projectTaskBasedDeadlineRisk);
 }
 
 $('#tasks_charts_tab').addClass('active');

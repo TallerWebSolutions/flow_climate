@@ -197,6 +197,7 @@ class ProjectsController < AuthenticatedController
     tasks = Task.where(id: @project.tasks.map(&:id)).order(:created_date)
     @tasks_charts_adapter = Highchart::TasksChartsAdapter.new(tasks.map(&:id), @project.start_date, @project.end_date)
     @burnup_adapter = Highchart::BurnupAdapter.new(tasks, @project.start_date, @project.end_date)
+    @project_consolidations = Consolidations::ProjectConsolidation.for_project(@project).weekly_data.order(:consolidation_date)
 
     respond_to { |format| format.js { render 'projects/dashboards/tasks_dashboard' } }
   end

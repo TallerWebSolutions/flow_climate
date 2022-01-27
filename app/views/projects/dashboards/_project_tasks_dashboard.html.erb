@@ -42,3 +42,24 @@
     <% end %>
   </div>
 </div>
+
+<div class="row">
+  <div class="col-xs-6">
+    <% if project_consolidations.map(&:tasks_based_operational_risk).flatten.compact.count.positive? %>
+      <div id="project-dashboard-risk-evolution"
+           class="flow-chart"
+           data-title="<%= I18n.t('projects.charts.risk_evolution_in_time') %>"
+           data-xcategories="<%= project_consolidations.map(&:consolidation_date).to_json %>"
+           data-xtitle="<%= I18n.t('general.period') %>"
+           data-ytitle="<%= I18n.t('charts.risk_evolution.ytitle') %>"
+           data-prefix=""
+           data-tooltipsuffix="%"
+           data-datalabelsuffix=""
+           data-series='<%= [{ name: I18n.t('charts.risk_evolution.ytitle'), data: project_consolidations.map(&:tasks_based_operational_risk).map { |risk| (risk * 100).to_f } }].to_json %>'
+           data-decimals='2'>
+      </div>
+    <% else %>
+      <% render 'layouts/no_data', missing_data: I18n.t('general.data') %>
+    <% end %>
+  </div>
+</div>

@@ -954,6 +954,8 @@ en:
     effort_development_month: "Development Hours in Month"
     effort_management_month: "Management Hours in Month"
     total_effort_month: "Total Effort in Month"
+    risk_evolution:
+      ytitle: "Risk (%)"
   finances_params:
     edit:
       title: "Edit Financial Information"

@@ -57,6 +57,8 @@
 #  project_throughput_hours_management_in_month  :decimal(, )      default(0.0), not null
 #  project_throughput_hours_upstream             :decimal(, )      default(0.0)
 #  project_throughput_hours_upstream_in_month    :decimal(, )
+#  tasks_based_deadline_p80                      :decimal(, )      default(0.0)
+#  tasks_based_operational_risk                  :decimal(, )      default(0.0)
 #  team_based_monte_carlo_weeks_max              :integer          default(0)
 #  team_based_monte_carlo_weeks_min              :integer          default(0)
 #  team_based_monte_carlo_weeks_p80              :decimal(, )      default(0.0)

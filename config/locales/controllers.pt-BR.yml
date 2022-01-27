@@ -1043,6 +1043,8 @@ pt-BR:
     effort_development_month: "Horas de Desenvolvimento no Mês"
     effort_management_month: "Horas de Gestão no Mês"
     total_effort_month: "Esforço Total no Mês"
+    risk_evolution:
+      ytitle: "Risco (%)"
   finances_params:
     edit:
       title: "Editar Informação Financeira"
