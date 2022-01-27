@@ -1,5 +1,85 @@
 <div class="row">
   <div class="col-xs-6">
+    <h4><%= I18n.t('general.bugs') %></h4>
+
+    <div id="project-dashboard-bugs-column"
+         class="flow-chart"
+         data-title=""
+         data-xcategories=""
+         data-xtitle=""
+         data-ytitle="<%= I18n.t('general.bugs') %>"
+         data-prefix=""
+         data-suffix=""
+         data-tooltipsuffix=""
+         data-datalabelsuffix=""
+         data-series="<%= [{ name: I18n.t('projects.charts.bugs_in_time.opened'), data: all_project_consolidations.map { |consolidation| consolidation.bugs_opened } },
+                           { name: I18n.t('projects.charts.bugs_in_time.closed'), data: all_project_consolidations.map { |consolidation| consolidation.bugs_closed } }].to_json %>"
+         data-decimals="0">
+    </div>
+  </div>
+
+  <div class="col-xs-6">
+    <div id="project-dashboard-flow-data-column"
+         class="flow-chart"
+         data-title="<%= I18n.t('demands.charts.flow_data') %>"
+         data-xcategories=""
+         data-xtitle="<%= I18n.t('general.period') %>"
+         data-ytitle="<%= I18n.t('demands.charts.demands.title') %>"
+         data-prefix=""
+         data-tooltipsuffix="<%= I18n.t('projects.charts.throughput.tooltipsufix') %>"
+         data-datalabelsuffix=""
+         data-series="<%= [
+                            { name: I18n.t('demands.charts.creation_date'), data: demands_chart_adapter.creation_chart_data },
+                            { name: I18n.t('demands.charts.committed_date'), data: demands_chart_adapter.committed_chart_data },
+                            { name: I18n.t('general.pull_transaction'), data: demands_chart_adapter.pull_transaction_rate },
+                            { name: I18n.t('general.delivered'), data: demands_chart_adapter.throughput_chart_data }
+                          ].to_json %>"
+         data-stacking=""
+         data-decimals="0">
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-6">
+    <div id="project-burnup-demands"
+         class="flow-chart"
+         data-title="<%= I18n.t('projects.charts.burnup.demands.title', target_name: project.name) %>"
+         data-xcategories=""
+         data-xtitle="<%= I18n.t('projects.charts.xlabel.time') %>"
+         data-ytitle="<%= I18n.t('projects.charts.burnup.ylabel') %>"
+         data-tooltipsuffix="<%= I18n.t('projects.charts.burnup.tooltipsufix') %>"
+         data-prefix=""
+         data-suffix=""
+         data-datalabelsuffix=""
+         data-series="<%= [ { name: I18n.t('general.scope'), data: project.weekly_project_scope_until_end },
+                            { name: I18n.t('charts.burnup.ideal'), data: project.current_weekly_scope_ideal_burnup },
+                            { name: I18n.t('general.delivered'), data: all_project_consolidations.map(&:project_throughput) }].to_json %>"
+         data-decimals="0">
+    </div>
+  </div>
+
+  <div class="col-xs-6">
+    <div id="project-burnup-hours"
+         class="flow-chart"
+         data-title="<%= I18n.t('projects.charts.burnup.hours.title', target_name: project.name) %>"
+         data-xcategories=""
+         data-xtitle="<%= I18n.t('general.weeks') %>"
+         data-ytitle="<%= I18n.t('general.hours') %>"
+         data-tooltipsuffix="<%= I18n.t('general.hours') %>"
+         data-prefix=""
+         data-suffix=""
+         data-datalabelsuffix=""
+         data-series="<%= [ { name: I18n.t('general.scope'), data: project.weekly_project_scope_hours_until_end },
+                            { name: I18n.t('charts.burnup.ideal'), data: project.current_weekly_hours_ideal_burnup },
+                            { name: I18n.t('general.delivered'), data: all_project_consolidations.map(&:project_throughput_hours).map(&:to_f) }].to_json %>"
+         data-decimals="2">
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-6">
     <h4><%= I18n.t('general.leadtime_p80_label') %></h4>
 
     <div id="project-dashboard-lead-time-line"
@@ -220,85 +300,5 @@
          data-decimals="2">
     </div>
 
-  </div>
-</div>
-
-<div class="row">
-  <div class="col-xs-6">
-    <div id="project-burnup-demands"
-         class="flow-chart"
-         data-title="<%= I18n.t('projects.charts.burnup.demands.title', target_name: project.name) %>"
-         data-xcategories=""
-         data-xtitle="<%= I18n.t('projects.charts.xlabel.time') %>"
-         data-ytitle="<%= I18n.t('projects.charts.burnup.ylabel') %>"
-         data-tooltipsuffix="<%= I18n.t('projects.charts.burnup.tooltipsufix') %>"
-         data-prefix=""
-         data-suffix=""
-         data-datalabelsuffix=""
-         data-series="<%= [ { name: I18n.t('general.scope'), data: project.weekly_project_scope_until_end },
-                            { name: I18n.t('charts.burnup.ideal'), data: project.current_weekly_scope_ideal_burnup },
-                            { name: I18n.t('general.delivered'), data: all_project_consolidations.map(&:project_throughput) }].to_json %>"
-         data-decimals="0">
-    </div>
-  </div>
-
-  <div class="col-xs-6">
-    <div id="project-burnup-hours"
-         class="flow-chart"
-         data-title="<%= I18n.t('projects.charts.burnup.hours.title', target_name: project.name) %>"
-         data-xcategories=""
-         data-xtitle="<%= I18n.t('general.weeks') %>"
-         data-ytitle="<%= I18n.t('general.hours') %>"
-         data-tooltipsuffix="<%= I18n.t('general.hours') %>"
-         data-prefix=""
-         data-suffix=""
-         data-datalabelsuffix=""
-         data-series="<%= [ { name: I18n.t('general.scope'), data: project.weekly_project_scope_hours_until_end },
-                            { name: I18n.t('charts.burnup.ideal'), data: project.current_weekly_hours_ideal_burnup },
-                            { name: I18n.t('general.delivered'), data: all_project_consolidations.map(&:project_throughput_hours).map(&:to_f) }].to_json %>"
-         data-decimals="2">
-    </div>
-  </div>
-</div>
-
-<div class="row">
-  <div class="col-xs-6">
-    <h4><%= I18n.t('general.bugs') %></h4>
-
-    <div id="project-dashboard-bugs-column"
-         class="flow-chart"
-         data-title=""
-         data-xcategories=""
-         data-xtitle=""
-         data-ytitle="<%= I18n.t('general.bugs') %>"
-         data-prefix=""
-         data-suffix=""
-         data-tooltipsuffix=""
-         data-datalabelsuffix=""
-         data-series="<%= [{ name: I18n.t('projects.charts.bugs_in_time.opened'), data: all_project_consolidations.map { |consolidation| consolidation.bugs_opened } },
-                           { name: I18n.t('projects.charts.bugs_in_time.closed'), data: all_project_consolidations.map { |consolidation| consolidation.bugs_closed } }].to_json %>"
-         data-decimals="0">
-    </div>
-  </div>
-
-  <div class="col-xs-6">
-    <div id="project-dashboard-flow-data-column"
-         class="flow-chart"
-         data-title="<%= I18n.t('demands.charts.flow_data') %>"
-         data-xcategories=""
-         data-xtitle="<%= I18n.t('general.period') %>"
-         data-ytitle="<%= I18n.t('demands.charts.demands.title') %>"
-         data-prefix=""
-         data-tooltipsuffix="<%= I18n.t('projects.charts.throughput.tooltipsufix') %>"
-         data-datalabelsuffix=""
-         data-series="<%= [
-                              { name: I18n.t('demands.charts.creation_date'), data: demands_chart_adapter.creation_chart_data },
-                              { name: I18n.t('demands.charts.committed_date'), data: demands_chart_adapter.committed_chart_data },
-                              { name: I18n.t('general.pull_transaction'), data: demands_chart_adapter.pull_transaction_rate },
-                              { name: I18n.t('general.delivered'), data: demands_chart_adapter.throughput_chart_data }
-                          ].to_json %>"
-         data-stacking=""
-         data-decimals="0">
-    </div>
   </div>
 </div>

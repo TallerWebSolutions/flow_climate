@@ -78,20 +78,26 @@ module Azure
       project = project(company, project_custom_field, team, work_item_response)
 
       demand = Demand.where(company: company, team: team, external_id: work_item_response['id'],
-                            created_date: work_item_response['fields']['System.CreatedDate'],
-                            product: product, project: project, demand_type: :feature).first_or_create
+                            created_date: work_item_response['fields']['System.CreatedDate']).first_or_initialize
 
-      demand.update(demand_title: work_item_response['fields']['System.Title'].strip, end_date: work_item_response['fields']['Microsoft.VSTS.Common.ClosedDate'])
+      demand.update(demand_title: work_item_response['fields']['System.Title'].strip,
+                    end_date: work_item_response['fields']['Microsoft.VSTS.Common.ClosedDate'],
+                    product: product, project: project, demand_type: :feature)
       demand
     end
 
     def project(company, project_custom_field, team, work_item_response)
       project_name = work_item_response['fields'][project_custom_field.custom_field_name]
 
-      return nil if project_name.blank?
+      project_name = work_item_response['fields']['Custom.TargetQuarter'] + work_item_response['fields']['Custom.Year'].slice(-2, 2) if project_name.blank?
 
-      project = Project.where(name: project_name, company: company, team: team).first_or_create
-      project.update(qty_hours: 0, project_type: :outsourcing, status: :executing, start_date: Time.zone.today, end_date: 3.months.from_now, initial_scope: 0, value: 0, hour_value: 0)
+      project_name += " - #{team.name}"
+
+      project = Project.where(name: project_name, company: company, team: team).first_or_initialize
+      unless project.persisted?
+        project.update(qty_hours: 0, project_type: :outsourcing, status: :executing, start_date: Time.zone.today,
+                       end_date: 3.months.from_now, initial_scope: 0, value: 0, hour_value: 0)
+      end
       project
     end
   end

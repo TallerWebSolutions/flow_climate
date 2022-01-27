@@ -36,6 +36,7 @@
         <th><%= I18n.t('projects.show.demand_blocks_count') %></th>
         <th><%= I18n.t('projects.show.demand_blocks_duration_average') %></th>
         <th><%= I18n.t('projects.show.demands_count') %></th>
+        <th><%= Task.model_name.human(count: 2) %></th>
         <th><%= I18n.t('projects.show.features_count') %></th>
         <th><%= I18n.t('projects.show.bugs_count') %></th>
         <th><%= I18n.t('projects.show.chore_count') %></th>
@@ -72,6 +73,7 @@
           </td>
           <td><%= number_with_precision(project.average_block_duration, precision: 2) %>h</td>
           <td><%= project.demands.kept.count %></td>
+          <td><%= project.tasks.count %></td>
           <td><%= project.demands.kept.feature.count %><small> (<%= number_with_precision(project.percentage_of_demand_type(:feature), precision: 2) %>%)</small></td>
           <td><%= project.demands.kept.bug.count %><small> (<%= number_with_precision(project.percentage_of_demand_type(:bug), precision: 2) %>%)</small></td>
           <td><%= project.demands.kept.chore.count %><small> (<%= number_with_precision(project.percentage_of_demand_type(:chore), precision: 2) %>%)</small></td>

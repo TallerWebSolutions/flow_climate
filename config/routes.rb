@@ -223,6 +223,8 @@ Rails.application.routes.draw do
       end
 
       member do
+        get :tasks_tab
+
         get :statistics
         get :risk_drill_down
         get :closing_dashboard

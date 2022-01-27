@@ -193,6 +193,12 @@ class ProjectsController < AuthenticatedController
     @all_project_consolidations = Consolidations::ProjectConsolidation.for_project(@project).weekly_data.order(:consolidation_date)
   end
 
+  def tasks_tab
+    @tasks_charts_adapter = Highchart::TasksChartsAdapter.new(@project.tasks.map(&:id), @project.start_date, @project.end_date)
+
+    respond_to { |format| format.js { render 'projects/dashboards/tasks_dashboard' } }
+  end
+
   private
 
   def assign_projects

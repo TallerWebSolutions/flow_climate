@@ -1,0 +1,13 @@
+let project = $("#project-tasks-dashboard");
+
+$("#project-demands-dashboard").hide();
+project.show();
+project.html("<%= escape_javascript(render 'projects/dashboards/project_tasks_dashboard', company: @company, tasks_chart_adapter: @tasks_charts_adapter) %>")
+
+const projectFlowTasksDataColumn = $("#project-dashboard-tasks-flow-data-column");
+if (projectFlowTasksDataColumn.length !== 0) {
+    buildColumnChart(projectFlowTasksDataColumn);
+}
+
+$('#tasks_charts_tab').addClass('active');
+$('#demands_charts_tab').removeClass('active');
