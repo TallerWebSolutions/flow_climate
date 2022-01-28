@@ -1,4 +1,4 @@
-# frozen-string-literal: true
+# frozen_string_literal: true
 
 namespace :initiatives do
   task create_iniciatives: :environment do

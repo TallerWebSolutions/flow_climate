@@ -3,12 +3,13 @@
 RSpec.describe Project, type: :model do
   context 'enums' do
     it { is_expected.to define_enum_for(:status).with_values(waiting: 0, executing: 1, maintenance: 2, finished: 3, cancelled: 4, negotiating: 5) }
-    it { is_expected.to define_enum_for(:project_type).with_values(outsourcing: 0, consulting: 1, training: 2, domestic_product: 3) }
+    it { is_expected.to define_enum_for(:project_type).with_values(outsourcing: 0, consulting: 1, training: 2, domestic_product: 3, marketing: 4) }
   end
 
   context 'associations' do
     it { is_expected.to belong_to :company }
     it { is_expected.to belong_to :team }
+    it { is_expected.to belong_to :initiative }
 
     it { is_expected.to have_many(:project_risk_configs).dependent(:destroy) }
     it { is_expected.to have_many(:project_risk_alerts).dependent(:destroy) }

@@ -151,9 +151,12 @@ pt-BR:
       jira/jira_custom_field_mapping:
         one: Mapeamento de Campo Customizado
         other: Mapeamentos de Campos Customizados
-      project_consolidation:
+      consolidations/project_consolidation:
         one: Consolidação de Projeto
         other: Consolidações de Projeto
+      consolidations/initiaves_consolidation:
+        one: Consolidação de Iniciativa
+        other: Consolidações de Iniciativa
       membership:
         one: Associação de Membro
         other: Associações de Membros
@@ -298,6 +301,7 @@ pt-BR:
             consulting: Consultoria
             training: Treinamento
             domestic_product: Produto Interno
+            marketing: Marketing
       team:
         name: Nome
         company: Empresa
@@ -559,8 +563,10 @@ pt-BR:
         azure_organization: Organização
         username: Nome de Usuário
         azure_work_item_query: Query para Consultar os Work Items no Azure
-      project_consolidation:
+      consolidations/project_consolidation:
         last_8_throughput_per_week_data: Throughput das últimas 8 Semanas
+      consolidations/initiative_consolidation:
+        tasks_operational_risk: Risco Operacional para Tarefas
       membership:
         member_role: Função
         member_name: Nome

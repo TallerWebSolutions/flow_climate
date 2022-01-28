@@ -17,7 +17,8 @@ RSpec.describe Task, type: :model do
         second_task = Fabricate :task, created_date: 3.days.ago, end_date: 2.days.ago
         Fabricate :task, created_date: 2.days.ago, end_date: nil
 
-        expect(described_class.finished).to eq [second_task, first_task]
+        expect(described_class.finished(Time.zone.now)).to eq [second_task, first_task]
+        expect(described_class.finished(27.hours.ago)).to eq [second_task]
       end
     end
   end

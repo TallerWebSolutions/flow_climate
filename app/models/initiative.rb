@@ -26,11 +26,47 @@
 class Initiative < ApplicationRecord
   belongs_to :company
 
-  has_many :projects, dependent: :destroy
+  has_many :projects, dependent: :nullify
   has_many :demands, through: :projects
   has_many :tasks, through: :projects
 
-  validates :name, presence: true
+  has_many :initiative_consolidations, class_name: 'Consolidations::InitiativeConsolidation', dependent: :destroy
+
+  validates :name, :start_date, :end_date, presence: true
 
   validates :name, uniqueness: { scope: :company_id, case_sensitive: false }
+
+  before_save :set_dates
+
+  def remaining_weeks(from_date = Time.zone.today)
+    start_date_limit = [start_date, from_date].max
+    return 0 if end_date < start_date_limit
+
+    ((start_date_limit.end_of_week.upto(end_date.to_date.end_of_week).count.to_f + 1) / 7).round + 1
+  end
+
+  def current_tasks_operational_risk
+    return 0 if initiative_consolidations.blank?
+
+    last_consolidation.tasks_operational_risk
+  end
+
+  def last_update
+    return nil if initiative_consolidations.blank?
+
+    last_consolidation.updated_at
+  end
+
+  private
+
+  def last_consolidation
+    initiative_consolidations.order(:consolidation_date).last
+  end
+
+  def set_dates
+    return if projects.blank?
+
+    self.start_date = projects.map(&:start_date).min
+    self.end_date = projects.map(&:end_date).max
+  end
 end

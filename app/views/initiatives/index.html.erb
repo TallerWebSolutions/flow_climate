@@ -15,6 +15,7 @@
       <th><%= Initiative.human_attribute_name(:name) %></th>
       <th><%= Initiative.human_attribute_name(:start_date) %></th>
       <th><%= Initiative.human_attribute_name(:end_date) %></th>
+      <th><%= Consolidations::InitiativeConsolidation.human_attribute_name(:tasks_operational_risk) %></th>
       <th><%= Initiative.human_attribute_name(:projects) %></th>
       <th><%= Initiative.human_attribute_name(:demands) %></th>
       <th><%= Initiative.human_attribute_name(:tasks) %></th>
@@ -23,9 +24,10 @@
     <tbody>
     <% @initiatives.each do |initiative| %>
       <tr>
-        <td><%= initiative.name %></td>
+        <td><%= link_to initiative.name, company_initiative_path(@company, initiative) %></td>
         <td><%= I18n.l(initiative.start_date) %></td>
         <td><%= I18n.l(initiative.end_date) %></td>
+        <td><%= number_to_percentage(initiative.current_tasks_operational_risk * 100, precision: 2) %></td>
         <td><%= initiative.projects.count %></td>
         <td><%= initiative.demands.count %></td>
         <td><%= initiative.tasks.count %></td>

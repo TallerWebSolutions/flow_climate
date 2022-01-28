@@ -1655,6 +1655,49 @@ ALTER SEQUENCE public.friendly_id_slugs_id_seq OWNED BY public.friendly_id_slugs
 
 
 --
+-- Name: initiative_consolidations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.initiative_consolidations (
+    id bigint NOT NULL,
+    initiative_id integer NOT NULL,
+    consolidation_date date NOT NULL,
+    last_data_in_week boolean DEFAULT false,
+    last_data_in_month boolean DEFAULT false,
+    last_data_in_year boolean DEFAULT false,
+    tasks_delivered integer,
+    tasks_delivered_in_month integer,
+    tasks_delivered_in_week integer,
+    tasks_operational_risk numeric,
+    tasks_scope integer,
+    tasks_completion_time_p80 numeric,
+    tasks_completion_time_p80_in_month numeric,
+    tasks_completion_time_p80_in_week numeric,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: initiative_consolidations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.initiative_consolidations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: initiative_consolidations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.initiative_consolidations_id_seq OWNED BY public.initiative_consolidations.id;
+
+
+--
 -- Name: initiatives; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3591,6 +3634,13 @@ ALTER TABLE ONLY public.friendly_id_slugs ALTER COLUMN id SET DEFAULT nextval('p
 
 
 --
+-- Name: initiative_consolidations id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.initiative_consolidations ALTER COLUMN id SET DEFAULT nextval('public.initiative_consolidations_id_seq'::regclass);
+
+
+--
 -- Name: initiatives id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4247,6 +4297,14 @@ ALTER TABLE ONLY public.flow_events
 
 ALTER TABLE ONLY public.friendly_id_slugs
     ADD CONSTRAINT friendly_id_slugs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: initiative_consolidations initiative_consolidations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.initiative_consolidations
+    ADD CONSTRAINT initiative_consolidations_pkey PRIMARY KEY (id);
 
 
 --
@@ -5115,6 +5173,20 @@ CREATE INDEX index_friendly_id_slugs_on_sluggable_type_and_sluggable_id ON publi
 
 
 --
+-- Name: index_initiative_consolidations_on_consolidation_date; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_initiative_consolidations_on_consolidation_date ON public.initiative_consolidations USING btree (consolidation_date);
+
+
+--
+-- Name: index_initiative_consolidations_on_initiative_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_initiative_consolidations_on_initiative_id ON public.initiative_consolidations USING btree (initiative_id);
+
+
+--
 -- Name: index_initiatives_on_company_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5780,6 +5852,13 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON public.users USING bt
 
 
 --
+-- Name: initiative_consolidation_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX initiative_consolidation_unique ON public.initiative_consolidations USING btree (initiative_id, consolidation_date);
+
+
+--
 -- Name: operations_dashboard_cache_unique; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6131,6 +6210,14 @@ ALTER TABLE ONLY public.demand_block_notifications
 
 ALTER TABLE ONLY public.score_matrix_questions
     ADD CONSTRAINT fk_rails_383aa02a04 FOREIGN KEY (score_matrix_id) REFERENCES public.score_matrices(id);
+
+
+--
+-- Name: initiative_consolidations fk_rails_3a60bcdf90; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.initiative_consolidations
+    ADD CONSTRAINT fk_rails_3a60bcdf90 FOREIGN KEY (initiative_id) REFERENCES public.initiatives(id);
 
 
 --
@@ -6999,6 +7086,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220120130408'),
 ('20220125153405'),
 ('20220127194418'),
-('20220128154551');
+('20220128154551'),
+('20220128210845');
 
 

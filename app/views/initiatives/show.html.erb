@@ -1,0 +1,17 @@
+<div class="row">
+  <div class="col-xs-12">
+    <ul class="breadcrumb">
+      <li><%= link_to I18n.t('general.home.title'), root_path %></li>
+      <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
+      <li><%= link_to Initiative.model_name.human(count: 2), company_initiatives_path(@company) %></li>
+      <li><%= @initiative.name %></li>
+    </ul>
+  </div>
+</div>
+
+<%= link_to generate_cache_company_initiative_path(@company, @initiative), method: :post do %>
+  <i class="fas fa-sync-alt" aria-hidden="true" title="<%= I18n.t('general.update_cache') %>"></i>
+  <% if @initiative.last_update.present? %>
+    <%= I18n.t('general.last_update.text', last_update: I18n.l(@initiative.last_update, format: :short)) %>
+  <% end %>
+<% end %>

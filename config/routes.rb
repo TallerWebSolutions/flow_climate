@@ -113,7 +113,9 @@ Rails.application.routes.draw do
       get :risks_tab
     end
 
-    resources :initiatives, only: :index
+    resources :initiatives, only: %i[index show] do
+      post :generate_cache, on: :member
+    end
 
     resources :azure_accounts, only: [], module: 'azure' do
       post :synchronize_azure, on: :collection

@@ -96,11 +96,11 @@ module Consolidations
                            team_based_monte_carlo_weeks_max: team_based_montecarlo_durations.max,
                            team_based_monte_carlo_weeks_std_dev: Stats::StatisticsService.instance.standard_deviation(team_based_montecarlo_durations),
                            team_based_monte_carlo_weeks_p80: Stats::StatisticsService.instance.percentile(80, team_based_montecarlo_durations),
-                           operational_risk: 1 - Stats::StatisticsService.instance.compute_odds_to_deadline(project.remaining_weeks, project_based_montecarlo_durations),
+                           operational_risk: 1 - Stats::StatisticsService.instance.compute_odds_to_deadline(project.remaining_weeks(end_of_day.to_date), project_based_montecarlo_durations),
                            project_scope: project.backlog_count_for(end_of_day),
                            flow_pressure: project.flow_pressure(end_of_day),
                            value_per_demand: project.value_per_demand,
-                           team_based_operational_risk: 1 - Stats::StatisticsService.instance.compute_odds_to_deadline(project.remaining_weeks, team_based_montecarlo_durations),
+                           team_based_operational_risk: 1 - Stats::StatisticsService.instance.compute_odds_to_deadline(project.remaining_weeks(end_of_day.to_date), team_based_montecarlo_durations),
                            weeks_by_little_law: weeks_by_little_law,
                            hours_per_demand: DemandService.instance.hours_per_demand(demands_finished),
                            hours_per_demand_month: DemandService.instance.hours_per_demand(demands_finished_in_month),
@@ -124,7 +124,7 @@ module Consolidations
                            project_throughput_hours_design_in_month: demand_efforts.designer_efforts.sum(&:effort_value),
                            project_throughput_hours_management_in_month: demand_efforts.manager_efforts.sum(&:effort_value),
                            tasks_based_deadline_p80: Stats::StatisticsService.instance.percentile(80, tasks_based_montecarlo_durations),
-                           tasks_based_operational_risk: 1 - Stats::StatisticsService.instance.compute_odds_to_deadline(project.remaining_weeks, tasks_based_montecarlo_durations)
+                           tasks_based_operational_risk: 1 - Stats::StatisticsService.instance.compute_odds_to_deadline(project.remaining_weeks(end_of_day.to_date), tasks_based_montecarlo_durations)
       )
     end
 
