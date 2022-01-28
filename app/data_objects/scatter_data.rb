@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ScatterData
   attr_reader :completion_times, :items_ids, :completion_time_p95, :completion_time_p80, :completion_time_p65
 

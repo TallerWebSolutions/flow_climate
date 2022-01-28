@@ -194,18 +194,24 @@ class ProjectsController < AuthenticatedController
   end
 
   def tasks_tab
-    tasks = Task.where(id: @project.tasks.map(&:id)).order(:created_date)
-    @tasks_charts_adapter = Highchart::TasksChartsAdapter.new(tasks.map(&:id), @project.start_date, @project.end_date)
-    @burnup_adapter = Highchart::BurnupAdapter.new(tasks, @project.start_date, @project.end_date)
+    start_date = @project.start_date
+    end_date = @project.end_date
+
+    @tasks_charts_adapter = Highchart::TasksChartsAdapter.new(tasks.map(&:id), start_date, end_date)
+    @burnup_adapter = Highchart::BurnupAdapter.new(tasks, start_date, end_date)
     @project_consolidations = Consolidations::ProjectConsolidation.for_project(@project).weekly_data.order(:consolidation_date)
 
-    finished_tasks = tasks.where.not(end_date: nil).order(:end_date)
+    finished_tasks = tasks.finished
     @task_completion_control_chart_data = ScatterData.new(finished_tasks.map(&:seconds_to_complete), finished_tasks.map(&:external_id))
 
     respond_to { |format| format.js { render 'projects/dashboards/tasks_dashboard' } }
   end
 
   private
+
+  def tasks
+    @tasks ||= Task.where(id: @project.tasks.map(&:id)).order(:created_date)
+  end
 
   def assign_projects
     @projects = @company.projects.distinct.includes(:team).order(end_date: :desc).order(end_date: :desc).page(page_param)

@@ -10,6 +10,18 @@ RSpec.describe Task, type: :model do
     it { is_expected.to validate_presence_of :created_date }
   end
 
+  context 'scopes' do
+    describe '.finished' do
+      it 'returns the finished tasks ordered by end_date' do
+        first_task = Fabricate :task, created_date: 2.days.ago, end_date: 1.day.ago
+        second_task = Fabricate :task, created_date: 3.days.ago, end_date: 2.days.ago
+        Fabricate :task, created_date: 2.days.ago, end_date: nil
+
+        expect(described_class.finished).to eq [second_task, first_task]
+      end
+    end
+  end
+
   context 'callbacks' do
     describe '#compute_time_to_deliver' do
       context 'with end date' do

@@ -25,6 +25,7 @@
 class Task < ApplicationRecord
   belongs_to :demand
 
+  scope :finished, -> { where.not(end_date: nil).order(:end_date) }
   validates :title, :created_date, presence: true
 
   before_save :compute_time_to_deliver

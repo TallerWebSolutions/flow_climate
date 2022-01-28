@@ -923,6 +923,7 @@ pt-BR:
     risk_reviews: "Revisões de Risco"
     service_delivery_reviews: "Service Delivery Review"
     azure: "Azure"
+    initiatives_list: "Iniciativas"
   charts:
     xlabel:
       months: "Meses"
@@ -1440,3 +1441,6 @@ pt-BR:
       completion_control_chart:
         title: "Gráfico de Dispersão do Tempo de Resolução"
         ylabel: "Dias"
+  initiatives:
+    index:
+      title: "Iniciativas"

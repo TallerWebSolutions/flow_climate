@@ -22,6 +22,7 @@ RSpec.describe Company, type: :model do
     it { is_expected.to have_many(:stages).dependent(:restrict_with_error) }
     it { is_expected.to have_many(:team_resources).dependent(:destroy) }
     it { is_expected.to have_many(:flow_events).dependent(:destroy) }
+    it { is_expected.to have_many(:initiatives).dependent(:destroy) }
   end
 
   context 'validations' do

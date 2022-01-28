@@ -834,6 +834,7 @@ en:
     risk_reviews: "Risk Reviews"
     service_delivery_reviews: "Service Delivery Review"
     azure: "Azure"
+    initiatives_list: "Initiatives"
   charts:
     xlabel:
       months: "Months"
@@ -1450,3 +1451,6 @@ en:
       completion_control_chart:
         title: "Control Chart to Completion Time"
         ylabel: "Days"
+  initiatives:
+    index:
+      title: "Initiatives"
