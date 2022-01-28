@@ -20,6 +20,7 @@
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null
 #  company_id                :integer          not null
+#  initiative_id             :integer
 #  team_id                   :integer          not null
 #
 # Indexes
@@ -30,6 +31,7 @@
 #
 #  fk_rails_44a549d7b3  (company_id => companies.id)
 #  fk_rails_ecc227a0c2  (team_id => teams.id)
+#  fk_rails_f78e8f0103  (initiative_id => initiatives.id)
 #
 
 class Project < ApplicationRecord

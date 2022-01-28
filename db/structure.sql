@@ -1655,6 +1655,40 @@ ALTER SEQUENCE public.friendly_id_slugs_id_seq OWNED BY public.friendly_id_slugs
 
 
 --
+-- Name: initiatives; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.initiatives (
+    id bigint NOT NULL,
+    company_id integer NOT NULL,
+    name character varying NOT NULL,
+    start_date date NOT NULL,
+    end_date date NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: initiatives_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.initiatives_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: initiatives_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.initiatives_id_seq OWNED BY public.initiatives.id;
+
+
+--
 -- Name: integration_errors; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2430,7 +2464,8 @@ CREATE TABLE public.projects (
     percentage_effort_to_bugs integer DEFAULT 0 NOT NULL,
     team_id integer NOT NULL,
     max_work_in_progress numeric DEFAULT 1.0 NOT NULL,
-    company_id integer NOT NULL
+    company_id integer NOT NULL,
+    initiative_id integer
 );
 
 
@@ -3556,6 +3591,13 @@ ALTER TABLE ONLY public.friendly_id_slugs ALTER COLUMN id SET DEFAULT nextval('p
 
 
 --
+-- Name: initiatives id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.initiatives ALTER COLUMN id SET DEFAULT nextval('public.initiatives_id_seq'::regclass);
+
+
+--
 -- Name: integration_errors id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4205,6 +4247,14 @@ ALTER TABLE ONLY public.flow_events
 
 ALTER TABLE ONLY public.friendly_id_slugs
     ADD CONSTRAINT friendly_id_slugs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: initiatives initiatives_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.initiatives
+    ADD CONSTRAINT initiatives_pkey PRIMARY KEY (id);
 
 
 --
@@ -5062,6 +5112,27 @@ CREATE UNIQUE INDEX index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope
 --
 
 CREATE INDEX index_friendly_id_slugs_on_sluggable_type_and_sluggable_id ON public.friendly_id_slugs USING btree (sluggable_type, sluggable_id);
+
+
+--
+-- Name: index_initiatives_on_company_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_initiatives_on_company_id ON public.initiatives USING btree (company_id);
+
+
+--
+-- Name: index_initiatives_on_company_id_and_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_initiatives_on_company_id_and_name ON public.initiatives USING btree (company_id, name);
+
+
+--
+-- Name: index_initiatives_on_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_initiatives_on_name ON public.initiatives USING btree (name);
 
 
 --
@@ -6335,6 +6406,14 @@ ALTER TABLE ONLY public.stages_teams
 
 
 --
+-- Name: initiatives fk_rails_8fd87a6ae5; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.initiatives
+    ADD CONSTRAINT fk_rails_8fd87a6ae5 FOREIGN KEY (company_id) REFERENCES public.companies(id);
+
+
+--
 -- Name: users fk_rails_971bf2d9a1; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6671,6 +6750,14 @@ ALTER TABLE ONLY public.azure_projects
 
 
 --
+-- Name: projects fk_rails_f78e8f0103; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.projects
+    ADD CONSTRAINT fk_rails_f78e8f0103 FOREIGN KEY (initiative_id) REFERENCES public.initiatives(id);
+
+
+--
 -- Name: demands fk_rails_fcc44c0e5d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6911,6 +6998,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220115003017'),
 ('20220120130408'),
 ('20220125153405'),
-('20220127194418');
+('20220127194418'),
+('20220128154551');
 
 

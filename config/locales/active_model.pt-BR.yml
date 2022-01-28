@@ -199,6 +199,9 @@ pt-BR:
       task:
         one: Tarefa
         other: Tarefas
+      initiative:
+        one: Iniciativa
+        other: Iniciativas
     attributes:
       user:
         first_name: Nome
@@ -710,6 +713,14 @@ pt-BR:
         end_date: "Dt Entrega"
         seconds_to_complete: "Segundos para Finalizar"
         completion_time: "Tempo para Concluir"
+      initiative:
+        company: "Empresa"
+        projects: "Projetos"
+        name: "Nome"
+        demands: "Demandas"
+        tasks: "Tarefas"
+        start_date: "Dt Início"
+        end_date: "Dt Fim"
   product:
     name:
       uniqueness: "Não deve repetir nome de produto para o mesmo cliente."
