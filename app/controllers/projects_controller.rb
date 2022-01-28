@@ -199,6 +199,9 @@ class ProjectsController < AuthenticatedController
     @burnup_adapter = Highchart::BurnupAdapter.new(tasks, @project.start_date, @project.end_date)
     @project_consolidations = Consolidations::ProjectConsolidation.for_project(@project).weekly_data.order(:consolidation_date)
 
+    finished_tasks = tasks.where.not(end_date: nil).order(:end_date)
+    @task_completion_control_chart_data = ScatterData.new(finished_tasks.map(&:seconds_to_complete), finished_tasks.map(&:external_id))
+
     respond_to { |format| format.js { render 'projects/dashboards/tasks_dashboard' } }
   end
 

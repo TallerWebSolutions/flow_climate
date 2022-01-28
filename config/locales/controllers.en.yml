@@ -1445,3 +1445,8 @@ en:
   tasks:
     index:
       title: "Tasks"
+    charts:
+      completion_time: "Completion Time"
+      completion_control_chart:
+        title: "Control Chart to Completion Time"
+        ylabel: "Days"

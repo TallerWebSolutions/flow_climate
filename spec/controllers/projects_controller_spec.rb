@@ -1296,23 +1296,28 @@ RSpec.describe ProjectsController, type: :controller do
       context 'valid parameters' do
         context 'with data' do
           it 'assigns the instance variables and renders the template' do
-            demand = Fabricate :demand, project: project
-            task = Fabricate :task, demand: demand, created_date: Time.zone.now
-            other_task = Fabricate :task, demand: demand, created_date: 1.day.ago
+            travel_to Time.zone.local(2022, 1, 28, 10, 0, 0) do
+              demand = Fabricate :demand, project: project
+              task = Fabricate :task, demand: demand, created_date: 2.days.ago, end_date: Time.zone.now
+              other_task = Fabricate :task, demand: demand, created_date: 3.days.ago, end_date: Time.zone.now
 
-            consolidation = Fabricate :project_consolidation, project: project, consolidation_date: 2.days.ago, last_data_in_week: true
-            other_consolidation = Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago, last_data_in_week: true
-            Fabricate :project_consolidation, project: project, consolidation_date: Time.zone.today, last_data_in_week: false
-            Fabricate :project_consolidation, consolidation_date: 1.day.ago, last_data_in_week: true
+              consolidation = Fabricate :project_consolidation, project: project, consolidation_date: 2.days.ago, last_data_in_week: true
+              other_consolidation = Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago, last_data_in_week: true
 
-            get :tasks_tab, params: { company_id: company, id: project }, xhr: true
+              Fabricate :project_consolidation, project: project, consolidation_date: Time.zone.today, last_data_in_week: false
+              Fabricate :project_consolidation, consolidation_date: 1.day.ago, last_data_in_week: true
 
-            expect(response).to render_template 'projects/dashboards/tasks_dashboard'
-            expect(assigns(:tasks_charts_adapter).tasks_in_chart).to eq [other_task, task]
-            expect(assigns(:project_consolidations).map(&:consolidation_date)).to eq [consolidation.consolidation_date, other_consolidation.consolidation_date]
-            expect(assigns(:burnup_adapter).work_items).to eq [other_task, task]
-            expect(assigns(:company)).to eq company
-            expect(assigns(:project)).to eq project
+              get :tasks_tab, params: { company_id: company, id: project }, xhr: true
+
+              expect(response).to render_template 'projects/dashboards/tasks_dashboard'
+              expect(assigns(:tasks_charts_adapter).tasks_in_chart).to eq [other_task, task]
+              expect(assigns(:project_consolidations).map(&:consolidation_date)).to eq [consolidation.consolidation_date, other_consolidation.consolidation_date]
+              expect(assigns(:burnup_adapter).work_items).to eq [other_task, task]
+              expect(assigns(:task_completion_control_chart_data).items_ids).to eq [other_task.external_id, task.external_id]
+              expect(assigns(:task_completion_control_chart_data).completion_times).to eq [other_task.seconds_to_complete, task.seconds_to_complete]
+              expect(assigns(:company)).to eq company
+              expect(assigns(:project)).to eq project
+            end
           end
         end
 

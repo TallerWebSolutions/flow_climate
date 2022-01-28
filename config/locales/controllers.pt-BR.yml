@@ -1435,3 +1435,8 @@ pt-BR:
   tasks:
     index:
       title: "Tarefas"
+    charts:
+      completion_time: "Tempo para Resolver"
+      completion_control_chart:
+        title: "Gráfico de Dispersão do Tempo de Resolução"
+        ylabel: "Dias"

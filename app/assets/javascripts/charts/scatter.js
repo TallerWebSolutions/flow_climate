@@ -31,7 +31,7 @@ function buildScatterChart(scatterDiv) {
               color: "green",
             },
             text: `percentile 95% (${parseFloat(
-              scatterDiv.data("percentile95")
+                scatterDiv.data("percentile95")
             ).toFixed(2)} ${scatterDiv.data("tooltipsuffix")})`,
           },
         },
@@ -45,7 +45,7 @@ function buildScatterChart(scatterDiv) {
               color: "#DAA520",
             },
             text: `percentile 80% (${parseFloat(
-              scatterDiv.data("percentile80")
+                scatterDiv.data("percentile80")
             ).toFixed(2)} ${scatterDiv.data("tooltipsuffix")})`,
           },
         },
@@ -59,7 +59,7 @@ function buildScatterChart(scatterDiv) {
               color: "red",
             },
             text: `percentile 65% (${parseFloat(
-              scatterDiv.data("percentile65")
+                scatterDiv.data("percentile65")
             ).toFixed(2)} ${scatterDiv.data("tooltipsuffix")})`,
           },
         },
@@ -68,15 +68,16 @@ function buildScatterChart(scatterDiv) {
     tooltip: {
       formatter: function () {
         return `${this.key}: ${this.y.toFixed(2)} ${scatterDiv.data(
-          "tooltipsuffix"
+            "tooltipsuffix"
         )}`;
       },
     },
     legend: {
-      layout: "vertical",
-      align: "right",
-      verticalAlign: "middle",
-      borderWidth: 0,
+      type: 'line',
+      align: 'center',
+      verticalAlign: 'top',
+      x: 0,
+      y: 0
     },
     plotOptions: {
       scatter: {
@@ -99,7 +100,7 @@ function buildScatterChart(scatterDiv) {
         tooltip: {
           headerFormat: "<b>{series.name}</b><br>",
           pointFormat: `{point.name}: {point.y:.2f} ${scatterDiv.data(
-            "tooltipsuffix"
+              "tooltipsuffix"
           )}`,
         },
       },
