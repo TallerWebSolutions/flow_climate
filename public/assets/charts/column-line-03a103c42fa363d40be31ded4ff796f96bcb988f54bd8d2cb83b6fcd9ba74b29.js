@@ -23,9 +23,6 @@ function buildColumnLineChart(columnDiv) {
                 width: 1,
                 color: '#808080'
             }],
-            stackLabels: {
-                enabled: true
-            },
             opposite: true
         }, {
             title: {
@@ -37,7 +34,10 @@ function buildColumnLineChart(columnDiv) {
                 color: '#808080'
             }],
             stackLabels: {
-                enabled: true
+                enabled: true,
+                formatter: function () {
+                    return Highcharts.numberFormat(this.total, columnDiv.data('decimals'), ',', '.');
+                }
             }
         }],
         tooltip: {
@@ -55,9 +55,9 @@ function buildColumnLineChart(columnDiv) {
         },
         plotOptions: {
             column: {
+                stacking: columnDiv.data('stacking'),
                 dataLabels: {
-                    enabled: true,
-                    color: 'black',
+                    enabled: columnDiv.data('stacking') !== "normal",
                     formatter: function () {
                         return Highcharts.numberFormat(this.y, columnDiv.data('decimals'), ',', '.');
                     }
