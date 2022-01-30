@@ -19,6 +19,8 @@
       <th><%= Initiative.human_attribute_name(:projects) %></th>
       <th><%= Initiative.human_attribute_name(:demands) %></th>
       <th><%= Initiative.human_attribute_name(:tasks) %></th>
+      <th><%= I18n.t('general.delivered') %></th>
+      <th><%= I18n.t('general.percentage.delivered') %></th>
     </tr>
     </thead>
     <tbody>
@@ -31,6 +33,8 @@
         <td><%= initiative.projects.count %></td>
         <td><%= initiative.demands.count %></td>
         <td><%= initiative.tasks.count %></td>
+        <td><%= initiative.tasks.finished.count %></td>
+        <td><span><%= number_to_percentage(initiative.remaining_backlog_tasks_percentage * 100, precision: 2) %></td>
       </tr>
     <% end %>
     </tbody>

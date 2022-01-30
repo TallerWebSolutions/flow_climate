@@ -46,6 +46,7 @@ pt-BR:
     download_csv: "Download CSV"
     percentage:
       title: "Porcentagem"
+      delivered: "% Entregue"
     destroy:
       confirm: "Confirma a exclusão do registro?"
       success: "Excluído com sucesso"

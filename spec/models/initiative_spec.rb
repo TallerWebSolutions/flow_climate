@@ -99,27 +99,27 @@ RSpec.describe Initiative, type: :model do
     end
   end
 
-  describe '#last_update' do
+  describe '#remaining_backlog_tasks_percentage' do
     context 'with data' do
       it 'returns current tasks operational risk' do
         travel_to Time.zone.local(2022, 1, 30, 10, 0, 0) do
-          initiative = Fabricate :initiative, start_date: 4.weeks.ago, end_date: 3.weeks.from_now
-          Fabricate :initiative_consolidation, initiative: initiative, consolidation_date: 2.days.ago, tasks_operational_risk: 0.2
-          Fabricate :initiative_consolidation, initiative: initiative, consolidation_date: 1.day.ago, tasks_operational_risk: 0.7
-          Fabricate :initiative_consolidation, consolidation_date: Time.zone.now, tasks_operational_risk: 0.4
+          project = Fabricate :project
+          demand = Fabricate :demand, project: project
+          initiative = Fabricate :initiative, projects: [project], start_date: 4.weeks.ago, end_date: 3.weeks.from_now
+          Fabricate :task, demand: demand, created_date: 2.days.ago, end_date: 1.day.ago
+          Fabricate :task, demand: demand, created_date: 10.days.ago, end_date: 5.days.ago
+          Fabricate :task, demand: demand, created_date: 10.days.ago, end_date: nil
 
-          expect(initiative.last_update).to eq initiative.created_at
+          expect(initiative.remaining_backlog_tasks_percentage).to(be_within(0.1).of(0.6))
         end
       end
     end
 
     context 'without data' do
       it 'returns zero as tasks operational risk' do
-        travel_to Time.zone.local(2022, 1, 30, 10, 0, 0) do
-          initiative = Fabricate :initiative, start_date: 4.weeks.ago, end_date: 3.weeks.from_now
+        initiative = Fabricate :initiative, start_date: 4.weeks.ago, end_date: 3.weeks.from_now
 
-          expect(initiative.last_update).to eq nil
-        end
+        expect(initiative.remaining_backlog_tasks_percentage).to eq 1
       end
     end
   end

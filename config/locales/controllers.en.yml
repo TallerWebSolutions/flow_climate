@@ -46,6 +46,7 @@ en:
     download_csv: "Download CSV"
     percentage:
       title: "Percentage"
+      delivered: "% Delivered"
     destroy:
       confirm: "You are about to delete a record. Are you sure?"
       success: "Excluded"

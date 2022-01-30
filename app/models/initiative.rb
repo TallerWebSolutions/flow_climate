@@ -57,6 +57,15 @@ class Initiative < ApplicationRecord
     last_consolidation.updated_at
   end
 
+  def remaining_backlog_tasks_percentage
+    return 1 if tasks.blank?
+
+    total_tasks = tasks.count
+    finished_tasks_count = tasks.finished.count
+
+    finished_tasks_count.to_f / total_tasks
+  end
+
   private
 
   def last_consolidation
