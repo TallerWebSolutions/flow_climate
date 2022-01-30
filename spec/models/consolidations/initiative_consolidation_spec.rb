@@ -17,6 +17,15 @@ RSpec.describe Consolidations::InitiativeConsolidation, type: :model do
         expect(described_class.outdated_consolidations(4.weeks.ago, 1.day.ago)).to match_array([first_outdated_consolidation, second_outdated_consolidation])
       end
     end
+
+    describe '.weekly_data' do
+      it 'returns the outdated consolidations based on the given dates' do
+        last_data_in_week_consolidation = Fabricate :initiative_consolidation, consolidation_date: 5.weeks.ago, last_data_in_week: true
+        Fabricate :initiative_consolidation, consolidation_date: Time.zone.now
+
+        expect(described_class.weekly_data).to match_array([last_data_in_week_consolidation])
+      end
+    end
   end
 
   context 'validations' do

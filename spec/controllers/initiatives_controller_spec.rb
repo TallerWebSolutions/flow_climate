@@ -66,9 +66,18 @@ RSpec.describe InitiativesController, type: :controller do
       context 'with valid params' do
         context 'with data' do
           it 'assigns the instance variables and renders the template' do
+            initiative_consolidation = Fabricate :initiative_consolidation, initiative: initiative, consolidation_date: 1.day.ago, last_data_in_week: true
+            other_initiative_consolidation = Fabricate :initiative_consolidation, initiative: initiative, consolidation_date: 2.days.ago, last_data_in_week: true
+
+            Fabricate :initiative_consolidation
+
             get :show, params: { company_id: company, id: initiative }
 
             expect(assigns(:initiative)).to eq initiative
+            expect(assigns(:initiative_consolidations)).to eq [other_initiative_consolidation, initiative_consolidation]
+            expect(assigns(:burnup_adapter)).to be_a Highchart::BurnupAdapter
+            expect(assigns(:tasks_completed)).to eq 0
+            expect(assigns(:tasks_to_do)).to eq 0
             expect(response).to render_template 'initiatives/show'
           end
         end
@@ -101,9 +110,11 @@ RSpec.describe InitiativesController, type: :controller do
       it 'iterates over the dates and calls the job to generate the cache' do
         initiative = Fabricate :initiative, company: company, start_date: 3.days.ago, end_date: 1.day.from_now
 
-        expect(Consolidations::InitiativeConsolidationJob).to(receive(:perform_later).exactly(5).times).and_call_original
+        expect(Consolidations::InitiativeConsolidationJob).to(receive(:perform_later).exactly(4).times).and_call_original
 
         post :generate_cache, params: { company_id: company, id: initiative }
+
+        expect(flash[:notice]).to eq I18n.t('general.enqueued')
       end
     end
   end

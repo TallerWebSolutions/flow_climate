@@ -36,6 +36,8 @@ module Consolidations
     belongs_to :initiative
 
     scope :outdated_consolidations, ->(start_date, end_date) { where('initiative_consolidations.consolidation_date < :upper_limit OR initiative_consolidations.consolidation_date > :bottom_limit', upper_limit: start_date, bottom_limit: end_date) }
+    scope :weekly_data, -> { where(last_data_in_week: true) }
+
     validates :consolidation_date, presence: true
 
     validates :initiative, uniqueness: { scope: :consolidation_date }

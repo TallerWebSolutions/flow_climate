@@ -185,6 +185,8 @@ en:
     upstream: "Upstream"
     downstream: "Downstream"
     discarded_demands: "Discarded"
+    consolidations:
+      no_cache: "No consolidations. Click on the button to get some."
   header:
     logout: Logout
     explore: Explore
@@ -957,6 +959,9 @@ en:
     total_effort_month: "Total Effort in Month"
     risk_evolution:
       ytitle: "Risk (%)"
+    in_week: "In Week"
+    initiatives_completed:
+      title: "Tasks Completed"
   finances_params:
     edit:
       title: "Edit Financial Information"
@@ -1447,10 +1452,17 @@ en:
     index:
       title: "Tasks"
     charts:
-      completion_time: "Completion Time"
+      completion_time:
+        ytitle: "Days to Complete"
+        title: "P80 Evolution for Tasks Completion Time"
       completion_control_chart:
         title: "Control Chart to Completion Time"
         ylabel: "Days"
+      risk:
+        ytitle: "Operational Risk (%)"
+        title: "Operational Risk Evolution"
+      scope:
+        ytitle: "Tasks"
   initiatives:
     index:
       title: "Initiatives"
