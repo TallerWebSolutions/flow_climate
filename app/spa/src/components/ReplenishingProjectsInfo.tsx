@@ -106,12 +106,12 @@ const TableRow = ({ project, companySlug }: TableRowProps) => {
           />
         </TableCell>
         <TableCell>{project.remainingBacklog} demandas</TableCell>
-        <TableCell>{project.flowPressurePercentage}</TableCell>
+        <TableCell>{project.flowPressurePercentage.toFixed(2)}%</TableCell>
         <TableCell>{(project.leadTimeP80 / 86400).toFixed(2)}</TableCell>
         <TableCell>{project.qtyInProgress} demandas</TableCell>
         <TableCell>{project.startDate}</TableCell>
         <TableCell>{project.endDate}</TableCell>
-        <TableCell>{project.monteCarloP80}</TableCell>
+        <TableCell>{project.monteCarloP80.toFixed(2)}</TableCell>
       </MaterialTableRow>
       <MaterialTableRow sx={{ td: { color: "grey.600" } }}>
         <TableCell width={52} />
