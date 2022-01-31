@@ -226,5 +226,14 @@ RSpec.describe Membership, type: :model do
         expect(membership.monthly_payment).to eq 100
       end
     end
+
+    context 'with nil monthly payment in the team member' do
+      it 'returns the total monthly payment' do
+        team_member = Fabricate :team_member, hours_per_month: 160, monthly_payment: nil
+        membership = Fabricate :membership, team_member: team_member, hours_per_month: 0
+
+        expect(membership.monthly_payment).to eq 0
+      end
+    end
   end
 end

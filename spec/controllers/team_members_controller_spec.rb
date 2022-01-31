@@ -186,7 +186,7 @@ RSpec.describe TeamMembersController, type: :controller do
 
     describe 'POST #create' do
       context 'passing valid parameters' do
-        before { post :create, params: { company_id: company, team_member: { name: 'foo', jira_account_user_email: 'foo@bar.com', jira_account_id: 'jira_account_id', billable: false, active: false, monthly_payment: 100, hours_per_month: 10, billable_type: :outsourcing, start_date: 1.day.ago.to_date, end_date: Time.zone.today } }, xhr: true }
+        before { post :create, params: { company_id: company, team_member: { name: 'foo', jira_account_user_email: 'foo@bar.com', jira_account_id: 'jira_account_id', billable: false, active: false, hours_per_month: 10, monthly_payment: 100, hours_per_month: 10, billable_type: :outsourcing, start_date: 1.day.ago.to_date, end_date: Time.zone.today } }, xhr: true }
 
         it 'creates the new team member and redirects to team show' do
           expect(response).to render_template 'team_members/create'
@@ -196,6 +196,7 @@ RSpec.describe TeamMembersController, type: :controller do
           expect(TeamMember.last.jira_account_user_email).to eq 'foo@bar.com'
           expect(TeamMember.last.jira_account_id).to eq 'jira_account_id'
           expect(TeamMember.last.billable).to be false
+          expect(TeamMember.last.hours_per_month).to eq 10
           expect(TeamMember.last.monthly_payment).to eq 100
           expect(TeamMember.last.billable_type).to eq 'outsourcing'
           expect(TeamMember.last.start_date).to eq 1.day.ago.to_date
@@ -271,6 +272,7 @@ RSpec.describe TeamMembersController, type: :controller do
           expect(team_member_updated.jira_account_user_email).to eq 'foo@bar.com'
           expect(team_member_updated.jira_account_id).to eq 'jira_account_id'
           expect(team_member_updated.billable).to be false
+          expect(team_member_updated.hours_per_month.to_f).to be 10.0
           expect(team_member_updated.monthly_payment.to_f).to be 100.0
           expect(team_member_updated.billable_type).to eq 'outsourcing'
           expect(team_member_updated.start_date).to eq 1.day.ago.to_date

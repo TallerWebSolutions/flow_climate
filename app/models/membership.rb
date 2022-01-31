@@ -100,6 +100,8 @@ class Membership < ApplicationRecord
   end
 
   def monthly_payment
+    return 0 if team_member.monthly_payment.blank?
+
     membership_share = if hours_per_month.present? && team_member.hours_per_month.present? && hours_per_month < team_member.hours_per_month
                          hours_per_month.to_f / team_member.hours_per_month
                        else
