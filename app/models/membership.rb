@@ -42,7 +42,6 @@ class Membership < ApplicationRecord
 
   delegate :name, to: :team_member, prefix: true
   delegate :jira_account_id, to: :team_member
-  delegate :monthly_payment, to: :team_member
   delegate :company, to: :team
   delegate :projects, to: :team_member
 
@@ -98,6 +97,16 @@ class Membership < ApplicationRecord
     stages_to_work_on = team.stages.where(queue: false)
     stages_to_work_on = stages_to_work_on.development if developer?
     stages_to_work_on
+  end
+
+  def monthly_payment
+    membership_share = if hours_per_month.present? && team_member.hours_per_month.present? && hours_per_month < team_member.hours_per_month
+                         hours_per_month.to_f / team_member.hours_per_month
+                       else
+                         1
+                       end
+
+    team_member.monthly_payment * membership_share
   end
 
   private

@@ -8,6 +8,7 @@
 #  billable                :boolean          default(TRUE)
 #  billable_type           :integer          default("outsourcing")
 #  end_date                :date
+#  hours_per_month         :integer          default(0)
 #  jira_account_user_email :string
 #  monthly_payment         :decimal(, )
 #  name                    :string           not null

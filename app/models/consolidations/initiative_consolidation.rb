@@ -15,7 +15,7 @@
 #  tasks_delivered                    :integer
 #  tasks_delivered_in_month           :integer
 #  tasks_delivered_in_week            :integer
-#  tasks_operational_risk             :integer
+#  tasks_operational_risk             :decimal(, )
 #  tasks_scope                        :integer
 #  created_at                         :datetime         not null
 #  updated_at                         :datetime         not null

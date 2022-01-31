@@ -58,7 +58,6 @@ RSpec.describe Membership, type: :model do
   context 'delegations' do
     it { is_expected.to delegate_method(:name).to(:team_member).with_prefix }
     it { is_expected.to delegate_method(:jira_account_id).to(:team_member) }
-    it { is_expected.to delegate_method(:monthly_payment).to(:team_member) }
     it { is_expected.to delegate_method(:company).to(:team) }
     it { is_expected.to delegate_method(:projects).to(:team_member) }
   end
@@ -197,6 +196,35 @@ RSpec.describe Membership, type: :model do
       membership = Fabricate :membership, team: team, team_member: team_member, hours_per_month: 100, start_date: 1.month.ago, end_date: nil
 
       expect(membership.to_hash).to eq(member_name: team_member.name, jira_account_id: team_member.jira_account_id)
+    end
+  end
+
+  describe '#monthly_payment' do
+    context 'with hours_per_month in the team member' do
+      it 'returns the value share to the team' do
+        team_member = Fabricate :team_member, hours_per_month: 160, monthly_payment: 100
+        membership = Fabricate :membership, team_member: team_member, hours_per_month: 80
+
+        expect(membership.monthly_payment).to eq 50
+      end
+    end
+
+    context 'with no hours_per_month in the team member' do
+      it 'returns the total monthly payment' do
+        team_member = Fabricate :team_member, hours_per_month: nil, monthly_payment: 100
+        membership = Fabricate :membership, team_member: team_member, hours_per_month: 80
+
+        expect(membership.monthly_payment).to eq 100
+      end
+    end
+
+    context 'with zero as hours_per_month in the team member' do
+      it 'returns the total monthly payment' do
+        team_member = Fabricate :team_member, hours_per_month: 0, monthly_payment: 100
+        membership = Fabricate :membership, team_member: team_member, hours_per_month: 0
+
+        expect(membership.monthly_payment).to eq 100
+      end
     end
   end
 end

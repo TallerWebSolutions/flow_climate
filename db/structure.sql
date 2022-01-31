@@ -3129,7 +3129,8 @@ CREATE TABLE public.team_members (
     jira_account_user_email character varying,
     jira_account_id character varying,
     company_id integer NOT NULL,
-    user_id integer
+    user_id integer,
+    hours_per_month integer DEFAULT 0
 );
 
 
@@ -7087,6 +7088,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220125153405'),
 ('20220127194418'),
 ('20220128154551'),
-('20220128210845');
+('20220128210845'),
+('20220131144645');
 
 
