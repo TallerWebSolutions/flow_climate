@@ -102,7 +102,7 @@ GEM
     cloudinary (1.21.0)
       aws_cf_signer
       rest-client (>= 2.0.0)
-    code_analyzer (0.5.2)
+    code_analyzer (0.5.5)
       sexp_processor
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
@@ -172,7 +172,7 @@ GEM
     graphiql-rails (1.8.0)
       railties
       sprockets-rails
-    graphql (1.13.6)
+    graphql (1.13.7)
     hashdiff (1.0.1)
     histogram (0.2.4.1)
     http-accept (1.7.0)
@@ -305,9 +305,9 @@ GEM
     rails_12factor (0.0.3)
       rails_serve_static_assets
       rails_stdout_logging
-    rails_best_practices (1.22.1)
-      activesupport
-      code_analyzer (>= 0.5.2)
+    rails_best_practices (1.23.0)
+      activesupport (~> 6.1.4)
+      code_analyzer (~> 0.5.5)
       erubis
       i18n
       json
@@ -350,7 +350,7 @@ GEM
     rspec-expectations (3.10.2)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.10.0)
-    rspec-mocks (3.10.2)
+    rspec-mocks (3.10.3)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.10.0)
     rspec-rails (5.1.0)
