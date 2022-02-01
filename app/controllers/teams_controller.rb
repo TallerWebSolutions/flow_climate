@@ -123,10 +123,11 @@ class TeamsController < DemandsListController
   end
 
   def build_cache_object
-    @team_consolidations = @team.team_consolidations.weekly_data.where('consolidation_date >= :limit_date', limit_date: 6.months.ago).order(:consolidation_date)
-    @team_consolidations = @team.team_consolidations.order(:consolidation_date) if @team_consolidations.blank?
+    ordered_team_consolidations = @team.team_consolidations.order(:consolidation_date)
+    @team_consolidations = ordered_team_consolidations.weekly_data.where('consolidation_date >= :limit_date', limit_date: 6.months.ago)
+    @team_consolidations = ordered_team_consolidations if @team_consolidations.blank?
 
-    last_consolidation = @team_consolidations.last
+    last_consolidation = ordered_team_consolidations.last
     @team_consolidations = Consolidations::TeamConsolidation.where(id: (@team_consolidations.map(&:id) + [last_consolidation&.id].uniq)).order(:consolidation_date)
   end
 
