@@ -715,6 +715,7 @@ pt-BR:
         member_role: "Função"
       task:
         demand: "Demanda"
+        title: "Título"
         created_date: "Dt Criação"
         end_date: "Dt Entrega"
         seconds_to_complete: "Segundos para Finalizar"

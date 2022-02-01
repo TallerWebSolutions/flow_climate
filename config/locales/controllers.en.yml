@@ -838,6 +838,7 @@ en:
     service_delivery_reviews: "Service Delivery Review"
     azure: "Azure"
     initiatives_list: "Initiatives"
+    tasks: "Tasks"
   charts:
     xlabel:
       months: "Months"
@@ -1452,6 +1453,7 @@ en:
   tasks:
     index:
       title: "Tasks"
+      count: "%{count} Tasks"
     charts:
       completion_time:
         ytitle: "Days to Complete"

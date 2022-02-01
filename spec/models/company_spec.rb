@@ -13,6 +13,7 @@ RSpec.describe Company, type: :model do
     it { is_expected.to have_many(:jira_product_configs).through(:products) }
     it { is_expected.to have_many(:demands) }
     it { is_expected.to have_many(:demand_blocks).through(:demands) }
+    it { is_expected.to have_many(:tasks).through(:demands) }
     it { is_expected.to have_many(:team_members) }
     it { is_expected.to have_many(:memberships).through(:team_members) }
     it { is_expected.to have_many(:teams).dependent(:restrict_with_error) }
@@ -706,6 +707,26 @@ RSpec.describe Company, type: :model do
                    waiting_projects_count: company.waiting_projects_count, active_projects_count: company.active_projects_count }
 
       expect(company.to_hash).to eq expected
+    end
+  end
+
+  describe '#use_tasks?' do
+    context 'with tasks' do
+      it 'returns true' do
+        company = Fabricate :company
+        demand = Fabricate :demand, company: company
+        Fabricate :task, demand: demand
+
+        expect(company.use_tasks?).to be true
+      end
+    end
+
+    context 'without tasks' do
+      it 'returns true' do
+        company = Fabricate :company
+
+        expect(company.use_tasks?).to be false
+      end
     end
   end
 end

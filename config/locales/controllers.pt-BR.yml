@@ -927,6 +927,7 @@ pt-BR:
     service_delivery_reviews: "Service Delivery Review"
     azure: "Azure"
     initiatives_list: "Iniciativas"
+    tasks: "Tarefas"
   charts:
     xlabel:
       months: "Meses"
@@ -1442,6 +1443,7 @@ pt-BR:
   tasks:
     index:
       title: "Tarefas"
+      count: "%{count} Tarefas"
     charts:
       completion_time:
         ytitle: "Dias para Resolver"

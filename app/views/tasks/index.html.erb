@@ -1,0 +1,11 @@
+<div class="row">
+  <div class="col-xs-12">
+    <ul class="breadcrumb">
+      <li><%= link_to I18n.t('general.home.title'), root_path %></li>
+      <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
+      <li><%= Task.model_name.human(count: 2) %></li>
+    </ul>
+  </div>
+</div>
+
+<%= render 'tasks/tasks_table', company: @company, tasks_list: @tasks, paged_tasks: @paged_tasks %>

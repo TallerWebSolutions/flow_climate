@@ -1,16 +1,18 @@
 <div class="row">
   <div class="col-xs-12">
-    <h3><%= I18n.t('tasks.index.title') %></h3>
+    <h3><%= I18n.t('tasks.index.count', count: @tasks.count) %></h3>
   </div>
 </div>
 
-<% if tasks_list.empty? %>
+<%= paginate paged_tasks.page(params[:page]) %>
+
+<% if paged_tasks.empty? %>
   <%= render 'layouts/no_data', missing_data: Task.model_name.human.downcase %>
 <% else %>
   <table class="table table-striped">
     <thead>
     <tr>
-      <th><%= Task.human_attribute_name :demand_id %></th>
+      <th><%= Task.human_attribute_name :demand %></th>
       <th><%= Task.human_attribute_name :title %></th>
       <th><%= Task.human_attribute_name :created_date %></th>
       <th><%= Task.human_attribute_name :end_date %></th>
@@ -18,7 +20,7 @@
     </tr>
     </thead>
     <tbody>
-    <% tasks_list.each do |task| %>
+    <% paged_tasks.each do |task| %>
       <tr>
         <td><%= task.demand_id %></td>
         <td><%= task.title %></td>
