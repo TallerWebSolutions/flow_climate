@@ -133,7 +133,7 @@
     <div id="throughput-column"
          class="flow-chart"
          data-title='<%= I18n.t('projects.charts.throughput.title', target_name: team.name) %>'
-         data-xcategories=''
+         data-xcategories='<%= team_consolidations.map(&:consolidation_date).to_json %>'
          data-xtitle='<%= I18n.t('general.weeks') %>'
          data-ytitle='<%= I18n.t('projects.charts.throughput.ylabel') %>'
          data-prefix=''

@@ -125,6 +125,9 @@ class TeamsController < DemandsListController
   def build_cache_object
     @team_consolidations = @team.team_consolidations.weekly_data.where('consolidation_date >= :limit_date', limit_date: 6.months.ago).order(:consolidation_date)
     @team_consolidations = @team.team_consolidations.order(:consolidation_date) if @team_consolidations.blank?
+
+    last_consolidation = @team_consolidations.last
+    @team_consolidations = Consolidations::TeamConsolidation.where(id: (@team_consolidations.map(&:id) + [last_consolidation&.id].uniq)).order(:consolidation_date)
   end
 
   def build_projects_lead_time_in_time_array(executing_projects)

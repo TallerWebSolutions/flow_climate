@@ -82,7 +82,7 @@ module Consolidations
       hours_per_demand_in_semester = DemandService.instance.hours_per_demand(demands_finished_in_semester)
       hours_per_demand_in_year = DemandService.instance.hours_per_demand(demands_finished_in_year)
 
-      consolidation = Consolidations::TeamConsolidation.where(team: team, consolidation_date: cache_date.to_date).first_or_initialize
+      consolidation = Consolidations::TeamConsolidation.where(team: team, consolidation_date: cache_date.to_date).first_or_create
 
       flow_efficiency = DemandService.instance.flow_efficiency(demands_finished)
       flow_efficiency_in_month = DemandService.instance.flow_efficiency(demands_finished_in_month)
