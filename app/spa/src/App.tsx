@@ -6,6 +6,8 @@ import ApiProvider from "./lib/ApiProvider"
 import ThemeProvider from "./lib/ThemeProvider"
 import Replenishing from "./pages/Replenishing"
 
+import "./lib/i18n"
+
 const App = () => (
   <Fragment>
     <Helmet>

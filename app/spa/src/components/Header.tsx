@@ -2,6 +2,9 @@ import React from "react"
 import { Avatar, Box, Container, Link, Menu, MenuItem } from "@mui/material"
 import { useState } from "react"
 import { gql, useMutation } from "@apollo/client"
+
+import { t } from "../lib/i18n"
+
 import { Message } from "./MessagesBox"
 
 const buildLinks = (companyName: string) => [
@@ -100,11 +103,11 @@ const Header = ({ company, user, pushMessage }: HeaderProps) => {
           >
             {user && (
               <MenuItem component="a" href={`/users/${user.id}/edit`}>
-                Minha Conta
+                {t("userMenu.myAccount")}
               </MenuItem>
             )}
             <MenuItem component="a" href="/users/activate_email_notifications">
-              Ligar Notificações
+              {t("userMenu.turnOnNotifications")}
             </MenuItem>
             {company && (
               <React.Fragment>
@@ -124,10 +127,10 @@ const Header = ({ company, user, pushMessage }: HeaderProps) => {
               </React.Fragment>
             )}
             <MenuItem component="a" href="/users/admin_dashboard">
-              Admin Dashboard
+              {t("userMenu.adminDashboard")}
             </MenuItem>
             <MenuItem component="a" href="/users/sign_out">
-              Sair
+              {t("userMenu.logout")}
             </MenuItem>
           </Menu>
         </Box>
