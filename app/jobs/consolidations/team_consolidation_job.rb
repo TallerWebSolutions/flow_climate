@@ -10,19 +10,20 @@ module Consolidations
       beginning_of_day = cache_date.beginning_of_day
       end_of_day = cache_date.end_of_day
 
-      demands = team.demands.where('demands.created_date <= :analysed_date', analysed_date: end_of_day)
-      demands_in_week = team.demands.where('demands.created_date BETWEEN :bottom_limit AND :upper_limit', bottom_limit: beginning_of_day.beginning_of_week, upper_limit: end_of_day)
-      demands_in_month = team.demands.where('demands.created_date BETWEEN :bottom_limit AND :upper_limit', bottom_limit: beginning_of_day.beginning_of_month, upper_limit: end_of_day)
-      demands_in_quarter = team.demands.where('demands.created_date BETWEEN :bottom_limit AND :upper_limit', bottom_limit: beginning_of_day.beginning_of_quarter, upper_limit: end_of_day)
-      demands_in_semester = team.demands.where('demands.created_date BETWEEN :bottom_limit AND :upper_limit', bottom_limit: TimeService.instance.beginning_of_semester(beginning_of_day), upper_limit: end_of_day)
-      demands_in_year = team.demands.where('demands.created_date BETWEEN :bottom_limit AND :upper_limit', bottom_limit: beginning_of_day.beginning_of_year, upper_limit: end_of_day)
+      demands = team.demands.not_discarded_until(cache_date)
+      created_demands_to_date = demands.where('demands.created_date <= :analysed_date', analysed_date: end_of_day)
+      demands_in_week = demands.where('demands.created_date BETWEEN :bottom_limit AND :upper_limit', bottom_limit: beginning_of_day.beginning_of_week, upper_limit: end_of_day)
+      demands_in_month = demands.where('demands.created_date BETWEEN :bottom_limit AND :upper_limit', bottom_limit: beginning_of_day.beginning_of_month, upper_limit: end_of_day)
+      demands_in_quarter = demands.where('demands.created_date BETWEEN :bottom_limit AND :upper_limit', bottom_limit: beginning_of_day.beginning_of_quarter, upper_limit: end_of_day)
+      demands_in_semester = demands.where('demands.created_date BETWEEN :bottom_limit AND :upper_limit', bottom_limit: TimeService.instance.beginning_of_semester(beginning_of_day), upper_limit: end_of_day)
+      demands_in_year = demands.where('demands.created_date BETWEEN :bottom_limit AND :upper_limit', bottom_limit: beginning_of_day.beginning_of_year, upper_limit: end_of_day)
 
-      demands_finished = demands.finished_until_date(end_of_day).order(end_date: :asc)
-      demands_finished_in_week = demands.to_end_dates(beginning_of_day.beginning_of_week, end_of_day)
-      demands_finished_in_month = demands.to_end_dates(beginning_of_day.beginning_of_month, end_of_day)
-      demands_finished_in_quarter = demands.to_end_dates(beginning_of_day.beginning_of_quarter, end_of_day)
-      demands_finished_in_semester = demands.to_end_dates(TimeService.instance.beginning_of_semester(beginning_of_day), end_of_day)
-      demands_finished_in_year = demands.to_end_dates(beginning_of_day.beginning_of_year, end_of_day)
+      demands_finished = team.demands.finished_until_date(end_of_day).order(end_date: :asc)
+      demands_finished_in_week = team.demands.to_end_dates(beginning_of_day.beginning_of_week, end_of_day)
+      demands_finished_in_month = team.demands.to_end_dates(beginning_of_day.beginning_of_month, end_of_day)
+      demands_finished_in_quarter = team.demands.to_end_dates(beginning_of_day.beginning_of_quarter, end_of_day)
+      demands_finished_in_semester = team.demands.to_end_dates(TimeService.instance.beginning_of_semester(beginning_of_day), end_of_day)
+      demands_finished_in_year = team.demands.to_end_dates(beginning_of_day.beginning_of_year, end_of_day)
 
       demands_lead_time = demands_finished.map(&:leadtime).flatten.compact
       demands_lead_time_in_week = demands_finished_in_week.map(&:leadtime).flatten.compact
@@ -53,12 +54,10 @@ module Consolidations
       value_per_demand_in_year = 0
       value_per_demand_in_year = demands_finished_in_year.sum(&:cost_to_project) / demands_finished_in_year.count unless demands_finished_in_year.count.zero?
 
-      qty_demands_created = demands.where('created_date <= :limit_date', limit_date: end_of_day)
-      qty_demands_created_in_week = demands_in_week.where('created_date <= :limit_date', limit_date: end_of_day)
-      qty_demands_committed = demands.where('commitment_date <= :limit_date', limit_date: end_of_day)
-      qty_demands_committed_in_week = demands_in_week.where('commitment_date <= :limit_date', limit_date: end_of_day)
+      qty_demands_committed = created_demands_to_date.where('commitment_date <= :limit_date', limit_date: end_of_day).count
+      qty_demands_committed_in_week = demands_in_week.where('commitment_date BETWEEN :bottom_limit AND :upper_limit', bottom_limit: beginning_of_day.beginning_of_week, upper_limit: end_of_day).count
 
-      bugs_opened = demands.bug.count
+      bugs_opened = created_demands_to_date.bug.count
       bugs_opened_in_month = demands_in_month.bug.count
       bugs_opened_in_quarter = demands_in_quarter.bug.count
       bugs_opened_in_semester = demands_in_semester.bug.count
@@ -126,8 +125,8 @@ module Consolidations
                            value_per_demand_in_quarter: value_per_demand_in_quarter,
                            value_per_demand_in_semester: value_per_demand_in_semester,
                            value_per_demand_in_year: value_per_demand_in_year,
-                           qty_demands_created: qty_demands_created,
-                           qty_demands_created_in_week: qty_demands_created_in_week,
+                           qty_demands_created: created_demands_to_date.count,
+                           qty_demands_created_in_week: demands_in_week.count,
                            qty_demands_committed: qty_demands_committed,
                            qty_demands_committed_in_week: qty_demands_committed_in_week,
                            qty_demands_finished_upstream: demands_finished.finished_in_downstream.count,

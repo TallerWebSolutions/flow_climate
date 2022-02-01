@@ -644,7 +644,7 @@ pt-BR:
         series: "Defeitos Abertos"
       quality_opened_in_month_bugs:
         series: "Defeitos Abertos no Mês"
-      data_range: "3 meses de dados"
+      data_range: "6 meses de dados"
     replenishing:
       title: "Reabastecimento do Fluxo"
     charts:

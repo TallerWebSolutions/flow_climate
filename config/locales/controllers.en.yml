@@ -1158,7 +1158,7 @@ en:
         series: "Bugs Opened"
       quality_opened_in_month_bugs:
         series: "Bugs Opened in Month"
-      data_range: "3 months data"
+      data_range: "6 months data"
     new:
       title: "New Team"
     index:
