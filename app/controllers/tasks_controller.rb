@@ -9,10 +9,22 @@ class TasksController < AuthenticatedController
   end
 
   def search
+    search_tasks
+    render 'tasks/index'
+  end
+
+  def charts
+    search_tasks
+    finished_tasks = @tasks.finished
+    @task_completion_control_chart_data = ScatterData.new(finished_tasks.map(&:seconds_to_complete), finished_tasks.map(&:external_id))
+  end
+
+  private
+
+  def search_tasks
     @tasks = @company.tasks.order(created_date: :desc)
 
     @tasks = @tasks.where('title ILIKE :task_name_search', task_name_search: "%#{params['tasks_search']}%") if params['tasks_search'].present?
     @paged_tasks = @tasks.page(page_param)
-    render 'tasks/index'
   end
 end

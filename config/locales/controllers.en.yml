@@ -1457,9 +1457,7 @@ en:
       search:
         placeholder: "search by task name"
     charts:
-      completion_time:
-        ytitle: "Days to Complete"
-        title: "P80 Evolution for Tasks Completion Time"
+      completion_time: "Completion Time"
       completion_control_chart:
         title: "Control Chart to Completion Time"
         ylabel: "Days"

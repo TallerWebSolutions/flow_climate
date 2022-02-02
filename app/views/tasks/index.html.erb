@@ -8,6 +8,19 @@
   </div>
 </div>
 
+<div id="dashboard-controls">
+  <div class="row">
+    <div class="col-xs-12 center">
+      <div class="tab">
+        <%= link_to I18n.t('general.list'), '#', class: 'btn btn-default active' %>
+        <%= link_to I18n.t('general.tabs.charts'), charts_company_tasks_path(@company, tasks_search: params['tasks_search']), class: 'btn btn-default', method: :post %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr>
+
 <%= form_tag search_company_tasks_path(@company) do %>
   <div class="row row-equal">
     <div class="col-xs-6">
@@ -19,5 +32,7 @@
     </div>
   </div>
 <% end  %>
+
+<hr>
 
 <%= render 'tasks/tasks_table', company: @company, tasks_list: @tasks, paged_tasks: @paged_tasks %>

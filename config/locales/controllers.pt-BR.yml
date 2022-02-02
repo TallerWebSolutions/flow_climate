@@ -1447,9 +1447,7 @@ pt-BR:
       search:
         placeholder: "buscar pelo nome da tarefa"
     charts:
-      completion_time:
-        ytitle: "Dias para Resolver"
-        title: "Evolução do P80 do Tempo para Terminar"
+      completion_time: "Tempo para Finalizar"
       completion_control_chart:
         title: "Gráfico de Dispersão do Tempo de Resolução"
         ylabel: "Dias"

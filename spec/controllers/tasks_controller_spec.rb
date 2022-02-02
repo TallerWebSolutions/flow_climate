@@ -13,6 +13,12 @@ RSpec.describe TasksController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'POST #charts' do
+      before { post :charts, params: { company_id: 'foo' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -65,7 +71,7 @@ RSpec.describe TasksController, type: :controller do
       end
     end
 
-    describe 'POST #index' do
+    describe 'POST #search' do
       context 'with valid params' do
         context 'with search' do
           it 'assigns the instance variables and renders the template' do
@@ -117,6 +123,71 @@ RSpec.describe TasksController, type: :controller do
 
           context 'not permitted' do
             before { post :search, params: { company_id: demand.company } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
+
+    describe 'POST #charts' do
+      context 'with valid params' do
+        context 'with search' do
+          it 'assigns the instance variables and renders the template' do
+            demand = Fabricate :demand, company: company
+            task = Fabricate :task, demand: demand, created_date: 2.days.ago, end_date: Time.zone.now, title: 'fOo'
+            other_task = Fabricate :task, demand: demand, created_date: 1.day.ago, end_date: 2.hours.ago, title: 'fOObar'
+            Fabricate :task, demand: demand, created_date: Time.zone.now, title: 'xpto'
+
+            post :charts, params: { company_id: company, tasks_search: 'foo' }
+
+            expect(assigns(:tasks)).to eq [other_task, task]
+            expect(assigns(:task_completion_control_chart_data).items_ids).to eq [other_task.external_id, task.external_id]
+            expect(assigns(:task_completion_control_chart_data).completion_times).to eq [other_task.seconds_to_complete, task.seconds_to_complete]
+
+            expect(response).to render_template :charts
+          end
+        end
+
+        context 'with no search' do
+          it 'assigns the chart variable with the finished tasks and renders the template' do
+            demand = Fabricate :demand, company: company
+            task = Fabricate :task, demand: demand, created_date: 2.days.ago, end_date: Time.zone.now, title: 'fOo'
+            other_task = Fabricate :task, demand: demand, created_date: 1.day.ago, end_date: 2.hours.ago, title: 'fOObar'
+            another_task = Fabricate :task, demand: demand, created_date: Time.zone.now, title: 'xpto'
+
+            post :charts, params: { company_id: company }
+
+            expect(assigns(:tasks)).to eq [another_task, other_task, task]
+            expect(assigns(:task_completion_control_chart_data).items_ids).to eq [other_task.external_id, task.external_id]
+            expect(assigns(:task_completion_control_chart_data).completion_times).to eq [other_task.seconds_to_complete, task.seconds_to_complete]
+
+            expect(response).to render_template :charts
+          end
+        end
+
+        context 'with no data' do
+          it 'assigns an empty variable and renders the template' do
+            post :charts, params: { company_id: company, tasks_search: 'foo' }
+
+            expect(assigns(:tasks)).to eq []
+            expect(response).to render_template :charts
+          end
+        end
+      end
+
+      context 'with invalid params' do
+        context 'company' do
+          let(:demand) { Fabricate :demand }
+
+          context 'not found' do
+            before { post :charts, params: { company_id: 'foo' } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'not permitted' do
+            before { post :charts, params: { company_id: demand.company } }
 
             it { expect(response).to have_http_status :not_found }
           end

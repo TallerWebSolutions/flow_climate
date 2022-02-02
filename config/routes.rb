@@ -118,7 +118,10 @@ Rails.application.routes.draw do
     end
 
     resources :tasks, only: :index do
-      post :search, on: :collection
+      collection do
+        post 'charts/(:tasks_search)', action: :charts, as: 'charts'
+        post 'search/(:tasks_search)', action: :search, as: 'search'
+      end
     end
 
     resources :azure_accounts, only: [], module: 'azure' do
