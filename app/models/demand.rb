@@ -277,6 +277,15 @@ class Demand < ApplicationRecord
     end
   end
 
+  def discard_with_date(date)
+    update(discarded_at: date)
+    demand_transitions.update(discarded_at: date)
+    demand_blocks.update(discarded_at: date)
+    demand_comments.update(discarded_at: date)
+    item_assignments.update(discarded_at: date)
+    tasks.update(discarded_at: date)
+  end
+
   private
 
   def commitment_transition
@@ -318,6 +327,7 @@ class Demand < ApplicationRecord
     demand_blocks.discard_all
     demand_comments.discard_all
     item_assignments.discard_all
+    tasks.discard_all
   end
 
   def undiscard_dependencies
@@ -325,6 +335,7 @@ class Demand < ApplicationRecord
     demand_blocks.undiscard_all
     demand_comments.undiscard_all
     item_assignments.undiscard_all
+    tasks.undiscard_all
   end
 
   def decrease_uncertain_scope

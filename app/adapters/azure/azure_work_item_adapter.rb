@@ -77,8 +77,8 @@ module Azure
       company = product.company
       project = project(company, project_custom_field, team, work_item_response)
 
-      demand = Demand.where(company: company, team: team, external_id: work_item_response['id'],
-                            created_date: work_item_response['fields']['System.CreatedDate']).first_or_initialize
+      demand = Demand.with_discarded.where(company: company, team: team, external_id: work_item_response['id'],
+                                           created_date: work_item_response['fields']['System.CreatedDate']).first_or_initialize
 
       demand.update(demand_title: work_item_response['fields']['System.Title'].strip,
                     end_date: work_item_response['fields']['Microsoft.VSTS.Common.ClosedDate'],

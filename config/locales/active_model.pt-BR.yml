@@ -395,6 +395,7 @@ pt-BR:
             ready_to_deploy: Pronto para Entrega
             delivered: Entregue
             archived: Arquivado
+            trashcan: Lixeira
           stage_stream:
             upstream: Upstream
             downstream: Downstream

@@ -23,10 +23,13 @@
 #  fk_rails_ae3913c114  (demand_id => demands.id)
 #
 class Task < ApplicationRecord
+  include Discard::Model
+
   belongs_to :demand
 
-  scope :finished, ->(date = Time.zone.now) { where('tasks.end_date <= :limit_date', limit_date: date).order(:end_date) }
-  scope :open, ->(date = Time.zone.now) { where('tasks.created_date <= :limit_date AND tasks.end_date IS NULL', limit_date: date).order(:created_date) }
+  scope :not_discarded_until, ->(date) { where('tasks.discarded_at IS NULL OR tasks.discarded_at > :limit_date', limit_date: date) }
+  scope :finished, ->(date = Time.zone.now) { not_discarded_until(date).where('tasks.end_date <= :limit_date', limit_date: date).order(:end_date) }
+  scope :open, ->(date = Time.zone.now) { not_discarded_until(date).where('tasks.created_date <= :limit_date AND tasks.end_date IS NULL', limit_date: date).order(:created_date) }
 
   validates :title, :created_date, presence: true
 
@@ -36,5 +39,6 @@ class Task < ApplicationRecord
 
   def compute_time_to_deliver
     self.seconds_to_complete = (end_date - created_date).to_i if end_date.present?
+    self.discarded_at = demand.discarded_at
   end
 end

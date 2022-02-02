@@ -2995,7 +2995,8 @@ CREATE TABLE public.tasks (
     seconds_to_complete integer,
     end_date timestamp without time zone,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    discarded_at timestamp without time zone
 );
 
 
@@ -5650,6 +5651,13 @@ CREATE INDEX index_tasks_on_demand_id ON public.tasks USING btree (demand_id);
 
 
 --
+-- Name: index_tasks_on_discarded_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_tasks_on_discarded_at ON public.tasks USING btree (discarded_at);
+
+
+--
 -- Name: index_team_consolidations_on_last_data_in_month; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -7089,6 +7097,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220127194418'),
 ('20220128154551'),
 ('20220128210845'),
-('20220131144645');
+('20220131144645'),
+('20220202200413');
 
 

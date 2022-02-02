@@ -13,21 +13,45 @@ RSpec.describe Azure::AzureWorkItemUpdatesAdapter do
     let(:demand) { Fabricate :demand, external_id: 1, company: company, team: team }
 
     context 'when success' do
-      it 'returns the transitions' do
-        first_item_mocked_azure_return = file_fixture('azure_work_item_updates.json').read
+      context 'with not discarded item' do
+        it 'returns the transitions' do
+          first_item_mocked_azure_return = file_fixture('azure_work_item_updates.json').read
 
-        allow(HTTParty).to(receive(:get).with("#{Figaro.env.azure_base_uri}/#{azure_account.azure_organization}/#{azure_project.project_id}/_apis/wit/workitems/1/updates?api-version=6.1-preview.3",
-                                              basic_auth: { username: azure_account.username, password: azure_account.password },
-                                              headers: { 'Content-Type' => 'application/json' })).once { JSON.parse(first_item_mocked_azure_return) }
+          allow(HTTParty).to(receive(:get).with("#{Figaro.env.azure_base_uri}/#{azure_account.azure_organization}/#{azure_project.project_id}/_apis/wit/workitems/1/updates?api-version=6.1-preview.3",
+                                                basic_auth: { username: azure_account.username, password: azure_account.password },
+                                                headers: { 'Content-Type' => 'application/json' })).once { JSON.parse(first_item_mocked_azure_return) }
 
-        described_class.new(azure_account).transitions(demand, azure_product_config.azure_team.azure_project.project_id)
+          described_class.new(azure_account).transitions(demand, azure_product_config.azure_team.azure_project.project_id)
 
-        expect(Stage.all.map(&:name)).to eq ['To Do', 'Doing', 'Done']
-        expect(Stage.all.map { |s| [s.name, s.projects] }).to match_array [['To Do', [demand.project]], ['Doing', [demand.project]], ['Done', [demand.project]]]
-        expect(DemandTransition.all.order(:id).map(&:last_time_in)).to eq %w[2022-01-13T14:05:06.22Z 2022-01-17T13:34:43.95Z 2022-01-24T15:02:14.39Z]
-        expect(DemandTransition.all.order(:id).map(&:last_time_out)).to eq ['2022-01-17T13:34:43.95Z', '2022-01-24T15:02:14.39Z', nil]
-        expect(TeamMember.all.order(:id).map(&:name)).to eq ['Celso Martins']
-        expect(TeamMember.all.order(:id).map(&:user_id)).to eq [user.id]
+          expect(Stage.all.map(&:name)).to eq ['To Do', 'Doing', 'Done']
+          expect(Stage.all.map { |s| [s.name, s.projects] }).to match_array [['To Do', [demand.project]], ['Doing', [demand.project]], ['Done', [demand.project]]]
+          expect(DemandTransition.all.order(:id).map(&:last_time_in)).to eq %w[2022-01-13T14:05:06.22Z 2022-01-17T13:34:43.95Z 2022-01-24T15:02:14.39Z]
+          expect(DemandTransition.all.order(:id).map(&:last_time_out)).to eq ['2022-01-17T13:34:43.95Z', '2022-01-24T15:02:14.39Z', nil]
+          expect(TeamMember.all.order(:id).map(&:name)).to eq ['Celso Martins']
+          expect(TeamMember.all.order(:id).map(&:user_id)).to eq [user.id]
+        end
+      end
+
+      context 'with discarded item' do
+        it 'returns the transitions' do
+          Fabricate :stage, company: company, name: 'Done', stage_type: :trashcan, integration_id: azure_account.id
+
+          first_item_mocked_azure_return = file_fixture('azure_work_item_updates.json').read
+
+          allow(HTTParty).to(receive(:get).with("#{Figaro.env.azure_base_uri}/#{azure_account.azure_organization}/#{azure_project.project_id}/_apis/wit/workitems/1/updates?api-version=6.1-preview.3",
+                                                basic_auth: { username: azure_account.username, password: azure_account.password },
+                                                headers: { 'Content-Type' => 'application/json' })).once { JSON.parse(first_item_mocked_azure_return) }
+
+          described_class.new(azure_account).transitions(demand, azure_product_config.azure_team.azure_project.project_id)
+
+          expect(Stage.all.map(&:name)).to match_array ['To Do', 'Doing', 'Done']
+          expect(Stage.all.map { |s| [s.name, s.projects] }).to match_array [['To Do', [demand.project]], ['Doing', [demand.project]], ['Done', [demand.project]]]
+          expect(DemandTransition.all.order(:id).map(&:last_time_in)).to eq %w[2022-01-13T14:05:06.22Z 2022-01-17T13:34:43.95Z 2022-01-24T15:02:14.39Z]
+          expect(DemandTransition.all.order(:id).map(&:last_time_out)).to eq ['2022-01-17T13:34:43.95Z', '2022-01-24T15:02:14.39Z', nil]
+          expect(TeamMember.all.order(:id).map(&:name)).to eq ['Celso Martins']
+          expect(TeamMember.all.order(:id).map(&:user_id)).to eq [user.id]
+          expect(demand.discarded_at).to eq '2022-01-24T15:02:14.39Z'
+        end
       end
     end
 
