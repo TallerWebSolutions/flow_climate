@@ -36,7 +36,9 @@ module Azure
     end
 
     def read_stage(company, demand, to_stage_name)
-      to_stage = Stage.where(company: company, name: to_stage_name, integration_id: azure_account.id).first_or_create
+      to_stage = Stage.where(company: company, integration_id: azure_account.id).where('name ILIKE :stage_name', stage_name: to_stage_name).first_or_initialize
+      to_stage.name = to_stage_name.titleize
+      to_stage.save
       to_stage.projects << demand.project unless demand.project.blank? || to_stage.projects.include?(demand.project)
       to_stage
     end
@@ -45,7 +47,7 @@ module Azure
       from_stage_name = azure_json_value['fields']['System.State']['oldValue']
       return if from_stage_name.blank?
 
-      from_stage = Stage.where(company: company, name: from_stage_name).first
+      from_stage = Stage.where(company: company, integration_id: azure_account.id).where('name ILIKE :stage_name', stage_name: from_stage_name).first
       from_transition = DemandTransition.find_by(demand: demand, stage: from_stage)
       from_transition.update(last_time_out: to_date)
     end
