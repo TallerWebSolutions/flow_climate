@@ -82,6 +82,7 @@ class Project < ApplicationRecord
   scope :not_cancelled, -> { where.not(status: :cancelled) }
 
   after_save :remove_outdated_consolidations
+  after_save :update_initiative_dates
 
   def to_hash
     { id: id, name: name, start_date: start_date, end_date: end_date, remaining_backlog: remaining_backlog,
@@ -559,5 +560,15 @@ class Project < ApplicationRecord
     return 0 if end_date_for_from_date < start_date_limit
 
     (end_date_for_from_date - start_date_limit) + 1
+  end
+
+  def update_initiative_dates
+    return if initiative.blank?
+
+    initiative_reloaded = initiative.reload
+    start_date = initiative_reloaded.projects.map(&:start_date).min
+    end_date = initiative_reloaded.projects.map(&:end_date).max
+
+    initiative_reloaded.update(start_date: start_date, end_date: end_date)
   end
 end

@@ -1522,25 +1522,56 @@ RSpec.describe Project, type: :model do
     end
   end
 
-  describe '#remove_outdated_consolidations' do
-    context 'with project consolidations' do
-      it 'removes the consolidations outside project range' do
-        project = Fabricate :project, start_date: 4.weeks.ago, end_date: 2.weeks.from_now, qty_hours: 10
-        Fabricate :project_consolidation, project: project, consolidation_date: 5.weeks.ago, project_scope_hours: 5, last_data_in_week: true
-        Fabricate :project_consolidation, project: project, consolidation_date: 3.weeks.ago, project_scope_hours: 13, last_data_in_week: true
-        Fabricate :project_consolidation, project: project, consolidation_date: 4.weeks.from_now, project_scope_hours: 18
+  context 'callbacks' do
+    describe '#remove_outdated_consolidations' do
+      context 'with project consolidations' do
+        it 'removes the consolidations outside project range' do
+          project = Fabricate :project, start_date: 4.weeks.ago, end_date: 2.weeks.from_now, qty_hours: 10
+          Fabricate :project_consolidation, project: project, consolidation_date: 5.weeks.ago, project_scope_hours: 5, last_data_in_week: true
+          Fabricate :project_consolidation, project: project, consolidation_date: 3.weeks.ago, project_scope_hours: 13, last_data_in_week: true
+          Fabricate :project_consolidation, project: project, consolidation_date: 4.weeks.from_now, project_scope_hours: 18
 
-        project.remove_outdated_consolidations
-        expect(project.project_consolidations.reload.count).to eq 1
+          project.remove_outdated_consolidations
+          expect(project.project_consolidations.reload.count).to eq 1
+        end
+      end
+
+      context 'with no consolidations' do
+        let(:project) { Fabricate :project }
+
+        before { project.remove_outdated_consolidations }
+
+        it { expect(project.project_consolidations.reload.count).to eq 0 }
       end
     end
 
-    context 'with no consolidations' do
-      let(:project) { Fabricate :project }
+    describe '#update_initiative' do
+      context 'with initiative' do
+        it 'updates the iniciative with the new date information if the dates are sooner or later than the other projects date' do
+          company = Fabricate :company
+          initiative = Fabricate :initiative, company: company, start_date: 4.weeks.ago, end_date: 2.weeks.from_now
+          project = Fabricate :project, company: company, start_date: 4.weeks.ago, end_date: 2.weeks.from_now, initiative: initiative
+          other_project = Fabricate :project, company: company, start_date: 3.weeks.ago, end_date: 1.week.from_now, initiative: initiative
 
-      before { project.remove_outdated_consolidations }
+          other_project.update(start_date: 1.month.ago, end_date: 1.month.from_now)
 
-      it { expect(project.project_consolidations.reload.count).to eq 0 }
+          initiative_reloaded = initiative.reload
+          expect(initiative_reloaded.start_date).to eq other_project.start_date
+          expect(initiative_reloaded.end_date).to eq other_project.end_date
+
+          other_project.update(start_date: 3.weeks.ago, end_date: 1.week.from_now)
+          expect(initiative_reloaded.start_date).to eq project.start_date
+          expect(initiative_reloaded.end_date).to eq project.end_date
+        end
+      end
+
+      context 'without initiative' do
+        let(:project) { Fabricate :project }
+
+        before { project.remove_outdated_consolidations }
+
+        it { expect(project.project_consolidations.reload.count).to eq 0 }
+      end
     end
   end
 
