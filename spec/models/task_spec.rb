@@ -21,6 +21,17 @@ RSpec.describe Task, type: :model do
         expect(described_class.finished(27.hours.ago)).to eq [second_task]
       end
     end
+
+    describe '.open' do
+      it 'returns the finished tasks ordered by end_date' do
+        first_task = Fabricate :task, created_date: 2.days.ago, end_date: nil
+        second_task = Fabricate :task, created_date: 3.days.ago, end_date: nil
+        Fabricate :task, created_date: 2.days.ago, end_date: 1.day.ago
+
+        expect(described_class.open(Time.zone.now)).to eq [second_task, first_task]
+        expect(described_class.open(54.hours.ago)).to eq [second_task]
+      end
+    end
   end
 
   context 'callbacks' do

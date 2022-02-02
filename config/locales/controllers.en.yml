@@ -188,6 +188,7 @@ en:
     discarded_demands: "Discarded"
     consolidations:
       no_cache: "No consolidations. Click on the button to get some."
+    open: "Open"
   header:
     logout: Logout
     explore: Explore

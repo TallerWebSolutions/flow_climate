@@ -411,6 +411,7 @@ RSpec.describe DemandsController, type: :controller do
             expect(assigns(:demand_comments)).to eq [other_demand_comment, demand_comment]
             expect(assigns(:demand_efforts)).to eq [other_demand_effort, demand_effort]
             expect(assigns(:tasks_list)).to eq [other_task, task]
+            expect(assigns(:paged_tasks)).to eq [other_task, task]
             expect(assigns(:lead_time_breakdown)).to eq({})
           end
         end

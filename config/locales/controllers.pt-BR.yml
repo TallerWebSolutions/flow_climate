@@ -152,7 +152,7 @@ pt-BR:
     scope: "Escopo"
     all: "Todos"
     active: "Ativo"
-    finished: "Finalizado"
+    finished: "Finalizadas"
     name: "Nome"
     bugs: "Defeitos"
     people: "Pessoas"
@@ -188,6 +188,7 @@ pt-BR:
     discarded_demands: "Descartadas"
     consolidations:
       no_cache: "Sem consolidações. Clique no botão para gerar."
+    open: "Abertas"
   header:
     logout: Sair
     sign_up: Cadastre-se

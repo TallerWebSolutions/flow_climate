@@ -27,6 +27,10 @@
       <%= label_tag I18n.t('general.search_text'), nil, class: 'control-label' %>
       <%= text_field_tag :tasks_search, params['tasks_search'], class: 'form-control', placeholder: I18n.t('tasks.index.search.placeholder') %>
     </div>
+    <div class="col-xs-4">
+      <%= label_tag Task.human_attribute_name(:end_date), nil, class: 'control-label' %>
+      <%= select_tag :task_status, options_for_select([[I18n.t('general.open'), :not_finished], [I18n.t('general.finished'), :finished]], params[:task_status]), include_blank: I18n.t('general.select'), class: 'form-control' %>
+    </div>
     <div class="col-xs-2">
       <%= submit_tag I18n.t('general.search'), class: 'btn btn-sm btn-success bottom-button' %>
     </div>

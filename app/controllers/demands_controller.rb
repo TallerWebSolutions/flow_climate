@@ -143,7 +143,12 @@ class DemandsController < DemandsListController
     @demand_transitions = @demand.demand_transitions.includes([:stage]).order(:last_time_in)
     @demand_comments = @demand.demand_comments.includes([:team_member]).order(:comment_date)
     @demand_efforts = @demand.demand_efforts.order(:start_time_to_computation)
+    read_tasks
+  end
+
+  def read_tasks
     @tasks_list = @demand.tasks.order(created_date: :desc)
+    @paged_tasks = @tasks_list.page(params['page'])
   end
 
   # rubocop:disable Metrics/AbcSize

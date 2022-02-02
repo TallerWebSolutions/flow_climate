@@ -25,6 +25,12 @@ class TasksController < AuthenticatedController
     @tasks = @company.tasks.order(created_date: :desc)
 
     @tasks = @tasks.where('title ILIKE :task_name_search', task_name_search: "%#{params['tasks_search']}%") if params['tasks_search'].present?
+
+    if params['task_status'].present?
+      @tasks = @tasks.finished if params['task_status'] == 'finished'
+      @tasks = @tasks.open if params['task_status'] == 'not_finished'
+    end
+
     @paged_tasks = @tasks.page(page_param)
   end
 end

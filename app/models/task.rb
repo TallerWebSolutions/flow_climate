@@ -26,6 +26,8 @@ class Task < ApplicationRecord
   belongs_to :demand
 
   scope :finished, ->(date = Time.zone.now) { where('tasks.end_date <= :limit_date', limit_date: date).order(:end_date) }
+  scope :open, ->(date = Time.zone.now) { where('tasks.created_date <= :limit_date AND tasks.end_date IS NULL', limit_date: date).order(:created_date) }
+
   validates :title, :created_date, presence: true
 
   before_save :compute_time_to_deliver

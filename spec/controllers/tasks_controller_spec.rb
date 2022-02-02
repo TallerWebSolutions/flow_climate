@@ -76,11 +76,12 @@ RSpec.describe TasksController, type: :controller do
         context 'with search' do
           it 'assigns the instance variables and renders the template' do
             demand = Fabricate :demand, company: company
-            task = Fabricate :task, demand: demand, created_date: 2.days.ago, title: 'fOo'
-            other_task = Fabricate :task, demand: demand, created_date: 1.day.ago, title: 'fOObar'
-            Fabricate :task, demand: demand, created_date: Time.zone.now, title: 'xpto'
+            task = Fabricate :task, demand: demand, created_date: 2.days.ago, end_date: 1.day.ago, title: 'fOo'
+            other_task = Fabricate :task, demand: demand, created_date: 1.day.ago, end_date: 1.hour.ago, title: 'fOObar'
+            Fabricate :task, demand: demand, created_date: 1.day.ago, end_date: nil, title: 'barfOO'
+            Fabricate :task, demand: demand, created_date: 2.hours.ago, end_date: 1.hour.ago, title: 'xpto'
 
-            post :search, params: { company_id: company, tasks_search: 'foo' }
+            post :search, params: { company_id: company, tasks_search: 'foo', task_status: 'finished' }
 
             expect(assigns(:tasks)).to eq [other_task, task]
             expect(response).to render_template :index
