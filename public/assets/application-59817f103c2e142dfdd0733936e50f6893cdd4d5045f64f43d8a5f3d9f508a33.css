@@ -158,6 +158,7 @@ html {
 .bottom-spaced-component { margin-bottom: 8px; }
 
 .project-deadline-info {
+    font-size: large;
     margin-bottom: 17px;
 }
 
@@ -195,6 +196,30 @@ html {
 
 .check-box-group-label {
     padding-right: 10px;
+}
+
+.no-alert {
+    padding: 10px;
+    background-color: #8dfae3;
+    border: 2px solid darkgreen;
+}
+
+.yellow-alert {
+    padding: 10px;
+    background-color: #EEE1B7;
+    border: 2px solid darkorange;
+}
+
+.red-alert {
+    padding: 10px;
+    background-color: #f0cbcf;
+    border: 2px solid darkred;
+}
+
+.standard-form {
+    background-color: #f3f6fc;
+    margin-top: 10px;
+    padding: 10px;
 }
 
 label.required:after{content: " *"}
@@ -335,6 +360,10 @@ ul.breadcrumb li a:hover {
 
 .header-summary {
     padding: 5px;
+}
+
+.same-line-sync-symbol {
+    padding-left: 5px;
 }
 
 #popup {
@@ -549,15 +578,29 @@ ul.breadcrumb li a:hover {
     font-weight: bold;
 }
 
+.show-main-info {
+    font-size: x-large;
+    margin-bottom: 3px;
+}
+
+.show-main-info-buttons {
+    font-size: large;
+}
+
+.show-secondary-info {
+    font-size: medium;
+    margin-bottom: 20px;
+}
+
+.show-important-detail {
+    font-size: larger;
+    margin-bottom: 5px;
+    font-style: italic;
+}
+
 .stamp {
     padding: 10px;
     background-color: lightskyblue;
-    border: thin solid;
-}
-
-.red-stamp {
-    background-color: #f0cbcf;
-    padding: 10px;
     border: thin solid;
 }
 
@@ -578,12 +621,6 @@ ul.breadcrumb li a:hover {
     min-height: 25px;
 }
 
-.standard-form {
-    background-color: #f3f6fc;
-    margin-top: 10px;
-    padding: 10px;
-}
-
 .table-index {
     display: block;
     overflow-x: auto;
@@ -595,6 +632,10 @@ ul.breadcrumb li a:hover {
 }
 
 .upstream {
+    font-style: italic;
+}
+
+.discarded {
     font-style: italic;
 }
 
@@ -611,10 +652,7 @@ ul.breadcrumb li a:hover {
 }
 
 .countdown {
-    background-color: yellow;
-    font-size: larger;
-    padding: 5px;
-    border: solid medium #730E15;
+    font-weight: bold;
 }
 
 .loader {
@@ -652,10 +690,6 @@ ul.breadcrumb li a:hover {
 
 .summary-card-value {
     font-size: small;
-}
-
-.filter-button {
-    width: 100%;
 }
 
 .btn-active {
@@ -729,8 +763,18 @@ ul.breadcrumb li a:hover {
 
 .bottom-button {
     position: absolute;
+    bottom: 0;
+}
+.bottom-right-button {
+    position: absolute;
     right: 0;
     bottom: 0;
+}
+
+.row-equal {
+    display: flex;
+    display: -webkit-flex;
+    flex-wrap: wrap;
 }
 /* Add a black background color to the top navigation */
 .topnav {
