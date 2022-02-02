@@ -78,7 +78,7 @@
     <div class="col-xs-12 center">
       <div class="tab">
         <%= link_to Demand.model_name.human(count: 2), company_project_path(@company, @project), class: 'btn btn-default active', id: 'demands_charts_tab' %>
-        <% if company.use_tasks? %>
+        <% if @company.use_tasks? %>
           <%= link_to Task.model_name.human(count: 2), tasks_tab_company_project_path(@company, @project), class: 'btn btn-default', id: 'tasks_charts_tab', remote: true %>
         <% end %>
       </div>
