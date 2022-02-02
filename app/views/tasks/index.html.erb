@@ -8,4 +8,16 @@
   </div>
 </div>
 
+<%= form_tag search_company_tasks_path(@company) do %>
+  <div class="row row-equal">
+    <div class="col-xs-6">
+      <%= label_tag I18n.t('general.search_text'), nil, class: 'control-label' %>
+      <%= text_field_tag :tasks_search, params['tasks_search'], class: 'form-control', placeholder: I18n.t('tasks.index.search.placeholder') %>
+    </div>
+    <div class="col-xs-2">
+      <%= submit_tag I18n.t('general.search'), class: 'btn btn-sm btn-success bottom-button' %>
+    </div>
+  </div>
+<% end  %>
+
 <%= render 'tasks/tasks_table', company: @company, tasks_list: @tasks, paged_tasks: @paged_tasks %>

@@ -117,7 +117,9 @@ Rails.application.routes.draw do
       post :generate_cache, on: :member
     end
 
-    resources :tasks, only: :index
+    resources :tasks, only: :index do
+      post :search, on: :collection
+    end
 
     resources :azure_accounts, only: [], module: 'azure' do
       post :synchronize_azure, on: :collection

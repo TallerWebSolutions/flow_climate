@@ -1454,6 +1454,8 @@ en:
     index:
       title: "Tasks"
       count: "%{count} Tasks"
+      search:
+        placeholder: "search by task name"
     charts:
       completion_time:
         ytitle: "Days to Complete"

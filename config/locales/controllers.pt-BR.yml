@@ -1444,6 +1444,8 @@ pt-BR:
     index:
       title: "Tarefas"
       count: "%{count} Tarefas"
+      search:
+        placeholder: "buscar pelo nome da tarefa"
     charts:
       completion_time:
         ytitle: "Dias para Resolver"

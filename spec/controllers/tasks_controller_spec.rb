@@ -2,8 +2,14 @@
 
 RSpec.describe TasksController, type: :controller do
   context 'unauthenticated' do
-    describe '#index' do
+    describe 'GET #index' do
       before { get :index, params: { company_id: 'foo' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
+
+    describe 'POST #search' do
+      before { post :search, params: { company_id: 'foo' } }
 
       it { expect(response).to redirect_to new_user_session_path }
     end
@@ -15,7 +21,7 @@ RSpec.describe TasksController, type: :controller do
 
     before { sign_in user }
 
-    describe '#index' do
+    describe 'GET #index' do
       context 'with valid params' do
         context 'with data' do
           it 'assigns the instance variables and renders the template' do
@@ -52,6 +58,65 @@ RSpec.describe TasksController, type: :controller do
 
           context 'not permitted' do
             before { get :index, params: { company_id: demand.company } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
+
+    describe 'POST #index' do
+      context 'with valid params' do
+        context 'with search' do
+          it 'assigns the instance variables and renders the template' do
+            demand = Fabricate :demand, company: company
+            task = Fabricate :task, demand: demand, created_date: 2.days.ago, title: 'fOo'
+            other_task = Fabricate :task, demand: demand, created_date: 1.day.ago, title: 'fOObar'
+            Fabricate :task, demand: demand, created_date: Time.zone.now, title: 'xpto'
+
+            post :search, params: { company_id: company, tasks_search: 'foo' }
+
+            expect(assigns(:tasks)).to eq [other_task, task]
+            expect(response).to render_template :index
+          end
+        end
+
+        context 'with no search' do
+          it 'assigns the instance variables and renders the template' do
+            demand = Fabricate :demand, company: company
+            task = Fabricate :task, demand: demand, created_date: 2.days.ago, title: 'fOo'
+            other_task = Fabricate :task, demand: demand, created_date: 1.day.ago, title: 'fOObar'
+            another_task = Fabricate :task, demand: demand, created_date: Time.zone.now, title: 'xpto'
+
+            post :search, params: { company_id: company }
+
+            expect(assigns(:tasks)).to eq [another_task, other_task, task]
+            expect(response).to render_template :index
+          end
+        end
+
+        context 'with no data' do
+          it 'assigns an empty variable and renders the template' do
+            post :search, params: { company_id: company, tasks_search: 'foo' }
+
+            expect(assigns(:tasks)).to eq []
+            expect(response).to render_template :index
+          end
+        end
+      end
+
+      context 'with invalid params' do
+        context 'company' do
+          let(:demand) { Fabricate :demand }
+
+          context 'not found' do
+            before { post :search, params: { company_id: 'foo' } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'not permitted' do
+            before { post :search, params: { company_id: demand.company } }
 
             it { expect(response).to have_http_status :not_found }
           end
