@@ -13,10 +13,11 @@ RSpec.describe Task, type: :model do
   context 'scopes' do
     describe '.finished' do
       it 'returns the finished tasks ordered by end_date' do
+        discarded_demand = Fabricate :demand, discarded_at: 4.days.ago
         first_task = Fabricate :task, created_date: 2.days.ago, end_date: 1.day.ago
         second_task = Fabricate :task, created_date: 3.days.ago, end_date: 2.days.ago
         Fabricate :task, created_date: 2.days.ago, end_date: nil
-        Fabricate :task, created_date: 3.days.ago, end_date: 2.days.ago, discarded_at: 3.days.ago
+        Fabricate :task, demand: discarded_demand, created_date: 3.days.ago, end_date: 2.days.ago
 
         expect(described_class.finished(Time.zone.now)).to eq [second_task, first_task]
         expect(described_class.finished(27.hours.ago)).to eq [second_task]
@@ -38,7 +39,8 @@ RSpec.describe Task, type: :model do
 
     describe '.not_discarded_until' do
       it 'returns the not discarded tasks until date' do
-        first_task = Fabricate :task, created_date: 2.days.ago, end_date: nil, discarded_at: 4.days.ago
+        discarded_demand = Fabricate :demand, discarded_at: 4.days.ago
+        first_task = Fabricate :task, demand: discarded_demand, created_date: 2.days.ago, end_date: nil
         second_task = Fabricate :task, created_date: 3.days.ago, end_date: 2.days.ago, discarded_at: nil
 
         expect(described_class.not_discarded_until(Time.zone.now)).to eq [second_task]
