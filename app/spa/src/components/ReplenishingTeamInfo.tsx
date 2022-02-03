@@ -14,11 +14,11 @@ type ComparativeValue = {
   increased: boolean
 }
 
-type TeamReplenishment = {
-  throughputData: number[]
-  averageThroughput: ComparativeValue
-  leadTime: ComparativeValue
-  workInProgress: number
+export type TeamReplenishment = {
+  throughputData?: number[]
+  averageThroughput?: ComparativeValue
+  leadTime?: ComparativeValue
+  workInProgress?: number
 }
 
 type ReplenishmentTeamInfoProps = {

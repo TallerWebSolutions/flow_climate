@@ -24,7 +24,7 @@ type Product = {
 }
 
 export type Project = {
-  id: number
+  id: string
   name: string
   remainingWeeks: number
   remainingBacklog: number

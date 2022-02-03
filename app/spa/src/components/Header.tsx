@@ -25,7 +25,7 @@ export type User = {
 }
 
 type Company = {
-  id: number
+  id: string
   name: string
   slug: string
 }

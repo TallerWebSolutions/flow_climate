@@ -9,13 +9,20 @@ import {
 import { gql, useQuery, useMutation } from "@apollo/client"
 import CachedIcon from "@mui/icons-material/Cached"
 
-import ReplenishingTeamInfo from "../components/ReplenishingTeamInfo"
-import ReplenishingProjectsInfo from "../components/ReplenishingProjectsInfo"
+import ReplenishingTeamInfo, {
+  TeamReplenishment,
+} from "../components/ReplenishingTeamInfo"
+import ReplenishingProjectsInfo, {
+  Project,
+} from "../components/ReplenishingProjectsInfo"
 import Header, { User as HeaderUser } from "../components/Header"
 import { useParams } from "react-router-dom"
-import BreadcrumbReplenishingInfo from "../components/BreadcrumbReplenishingInfo"
+import BreadcrumbReplenishingInfo, {
+  BreadcrumbReplenishing,
+} from "../components/BreadcrumbReplenishingInfo"
 import MessagesBox, { Message } from "../components/MessagesBox"
 import { format } from "date-fns"
+import { replenishingMock } from "../lib/mocks"
 
 const QUERY = gql`
   query Replenishing($teamId: Int!) {
@@ -90,7 +97,7 @@ const GENERATE_REPLENISHING_MUTATION = gql`
 `
 
 type Company = {
-  id: number
+  id: string
   name: string
   slug: string
 }
@@ -99,11 +106,20 @@ type ReplenishingConsolidation = {
   id: string
   consolidationDate: string
   createdAt: string
+  project: Project
+  customerHappiness: number
 }
 
 type Team = {
   id: string
+  name: string
   company: Company
+  increasedLeadtime80: boolean
+  throughputData: number[]
+  averageThroughput: number
+  increasedAvgThroughtput: boolean
+  leadTime: number
+  workInProgress: number
   lastReplenishingConsolidations: ReplenishingConsolidation[]
 }
 
@@ -142,9 +158,15 @@ const useMessages = (): [Message[], (message: Message) => void] => {
 
 const Replenishing = () => {
   const { teamId, companyNickName = "" } = useParams()
-  const { data, loading, error } = useQuery<ReplenishingDTO>(QUERY, {
-    variables: { teamId: Number(teamId) },
+  const {
+    data: mock,
+    loading,
+    error,
+  } = useQuery<ReplenishingDTO>(QUERY, {
+    variables: { teamId },
   })
+
+  const data = replenishingMock
 
   const [messages, pushMessage] = useMessages()
 
@@ -185,13 +207,16 @@ const Replenishing = () => {
               justifyContent="space-between"
               alignItems="center"
             >
-              <BreadcrumbReplenishingInfo
-                replenishingBreadcrumb={normalizeBreadcrumbReplenishing(
-                  data,
-                  companyNickName,
-                  teamId
-                )}
-              />
+              {data.team.company && (
+                <BreadcrumbReplenishingInfo
+                  replenishingBreadcrumb={normalizeBreadcrumbReplenishing(
+                    data.team.company.name,
+                    data.team.company.slug,
+                    teamId,
+                    data.team.name
+                  )}
+                />
+              )}
               <Typography ml="auto" mr={1} variant="subtitle2">
                 Última atualização em{" "}
                 {format(
@@ -235,41 +260,48 @@ const Replenishing = () => {
 
 export default Replenishing
 
-export const normalizeTeamInfo = (data: any) => ({
-  throughputData: data.team.throughputData,
-  averageThroughput: {
-    value: data.team.averageThroughput,
-    increased: data.team.increasedAvgThroughtput,
+export const normalizeTeamInfo = (
+  data: ReplenishingDTO
+): TeamReplenishment => ({
+  throughputData: data?.team.throughputData,
+  averageThroughput: data?.team && {
+    value: data?.team.averageThroughput,
+    increased: data?.team.increasedAvgThroughtput,
   },
-  leadTime: {
-    value: data.team.leadTime,
-    increased: data.team.increasedLeadtime80,
+  leadTime: data?.team && {
+    value: data?.team.leadTime,
+    increased: data?.team.increasedLeadtime80,
   },
-  workInProgress: data.team.workInProgress,
+  workInProgress: data?.team.workInProgress,
 })
 
 const normalizeBreadcrumbReplenishing = (
-  data: any,
+  companyName?: string,
   companyNickName?: string,
-  teamId?: string
-) => {
+  teamId?: string,
+  teamName?: string
+): BreadcrumbReplenishing => {
   const teamUrl = `/companies/${companyNickName}/teams/${teamId}`
   const companyUrl = `/companies/${companyNickName}/`
   return {
-    companyName: data.team.company.name,
+    companyName,
     companyUrl,
-    teamName: data.team.name,
+    teamName,
     teamUrl,
   }
 }
 
-export const normalizeProjectInfo = (data: any) =>
-  data.team.lastReplenishingConsolidations.map(function (consolidation: any) {
-    return {
-      ...consolidation.project,
-      customerHappiness: consolidation.customerHappiness,
-    }
-  })
+export const normalizeProjectInfo = (data: ReplenishingDTO): Project[] =>
+  data
+    ? data.team.lastReplenishingConsolidations.map(function (
+        consolidation: ReplenishingConsolidation
+      ) {
+        return {
+          ...consolidation.project,
+          customerHappiness: consolidation.customerHappiness,
+        }
+      })
+    : []
 
 const normalizeUser = (data: ReplenishingDTO): HeaderUser => ({
   id: data?.me.id || "",

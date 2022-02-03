@@ -1,10 +1,10 @@
 import { Breadcrumbs, Box, Link, Typography } from "@mui/material"
 
-type BreadcrumbReplenishing = {
-  companyName: string
-  companyUrl: string
-  teamName: string
-  teamUrl: string
+export type BreadcrumbReplenishing = {
+  companyName?: string
+  companyUrl?: string
+  teamName?: string
+  teamUrl?: string
 }
 
 type BreadcrumbReplenishingProps = {
