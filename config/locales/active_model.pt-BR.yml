@@ -715,6 +715,7 @@ pt-BR:
         who: "Quem"
         member_role: "Função"
       task:
+        external_id: "Id da Tarefa"
         demand: "Demanda"
         title: "Título"
         created_date: "Dt Criação"
