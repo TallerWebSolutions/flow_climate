@@ -12,6 +12,7 @@
   <table class="table table-striped">
     <thead>
     <tr>
+      <th><%= Task.human_attribute_name :external_id %></th>
       <th><%= Task.human_attribute_name :demand %></th>
       <th><%= Task.human_attribute_name :title %></th>
       <th><%= Task.human_attribute_name :created_date %></th>
@@ -22,6 +23,7 @@
     <tbody>
     <% paged_tasks.each do |task| %>
       <tr>
+        <td><%= task.external_id %></td>
         <td><%= task.demand_id %></td>
         <td><%= task.title %></td>
         <td><%= I18n.l(task.created_date, format: :short) %></td>

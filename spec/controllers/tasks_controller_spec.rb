@@ -32,8 +32,10 @@ RSpec.describe TasksController, type: :controller do
         context 'with data' do
           it 'assigns the instance variables and renders the template' do
             demand = Fabricate :demand, company: company
+            discarded_demand = Fabricate :demand, company: company, discarded_at: 2.days.ago
             task = Fabricate :task, demand: demand, created_date: 1.day.ago
             other_task = Fabricate :task, demand: demand, created_date: Time.zone.now
+            Fabricate :task, demand: discarded_demand, created_date: Time.zone.now
 
             get :index, params: { company_id: company }
 
@@ -76,8 +78,10 @@ RSpec.describe TasksController, type: :controller do
         context 'with search' do
           it 'assigns the instance variables and renders the template' do
             demand = Fabricate :demand, company: company
+            discarded_demand = Fabricate :demand, company: company, discarded_at: 2.days.ago
             task = Fabricate :task, demand: demand, created_date: 2.days.ago, end_date: 1.day.ago, title: 'fOo'
             other_task = Fabricate :task, demand: demand, created_date: 1.day.ago, end_date: 1.hour.ago, title: 'fOObar'
+            Fabricate :task, demand: discarded_demand, created_date: 1.day.ago, end_date: 1.hour.ago, title: 'fOObar'
             Fabricate :task, demand: demand, created_date: 1.day.ago, end_date: nil, title: 'barfOO'
             Fabricate :task, demand: demand, created_date: 2.hours.ago, end_date: 1.hour.ago, title: 'xpto'
 
