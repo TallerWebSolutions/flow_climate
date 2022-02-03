@@ -13,6 +13,8 @@ module Azure
         azure_product_config = product.azure_product_config
         work_items_ids = work_item_adapter.work_items_ids(azure_product_config)
 
+        remove_deleted_items(azure_account.company, work_items_ids)
+
         Rails.logger.info("[AzureAPI] found #{work_items_ids.count} work items")
 
         work_items_ids.sort.uniq.each do |id|
@@ -28,6 +30,12 @@ module Azure
       finished_time = Time.zone.now
 
       UserNotifierMailer.async_activity_finished(user_email, user_name, AzureAccount.model_name.human.downcase, azure_account.id, started_time, finished_time, '').deliver
+    end
+
+    private
+
+    def remove_deleted_items(company, azure_work_items_ids)
+      company.demands.where.not(external_id: azure_work_items_ids).map(&:discard)
     end
   end
 end
