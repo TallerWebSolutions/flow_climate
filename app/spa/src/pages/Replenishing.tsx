@@ -22,7 +22,6 @@ import BreadcrumbReplenishingInfo, {
 } from "../components/BreadcrumbReplenishingInfo"
 import MessagesBox, { Message } from "../components/MessagesBox"
 import { format } from "date-fns"
-import { replenishingMock } from "../lib/mocks"
 
 const QUERY = gql`
   query Replenishing($teamId: Int!) {
@@ -158,15 +157,9 @@ const useMessages = (): [Message[], (message: Message) => void] => {
 
 const Replenishing = () => {
   const { teamId, companyNickName = "" } = useParams()
-  const {
-    data: mock,
-    loading,
-    error,
-  } = useQuery<ReplenishingDTO>(QUERY, {
+  const { data, loading, error } = useQuery<ReplenishingDTO>(QUERY, {
     variables: { teamId },
   })
-
-  const data = replenishingMock
 
   const [messages, pushMessage] = useMessages()
 
