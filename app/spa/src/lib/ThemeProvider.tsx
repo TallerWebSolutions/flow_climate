@@ -3,7 +3,6 @@ import {
   createTheme,
   ThemeProvider as MaterialThemeProvider,
 } from "@mui/material/styles"
-import { shouldInclude } from "@apollo/client/utilities"
 
 const theme = createTheme({
   palette: {
