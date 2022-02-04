@@ -29,8 +29,11 @@ module Azure
       team_member = read_team_member(azure_json_value, company)
 
       to_date = azure_json_value['fields']['System.ChangedDate']['newValue']
+      read_from_transition(azure_json_value, company, demand, to_date)
+
       to_stage = read_stage(company, demand, to_stage_name)
-      demand_transition = DemandTransition.where(demand: demand, stage: to_stage, team_member: team_member, last_time_in: to_date).first_or_create
+      demand_transition = DemandTransition.where(demand: demand, stage: to_stage, team_member: team_member, last_time_in: to_date).first_or_initialize
+      demand_transition.save
 
       if to_stage.trashcan?
         demand.discard_with_date(to_date)
@@ -38,7 +41,6 @@ module Azure
         demand.undiscard
       end
 
-      read_from_transition(azure_json_value, company, demand, to_date)
       demand_transition
     end
 
