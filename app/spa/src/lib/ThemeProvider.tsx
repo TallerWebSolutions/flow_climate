@@ -3,6 +3,7 @@ import {
   createTheme,
   ThemeProvider as MaterialThemeProvider,
 } from "@mui/material/styles"
+import { shouldInclude } from "@apollo/client/utilities"
 
 const theme = createTheme({
   palette: {
@@ -15,6 +16,11 @@ const theme = createTheme({
       light: "#634C6B",
       main: "#29172E",
       dark: "#140318",
+    },
+    warning: {
+      light: "#FF9C3F",
+      main: "#ED6C02",
+      dark: "#B33D00",
     },
   },
   typography: {
@@ -66,6 +72,7 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 2,
+          border: "1px solid",
         },
       },
     },

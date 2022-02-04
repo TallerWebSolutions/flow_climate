@@ -126,7 +126,7 @@ const TableRow = ({ project, companySlug }: TableRowProps) => {
         <TableCell />
         <TableCell>{project.flowPressure.toFixed(2)}</TableCell>
         <TableCell />
-        <TableCell>{project.workInProgressLimit}</TableCell>
+        <TableCell>Limite de WiP: {project.workInProgressLimit}</TableCell>
         <TableCell>Idade: {project.aging} dias</TableCell>
         <TableCell>Restante: {project.remainingWeeks} semanas</TableCell>
       </MaterialTableRow>
@@ -186,7 +186,8 @@ const TableRow = ({ project, companySlug }: TableRowProps) => {
                     Selecionadas: {project.qtySelected}
                   </TableCell>
                   <TableCell sx={{ color: "grey.600" }}>
-                    Chances da data: {project.teamBasedOddsToDeadline * 100}%
+                    Chances da data:{" "}
+                    {(project.teamBasedOddsToDeadline * 100).toFixed(2)}%
                   </TableCell>
                 </MaterialTableRow>
               </TableBody>

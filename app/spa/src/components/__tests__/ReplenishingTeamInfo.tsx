@@ -1,9 +1,10 @@
 import { render } from "@testing-library/react"
 
-import { projectMock } from "../../lib/mocks"
+import { projectMock, teamMock } from "../../lib/mocks"
 
 import ReplenishmentTeamInfo, {
   getWipLimits,
+  getProjects,
   isTeamWipLimitSurpassed,
 } from "../ReplenishingTeamInfo"
 
@@ -74,6 +75,10 @@ describe("components/ReplenishmentTeamInfo", () => {
 })
 
 describe("normalizers/ReplenishmentTeamInfo", () => {
+  it("should get all projects from team data", () => {
+    expect(getProjects(teamMock)).toEqual([projectMock])
+  })
+
   it("should get wip limit from all projects", () => {
     expect(getWipLimits([])).toEqual([])
     expect(getWipLimits([projectMock])).toEqual([23])

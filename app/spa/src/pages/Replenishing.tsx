@@ -110,7 +110,7 @@ type ReplenishingConsolidation = {
   customerHappiness: number
 }
 
-type Team = {
+export type Team = {
   id: string
   name: string
   company: Company
@@ -260,6 +260,11 @@ const Replenishing = () => {
 
 export default Replenishing
 
+export const getProjects = (team: Team): Project[] =>
+  team.lastReplenishingConsolidations.map(
+    (consolidation) => consolidation.project
+  )
+
 export const normalizeTeamInfo = (
   data: ReplenishingDTO
 ): TeamReplenishment => ({
@@ -273,6 +278,7 @@ export const normalizeTeamInfo = (
     increased: data?.team.increasedLeadtime80,
   },
   workInProgress: data?.team.workInProgress,
+  projects: data ? getProjects(data.team) : [],
 })
 
 const normalizeBreadcrumbReplenishing = (

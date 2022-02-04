@@ -1,14 +1,9 @@
-import {
-  Card,
-  CardContent,
-  Typography,
-  Grid,
-  Divider,
-  CardContentProps,
-} from "@mui/material"
+import { Typography, Grid, Divider } from "@mui/material"
 import { Box } from "@mui/system"
 import { Fragment } from "react"
+
 import { Project } from "./ReplenishingProjectsInfo"
+import Card, { CardType } from "./Card"
 
 type ComparativeValue = {
   value: number
@@ -20,87 +15,63 @@ export type TeamReplenishment = {
   averageThroughput?: ComparativeValue
   leadTime?: ComparativeValue
   workInProgress?: number
+  projects: Project[]
 }
 
 type ReplenishmentTeamInfoProps = {
   team: TeamReplenishment
 }
 
-type CustomCardContentProps = {
-  title: string
-  subtitle: string
-} & CardContentProps
-
-const CustomCardContent = ({
-  children,
-  title,
-  subtitle,
-  ...props
-}: CustomCardContentProps) => (
-  <CardContent {...props} sx={{ ":last-child": { paddingBottom: 2 } }}>
-    <Typography variant="h6" component="h6">
-      {title}
-    </Typography>
-    <Typography
-      variant="body2"
-      component="span"
-      color="grey.600"
-      mb={1}
-      display="block"
-    >
-      {subtitle}
-    </Typography>
-    {children}
-  </CardContent>
-)
-
 export const getWipLimits = (projects: Project[]): number[] =>
   projects.map(({ workInProgressLimit }) => workInProgressLimit)
 
 export const isTeamWipLimitSurpassed = (
   projects: Project[],
-  teamWipLimit: number
-) => getWipLimits(projects).reduce((a, b) => a + b) > teamWipLimit
+  teamWipLimit?: number
+) => {
+  console.log(getWipLimits(projects), teamWipLimit)
+
+  return getWipLimits(projects).reduce((a, b) => a + b) > Number(teamWipLimit)
+}
 
 const ReplenishmentTeamInfo = ({ team }: ReplenishmentTeamInfoProps) => (
   <Grid container spacing={15} mb={4} sx={{ pointerEvents: "none" }}>
     <Grid item xs={4}>
-      <Card>
-        <CustomCardContent title="Throughput" subtitle="Últimas quatro semanas">
-          <Box display="flex">
-            {team.throughputData?.map((th, index, list) => (
-              <Fragment key={`${th}--${index}`}>
-                <Typography key={`value--${index}`}>{th}</Typography>
-                {index < list.length - 1 && (
-                  <Divider
-                    key={`divider--${index}`}
-                    variant="middle"
-                    orientation="vertical"
-                    flexItem
-                    sx={{ marginX: 2 }}
-                  />
-                )}
-              </Fragment>
-            ))}
-          </Box>
-        </CustomCardContent>
+      <Card title="Throughput" subtitle="Últimas quatro semanas">
+        <Box display="flex">
+          {team.throughputData?.map((th, index, list) => (
+            <Fragment key={`${th}--${index}`}>
+              <Typography key={`value--${index}`}>{th}</Typography>
+              {index < list.length - 1 && (
+                <Divider
+                  key={`divider--${index}`}
+                  variant="middle"
+                  orientation="vertical"
+                  flexItem
+                  sx={{ marginX: 2 }}
+                />
+              )}
+            </Fragment>
+          ))}
+        </Box>
       </Card>
     </Grid>
     <Grid item xs={4}>
-      <Card>
-        <CustomCardContent title="Lead Time" subtitle="Últimas quatro semanas">
-          <Typography>{team.leadTime?.value?.toFixed(2)}</Typography>
-        </CustomCardContent>
+      <Card title="Lead Time" subtitle="Últimas quatro semanas">
+        <Typography>{team.leadTime?.value?.toFixed(2)}</Typography>
       </Card>
     </Grid>
     <Grid item xs={4}>
-      <Card>
-        <CustomCardContent
-          title="Work in Progress"
-          subtitle="WiP máximo do time:"
-        >
-          <Typography>{team.workInProgress}</Typography>
-        </CustomCardContent>
+      <Card
+        title="Work in Progress"
+        subtitle="WiP máximo do time"
+        type={
+          isTeamWipLimitSurpassed(team.projects, team.workInProgress)
+            ? CardType.alert
+            : CardType.primary
+        }
+      >
+        <Typography>{team.workInProgress}</Typography>
       </Card>
     </Grid>
   </Grid>
