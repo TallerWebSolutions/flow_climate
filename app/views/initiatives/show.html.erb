@@ -81,7 +81,7 @@
          data-title='<%= I18n.t('tasks.charts.risk.title') %>'
          data-ytitle='<%= I18n.t('tasks.charts.risk.ytitle') %>'
          data-prefix=''
-         data-tooltipsuffix='<%= I18n.t('general.days') %>'
+         data-tooltipsuffix='%'
          data-datalabelsuffix=''
          data-series='<%= [{ name: I18n.t('tasks.charts.risk.ytitle'), data: @initiative_consolidations.map(&:tasks_operational_risk).map { |risk| risk.to_f * 100 } }].to_json %>'
          data-decimals='2'>
