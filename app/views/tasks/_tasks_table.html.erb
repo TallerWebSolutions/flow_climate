@@ -23,7 +23,7 @@
     <tbody>
     <% paged_tasks.each do |task| %>
       <tr>
-        <td><%= task.external_id %></td>
+        <td><%= link_to task.external_id, company_task_path(company, task) %></td>
         <td><%= task.demand_id %></td>
         <td><%= task.title %></td>
         <td><%= I18n.l(task.created_date, format: :short) %></td>

@@ -67,9 +67,7 @@ function buildScatterChart(scatterDiv) {
     },
     tooltip: {
       formatter: function () {
-        return `${this.key}: ${this.y.toFixed(2)} ${scatterDiv.data(
-            "tooltipsuffix"
-        )}`;
+        return `${this.x}: ${this.y.toFixed(2)} ${scatterDiv.data("tooltipsuffix")}`;
       },
     },
     legend: {
@@ -97,14 +95,20 @@ function buildScatterChart(scatterDiv) {
             },
           },
         },
-        tooltip: {
-          headerFormat: "<b>{series.name}</b><br>",
-          pointFormat: `{point.name}: {point.y:.2f} ${scatterDiv.data(
-              "tooltipsuffix"
-          )}`,
-        },
+      },
+      series: {
+        point: {
+          events: {
+            click: function () {
+              if (this.url) {
+                window.open(this.url);
+              }
+            }
+          }
+        }
       },
     },
+
     series: scatterDiv.data("series"),
   });
 }

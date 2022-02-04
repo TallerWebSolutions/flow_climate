@@ -1448,7 +1448,9 @@ pt-BR:
       search:
         placeholder: "buscar pelo nome da tarefa"
     charts:
-      completion_time: "Tempo para Finalizar"
+      completion_time:
+        title: "Tempo para Finalizar"
+        ytitle: "dias"
       completion_control_chart:
         title: "Gráfico de Dispersão do Tempo de Resolução"
         ylabel: "Dias"

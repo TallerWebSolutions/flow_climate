@@ -16,7 +16,12 @@ class TasksController < AuthenticatedController
   def charts
     search_tasks
     finished_tasks = @tasks.not_discarded_until(Time.zone.now).finished
-    @task_completion_control_chart_data = ScatterData.new(finished_tasks.map(&:seconds_to_complete), finished_tasks.map(&:external_id))
+    @task_completion_control_chart_data = finished_tasks.map { |task| { id: task.external_id, completion_time: task.seconds_to_complete, item_url: company_task_url(@company, task) } }
+    @completion_times = @task_completion_control_chart_data.pluck(:completion_time)
+  end
+
+  def show
+    @task = @company.tasks.find(params['id'])
   end
 
   private

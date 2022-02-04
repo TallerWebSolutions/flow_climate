@@ -1,4 +1,4 @@
-const projectTaskBasedScatterPlot = $("#project-dashboard-task-completion-scatter");
-if (projectTaskBasedScatterPlot.length !== 0) {
-    buildScatterChart(projectTaskBasedScatterPlot);
+const tasksBasedScatterPlot = $("#tasks-completion-scatter");
+if (tasksBasedScatterPlot.length !== 0) {
+    buildScatterChart(tasksBasedScatterPlot);
 }

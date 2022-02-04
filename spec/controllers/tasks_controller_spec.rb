@@ -19,6 +19,12 @@ RSpec.describe TasksController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'GET #show' do
+      before { get :show, params: { company_id: 'foo', id: 'bar' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -147,8 +153,8 @@ RSpec.describe TasksController, type: :controller do
             post :charts, params: { company_id: company, tasks_search: 'foo' }
 
             expect(assigns(:tasks)).to eq [other_task, task]
-            expect(assigns(:task_completion_control_chart_data).items_ids).to eq [other_task.external_id, task.external_id]
-            expect(assigns(:task_completion_control_chart_data).completion_times).to eq [other_task.seconds_to_complete, task.seconds_to_complete]
+            expect(assigns(:task_completion_control_chart_data).pluck(:id)).to eq [other_task.external_id, task.external_id]
+            expect(assigns(:task_completion_control_chart_data).pluck(:completion_time)).to eq [other_task.seconds_to_complete, task.seconds_to_complete]
 
             expect(response).to render_template :charts
           end
@@ -164,8 +170,8 @@ RSpec.describe TasksController, type: :controller do
             post :charts, params: { company_id: company }
 
             expect(assigns(:tasks)).to eq [another_task, other_task, task]
-            expect(assigns(:task_completion_control_chart_data).items_ids).to eq [other_task.external_id, task.external_id]
-            expect(assigns(:task_completion_control_chart_data).completion_times).to eq [other_task.seconds_to_complete, task.seconds_to_complete]
+            expect(assigns(:task_completion_control_chart_data).pluck(:id)).to eq [other_task.external_id, task.external_id]
+            expect(assigns(:task_completion_control_chart_data).pluck(:completion_time)).to eq [other_task.seconds_to_complete, task.seconds_to_complete]
 
             expect(response).to render_template :charts
           end
@@ -193,6 +199,47 @@ RSpec.describe TasksController, type: :controller do
 
           context 'not permitted' do
             before { post :charts, params: { company_id: demand.company } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
+
+    describe 'GET #show' do
+      context 'with valid params' do
+        context 'with data' do
+          it 'assigns the instance variables and renders the template' do
+            demand = Fabricate :demand, company: company
+            task = Fabricate :task, demand: demand, created_date: 1.day.ago
+
+            get :show, params: { company_id: company, id: task }
+
+            expect(assigns(:task)).to eq task
+            expect(response).to render_template :show
+          end
+        end
+      end
+
+      context 'with invalid params' do
+        context 'task' do
+          before { get :show, params: { company_id: company, id: 'foo' } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'company' do
+          let(:demand) { Fabricate :demand }
+          let(:task) { Fabricate :task }
+
+          context 'not found' do
+            before { get :show, params: { company_id: 'foo', id: task } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'not permitted' do
+            before { get :show, params: { company_id: demand.company, id: task } }
 
             it { expect(response).to have_http_status :not_found }
           end
