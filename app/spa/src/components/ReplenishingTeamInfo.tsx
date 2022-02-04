@@ -28,11 +28,7 @@ export const getWipLimits = (projects: Project[]): number[] =>
 export const isTeamWipLimitSurpassed = (
   projects: Project[],
   teamWipLimit?: number
-) => {
-  console.log(getWipLimits(projects), teamWipLimit)
-
-  return getWipLimits(projects).reduce((a, b) => a + b) > Number(teamWipLimit)
-}
+) => getWipLimits(projects).reduce((a, b) => a + b, 0) > Number(teamWipLimit)
 
 const ReplenishmentTeamInfo = ({ team }: ReplenishmentTeamInfoProps) => (
   <Grid container spacing={15} mb={4} sx={{ pointerEvents: "none" }}>

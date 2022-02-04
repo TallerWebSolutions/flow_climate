@@ -4,7 +4,6 @@ import { projectMock, teamMock } from "../../lib/mocks"
 
 import ReplenishmentTeamInfo, {
   getWipLimits,
-  getProjects,
   isTeamWipLimitSurpassed,
 } from "../ReplenishingTeamInfo"
 
@@ -21,6 +20,7 @@ describe("components/ReplenishmentTeamInfo", () => {
         increased: true,
       },
       workInProgress: 3,
+      projects: [],
     }
 
     render(<ReplenishmentTeamInfo team={team} />)
@@ -38,6 +38,7 @@ describe("components/ReplenishmentTeamInfo", () => {
         increased: true,
       },
       workInProgress: 3,
+      projects: [],
     }
 
     const team2 = {
@@ -50,6 +51,7 @@ describe("components/ReplenishmentTeamInfo", () => {
         increased: true,
       },
       workInProgress: 3,
+      projects: [],
     }
 
     const team3 = {
@@ -58,13 +60,15 @@ describe("components/ReplenishmentTeamInfo", () => {
         increased: true,
       },
       workInProgress: 3,
+      projects: [],
     }
 
     const team4 = {
       workInProgress: 3,
+      projects: [],
     }
 
-    const team5 = {}
+    const team5 = { projects: [] }
 
     render(<ReplenishmentTeamInfo team={team1} />)
     render(<ReplenishmentTeamInfo team={team2} />)
@@ -75,14 +79,10 @@ describe("components/ReplenishmentTeamInfo", () => {
 })
 
 describe("normalizers/ReplenishmentTeamInfo", () => {
-  it("should get all projects from team data", () => {
-    expect(getProjects(teamMock)).toEqual([projectMock])
-  })
-
   it("should get wip limit from all projects", () => {
     expect(getWipLimits([])).toEqual([])
-    expect(getWipLimits([projectMock])).toEqual([23])
-    expect(getWipLimits([projectMock, projectMock])).toEqual([23, 23])
+    expect(getWipLimits([projectMock])).toEqual([9])
+    expect(getWipLimits([projectMock, projectMock])).toEqual([9, 9])
   })
 
   it("should tell if team wip limit is surpassed", () => {

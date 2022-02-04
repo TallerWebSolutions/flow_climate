@@ -1,20 +1,66 @@
 // @ts-nocheck
-import { normalizeProjectInfo, normalizeTeamInfo } from "../Replenishing"
+import {
+  normalizeProjectInfo,
+  normalizeTeamInfo,
+  getProjects,
+} from "../Replenishing"
+
+import {
+  teamMock,
+  projectMock,
+  replenishingMock as data,
+} from "../../lib/mocks"
 
 describe("pages/Replenishing", () => {
+  describe("normalizers", () => {
+    it("should get all projects from team data", () => {
+      expect(getProjects(teamMock)).toEqual([projectMock])
+    })
+  })
+
   describe("valid data for team info from replenishing", () => {
     it("should normalize the team info into the query results to the component shape", () => {
       const expected = {
-        throughputData: [9, 2, 4, 6],
         averageThroughput: {
-          value: 5.25,
-          increased: false,
+          increased: true,
+          value: 3,
         },
         leadTime: {
-          value: 26.73062348611111,
-          increased: true,
+          increased: false,
+          value: 10,
         },
-        workInProgress: 13,
+        projects: [
+          {
+            aging: 5,
+            customerHappiness: 1,
+            customers: [],
+            endDate: "12/12/12",
+            flowPressure: 12,
+            flowPressurePercentage: 43,
+            id: "1",
+            lastWeekThroughput: 54,
+            leadTimeP80: 32,
+            modeWeeklyTroughputs: 3,
+            monteCarloP80: 89,
+            name: "Project X",
+            products: [],
+            qtyInProgress: 9,
+            qtySelected: 8,
+            remainingBacklog: 20,
+            remainingWeeks: 10,
+            startDate: "11/11/11",
+            stdDevWeeklyTroughputs: 4,
+            teamBasedOddsToDeadline: 4.9999999999,
+            teamMonteCarloP80: 3,
+            teamMonteCarloWeeksMax: 9,
+            teamMonteCarloWeeksMin: 1,
+            teamMonteCarloWeeksStdDev: 3,
+            weeklyThroughputs: [0, 1, 2, 3, 4, 3],
+            workInProgressLimit: 9,
+          },
+        ],
+        throughputData: [1, 2, 3, 4, 5],
+        workInProgress: 10,
       }
 
       expect(normalizeTeamInfo(data)).toEqual(expected)
@@ -23,125 +69,9 @@ describe("pages/Replenishing", () => {
 
   describe("valid data for projects info from replenishing", () => {
     it("should normalize the team info into the query results to the component shape", () => {
-      const expected = [
-        {
-          __typename: "Project",
-          id: "673",
-          name: "Redesign - Informações de Venda",
-          customerHappiness: 1,
-          remainingWeeks: 2,
-          remainingBacklog: 9,
-          flowPressure: 2,
-          flowPressurePercentage: 0,
-          leadTimeP80: 4366647.3092,
-          qtySelected: 0,
-          qtyInProgress: 1,
-          monteCarloP80: 41,
-          workInProgressLimit: 3,
-          weeklyThroughputs: "2, 3, 5, 3",
-          modeWeeklyTroughputs: 3,
-          stdDevWeeklyTroughputs: 2.1,
-          teamMonteCarloP80: 5,
-          teamMonteCarloWeeksMax: 1,
-          teamMonteCarloWeeksMin: 10,
-          teamMonteCarloWeeksStdDev: 4.5,
-          teamBasedOddsToDeadline: 0.9,
-        },
-        {
-          __typename: "Project",
-          id: "689",
-          name: "Daily Bugle - Matéria Fofoca e Editorias Políticas",
-          customerHappiness: 2,
-          remainingWeeks: 5,
-          remainingBacklog: 7,
-          flowPressure: 0.25,
-          flowPressurePercentage: 0,
-          leadTimeP80: 0,
-          qtySelected: 0,
-          qtyInProgress: 0,
-          monteCarloP80: 0,
-          modeWeeklyTroughputs: 3,
-          workInProgressLimit: 3,
-          weeklyThroughputs: "2, 3, 5, 3",
-          stdDevWeeklyTroughputs: 2.1,
-          teamMonteCarloP80: 5,
-          teamMonteCarloWeeksMax: 1,
-          teamMonteCarloWeeksMin: 10,
-          teamMonteCarloWeeksStdDev: 4.5,
-          teamBasedOddsToDeadline: 0.9,
-        },
-      ]
+      const expected = [projectMock]
 
       expect(normalizeProjectInfo(data)).toEqual(expected)
     })
   })
 })
-
-const data = {
-  team: {
-    id: "1",
-    name: "Vingadores",
-    throughputData: [9, 2, 4, 6],
-    averageThroughput: 5.25,
-    increasedAvgThroughtput: false,
-    leadTime: 26.73062348611111,
-    increasedLeadtime80: true,
-    workInProgress: 13,
-    lastReplenishingConsolidations: [
-      {
-        __typename: "ReplenishingConsolidation",
-        customerHappiness: 1,
-        id: "28231",
-        project: {
-          __typename: "Project",
-          id: "673",
-          name: "Redesign - Informações de Venda",
-          remainingWeeks: 2,
-          remainingBacklog: 9,
-          flowPressure: 2,
-          flowPressurePercentage: 0,
-          leadTimeP80: 4366647.3092,
-          qtySelected: 0,
-          qtyInProgress: 1,
-          monteCarloP80: 41,
-          workInProgressLimit: 3,
-          weeklyThroughputs: "2, 3, 5, 3",
-          modeWeeklyTroughputs: 3,
-          stdDevWeeklyTroughputs: 2.1,
-          teamMonteCarloP80: 5,
-          teamMonteCarloWeeksMax: 1,
-          teamMonteCarloWeeksMin: 10,
-          teamMonteCarloWeeksStdDev: 4.5,
-          teamBasedOddsToDeadline: 0.9,
-        },
-      },
-      {
-        __typename: "ReplenishingConsolidation",
-        customerHappiness: 2,
-        id: "28232",
-        project: {
-          __typename: "Project",
-          id: "689",
-          name: "Daily Bugle - Matéria Fofoca e Editorias Políticas",
-          remainingWeeks: 5,
-          remainingBacklog: 7,
-          flowPressure: 0.25,
-          flowPressurePercentage: 0,
-          leadTimeP80: 0,
-          qtySelected: 0,
-          qtyInProgress: 0,
-          monteCarloP80: 0,
-          modeWeeklyTroughputs: 3,
-          workInProgressLimit: 3,
-          weeklyThroughputs: "2, 3, 5, 3",
-          stdDevWeeklyTroughputs: 2.1,
-          teamMonteCarloP80: 5,
-          teamMonteCarloWeeksMax: 1,
-          teamMonteCarloWeeksMin: 10,
-          teamMonteCarloWeeksStdDev: 4.5,
-          teamBasedOddsToDeadline: 0.9,
-        },
-      },
-    ],
-  },
-}
