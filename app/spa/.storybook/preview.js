@@ -8,14 +8,14 @@ export const parameters = {
   },
 }
 
-import ThemeProvider from '../src/lib/ThemeProvider'
+import ThemeProvider from "../src/lib/ThemeProvider"
 
 const withThemeProvider = (Story, context) => {
   return (
     <ThemeProvider>
       <Story {...context} />
     </ThemeProvider>
-  );
-};
+  )
+}
 
-export const decorators = [withThemeProvider];
+export const decorators = [withThemeProvider]
