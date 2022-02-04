@@ -8,6 +8,7 @@ import {
 } from "@mui/material"
 import { Box } from "@mui/system"
 import { Fragment } from "react"
+import { Project } from "./ReplenishingProjectsInfo"
 
 type ComparativeValue = {
   value: number
@@ -53,6 +54,14 @@ const CustomCardContent = ({
   </CardContent>
 )
 
+export const getWipLimits = (projects: Project[]): number[] =>
+  projects.map(({ workInProgressLimit }) => workInProgressLimit)
+
+export const isTeamWipLimitSurpassed = (
+  projects: Project[],
+  teamWipLimit: number
+) => getWipLimits(projects).reduce((a, b) => a + b) > teamWipLimit
+
 const ReplenishmentTeamInfo = ({ team }: ReplenishmentTeamInfoProps) => (
   <Grid container spacing={15} mb={4} sx={{ pointerEvents: "none" }}>
     <Grid item xs={4}>
@@ -60,7 +69,7 @@ const ReplenishmentTeamInfo = ({ team }: ReplenishmentTeamInfoProps) => (
         <CustomCardContent title="Throughput" subtitle="Últimas quatro semanas">
           <Box display="flex">
             {team.throughputData?.map((th, index, list) => (
-              <Fragment>
+              <Fragment key={`${th}--${index}`}>
                 <Typography key={`value--${index}`}>{th}</Typography>
                 {index < list.length - 1 && (
                   <Divider
