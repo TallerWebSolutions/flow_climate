@@ -25,6 +25,7 @@
     "**/__tests__",
     "**/*.test.ts",
     "**/*.test.tsx",
+    "**/*.stories.tsx",
     "src/components/__tests__/*"
   ]
 }
