@@ -17,10 +17,15 @@ module Azure
         end
       end
 
-      transitions
+      remove_not_read_transitions(demand, transitions)
     end
 
     private
+
+    def remove_not_read_transitions(demand, transitions)
+      demand.demand_transitions.where.not(id: transitions.map(&:id)).map(&:destroy)
+      transitions
+    end
 
     # OPTIMIZE: move all reader methods to an AzureReader
     def read_transition(azure_json_value, demand)

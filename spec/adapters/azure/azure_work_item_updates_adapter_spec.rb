@@ -17,6 +17,8 @@ RSpec.describe Azure::AzureWorkItemUpdatesAdapter do
         it 'returns the transitions' do
           first_item_mocked_azure_return = file_fixture('azure_work_item_updates.json').read
 
+          Fabricate :demand_transition, demand: demand, stage: stage
+
           allow(HTTParty).to(receive(:get).with("#{Figaro.env.azure_base_uri}/#{azure_account.azure_organization}/#{azure_project.project_id}/_apis/wit/workitems/1/updates?api-version=6.1-preview.3",
                                                 basic_auth: { username: azure_account.username, password: azure_account.password },
                                                 headers: { 'Content-Type' => 'application/json' })).once { JSON.parse(first_item_mocked_azure_return) }
