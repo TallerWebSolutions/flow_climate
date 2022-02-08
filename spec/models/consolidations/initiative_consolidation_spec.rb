@@ -8,13 +8,15 @@ RSpec.describe Consolidations::InitiativeConsolidation, type: :model do
   context 'scopes' do
     describe '.outdated_consolidations' do
       it 'returns the outdated consolidations based on the given dates' do
-        Fabricate :initiative_consolidation, consolidation_date: 3.weeks.ago
-        Fabricate :initiative_consolidation, consolidation_date: 1.week.ago
+        travel_to Time.zone.local(2022, 2, 5) do
+          Fabricate :initiative_consolidation, consolidation_date: 3.weeks.ago
+          Fabricate :initiative_consolidation, consolidation_date: 1.week.ago
 
-        first_outdated_consolidation = Fabricate :initiative_consolidation, consolidation_date: 5.weeks.ago
-        second_outdated_consolidation = Fabricate :initiative_consolidation, consolidation_date: Time.zone.now
+          first_outdated_consolidation = Fabricate :initiative_consolidation, consolidation_date: 5.weeks.ago
+          second_outdated_consolidation = Fabricate :initiative_consolidation, consolidation_date: Time.zone.now
 
-        expect(described_class.outdated_consolidations(4.weeks.ago, 1.day.ago)).to match_array([first_outdated_consolidation, second_outdated_consolidation])
+          expect(described_class.outdated_consolidations(4.weeks.ago, 1.day.ago)).to match_array([first_outdated_consolidation, second_outdated_consolidation])
+        end
       end
     end
 

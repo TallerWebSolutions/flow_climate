@@ -686,7 +686,7 @@ RSpec.describe DemandsController, type: :controller do
                   get :search_demands, params: { company_id: company, start_date: start_date, end_date: end_date, grouping: 'no_grouping', demand_state: 'not_committed' }
 
                   expect(response).to render_template 'demands/index'
-                  expect(assigns(:demands).map(&:id)).to eq [first_demand.id, fifth_demand.id]
+                  expect(assigns(:demands).map(&:id)).to match_array [first_demand.id, fifth_demand.id]
                   expect(assigns(:confidence_95_leadtime)).to eq 0
                 end
               end
