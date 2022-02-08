@@ -158,7 +158,7 @@ const useMessages = (): [Message[], (message: Message) => void] => {
 const Replenishing = () => {
   const { teamId, companyNickName = "" } = useParams()
   const { data, loading, error } = useQuery<ReplenishingDTO>(QUERY, {
-    variables: { teamId },
+    variables: { teamId: Number(teamId) },
   })
 
   const [messages, pushMessage] = useMessages()
