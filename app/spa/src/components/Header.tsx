@@ -4,6 +4,7 @@ import { useState } from "react"
 import { gql, useMutation } from "@apollo/client"
 
 import { t } from "../lib/i18n"
+import { useMessages } from "../pages/Replenishing"
 
 import { Message } from "./MessagesBox"
 
@@ -44,9 +45,10 @@ const SEND_API_TOKEN_MUTATION = gql`
   }
 `
 
-const Header = ({ company, user, pushMessage }: HeaderProps) => {
+const Header = ({ company, user }: HeaderProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const handleClose = () => setAnchorEl(null)
+  const [_, pushMessage] = useMessages()
 
   const [sendAuthTokenMutation] = useMutation(SEND_API_TOKEN_MUTATION, {
     update: () =>
