@@ -104,7 +104,6 @@ RSpec.describe Company, type: :model do
     end
   end
 
-
   RSpec.shared_context 'demands with effort for company', shared_context: :metadata do
     let(:company) { Fabricate :company }
     let!(:customer) { Fabricate :customer, company: company }

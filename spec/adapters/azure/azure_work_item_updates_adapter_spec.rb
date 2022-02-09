@@ -6,7 +6,7 @@ RSpec.describe Azure::AzureWorkItemUpdatesAdapter do
     let!(:user) { Fabricate :user, companies: [company], email: 'celso@taller.net.br' }
     let(:team) { Fabricate :team, company: company }
     let(:azure_account) { Fabricate :azure_account, company: company }
-    let(:stage) { Fabricate :stage, name: 'TO do', company: company, integration_id: azure_account.id }
+    let(:stage) { Fabricate :stage, name: 'TO do', company: company, integration_id: azure_account.id, stage_type: :backlog }
     let(:azure_product_config) { Fabricate :azure_product_config, azure_account: azure_account }
     let!(:azure_team) { Fabricate :azure_team, azure_product_config: azure_product_config, team_name: 'FlowClimate Team', team_id: '75359256-f8b4-4108-8f9c-4dbfb8975548' }
     let!(:azure_project) { Fabricate :azure_project, azure_team: azure_team, project_name: 'FlowClimate', project_id: '19dd7898-d318-4896-8797-afaf2320dcd3' }

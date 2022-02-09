@@ -9,7 +9,7 @@ module Azure
       if work_item_updates_hash.respond_to?(:code) && work_item_updates_hash.code != 200
         Rails.logger.error("[AzureAPI] Failed to request azure item updates for ##{demand.external_id} - Reason: #{work_item_updates_hash.code}")
       else
-        transitions = process_valid_updates_response(demand, work_item_updates_hash)
+        transitions = process_valid_item_updates_response(demand, work_item_updates_hash)
       end
 
       remove_not_read_transitions(demand, transitions)
@@ -17,7 +17,7 @@ module Azure
 
     private
 
-    def process_valid_updates_response(demand, work_item_updates_hash)
+    def process_valid_item_updates_response(demand, work_item_updates_hash)
       transitions = []
 
       work_item_updates_hash['value'].sort_by { |value| value['revisedDate'] }.each do |azure_json_value|
@@ -70,7 +70,7 @@ module Azure
       return if from_stage_name.blank?
 
       from_stage = Stage.where(company: company, integration_id: azure_account.id).where('name ILIKE :stage_name', stage_name: from_stage_name).first
-      from_transition = DemandTransition.find_by(demand: demand, stage: from_stage)
+      from_transition = DemandTransition.where(demand: demand, stage: from_stage).last
       from_transition.update(last_time_out: to_date)
     end
 
