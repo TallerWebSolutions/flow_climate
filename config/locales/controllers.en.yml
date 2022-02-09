@@ -1241,6 +1241,7 @@ en:
       error: "Problems were found while creating the Flow Event"
     edit:
       tooltip: "Edit Event"
+      title: "Edit Event"
     index:
       title: "Flow Events"
   jira_accounts:

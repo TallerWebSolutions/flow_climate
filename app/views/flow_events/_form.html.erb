@@ -17,7 +17,7 @@
 
   <div class='col-xs-4 col-xs-offset-4 form-group'>
     <%= f.label :project, class: 'control-label' %>
-    <%= f.select :project_id, [], { include_blank: I18n.t('general.select'), selected: flow_event.project_id }, class: 'form-control', disabled: :disabled %>
+    <%= f.select :project_id, options_from_collection_for_select(projects_by_team || [], :id, :name, flow_event.project_id), { include_blank: I18n.t('general.select') }, class: 'form-control', disabled: projects_by_team.blank? %>
   </div>
 
   <div class='col-xs-4 col-xs-offset-4 form-group <%= 'has-error' if flow_event.errors[:event_type].present? %>'>

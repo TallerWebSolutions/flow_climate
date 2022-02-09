@@ -1220,6 +1220,7 @@ pt-BR:
       error: "Problemas foram encontrados para salvar o Evento"
     edit:
       tooltip: "Editar Evento"
+      title: "Editar Evento"
     show:
       event_duration: "Duração do Evento"
     index:

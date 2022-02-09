@@ -30,7 +30,9 @@ class FlowEventsController < AuthenticatedController
     @flow_events = @company.flow_events.order(event_date: :desc)
   end
 
-  def edit; end
+  def edit
+    @projects_by_team = @company.teams.find(@flow_event.team_id).projects.running.order(:name) if @flow_event.team.present?
+  end
 
   def update
     @flow_event.update(flow_event_params)

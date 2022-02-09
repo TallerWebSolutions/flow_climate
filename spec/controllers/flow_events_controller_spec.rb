@@ -52,8 +52,10 @@ RSpec.describe FlowEventsController, type: :controller do
     let(:company) { Fabricate :company, users: [user] }
     let(:other_company) { Fabricate :company, users: [user] }
 
+    let(:team) { Fabricate :team, company: company }
+
     let(:customer) { Fabricate :customer, company: company }
-    let(:project) { Fabricate :project, company: company, customers: [customer], status: :executing }
+    let(:project) { Fabricate :project, company: company, team: team, customers: [customer], status: :executing }
 
     let(:other_customer) { Fabricate :customer, company: other_company }
     let(:other_project) { Fabricate :project, customers: [other_customer] }
@@ -192,13 +194,14 @@ RSpec.describe FlowEventsController, type: :controller do
     end
 
     describe 'GET #edit' do
-      let(:flow_event) { Fabricate :flow_event, project: project }
+      let(:flow_event) { Fabricate :flow_event, project: project, team: team }
 
       context 'passing valid parameters' do
         it 'assign the instance variable and renders the template' do
           get :edit, params: { company_id: company, project_id: project, id: flow_event }
           expect(response).to render_template :edit
           expect(assigns(:flow_event)).to eq flow_event
+          expect(assigns(:projects_by_team)).to eq [project]
         end
       end
 
