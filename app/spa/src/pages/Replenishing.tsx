@@ -145,7 +145,7 @@ type ReplenishingCacheResult = {
 
 type ReplenishingCacheDTO = ReplenishingCacheResult | undefined
 
-const useMessages = (): [Message[], (message: Message) => void] => {
+export const useMessages = (): [Message[], (message: Message) => void] => {
   const [messages, setMessages] = useState<Message[]>([])
 
   const pushMessage = (message: Message) => {
