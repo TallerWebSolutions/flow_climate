@@ -9,12 +9,7 @@ module Azure
       if work_item_updates_hash.respond_to?(:code) && work_item_updates_hash.code != 200
         Rails.logger.error("[AzureAPI] Failed to request azure item updates for ##{demand.external_id} - Reason: #{work_item_updates_hash.code}")
       else
-        work_item_updates_hash['value'].each do |azure_json_value|
-          next if azure_json_value['fields'].blank? || azure_json_value['fields']['System.State'].blank?
-
-          demand_transition = read_transition(azure_json_value, demand)
-          transitions << demand_transition unless transitions.include?(demand_transition)
-        end
+        transitions = process_valid_updates_response(demand, work_item_updates_hash)
       end
 
       remove_not_read_transitions(demand, transitions)
@@ -22,9 +17,22 @@ module Azure
 
     private
 
+    def process_valid_updates_response(demand, work_item_updates_hash)
+      transitions = []
+
+      work_item_updates_hash['value'].sort_by { |value| value['revisedDate'] }.each do |azure_json_value|
+        next if azure_json_value['fields'].blank? || azure_json_value['fields']['System.State'].blank?
+
+        demand_transition = read_transition(azure_json_value, demand)
+        transitions << demand_transition
+      end
+
+      transitions
+    end
+
     def remove_not_read_transitions(demand, transitions)
       demand.demand_transitions.where.not(id: transitions.map(&:id)).map(&:destroy)
-      transitions
+      transitions.uniq
     end
 
     # OPTIMIZE: move all reader methods to an AzureReader

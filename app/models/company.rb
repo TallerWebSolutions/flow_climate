@@ -65,9 +65,15 @@ class Company < ApplicationRecord
   end
 
   def add_user(user)
-    return if users.include?(user)
+    users << user unless users.include?(user)
+  end
 
-    users << user
+  def azure?
+    azure_account.present?
+  end
+
+  def jira?
+    jira_accounts.present?
   end
 
   def active_projects

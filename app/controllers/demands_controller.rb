@@ -6,8 +6,8 @@ class DemandsController < DemandsListController
   before_action :user_gold_check
 
   before_action :assign_company
-  before_action :assign_demand, only: %i[edit update show synchronize_jira destroy destroy_physically score_research]
-  before_action :assign_project, except: %i[demands_csv search_demands show destroy destroy_physically score_research index demands_list_by_ids demands_charts synchronize_jira]
+  before_action :assign_demand, only: %i[edit update show synchronize_jira synchronize_azure destroy destroy_physically score_research]
+  before_action :assign_project, except: %i[demands_csv search_demands show destroy destroy_physically score_research index demands_list_by_ids demands_charts synchronize_jira synchronize_azure]
 
   def new
     @demand = Demand.new(project: @project)
@@ -69,6 +69,14 @@ class DemandsController < DemandsListController
     jira_account = @company.jira_accounts.first
     demand_url = company_project_demand_url(@demand.project.company, @demand.project, @demand)
     Jira::ProcessJiraIssueJob.perform_later(jira_account, @demand.project, @demand.external_id, current_user.email, current_user.full_name, demand_url)
+    flash[:notice] = I18n.t('general.enqueued')
+    redirect_to company_demand_path(@company, @demand)
+  end
+
+  def synchronize_azure
+    azure_account = @company.azure_account
+    demand_url = company_project_demand_url(@demand.project.company, @demand.project, @demand)
+    Azure::AzureItemSyncJob.perform_later(@demand.id, azure_account, current_user.email, current_user.full_name, demand_url)
     flash[:notice] = I18n.t('general.enqueued')
     redirect_to company_demand_path(@company, @demand)
   end

@@ -17,9 +17,16 @@
 
 <div class="row bottom-spaced-component">
   <div class="col-xs-6">
-    <%= link_to synchronize_jira_company_demand_path(@company, @demand), method: :put do %>
-      <span class="btn btn-sm"><i class="fas fa-sync-alt"></i></span><span><%= I18n.t('demands.show.sync_jira') %></span>
+    <% if @company.jira? %>
+      <%= link_to synchronize_jira_company_demand_path(@company, @demand), method: :put do %>
+        <span class="btn btn-sm"><i class="fas fa-sync-alt"></i></span><span><%= I18n.t('demands.show.sync_jira') %></span>
+      <% end %>
+    <% elsif @company.azure? %>
+      <%= link_to synchronize_azure_company_demand_path(@company, @demand), method: :put do %>
+        <span class="btn btn-sm"><i class="fas fa-sync-alt"></i></span><span><%= I18n.t('demands.show.sync_jira') %></span>
+      <% end %>
     <% end %>
+
     <span class="detailed"><%= "(#{t('general.last_update.text', last_update: I18n.l(@demand.updated_at, format: :short))})" %></span>
   </div>
 </div>

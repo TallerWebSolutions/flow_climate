@@ -60,6 +60,51 @@ RSpec.describe Company, type: :model do
     end
   end
 
+  describe '#azure?' do
+    it 'returns true with an azure company' do
+      company = Fabricate :company
+      Fabricate :azure_account, company: company
+
+      expect(company.reload.azure?).to be true
+    end
+
+    it 'returns false with a jira company' do
+      jira_account = Fabricate :jira_account
+      company = Fabricate :company, jira_accounts: [jira_account]
+
+      expect(company.reload.azure?).to be false
+    end
+
+    it 'returns false with a company without integrations' do
+      company = Fabricate :company
+
+      expect(company.reload.azure?).to be false
+    end
+  end
+
+  describe '#jira?' do
+    it 'returns true with a jira company' do
+      jira_account = Fabricate :jira_account
+      company = Fabricate :company, jira_accounts: [jira_account]
+
+      expect(company.reload.jira?).to be true
+    end
+
+    it 'returns false with an azure company' do
+      company = Fabricate :company
+      Fabricate :azure_account, company: company
+
+      expect(company.reload.jira?).to be false
+    end
+
+    it 'returns false with a company without integrations' do
+      company = Fabricate :company
+
+      expect(company.reload.jira?).to be false
+    end
+  end
+
+
   RSpec.shared_context 'demands with effort for company', shared_context: :metadata do
     let(:company) { Fabricate :company }
     let!(:customer) { Fabricate :customer, company: company }

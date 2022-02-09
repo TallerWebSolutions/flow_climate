@@ -1,10 +1,3 @@
-GIT
-  remote: https://github.com/brainopia/sidekiq-limit_fetch.git
-  revision: bf9cee3b81e49ab8002bb9d564c2002d5b8a4b56
-  specs:
-    sidekiq-limit_fetch (3.4.0)
-      sidekiq (>= 4)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -345,14 +338,14 @@ GEM
     rollbar (3.3.0)
     rspec-collection_matchers (1.2.0)
       rspec-expectations (>= 2.99.0.beta1)
-    rspec-core (3.10.2)
-      rspec-support (~> 3.10.0)
-    rspec-expectations (3.10.2)
+    rspec-core (3.11.0)
+      rspec-support (~> 3.11.0)
+    rspec-expectations (3.11.0)
       diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.10.0)
-    rspec-mocks (3.10.3)
+      rspec-support (~> 3.11.0)
+    rspec-mocks (3.11.0)
       diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.10.0)
+      rspec-support (~> 3.11.0)
     rspec-rails (5.1.0)
       actionpack (>= 5.2)
       activesupport (>= 5.2)
@@ -361,7 +354,7 @@ GEM
       rspec-expectations (~> 3.10)
       rspec-mocks (~> 3.10)
       rspec-support (~> 3.10)
-    rspec-support (3.10.3)
+    rspec-support (3.11.0)
     rspec_junit_formatter (0.5.1)
       rspec-core (>= 2, < 4, != 2.12.0)
     rubocop (1.25.1)
@@ -411,6 +404,8 @@ GEM
       connection_pool (>= 2.2.2)
       rack (~> 2.0)
       redis (>= 4.2.0)
+    sidekiq-limit_fetch (3.4.0)
+      sidekiq (>= 4)
     simplecov (0.21.2)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
@@ -526,7 +521,7 @@ DEPENDENCIES
   rubycritic
   shoulda-matchers
   sidekiq
-  sidekiq-limit_fetch!
+  sidekiq-limit_fetch
   simplecov
   slack-notifier
   stackprof

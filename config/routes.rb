@@ -281,6 +281,7 @@ Rails.application.routes.draw do
         delete :destroy_physically
         get :score_research
         put :synchronize_jira
+        put :synchronize_azure
       end
 
       collection do
