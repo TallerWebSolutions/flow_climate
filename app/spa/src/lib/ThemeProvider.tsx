@@ -21,6 +21,11 @@ const theme = createTheme({
       main: "#ED6C02",
       dark: "#B33D00",
     },
+    success: {
+      light: "#80E27E",
+      main: "#4CAF50",
+      dark: "#087F23",
+    },
   },
   typography: {
     body1: {
