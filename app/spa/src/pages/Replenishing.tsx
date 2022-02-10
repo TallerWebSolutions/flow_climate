@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react"
+import { Fragment, useContext } from "react"
 import {
   Backdrop,
   CircularProgress,
@@ -17,8 +17,7 @@ import ReplenishingTeamInfo, {
 import ReplenishingProjectsInfo, {
   Project,
 } from "../components/ReplenishingProjectsInfo"
-import BasicPage from "../components/BasicPage"
-import MessagesBox, { Message } from "../components/MessagesBox"
+import BasicPage, { MessagesContext } from "../components/BasicPage"
 
 const QUERY = gql`
   query Replenishing($teamId: Int!) {
@@ -126,23 +125,12 @@ type ReplenishingCacheResult = {
 
 type ReplenishingCacheDTO = ReplenishingCacheResult | undefined
 
-export const useMessages = (): [Message[], (message: Message) => void] => {
-  const [messages, setMessages] = useState<Message[]>([])
-
-  const pushMessage = (message: Message) => {
-    setMessages((messages) => [...messages, message])
-  }
-
-  return [messages, pushMessage]
-}
-
 const Replenishing = () => {
   const { teamId, companyNickName = "" } = useParams()
   const { data, loading, error } = useQuery<ReplenishingDTO>(QUERY, {
     variables: { teamId: Number(teamId) },
   })
-
-  const [messages, pushMessage] = useMessages()
+  const { pushMessage } = useContext(MessagesContext)
 
   const [generateReplenishingCache] = useMutation<ReplenishingCacheDTO>(
     GENERATE_REPLENISHING_MUTATION,
@@ -211,7 +199,6 @@ const Replenishing = () => {
             />
           </Fragment>
         )}
-        <MessagesBox messages={messages} />
       </Container>
     </BasicPage>
   )

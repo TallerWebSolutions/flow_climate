@@ -1,10 +1,10 @@
-import React from "react"
+import React, { useContext } from "react"
 import { Avatar, Box, Container, Link, Menu, MenuItem } from "@mui/material"
 import { useState } from "react"
 import { gql, useMutation, useQuery } from "@apollo/client"
 
 import { t } from "../lib/i18n"
-import { useMessages } from "../pages/Replenishing"
+import { MessagesContext } from "./BasicPage"
 
 const buildLinks = (companyName: string) => [
   { name: "Taller", href: `/companies/${companyName}` },
@@ -18,7 +18,7 @@ const buildLinks = (companyName: string) => [
 ]
 
 const USER_QUERY = gql`
-  query UserQuery = {
+  query UserQuery {
     me {
       id
       fullName
@@ -76,9 +76,9 @@ const normalizeUser = (data: UserDTO): HeaderUser => ({
 const Header = ({ company }: HeaderProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const handleClose = () => setAnchorEl(null)
-  const [_, pushMessage] = useMessages()
   const { data: userData } = useQuery<UserDTO>(USER_QUERY)
   const user = normalizeUser(userData)
+  const { pushMessage } = useContext(MessagesContext)
 
   const [sendAuthTokenMutation] = useMutation(SEND_API_TOKEN_MUTATION, {
     update: () =>
