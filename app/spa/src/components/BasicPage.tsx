@@ -1,10 +1,12 @@
 import { createContext, ReactElement, useState } from "react"
+import { Container, Typography } from "@mui/material"
 
 import Header from "./Header"
 import MessagesBox, { Message } from "./MessagesBox"
 
 type BasicPageProps = {
-  children: ReactElement | ReactElement[]
+  children?: ReactElement | ReactElement[]
+  title: string
 }
 
 export const MessagesContext = createContext<{
@@ -25,14 +27,19 @@ const useMessages = (): [Message[], (message: Message) => void] => {
   return [messages, pushMessage]
 }
 
-const BasicPage = ({ children }: BasicPageProps) => {
+const BasicPage = ({ children, title }: BasicPageProps) => {
   const [messages, pushMessage] = useMessages()
 
   return (
     <MessagesContext.Provider value={{ messages, pushMessage }}>
       <Header />
-      {children}
-      <MessagesBox messages={messages} />
+      <Container maxWidth="xl">
+        <Typography component="h1" variant="h4" mb={3}>
+          {title}
+        </Typography>
+        {children}
+        <MessagesBox messages={messages} />
+      </Container>
     </MessagesContext.Provider>
   )
 }

@@ -21,7 +21,7 @@ const MessageBox = ({ message }: { message: Message }) => {
 const MessagesBox = ({ messages }: { messages: Message[] }) => (
   <Stack sx={{ position: "fixed", marginBottom: 2, bottom: 0 }} spacing={2}>
     {messages.map((message, index) => (
-      <MessageBox key={index + "--" + message.text} message={message} />
+      <MessageBox key={index + "--" + message.severity} message={message} />
     ))}
   </Stack>
 )
