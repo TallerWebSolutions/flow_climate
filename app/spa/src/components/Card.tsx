@@ -6,6 +6,7 @@ import {
   Typography,
 } from "@mui/material"
 import ErrorIcon from "@mui/icons-material/Error"
+import CheckCircleIcon from "@mui/icons-material/CheckCircle"
 
 type CustomCardContentProps = {
   title: string
@@ -36,14 +37,15 @@ const CustomCardContent = ({
 )
 
 export enum CardType {
-  primary,
-  alert,
+  PRIMARY = "primary",
+  WARNING = "warning",
+  SUCCESS = "success",
 }
 
 type CustomCardProps = {
   subtitle: string
   title: string
-  type?: CardType
+  type: CardType
 } & CardProps
 
 const Card = ({
@@ -56,11 +58,14 @@ const Card = ({
   <MUICard
     {...props}
     sx={{
-      borderColor: type === CardType.alert ? "warning.light" : "#ccc",
+      borderColor: type === CardType.PRIMARY ? "#ccc" : `${type}.light`,
     }}
   >
-    {type === CardType.alert && (
-      <ErrorIcon color="warning" sx={{ float: "right", margin: 2 }} />
+    {type === CardType.WARNING && (
+      <ErrorIcon color={type} sx={{ float: "right", margin: 2 }} />
+    )}
+    {type === CardType.SUCCESS && (
+      <CheckCircleIcon color={type} sx={{ float: "right", margin: 2 }} />
     )}
     <CustomCardContent title={title} subtitle={subtitle}>
       {children}

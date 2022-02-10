@@ -10,12 +10,25 @@ export default {
 } as ComponentMeta<typeof Card>
 
 export const Primary: ComponentStory<typeof Card> = () => (
-  <Card title="Card Component" subtitle="The best card in the world" />
-)
-export const Alert: ComponentStory<typeof Card> = () => (
   <Card
     title="Card Component"
     subtitle="The best card in the world"
-    type={CardType.alert}
+    type={CardType.PRIMARY}
+  />
+)
+
+export const Warning: ComponentStory<typeof Card> = () => (
+  <Card
+    title="Card Component"
+    subtitle="The best card in the world"
+    type={CardType.WARNING}
+  />
+)
+
+export const Success: ComponentStory<typeof Card> = () => (
+  <Card
+    title="Card Component"
+    subtitle="The best card in the world"
+    type={CardType.SUCCESS}
   />
 )
