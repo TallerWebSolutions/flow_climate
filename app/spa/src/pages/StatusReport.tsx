@@ -1,7 +1,9 @@
-import { forwardRef, Fragment, useRef } from "react"
+import { forwardRef, useRef } from "react"
 import { ResponsivePie } from "@nivo/pie"
 import { Box } from "@mui/material"
 import { exportComponentAsPNG } from "react-component-export-image"
+
+import BasicPage from "../components/BasicPage"
 
 const data = [
   {
@@ -162,10 +164,10 @@ const StatusReport = () => {
   const ref: any = useRef()
 
   return (
-    <Fragment>
+    <BasicPage>
       <button onClick={() => exportComponentAsPNG(ref)}>Exportar</button>
       <Chart ref={ref} />
-    </Fragment>
+    </BasicPage>
   )
 }
 

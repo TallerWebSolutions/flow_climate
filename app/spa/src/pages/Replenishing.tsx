@@ -8,6 +8,8 @@ import {
 } from "@mui/material"
 import { gql, useQuery, useMutation } from "@apollo/client"
 import CachedIcon from "@mui/icons-material/Cached"
+import { useParams } from "react-router-dom"
+import { format } from "date-fns"
 
 import ReplenishingTeamInfo, {
   TeamReplenishment,
@@ -15,23 +17,11 @@ import ReplenishingTeamInfo, {
 import ReplenishingProjectsInfo, {
   Project,
 } from "../components/ReplenishingProjectsInfo"
-import Header, { User as HeaderUser } from "../components/Header"
-import { useParams } from "react-router-dom"
-import BreadcrumbReplenishingInfo, {
-  BreadcrumbReplenishing,
-} from "../components/BreadcrumbReplenishingInfo"
+import BasicPage from "../components/BasicPage"
 import MessagesBox, { Message } from "../components/MessagesBox"
-import { format } from "date-fns"
 
 const QUERY = gql`
   query Replenishing($teamId: Int!) {
-    me {
-      id
-      fullName
-      avatar {
-        imageSource
-      }
-    }
     team(id: $teamId) {
       id
       name
@@ -122,17 +112,8 @@ export type Team = {
   lastReplenishingConsolidations: ReplenishingConsolidation[]
 }
 
-type User = {
-  id: string
-  fullName: string
-  avatar: {
-    imageSource: string
-  }
-}
-
 type ReplenishingResult = {
   team: Team
-  me: User
 }
 
 type ReplenishingDTO = ReplenishingResult | undefined
@@ -186,12 +167,7 @@ const Replenishing = () => {
     )
 
   return (
-    <Fragment>
-      <Header
-        company={data?.team.company}
-        user={normalizeUser(data)}
-        pushMessage={pushMessage}
-      />
+    <BasicPage>
       <Container maxWidth="xl">
         {data?.team && (
           <Fragment>
@@ -200,16 +176,6 @@ const Replenishing = () => {
               justifyContent="space-between"
               alignItems="center"
             >
-              {data.team.company && (
-                <BreadcrumbReplenishingInfo
-                  replenishingBreadcrumb={normalizeBreadcrumbReplenishing(
-                    data.team.company.name,
-                    data.team.company.slug,
-                    teamId,
-                    data.team.name
-                  )}
-                />
-              )}
               <Typography ml="auto" mr={1} variant="subtitle2">
                 Última atualização em{" "}
                 {format(
@@ -247,7 +213,7 @@ const Replenishing = () => {
         )}
         <MessagesBox messages={messages} />
       </Container>
-    </Fragment>
+    </BasicPage>
   )
 }
 
@@ -274,22 +240,6 @@ export const normalizeTeamInfo = (
   projects: data ? getProjects(data.team) : [],
 })
 
-const normalizeBreadcrumbReplenishing = (
-  companyName?: string,
-  companyNickName?: string,
-  teamId?: string,
-  teamName?: string
-): BreadcrumbReplenishing => {
-  const teamUrl = `/companies/${companyNickName}/teams/${teamId}`
-  const companyUrl = `/companies/${companyNickName}/`
-  return {
-    companyName,
-    companyUrl,
-    teamName,
-    teamUrl,
-  }
-}
-
 export const normalizeProjectInfo = (data: ReplenishingDTO): Project[] =>
   data
     ? data.team.lastReplenishingConsolidations.map(function (
@@ -301,9 +251,3 @@ export const normalizeProjectInfo = (data: ReplenishingDTO): Project[] =>
         }
       })
     : []
-
-const normalizeUser = (data: ReplenishingDTO): HeaderUser => ({
-  id: data?.me.id || "",
-  fullName: data?.me.fullName || "",
-  avatarSource: data?.me.avatar.imageSource || "",
-})

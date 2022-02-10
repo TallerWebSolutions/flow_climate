@@ -1,12 +1,10 @@
 import React from "react"
 import { Avatar, Box, Container, Link, Menu, MenuItem } from "@mui/material"
 import { useState } from "react"
-import { gql, useMutation } from "@apollo/client"
+import { gql, useMutation, useQuery } from "@apollo/client"
 
 import { t } from "../lib/i18n"
 import { useMessages } from "../pages/Replenishing"
-
-import { Message } from "./MessagesBox"
 
 const buildLinks = (companyName: string) => [
   { name: "Taller", href: `/companies/${companyName}` },
@@ -19,7 +17,19 @@ const buildLinks = (companyName: string) => [
   { name: "Eventos", href: `/companies/${companyName}/flow_events` },
 ]
 
-export type User = {
+const USER_QUERY = gql`
+  query UserQuery = {
+    me {
+      id
+      fullName
+      avatar {
+        imageSource
+      }
+    }
+  }
+`
+
+type HeaderUser = {
   id: string
   avatarSource: string
   fullName: string
@@ -32,10 +42,22 @@ type Company = {
 }
 
 type HeaderProps = {
-  pushMessage: (message: Message) => void
   company?: Company
-  user?: User
 }
+
+type User = {
+  id: string
+  fullName: string
+  avatar: {
+    imageSource: string
+  }
+}
+
+type UserResult = {
+  me: User
+}
+
+type UserDTO = UserResult | undefined
 
 const SEND_API_TOKEN_MUTATION = gql`
   mutation SendAuthToken($companyId: Int!) {
@@ -45,10 +67,18 @@ const SEND_API_TOKEN_MUTATION = gql`
   }
 `
 
-const Header = ({ company, user }: HeaderProps) => {
+const normalizeUser = (data: UserDTO): HeaderUser => ({
+  id: data?.me.id || "",
+  fullName: data?.me.fullName || "",
+  avatarSource: data?.me.avatar.imageSource || "",
+})
+
+const Header = ({ company }: HeaderProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const handleClose = () => setAnchorEl(null)
   const [_, pushMessage] = useMessages()
+  const { data: userData } = useQuery<UserDTO>(USER_QUERY)
+  const user = normalizeUser(userData)
 
   const [sendAuthTokenMutation] = useMutation(SEND_API_TOKEN_MUTATION, {
     update: () =>
