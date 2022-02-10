@@ -2,7 +2,7 @@
 
 class ProjectsController < AuthenticatedController
   before_action :assign_company
-  before_action :assign_project, except: %i[new create index search_projects running_projects_charts search_projects_by_team]
+  before_action :assign_project, except: %i[new create index search_projects running_projects_charts search_projects_by_team status_report_dashboard]
 
   def show
     assign_project_stages
@@ -133,13 +133,9 @@ class ProjectsController < AuthenticatedController
   end
 
   def status_report_dashboard
-    @project_summary = ProjectsSummaryData.new([@project])
-    @x_axis = TimeService.instance.weeks_between_of(@project.start_date.beginning_of_week, @project.end_date.end_of_week)
-    @work_item_flow_information = Flow::WorkItemFlowInformations.new(demands, @project.initial_scope, @x_axis.length, @x_axis.last, 'week')
-    @average_speed = DemandService.instance.average_speed(demands)
-    build_work_item_flow_information
+    prepend_view_path Rails.root.join('public')
 
-    respond_to { |format| format.js { render 'projects/status_report_dashboard' } }
+    render 'spa-build/index'
   end
 
   def lead_time_dashboard
