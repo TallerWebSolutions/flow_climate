@@ -910,29 +910,16 @@ RSpec.describe ProjectsController, type: :controller do
 
     describe 'GET #status_report_dashboard' do
       let(:company) { Fabricate :company, users: [user] }
-      let(:customer) { Fabricate :customer, company: company }
-      let!(:project) { Fabricate :project, company: company, start_date: 2.weeks.ago, end_date: Time.zone.today }
+      let(:project) { Fabricate :project, company: company }
 
       context 'passing valid parameters' do
         it 'assigns the instance variables and renders the template' do
-          work_flow_info = instance_double('Flow::WorkItemFlowInformations', upstream_delivered_per_period: [], downstream_delivered_per_period: [], throughput_per_period: [])
-          expect(Flow::WorkItemFlowInformations).to(receive(:new).once { work_flow_info })
-          expect(work_flow_info).to(receive(:work_items_flow_behaviour).exactly(3).times)
-          expect(work_flow_info).to(receive(:build_cfd_hash).exactly(3).times)
-
           get :status_report_dashboard, params: { company_id: company, id: project }, xhr: true
-          expect(response).to render_template 'projects/status_report_dashboard'
-          expect(assigns(:project)).to eq project
+          expect(response).to render_template 'spa-build/index'
         end
       end
 
       context 'passing an invalid' do
-        context 'non-existent project' do
-          before { get :status_report_dashboard, params: { company_id: company, id: 'foo' }, xhr: true }
-
-          it { expect(response).to have_http_status :not_found }
-        end
-
         context 'company' do
           context 'non-existent' do
             before { get :status_report_dashboard, params: { company_id: 'foo', id: project }, xhr: true }

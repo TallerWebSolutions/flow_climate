@@ -208,31 +208,6 @@ Rails.application.routes.draw do
     end
 
     resources :projects do
-      resources :demands, except: %i[show destroy index] do
-        resources :demand_blocks, only: %i[edit update] do
-          member do
-            patch :activate
-            patch :deactivate
-          end
-        end
-      end
-
-      resources :project_risk_configs, except: %i[edit update show] do
-        member do
-          patch :activate
-          patch :deactivate
-        end
-      end
-
-      resources :stage_project_configs, only: %i[index destroy]
-      resources :project_risk_alerts, only: %i[index]
-
-      scope :jira do
-        resources :jira_project_configs, only: %i[new create destroy index], module: 'jira' do
-          put :synchronize_jira, on: :member
-        end
-      end
-
       member do
         get :tasks_tab
 
@@ -256,6 +231,31 @@ Rails.application.routes.draw do
         get :search_projects
         get :search_projects_by_team
         get :running_projects_charts
+      end
+
+      resources :demands, except: %i[show destroy index] do
+        resources :demand_blocks, only: %i[edit update] do
+          member do
+            patch :activate
+            patch :deactivate
+          end
+        end
+      end
+
+      resources :project_risk_configs, except: %i[edit update show] do
+        member do
+          patch :activate
+          patch :deactivate
+        end
+      end
+
+      resources :stage_project_configs, only: %i[index destroy]
+      resources :project_risk_alerts, only: %i[index]
+
+      scope :jira do
+        resources :jira_project_configs, only: %i[new create destroy index], module: 'jira' do
+          put :synchronize_jira, on: :member
+        end
       end
     end
 
