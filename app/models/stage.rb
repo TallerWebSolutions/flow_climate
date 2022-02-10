@@ -85,12 +85,6 @@ class Stage < ApplicationRecord
     order >= commitment_stage.order && (first_done_stage_in_pipe.blank? || order <= first_done_stage_in_pipe.order)
   end
 
-  def before_commitment_area?
-    return true if commitment_stage.blank?
-
-    order < commitment_stage.order
-  end
-
   private
 
   def commitment_stage

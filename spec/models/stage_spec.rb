@@ -196,7 +196,7 @@ RSpec.describe Stage, type: :model do
     end
   end
 
-  describe '#before_commitment_area?' do
+  describe '#commitment_area?' do
     it 'returns true when the stage is in a commitment area within the same integration pipe ID' do
       company = Fabricate :company
 
