@@ -168,8 +168,8 @@ RSpec.describe ProjectsController, type: :controller do
               expect(assigns(:company)).to eq company
               expect(assigns(:project)).to eq first_project
               expect(assigns(:unscored_demands)).to eq [third_demand, second_demand]
-              expect(assigns(:lead_time_histogram_data).keys.map(&:to_f)).to eq [43_200.0]
-              expect(assigns(:lead_time_histogram_data).values.map(&:to_f)).to eq [2]
+              expect(assigns(:lead_time_histogram_data).keys.map(&:to_f)).to eq [172_800.0]
+              expect(assigns(:lead_time_histogram_data).values.map(&:to_f)).to eq [1.0]
               expect(assigns(:last_10_deliveries).map(&:external_id)).to eq %w[zzz ccc]
               expect(assigns(:demands_blocks)).to eq [second_block, first_block]
               expect(assigns(:stages_list)).to eq [second_stage, first_stage]

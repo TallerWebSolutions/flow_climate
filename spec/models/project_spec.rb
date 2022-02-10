@@ -992,7 +992,7 @@ RSpec.describe Project, type: :model do
       let!(:other_expedite_demand) { Fabricate :demand, demand_type: :bug, project: project, commitment_date: 1.day.ago, end_date: Time.zone.today }
       let!(:standard_demand) { Fabricate :demand, demand_type: :feature, project: project, end_date: Time.zone.today }
 
-      it { expect(project.general_leadtime.to_f).to eq 102_240.00000000001 }
+      it { expect(project.general_leadtime.to_f).to eq 119_520.0 }
     end
 
     context 'having no demands' do
@@ -1378,7 +1378,7 @@ RSpec.describe Project, type: :model do
           Fabricate :demand, project: project, team: team, created_date: 2.days.ago, commitment_date: 1.day.ago, end_date: 1.hour.ago
           Fabricate :demand, project: project, team: team, created_date: 2.days.ago, discarded_at: 1.day.ago
 
-          expect(project.average_demand_aging).to eq 2.986111111111111
+          expect(project.average_demand_aging).to eq 0.6527777777777778
         end
       end
     end

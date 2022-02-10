@@ -115,7 +115,7 @@ RSpec.describe Stage, type: :model do
     let!(:fifth_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :upstream, integration_pipe_id: '321', order: 2, end_point: false }
     let!(:sixth_stage) { Fabricate :stage, company: company, projects: [project], stage_stream: :downstream, integration_pipe_id: '321', order: -1, end_point: true }
 
-    context 'having data' do
+    context 'with data' do
       context 'and the demand reached the downstream' do
         let(:demand) { Fabricate :demand, project: project }
         let!(:first_demand_transition) { Fabricate :demand_transition, stage: first_stage, demand: demand }
@@ -135,7 +135,7 @@ RSpec.describe Stage, type: :model do
       end
     end
 
-    context 'having no data' do
+    context 'with no data' do
       let!(:first_stage) { Fabricate :stage, company: company }
       let(:demand) { Fabricate :demand, project: project }
 
@@ -148,7 +148,7 @@ RSpec.describe Stage, type: :model do
     let(:customer) { Fabricate :customer, company: company }
     let(:project) { Fabricate :project, customers: [customer] }
 
-    context 'having data' do
+    context 'with data' do
       let!(:first_stage) { Fabricate :stage, company: company, projects: [project], integration_pipe_id: '321', order: 2 }
       let!(:second_stage) { Fabricate :stage, company: company, projects: [project], integration_pipe_id: '321', order: 1 }
       let!(:third_stage) { Fabricate :stage, company: company, projects: [project], integration_pipe_id: '321', order: 4, end_point: true }
@@ -170,7 +170,7 @@ RSpec.describe Stage, type: :model do
       it { expect(fifth_stage.before_end_point?).to be false }
     end
 
-    context 'having no data' do
+    context 'with no data' do
       let!(:first_stage) { Fabricate :stage, company: company }
       let(:demand) { Fabricate :demand, project: project }
 
@@ -179,7 +179,7 @@ RSpec.describe Stage, type: :model do
   end
 
   describe '#total_seconds_in' do
-    context 'having data' do
+    context 'with data' do
       let(:demand) { Fabricate :demand }
       let!(:first_stage) { Fabricate :stage, projects: [demand.project], integration_pipe_id: '321', order: 2 }
 
@@ -189,10 +189,36 @@ RSpec.describe Stage, type: :model do
       it { expect(first_stage.total_seconds_in).to eq 194_400.0 }
     end
 
-    context 'having no data' do
+    context 'with no data' do
       let!(:first_stage) { Fabricate :stage }
 
       it { expect(first_stage.total_seconds_in).to eq 0 }
+    end
+  end
+
+  describe '#before_commitment_area?' do
+    it 'returns true when the stage is in a commitment area within the same integration pipe ID' do
+      company = Fabricate :company
+
+      first_stage = Fabricate :stage, company: company, integration_pipe_id: 1, order: 0, commitment_point: false, end_point: false
+      second_stage = Fabricate :stage, company: company, integration_pipe_id: 1, order: 1, commitment_point: true, end_point: false
+      third_stage = Fabricate :stage, company: company, integration_pipe_id: 1, order: 2, commitment_point: false, end_point: false
+      fourth_stage = Fabricate :stage, company: company, integration_pipe_id: 1, order: 3, commitment_point: false, end_point: true
+      fifth_stage = Fabricate :stage, company: company, integration_pipe_id: 1, order: 4, commitment_point: false, end_point: false
+      sixth_stage = Fabricate :stage, company: company, integration_pipe_id: 1, order: 5, commitment_point: false, end_point: true
+
+      other_company_stage = Fabricate :stage, integration_pipe_id: 1, order: 2, commitment_point: false, end_point: false
+      other_pipe_stage = Fabricate :stage, company: company, integration_pipe_id: 2, order: 2, commitment_point: false, end_point: false
+
+      expect(first_stage.commitment_area?).to be false
+      expect(second_stage.commitment_area?).to be true
+      expect(third_stage.commitment_area?).to be true
+      expect(fourth_stage.commitment_area?).to be true
+      expect(fifth_stage.commitment_area?).to be false
+      expect(sixth_stage.commitment_area?).to be false
+
+      expect(other_company_stage.commitment_area?).to be false
+      expect(other_pipe_stage.commitment_area?).to be false
     end
   end
 end

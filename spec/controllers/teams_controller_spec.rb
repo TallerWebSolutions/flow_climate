@@ -581,7 +581,7 @@ RSpec.describe TeamsController, type: :controller do
             expect(response).to render_template 'teams/dashboards/dashboard_page_five'
             expect(response).to render_template 'teams/dashboards/_dashboard_tab_page_five'
             expect(assigns(:x_axis_index)).to eq [1]
-            expect(assigns(:memberships_lead_time_in_time)).to match_array [{ data: [0, 3.400000000000002], name: first_team_member.name }, { data: [0, 3.400000000000002], name: second_team_member.name }, { data: [0, 3.400000000000002], name: third_team_member.name }]
+            expect(assigns(:memberships_lead_time_in_time)).to match_array [{ data: [0, 4.6000000000000005], name: first_team_member.name }, { data: [0, 4.6000000000000005], name: second_team_member.name }, { data: [0, 4.6000000000000005], name: third_team_member.name }]
           end
         end
       end

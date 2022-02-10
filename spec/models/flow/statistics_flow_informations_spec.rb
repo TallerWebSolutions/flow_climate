@@ -78,13 +78,13 @@ RSpec.describe Flow::StatisticsFlowInformations, type: :model do
         stats_flow_info = described_class.new(Demand.all)
 
         expect(stats_flow_info.demands).to match_array Demand.all
-        expect(stats_flow_info.demands_charts_ids).to match_array %w[first_demand third_bug second_bug first_bug fourth_bug seventh_demand third_demand second_demand sixth_demand]
-        expect(stats_flow_info.lead_time_bins).to eq [73.75, 220.18, 366.6]
-        expect(stats_flow_info.lead_time_95p).to eq 430.21474537037034
-        expect(stats_flow_info.lead_time_80p).to eq 390.0147453703704
-        expect(stats_flow_info.lead_time_65p).to eq 190.9705833333333
-        expect(stats_flow_info.lead_time_histogram_data).to eq [5.0, 1.0, 3.0]
-        expect(stats_flow_info.lead_time_data_array).to match_array [0.5416666666666666, 0.999988425925926, 1.000023148148148, 4.9999768518518515, 7.755694444444444, 236.77430555555554, 372.81474537037036, 415.81474537037036, 439.81474537037036]
+        expect(stats_flow_info.demands_charts_ids).to match_array %w[first_bug first_demand fourth_bug second_bug third_bug]
+        expect(stats_flow_info.lead_time_bins).to eq [2.35, 5.95]
+        expect(stats_flow_info.lead_time_95p).to eq 7.2045509259259255
+        expect(stats_flow_info.lead_time_80p).to eq 5.55112037037037
+        expect(stats_flow_info.lead_time_65p).to eq 2.600004629629629
+        expect(stats_flow_info.lead_time_histogram_data).to eq [3.0, 2.0]
+        expect(stats_flow_info.lead_time_data_array).to match_array [0.5416666666666666, 0.999988425925926, 1.000023148148148, 4.9999768518518515, 7.755694444444444]
 
         stats_flow_info.statistics_flow_behaviour(dates_array.first)
         expect(stats_flow_info.average_aging_per_period).to eq [0]
@@ -93,7 +93,7 @@ RSpec.describe Flow::StatisticsFlowInformations, type: :model do
         stats_flow_info.statistics_flow_behaviour(dates_array.second)
         expect(stats_flow_info.average_aging_per_period).to eq [0, 36.79736111111111]
         expect(stats_flow_info.lead_time_accumulated).to eq [0, 7.755694444444444]
-        expect(stats_flow_info.current_lead_time_zones).to eq({ [46_800.0, 9_488_298.5] => 5, [9_488_298.5, 18_976_597.0] => 0, [18_976_597.0, 28_464_895.5] => 1, [28_464_895.5, 37_999_994.0] => 3 })
+        expect(stats_flow_info.current_lead_time_zones).to eq({ [46_800.0, 155_823.0] => 3, [155_823.0, 311_646.0] => 0, [311_646.0, 467_469.0] => 1, [467_469.0, 670_092.0] => 1 })
       end
     end
 

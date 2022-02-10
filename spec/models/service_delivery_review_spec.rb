@@ -46,20 +46,20 @@ RSpec.describe ServiceDeliveryReview, type: :model do
     let(:portfolio_unit) { Fabricate :portfolio_unit, product: product }
     let(:other_portfolio_unit) { Fabricate :portfolio_unit, product: product }
 
-    let!(:first_demand) { Fabricate :demand, project: project, portfolio_unit: portfolio_unit, service_delivery_review: service_delivery_review, demand_type: :bug, class_of_service: :expedite }
-    let!(:second_demand) { Fabricate :demand, project: project, portfolio_unit: other_portfolio_unit, service_delivery_review: service_delivery_review, demand_type: :bug, class_of_service: :standard }
-    let!(:third_demand) { Fabricate :demand, project: project, portfolio_unit: portfolio_unit, service_delivery_review: service_delivery_review, demand_type: :feature, class_of_service: :expedite }
-    let!(:fourth_demand) { Fabricate :demand, project: project, portfolio_unit: nil, service_delivery_review: service_delivery_review, demand_type: :chore, class_of_service: :expedite }
+    let!(:first_demand) { Fabricate :demand, project: project, external_id: 'first_demand', portfolio_unit: portfolio_unit, service_delivery_review: service_delivery_review, demand_type: :bug, class_of_service: :expedite }
+    let!(:second_demand) { Fabricate :demand, project: project, external_id: 'second_demand', portfolio_unit: other_portfolio_unit, service_delivery_review: service_delivery_review, demand_type: :bug, class_of_service: :standard }
+    let!(:third_demand) { Fabricate :demand, project: project, external_id: 'third_demand', portfolio_unit: portfolio_unit, service_delivery_review: service_delivery_review, demand_type: :feature, class_of_service: :expedite }
+    let!(:fourth_demand) { Fabricate :demand, project: project, external_id: 'fourth_demand', portfolio_unit: nil, service_delivery_review: service_delivery_review, demand_type: :chore, class_of_service: :expedite }
 
-    let!(:first_transition) { Fabricate :demand_transition, stage: stage, demand: first_demand, last_time_in: 10.days.ago, last_time_out: 1.minute.ago }
-    let!(:second_transition) { Fabricate :demand_transition, stage: stage, demand: second_demand, last_time_in: 6.days.ago, last_time_out: 1.hour.ago }
-    let!(:third_transition) { Fabricate :demand_transition, stage: stage, demand: third_demand, last_time_in: 96.hours.ago, last_time_out: 95.hours.ago }
-    let!(:fourth_transition) { Fabricate :demand_transition, stage: stage, demand: fourth_demand, last_time_in: 6.days.ago, last_time_out: 1.day.ago }
+    let!(:first_transition) { Fabricate :demand_transition, stage: other_stage, demand: first_demand, last_time_in: 18.days.ago, last_time_out: 10.days.ago }
+    let!(:second_transition) { Fabricate :demand_transition, stage: other_stage, demand: second_demand, last_time_in: 7.days.ago, last_time_out: 6.days.ago }
+    let!(:third_transition) { Fabricate :demand_transition, stage: other_stage, demand: third_demand, last_time_in: 97.hours.ago, last_time_out: 96.hours.ago }
+    let!(:fourth_transition) { Fabricate :demand_transition, stage: other_stage, demand: fourth_demand, last_time_in: 11.days.ago, last_time_out: 6.days.ago }
 
-    let!(:fifth_transition) { Fabricate :demand_transition, stage: other_stage, demand: first_demand, last_time_in: 18.days.ago, last_time_out: 10.days.ago }
-    let!(:sixth_transition) { Fabricate :demand_transition, stage: other_stage, demand: second_demand, last_time_in: 7.days.ago, last_time_out: 6.days.ago }
-    let!(:seventh_transition) { Fabricate :demand_transition, stage: other_stage, demand: third_demand, last_time_in: 97.hours.ago, last_time_out: 96.hours.ago }
-    let!(:eigth_transition) { Fabricate :demand_transition, stage: other_stage, demand: fourth_demand, last_time_in: 11.days.ago, last_time_out: 6.days.ago }
+    let!(:fifth_transition) { Fabricate :demand_transition, stage: stage, demand: first_demand, last_time_in: 10.days.ago, last_time_out: 1.minute.ago }
+    let!(:sixth_transition) { Fabricate :demand_transition, stage: stage, demand: second_demand, last_time_in: 6.days.ago, last_time_out: 1.hour.ago }
+    let!(:seventh_transition) { Fabricate :demand_transition, stage: stage, demand: third_demand, last_time_in: 96.hours.ago, last_time_out: 95.hours.ago }
+    let!(:eigth_transition) { Fabricate :demand_transition, stage: stage, demand: fourth_demand, last_time_in: 6.days.ago, last_time_out: 1.day.ago }
   end
 
   describe '#bugs_count' do
@@ -158,7 +158,7 @@ RSpec.describe ServiceDeliveryReview, type: :model do
 
     it 'returns the lead time breakdown to the entire demand array' do
       expect(service_delivery_review.lead_time_breakdown.keys).to eq [other_stage.name]
-      expect(service_delivery_review.lead_time_breakdown[other_stage.name]).to match_array [fifth_transition, sixth_transition, seventh_transition, eigth_transition]
+      expect(service_delivery_review.lead_time_breakdown[other_stage.name]).to match_array [first_transition, second_transition, third_transition, fourth_transition]
 
       expect(other_service_delivery_review.lead_time_breakdown).to eq({})
     end
@@ -194,8 +194,8 @@ RSpec.describe ServiceDeliveryReview, type: :model do
 
     it 'returns the underserved demands in array' do
       underserved_demands = service_delivery_review.underserved_demands
-      expect(underserved_demands[:value]).to match_array [first_demand]
-      expect(underserved_demands[:share]).to eq 0.25
+      expect(underserved_demands[:value]).to match_array [first_demand, fourth_demand]
+      expect(underserved_demands[:share]).to eq 0.5
 
       expect(other_service_delivery_review.underserved_demands[:value]).to eq([])
     end
@@ -206,8 +206,8 @@ RSpec.describe ServiceDeliveryReview, type: :model do
 
     it 'returns the fit for purpose demands in array' do
       fit_for_purpose_demands = service_delivery_review.fit_for_purpose_demands
-      expect(fit_for_purpose_demands[:value]).to match_array [second_demand, fourth_demand]
-      expect(fit_for_purpose_demands[:share]).to eq 0.5
+      expect(fit_for_purpose_demands[:value]).to match_array [second_demand]
+      expect(fit_for_purpose_demands[:share]).to eq 0.25
 
       expect(other_service_delivery_review.fit_for_purpose_demands[:value]).to eq([])
     end
