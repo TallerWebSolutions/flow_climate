@@ -162,9 +162,10 @@ const Chart = forwardRef((_, ref) => (
 
 const StatusReport = () => {
   const ref: any = useRef()
+  const projectName = "Projeto X"
 
   return (
-    <BasicPage>
+    <BasicPage title={projectName}>
       <button onClick={() => exportComponentAsPNG(ref)}>Exportar</button>
       <Chart ref={ref} />
     </BasicPage>

@@ -1,11 +1,5 @@
 import { Fragment, useContext } from "react"
-import {
-  Backdrop,
-  CircularProgress,
-  Container,
-  Box,
-  Typography,
-} from "@mui/material"
+import { Backdrop, CircularProgress, Box, Typography } from "@mui/material"
 import { gql, useQuery, useMutation } from "@apollo/client"
 import CachedIcon from "@mui/icons-material/Cached"
 import { useParams } from "react-router-dom"
@@ -155,51 +149,42 @@ const Replenishing = () => {
     )
 
   return (
-    <BasicPage>
-      <Container maxWidth="xl">
-        {data?.team && (
-          <Fragment>
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Typography ml="auto" mr={1} variant="subtitle2">
-                Última atualização em{" "}
-                {format(
-                  new Date(
-                    data.team.lastReplenishingConsolidations[0].createdAt
-                  ),
-                  "d/m/y"
-                )}{" "}
-                às{" "}
-                {format(
-                  new Date(
-                    data.team.lastReplenishingConsolidations[0].createdAt
-                  ),
-                  "h:mm"
-                )}
-              </Typography>
-              <CachedIcon
-                onClick={() =>
-                  generateReplenishingCache({
-                    variables: { teamId: data.team.id },
-                  })
-                }
-                sx={{ cursor: "pointer" }}
-              />
-            </Box>
-            <Typography component="h1" variant="h4" mb={3}>
-              Reabastecimento
+    <BasicPage title="Reabastecimento">
+      {data?.team && (
+        <Fragment>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Typography ml="auto" mr={1} variant="subtitle2">
+              Última atualização em{" "}
+              {format(
+                new Date(data.team.lastReplenishingConsolidations[0].createdAt),
+                "d/m/y"
+              )}{" "}
+              às{" "}
+              {format(
+                new Date(data.team.lastReplenishingConsolidations[0].createdAt),
+                "h:mm"
+              )}
             </Typography>
-            <ReplenishingTeamInfo team={normalizeTeamInfo(data)} />
-            <ReplenishingProjectsInfo
-              projects={normalizeProjectInfo(data)}
-              companySlug={companyNickName}
+            <CachedIcon
+              onClick={() =>
+                generateReplenishingCache({
+                  variables: { teamId: data.team.id },
+                })
+              }
+              sx={{ cursor: "pointer" }}
             />
-          </Fragment>
-        )}
-      </Container>
+          </Box>
+          <ReplenishingTeamInfo team={normalizeTeamInfo(data)} />
+          <ReplenishingProjectsInfo
+            projects={normalizeProjectInfo(data)}
+            companySlug={companyNickName}
+          />
+        </Fragment>
+      )}
     </BasicPage>
   )
 }
