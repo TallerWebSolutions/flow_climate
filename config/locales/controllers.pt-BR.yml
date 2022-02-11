@@ -16,7 +16,10 @@ pt-BR:
     messages:
       saved: Salvo!
       save_error: Não foi possível salvar! Por favor recarregue a página e tente novamente.
-    search: "Buscar"
+    search:
+      start_date: "De"
+      end_date: "Até"
+      title: "Buscar"
     home:
       title: "Home"
     result: "Resultado"
@@ -1449,6 +1452,8 @@ pt-BR:
       count: "%{count} Tarefas"
       search:
         placeholder: "buscar pelo nome da tarefa"
+        helpers:
+          date: "Se estiver buscando por tarefas fechadas, a busca será feita pela data de entrega, senão será feita pela data de criação."
     charts:
       completion_time:
         title: "Tempo para Finalizar (P80)"

@@ -36,12 +36,25 @@ class TasksController < AuthenticatedController
     tasks
     @tasks = @tasks.where('title ILIKE :task_name_search', task_name_search: "%#{params['tasks_search']}%") if params['tasks_search'].present?
 
-    if params['task_status'].present?
-      @tasks = @tasks.finished if params['task_status'] == 'finished'
-      @tasks = @tasks.open if params['task_status'] == 'not_finished'
-    end
+    @tasks = search_by_status(@tasks) if params['task_status'].present?
+    @tasks = search_by_date(@tasks) if params['tasks_start_date'].present? && params['tasks_end_date'].present?
 
     @paged_tasks = @tasks.page(page_param)
+  end
+
+  def search_by_status(tasks)
+    return tasks.finished if params['task_status'] == 'finished'
+    return tasks.open if params['task_status'] == 'not_finished'
+
+    tasks
+  end
+
+  def search_by_date(tasks)
+    if params['task_status'] == 'finished'
+      tasks.where('tasks.end_date BETWEEN :start_date AND :end_date', start_date: params['tasks_start_date'].to_date.beginning_of_day, end_date: params['tasks_end_date'].to_date.end_of_day)
+    else
+      tasks.where('tasks.created_date BETWEEN :start_date AND :end_date', start_date: params['tasks_start_date'].to_date.beginning_of_day, end_date: params['tasks_end_date'].to_date.end_of_day)
+    end
   end
 
   def tasks

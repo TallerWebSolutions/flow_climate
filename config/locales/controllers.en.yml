@@ -16,7 +16,10 @@ en:
     messages:
       saved: Saved!
       save_error: We couldn't save it now! Please reload and try again.
-    search: "Search"
+    search:
+      start_date: "From"
+      end_date: "Until"
+      title: "Search"
     home:
       title: "Home"
     result: "Result"
@@ -1459,6 +1462,8 @@ en:
       count: "%{count} Tasks"
       search:
         placeholder: "search by task name"
+        helpers:
+          date: "When searching by finished tasks it will search by the delivered date, else it will search by the created date."
     charts:
       completion_time:
         title: "Completion Time (P80)"

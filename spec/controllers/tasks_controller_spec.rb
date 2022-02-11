@@ -81,8 +81,8 @@ RSpec.describe TasksController, type: :controller do
 
     describe 'POST #search' do
       context 'with valid params' do
-        context 'with search' do
-          it 'assigns the instance variables and renders the template' do
+        context 'with search by status and text' do
+          it 'assigns the instance variables and renders the template according to the search' do
             demand = Fabricate :demand, company: company
             discarded_demand = Fabricate :demand, company: company, discarded_at: 2.days.ago
             task = Fabricate :task, demand: demand, created_date: 2.days.ago, end_date: 1.day.ago, title: 'fOo'
@@ -98,7 +98,57 @@ RSpec.describe TasksController, type: :controller do
           end
         end
 
-        context 'with no search' do
+        context 'with search by tasks dates without status search' do
+          it 'searches by created date and renders the template' do
+            demand = Fabricate :demand, company: company
+            discarded_demand = Fabricate :demand, company: company, discarded_at: 2.days.ago
+            task = Fabricate :task, demand: demand, created_date: 2.days.ago, end_date: 1.day.ago
+            other_task = Fabricate :task, demand: demand, created_date: 1.day.ago, end_date: 1.hour.ago
+            Fabricate :task, demand: discarded_demand, created_date: 1.day.ago, end_date: 1.hour.ago
+            Fabricate :task, demand: demand, created_date: 3.days.ago, end_date: nil
+
+            post :search, params: { company_id: company, tasks_start_date: 52.hours.ago.to_date, tasks_end_date: 1.minute.ago.to_date }
+
+            expect(assigns(:tasks)).to eq [other_task, task]
+            expect(response).to render_template :index
+          end
+        end
+
+        context 'with search by tasks dates with status search, but opened' do
+          it 'searches by created date and renders the template' do
+            demand = Fabricate :demand, company: company
+            discarded_demand = Fabricate :demand, company: company, discarded_at: 2.days.ago
+            task = Fabricate :task, demand: demand, created_date: 2.days.ago, end_date: nil
+            other_task = Fabricate :task, demand: demand, created_date: 1.day.ago, end_date: nil
+            Fabricate :task, demand: discarded_demand, created_date: 1.day.ago, end_date: nil
+            Fabricate :task, demand: demand, created_date: 3.days.ago, end_date: nil
+
+            post :search, params: { company_id: company, tasks_start_date: 52.hours.ago.to_date, tasks_end_date: 1.minute.ago.to_date, task_status: 'not_finished' }
+
+            expect(assigns(:tasks)).to eq [other_task, task]
+            expect(response).to render_template :index
+          end
+        end
+
+        context 'with search by tasks dates with the status closed' do
+          it 'searches by end date and renders the template' do
+            demand = Fabricate :demand, company: company
+            discarded_demand = Fabricate :demand, company: company, discarded_at: 2.days.ago
+
+            task = Fabricate :task, demand: demand, created_date: 2.days.ago, end_date: 1.day.ago
+            other_task = Fabricate :task, demand: demand, created_date: 1.day.ago, end_date: 1.hour.ago
+            Fabricate :task, demand: discarded_demand, created_date: 1.day.ago, end_date: 1.hour.ago
+            Fabricate :task, demand: demand, created_date: 3.days.ago, end_date: nil
+            Fabricate :task, demand: demand, created_date: 4.days.ago, end_date: 3.days.ago
+
+            post :search, params: { company_id: company, tasks_start_date: 26.hours.ago.to_date, tasks_end_date: 1.minute.ago.to_date, task_status: 'finished' }
+
+            expect(assigns(:tasks)).to eq [other_task, task]
+            expect(response).to render_template :index
+          end
+        end
+
+        context 'with no search params' do
           it 'assigns the instance variables and renders the template' do
             demand = Fabricate :demand, company: company
             task = Fabricate :task, demand: demand, created_date: 2.days.ago, title: 'fOo'
