@@ -163,9 +163,15 @@ const Chart = forwardRef((_, ref) => (
 const StatusReport = () => {
   const ref: any = useRef()
   const projectName = "Projeto X"
+  const breadcrumbsLinks = [
+    { name: "Home", url: "/" },
+    { name: "TALLER", url: "" },
+    { name: "Projetos", url: "" },
+    { name: "IstoÉ - Matérias e Editorias", url: "" },
+  ]
 
   return (
-    <BasicPage title={projectName}>
+    <BasicPage title={projectName} breadcrumbsLinks={breadcrumbsLinks}>
       <button onClick={() => exportComponentAsPNG(ref)}>Exportar</button>
       <Chart ref={ref} />
     </BasicPage>
