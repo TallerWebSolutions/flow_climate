@@ -150,11 +150,15 @@ RSpec.describe TasksController, type: :controller do
             other_task = Fabricate :task, demand: demand, created_date: 1.day.ago, end_date: 2.hours.ago, title: 'fOObar'
             Fabricate :task, demand: demand, created_date: Time.zone.now, title: 'xpto'
 
+            finished_tasks = Task.finished
+
             post :charts, params: { company_id: company, tasks_search: 'foo' }
 
             expect(assigns(:tasks)).to eq [other_task, task]
             expect(assigns(:task_completion_control_chart_data).pluck(:id)).to eq [other_task.external_id, task.external_id]
             expect(assigns(:task_completion_control_chart_data).pluck(:completion_time)).to eq [other_task.seconds_to_complete, task.seconds_to_complete]
+            expect(assigns(:tasks_throughputs)).to eq [2]
+            expect(assigns(:tasks_throughputs_x_axis)).to eq TimeService.instance.weeks_between_of(finished_tasks.map(&:end_date).min, finished_tasks.map(&:end_date).max)
 
             expect(response).to render_template :charts
           end

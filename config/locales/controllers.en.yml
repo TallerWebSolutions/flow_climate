@@ -1461,7 +1461,7 @@ en:
         placeholder: "search by task name"
     charts:
       completion_time:
-        title: "Completion Time"
+        title: "Completion Time (P80)"
         ytitle: "days"
       completion_control_chart:
         title: "Control Chart to Completion Time"
@@ -1471,6 +1471,9 @@ en:
         title: "Operational Risk Evolution"
       scope:
         ytitle: "Tasks"
+      throughput:
+        title: "Throughput"
+      tasks: "Tasks"
   initiatives:
     index:
       title: "Initiatives"

@@ -1451,7 +1451,7 @@ pt-BR:
         placeholder: "buscar pelo nome da tarefa"
     charts:
       completion_time:
-        title: "Tempo para Finalizar"
+        title: "Tempo para Finalizar (P80)"
         ytitle: "dias"
       completion_control_chart:
         title: "Gráfico de Dispersão do Tempo de Resolução"
@@ -1461,6 +1461,9 @@ pt-BR:
         title: "Evolução do Risco Operacional"
       scope:
         ytitle: "Tarefas"
+      throughput:
+        title: "Vazão"
+      tasks: "Tarefas"
   initiatives:
     index:
       title: "Iniciativas"

@@ -36,8 +36,27 @@
            data-prefix=''
            data-tooltipsuffix='<%= I18n.t('tasks.charts.completion_control_chart.ylabel') %>'
            data-percentile95='<%= Stats::StatisticsService.instance.percentile(95, @completion_times) / 1.day %>'
-           data-percentile80='<%= Stats::StatisticsService.instance.percentile(95, @completion_times) / 1.day %>'
-           data-percentile65='<%= Stats::StatisticsService.instance.percentile(95, @completion_times) / 1.day %>'>
+           data-percentile80='<%= Stats::StatisticsService.instance.percentile(80, @completion_times) / 1.day %>'
+           data-percentile65='<%= Stats::StatisticsService.instance.percentile(65, @completion_times) / 1.day %>'>
+      </div>
+    <% else %>
+      <% render 'layouts/no_data', missing_data: I18n.t('general.data') %>
+    <% end %>
+  </div>
+  <div class="col-xs-6">
+    <% if @tasks_throughputs_x_axis.present? %>
+      <div id="tasks-list-throughput-data-column"
+           class="flow-chart"
+           data-title="<%= I18n.t('tasks.charts.throughput.title') %>"
+           data-xcategories="<%= @tasks_throughputs_x_axis.map(&:to_s).to_json %>"
+           data-xtitle="<%= I18n.t('general.period') %>"
+           data-ytitle="<%= I18n.t('tasks.charts.tasks') %>"
+           data-prefix=""
+           data-tooltipsuffix="<%= I18n.t('tasks.charts.tasks') %>"
+           data-datalabelsuffix=""
+           data-series="<%= [{ name: I18n.t('general.delivered'), data: @tasks_throughputs }].to_json %>"
+           data-stacking=""
+           data-decimals="0">
       </div>
     <% else %>
       <% render 'layouts/no_data', missing_data: I18n.t('general.data') %>
@@ -47,6 +66,7 @@
 
 <% content_for :javascript do %>
   <%= javascript_include_tag 'charts/scatter' %>
+  <%= javascript_include_tag 'charts/column.js' %>
 
   <%= javascript_include_tag 'tasks/charts' %>
 <% end %>
