@@ -15,6 +15,7 @@ class InitiativesController < AuthenticatedController
     @tasks_to_do = tasks.count - @tasks_completed
 
     @burnup_adapter = Highchart::BurnupAdapter.new(tasks, @initiative.start_date, @initiative.end_date)
+    @tasks_charts_adapter = Highchart::TasksChartsAdapter.new(tasks.map(&:id), @initiative.start_date, @initiative.end_date)
   end
 
   def generate_cache

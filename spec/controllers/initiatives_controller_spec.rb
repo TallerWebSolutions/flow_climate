@@ -69,6 +69,15 @@ RSpec.describe InitiativesController, type: :controller do
             initiative_consolidation = Fabricate :initiative_consolidation, initiative: initiative, consolidation_date: 1.day.ago, last_data_in_week: true
             other_initiative_consolidation = Fabricate :initiative_consolidation, initiative: initiative, consolidation_date: 2.days.ago, last_data_in_week: true
 
+            project = Fabricate :project, initiative: initiative
+            demand = Fabricate :demand, project: project
+
+            task = Fabricate :task, demand: demand, created_date: 2.days.ago, end_date: Time.zone.now
+            other_task = Fabricate :task, demand: demand, created_date: 3.days.ago, end_date: Time.zone.now
+            unfinished_task = Fabricate :task, demand: demand, created_date: 4.days.ago, end_date: nil
+
+            Fabricate :task, created_date: 3.days.ago, end_date: nil
+
             Fabricate :initiative_consolidation
 
             get :show, params: { company_id: company, id: initiative }
@@ -76,8 +85,10 @@ RSpec.describe InitiativesController, type: :controller do
             expect(assigns(:initiative)).to eq initiative
             expect(assigns(:initiative_consolidations)).to eq [other_initiative_consolidation, initiative_consolidation]
             expect(assigns(:burnup_adapter)).to be_a Highchart::BurnupAdapter
-            expect(assigns(:tasks_completed)).to eq 0
-            expect(assigns(:tasks_to_do)).to eq 0
+            expect(assigns(:tasks_completed)).to eq 2
+            expect(assigns(:tasks_to_do)).to eq 1
+            expect(assigns(:tasks_charts_adapter).tasks_in_chart).to eq [unfinished_task, other_task, task]
+
             expect(response).to render_template 'initiatives/show'
           end
         end

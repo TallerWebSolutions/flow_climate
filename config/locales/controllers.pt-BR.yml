@@ -822,7 +822,8 @@ pt-BR:
         tooltipsufix: " demanda(s)"
       hours_per_month:
         title: "Horas por Mês para %{name}"
-      throughput: "Vazão no Período"
+      throughput:
+        tooltipsufix: "demanda(s)"
       creation_date: "Criadas"
       demands:
         title: "Demandas"

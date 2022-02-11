@@ -13,7 +13,12 @@ if (initiativetasksBurnup.length !== 0) {
     buildBurnupChart(initiativetasksBurnup);
 }
 
-const initiativetasksCompleted = $("#initiatives-completed");
+const initiativetasksCompleted = $("#initiatives-tasks-completed");
 if (initiativetasksCompleted.length !== 0) {
     buildDonutChart(initiativetasksCompleted);
+}
+
+const initiativeFlowTasksDataColumn = $("#initiative-dashboard-tasks-flow-data-column");
+if (initiativeFlowTasksDataColumn.length !== 0) {
+    buildColumnChart(initiativeFlowTasksDataColumn);
 }
