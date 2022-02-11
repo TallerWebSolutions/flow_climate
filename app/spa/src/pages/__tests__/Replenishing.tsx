@@ -14,7 +14,6 @@ import {
   replenishingMock as data,
 } from "../../lib/mocks"
 import { MemoryRouter, Route, Routes } from "react-router-dom"
-import { Fragment } from "react"
 
 describe("pages/Replenishing", () => {
   describe("normalizers", () => {
@@ -80,8 +79,8 @@ describe("pages/Replenishing", () => {
     })
   })
 
-  describe("should render breadcrumb from query data", () => {
-    it("should show replenishing page breadcrumb according to the replenishing query result", async () => {
+  describe("breadcrumbs", () => {
+    it("should render breadcrumb from query data", async () => {
       const mocks = [
         {
           request: {
