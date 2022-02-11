@@ -107,7 +107,7 @@ RSpec.describe TasksController, type: :controller do
             Fabricate :task, demand: discarded_demand, created_date: 1.day.ago, end_date: 1.hour.ago
             Fabricate :task, demand: demand, created_date: 3.days.ago, end_date: nil
 
-            post :search, params: { company_id: company, tasks_start_date: 52.hours.ago.to_date, tasks_end_date: 1.minute.ago.to_date }
+            post :search, params: { company_id: company, tasks_start_date: 52.hours.ago.to_date, tasks_end_date: 1.minute.ago.to_date, task_status: 'foo' }
 
             expect(assigns(:tasks)).to eq [other_task, task]
             expect(response).to render_template :index
