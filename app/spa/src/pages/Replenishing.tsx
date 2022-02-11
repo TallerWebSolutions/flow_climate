@@ -13,7 +13,7 @@ import ReplenishingProjectsInfo, {
 } from "../components/ReplenishingProjectsInfo"
 import BasicPage, { MessagesContext } from "../components/BasicPage"
 
-const QUERY = gql`
+export const QUERY = gql`
   query Replenishing($teamId: Int!) {
     team(id: $teamId) {
       id
@@ -148,8 +148,18 @@ const Replenishing = () => {
       </Backdrop>
     )
 
+  const companyName = data?.team.company.name
+  const companyUrl = `/companies/${data?.team.company.slug}`
+  const teamName = data?.team.name
+  const teamUrl = `/companies/${data?.team.company.slug}/teams/${data?.team.id}`
+
+  const breadcrumbsLinks = [
+    { name: companyName, url: companyUrl },
+    { name: teamName, url: teamUrl },
+  ]
+
   return (
-    <BasicPage title="Reabastecimento">
+    <BasicPage title="Reabastecimento" breadcrumbsLinks={breadcrumbsLinks}>
       {data?.team && (
         <Fragment>
           <Box

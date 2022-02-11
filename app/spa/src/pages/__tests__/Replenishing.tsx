@@ -1,8 +1,11 @@
-// @ts-nocheck
-import {
+import { render, within } from "@testing-library/react"
+import { MockedProvider } from "@apollo/client/testing"
+
+import ReplenishingPage, {
   normalizeProjectInfo,
   normalizeTeamInfo,
   getProjects,
+  QUERY as REPLENISHING_QUERY,
 } from "../Replenishing"
 
 import {
@@ -10,6 +13,8 @@ import {
   projectMock,
   replenishingMock as data,
 } from "../../lib/mocks"
+import { MemoryRouter, Route, Routes } from "react-router-dom"
+import { Fragment } from "react"
 
 describe("pages/Replenishing", () => {
   describe("normalizers", () => {
@@ -72,6 +77,51 @@ describe("pages/Replenishing", () => {
       const expected = [projectMock]
 
       expect(normalizeProjectInfo(data)).toEqual(expected)
+    })
+  })
+
+  describe("should render breadcrumb from query data", () => {
+    it("should show replenishing page breadcrumb according to the replenishing query result", async () => {
+      const mocks = [
+        {
+          request: {
+            query: REPLENISHING_QUERY,
+            variables: {
+              teamId: 1,
+            },
+          },
+          result: { data },
+        },
+      ]
+
+      const page = render(
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <MemoryRouter
+            initialEntries={[
+              "/companies/taller/teams/1/replenishing_consolidations",
+            ]}
+          >
+            <Routes>
+              <Route
+                path="/companies/:companyNickName/teams/:teamId/replenishing_consolidations"
+                element={<ReplenishingPage />}
+              />
+            </Routes>
+          </MemoryRouter>
+        </MockedProvider>
+      )
+
+      await new Promise((resolve) => setTimeout(resolve, 0))
+
+      const breadcrumbs = await page.findByTestId("breadcrumbs")
+      const companyLink = within(breadcrumbs).getAllByText("Taller")
+      const teamLink = within(breadcrumbs).queryAllByText("Vingadores")
+
+      expect(companyLink).toHaveLength(1)
+      expect(companyLink[0]).toHaveAttribute("href", "/companies/taller")
+
+      expect(teamLink).toHaveLength(1)
+      expect(teamLink[0]).toHaveAttribute("href", "/companies/taller/teams/1")
     })
   })
 })

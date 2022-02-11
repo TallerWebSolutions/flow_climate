@@ -5,7 +5,7 @@ import {
   Typography,
 } from "@mui/material"
 
-type BreadcrumbsLink = {
+export type BreadcrumbsLink = {
   name: string
   url: string
 }
@@ -16,10 +16,15 @@ type BreadcrumbsProps = {
 }
 
 const Breadcrumbs = ({ links, currentPageName }: BreadcrumbsProps) => (
-  <Box py={3}>
+  <Box py={3} data-testid="breadcrumbs">
     <MUIBreadcrumbs aria-label="breadcrumb">
-      {links.map((link) => (
-        <Link underline="hover" color="inherit" href={link.url}>
+      {links.map((link, index) => (
+        <Link
+          underline="hover"
+          color="inherit"
+          href={link.url}
+          key={`${link.name}--${index}`}
+        >
           {link.name}
         </Link>
       ))}
