@@ -4,15 +4,14 @@
 #
 # Table name: jira_accounts
 #
-#  id                     :bigint           not null, primary key
-#  base_uri               :string           not null
-#  customer_domain        :string           not null
-#  encrypted_api_token    :string           not null
-#  encrypted_api_token_iv :string           not null
-#  username               :string           not null
-#  created_at             :datetime         not null
-#  updated_at             :datetime         not null
-#  company_id             :integer          not null
+#  id                  :bigint           not null, primary key
+#  base_uri            :string           not null
+#  customer_domain     :string           not null
+#  encrypted_api_token :string           not null
+#  username            :string           not null
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  company_id          :integer          not null
 #
 # Indexes
 #
@@ -30,10 +29,16 @@ module Jira
     belongs_to :company
     has_many :jira_custom_field_mappings, class_name: 'Jira::JiraCustomFieldMapping', dependent: :destroy, inverse_of: :jira_account
 
-    attr_encrypted :api_token, key: Base64.decode64(Figaro.env.secret_key_32_encoded)
-
-    validates :username, :api_token, :base_uri, :customer_domain, presence: true
+    validates :username, :encrypted_api_token, :base_uri, :customer_domain, presence: true
     validates :customer_domain, :base_uri, uniqueness: true
+
+    def api_token
+      Security::EncryptionService.decrypt(encrypted_api_token)
+    end
+
+    def api_token=(value)
+      self.encrypted_api_token = Security::EncryptionService.encrypt(value)
+    end
 
     def responsibles_custom_field
       jira_custom_field_mappings.find_by(custom_field_type: :responsibles)

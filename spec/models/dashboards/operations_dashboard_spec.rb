@@ -3,7 +3,7 @@
 RSpec.describe Dashboards::OperationsDashboard, type: :model do
   context 'associations' do
     it { is_expected.to belong_to(:team_member) }
-    it { is_expected.to belong_to(:first_delivery).class_name('Demand') }
+    it { is_expected.to belong_to(:first_delivery).class_name('Demand').optional }
 
     it { is_expected.to have_many(:operations_dashboard_pairings).class_name('Dashboards::OperationsDashboardPairing').dependent(:destroy) }
   end

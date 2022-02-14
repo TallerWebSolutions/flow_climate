@@ -33,9 +33,9 @@
 class Contract < ApplicationRecord
   enum renewal_period: { monthly: 0, yearly: 1 }
 
-  belongs_to :contract
   belongs_to :customer
   belongs_to :product
+  belongs_to :contract, optional: true
 
   has_many :contract_consolidations, dependent: :destroy, class_name: 'Consolidations::ContractConsolidation'
   has_many :demands, dependent: :nullify

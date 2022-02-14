@@ -36,7 +36,7 @@
 module Dashboards
   class OperationsDashboard < ApplicationRecord
     belongs_to :team_member
-    belongs_to :first_delivery, class_name: 'Demand'
+    belongs_to :first_delivery, optional: true, class_name: 'Demand'
 
     has_many :operations_dashboard_pairings, class_name: 'Dashboards::OperationsDashboardPairing', dependent: :destroy
 

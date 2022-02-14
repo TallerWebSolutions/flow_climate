@@ -3,7 +3,7 @@
 RSpec.describe Customer, type: :model do
   context 'associations' do
     it { is_expected.to belong_to :company }
-    it { is_expected.to belong_to :customer }
+    it { is_expected.to belong_to(:customer).optional }
     it { is_expected.to have_many :products }
     it { is_expected.to have_many(:demands).dependent(:nullify) }
     it { is_expected.to have_many(:contracts).dependent(:restrict_with_error) }

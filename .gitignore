@@ -32,3 +32,5 @@ logfile
 
 .idea/
 .vscode
+
+/config/master.key

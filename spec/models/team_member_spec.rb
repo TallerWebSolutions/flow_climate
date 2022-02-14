@@ -7,7 +7,7 @@ RSpec.describe TeamMember, type: :model do
 
   context 'associations' do
     it { is_expected.to belong_to(:company) }
-    it { is_expected.to belong_to(:user) }
+    it { is_expected.to belong_to(:user).optional }
     it { is_expected.to have_many(:memberships).dependent(:destroy) }
     it { is_expected.to have_many(:teams).through(:memberships) }
     it { is_expected.to have_many(:demand_comments).dependent(:nullify) }

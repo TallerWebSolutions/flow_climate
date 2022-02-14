@@ -7,7 +7,7 @@ RSpec.describe PortfolioUnit, type: :model do
 
   context 'associations' do
     it { is_expected.to belong_to :product }
-    it { is_expected.to belong_to(:parent).class_name('PortfolioUnit').inverse_of(:children) }
+    it { is_expected.to belong_to(:parent).class_name('PortfolioUnit').inverse_of(:children).optional }
     it { is_expected.to have_many(:children).class_name('PortfolioUnit').inverse_of(:parent).dependent(:destroy) }
     it { is_expected.to have_many(:demands).dependent(:nullify) }
     it { is_expected.to have_one(:jira_portfolio_unit_config).dependent(:destroy) }

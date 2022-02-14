@@ -44,7 +44,7 @@ class Project < ApplicationRecord
 
   belongs_to :company
   belongs_to :team
-  belongs_to :initiative
+  belongs_to :initiative, optional: true
 
   has_many :customers_projects, dependent: :destroy
   has_many :customers, through: :customers_projects, dependent: :destroy

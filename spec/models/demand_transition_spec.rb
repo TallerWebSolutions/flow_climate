@@ -4,7 +4,7 @@ RSpec.describe DemandTransition, type: :model do
   context 'associations' do
     it { is_expected.to belong_to(:demand) }
     it { is_expected.to belong_to(:stage) }
-    it { is_expected.to belong_to(:team_member) }
+    it { is_expected.to belong_to(:team_member).optional }
     it { is_expected.to have_many(:demand_efforts).dependent(:destroy) }
   end
 
@@ -319,16 +319,6 @@ RSpec.describe DemandTransition, type: :model do
           demand_transition = Fabricate.build :demand_transition, demand: demand
 
           expect(ProjectBrokenWipLog).to(receive(:where)).once.and_call_original
-          demand_transition.save
-        end
-      end
-
-      context 'without project' do
-        it 'does not check the wip count' do
-          demand = Fabricate :demand, project: nil, created_date: 2.days.ago, commitment_date: 1.day.ago, end_date: nil
-          demand_transition = Fabricate.build :demand_transition, demand: demand
-
-          expect(ProjectBrokenWipLog).not_to(receive(:where))
           demand_transition.save
         end
       end

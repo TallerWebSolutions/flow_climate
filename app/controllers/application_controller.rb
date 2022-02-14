@@ -5,8 +5,6 @@ class ApplicationController < ActionController::Base
 
   before_action :redirect_subdomain
 
-  protect_from_forgery with: :exception
-
   private
 
   def not_found

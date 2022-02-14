@@ -9,7 +9,7 @@ RSpec.describe Jira::JiraAccount, type: :model do
   context 'validations' do
     context 'simple ones' do
       it { is_expected.to validate_presence_of :username }
-      it { is_expected.to validate_presence_of :api_token }
+      it { is_expected.to validate_presence_of :encrypted_api_token }
       it { is_expected.to validate_presence_of :base_uri }
       it { is_expected.to validate_presence_of :customer_domain }
     end

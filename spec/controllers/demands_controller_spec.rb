@@ -194,7 +194,7 @@ RSpec.describe DemandsController, type: :controller do
           it 'does not create the demand and re-render the template with the errors' do
             expect(Demand.last).to be_nil
             expect(response).to render_template :new
-            expect(assigns(:demand).errors.full_messages).to eq ['Data de Criação não pode ficar em branco', 'Id da Demanda não pode ficar em branco', 'Tipo da Demanda não pode ficar em branco']
+            expect(assigns(:demand).errors.full_messages).to eq ['Time deve existir', 'Data de Criação não pode ficar em branco', 'Id da Demanda não pode ficar em branco', 'Tipo da Demanda não pode ficar em branco']
           end
         end
 

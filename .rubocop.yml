@@ -15,6 +15,7 @@ AllCops:
     - 'app/helpers/**/*'
     - 'config/environments/**/*'
     - 'app/jobs/**/*'
+    - 'tmp/**/*'
   NewCops: enable
 
 # This is currently exiting with a rubocop exception error and should be

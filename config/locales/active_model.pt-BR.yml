@@ -142,6 +142,9 @@ pt-BR:
       azure/azure_account:
         one: Conta no Azure Devops
         other: Contas no Azure Devops
+      azure/azure_product_config:
+        one: Configuração de Produto no Azure
+        other: Configurações de Produto no Azure
       jira/jira_account:
         one: Conta do Jira
         other: Contas do Jira
@@ -542,7 +545,7 @@ pt-BR:
         product: Produto
       jira/jira_account:
         username: Nome de usuário
-        api_token: Token da API
+        encrypted_api_token: Token da API
         base_uri: URI base
         company: Empresa
         jira_custom_field_mappings: Meapeamento de Campos Customizados
@@ -564,11 +567,14 @@ pt-BR:
         azure_organization: Organização
         username: Nome de Usuário
         azure_work_item_query: Query para Consultar os Work Items no Azure
+      azure/azure_team:
+        azure_product_config: Config de Produto no Azure
       consolidations/project_consolidation:
         last_8_throughput_per_week_data: Throughput das últimas 8 Semanas
       consolidations/initiative_consolidation:
         tasks_operational_risk: Risco Operacional para Tarefas
       membership:
+        team_member: Membro de Time
         member_role: Função
         member_name: Nome
         start_date: Início
@@ -599,7 +605,7 @@ pt-BR:
             continuous_integration: Integração Contínua
             library_manager: Gerenciador de Libs
             code_hosting_platform: Plataforma de Hospedagem de Código
-      team_resource_alloacation:
+      team_resource_allocation:
         team: Time
         team_resource: Recurso do Time
         monthly_payment: Pagamento Mensal

@@ -77,14 +77,14 @@ class Demand < ApplicationRecord
 
   belongs_to :company
   belongs_to :project
-  belongs_to :product
-  belongs_to :customer
-  belongs_to :portfolio_unit
+  belongs_to :product, optional: true
   belongs_to :team
-  belongs_to :risk_review
-  belongs_to :service_delivery_review
-  belongs_to :contract
-  belongs_to :current_stage, class_name: 'Stage', inverse_of: :current_demands
+  belongs_to :customer, optional: true
+  belongs_to :portfolio_unit, optional: true
+  belongs_to :risk_review, optional: true
+  belongs_to :service_delivery_review, optional: true
+  belongs_to :contract, optional: true
+  belongs_to :current_stage, class_name: 'Stage', inverse_of: :current_demands, optional: true
 
   has_many :demand_transitions, dependent: :destroy
   has_many :demand_blocks, dependent: :destroy

@@ -26,7 +26,6 @@ module Dashboards
   class OperationsDashboardPairing < ApplicationRecord
     belongs_to :operations_dashboard
     belongs_to :pair, class_name: 'TeamMember'
-    belongs_to :demand
 
     validates :pair_times, presence: true
 

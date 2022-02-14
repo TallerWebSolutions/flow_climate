@@ -87,7 +87,7 @@ RSpec.describe TeamResourceAllocationsController, type: :controller do
           expect(TeamResource.all.count).to eq 1
           expect(TeamResourceAllocation.all.count).to eq 0
           expect(response).to render_template 'team_resource_allocations/create'
-          expect(assigns(:team_resource_allocation).errors.full_messages).to eq ['Start date não pode ficar em branco', 'Monthly payment não pode ficar em branco']
+          expect(assigns(:team_resource_allocation).errors.full_messages).to eq ['Recurso do Time deve existir', 'Início não pode ficar em branco', 'Pagamento Mensal não pode ficar em branco']
         end
       end
     end

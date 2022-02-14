@@ -9,7 +9,6 @@ gem 'rails'
 gem 'bundler', require: false
 
 gem 'addressable'
-gem 'attr_encrypted'
 gem 'barnes'
 gem 'carrierwave'
 gem 'cloudinary'

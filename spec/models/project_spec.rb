@@ -9,7 +9,7 @@ RSpec.describe Project, type: :model do
   context 'associations' do
     it { is_expected.to belong_to :company }
     it { is_expected.to belong_to :team }
-    it { is_expected.to belong_to :initiative }
+    it { is_expected.to belong_to(:initiative).optional }
 
     it { is_expected.to have_many(:project_risk_configs).dependent(:destroy) }
     it { is_expected.to have_many(:project_risk_alerts).dependent(:destroy) }

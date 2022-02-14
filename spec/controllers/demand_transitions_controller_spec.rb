@@ -164,7 +164,7 @@ RSpec.describe DemandTransitionsController, type: :controller do
         it 'does not create the transition and re-render the template with the errors' do
           expect(DemandTransition.all.count).to eq 0
           expect(response).to render_template 'demand_transitions/create'
-          expect(assigns(:demand_transition).errors.full_messages).to eq ['Entrada não pode ficar em branco']
+          expect(assigns(:demand_transition).errors.full_messages).to eq ['Etapa deve existir', 'Entrada não pode ficar em branco']
         end
       end
     end

@@ -37,7 +37,7 @@ class DemandTransition < ApplicationRecord
 
   belongs_to :demand
   belongs_to :stage
-  belongs_to :team_member
+  belongs_to :team_member, optional: true
 
   has_many :demand_efforts, dependent: :destroy
 

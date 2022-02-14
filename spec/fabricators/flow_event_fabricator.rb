@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 Fabricator(:flow_event) do
+  user
+  team
   company
   project
 

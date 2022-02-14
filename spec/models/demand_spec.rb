@@ -9,14 +9,14 @@ RSpec.describe Demand, type: :model do
   context 'associations' do
     it { is_expected.to belong_to :company }
     it { is_expected.to belong_to :project }
-    it { is_expected.to belong_to :product }
-    it { is_expected.to belong_to :customer }
-    it { is_expected.to belong_to :portfolio_unit }
+    it { is_expected.to belong_to(:product).optional }
+    it { is_expected.to belong_to(:customer).optional }
+    it { is_expected.to belong_to(:portfolio_unit).optional }
     it { is_expected.to belong_to :team }
-    it { is_expected.to belong_to :risk_review }
-    it { is_expected.to belong_to :service_delivery_review }
-    it { is_expected.to belong_to :contract }
-    it { is_expected.to belong_to(:current_stage).class_name('Stage').inverse_of(:current_demands) }
+    it { is_expected.to belong_to(:risk_review).optional }
+    it { is_expected.to belong_to(:service_delivery_review).optional }
+    it { is_expected.to belong_to(:contract).optional }
+    it { is_expected.to belong_to(:current_stage).class_name('Stage').inverse_of(:current_demands).optional }
 
     it { is_expected.to have_many(:demand_transitions).dependent(:destroy) }
     it { is_expected.to have_many(:demand_blocks).dependent(:destroy) }

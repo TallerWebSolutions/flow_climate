@@ -6,6 +6,7 @@
 #
 #  id                  :bigint           not null, primary key
 #  created_date        :datetime         not null
+#  discarded_at        :datetime
 #  end_date            :datetime
 #  seconds_to_complete :integer
 #  title               :string           not null
@@ -16,7 +17,8 @@
 #
 # Indexes
 #
-#  index_tasks_on_demand_id  (demand_id)
+#  index_tasks_on_demand_id     (demand_id)
+#  index_tasks_on_discarded_at  (discarded_at)
 #
 # Foreign Keys
 #

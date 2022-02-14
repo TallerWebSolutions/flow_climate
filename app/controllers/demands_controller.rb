@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class DemandsController < DemandsListController
-  protect_from_forgery except: %i[search_demands]
-
   before_action :user_gold_check
 
   before_action :assign_company

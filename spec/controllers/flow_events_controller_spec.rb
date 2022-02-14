@@ -131,7 +131,7 @@ RSpec.describe FlowEventsController, type: :controller do
 
           it 're-assigns the form with the errors' do
             expect(response).to render_template :new
-            expect(assigns(:flow_event).errors.full_messages).to eq ['Data do Evento não pode ficar em branco', 'Tipo do Evento não pode ficar em branco', 'Descrição do Evento não pode ficar em branco']
+            expect(assigns(:flow_event).errors.full_messages).to eq ['Time deve existir', 'Data do Evento não pode ficar em branco', 'Tipo do Evento não pode ficar em branco', 'Descrição do Evento não pode ficar em branco']
           end
         end
 

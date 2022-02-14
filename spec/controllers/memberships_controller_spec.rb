@@ -120,7 +120,7 @@ RSpec.describe MembershipsController, type: :controller do
         it 'does not create the membership and re-render the template with the errors' do
           expect(Membership.all.count).to eq 3
           expect(response).to render_template 'memberships/create'
-          expect(assigns(:membership).errors.full_messages).to eq ['Início não pode ficar em branco', 'Função não pode ficar em branco']
+          expect(assigns(:membership).errors.full_messages).to eq ['Membro de Time deve existir', 'Início não pode ficar em branco', 'Função não pode ficar em branco']
         end
       end
     end

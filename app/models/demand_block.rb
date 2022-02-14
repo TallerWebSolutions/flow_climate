@@ -41,10 +41,10 @@ class DemandBlock < ApplicationRecord
   enum block_type: { coding_needed: 0, specification_needed: 1, waiting_external_supplier: 2, customer_low_urgency: 3, integration_needed: 4, customer_unavailable: 5, other_demand_dependency: 6, external_dependency: 7, other_demand_priority: 8, waiting_for_code_review: 9, budget_approval: 10, waiting_deploy_window: 11, infrastructure: 12, scope_changed: 13 }
 
   belongs_to :demand
-  belongs_to :stage
+  belongs_to :stage, optional: true
   belongs_to :blocker, class_name: 'TeamMember', inverse_of: :demand_blocks
-  belongs_to :unblocker, class_name: 'TeamMember', inverse_of: :demand_blocks
-  belongs_to :risk_review
+  belongs_to :unblocker, class_name: 'TeamMember', inverse_of: :demand_blocks, optional: true
+  belongs_to :risk_review, optional: true
 
   has_many :demand_block_notifications, dependent: :destroy, class_name: 'Notifications::DemandBlockNotification'
 

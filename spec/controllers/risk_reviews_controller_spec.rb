@@ -81,8 +81,10 @@ RSpec.describe RiskReviewsController, type: :controller do
       context 'with valid parameters' do
         context 'with no data to blockings' do
           it 'instantiates a new Team Member and renders the template' do
+            stage = Fabricate :stage, company: company
+            allow_any_instance_of(Demand).to(receive(:stage_at)).and_return(stage)
             demand = Fabricate :demand
-            demand_block = Fabricate :demand_block
+            demand_block = Fabricate :demand_block, demand: demand
 
             risk_review = Fabricate :risk_review, product: product, demands: [demand], demand_blocks: [demand_block]
 

@@ -8,7 +8,8 @@ RSpec.describe Contract, type: :model do
   context 'associations' do
     it { is_expected.to belong_to :customer }
     it { is_expected.to belong_to :product }
-    it { is_expected.to belong_to :contract }
+    it { is_expected.to belong_to(:contract).optional }
+
     it { is_expected.to have_many :contract_consolidations }
     it { is_expected.to have_many(:demands).dependent(:nullify) }
     it { is_expected.to have_many :contract_estimation_change_histories }

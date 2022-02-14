@@ -11,8 +11,6 @@ module Dashboards
         demands = team_member.demands.kept.where('demands.created_date <= :date', date: cache_date)
         finished_demands = demands.where('demands.end_date <= :date', date: cache_date).order(:end_date)
 
-        start_date_charts = [start_date, demands.map(&:end_date).flatten.compact.min].compact.max
-
         operations_dashboard_cache = OperationsDashboard.where(dashboard_date: cache_date, team_member: team_member).first_or_initialize
 
         member_effort_and_pull = build_member_effort_chart(team_member, cache_date)

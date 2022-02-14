@@ -27,7 +27,7 @@ class Product < ApplicationRecord
   include DemandsAggregator
 
   belongs_to :company
-  belongs_to :customer, counter_cache: true
+  belongs_to :customer, optional: true, counter_cache: true
 
   has_many :products_projects, dependent: :destroy
   has_many :projects, through: :products_projects, dependent: :destroy

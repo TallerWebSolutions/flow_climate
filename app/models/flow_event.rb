@@ -43,8 +43,8 @@ class FlowEvent < ApplicationRecord
   belongs_to :company
   belongs_to :user
   belongs_to :team
-  belongs_to :project
-  belongs_to :risk_review
+  belongs_to :project, optional: true
+  belongs_to :risk_review, optional: true
 
   validates :event_date, :event_type, :event_size, :event_description, presence: true
 

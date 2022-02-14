@@ -7,10 +7,10 @@ RSpec.describe DemandBlock, type: :model do
 
   context 'associations' do
     it { is_expected.to belong_to(:demand) }
-    it { is_expected.to belong_to(:stage) }
-    it { is_expected.to belong_to(:risk_review) }
+    it { is_expected.to belong_to(:stage).optional }
+    it { is_expected.to belong_to(:risk_review).optional }
     it { is_expected.to belong_to(:blocker).class_name(TeamMember).inverse_of(:demand_blocks) }
-    it { is_expected.to belong_to(:unblocker).class_name(TeamMember).inverse_of(:demand_blocks) }
+    it { is_expected.to belong_to(:unblocker).class_name(TeamMember).inverse_of(:demand_blocks).optional }
     it { is_expected.to have_many(:demand_block_notifications).class_name('Notifications::DemandBlockNotification').dependent(:destroy) }
   end
 
