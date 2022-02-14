@@ -2,7 +2,6 @@
 
 ENV['RAILS_ENV'] ||= 'test'
 
-abort('The Rails environment is running in production mode!') if Rails.env.production?
 
 require 'simplecov'
 SimpleCov.start do
@@ -10,7 +9,8 @@ SimpleCov.start do
   minimum_coverage 100
 end
 
-# require File.expand_path('../config/environment', __dir__)
+require File.expand_path('../config/environment', __dir__)
+abort('The Rails environment is running in production mode!') if Rails.env.production?
 
 require 'rspec/rails'
 require 'shoulda/matchers'
