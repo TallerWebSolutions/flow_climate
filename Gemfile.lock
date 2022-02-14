@@ -526,6 +526,7 @@ DEPENDENCIES
   sidekiq-limit_fetch
   simplecov
   slack-notifier
+  sprockets-rails
   stackprof
   traceroute
   uglifier

@@ -33,6 +33,7 @@ gem 'rollbar'
 gem 'sidekiq'
 gem 'sidekiq-limit_fetch'
 gem 'slack-notifier'
+gem 'sprockets-rails', require: 'sprockets/railtie'
 gem 'uglifier'
 gem 'yui-compressor'
 
