@@ -260,4 +260,51 @@ RSpec.describe Types::QueryType do
       end
     end
   end
+
+  describe 'project' do
+    context 'with project' do
+      it 'returns the project and its fields' do
+        company = Fabricate :company
+        team = Fabricate :team, company: company
+        customer = Fabricate :customer, company: company
+        product = Fabricate :product, company: company, customer: customer
+        project = Fabricate :project, company: company, customers: [customer], products: [product], team: team, status: :executing, start_date: 4.days.ago, end_date: 1.day.from_now, max_work_in_progress: 2
+
+        query =
+          %(query {
+        me {
+          id
+          fullName
+          avatar {
+            imageSource
+          }
+        }
+        project(id: #{project.id}) {
+          id
+          name
+        }
+      })
+
+        user = Fabricate :user
+
+        context = {
+          current_user: user
+        }
+
+        result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
+        expect(result.dig('data', 'me')).to eq({
+                                                 'id' => user.id.to_s,
+                                                 'fullName' => user.full_name,
+                                                 'avatar' => {
+                                                   'imageSource' => user.avatar.url
+                                                 }
+                                               })
+
+        expect(result.dig('data', 'project')).to eq({
+                                                      'id' => project.id.to_s,
+                                                      'name' => project.name
+                                                    })
+      end
+    end
+  end
 end

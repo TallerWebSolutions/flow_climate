@@ -248,14 +248,6 @@ class ProjectsController < AuthenticatedController
     @demands_finished_with_leadtime ||= @demands.finished_with_leadtime
   end
 
-  def build_work_item_flow_information
-    @x_axis.each_with_index do |analysed_date, distribution_index|
-      add_data_to_chart = analysed_date <= Time.zone.today.end_of_week
-      @work_item_flow_information.work_items_flow_behaviour(@x_axis.first, analysed_date, distribution_index, add_data_to_chart)
-      @work_item_flow_information.build_cfd_hash(@x_axis.first, analysed_date)
-    end
-  end
-
   def build_projects_search(start_date, end_date, project_status, project_name)
     projects = @company.projects
     projects = projects.where('name ILIKE :name', name: "%#{project_name.tr(' ', '%')}%") if project_name.present?
