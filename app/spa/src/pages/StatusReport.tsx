@@ -10,6 +10,11 @@ export const QUERY = gql`
     project(id: $id) {
       id
       name
+      company {
+        id
+        name
+        slug
+      }
     }
   }
 `
@@ -24,7 +29,7 @@ const StatusReport = () => {
   const { projectId } = useParams()
   const { data, loading, error } = useQuery<ProjectStatusReportDTO>(QUERY, {
     variables: {
-      id: projectId,
+      id: Number(projectId),
     },
   })
 
@@ -40,8 +45,8 @@ const StatusReport = () => {
     )
 
   const projectName = data?.project.name || ""
-  const companyName = "Taller"
-  const companySlug = "taller"
+  const companyName = data?.project.company.name || ""
+  const companySlug = data?.project.company.slug
   const breadcrumbsLinks = [
     { name: companyName, url: `/companies/${companySlug}` },
     { name: "Projetos", url: `/companies/${companySlug}/projects` },

@@ -12,6 +12,7 @@ import {
 import { KeyboardArrowUp, KeyboardArrowDown } from "@material-ui/icons"
 import { Box } from "@mui/system"
 import { Fragment, useState } from "react"
+import { Company } from "../modules/company/company.types"
 
 type Customer = {
   id: string
@@ -50,6 +51,7 @@ export type Project = {
   startDate: string
   endDate: string
   aging: number
+  company: Company
 }
 
 type ReplenishingProjectsInfoProps = {

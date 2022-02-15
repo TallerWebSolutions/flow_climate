@@ -5,6 +5,7 @@ import { gql, useMutation, useQuery } from "@apollo/client"
 
 import { t } from "../lib/i18n"
 import { MessagesContext } from "./BasicPage"
+import { Company } from "../modules/company/company.types"
 
 const buildLinks = (companyName: string) => [
   { name: "Taller", href: `/companies/${companyName}` },
@@ -33,12 +34,6 @@ type HeaderUser = {
   id: string
   avatarSource: string
   fullName: string
-}
-
-type Company = {
-  id: string
-  name: string
-  slug: string
 }
 
 type HeaderProps = {

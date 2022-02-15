@@ -11,6 +11,7 @@ import ReplenishingPage, {
 import {
   teamMock,
   projectMock,
+  companyMock,
   replenishingMock as data,
 } from "../../lib/mocks"
 import { MemoryRouter, Route, Routes } from "react-router-dom"
@@ -61,6 +62,7 @@ describe("pages/Replenishing", () => {
             teamMonteCarloWeeksStdDev: 3,
             weeklyThroughputs: [0, 1, 2, 3, 4, 3],
             workInProgressLimit: 9,
+            company: companyMock,
           },
         ],
         throughputData: [1, 2, 3, 4, 5],

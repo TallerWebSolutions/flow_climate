@@ -12,6 +12,7 @@ import ReplenishingProjectsInfo, {
   Project,
 } from "../components/ReplenishingProjectsInfo"
 import BasicPage, { MessagesContext } from "../components/BasicPage"
+import { Company } from "../modules/company/company.types"
 
 export const QUERY = gql`
   query Replenishing($teamId: Int!) {
@@ -77,12 +78,6 @@ const GENERATE_REPLENISHING_MUTATION = gql`
     }
   }
 `
-
-type Company = {
-  id: string
-  name: string
-  slug: string
-}
 
 type ReplenishingConsolidation = {
   id: string

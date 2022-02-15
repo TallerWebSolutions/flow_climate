@@ -1,3 +1,9 @@
+export const companyMock = {
+  id: "1",
+  name: "Taller",
+  slug: "taller",
+}
+
 export const projectMock = {
   id: "1",
   name: "Project X",
@@ -25,6 +31,7 @@ export const projectMock = {
   aging: 5,
   customers: [],
   products: [],
+  company: companyMock,
 }
 
 export const teamMock = {
@@ -36,11 +43,7 @@ export const teamMock = {
   increasedAvgThroughtput: true,
   leadTime: 10,
   workInProgress: 10,
-  company: {
-    id: "1",
-    name: "Taller",
-    slug: "taller",
-  },
+  company: companyMock,
   lastReplenishingConsolidations: [
     {
       id: "1",

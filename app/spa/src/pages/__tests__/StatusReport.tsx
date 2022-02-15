@@ -13,7 +13,7 @@ describe("pages/StatusReport", () => {
           request: {
             query: STATUS_REPORT_QUERY,
             variables: {
-              id: "1",
+              id: 1,
             },
           },
           result: {
