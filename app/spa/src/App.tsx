@@ -21,7 +21,7 @@ const App = () => (
           element={<Replenishing />}
         />
         <Route
-          path="/companies/taller/projects/:projectId/status_report"
+          path="/companies/taller/projects/:projectId/status_report_dashboard"
           element={<StatusReport />}
         />
       </Routes>
