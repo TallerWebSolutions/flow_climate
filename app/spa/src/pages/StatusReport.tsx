@@ -1,12 +1,13 @@
 import { gql, useQuery } from "@apollo/client"
 import { Backdrop, CircularProgress } from "@mui/material"
+import { useParams } from "react-router-dom"
 
 import BasicPage from "../components/BasicPage"
 import { Project } from "../components/ReplenishingProjectsInfo"
 
 export const QUERY = gql`
-  query ProjectStatusReport {
-    project: projectById {
+  query ProjectStatusReport($id: String!) {
+    project(id: $id) {
       id
       name
     }
@@ -20,7 +21,12 @@ type ProjectStatusReportResult = {
 type ProjectStatusReportDTO = ProjectStatusReportResult | undefined
 
 const StatusReport = () => {
-  const { data, loading, error } = useQuery<ProjectStatusReportDTO>(QUERY)
+  const { projectId } = useParams()
+  const { data, loading, error } = useQuery<ProjectStatusReportDTO>(QUERY, {
+    variables: {
+      id: projectId,
+    },
+  })
 
   if (error) {
     console.error(error)
