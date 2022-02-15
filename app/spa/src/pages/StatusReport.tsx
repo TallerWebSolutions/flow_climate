@@ -2,16 +2,13 @@ import { gql, useQuery } from "@apollo/client"
 import { Backdrop, CircularProgress } from "@mui/material"
 
 import BasicPage from "../components/BasicPage"
+import { Project } from "../components/ReplenishingProjectsInfo"
 
-const QUERY = gql`
+export const QUERY = gql`
   query ProjectStatusReport {
-    projectById: project {
+    project: projectById {
       id
-      company {
-        id
-        name
-        slug
-      }
+      name
     }
   }
 `
@@ -23,7 +20,7 @@ type ProjectStatusReportResult = {
 type ProjectStatusReportDTO = ProjectStatusReportResult | undefined
 
 const StatusReport = () => {
-  const {data, loading, error} = useQuery<ProjectStatusReportDTO>(QUERY)
+  const { data, loading, error } = useQuery<ProjectStatusReportDTO>(QUERY)
 
   if (error) {
     console.error(error)
@@ -36,16 +33,19 @@ const StatusReport = () => {
       </Backdrop>
     )
 
-  const projectName = "Projeto X"
+  const projectName = data?.project.name || ""
+  const companyName = "Taller"
+  const companySlug = "taller"
   const breadcrumbsLinks = [
-    { name: data.project.company.name, url: "" },
-    { name: "Projetos", url: "" },
-    { name: "IstoÉ - Matérias e Editorias", url: "" },
+    { name: companyName, url: `/companies/${companySlug}` },
+    { name: "Projetos", url: `/companies/${companySlug}/projects` },
+    {
+      name: projectName,
+      url: `/companies/${companySlug}/projects/${data?.project.id}`,
+    },
   ]
 
-  return (
-    <BasicPage title={projectName} breadcrumbsLinks={breadcrumbsLinks} />
-  )
+  return <BasicPage title={projectName} breadcrumbsLinks={breadcrumbsLinks} />
 }
 
 export default StatusReport
