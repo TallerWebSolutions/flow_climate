@@ -6,7 +6,7 @@ import BasicPage from "../components/BasicPage"
 import { Project } from "../components/ReplenishingProjectsInfo"
 
 export const QUERY = gql`
-  query ProjectStatusReport($id: String!) {
+  query ProjectStatusReport($id: Int!) {
     project(id: $id) {
       id
       name
