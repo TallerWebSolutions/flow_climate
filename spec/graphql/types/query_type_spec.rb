@@ -282,6 +282,10 @@ RSpec.describe Types::QueryType do
         project(id: #{project.id}) {
           id
           name
+          company {
+            id
+            name
+          }
         }
       })
 
@@ -302,7 +306,11 @@ RSpec.describe Types::QueryType do
 
         expect(result.dig('data', 'project')).to eq({
                                                       'id' => project.id.to_s,
-                                                      'name' => project.name
+                                                      'name' => project.name,
+                                                      'company' => {
+                                                        'id' => company.id.to_s,
+                                                        'name' => company.name
+                                                      }
                                                     })
       end
     end
