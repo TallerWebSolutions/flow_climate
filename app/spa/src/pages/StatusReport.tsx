@@ -62,7 +62,11 @@ const StatusReport = () => {
   ]
 
   return (
-    <BasicPage title={projectName} breadcrumbsLinks={breadcrumbsLinks}>
+    <BasicPage
+      title={projectName}
+      breadcrumbsLinks={breadcrumbsLinks}
+      company={data?.project.company}
+    >
       <Typography component="h2" variant="h6" mb={3}>
         Mudanças no Prazo
       </Typography>

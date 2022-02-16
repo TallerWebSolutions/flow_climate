@@ -4,11 +4,13 @@ import { Container, Typography } from "@mui/material"
 import Header from "./Header"
 import MessagesBox, { Message } from "./MessagesBox"
 import Breadcrumbs, { BreadcrumbsLink } from "./Breadcrumbs"
+import { Company } from "../modules/company/company.types"
 
 type BasicPageProps = {
-  children?: ReactElement | ReactElement[]
   title: string
   breadcrumbsLinks: BreadcrumbsLink[]
+  children?: ReactElement | ReactElement[]
+  company?: Company
 }
 
 export const MessagesContext = createContext<{
@@ -29,12 +31,17 @@ const useMessages = (): [Message[], (message: Message) => void] => {
   return [messages, pushMessage]
 }
 
-const BasicPage = ({ children, title, breadcrumbsLinks }: BasicPageProps) => {
+const BasicPage = ({
+  children,
+  title,
+  breadcrumbsLinks,
+  company,
+}: BasicPageProps) => {
   const [messages, pushMessage] = useMessages()
 
   return (
     <MessagesContext.Provider value={{ messages, pushMessage }}>
-      <Header />
+      <Header company={company} />
       <Container maxWidth="xl">
         <Breadcrumbs links={breadcrumbsLinks} />
         <Typography component="h1" variant="h4" mb={3}>

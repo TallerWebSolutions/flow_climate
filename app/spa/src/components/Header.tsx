@@ -86,7 +86,12 @@ const Header = ({ company }: HeaderProps) => {
   return (
     <Box py={1} sx={{ backgroundColor: "primary.main" }}>
       <Container maxWidth="xl">
-        <Box display="flex" alignItems="center" justifyContent="space-between">
+        <Box
+          display="flex"
+          alignItems="center"
+          justifyContent="space-between"
+          data-testid="main-menu"
+        >
           <Link href="/" sx={{ display: "block" }}>
             <img
               src="https://res.cloudinary.com/taller-digital/image/upload/v1599220860/2_taller_branco_horizontal.png"
@@ -129,34 +134,53 @@ const Header = ({ company }: HeaderProps) => {
             }}
           >
             {user && (
-              <MenuItem component="a" href={`/users/${user.id}/edit`}>
+              <MenuItem
+                key="userMenu.myAccount"
+                component="a"
+                href={`/users/${user.id}/edit`}
+              >
                 {t("userMenu.myAccount")}
               </MenuItem>
             )}
-            <MenuItem component="a" href="/users/activate_email_notifications">
+            <MenuItem
+              key="userMenu.turnOnNotifications"
+              component="a"
+              href="/users/activate_email_notifications"
+            >
               {t("userMenu.turnOnNotifications")}
             </MenuItem>
-            {company && (
-              <React.Fragment>
-                <MenuItem
-                  onClick={() =>
-                    sendAuthTokenMutation({
-                      variables: { companyId: Number(company.id) },
-                    })
-                  }
-                  component="a"
-                >
-                  Solicitar API Token
-                </MenuItem>
-                <MenuItem component="a" href={`/companies/${company.slug}`}>
-                  {company.name}
-                </MenuItem>
-              </React.Fragment>
-            )}
-            <MenuItem component="a" href="/users/admin_dashboard">
+            {company && [
+              <MenuItem
+                key="sendAuthTokenMutation"
+                onClick={() =>
+                  sendAuthTokenMutation({
+                    variables: { companyId: Number(company.id) },
+                  })
+                }
+                component="a"
+              >
+                Solicitar API Token
+              </MenuItem>,
+              <MenuItem
+                key="company.name"
+                component="a"
+                href={`/companies/${company.slug}`}
+              >
+                {company.name}
+              </MenuItem>,
+            ]}
+            <MenuItem
+              key="userMenu.adminDashboard"
+              component="a"
+              href="/users/admin_dashboard"
+            >
               {t("userMenu.adminDashboard")}
             </MenuItem>
-            <MenuItem component="a" href="/users/sign_out">
+            <MenuItem
+              key="userMenu.logout"
+              component="a"
+              href="/users/sign_out"
+            >
               {t("userMenu.logout")}
             </MenuItem>
           </Menu>

@@ -143,10 +143,11 @@ const Replenishing = () => {
       </Backdrop>
     )
 
-  const companyName = data?.team.company.name
-  const companyUrl = `/companies/${data?.team.company.slug}`
+  const company = data?.team.company
+  const companyName = company.name
+  const companyUrl = `/companies/${company.slug}`
   const teamName = data?.team.name
-  const teamUrl = `/companies/${data?.team.company.slug}/teams/${data?.team.id}`
+  const teamUrl = `/companies/${company.slug}/teams/${data?.team.id}`
 
   const breadcrumbsLinks = [
     { name: companyName || "", url: companyUrl },
@@ -155,7 +156,11 @@ const Replenishing = () => {
   ]
 
   return (
-    <BasicPage title="Reabastecimento" breadcrumbsLinks={breadcrumbsLinks}>
+    <BasicPage
+      title="Reabastecimento"
+      breadcrumbsLinks={breadcrumbsLinks}
+      company={company}
+    >
       {data?.team && (
         <Fragment>
           <Box
