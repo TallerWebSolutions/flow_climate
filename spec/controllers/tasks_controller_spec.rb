@@ -102,17 +102,19 @@ RSpec.describe TasksController, type: :controller do
 
         context 'with search by tasks dates without status search' do
           it 'searches by created date and renders the template' do
-            demand = Fabricate :demand, company: company
-            discarded_demand = Fabricate :demand, company: company, discarded_at: 2.days.ago
-            task = Fabricate :task, demand: demand, created_date: 2.days.ago, end_date: 1.day.ago
-            other_task = Fabricate :task, demand: demand, created_date: 1.day.ago, end_date: 1.hour.ago
-            Fabricate :task, demand: discarded_demand, created_date: 1.day.ago, end_date: 1.hour.ago
-            Fabricate :task, demand: demand, created_date: 3.days.ago, end_date: nil
+            travel_to Time.zone.local(2022, 2, 16, 10, 0, 0) do
+              demand = Fabricate :demand, company: company
+              discarded_demand = Fabricate :demand, company: company, discarded_at: 2.days.ago
+              task = Fabricate :task, demand: demand, created_date: 2.days.ago, end_date: 1.day.ago
+              other_task = Fabricate :task, demand: demand, created_date: 1.day.ago, end_date: 1.hour.ago
+              Fabricate :task, demand: discarded_demand, created_date: 1.day.ago, end_date: 1.hour.ago
+              Fabricate :task, demand: demand, created_date: 3.days.ago, end_date: nil
 
-            post :search, params: { company_id: company, tasks_start_date: 52.hours.ago.to_date, tasks_end_date: 1.minute.ago.to_date, task_status: 'foo' }
+              post :search, params: { company_id: company, tasks_start_date: 52.hours.ago.to_date, tasks_end_date: 1.minute.ago.to_date, task_status: 'foo' }
 
-            expect(assigns(:tasks)).to eq [other_task, task]
-            expect(response).to render_template :index
+              expect(assigns(:tasks)).to eq [other_task, task]
+              expect(response).to render_template :index
+            end
           end
         end
 
