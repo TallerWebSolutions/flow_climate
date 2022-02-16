@@ -1,15 +1,17 @@
 import { gql, useQuery } from "@apollo/client"
-import { Backdrop, CircularProgress } from "@mui/material"
+import { Backdrop, CircularProgress, Typography } from "@mui/material"
 import { useParams } from "react-router-dom"
 
 import BasicPage from "../components/BasicPage"
 import { Project } from "../components/ReplenishingProjectsInfo"
+import Ticket from "../components/Ticket"
 
 export const QUERY = gql`
   query ProjectStatusReport($id: Int!) {
     project(id: $id) {
       id
       name
+      endDate
       company {
         id
         name
@@ -59,7 +61,14 @@ const StatusReport = () => {
     },
   ]
 
-  return <BasicPage title={projectName} breadcrumbsLinks={breadcrumbsLinks} />
+  return (
+    <BasicPage title={projectName} breadcrumbsLinks={breadcrumbsLinks}>
+      <Typography component="h2" variant="h6" mb={3}>
+        Mudanças no Prazo
+      </Typography>
+      <Ticket title="Prazo Atual" value={data?.project.endDate || ""} />
+    </BasicPage>
+  )
 }
 
 export default StatusReport
