@@ -5,20 +5,23 @@ class TasksController < AuthenticatedController
 
   def index
     @tasks = tasks.order(created_date: :desc)
+    @finished_tasks = @tasks.finished
     @paged_tasks = @tasks.page(page_param)
   end
 
   def search
     search_tasks
+    @finished_tasks = @tasks.finished
     render 'tasks/index'
   end
 
   def charts
     search_tasks
-    finished_tasks = @tasks.not_discarded_until(Time.zone.now).finished
-    @task_completion_control_chart_data = finished_tasks.map { |task| { id: task.external_id, completion_time: task.seconds_to_complete, item_url: company_task_url(@company, task) } }
+    @finished_tasks = @tasks.finished
+    @task_completion_control_chart_data = @finished_tasks.map { |task| { id: task.external_id, completion_time: task.seconds_to_complete, item_url: company_task_url(@company, task) } }
     @completion_times = @task_completion_control_chart_data.pluck(:completion_time)
-    build_tasks_thorughput(finished_tasks)
+
+    @tasks_charts_adapter = Highchart::TasksChartsAdapter.new(@tasks.map(&:id), @finished_tasks.map(&:end_date).min, @finished_tasks.map(&:end_date).max)
   end
 
   def show
@@ -26,11 +29,6 @@ class TasksController < AuthenticatedController
   end
 
   private
-
-  def build_tasks_thorughput(finished_tasks)
-    @tasks_throughputs = Task.where(id: finished_tasks.map(&:id)).group('EXTRACT(week FROM tasks.end_date)').group('EXTRACT(isoyear FROM tasks.end_date)').count.values
-    @tasks_throughputs_x_axis = TimeService.instance.weeks_between_of(finished_tasks.map(&:end_date).min, finished_tasks.map(&:end_date).max)
-  end
 
   def search_tasks
     tasks

@@ -1454,6 +1454,8 @@ pt-BR:
         placeholder: "buscar pelo nome da tarefa"
         helpers:
           date: "Se estiver buscando por tarefas fechadas, a busca será feita pela data de entrega, senão será feita pela data de criação."
+      finished:
+        count: "%{count} finalizadas"
     charts:
       completion_time:
         title: "Tempo para Finalizar (P80)"

@@ -1464,6 +1464,8 @@ en:
         placeholder: "search by task name"
         helpers:
           date: "When searching by finished tasks it will search by the delivered date, else it will search by the created date."
+      finished:
+        count: "%{count} finished"
     charts:
       completion_time:
         title: "Completion Time (P80)"

@@ -2,7 +2,6 @@
 
 ENV['RAILS_ENV'] ||= 'test'
 
-
 require 'simplecov'
 SimpleCov.start do
   add_filter 'config/initializers/rack_profiler.rb'

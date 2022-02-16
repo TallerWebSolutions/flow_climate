@@ -40,12 +40,13 @@ RSpec.describe TasksController, type: :controller do
             demand = Fabricate :demand, company: company
             discarded_demand = Fabricate :demand, company: company, discarded_at: 2.days.ago
             task = Fabricate :task, demand: demand, created_date: 1.day.ago
-            other_task = Fabricate :task, demand: demand, created_date: Time.zone.now
+            other_task = Fabricate :task, demand: demand, created_date: Time.zone.now, end_date: Time.zone.now
             Fabricate :task, demand: discarded_demand, created_date: Time.zone.now
 
             get :index, params: { company_id: company }
 
             expect(assigns(:tasks)).to eq [other_task, task]
+            expect(assigns(:finished_tasks)).to eq [other_task]
             expect(response).to render_template :index
           end
         end
@@ -93,6 +94,7 @@ RSpec.describe TasksController, type: :controller do
 
             post :search, params: { company_id: company, tasks_search: 'foo', task_status: 'finished' }
 
+            expect(assigns(:tasks)).to eq [other_task, task]
             expect(assigns(:tasks)).to eq [other_task, task]
             expect(response).to render_template :index
           end
@@ -207,8 +209,9 @@ RSpec.describe TasksController, type: :controller do
             expect(assigns(:tasks)).to eq [other_task, task]
             expect(assigns(:task_completion_control_chart_data).pluck(:id)).to eq [other_task.external_id, task.external_id]
             expect(assigns(:task_completion_control_chart_data).pluck(:completion_time)).to eq [other_task.seconds_to_complete, task.seconds_to_complete]
-            expect(assigns(:tasks_throughputs)).to eq [2]
-            expect(assigns(:tasks_throughputs_x_axis)).to eq TimeService.instance.weeks_between_of(finished_tasks.map(&:end_date).min, finished_tasks.map(&:end_date).max)
+            expect(assigns(:tasks_charts_adapter).x_axis).to eq TimeService.instance.weeks_between_of(finished_tasks.map(&:end_date).min, finished_tasks.map(&:end_date).max)
+            expect(assigns(:tasks_charts_adapter).throughput_chart_data).to eq [2]
+            expect(assigns(:tasks_charts_adapter).completion_percentiles_on_time_chart_data).to eq({ y_axis: [{ data: [1.7833333333333334], name: 'Lead time (80%)' }, { data: [1.7833333333333334], name: 'Lead time 80% acumulado' }] })
 
             expect(response).to render_template :charts
           end
