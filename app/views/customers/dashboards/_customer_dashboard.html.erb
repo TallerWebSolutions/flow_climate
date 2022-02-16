@@ -4,6 +4,8 @@
     <%= render 'common/dashboards/general_info',
                company: company,
                dashboard_name: customer.name,
+               start_date: customer.start_date,
+               end_date: customer.last_contract_end,
                object_type: object_type,
                flow_object_id: flow_object_id,
                upstream_demands: upstream_demands,

@@ -246,4 +246,26 @@ RSpec.describe Customer, type: :model do
       expect(no_projects_customer.active?).to eq false
     end
   end
+
+  describe '#last_contract_end' do
+    context 'without contracts' do
+      it 'returns nil' do
+        customer = Fabricate :customer
+
+        expect(customer.last_contract_end).to be_nil
+      end
+    end
+
+    context 'with contracts' do
+      it 'returns nil' do
+        travel_to Time.zone.local(2022, 2, 16, 10, 0, 0) do
+          customer = Fabricate :customer
+          Fabricate :contract, customer: customer, start_date: 2.months.ago, end_date: 1.month.ago
+          Fabricate :contract, customer: customer, start_date: 25.days.ago, end_date: 1.month.from_now
+
+          expect(customer.last_contract_end).to eq 1.month.from_now.to_date
+        end
+      end
+    end
+  end
 end

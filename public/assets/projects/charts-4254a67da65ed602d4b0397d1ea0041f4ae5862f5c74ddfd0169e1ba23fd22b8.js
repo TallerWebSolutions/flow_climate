@@ -84,4 +84,4 @@ if (projectHoursConsumedRole.length !== 0) {
 const projectHoursConsumedRoleMonth = $("#project-dashboard-hours-consumed-role-month-column-line");
 if (projectHoursConsumedRoleMonth.length !== 0) {
     buildColumnLineChart(projectHoursConsumedRoleMonth);
-}
+};

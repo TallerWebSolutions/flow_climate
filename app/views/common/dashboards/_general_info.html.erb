@@ -2,6 +2,18 @@
   <tbody>
   <tr>
     <td>
+      <b><%= Project.human_attribute_name :start_date %></b>
+    </td>
+    <td><%= I18n.l(start_date) %></td>
+  </tr>
+  <tr>
+    <td>
+      <b><%= Project.human_attribute_name :end_date %></b>
+    </td>
+    <td><%= I18n.l(end_date) if end_date.present? %></td>
+  </tr>
+  <tr>
+    <td>
       <b><%= I18n.t('activerecord.attributes.project.initial_scope') %></b>
       <i class="far fa-question-circle fa-align-right" title="<%= I18n.t('project.help.initial_scope') %>"></i>
     </td>
