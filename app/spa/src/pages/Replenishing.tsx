@@ -144,10 +144,10 @@ const Replenishing = () => {
     )
 
   const company = data?.team.company
-  const companyName = company.name
-  const companyUrl = `/companies/${company.slug}`
+  const companyName = company?.name
+  const companyUrl = `/companies/${company?.slug}`
   const teamName = data?.team.name
-  const teamUrl = `/companies/${company.slug}/teams/${data?.team.id}`
+  const teamUrl = `/companies/${company?.slug}/teams/${data?.team.id}`
 
   const breadcrumbsLinks = [
     { name: companyName || "", url: companyUrl },
