@@ -36,7 +36,7 @@ const BasicPage = ({ children, title, breadcrumbsLinks }: BasicPageProps) => {
     <MessagesContext.Provider value={{ messages, pushMessage }}>
       <Header />
       <Container maxWidth="xl">
-        <Breadcrumbs links={breadcrumbsLinks} currentPageName={title} />
+        <Breadcrumbs links={breadcrumbsLinks} />
         <Typography component="h1" variant="h4" mb={3}>
           {title}
         </Typography>

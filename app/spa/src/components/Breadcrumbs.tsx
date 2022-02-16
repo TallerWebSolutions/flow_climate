@@ -1,24 +1,22 @@
-import {
-  Breadcrumbs as MUIBreadcrumbs,
-  Box,
-  Link,
-  Typography,
-} from "@mui/material"
+import { Breadcrumbs as MUIBreadcrumbs, Link, Typography } from "@mui/material"
 
 export type BreadcrumbsLink = {
   name: string
-  url: string
+  url?: string
 }
 
 type BreadcrumbsProps = {
   links: BreadcrumbsLink[]
-  currentPageName: string
 }
 
-const Breadcrumbs = ({ links, currentPageName }: BreadcrumbsProps) => (
-  <Box py={3} data-testid="breadcrumbs">
-    <MUIBreadcrumbs aria-label="breadcrumb">
-      {links.map((link, index) => (
+const Breadcrumbs = ({ links }: BreadcrumbsProps) => (
+  <MUIBreadcrumbs
+    aria-label="breadcrumb"
+    data-testid="breadcrumbs"
+    sx={{ paddingY: 3 }}
+  >
+    {links.map((link, index) =>
+      link.url ? (
         <Link
           underline="hover"
           color="inherit"
@@ -27,10 +25,13 @@ const Breadcrumbs = ({ links, currentPageName }: BreadcrumbsProps) => (
         >
           {link.name}
         </Link>
-      ))}
-      <Typography color="text.primary">{currentPageName}</Typography>
-    </MUIBreadcrumbs>
-  </Box>
+      ) : (
+        <Typography color="text.primary" key={`${link.name}--${index}`}>
+          {link.name}
+        </Typography>
+      )
+    )}
+  </MUIBreadcrumbs>
 )
 
 export default Breadcrumbs

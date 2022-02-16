@@ -151,6 +151,7 @@ const Replenishing = () => {
   const breadcrumbsLinks = [
     { name: companyName || "", url: companyUrl },
     { name: teamName || "", url: teamUrl },
+    { name: "Reabastecimento" },
   ]
 
   return (

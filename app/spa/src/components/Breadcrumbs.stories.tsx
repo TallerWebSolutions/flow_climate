@@ -10,10 +10,11 @@ export default {
 } as ComponentMeta<typeof Breadcrumbs>
 
 const links = [
-  { name: "Root", link: "/" },
-  { name: "Special", link: "/" },
+  { name: "Root", url: "/" },
+  { name: "Special", url: "/" },
+  { name: "Today" },
 ]
 
 export const Primary: ComponentStory<typeof Breadcrumbs> = () => (
-  <Breadcrumbs links={links} currentPageName="Today" />
+  <Breadcrumbs links={links} />
 )

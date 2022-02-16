@@ -54,6 +54,9 @@ const StatusReport = () => {
       name: projectName,
       url: `/companies/${companySlug}/projects/${data?.project.id}`,
     },
+    {
+      name: "Status Report",
+    },
   ]
 
   return <BasicPage title={projectName} breadcrumbsLinks={breadcrumbsLinks} />
