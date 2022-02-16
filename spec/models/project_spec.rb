@@ -1692,4 +1692,33 @@ RSpec.describe Project, type: :model do
       end
     end
   end
+
+  describe '#average_speed' do
+    context 'with demands' do
+      it 'returns the amount selected in the given week' do
+        travel_to Time.zone.local(2021, 12, 13, 10, 0, 0) do
+          project = Fabricate :project, start_date: 3.weeks.ago, end_date: 3.days.from_now
+
+          Fabricate :demand, project: project, created_date: 2.weeks.ago, commitment_date: 9.days.ago, end_date: 1.day.ago
+          Fabricate :demand, project: project, created_date: 2.weeks.ago, commitment_date: 9.days.ago, end_date: 3.days.ago
+          Fabricate :demand, project: project, created_date: 6.days.ago, commitment_date: 5.days.ago, end_date: 4.days.ago
+          Fabricate :demand, project: project, created_date: 6.days.ago, commitment_date: 4.days.ago, end_date: nil
+          Fabricate :demand, project: project, created_date: 6.days.ago, commitment_date: 4.days.ago, end_date: 2.days.ago
+          Fabricate :demand, project: project, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil
+
+          expect(project.average_speed).to eq 0.8
+        end
+      end
+    end
+
+    context 'without demands' do
+      it 'returns the amount selected in the given week' do
+        travel_to Time.zone.local(2021, 12, 13, 10, 0, 0) do
+          project = Fabricate :project, start_date: 3.weeks.ago, end_date: 3.days.from_now
+
+          expect(project.average_speed).to eq 0
+        end
+      end
+    end
+  end
 end

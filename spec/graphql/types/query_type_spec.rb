@@ -269,6 +269,7 @@ RSpec.describe Types::QueryType do
         customer = Fabricate :customer, company: company
         product = Fabricate :product, company: company, customer: customer
         project = Fabricate :project, company: company, customers: [customer], products: [product], team: team, status: :executing, start_date: 4.days.ago, end_date: 1.day.from_now, max_work_in_progress: 2
+        project_consolidation = Fabricate :project_consolidation, project: project
 
         query =
           %(query {
@@ -285,6 +286,9 @@ RSpec.describe Types::QueryType do
           company {
             id
             name
+          }
+          projectConsolidations {
+            id
           }
         }
       })
@@ -310,7 +314,10 @@ RSpec.describe Types::QueryType do
                                                       'company' => {
                                                         'id' => company.id.to_s,
                                                         'name' => company.name
-                                                      }
+                                                      },
+                                                      'projectConsolidations' => [{
+                                                        'id' => project_consolidation.id.to_s
+                                                      }]
                                                     })
       end
     end

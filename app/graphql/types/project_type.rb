@@ -26,9 +26,25 @@ module Types
     field :team_monte_carlo_weeks_min, Float, null: false
     field :team_monte_carlo_weeks_std_dev, Float, null: false
     field :team_based_odds_to_deadline, Float, null: false
+    field :current_cost, Float, null: true
+    field :total_hours_consumed, Float, null: true
+    field :average_speed, Float, null: true
+    field :average_demand_aging, Float, null: true
+    field :first_deadline, GraphQL::Types::ISO8601Date, null: true
+    field :days_difference_between_first_and_last_deadlines, Int, null: true
+    field :deadlines_change_count, Int, null: true
+    field :discovered_scope, Int, null: true
+    field :total_throughput, Int, null: true
+    field :percentage_remaining_work, Float, null: true
+    field :failure_load, Float, null: true
+    field :general_leadtime, Float, null: true
+    field :percentage_standard, Float, null: true
+    field :percentage_expedite, Float, null: true
+    field :percentage_fixed_date, Float, null: true
 
     field :customers, [Types::CustomerType], null: true
     field :products, [Types::ProductType], null: true
+    field :project_consolidations, [Types::ProjectConsolidationType], null: true
 
     delegate :remaining_backlog, to: :object
     delegate :remaining_weeks, to: :object
@@ -69,6 +85,15 @@ module Types
 
     def std_dev_weekly_troughputs
       Stats::StatisticsService.instance.standard_deviation(weekly_throughputs)
+    end
+
+    def deadlines_change_count
+      object.project_change_deadline_histories.count
+    end
+
+    def discovered_scope
+      project_summary = ProjectsSummaryData.new([object])
+      project_summary.discovered_scope
     end
   end
 end

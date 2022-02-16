@@ -313,6 +313,10 @@ class Project < ApplicationRecord
     @current_cost ||= total_hours_consumed * hour_value
   end
 
+  def average_speed
+    DemandService.instance.average_speed(demands.kept.finished_until_date(Time.zone.now))
+  end
+
   def percentage_of_demand_type(demand_type)
     return 0 if demands.kept.count.zero?
 
