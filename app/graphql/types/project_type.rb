@@ -93,7 +93,7 @@ module Types
 
     def discovered_scope
       project_summary = ProjectsSummaryData.new([object])
-      project_summary.discovered_scope
+      project_summary.discovered_scope['discovered_after']
     end
   end
 end
