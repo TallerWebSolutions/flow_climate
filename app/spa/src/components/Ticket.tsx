@@ -2,7 +2,7 @@ import { Box, Typography } from "@mui/material"
 
 type TicketProps = {
   title: string
-  value: string
+  value?: string | number
 }
 
 const Ticket = ({ title, value }: TicketProps) => (

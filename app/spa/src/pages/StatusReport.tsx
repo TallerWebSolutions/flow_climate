@@ -1,5 +1,5 @@
 import { gql, useQuery } from "@apollo/client"
-import { Backdrop, CircularProgress, Typography } from "@mui/material"
+import { Backdrop, CircularProgress, Typography, Box } from "@mui/material"
 import { useParams } from "react-router-dom"
 
 import BasicPage from "../components/BasicPage"
@@ -12,6 +12,17 @@ export const QUERY = gql`
       id
       name
       endDate
+      firstDeadline
+      daysDifferenceBetweenFirstAndLastDeadlines
+      deadlinesChangeCount
+      currentCost
+      totalHoursConsumed
+      averageSpeed
+      averageDemandAging
+      totalThroughput
+      remainingBacklog
+      failureLoad
+      leadTimeP80
       company {
         id
         name
@@ -67,10 +78,45 @@ const StatusReport = () => {
       breadcrumbsLinks={breadcrumbsLinks}
       company={data?.project.company}
     >
-      <Typography component="h2" variant="h6" mb={3}>
-        Mudanças no Prazo
-      </Typography>
-      <Ticket title="Prazo Atual" value={data?.project.endDate || ""} />
+      <Box>
+        <Typography component="h2" variant="h6" mb={3}>
+          Números Atuais
+        </Typography>
+        <Ticket title="Custo" value={data?.project.currentCost} />
+        <Ticket title="Esforço" value={data?.project.totalHoursConsumed} />
+        <Ticket title="Velocidade média" value={data?.project.averageSpeed} />
+        <Ticket
+          title="Idade média dos itens"
+          value={data?.project.averageDemandAging}
+        />
+      </Box>
+      <Box>
+        <Typography component="h2" variant="h6" mb={3}>
+          Mudanças no Prazo
+        </Typography>
+        <Ticket title="Prazo atual" value={data?.project.endDate} />
+        <Ticket title="Primeiro prazo" value={data?.project.firstDeadline} />
+        <Ticket
+          title="Última diferença"
+          value={data?.project.daysDifferenceBetweenFirstAndLastDeadlines}
+        />
+        <Ticket
+          title="Quantidade de mudanças"
+          value={data?.project.deadlinesChangeCount}
+        />
+      </Box>
+      <Box>
+        <Typography component="h2" variant="h6" mb={3}>
+          Fluxo
+        </Typography>
+        <Ticket title="Entrega" value={data?.project.totalThroughput} />
+        <Ticket
+          title="Backlog restante"
+          value={data?.project.remainingBacklog}
+        />
+        <Ticket title="Carga de falha" value={data?.project.failureLoad} />
+        <Ticket title="Leadtime (80%)" value={data?.project.leadTimeP80} />
+      </Box>
     </BasicPage>
   )
 }

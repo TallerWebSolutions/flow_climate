@@ -52,6 +52,15 @@ export type Project = {
   endDate: string
   aging: number
   company: Company
+  firstDeadline: string
+  daysDifferenceBetweenFirstAndLastDeadlines: number
+  deadlinesChangeCount: number
+  currentCost: number
+  totalHoursConsumed: number
+  averageSpeed: number
+  averageDemandAging: number
+  totalThroughput: number
+  failureLoad: number
 }
 
 type ReplenishingProjectsInfoProps = {
