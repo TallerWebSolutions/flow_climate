@@ -738,6 +738,7 @@ en:
         title: "Hours per Month for %{name}"
       throughput:
         tooltipsufix: "demand(s)"
+        title: "Throughput"
       creation_date: "Created"
       commitment_date: "Commitment Date"
       committed_date: "Committed to"

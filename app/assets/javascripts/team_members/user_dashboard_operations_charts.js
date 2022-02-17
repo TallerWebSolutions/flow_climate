@@ -26,6 +26,11 @@ function buildOperationsCharts() {
 
   const memberLeadTimeHistogram = $("#member-lead-time-histogram");
   if (memberLeadTimeHistogram.length !== 0) {
-      buildColumnChart(memberLeadTimeHistogram);
+    buildColumnChart(memberLeadTimeHistogram);
+  }
+
+  const teamMemberHoursPerProject = $("#member-dashboard-hours-per-project");
+  if (teamMemberHoursPerProject.length !== 0) {
+    buildColumnChart(teamMemberHoursPerProject);
   }
 }

@@ -31,14 +31,8 @@ module Flow
     end
 
     def compute_effort_for_assignment(assignment)
-      stages_to_work_on = membership.stages_to_work_on
-
-      stages_to_compute_effort = (assignment.stages_during_assignment & stages_to_work_on)
-
-      return 0 if stages_to_compute_effort.blank?
-
       efforts_in_assignment = []
-      stages_to_compute_effort.each do |stage|
+      assignment.stages_during_assignment.each do |stage|
         efforts_in_assignment << sum_efforts_in_demand_transitions(assignment, stage)
       end
 

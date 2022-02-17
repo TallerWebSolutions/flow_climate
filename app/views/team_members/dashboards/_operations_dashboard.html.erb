@@ -92,7 +92,7 @@
 <div class="row equal-heights">
 
   <div class="col-xs-6">
-    <h4><%= I18n.t('demands.charts.throughput') %></h4>
+    <h4><%= I18n.t('demands.charts.throughput.title') %></h4>
 
     <div id="member-dashboard-throughput-column"
          class="flow-chart"
@@ -121,6 +121,27 @@
          data-tooltipsuffix='<%= I18n.t('general.hours') %>'
          data-datalabelsuffix=''
          data-series='<%= member_pull_interval_average_chart.to_json %>'
+         data-decimals='0'>
+    </div>
+  </div>
+</div>
+
+
+<div class="row equal-heights">
+
+  <div class="col-xs-12">
+    <h4><%= I18n.t('demands.charts.throughput.title') %></h4>
+
+    <div id="member-dashboard-hours-per-project"
+         class="flow-chart"
+         data-title=''
+         data-xcategories='<%= @x_axis_hours_per_project.to_json %>'
+         data-xtitle='<%= I18n.t('general.months') %>'
+         data-ytitle='<%= I18n.t('general.hours') %>'
+         data-prefix=''
+         data-tooltipsuffix=''
+         data-datalabelsuffix=''
+         data-series='<%= @y_axis_hours_per_project.to_json %>'
          data-decimals='0'>
     </div>
   </div>
