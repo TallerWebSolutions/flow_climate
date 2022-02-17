@@ -18,6 +18,7 @@ gem 'discard'
 gem 'figaro'
 gem 'friendly_id'
 gem 'graphql'
+gem 'graphiql-rails'
 gem 'histogram'
 gem 'httparty'
 gem 'jira-ruby', require: false
@@ -81,4 +82,3 @@ group :production do
   gem 'puma_worker_killer'
   gem 'rails_12factor'
 end
-gem 'graphiql-rails', group: :development
