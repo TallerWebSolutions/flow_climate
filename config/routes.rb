@@ -3,7 +3,7 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
-  mount GraphiQL::Rails::Engine, at: '/graphiql', graphql_path: '/graphql' if Rails.env.development?
+  mount GraphiQL::Rails::Engine, at: '/graphiql', graphql_path: '/graphql'
   options '/graphql', to: 'graphql#execute'
   post '/graphql', to: 'graphql#execute'
 
