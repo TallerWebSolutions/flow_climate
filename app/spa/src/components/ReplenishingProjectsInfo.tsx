@@ -13,6 +13,7 @@ import { KeyboardArrowUp, KeyboardArrowDown } from "@material-ui/icons"
 import { Box } from "@mui/system"
 import { Fragment, useState } from "react"
 import { Company } from "../modules/company/company.types"
+import { formatLeadtime } from "../lib/func"
 
 type Customer = {
   id: string
@@ -118,7 +119,7 @@ const TableRow = ({ project, companySlug }: TableRowProps) => {
         </TableCell>
         <TableCell>{project.remainingBacklog} demandas</TableCell>
         <TableCell>{project.flowPressurePercentage.toFixed(2)}%</TableCell>
-        <TableCell>{(project.leadTimeP80 / 86400).toFixed(2)}</TableCell>
+        <TableCell>{formatLeadtime(project.leadTimeP80)}</TableCell>
         <TableCell>{project.qtyInProgress} demandas</TableCell>
         <TableCell>{project.startDate}</TableCell>
         <TableCell>{project.endDate}</TableCell>

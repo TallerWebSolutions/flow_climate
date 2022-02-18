@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom"
 import BasicPage from "../components/BasicPage"
 import { Project } from "../components/ReplenishingProjectsInfo"
 import Ticket from "../components/Ticket"
+import { formatLeadtime } from "../lib/func"
 
 export const QUERY = gql`
   query ProjectStatusReport($id: Int!) {
@@ -72,6 +73,8 @@ const StatusReport = () => {
     },
   ]
 
+  const leadtime = data?.project.leadTimeP80
+
   return (
     <BasicPage
       title={projectName}
@@ -82,40 +85,55 @@ const StatusReport = () => {
         <Typography component="h2" variant="h6" mb={3}>
           Números Atuais
         </Typography>
-        <Ticket title="Custo" value={data?.project.currentCost} />
-        <Ticket title="Esforço" value={data?.project.totalHoursConsumed} />
-        <Ticket title="Velocidade média" value={data?.project.averageSpeed} />
-        <Ticket
-          title="Idade média dos itens"
-          value={data?.project.averageDemandAging}
-        />
+        <Box sx={{ display: "flex", justifyContent: "space-evenly" }}>
+          <Ticket title="Custo" value={data?.project.currentCost} />
+          <Ticket
+            title="Esforço"
+            value={data?.project.totalHoursConsumed?.toFixed(2)}
+          />
+          <Ticket
+            title="Velocidade média"
+            value={data?.project.averageSpeed?.toFixed(2)}
+          />
+          <Ticket
+            title="Idade média dos itens"
+            value={data?.project.averageDemandAging?.toFixed(2)}
+          />
+        </Box>
       </Box>
       <Box>
         <Typography component="h2" variant="h6" mb={3}>
           Mudanças no Prazo
         </Typography>
-        <Ticket title="Prazo atual" value={data?.project.endDate} />
-        <Ticket title="Primeiro prazo" value={data?.project.firstDeadline} />
-        <Ticket
-          title="Última diferença"
-          value={data?.project.daysDifferenceBetweenFirstAndLastDeadlines}
-        />
-        <Ticket
-          title="Quantidade de mudanças"
-          value={data?.project.deadlinesChangeCount}
-        />
+        <Box sx={{ display: "flex", justifyContent: "space-evenly" }}>
+          <Ticket title="Prazo atual" value={data?.project.endDate} />
+          <Ticket title="Primeiro prazo" value={data?.project.firstDeadline} />
+          <Ticket
+            title="Última diferença"
+            value={data?.project.daysDifferenceBetweenFirstAndLastDeadlines}
+          />
+          <Ticket
+            title="Quantidade de mudanças"
+            value={data?.project.deadlinesChangeCount}
+          />
+        </Box>
       </Box>
       <Box>
         <Typography component="h2" variant="h6" mb={3}>
           Fluxo
         </Typography>
-        <Ticket title="Entrega" value={data?.project.totalThroughput} />
-        <Ticket
-          title="Backlog restante"
-          value={data?.project.remainingBacklog}
-        />
-        <Ticket title="Carga de falha" value={data?.project.failureLoad} />
-        <Ticket title="Leadtime (80%)" value={data?.project.leadTimeP80} />
+        <Box sx={{ display: "flex", justifyContent: "space-evenly" }}>
+          <Ticket title="Entrega" value={data?.project.totalThroughput} />
+          <Ticket
+            title="Backlog restante"
+            value={data?.project.remainingBacklog}
+          />
+          <Ticket title="Carga de falha" value={data?.project.failureLoad} />
+          <Ticket
+            title="Leadtime (80%)"
+            value={leadtime && formatLeadtime(leadtime)}
+          />
+        </Box>
       </Box>
     </BasicPage>
   )
