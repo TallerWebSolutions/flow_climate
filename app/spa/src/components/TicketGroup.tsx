@@ -1,5 +1,4 @@
 import { Box, Typography } from "@mui/material"
-import { Fragment } from "react"
 import Ticket, { TicketProps } from "./Ticket"
 
 type TicketGroupProps = {
@@ -8,7 +7,7 @@ type TicketGroupProps = {
 }
 
 const TicketGroup = ({ title, data }: TicketGroupProps) => (
-  <Fragment>
+  <Box paddingTop={2} paddingBottom={6}>
     <Typography component="h2" variant="h6" mb={3}>
       {title}
     </Typography>
@@ -21,7 +20,7 @@ const TicketGroup = ({ title, data }: TicketGroupProps) => (
         />
       ))}
     </Box>
-  </Fragment>
+  </Box>
 )
 
 export default TicketGroup

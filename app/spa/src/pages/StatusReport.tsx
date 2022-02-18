@@ -75,24 +75,27 @@ const StatusReport = () => {
 
   const leadtime = data?.project.leadTimeP80
   const currentNumbersData = [
-    { title: "Custo", data: data?.project.currentCost },
-    { title: "Esforço", data: data?.project.totalHoursConsumed?.toFixed(2) },
-    { title: "Velocidade média", data: data?.project.averageSpeed?.toFixed(2) },
+    { title: "Custo", value: data?.project.currentCost },
+    { title: "Esforço", value: data?.project.totalHoursConsumed?.toFixed(2) },
+    {
+      title: "Velocidade média",
+      value: data?.project.averageSpeed?.toFixed(2),
+    },
     {
       title: "Idade média dos itens",
-      data: data?.project.averageDemandAging?.toFixed(2),
+      value: data?.project.averageDemandAging?.toFixed(2),
     },
   ]
   const deadlineChangesData = [
-    { title: "Prazo atual", data: data?.project.endDate },
-    { title: "Primeiro prazo", data: data?.project.firstDeadline },
+    { title: "Prazo atual", value: data?.project.endDate },
+    { title: "Primeiro prazo", value: data?.project.firstDeadline },
     {
       title: "Última diferença",
-      data: data?.project.daysDifferenceBetweenFirstAndLastDeadlines,
+      value: data?.project.daysDifferenceBetweenFirstAndLastDeadlines,
     },
     {
       title: "Quantidade de mudanças",
-      data: data?.project.deadlinesChangeCount,
+      value: data?.project.deadlinesChangeCount,
     },
   ]
   const flowData = [
