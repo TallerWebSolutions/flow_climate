@@ -19,7 +19,7 @@ RSpec.describe Jira::ProcessJiraIssueJob, type: :active_job do
     let(:team) { Fabricate :team }
     let(:demand) { Fabricate :demand, project: project }
 
-    let(:jira_account) { Fabricate :jira_account, base_uri: 'http://foo.bar', username: 'foo', api_token: 'bar' }
+    let(:jira_account) { Fabricate :jira_account, company: company, base_uri: 'http://foo.bar', username: 'foo', api_token: 'bar' }
 
     context 'when it has a valid response' do
       context 'and it has only one page' do
@@ -53,6 +53,17 @@ RSpec.describe Jira::ProcessJiraIssueJob, type: :active_job do
           expect(Jira::JiraIssueAdapter.instance).to(receive(:process_jira_issue_changelog).twice)
           described_class.perform_now(jira_account, project, 'foo', 'foo@bar.com', 'Foo Bar', 'http://foo.com.br')
         end
+      end
+    end
+
+    context 'with a discarded demand' do
+      it 'updates the correct fields' do
+        demand = Fabricate :demand, company: company, discarded_at: 2.days.ago
+        allow_any_instance_of(Jira::JiraApiService).to(receive(:request_issue).with(demand.external_id).and_return(client.Issue.build))
+        expect(DemandEffortService.instance).to(receive(:build_efforts_to_demand).with(demand)).once
+        expect(UserNotifierMailer).not_to receive(:async_activity_finished)
+
+        described_class.perform_now(jira_account, project, demand.external_id, 'foo@bar.com', 'Foo Bar', 'http://foo.com.br')
       end
     end
 

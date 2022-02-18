@@ -47,9 +47,10 @@ module Highchart
         end_period = date.end_of_month
 
         item_assignments_efforts_in_period = @item_assignments_efforts.where('start_time_to_computation BETWEEN :start_date AND :end_date', start_date: start_period, end_date: end_period)
-        projects_in_period = @item_assignments_efforts.map(&:demand).map(&:project).uniq
+        projects_in_period = item_assignments_efforts_in_period.map(&:demand).map(&:project).uniq
 
         build_project_efforts(item_assignments_efforts_in_period, projects_in_period)
+        normalize_projects_data(projects_in_period)
       end
 
       @projects_efforts.each { |key, values| @y_axis_hours_per_project << { name: key, data: values } }
@@ -65,9 +66,21 @@ module Highchart
 
         project_with_effort = @projects_efforts[project_active.name]
         if project_with_effort.present?
-          project_with_effort << effort_value_sum.to_f
+          @projects_efforts[project_active.name] << effort_value_sum.to_f
         else
           @projects_efforts[project_active.name] = [effort_value_sum.to_f]
+        end
+      end
+    end
+
+    def normalize_projects_data(projects_in_period)
+      projects_out_period = @projects_in_efforts.map(&:name) - projects_in_period.map(&:name)
+
+      projects_out_period.each do |out_project_name|
+        if @projects_efforts[out_project_name].present?
+          @projects_efforts[out_project_name] << 0
+        else
+          @projects_efforts[out_project_name] = [0]
         end
       end
     end
