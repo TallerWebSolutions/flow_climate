@@ -1,12 +1,13 @@
-import { Box, Typography } from "@mui/material"
+import { Box, SxProps, Typography } from "@mui/material"
 
-type TicketProps = {
+export type TicketProps = {
   title: string
   value?: string | number
+  sx?: SxProps
 }
 
-const Ticket = ({ title, value }: TicketProps) => (
-  <Box paddingX={2} borderLeft="4px solid" borderColor="primary.light">
+const Ticket = ({ title, value, sx }: TicketProps) => (
+  <Box paddingX={2} borderLeft="4px solid" borderColor="primary.light" sx={sx}>
     <Typography fontSize="1rem" color="primary.dark">
       {title}
     </Typography>

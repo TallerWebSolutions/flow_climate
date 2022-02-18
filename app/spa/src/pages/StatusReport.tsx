@@ -1,10 +1,10 @@
 import { gql, useQuery } from "@apollo/client"
-import { Backdrop, CircularProgress, Typography, Box } from "@mui/material"
+import { Backdrop, CircularProgress } from "@mui/material"
 import { useParams } from "react-router-dom"
 
 import BasicPage from "../components/BasicPage"
 import { Project } from "../components/ReplenishingProjectsInfo"
-import Ticket from "../components/Ticket"
+import TicketGroup from "../components/TicketGroup"
 import { formatLeadtime } from "../lib/func"
 
 export const QUERY = gql`
@@ -74,6 +74,33 @@ const StatusReport = () => {
   ]
 
   const leadtime = data?.project.leadTimeP80
+  const currentNumbersData = [
+    { title: "Custo", data: data?.project.currentCost },
+    { title: "Esforço", data: data?.project.totalHoursConsumed?.toFixed(2) },
+    { title: "Velocidade média", data: data?.project.averageSpeed?.toFixed(2) },
+    {
+      title: "Idade média dos itens",
+      data: data?.project.averageDemandAging?.toFixed(2),
+    },
+  ]
+  const deadlineChangesData = [
+    { title: "Prazo atual", data: data?.project.endDate },
+    { title: "Primeiro prazo", data: data?.project.firstDeadline },
+    {
+      title: "Última diferença",
+      data: data?.project.daysDifferenceBetweenFirstAndLastDeadlines,
+    },
+    {
+      title: "Quantidade de mudanças",
+      data: data?.project.deadlinesChangeCount,
+    },
+  ]
+  const flowData = [
+    { title: "Entrega", value: data?.project.totalThroughput },
+    { title: "Backlog restante", value: data?.project.remainingBacklog },
+    { title: "Carga de falha", value: data?.project.failureLoad },
+    { title: "Leadtime (80%)", value: leadtime && formatLeadtime(leadtime) },
+  ]
 
   return (
     <BasicPage
@@ -81,60 +108,9 @@ const StatusReport = () => {
       breadcrumbsLinks={breadcrumbsLinks}
       company={data?.project.company}
     >
-      <Box>
-        <Typography component="h2" variant="h6" mb={3}>
-          Números Atuais
-        </Typography>
-        <Box sx={{ display: "flex", justifyContent: "space-evenly" }}>
-          <Ticket title="Custo" value={data?.project.currentCost} />
-          <Ticket
-            title="Esforço"
-            value={data?.project.totalHoursConsumed?.toFixed(2)}
-          />
-          <Ticket
-            title="Velocidade média"
-            value={data?.project.averageSpeed?.toFixed(2)}
-          />
-          <Ticket
-            title="Idade média dos itens"
-            value={data?.project.averageDemandAging?.toFixed(2)}
-          />
-        </Box>
-      </Box>
-      <Box>
-        <Typography component="h2" variant="h6" mb={3}>
-          Mudanças no Prazo
-        </Typography>
-        <Box sx={{ display: "flex", justifyContent: "space-evenly" }}>
-          <Ticket title="Prazo atual" value={data?.project.endDate} />
-          <Ticket title="Primeiro prazo" value={data?.project.firstDeadline} />
-          <Ticket
-            title="Última diferença"
-            value={data?.project.daysDifferenceBetweenFirstAndLastDeadlines}
-          />
-          <Ticket
-            title="Quantidade de mudanças"
-            value={data?.project.deadlinesChangeCount}
-          />
-        </Box>
-      </Box>
-      <Box>
-        <Typography component="h2" variant="h6" mb={3}>
-          Fluxo
-        </Typography>
-        <Box sx={{ display: "flex", justifyContent: "space-evenly" }}>
-          <Ticket title="Entrega" value={data?.project.totalThroughput} />
-          <Ticket
-            title="Backlog restante"
-            value={data?.project.remainingBacklog}
-          />
-          <Ticket title="Carga de falha" value={data?.project.failureLoad} />
-          <Ticket
-            title="Leadtime (80%)"
-            value={leadtime && formatLeadtime(leadtime)}
-          />
-        </Box>
-      </Box>
+      <TicketGroup title="Números atuais" data={currentNumbersData} />
+      <TicketGroup title="Mudanças no prazo" data={deadlineChangesData} />
+      <TicketGroup title="Fluxo" data={flowData} />
     </BasicPage>
   )
 }
