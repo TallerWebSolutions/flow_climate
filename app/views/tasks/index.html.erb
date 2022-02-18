@@ -13,7 +13,7 @@
     <div class="col-xs-12 center">
       <div class="tab">
         <%= link_to I18n.t('general.list'), '#', class: 'btn btn-default active' %>
-        <%= link_to I18n.t('general.tabs.charts'), charts_company_tasks_path(@company, tasks_search: params['tasks_search']), class: 'btn btn-default', method: :post %>
+        <%= link_to I18n.t('general.tabs.charts'), charts_company_tasks_path(@company, tasks_search: params['tasks_search'], tasks_start_date: params['tasks_start_date'], tasks_end_date: params['tasks_end_date']), class: 'btn btn-default', method: :post %>
       </div>
     </div>
   </div>
@@ -54,4 +54,4 @@
 
 <hr>
 
-<%= render 'tasks/tasks_table', company: @company, tasks_list: @tasks, paged_tasks: @paged_tasks %>
+<%= render 'tasks/tasks_table', company: @company, tasks_list: @tasks, paged_tasks: @paged_tasks, finished_tasks: @finished_tasks %>

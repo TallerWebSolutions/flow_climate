@@ -304,6 +304,9 @@ pt-BR:
       paired_times: "Vezes pareado"
       its_me: "Sou eu!"
       its_not_me: "Não sou eu"
+    charts:
+      hours_per_project:
+        title: "Horas Entregues por Projeto"
   projects:
     index:
       title: "Projetos"
@@ -514,7 +517,7 @@ pt-BR:
       scope_variation:
         title: "Variação do escopo no tempo"
       risk_evolution_in_time: "Evolução do Risco Matemático Operacional"
-      risk_evolution_in_time_team_based: "Evolução do Risco Matemático Operacional - Team Data"
+      risk_evolution_in_time_team_based: "Evolução do Risco Matemático Operacional - Dados do Time"
       quality_block_per_demand: "bloqueios por demanda"
       throughput_hours_six_months:
         title: "Horas de Projetos por Mês - Últimos 6 meses"
@@ -827,6 +830,7 @@ pt-BR:
         title: "Horas por Mês para %{name}"
       throughput:
         tooltipsufix: "demanda(s)"
+        title: "Vazão"
       creation_date: "Criadas"
       demands:
         title: "Demandas"
@@ -1454,6 +1458,8 @@ pt-BR:
         placeholder: "buscar pelo nome da tarefa"
         helpers:
           date: "Se estiver buscando por tarefas fechadas, a busca será feita pela data de entrega, senão será feita pela data de criação."
+      finished:
+        count: "%{count} finalizadas"
     charts:
       completion_time:
         title: "Tempo para Finalizar (P80)"

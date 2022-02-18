@@ -72,18 +72,16 @@ RSpec.describe TeamMembersController, type: :controller do
     let(:company) { Fabricate :company, users: [user] }
     let(:team) { Fabricate :team, company: company }
 
-    let!(:team_member) { Fabricate :team_member, company: company, name: 'ddd', start_date: 1.day.ago, end_date: nil }
-    let!(:other_team_member) { Fabricate :team_member, company: company, name: 'aaa', start_date: 1.day.ago, end_date: nil }
-    let!(:inactive_team_member) { Fabricate :team_member, company: company, name: 'eee', start_date: 1.day.ago, end_date: Time.zone.today }
-
     describe 'GET #show' do
       let(:team) { Fabricate :team, company: company }
 
       context 'valid parameters' do
         it 'assigns the instance variables and renders the template' do
           travel_to Time.zone.local(2021, 12, 1, 10, 0, 0) do
-            first_membership = Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil
+            team_member = Fabricate :team_member, company: company, name: 'ddd', start_date: 4.months.ago, end_date: nil
+            first_membership = Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 3.months.ago, end_date: nil
             Fabricate :membership, team: team, team_member: team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago
+
             first_demand = Fabricate :demand, team: team, commitment_date: 4.months.ago, end_date: 3.months.ago
             second_demand = Fabricate :demand, team: team, commitment_date: 3.months.ago, end_date: 3.weeks.ago
             third_demand = Fabricate :demand, team: team, commitment_date: 2.months.ago, end_date: 1.month.ago
@@ -91,12 +89,18 @@ RSpec.describe TeamMembersController, type: :controller do
             fifth_demand = Fabricate :demand, team: team, commitment_date: 9.weeks.ago, end_date: 2.weeks.ago
             sixth_demand = Fabricate :demand, team: team, commitment_date: 9.days.ago, end_date: nil
 
-            Fabricate :item_assignment, demand: first_demand, membership: first_membership
-            Fabricate :item_assignment, demand: second_demand, membership: first_membership
-            Fabricate :item_assignment, demand: third_demand, membership: first_membership
-            Fabricate :item_assignment, demand: fourth_demand, membership: first_membership
-            Fabricate :item_assignment, demand: fifth_demand
+            first_assignment = Fabricate :item_assignment, demand: first_demand, membership: first_membership
+            second_assignment = Fabricate :item_assignment, demand: second_demand, membership: first_membership
+            third_assignment = Fabricate :item_assignment, demand: third_demand, membership: first_membership
+            fourth_assignment = Fabricate :item_assignment, demand: fourth_demand, membership: first_membership
+            fifth_assignment = Fabricate :item_assignment, demand: fifth_demand
             Fabricate :item_assignment, demand: sixth_demand, membership: first_membership
+
+            Fabricate :demand_effort, demand: first_demand, item_assignment: first_assignment, start_time_to_computation: 65.days.ago, effort_value: 10
+            Fabricate :demand_effort, demand: first_demand, item_assignment: second_assignment, start_time_to_computation: 64.days.ago, effort_value: 20
+            Fabricate :demand_effort, demand: first_demand, item_assignment: third_assignment, start_time_to_computation: 37.days.ago, effort_value: 30
+            Fabricate :demand_effort, demand: first_demand, item_assignment: fourth_assignment, start_time_to_computation: 39.days.ago, effort_value: 100
+            Fabricate :demand_effort, demand: first_demand, item_assignment: fifth_assignment, start_time_to_computation: 25.days.ago, effort_value: 204
 
             get :show, params: { company_id: company.id, id: team_member }
 
@@ -106,18 +110,15 @@ RSpec.describe TeamMembersController, type: :controller do
             expect(assigns(:team_member)).to eq team_member
             expect(assigns(:member_effort_chart)).to eq [{ data: [], name: team_member.name }]
             expect(assigns(:member_pull_interval_average_chart)).to eq [{ data: [], name: team_member.name }]
-            expect(assigns(:member_finished_demands)).to match_array [
-              first_demand,
-              second_demand,
-              third_demand,
-              fourth_demand
-            ]
+            expect(assigns(:member_finished_demands)).to match_array [first_demand, second_demand, third_demand, fourth_demand]
             expect(assigns(:member_leadtime65)).to be_within(0.01).of(31.00)
             expect(assigns(:member_leadtime80)).to be_within(0.01).of(46.60)
             expect(assigns(:member_leadtime95)).to be_within(0.01).of(64.15)
             expect(assigns(:member_lead_time_histogram_data).keys.first.to_f).to be_within(0.01).of(3_261_600)
             expect(assigns(:member_lead_time_histogram_data).keys.last.to_f).to be_within(0.01).of(5_119_200)
             expect(assigns(:member_lead_time_histogram_data).values).to eq [3, 1]
+            expect(assigns(:team_chart_adapter).x_axis_hours_per_project).to eq [3.months.ago.end_of_month, 2.months.ago.end_of_month, 1.month.ago.end_of_month, Time.zone.now.end_of_month].map(&:to_date)
+            expect(assigns(:team_chart_adapter).y_axis_hours_per_project).to eq [{ data: [30.0, 130.0, 0.0, 0.0], name: first_demand.project.name }]
           end
         end
       end
@@ -131,6 +132,8 @@ RSpec.describe TeamMembersController, type: :controller do
 
         context 'company' do
           context 'non-existent' do
+            let(:team_member) { Fabricate :team_member, company: company }
+
             before { get :show, params: { company_id: 'foo', id: team_member } }
 
             it { expect(response).to have_http_status :not_found }
@@ -138,6 +141,7 @@ RSpec.describe TeamMembersController, type: :controller do
 
           context 'not-permitted' do
             let(:company) { Fabricate :company, users: [] }
+            let(:team_member) { Fabricate :team_member, company: company }
 
             before { get :show, params: { company_id: company, id: team_member } }
 
@@ -158,9 +162,12 @@ RSpec.describe TeamMembersController, type: :controller do
 
     describe 'GET #new' do
       context 'valid parameters' do
-        before { get :new, params: { company_id: company }, xhr: true }
-
         it 'instantiates a new Team Member and renders the template' do
+          team_member = Fabricate :team_member, company: company, name: 'ddd', start_date: 1.day.ago, end_date: nil
+          other_team_member = Fabricate :team_member, company: company, name: 'aaa', start_date: 1.day.ago, end_date: nil
+          inactive_team_member = Fabricate :team_member, company: company, name: 'eee', start_date: 1.day.ago, end_date: Time.zone.today
+
+          get :new, params: { company_id: company }, xhr: true
           expect(response).to render_template 'team_members/new'
           expect(assigns(:team_members)).to eq [other_team_member, team_member, inactive_team_member]
           expect(assigns(:team_member)).to be_a_new TeamMember
@@ -186,9 +193,12 @@ RSpec.describe TeamMembersController, type: :controller do
 
     describe 'POST #create' do
       context 'passing valid parameters' do
-        before { post :create, params: { company_id: company, team_member: { name: 'foo', jira_account_user_email: 'foo@bar.com', jira_account_id: 'jira_account_id', billable: false, active: false, hours_per_month: 10, monthly_payment: 100, billable_type: :outsourcing, start_date: 1.day.ago.to_date, end_date: Time.zone.today } }, xhr: true }
-
         it 'creates the new team member and redirects to team show' do
+          Fabricate :team_member, company: company, name: 'ddd', start_date: 1.day.ago, end_date: nil
+          Fabricate :team_member, company: company, name: 'aaa', start_date: 1.day.ago, end_date: nil
+          Fabricate :team_member, company: company, name: 'eee', start_date: 1.day.ago, end_date: Time.zone.today
+
+          post :create, params: { company_id: company, team_member: { name: 'foo', jira_account_user_email: 'foo@bar.com', jira_account_id: 'jira_account_id', billable: false, active: false, hours_per_month: 10, monthly_payment: 100, billable_type: :outsourcing, start_date: 1.day.ago.to_date, end_date: Time.zone.today } }, xhr: true
           expect(response).to render_template 'team_members/create'
 
           expect(TeamMember.all.count).to eq 4
@@ -205,11 +215,11 @@ RSpec.describe TeamMembersController, type: :controller do
         end
       end
 
-      context 'passing invalid parameters' do
+      context 'with invalid parameters' do
         before { post :create, params: { company_id: company, team_member: { name: '' } }, xhr: true }
 
         it 'does not create the team member and re-render the template with the errors' do
-          expect(TeamMember.all.count).to eq 3
+          expect(TeamMember.all.count).to eq 0
           expect(response).to render_template 'team_members/create'
           expect(assigns(:team_member).errors.full_messages).to eq ['Nome não pode ficar em branco']
         end
@@ -309,12 +319,15 @@ RSpec.describe TeamMembersController, type: :controller do
     end
 
     describe 'DELETE #destroy' do
-      let(:team) { Fabricate :team, company: company }
-      let(:team_member) { Fabricate :team_member, company: company }
-      let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
-
       context 'with valid data' do
         it 'deletes the member and renders the template' do
+          team = Fabricate :team, company: company
+
+          team_member = Fabricate :team_member, company: company, name: 'ddd', start_date: 1.day.ago, end_date: nil
+          Fabricate :team_member, company: company, name: 'aaa', start_date: 1.day.ago, end_date: nil
+          Fabricate :team_member, company: company, name: 'eee', start_date: 1.day.ago, end_date: Time.zone.today
+          Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil
+
           delete :destroy, params: { company_id: company, id: team_member }, xhr: true
 
           expect(TeamMember.all.count).to eq 2
@@ -331,6 +344,7 @@ RSpec.describe TeamMembersController, type: :controller do
 
         context 'unpermitted company' do
           let(:company) { Fabricate :company, users: [] }
+          let(:team_member) { Fabricate :team_member, company: company }
 
           before { delete :destroy, params: { company_id: company, id: team_member }, xhr: true }
 
@@ -406,27 +420,38 @@ RSpec.describe TeamMembersController, type: :controller do
     describe 'GET #search_team_members' do
       context 'valid parameters' do
         context 'with no search parameters' do
-          before { get :search_team_members, params: { company_id: company }, xhr: true }
-
           it 'searches for the team members and renders the template' do
+            team_member = Fabricate :team_member, company: company, name: 'ddd', start_date: 1.day.ago, end_date: nil
+            other_team_member = Fabricate :team_member, company: company, name: 'aaa', start_date: 1.day.ago, end_date: nil
+            inactive_team_member = Fabricate :team_member, company: company, name: 'eee', start_date: 1.day.ago, end_date: Time.zone.today
+
+            get :search_team_members, params: { company_id: company }, xhr: true
+
             expect(response).to render_template 'team_members/search_team_members'
             expect(assigns(:team_members)).to eq [other_team_member, team_member, inactive_team_member]
           end
         end
 
         context 'with active status true' do
-          before { get :search_team_members, params: { company_id: company, team_member_status: 'true' }, xhr: true }
-
           it 'searches for the team members and renders the template' do
+            team_member = Fabricate :team_member, company: company, name: 'ddd', start_date: 1.day.ago, end_date: nil
+            other_team_member = Fabricate :team_member, company: company, name: 'aaa', start_date: 1.day.ago, end_date: nil
+            Fabricate :team_member, company: company, name: 'eee', start_date: 1.day.ago, end_date: Time.zone.today
+
+            get :search_team_members, params: { company_id: company, team_member_status: 'true' }, xhr: true
+
             expect(response).to render_template 'team_members/search_team_members'
             expect(assigns(:team_members)).to eq [other_team_member, team_member]
           end
         end
 
         context 'with active status false' do
-          before { get :search_team_members, params: { company_id: company, team_member_status: 'false' }, xhr: true }
-
           it 'searches for the team members and renders the template' do
+            Fabricate :team_member, company: company, name: 'ddd', start_date: 1.day.ago, end_date: nil
+            Fabricate :team_member, company: company, name: 'aaa', start_date: 1.day.ago, end_date: nil
+            inactive_team_member = Fabricate :team_member, company: company, name: 'eee', start_date: 1.day.ago, end_date: Time.zone.today
+
+            get :search_team_members, params: { company_id: company, team_member_status: 'false' }, xhr: true
             expect(response).to render_template 'team_members/search_team_members'
             expect(assigns(:team_members)).to eq [inactive_team_member]
           end
@@ -453,6 +478,8 @@ RSpec.describe TeamMembersController, type: :controller do
     describe 'GET #pairings' do
       context 'valid parameters' do
         context 'with no data' do
+          let(:team_member) { Fabricate :team_member, company: company }
+
           before { get :pairings, params: { company_id: company, id: team_member } }
 
           it 'searches for the team members and renders the template' do
@@ -462,6 +489,7 @@ RSpec.describe TeamMembersController, type: :controller do
         end
 
         context 'with data' do
+          let(:team_member) { Fabricate :team_member, company: company }
           let(:second_team_member) { Fabricate :team_member, company: company, name: 'second_team_member' }
           let(:third_team_member) { Fabricate :team_member, company: company, name: 'third_team_member' }
 
@@ -484,6 +512,8 @@ RSpec.describe TeamMembersController, type: :controller do
 
       context 'invalid' do
         context 'non-existent company' do
+          let(:team_member) { Fabricate :team_member, company: company }
+
           before { get :pairings, params: { company_id: 'foo', id: team_member } }
 
           it { expect(response).to have_http_status :not_found }
@@ -497,6 +527,7 @@ RSpec.describe TeamMembersController, type: :controller do
 
         context 'not-permitted company' do
           let(:company) { Fabricate :company, users: [] }
+          let(:team_member) { Fabricate :team_member, company: company }
 
           before { get :pairings, params: { company_id: company, id: team_member } }
 

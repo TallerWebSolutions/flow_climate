@@ -280,6 +280,9 @@ en:
       paired_times: "Paired times"
       its_me: "It's me!"
       its_not_me: "It's not me"
+    charts:
+      hours_per_project:
+        title: "Delivered Hours per Project"
   projects:
     index:
       title: "Projects"
@@ -738,6 +741,7 @@ en:
         title: "Hours per Month for %{name}"
       throughput:
         tooltipsufix: "demand(s)"
+        title: "Throughput"
       creation_date: "Created"
       commitment_date: "Commitment Date"
       committed_date: "Committed to"
@@ -1464,6 +1468,8 @@ en:
         placeholder: "search by task name"
         helpers:
           date: "When searching by finished tasks it will search by the delivered date, else it will search by the created date."
+      finished:
+        count: "%{count} finished"
     charts:
       completion_time:
         title: "Completion Time (P80)"

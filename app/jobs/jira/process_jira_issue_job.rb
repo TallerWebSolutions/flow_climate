@@ -8,6 +8,8 @@ module Jira
       started_time = Time.zone.now
       jira_con = Jira::JiraApiService.new(jira_account.username, jira_account.api_token, jira_account.base_uri)
 
+      demand = Demand.find_by(company: jira_account.company, external_id: issue_key)
+
       jira_issue = jira_con.request_issue(issue_key)
       if jira_issue.attrs.present?
         product = Jira::JiraReader.instance.read_product(jira_issue.attrs, jira_account)
@@ -28,6 +30,9 @@ module Jira
         finished_time = Time.zone.now
 
         UserNotifierMailer.async_activity_finished(user_email, user_name, Demand.model_name.human.downcase, issue_key, started_time, finished_time, demand_url).deliver if user_email.present?
+      elsif demand.present?
+        demand.discard unless demand.discarded?
+        DemandEffortService.instance.build_efforts_to_demand(demand)
       end
     end
   end

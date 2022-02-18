@@ -12,21 +12,20 @@ class DemandEffortService
     demand.demand_transitions.order(:last_time_in).each do |transition|
       next unless transition.stage_compute_effort_to_project?
 
-      end_date_for_assignment = [transition.last_time_out, Time.zone.now].compact.min
+      end_date_for_assignment = [transition.last_time_out, Time.zone.now, demand.discarded_at].compact.min
 
       assignments_in_dates = demand.item_assignments.for_dates(transition.last_time_in, end_date_for_assignment).order(:start_time)
       top_effort_assignment = assignments_in_dates.max_by { |assign_in_date| assign_in_date.working_hours_until(transition.last_time_in, transition.last_time_out) }
 
       assignments_in_dates.each do |assignment|
         start_day = [assignment.start_time.to_date, transition.last_time_in].max.to_date
-        end_day = [assignment.finish_time, transition.last_time_out, Time.zone.now].compact.min.to_date
+        end_day = [assignment.finish_time, transition.last_time_out, demand.discarded_at, Time.zone.now].compact.min.to_date
 
         (start_day..end_day).map do |day_to_effort|
           demand_effort_ids << compute_and_save_effort(day_to_effort, assignment, top_effort_assignment, transition)
         end
       end
     end
-
     demand.demand_efforts.where.not(id: demand_effort_ids).map(&:destroy)
 
     return if demand.manual_effort?

@@ -1,5 +1,34 @@
 <div class="row">
   <div class="col-xs-6">
+    <div id="project-demands-risk"
+         class="flow-chart"
+         data-xcategories='<%= all_project_consolidations.map(&:consolidation_date).to_json %>'
+         data-title='<%= I18n.t('projects.charts.risk_evolution_in_time') %>'
+         data-ytitle='<%= I18n.t('charts.risk_evolution.ytitle') %>'
+         data-prefix=''
+         data-tooltipsuffix='%'
+         data-datalabelsuffix=''
+         data-series='<%= [{ name: I18n.t('projects.charts.risk_evolution_in_time'), data: all_project_consolidations.map(&:operational_risk).map { |risk| risk.to_f * 100 } }].to_json %>'
+         data-decimals='2'>
+    </div>
+  </div>
+  <div class="col-xs-6">
+    <div id="project-demands-team-based-risk"
+         class="flow-chart"
+         data-xcategories='<%= all_project_consolidations.map(&:consolidation_date).to_json %>'
+         data-title='<%= I18n.t('projects.charts.risk_evolution_in_time_team_based') %>'
+         data-ytitle='<%= I18n.t('charts.risk_evolution.ytitle') %>'
+         data-prefix=''
+         data-tooltipsuffix='%'
+         data-datalabelsuffix=''
+         data-series='<%= [{ name: I18n.t('tasks.charts.risk.ytitle'), data: all_project_consolidations.map(&:tasks_based_operational_risk).map { |risk| risk.to_f * 100 } }].to_json %>'
+         data-decimals='2'>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-6">
     <h4><%= I18n.t('general.bugs') %></h4>
 
     <div id="project-dashboard-bugs-column"
@@ -96,6 +125,7 @@
          data-decimals="2">
     </div>
   </div>
+
   <div class="col-xs-6">
     <div id="project-cfd-downstream-area"
          class="flow-chart"

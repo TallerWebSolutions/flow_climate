@@ -8,7 +8,8 @@ class TeamMembersController < AuthenticatedController
     assign_team_member_objects
     @member_demands = @team_member.demands
     build_demands_info(@member_demands)
-    build_member_charts(@team_member)
+    build_member_charts
+    @team_chart_adapter = Highchart::TeamMemberAdapter.new(@team_member)
 
     render :show
   end
@@ -114,14 +115,14 @@ class TeamMembersController < AuthenticatedController
     pairings_hash
   end
 
-  def build_member_charts(team_member)
+  def build_member_charts
     @member_effort_chart = []
     @member_pull_interval_average_chart = []
 
     operations_dashboards_cache
 
-    @member_effort_chart << { name: team_member.name, data: @operations_dashboards.map { |dashboard| dashboard.member_effort.to_f } }
-    @member_pull_interval_average_chart << { name: team_member.name, data: @operations_dashboards.map { |dashboard| dashboard.pull_interval.to_f } }
+    @member_effort_chart << { name: @team_member.name, data: @operations_dashboards.map { |dashboard| dashboard.member_effort.to_f } }
+    @member_pull_interval_average_chart << { name: @team_member.name, data: @operations_dashboards.map { |dashboard| dashboard.pull_interval.to_f } }
   end
 
   def assign_team_member_objects

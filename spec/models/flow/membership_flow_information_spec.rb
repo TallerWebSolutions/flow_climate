@@ -40,7 +40,7 @@ RSpec.describe Flow::MembershipFlowInformation, type: :service do
           allow_any_instance_of(Membership).to(receive(:demands)).and_return(Demand.all)
           membership_flow = described_class.new(membership)
 
-          expect(membership_flow.compute_developer_effort(Time.zone.today)).to eq 46
+          expect(membership_flow.compute_developer_effort(Time.zone.today)).to eq 52
           expect(membership_flow.compute_developer_effort(10.days.ago)).to eq 30
         end
       end

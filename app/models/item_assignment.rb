@@ -98,7 +98,10 @@ class ItemAssignment < ApplicationRecord
     membership_flow_information = Flow::MembershipFlowInformation.new(membership)
 
     effort_in_assignment = membership_flow_information.compute_effort_for_assignment(self)
-    self.assignment_for_role = effort_in_assignment.positive?
+    stages_to_work_on = membership.stages_to_work_on
+    stages_to_compute_effort = (stages_during_assignment & stages_to_work_on)
+
+    self.assignment_for_role = stages_to_compute_effort.count.positive?
     self.item_assignment_effort = effort_in_assignment
   end
 

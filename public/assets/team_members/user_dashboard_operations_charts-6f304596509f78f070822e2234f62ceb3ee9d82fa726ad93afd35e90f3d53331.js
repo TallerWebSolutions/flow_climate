@@ -33,4 +33,4 @@ function buildOperationsCharts() {
   if (teamMemberHoursPerProject.length !== 0) {
     buildColumnChart(teamMemberHoursPerProject);
   }
-}
+};

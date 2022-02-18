@@ -11,4 +11,4 @@ if (tasksListThroughput.length !== 0) {
 const completionTimeEvolution = $("#tasks-list-completion-time-evolution");
 if (completionTimeEvolution.length !== 0) {
     buildLineChart(completionTimeEvolution);
-}
+};

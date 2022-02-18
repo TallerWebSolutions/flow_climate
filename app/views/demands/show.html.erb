@@ -143,7 +143,7 @@
 </div>
 
 <div id="content-demand-tasks" class="tabcontent">
-  <%= render 'tasks/tasks_table', company: @company, demand: @demand, tasks_list: @tasks_list, paged_tasks: @paged_tasks %>
+  <%= render 'tasks/tasks_table', company: @company, demand: @demand, tasks_list: @tasks_list, paged_tasks: @paged_tasks, finished_tasks: @tasks_list.finished %>
 </div>
 
 <div class="modal fade" id="edit-block-form" tabindex="-1" role="dialog" aria-labelledby="edit-block-form" aria-hidden="true"></div>

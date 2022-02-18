@@ -37,16 +37,19 @@ RSpec.describe TasksController, type: :controller do
       context 'with valid params' do
         context 'with data' do
           it 'assigns the instance variables and renders the template' do
-            demand = Fabricate :demand, company: company
-            discarded_demand = Fabricate :demand, company: company, discarded_at: 2.days.ago
-            task = Fabricate :task, demand: demand, created_date: 1.day.ago
-            other_task = Fabricate :task, demand: demand, created_date: Time.zone.now
-            Fabricate :task, demand: discarded_demand, created_date: Time.zone.now
+            travel_to Time.zone.local(2022, 2, 16, 10, 0, 0) do
+              demand = Fabricate :demand, company: company
+              discarded_demand = Fabricate :demand, company: company, discarded_at: 2.days.ago
+              task = Fabricate :task, demand: demand, created_date: 1.day.ago
+              other_task = Fabricate :task, demand: demand, created_date: Time.zone.now, end_date: Time.zone.now
+              Fabricate :task, demand: discarded_demand, created_date: Time.zone.now
 
-            get :index, params: { company_id: company }
+              get :index, params: { company_id: company }
 
-            expect(assigns(:tasks)).to eq [other_task, task]
-            expect(response).to render_template :index
+              expect(assigns(:tasks)).to eq [other_task, task]
+              expect(assigns(:finished_tasks)).to eq [other_task]
+              expect(response).to render_template :index
+            end
           end
         end
 
@@ -83,82 +86,93 @@ RSpec.describe TasksController, type: :controller do
       context 'with valid params' do
         context 'with search by status and text' do
           it 'assigns the instance variables and renders the template according to the search' do
-            demand = Fabricate :demand, company: company
-            discarded_demand = Fabricate :demand, company: company, discarded_at: 2.days.ago
-            task = Fabricate :task, demand: demand, created_date: 2.days.ago, end_date: 1.day.ago, title: 'fOo'
-            other_task = Fabricate :task, demand: demand, created_date: 1.day.ago, end_date: 1.hour.ago, title: 'fOObar'
-            Fabricate :task, demand: discarded_demand, created_date: 1.day.ago, end_date: 1.hour.ago, title: 'fOObar'
-            Fabricate :task, demand: demand, created_date: 1.day.ago, end_date: nil, title: 'barfOO'
-            Fabricate :task, demand: demand, created_date: 2.hours.ago, end_date: 1.hour.ago, title: 'xpto'
+            travel_to Time.zone.local(2022, 2, 16, 10, 0, 0) do
+              demand = Fabricate :demand, company: company
+              discarded_demand = Fabricate :demand, company: company, discarded_at: 2.days.ago
+              task = Fabricate :task, demand: demand, created_date: 2.days.ago, end_date: 1.day.ago, title: 'fOo'
+              other_task = Fabricate :task, demand: demand, created_date: 1.day.ago, end_date: 1.hour.ago, title: 'fOObar'
+              Fabricate :task, demand: discarded_demand, created_date: 1.day.ago, end_date: 1.hour.ago, title: 'fOObar'
+              Fabricate :task, demand: demand, created_date: 1.day.ago, end_date: nil, title: 'barfOO'
+              Fabricate :task, demand: demand, created_date: 2.hours.ago, end_date: 1.hour.ago, title: 'xpto'
 
-            post :search, params: { company_id: company, tasks_search: 'foo', task_status: 'finished' }
+              post :search, params: { company_id: company, tasks_search: 'foo', task_status: 'finished' }
 
-            expect(assigns(:tasks)).to eq [other_task, task]
-            expect(response).to render_template :index
+              expect(assigns(:tasks)).to eq [other_task, task]
+              expect(assigns(:tasks)).to eq [other_task, task]
+              expect(response).to render_template :index
+            end
           end
         end
 
         context 'with search by tasks dates without status search' do
           it 'searches by created date and renders the template' do
-            demand = Fabricate :demand, company: company
-            discarded_demand = Fabricate :demand, company: company, discarded_at: 2.days.ago
-            task = Fabricate :task, demand: demand, created_date: 2.days.ago, end_date: 1.day.ago
-            other_task = Fabricate :task, demand: demand, created_date: 1.day.ago, end_date: 1.hour.ago
-            Fabricate :task, demand: discarded_demand, created_date: 1.day.ago, end_date: 1.hour.ago
-            Fabricate :task, demand: demand, created_date: 3.days.ago, end_date: nil
+            travel_to Time.zone.local(2022, 2, 16, 10, 0, 0) do
+              demand = Fabricate :demand, company: company
+              discarded_demand = Fabricate :demand, company: company, discarded_at: 2.days.ago
+              task = Fabricate :task, demand: demand, created_date: 2.days.ago, end_date: 1.day.ago
+              other_task = Fabricate :task, demand: demand, created_date: 1.day.ago, end_date: 1.hour.ago
+              Fabricate :task, demand: discarded_demand, created_date: 1.day.ago, end_date: 1.hour.ago
+              Fabricate :task, demand: demand, created_date: 3.days.ago, end_date: nil
 
-            post :search, params: { company_id: company, tasks_start_date: 52.hours.ago.to_date, tasks_end_date: 1.minute.ago.to_date, task_status: 'foo' }
+              post :search, params: { company_id: company, tasks_start_date: 52.hours.ago.to_date, tasks_end_date: 1.minute.ago.to_date, task_status: 'foo' }
 
-            expect(assigns(:tasks)).to eq [other_task, task]
-            expect(response).to render_template :index
+              expect(assigns(:tasks)).to eq [other_task, task]
+              expect(response).to render_template :index
+            end
           end
         end
 
         context 'with search by tasks dates with status search, but opened' do
           it 'searches by created date and renders the template' do
-            demand = Fabricate :demand, company: company
-            discarded_demand = Fabricate :demand, company: company, discarded_at: 2.days.ago
-            task = Fabricate :task, demand: demand, created_date: 2.days.ago, end_date: nil
-            other_task = Fabricate :task, demand: demand, created_date: 1.day.ago, end_date: nil
-            Fabricate :task, demand: discarded_demand, created_date: 1.day.ago, end_date: nil
-            Fabricate :task, demand: demand, created_date: 3.days.ago, end_date: nil
+            travel_to Time.zone.local(2022, 2, 16, 10, 0, 0) do
+              demand = Fabricate :demand, company: company
+              discarded_demand = Fabricate :demand, company: company, discarded_at: 2.days.ago
+              task = Fabricate :task, demand: demand, created_date: 2.days.ago, end_date: nil
+              other_task = Fabricate :task, demand: demand, created_date: 1.day.ago, end_date: nil
+              Fabricate :task, demand: discarded_demand, created_date: 1.day.ago, end_date: nil
+              Fabricate :task, demand: demand, created_date: 3.days.ago, end_date: nil
 
-            post :search, params: { company_id: company, tasks_start_date: 52.hours.ago.to_date, tasks_end_date: 1.minute.ago.to_date, task_status: 'not_finished' }
+              post :search, params: { company_id: company, tasks_start_date: 52.hours.ago.to_date, tasks_end_date: 1.minute.ago.to_date, task_status: 'not_finished' }
 
-            expect(assigns(:tasks)).to eq [other_task, task]
-            expect(response).to render_template :index
+              expect(assigns(:tasks)).to eq [other_task, task]
+              expect(response).to render_template :index
+            end
           end
         end
 
         context 'with search by tasks dates with the status closed' do
           it 'searches by end date and renders the template' do
-            demand = Fabricate :demand, company: company
-            discarded_demand = Fabricate :demand, company: company, discarded_at: 2.days.ago
+            travel_to Time.zone.local(2022, 2, 16, 10, 0, 0) do
+              demand = Fabricate :demand, company: company
+              discarded_demand = Fabricate :demand, company: company, discarded_at: 2.days.ago
 
-            task = Fabricate :task, demand: demand, created_date: 2.days.ago, end_date: 1.day.ago
-            other_task = Fabricate :task, demand: demand, created_date: 1.day.ago, end_date: 1.hour.ago
-            Fabricate :task, demand: discarded_demand, created_date: 1.day.ago, end_date: 1.hour.ago
-            Fabricate :task, demand: demand, created_date: 3.days.ago, end_date: nil
-            Fabricate :task, demand: demand, created_date: 4.days.ago, end_date: 3.days.ago
+              task = Fabricate :task, demand: demand, created_date: 2.days.ago, end_date: 1.day.ago
+              other_task = Fabricate :task, demand: demand, created_date: 1.day.ago, end_date: 1.hour.ago
+              Fabricate :task, demand: discarded_demand, created_date: 1.day.ago, end_date: 1.hour.ago
+              Fabricate :task, demand: demand, created_date: 3.days.ago, end_date: nil
+              Fabricate :task, demand: demand, created_date: 4.days.ago, end_date: 3.days.ago
 
-            post :search, params: { company_id: company, tasks_start_date: 26.hours.ago.to_date, tasks_end_date: 1.minute.ago.to_date, task_status: 'finished' }
+              post :search, params: { company_id: company, tasks_start_date: 26.hours.ago.to_date, tasks_end_date: 1.minute.ago.to_date, task_status: 'finished' }
 
-            expect(assigns(:tasks)).to eq [other_task, task]
-            expect(response).to render_template :index
+              expect(assigns(:tasks)).to eq [other_task, task]
+              expect(response).to render_template :index
+            end
           end
         end
 
         context 'with no search params' do
           it 'assigns the instance variables and renders the template' do
-            demand = Fabricate :demand, company: company
-            task = Fabricate :task, demand: demand, created_date: 2.days.ago, title: 'fOo'
-            other_task = Fabricate :task, demand: demand, created_date: 1.day.ago, title: 'fOObar'
-            another_task = Fabricate :task, demand: demand, created_date: Time.zone.now, title: 'xpto'
+            travel_to Time.zone.local(2022, 2, 16, 10, 0, 0) do
+              demand = Fabricate :demand, company: company
+              task = Fabricate :task, demand: demand, created_date: 2.days.ago, title: 'fOo'
+              other_task = Fabricate :task, demand: demand, created_date: 1.day.ago, title: 'fOObar'
+              another_task = Fabricate :task, demand: demand, created_date: Time.zone.now, title: 'xpto'
 
-            post :search, params: { company_id: company }
+              post :search, params: { company_id: company }
 
-            expect(assigns(:tasks)).to eq [another_task, other_task, task]
-            expect(response).to render_template :index
+              expect(assigns(:tasks)).to eq [another_task, other_task, task]
+              expect(response).to render_template :index
+            end
           end
         end
 
@@ -195,39 +209,44 @@ RSpec.describe TasksController, type: :controller do
       context 'with valid params' do
         context 'with search' do
           it 'assigns the instance variables and renders the template' do
-            demand = Fabricate :demand, company: company
-            task = Fabricate :task, demand: demand, created_date: 2.days.ago, end_date: Time.zone.now, title: 'fOo'
-            other_task = Fabricate :task, demand: demand, created_date: 1.day.ago, end_date: 2.hours.ago, title: 'fOObar'
-            Fabricate :task, demand: demand, created_date: Time.zone.now, title: 'xpto'
+            travel_to Time.zone.local(2022, 2, 16, 10, 0, 0) do
+              demand = Fabricate :demand, company: company
+              task = Fabricate :task, demand: demand, created_date: 2.days.ago, end_date: Time.zone.now, title: 'fOo'
+              other_task = Fabricate :task, demand: demand, created_date: 1.day.ago, end_date: 2.hours.ago, title: 'fOObar'
+              Fabricate :task, demand: demand, created_date: Time.zone.now, title: 'xpto'
 
-            finished_tasks = Task.finished
+              finished_tasks = Task.finished
 
-            post :charts, params: { company_id: company, tasks_search: 'foo' }
+              post :charts, params: { company_id: company, tasks_search: 'foo' }
 
-            expect(assigns(:tasks)).to eq [other_task, task]
-            expect(assigns(:task_completion_control_chart_data).pluck(:id)).to eq [other_task.external_id, task.external_id]
-            expect(assigns(:task_completion_control_chart_data).pluck(:completion_time)).to eq [other_task.seconds_to_complete, task.seconds_to_complete]
-            expect(assigns(:tasks_throughputs)).to eq [2]
-            expect(assigns(:tasks_throughputs_x_axis)).to eq TimeService.instance.weeks_between_of(finished_tasks.map(&:end_date).min, finished_tasks.map(&:end_date).max)
+              expect(assigns(:tasks)).to eq [other_task, task]
+              expect(assigns(:task_completion_control_chart_data).pluck(:id)).to eq [other_task.external_id, task.external_id]
+              expect(assigns(:task_completion_control_chart_data).pluck(:completion_time)).to eq [other_task.seconds_to_complete, task.seconds_to_complete]
+              expect(assigns(:tasks_charts_adapter).x_axis).to eq TimeService.instance.weeks_between_of(finished_tasks.map(&:end_date).min, finished_tasks.map(&:end_date).max)
+              expect(assigns(:tasks_charts_adapter).throughput_chart_data).to eq [2]
+              expect(assigns(:tasks_charts_adapter).completion_percentiles_on_time_chart_data).to eq({ y_axis: [{ data: [1.7833333333333334], name: 'Lead time (80%)' }, { data: [1.7833333333333334], name: 'Lead time 80% acumulado' }] })
 
-            expect(response).to render_template :charts
+              expect(response).to render_template :charts
+            end
           end
         end
 
         context 'with no search' do
           it 'assigns the chart variable with the finished tasks and renders the template' do
-            demand = Fabricate :demand, company: company
-            task = Fabricate :task, demand: demand, created_date: 2.days.ago, end_date: Time.zone.now, title: 'fOo'
-            other_task = Fabricate :task, demand: demand, created_date: 1.day.ago, end_date: 2.hours.ago, title: 'fOObar'
-            another_task = Fabricate :task, demand: demand, created_date: Time.zone.now, title: 'xpto'
+            travel_to Time.zone.local(2022, 2, 16, 10, 0, 0) do
+              demand = Fabricate :demand, company: company
+              task = Fabricate :task, demand: demand, created_date: 2.days.ago, end_date: Time.zone.now, title: 'fOo'
+              other_task = Fabricate :task, demand: demand, created_date: 1.day.ago, end_date: 2.hours.ago, title: 'fOObar'
+              another_task = Fabricate :task, demand: demand, created_date: Time.zone.now, title: 'xpto'
 
-            post :charts, params: { company_id: company }
+              post :charts, params: { company_id: company }
 
-            expect(assigns(:tasks)).to eq [another_task, other_task, task]
-            expect(assigns(:task_completion_control_chart_data).pluck(:id)).to eq [other_task.external_id, task.external_id]
-            expect(assigns(:task_completion_control_chart_data).pluck(:completion_time)).to eq [other_task.seconds_to_complete, task.seconds_to_complete]
+              expect(assigns(:tasks)).to eq [another_task, other_task, task]
+              expect(assigns(:task_completion_control_chart_data).pluck(:id)).to eq [other_task.external_id, task.external_id]
+              expect(assigns(:task_completion_control_chart_data).pluck(:completion_time)).to eq [other_task.seconds_to_complete, task.seconds_to_complete]
 
-            expect(response).to render_template :charts
+              expect(response).to render_template :charts
+            end
           end
         end
 

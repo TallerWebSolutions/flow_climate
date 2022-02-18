@@ -24,6 +24,8 @@
                object_type: 'Project',
                flow_object_id: @project.id,
                dashboard_name: @project.name,
+               start_date: @project.start_date,
+               end_date: @project.end_date,
                initial_scope: @project.initial_scope,
                demands: @project.demands.kept,
                demands_delivered: @project.demands.kept.finished_until_date(Time.zone.now),

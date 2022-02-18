@@ -45,6 +45,7 @@ class TeamMember < ApplicationRecord
   has_many :demands, -> { distinct }, through: :memberships
   has_many :projects, -> { distinct }, through: :demands
   has_many :item_assignments, -> { distinct }, through: :memberships
+  has_many :demand_efforts, -> { distinct }, through: :item_assignments
 
   has_many :operations_dashboards, class_name: 'Dashboards::OperationsDashboard', dependent: :destroy
 
@@ -75,7 +76,7 @@ class TeamMember < ApplicationRecord
   end
 
   def first_delivery
-    demands.undiscarded.finished_until_date(Time.zone.now).order(:end_date).first
+    demands.undiscarded.finished_until_date(Time.zone.now).order(:end_date).limit(1).first
   end
 
   def last_delivery
@@ -88,6 +89,10 @@ class TeamMember < ApplicationRecord
 
   def last_assignment
     item_assignments.undiscarded.order(:start_time).last
+  end
+
+  def first_effort
+    demand_efforts.order(:start_time_to_computation).limit(1).first
   end
 
   def weeks_for_first_delivery

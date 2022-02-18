@@ -234,8 +234,8 @@ class ProjectsController < AuthenticatedController
   end
 
   def build_charts_adapters
+    start_date = @project.start_date
     end_date = [@project.end_date, Time.zone.today].min
-    start_date = end_date - 8.weeks
     @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(demands.kept, start_date, end_date, 'week')
     @status_report_data = Highchart::StatusReportChartsAdapter.new(demands, @project.start_date, end_date, 'week')
   end

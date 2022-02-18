@@ -16,6 +16,7 @@ RSpec.describe Highchart::TasksChartsAdapter do
           expect(task_chart.tasks_in_chart.map(&:id)).to match_array Task.all.map(&:id)
           expect(task_chart.creation_chart_data).to eq [1, 1, 1, 0]
           expect(task_chart.throughput_chart_data).to eq [0, 1, 1, 0]
+          expect(task_chart.completion_percentiles_on_time_chart_data).to eq({ y_axis: [{ data: [0.0, 7.0, 7.0, 0.0, 0.0, 0.0, 0.0], name: I18n.t('projects.charts.leadtime_evolution.legend.leadtime_80_confidence') }, { data: [0.0, 7.0, 7.0, 7.0, 7.0, 7.0, 7.0], name: I18n.t('projects.charts.leadtime_evolution.legend.leadtime_80_confidence_accumulated') }] })
         end
       end
     end
