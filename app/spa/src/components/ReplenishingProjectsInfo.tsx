@@ -62,6 +62,8 @@ export type Project = {
   averageDemandAging: number
   totalThroughput: number
   failureLoad: number
+  discoveredScope: number
+  scope: number
 }
 
 type ReplenishingProjectsInfoProps = {

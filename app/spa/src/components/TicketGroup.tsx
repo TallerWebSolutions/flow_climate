@@ -8,7 +8,7 @@ type TicketGroupProps = {
 
 const TicketGroup = ({ title, data }: TicketGroupProps) => (
   <Box paddingTop={2} paddingBottom={6}>
-    <Typography component="h2" variant="h6" mb={3}>
+    <Typography component="h2" variant="h5" mb={3}>
       {title}
     </Typography>
     <Box sx={{ display: "flex" }}>

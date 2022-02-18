@@ -32,6 +32,17 @@ export const projectMock = {
   customers: [],
   products: [],
   company: companyMock,
+  currentCost: 1000,
+  failureLoad: 20,
+  totalThroughput: 30,
+  deadlinesChangeCount: 4,
+  daysDifferenceBetweenFirstAndLastDeadlines: 130,
+  firstDeadline: "10/10/10",
+  averageDemandAging: 180,
+  averageSpeed: 34,
+  totalHoursConsumed: 5000,
+  scope: 90,
+  discoveredScope: 30,
 }
 
 export const teamMock = {

@@ -104,7 +104,7 @@ type ReplenishingResult = {
   team: Team
 }
 
-type ReplenishingDTO = ReplenishingResult | undefined
+export type ReplenishingDTO = ReplenishingResult | undefined
 
 type ReplenishingCacheResult = {
   generateReplenishingCache: {

@@ -1,6 +1,8 @@
 import { gql, useQuery } from "@apollo/client"
-import { Backdrop, CircularProgress } from "@mui/material"
+import { Backdrop, CircularProgress, Box, Typography } from "@mui/material"
 import { useParams } from "react-router-dom"
+import { Bar } from "@nivo/bar"
+import { Pie } from "@nivo/pie"
 
 import BasicPage from "../components/BasicPage"
 import { Project } from "../components/ReplenishingProjectsInfo"
@@ -24,6 +26,7 @@ export const QUERY = gql`
       remainingBacklog
       failureLoad
       leadTimeP80
+      weeklyThroughputs
       company {
         id
         name
@@ -104,6 +107,23 @@ const StatusReport = () => {
     { title: "Carga de falha", value: data?.project.failureLoad },
     { title: "Leadtime (80%)", value: leadtime && formatLeadtime(leadtime) },
   ]
+  const throughputData = data?.project.weeklyThroughputs.map((th, index) => ({
+    week: `${th}--${index}`,
+    id: `${th}--${index}`,
+    throughput: th,
+  }))
+  const scope = data?.project.scope || 0
+  const discoveredScope = data?.project.discoveredScope || 0
+  const discoveryData = [
+    {
+      id: "Antes do início",
+      value: scope - discoveredScope,
+    },
+    {
+      id: "Depois do início",
+      value: discoveredScope,
+    },
+  ]
 
   return (
     <BasicPage
@@ -114,6 +134,42 @@ const StatusReport = () => {
       <TicketGroup title="Números atuais" data={currentNumbersData} />
       <TicketGroup title="Mudanças no prazo" data={deadlineChangesData} />
       <TicketGroup title="Fluxo" data={flowData} />
+      <Typography component="h2" variant="h5" mb={3}>
+        Itens de Trabalho
+      </Typography>
+      <Box display="flex">
+        <Box
+          height={300}
+          sx={{
+            flexGrow: 1,
+            flexBasis: 1,
+          }}
+        >
+          <Typography component="h3" variant="h6" mb={3}>
+            Descobertas
+          </Typography>
+          <Pie data={discoveryData} colors={{ scheme: "pastel2" }} />
+        </Box>
+        <Box
+          height={300}
+          sx={{
+            flexGrow: 1,
+            flexBasis: 1,
+          }}
+        >
+          <Typography component="h3" variant="h6" mb={3}>
+            Entregas
+          </Typography>
+          {throughputData && (
+            <Bar
+              data={throughputData}
+              colors={{ scheme: "pastel2" }}
+              keys={["throughput"]}
+              indexBy="week"
+            />
+          )}
+        </Box>
+      </Box>
     </BasicPage>
   )
 }
