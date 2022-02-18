@@ -280,6 +280,9 @@ en:
       paired_times: "Paired times"
       its_me: "It's me!"
       its_not_me: "It's not me"
+    charts:
+      hours_per_project:
+        title: "Delivered Hours per Project"
   projects:
     index:
       title: "Projects"

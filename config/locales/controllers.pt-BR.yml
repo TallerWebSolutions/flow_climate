@@ -304,6 +304,9 @@ pt-BR:
       paired_times: "Vezes pareado"
       its_me: "Sou eu!"
       its_not_me: "Não sou eu"
+    charts:
+      hours_per_project:
+        title: "Horas Entregues por Projeto"
   projects:
     index:
       title: "Projetos"

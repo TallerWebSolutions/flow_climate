@@ -9,7 +9,7 @@ class TeamMembersController < AuthenticatedController
     @member_demands = @team_member.demands
     build_demands_info(@member_demands)
     build_member_charts
-    build_member_projects_charts
+    @team_chart_adapter = Highchart::TeamMemberAdapter.new(@team_member)
 
     render :show
   end
@@ -141,60 +141,5 @@ class TeamMembersController < AuthenticatedController
 
   def team_member_params
     params.require(:team_member).permit(:name, :jira_account_user_email, :jira_account_id, :hours_per_month, :monthly_payment, :billable, :billable_type, :start_date, :end_date)
-  end
-
-  def build_member_projects_charts
-    end_date = [@team_member.end_date, Time.zone.now].compact.min
-    start_date = [@team_member.first_effort&.start_time_to_computation, @team_member.start_date, end_date - 12.months].compact.max
-
-    @x_axis_hours_per_project = TimeService.instance.months_between_of(start_date, end_date)
-
-    item_assignments_efforts = DemandEffort.joins(item_assignment: { membership: :team_member })
-                                           .joins(:demand)
-                                           .where('demand_efforts.effort_value > 0')
-                                           .where(memberships: { team_member: @team_member })
-                                           .where('start_time_to_computation BETWEEN :start_date AND :end_date', start_date: start_date, end_date: end_date)
-
-    projects_in_efforts = item_assignments_efforts.map(&:demand).map(&:project).uniq
-
-    @y_axis_hours_per_project = []
-    projects_efforts = {}
-    @x_axis_hours_per_project.each do |date|
-      start_period = date.beginning_of_month
-      end_period = date.end_of_month
-
-      item_assignments_efforts_in_period = item_assignments_efforts.where('start_time_to_computation BETWEEN :start_date AND :end_date', start_date: start_period, end_date: end_period)
-      projects_in_period = item_assignments_efforts.map(&:demand).map(&:project).uniq
-
-      projects_in_period.each do |project_active|
-        effort_value_sum = 0
-        efforts_project_active = item_assignments_efforts_in_period.where(demand: { project: project_active })
-        effort_value_sum = efforts_project_active.sum(&:effort_value) if efforts_project_active.present?
-
-        project_with_effort = projects_efforts[project_active.name]
-        if project_with_effort.present?
-          project_with_effort << effort_value_sum.to_f
-        else
-          projects_efforts[project_active.name] = [effort_value_sum.to_f]
-        end
-      end
-
-      projects_in_efforts_names = projects_in_efforts.map(&:name)
-      projects_in_chart = projects_in_period.map(&:name)
-
-      projects_not_present_in_period = projects_in_chart - projects_in_efforts_names
-
-      projects_not_present_in_period.each do |project_name|
-        if projects_efforts[project_name].present?
-          projects_efforts[project_name] << 0
-        else
-          projects_efforts[project_name] = [0]
-        end
-      end
-    end
-
-    projects_efforts.each do |key, values|
-      @y_axis_hours_per_project << { name: key, data: values }
-    end
   end
 end

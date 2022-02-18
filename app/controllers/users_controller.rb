@@ -79,11 +79,13 @@ class UsersController < AuthenticatedController
   def assign_team_member_dependencies
     @pairing_chart = {}
     @teams = []
-    return if @user.team_member.blank? || @company.role_for_user(@user)&.manager?
+    team_member = @user.team_member
+    return if team_member.blank? || @company.role_for_user(@user)&.manager?
 
     build_member_attributes
-    build_demands_info(@user.team_member.demands)
-    build_member_effort_chart(@user.team_member)
+    build_demands_info(team_member.demands)
+    build_member_effort_chart(team_member)
+    @team_chart_adapter = Highchart::TeamMemberAdapter.new(team_member)
   end
 
   def build_member_attributes
