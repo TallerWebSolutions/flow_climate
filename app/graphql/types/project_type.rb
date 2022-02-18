@@ -8,6 +8,8 @@ module Types
     field :end_date, GraphQL::Types::ISO8601Date, null: false
     field :aging, Int, null: false
     field :remaining_weeks, Int, null: false
+    field :total_scope, Int, null: false
+    field :backlog_count_for, Int, null: true
     field :remaining_backlog, Int, null: false
     field :flow_pressure, Float, null: false
     field :flow_pressure_percentage, Float, null: false

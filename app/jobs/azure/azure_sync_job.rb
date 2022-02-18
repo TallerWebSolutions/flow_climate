@@ -8,6 +8,7 @@ module Azure
       started_time = Time.zone.now
       products = Azure::AzureProjectAdapter.new(azure_account).products
       work_item_adapter = Azure::AzureWorkItemAdapter.new(azure_account)
+      azure_work_item_update = Azure::AzureWorkItemUpdatesAdapter.new(azure_account)
 
       products.each do |product|
         azure_product_config = product.azure_product_config
@@ -23,7 +24,7 @@ module Azure
           work_item_adapter.work_item(id, azure_product_config.azure_team.azure_project)
 
           demand = Demand.find_by(external_id: id)
-          Azure::AzureWorkItemUpdatesAdapter.new(azure_account).transitions(demand, azure_product_config.azure_team.azure_project.project_id) if demand.present?
+          azure_work_item_update.transitions(demand, azure_product_config.azure_team.azure_project.project_id) if demand.present?
         end
       end
 
@@ -36,6 +37,7 @@ module Azure
 
     def remove_deleted_items(company, azure_work_items_ids)
       company.demands.where.not(external_id: azure_work_items_ids).map(&:discard)
+      company.tasks.where.not(external_id: azure_work_items_ids).map(&:discard)
     end
   end
 end

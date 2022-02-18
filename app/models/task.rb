@@ -41,6 +41,6 @@ class Task < ApplicationRecord
 
   def compute_time_to_deliver
     self.seconds_to_complete = (end_date - created_date).to_i if end_date.present?
-    self.discarded_at = demand.discarded_at
+    self.discarded_at = demand.discarded_at if demand.discarded?
   end
 end

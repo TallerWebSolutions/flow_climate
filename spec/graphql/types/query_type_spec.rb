@@ -102,6 +102,7 @@ RSpec.describe Types::QueryType do
               endDate
               aging
               remainingWeeks
+              backlogCountFor
               remainingBacklog
               flowPressure
               flowPressurePercentage
@@ -169,6 +170,7 @@ RSpec.describe Types::QueryType do
                                                            'endDate' => project.end_date.iso8601,
                                                            'aging' => project.aging,
                                                            'remainingWeeks' => project.remaining_weeks,
+                                                           'backlogCountFor' => project.backlog_count_for,
                                                            'remainingBacklog' => project.remaining_backlog,
                                                            'flowPressure' => project.flow_pressure.to_f,
                                                            'flowPressurePercentage' => project.relative_flow_pressure_in_replenishing_consolidation.to_f,
@@ -199,6 +201,7 @@ RSpec.describe Types::QueryType do
                                                            'startDate' => other_project.start_date.iso8601,
                                                            'endDate' => other_project.end_date.iso8601,
                                                            'aging' => other_project.aging,
+                                                           'backlogCountFor' => other_project.backlog_count_for,
                                                            'remainingWeeks' => other_project.remaining_weeks,
                                                            'remainingBacklog' => other_project.remaining_backlog,
                                                            'flowPressure' => other_project.flow_pressure,
