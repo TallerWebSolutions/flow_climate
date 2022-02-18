@@ -148,7 +148,12 @@ const StatusReport = () => {
           <Typography component="h3" variant="h6" mb={3}>
             Descobertas
           </Typography>
-          <Pie data={discoveryData} colors={{ scheme: "pastel2" }} />
+          <Pie
+            data={discoveryData}
+            colors={{ scheme: "pastel2" }}
+            width={400}
+            height={300}
+          />
         </Box>
         <Box
           height={300}
@@ -166,6 +171,8 @@ const StatusReport = () => {
               colors={{ scheme: "pastel2" }}
               keys={["throughput"]}
               indexBy="week"
+              width={400}
+              height={300}
             />
           )}
         </Box>
