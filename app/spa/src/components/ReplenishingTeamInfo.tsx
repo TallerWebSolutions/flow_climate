@@ -33,7 +33,11 @@ export const isTeamWipLimitSurpassed = (
 const ReplenishmentTeamInfo = ({ team }: ReplenishmentTeamInfoProps) => (
   <Grid container spacing={15} mb={4} sx={{ pointerEvents: "none" }}>
     <Grid item xs={4}>
-      <Card title="Throughput" subtitle="Últimas quatro semanas">
+      <Card
+        title="Throughput"
+        subtitle="Últimas quatro semanas"
+        type={CardType.PRIMARY}
+      >
         <Box display="flex">
           {team.throughputData?.map((th, index, list) => (
             <Fragment key={`${th}--${index}`}>
@@ -53,7 +57,11 @@ const ReplenishmentTeamInfo = ({ team }: ReplenishmentTeamInfoProps) => (
       </Card>
     </Grid>
     <Grid item xs={4}>
-      <Card title="Lead Time" subtitle="Últimas quatro semanas">
+      <Card
+        title="Lead Time"
+        subtitle="Últimas quatro semanas"
+        type={CardType.PRIMARY}
+      >
         <Typography>{team.leadTime?.value?.toFixed(2)}</Typography>
       </Card>
     </Grid>
@@ -63,8 +71,8 @@ const ReplenishmentTeamInfo = ({ team }: ReplenishmentTeamInfoProps) => (
         subtitle="WiP máximo do time"
         type={
           isTeamWipLimitSurpassed(team.projects, team.workInProgress)
-            ? CardType.alert
-            : CardType.primary
+            ? CardType.WARNING
+            : CardType.PRIMARY
         }
       >
         <Typography>{team.workInProgress}</Typography>

@@ -1,12 +1,20 @@
-<% if params['controller'] == 'replenishing_consolidations' && params['action'] == 'index' %>
-  <%= favicon_link_tag 'favicon.png' %>
+<%
+  spa_controllers = [
+    { controller: 'replenishing_consolidations', action: 'index'},
+    { controller: 'projects', action: 'status_report_dashboard'}
+  ]
+%>
+
+<% view_controller = { controller: params['controller'], action: params['action']} %>
+
+<% if spa_controllers.include?(view_controller) %>
   <%= csrf_meta_tags %>
   <%= yield %>
 <% else %>
 <!DOCTYPE html>
   <html>
   <head>
-    <%= favicon_link_tag 'favicon.png' %>
+    <%= favicon_link_tag 'favicon.ico' %>
     <title>Flow Climate - Mastering the flow management</title>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 

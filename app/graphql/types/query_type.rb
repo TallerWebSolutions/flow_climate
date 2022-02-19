@@ -14,6 +14,13 @@ module Types
       argument :id, Int
     end
 
+    field :project,
+          Types::ProjectType,
+          null: true,
+          description: 'A plain project' do
+      argument :id, Int
+    end
+
     field :me, Types::UserType, null: false
 
     def teams
@@ -22,6 +29,10 @@ module Types
 
     def team(id:)
       Team.find(id)
+    end
+
+    def project(id:)
+      Project.find(id)
     end
 
     def me

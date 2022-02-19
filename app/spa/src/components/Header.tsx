@@ -1,11 +1,11 @@
-import React from "react"
+import React, { useContext } from "react"
 import { Avatar, Box, Container, Link, Menu, MenuItem } from "@mui/material"
 import { useState } from "react"
-import { gql, useMutation } from "@apollo/client"
+import { gql, useMutation, useQuery } from "@apollo/client"
 
 import { t } from "../lib/i18n"
-
-import { Message } from "./MessagesBox"
+import { MessagesContext } from "./BasicPage"
+import { Company } from "../modules/company/company.types"
 
 const buildLinks = (companyName: string) => [
   { name: "Taller", href: `/companies/${companyName}` },
@@ -18,23 +18,41 @@ const buildLinks = (companyName: string) => [
   { name: "Eventos", href: `/companies/${companyName}/flow_events` },
 ]
 
-export type User = {
+const USER_QUERY = gql`
+  query UserQuery {
+    me {
+      id
+      fullName
+      avatar {
+        imageSource
+      }
+    }
+  }
+`
+
+type HeaderUser = {
   id: string
   avatarSource: string
   fullName: string
 }
 
-type Company = {
-  id: string
-  name: string
-  slug: string
+type HeaderProps = {
+  company?: Company
 }
 
-type HeaderProps = {
-  pushMessage: (message: Message) => void
-  company?: Company
-  user?: User
+type User = {
+  id: string
+  fullName: string
+  avatar: {
+    imageSource: string
+  }
 }
+
+type UserResult = {
+  me: User
+}
+
+type UserDTO = UserResult | undefined
 
 const SEND_API_TOKEN_MUTATION = gql`
   mutation SendAuthToken($companyId: Int!) {
@@ -44,9 +62,18 @@ const SEND_API_TOKEN_MUTATION = gql`
   }
 `
 
-const Header = ({ company, user, pushMessage }: HeaderProps) => {
+const normalizeUser = (data: UserDTO): HeaderUser => ({
+  id: data?.me.id || "",
+  fullName: data?.me.fullName || "",
+  avatarSource: data?.me.avatar.imageSource || "",
+})
+
+const Header = ({ company }: HeaderProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const handleClose = () => setAnchorEl(null)
+  const { data: userData } = useQuery<UserDTO>(USER_QUERY)
+  const user = normalizeUser(userData)
+  const { pushMessage } = useContext(MessagesContext)
 
   const [sendAuthTokenMutation] = useMutation(SEND_API_TOKEN_MUTATION, {
     update: () =>
@@ -59,7 +86,12 @@ const Header = ({ company, user, pushMessage }: HeaderProps) => {
   return (
     <Box py={1} sx={{ backgroundColor: "primary.main" }}>
       <Container maxWidth="xl">
-        <Box display="flex" alignItems="center" justifyContent="space-between">
+        <Box
+          display="flex"
+          alignItems="center"
+          justifyContent="space-between"
+          data-testid="main-menu"
+        >
           <Link href="/" sx={{ display: "block" }}>
             <img
               src="https://res.cloudinary.com/taller-digital/image/upload/v1599220860/2_taller_branco_horizontal.png"
@@ -102,34 +134,53 @@ const Header = ({ company, user, pushMessage }: HeaderProps) => {
             }}
           >
             {user && (
-              <MenuItem component="a" href={`/users/${user.id}/edit`}>
+              <MenuItem
+                key="userMenu.myAccount"
+                component="a"
+                href={`/users/${user.id}/edit`}
+              >
                 {t("userMenu.myAccount")}
               </MenuItem>
             )}
-            <MenuItem component="a" href="/users/activate_email_notifications">
+            <MenuItem
+              key="userMenu.turnOnNotifications"
+              component="a"
+              href="/users/activate_email_notifications"
+            >
               {t("userMenu.turnOnNotifications")}
             </MenuItem>
-            {company && (
-              <React.Fragment>
-                <MenuItem
-                  onClick={() =>
-                    sendAuthTokenMutation({
-                      variables: { companyId: Number(company.id) },
-                    })
-                  }
-                  component="a"
-                >
-                  Solicitar API Token
-                </MenuItem>
-                <MenuItem component="a" href={`/companies/${company.slug}`}>
-                  {company.name}
-                </MenuItem>
-              </React.Fragment>
-            )}
-            <MenuItem component="a" href="/users/admin_dashboard">
+            {company && [
+              <MenuItem
+                key="sendAuthTokenMutation"
+                onClick={() =>
+                  sendAuthTokenMutation({
+                    variables: { companyId: Number(company.id) },
+                  })
+                }
+                component="a"
+              >
+                Solicitar API Token
+              </MenuItem>,
+              <MenuItem
+                key="company.name"
+                component="a"
+                href={`/companies/${company.slug}`}
+              >
+                {company.name}
+              </MenuItem>,
+            ]}
+            <MenuItem
+              key="userMenu.adminDashboard"
+              component="a"
+              href="/users/admin_dashboard"
+            >
               {t("userMenu.adminDashboard")}
             </MenuItem>
-            <MenuItem component="a" href="/users/sign_out">
+            <MenuItem
+              key="userMenu.logout"
+              component="a"
+              href="/users/sign_out"
+            >
               {t("userMenu.logout")}
             </MenuItem>
           </Menu>

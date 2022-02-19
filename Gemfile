@@ -17,6 +17,7 @@ gem 'devise'
 gem 'discard'
 gem 'figaro'
 gem 'friendly_id'
+gem 'graphiql-rails'
 gem 'graphql'
 gem 'histogram'
 gem 'httparty'
@@ -81,4 +82,3 @@ group :production do
   gem 'puma_worker_killer'
   gem 'rails_12factor'
 end
-gem 'graphiql-rails', group: :development
