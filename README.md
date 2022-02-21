@@ -20,8 +20,13 @@ Have the ultimate management tools in your hands!
 ## How to build the environment
 
 - Install PostgreSQL v. 13.3
-- Start postgresql
-  - Example on macOS (brew instalation): `pg_ctl -D /usr/local/var/postgres start`
+- Configure pgsql
+  - Start postgresql
+    - Example on macOS (brew instalation): `pg_ctl -D /usr/local/var/postgres start`
+  - psql postgres
+  - run `CREATE USER postgres SUPERUSER;`
+  - run `CREATE DATABASE postgres WITH OWNER postgres;`
+  - run `\password postgres` and define _postgres_ as user password;
 - Check `config/database.yml` for further information
 - You may need to install the `lipq-dev` on Linux environments
   - `sudo apt install postgresql libpq-dev`
@@ -31,7 +36,6 @@ Have the ultimate management tools in your hands!
     - Create the gemset to the project under the correct version
   - In the project folder run:
   - `rvm use 3.1.0@flow_climate --create`
-  - `rvm --ruby-version use 3.1.0`
   - `gem install bundler`
   - `bundle install`
   - copy the application.yml.example to application.yml
@@ -56,7 +60,6 @@ Have the ultimate management tools in your hands!
 
 # I've just updated the code, what to do?
 
-- Run `bundle install`
 - Run `rspec`
 
 **If there are pending migrations, run the command below:**
@@ -65,5 +68,7 @@ Have the ultimate management tools in your hands!
 
 **To download the database from production environment:**
 
-- Run `rails db:drop`
+- Exclude database `rails db:drop`
+- Install heroku-cli:
+  - on MacOS with homebrew: `brew tap heroku/brew && brew install heroku`
 - Run `heroku pg:pull DATABASE_URL flowcontrol_development -a flowclimateapp`
