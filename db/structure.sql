@@ -831,7 +831,8 @@ CREATE TABLE public.demands (
     contract_id integer,
     effort_development numeric DEFAULT 0.0 NOT NULL,
     effort_design numeric DEFAULT 0.0 NOT NULL,
-    effort_management numeric DEFAULT 0.0 NOT NULL
+    effort_management numeric DEFAULT 0.0 NOT NULL,
+    lead_time_percentile_project_ranking double precision
 );
 
 
@@ -6446,6 +6447,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220128210845'),
 ('20220131144645'),
 ('20220202200413'),
-('20220214141346');
+('20220214141346'),
+('20220221210259');
 
 

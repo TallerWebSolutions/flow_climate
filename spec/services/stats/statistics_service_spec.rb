@@ -33,6 +33,32 @@ RSpec.describe Stats::StatisticsService, type: :service do
     end
   end
 
+  describe '#percentile_for_lead_time' do
+    let(:empty_population) { [] }
+
+    context 'with no nil value in the population' do
+      it 'computes the values' do
+        population = [2, 4, 10, 56, 5, 4, 4, 89, 2]
+
+        expect(described_class.instance.percentile(4, empty_population)).to eq 0
+
+        expect(described_class.instance.percentile_for_lead_time(0, population)).to eq 0
+        expect(described_class.instance.percentile_for_lead_time(93, population)).to eq 1
+        expect(described_class.instance.percentile_for_lead_time(5, population)).to eq 0.5555555555555556
+      end
+    end
+
+    context 'with nil values in the population' do
+      let(:population) { [2, 4, nil, 10, 56, 5, nil, 4, 4, 89, 2] }
+
+      it 'computes the values after nil removal' do
+        expect(described_class.instance.percentile_for_lead_time(0, population)).to eq 0
+        expect(described_class.instance.percentile_for_lead_time(93, population)).to eq 1
+        expect(described_class.instance.percentile_for_lead_time(5, population)).to eq 0.5555555555555556
+      end
+    end
+  end
+
   describe '#leadtime_histogram_hash' do
     it { expect(described_class.instance.leadtime_histogram_hash([1.23, 2.34, 4.2, 3.5])).to eq(1.9725000000000001 => 2.0, 3.4575 => 2.0) }
   end

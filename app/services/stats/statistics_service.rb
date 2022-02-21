@@ -17,6 +17,18 @@ module Stats
       compute_value_in_percentile(desired_percentile, processed_population).to_f
     end
 
+    def percentile_for_lead_time(lead_time, population)
+      processed_population = population.compact
+      return 0 if processed_population.empty?
+      return 1 if processed_population.size == 1
+
+      population_sorted = processed_population.sort
+      return 1 if lead_time > population_sorted.max
+
+      below_value = population_sorted.count { |a| a < lead_time }
+      below_value / population_sorted.count.to_f
+    end
+
     def mean(population_array)
       population_array.sum.to_f / population_array.count
     end
