@@ -31,6 +31,5 @@ logfile
 /config/application.yml
 
 .idea/
-.vscode
 
 /config/master.key
