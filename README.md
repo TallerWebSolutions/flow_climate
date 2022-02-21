@@ -43,7 +43,7 @@ Have the ultimate management tools in your hands!
 
   - `rake db:create`
   - `rake db:migrate`
-  - `rake db:migrate RAILS_ENV=test`
+  - `RAILS_ENV=test rake db:migrate`
 
 - CI/CD: Github actions
 
@@ -65,10 +65,3 @@ Have the ultimate management tools in your hands!
 **If there are pending migrations, run the command below:**
 
 - Run `RAILS_ENV=test rake db:migrate`
-
-**To download the database from production environment:**
-
-- Exclude database `rails db:drop`
-- Install heroku-cli:
-  - on MacOS with homebrew: `brew tap heroku/brew && brew install heroku`
-- Run `heroku pg:pull DATABASE_URL flowcontrol_development -a flowclimateapp`
