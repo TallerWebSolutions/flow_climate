@@ -65,3 +65,6 @@ Have the ultimate management tools in your hands!
 **If there are pending migrations, run the command below:**
 
 - Run `RAILS_ENV=test rake db:migrate`
+
+** Local debugging for Visual Studio Code
+[See this article](https://rahul-arora.medium.com/debugging-ruby-on-rails-server-in-vs-code-819b45113e78)
