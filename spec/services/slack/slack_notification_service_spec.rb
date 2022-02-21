@@ -222,6 +222,10 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
         demand_transition = Fabricate :demand_transition, demand: demand, stage: stage, team_member: team_member
         Fabricate :slack_configuration, team: team, info_type: :demand_state_changed, stages_to_notify_transition: [stage.id]
 
+        expect_any_instance_of(Project).to receive(:lead_time_position_percentage_same_type).once.and_return(0.1)
+        expect_any_instance_of(Project).to receive(:lead_time_position_percentage_same_cos).once.and_return(0.3)
+        expect_any_instance_of(Project).to receive(:lead_time_position_percentage).once.and_return(0.15)
+
         expect_any_instance_of(Slack::Notifier).to receive(:ping).with(/moneybag/)
 
         described_class.instance.notify_demand_state_changed(stage, demand, demand_transition)

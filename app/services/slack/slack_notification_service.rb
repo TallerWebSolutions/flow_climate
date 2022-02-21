@@ -127,7 +127,16 @@ module Slack
       change_state_notify += "> *Responsáveis:* #{demand.active_team_members.map(&:team_member_name).join(', ')} (_#{demand.team_name}_)\n"
       change_state_notify += ":alarm_clock: *Lead time (p80) de demandas similares* | *No Projeto*: #{time_distance_in_words(DemandService.instance.similar_p80_project(demand))} | *No Time:* #{time_distance_in_words(DemandService.instance.similar_p80_team(demand))}\n" if stage.commitment_point?
 
-      change_state_notify += "> :alarm_clock: #{time_distance_in_words(demand.reload.leadtime)} | :moneybag: #{number_to_currency(demand.cost_to_project, decimal: 2)}\n" if stage.end_point?
+      if stage.end_point?
+        change_state_notify += "> :alarm_clock: #{time_distance_in_words(demand.reload.leadtime)} | :moneybag: #{number_to_currency(demand.cost_to_project, decimal: 2)}\n"
+        project = demand.project
+        team = demand.team
+
+        change_state_notify += "> Mais rápida do que *#{number_to_percentage(project.lead_time_position_percentage(demand) * 100, precision: 1)}* das demandas no projeto *#{project.name}*.\n"
+        change_state_notify += "> Mesmo tipo: *#{number_to_percentage(project.lead_time_position_percentage_same_type(demand) * 100, precision: 1)}* | Mesma Classe de Serviço: *#{number_to_percentage(project.lead_time_position_percentage_same_cos(demand) * 100, precision: 1)}*\n"
+        change_state_notify += "> E no time *#{team.name}*, o lead time foi menor que *#{number_to_percentage(team.lead_time_position_percentage(demand) * 100, precision: 1)}* das demandas.\n"
+        change_state_notify += "> Mesmo tipo: *#{number_to_percentage(team.lead_time_position_percentage_same_type(demand) * 100, precision: 1)}* | Mesma Classe de Serviço: *#{number_to_percentage(team.lead_time_position_percentage_same_cos(demand) * 100, precision: 1)}*\n"
+      end
 
       slack_notifier.ping(change_state_notify)
 

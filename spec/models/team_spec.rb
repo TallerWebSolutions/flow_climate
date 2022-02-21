@@ -354,4 +354,108 @@ RSpec.describe Team, type: :model do
       expect(empty_team.end_date).to eq Time.zone.today
     end
   end
+
+  describe '#lead_time_position_percentage' do
+    context 'with data' do
+      it 'returns the demand position within the others demands in the project' do
+        team = Fabricate :team
+
+        Fabricate :demand, team: team, created_date: 5.days.ago, commitment_date: 3.days.ago, end_date: 2.days.ago
+        Fabricate :demand, team: team, created_date: 5.days.ago, commitment_date: 4.days.ago, end_date: 1.day.ago
+        Fabricate :demand, team: team, created_date: 6.days.ago, commitment_date: 5.days.ago, end_date: 1.day.ago
+        Fabricate :demand, team: team, created_date: 6.days.ago, commitment_date: 4.days.ago, end_date: 3.days.ago
+
+        Fabricate :demand, created_date: 6.days.ago, commitment_date: 4.days.ago, end_date: 3.days.ago
+        Fabricate :demand, team: team, created_date: 6.days.ago, commitment_date: 4.days.ago, end_date: 3.days.ago, discarded_at: Time.zone.now
+
+        tested_demand = Fabricate :demand, team: team, created_date: 7.days.ago, commitment_date: 4.days.ago, end_date: 2.days.ago
+        first_place_demand = Fabricate :demand, team: team, created_date: 7.days.ago, commitment_date: 2.hours.ago, end_date: 1.hour.ago
+        last_place_demand = Fabricate :demand, team: team, created_date: 9.days.ago, commitment_date: 8.days.ago, end_date: 1.hour.ago
+
+        expect(team.lead_time_position_percentage(tested_demand)).to eq 0.5
+        expect(team.lead_time_position_percentage(first_place_demand)).to eq 1
+        expect(team.lead_time_position_percentage(last_place_demand)).to eq 0
+      end
+    end
+
+    context 'without data' do
+      it 'returns zero' do
+        team = Fabricate :team
+
+        tested_demand = Fabricate :demand, team: team, created_date: 7.days.ago, commitment_date: 4.days.ago, end_date: 2.days.ago
+
+        expect(team.lead_time_position_percentage(tested_demand)).to eq 0
+      end
+    end
+  end
+
+  describe '#lead_time_position_percentage_same_type' do
+    context 'with data' do
+      it 'returns the demand position within the others demands in the project' do
+        project = Fabricate :project
+
+        Fabricate :demand, project: project, demand_type: :feature, created_date: 5.days.ago, commitment_date: 3.days.ago, end_date: 2.days.ago
+        Fabricate :demand, project: project, demand_type: :feature, created_date: 5.days.ago, commitment_date: 4.days.ago, end_date: 1.day.ago
+        Fabricate :demand, project: project, demand_type: :feature, created_date: 6.days.ago, commitment_date: 5.days.ago, end_date: 1.day.ago
+        Fabricate :demand, project: project, demand_type: :feature, created_date: 6.days.ago, commitment_date: 4.days.ago, end_date: 3.days.ago
+
+        Fabricate :demand, demand_type: :feature, created_date: 6.days.ago, commitment_date: 4.days.ago, end_date: 3.days.ago
+        Fabricate :demand, project: project, demand_type: :feature, created_date: 6.days.ago, commitment_date: 4.days.ago, end_date: 3.days.ago, discarded_at: Time.zone.now
+        Fabricate :demand, project: project, demand_type: :bug, created_date: 6.days.ago, commitment_date: 4.days.ago, end_date: 3.days.ago
+
+        tested_demand = Fabricate :demand, demand_type: :feature, project: project, created_date: 7.days.ago, commitment_date: 4.days.ago, end_date: 2.days.ago
+        first_place_demand = Fabricate :demand, demand_type: :feature, project: project, created_date: 7.days.ago, commitment_date: 2.hours.ago, end_date: 1.hour.ago
+        last_place_demand = Fabricate :demand, demand_type: :feature, project: project, created_date: 9.days.ago, commitment_date: 8.days.ago, end_date: 1.hour.ago
+
+        expect(project.lead_time_position_percentage_same_type(tested_demand)).to eq 0.5
+        expect(project.lead_time_position_percentage_same_type(first_place_demand)).to eq 1
+        expect(project.lead_time_position_percentage_same_type(last_place_demand)).to eq 0
+      end
+    end
+
+    context 'without data' do
+      it 'returns zero' do
+        project = Fabricate :project
+
+        tested_demand = Fabricate :demand, demand_type: :feature, project: project, created_date: 7.days.ago, commitment_date: 4.days.ago, end_date: 2.days.ago
+
+        expect(project.lead_time_position_percentage_same_type(tested_demand)).to eq 0
+      end
+    end
+  end
+
+  describe '#lead_time_position_percentage_same_cos' do
+    context 'with data' do
+      it 'returns the demand position within the others demands in the project' do
+        project = Fabricate :project
+
+        Fabricate :demand, project: project, class_of_service: :standard, created_date: 5.days.ago, commitment_date: 3.days.ago, end_date: 2.days.ago
+        Fabricate :demand, project: project, class_of_service: :standard, created_date: 5.days.ago, commitment_date: 4.days.ago, end_date: 1.day.ago
+        Fabricate :demand, project: project, class_of_service: :standard, created_date: 6.days.ago, commitment_date: 5.days.ago, end_date: 1.day.ago
+        Fabricate :demand, project: project, class_of_service: :standard, created_date: 6.days.ago, commitment_date: 4.days.ago, end_date: 3.days.ago
+
+        Fabricate :demand, class_of_service: :standard, created_date: 6.days.ago, commitment_date: 4.days.ago, end_date: 3.days.ago
+        Fabricate :demand, project: project, class_of_service: :standard, created_date: 6.days.ago, commitment_date: 4.days.ago, end_date: 3.days.ago, discarded_at: Time.zone.now
+        Fabricate :demand, project: project, class_of_service: :fixed_date, created_date: 6.days.ago, commitment_date: 4.days.ago, end_date: 3.days.ago
+
+        tested_demand = Fabricate :demand, project: project, demand_type: :feature, created_date: 7.days.ago, commitment_date: 4.days.ago, end_date: 2.days.ago
+        first_place_demand = Fabricate :demand, project: project, demand_type: :feature, created_date: 7.days.ago, commitment_date: 2.hours.ago, end_date: 1.hour.ago
+        last_place_demand = Fabricate :demand, project: project, demand_type: :feature, created_date: 9.days.ago, commitment_date: 8.days.ago, end_date: 1.hour.ago
+
+        expect(project.lead_time_position_percentage_same_cos(tested_demand)).to eq 0.5
+        expect(project.lead_time_position_percentage_same_cos(first_place_demand)).to eq 1
+        expect(project.lead_time_position_percentage_same_cos(last_place_demand)).to eq 0
+      end
+    end
+
+    context 'without data' do
+      it 'returns zero' do
+        project = Fabricate :project
+
+        tested_demand = Fabricate :demand, demand_type: :feature, project: project, created_date: 7.days.ago, commitment_date: 4.days.ago, end_date: 2.days.ago
+
+        expect(project.lead_time_position_percentage_same_cos(tested_demand)).to eq 0
+      end
+    end
+  end
 end
