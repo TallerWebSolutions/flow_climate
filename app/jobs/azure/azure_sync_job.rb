@@ -30,7 +30,7 @@ module Azure
 
       finished_time = Time.zone.now
 
-      UserNotifierMailer.async_activity_finished(user_email, user_name, AzureAccount.model_name.human.downcase, azure_account.id, started_time, finished_time, '').deliver
+      UserNotifierMailer.async_activity_finished(user_email, user_name, AzureAccount.model_name.human.downcase, azure_account.id, started_time, finished_time, '').deliver if user_email.present?
     end
 
     private
