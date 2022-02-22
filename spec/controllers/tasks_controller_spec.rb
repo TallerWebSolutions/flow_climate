@@ -235,15 +235,19 @@ RSpec.describe TasksController, type: :controller do
           it 'assigns the chart variable with the finished tasks and renders the template' do
             travel_to Time.zone.local(2022, 2, 16, 10, 0, 0) do
               demand = Fabricate :demand, company: company
-              task = Fabricate :task, demand: demand, created_date: 2.days.ago, end_date: Time.zone.now, title: 'fOo'
-              other_task = Fabricate :task, demand: demand, created_date: 1.day.ago, end_date: 2.hours.ago, title: 'fOObar'
-              another_task = Fabricate :task, demand: demand, created_date: Time.zone.now, title: 'xpto'
+
+              finished_task = Fabricate :task, demand: demand, created_date: 2.days.ago, end_date: Time.zone.now, title: 'fOo', external_id: 'jupiter'
+              other_finished_task = Fabricate :task, demand: demand, created_date: 1.day.ago, end_date: 2.hours.ago, title: 'fOObar', external_id: 'pluto'
+              wip_task = Fabricate :task, demand: demand, created_date: 5.hours.ago, title: 'xpto', external_id: 'mars'
+              other_wip_task = Fabricate :task, demand: demand, created_date: 3.days.ago, title: 'sbbrubles', external_id: 'venus'
 
               post :charts, params: { company_id: company }
 
-              expect(assigns(:tasks)).to eq [another_task, other_task, task]
-              expect(assigns(:task_completion_control_chart_data).pluck(:id)).to eq [other_task.external_id, task.external_id]
-              expect(assigns(:task_completion_control_chart_data).pluck(:completion_time)).to eq [other_task.seconds_to_complete, task.seconds_to_complete]
+              expect(assigns(:tasks)).to eq [wip_task, other_finished_task, finished_task, other_wip_task]
+              expect(assigns(:task_completion_control_chart_data).pluck(:id)).to eq [other_finished_task.external_id, finished_task.external_id]
+              expect(assigns(:task_completion_control_chart_data).pluck(:completion_time)).to eq [other_finished_task.seconds_to_complete, finished_task.seconds_to_complete]
+              expect(assigns(:task_wip_completion_control_chart_data).pluck(:id)).to eq [other_wip_task.external_id, wip_task.external_id]
+              expect(assigns(:task_wip_completion_control_chart_data).pluck(:completion_time)).to eq [wip_task.partial_completion_time, other_wip_task.partial_completion_time]
 
               expect(response).to render_template :charts
             end

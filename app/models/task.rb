@@ -37,6 +37,12 @@ class Task < ApplicationRecord
 
   before_save :compute_time_to_deliver
 
+  def partial_completion_time
+    return seconds_to_complete if seconds_to_complete.present?
+
+    (Time.zone.now - created_date).to_i
+  end
+
   private
 
   def compute_time_to_deliver

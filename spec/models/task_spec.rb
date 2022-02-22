@@ -66,4 +66,26 @@ RSpec.describe Task, type: :model do
       end
     end
   end
+
+  describe '#partial_completion_time' do
+    context 'with a finished demand' do
+      it 'returns the time to complete' do
+        travel_to Time.zone.local(2022, 2, 22, 10, 0, 0) do
+          task = Fabricate :task, created_date: 2.days.ago, end_date: 12.hours.ago
+
+          expect(task.partial_completion_time).to eq 129_600
+        end
+      end
+    end
+
+    context 'with a not finished demand' do
+      it 'returns the difference between the creation date and the current time' do
+        travel_to Time.zone.local(2022, 2, 22, 10, 0, 0) do
+          task = Fabricate :task, created_date: 2.days.ago
+
+          expect(task.partial_completion_time).to eq 172_800
+        end
+      end
+    end
+  end
 end

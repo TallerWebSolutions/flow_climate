@@ -1485,6 +1485,8 @@ en:
       throughput:
         title: "Throughput"
       tasks: "Tasks"
+      wip_completion_control_chart:
+        title: "Current Partial Times to Tasks in Progress"
   initiatives:
     index:
       title: "Initiatives"

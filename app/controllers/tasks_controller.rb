@@ -18,8 +18,10 @@ class TasksController < AuthenticatedController
   def charts
     search_tasks
     @finished_tasks = @tasks.finished
-    @task_completion_control_chart_data = @finished_tasks.map { |task| { id: task.external_id, completion_time: task.seconds_to_complete, item_url: company_task_url(@company, task) } }
+    @task_completion_control_chart_data = @finished_tasks.map { |task| { id: task.external_id, completion_time: task.partial_completion_time, item_url: company_task_url(@company, task) } }
     @completion_times = @task_completion_control_chart_data.pluck(:completion_time)
+
+    build_wip_completion_time_control_chart(@tasks, @finished_tasks)
 
     @tasks_charts_adapter = Highchart::TasksChartsAdapter.new(@tasks.map(&:id), @finished_tasks.map(&:end_date).min, @finished_tasks.map(&:end_date).max)
   end
@@ -29,6 +31,11 @@ class TasksController < AuthenticatedController
   end
 
   private
+
+  def build_wip_completion_time_control_chart(tasks, finished_tasks)
+    partial_completion_times = (tasks - finished_tasks)
+    @task_wip_completion_control_chart_data = partial_completion_times.map { |task| { id: task.external_id, completion_time: task.partial_completion_time, item_url: company_task_url(@company, task) } }
+  end
 
   def search_tasks
     tasks

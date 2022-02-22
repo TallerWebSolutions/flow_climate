@@ -1475,6 +1475,8 @@ pt-BR:
       throughput:
         title: "Vazão"
       tasks: "Tarefas"
+      wip_completion_control_chart:
+        title: "Tempos Parciais para Tarefas em Progresso."
   initiatives:
     index:
       title: "Iniciativas"
