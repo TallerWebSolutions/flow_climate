@@ -232,10 +232,11 @@ module Jira
         return if already_assigned.present?
 
         item_assignment = demand.item_assignments.where(membership: membership, start_time: history_date).first_or_create
-
         item_assignment.update(finish_time: nil)
 
-        Slack::SlackNotificationService.instance.notify_item_assigned(item_assignment)
+        demand_url = company_demand_url(demand.company, demand)
+
+        Slack::SlackNotificationService.instance.notify_item_assigned(item_assignment, demand_url)
       end
     end
 

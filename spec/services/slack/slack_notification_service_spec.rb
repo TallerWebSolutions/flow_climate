@@ -245,7 +245,7 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
 
         expect_any_instance_of(Slack::Notifier).to receive(:post)
 
-        described_class.instance.notify_item_assigned(item_assignment)
+        described_class.instance.notify_item_assigned(item_assignment, "htto://foo.bar/baz")
         expect(item_assignment.reload.assignment_notified?).to be true
       end
     end
@@ -263,7 +263,7 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
 
         expect_any_instance_of(Slack::Notifier).not_to receive(:post)
 
-        described_class.instance.notify_item_assigned(dup_item_assignment)
+        described_class.instance.notify_item_assigned(dup_item_assignment, "htto://foo.bar/baz")
       end
     end
   end

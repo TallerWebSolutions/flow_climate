@@ -20,6 +20,7 @@ Have the ultimate management tools in your hands!
 ## How to build the environment
 
 - Install PostgreSQL v. 13.3
+- Install ImageMagick `brew install imagemagick` or `apt install imagemagick`
 - Configure pgsql
   - Start postgresql
     - Example on macOS (brew instalation): `pg_ctl -D /usr/local/var/postgres start`
@@ -53,18 +54,10 @@ Have the ultimate management tools in your hands!
 - In the project folder you should be able to run and check the output of:
 
   - `rspec`
-  - `rubocop -DR`
+  - `rubocop -A`
 
 - Run console: `rails c`
 - Run server: `rails s`
-
-# I've just updated the code, what to do?
-
-- Run `rspec`
-
-**If there are pending migrations, run the command below:**
-
-- Run `RAILS_ENV=test rake db:migrate`
 
 ** Local debugging for Visual Studio Code
 [See this article](https://rahul-arora.medium.com/debugging-ruby-on-rails-server-in-vs-code-819b45113e78)

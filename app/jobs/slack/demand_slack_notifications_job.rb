@@ -26,7 +26,8 @@ module Slack
 
       demand.item_assignments.each do |assignment|
         next if assignment.assignment_notified?
-        Slack::SlackNotificationService.instance.notify_item_assigned(assignment)
+        demand_url = company_demand_url(demand.company, demand)
+        Slack::SlackNotificationService.instance.notify_item_assigned(assignment, demand_url)
       end
     end
 

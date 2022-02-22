@@ -6,7 +6,6 @@ module Slack
 
     include ActionView::Helpers::NumberHelper
     include DateHelper
-    include ActionView::Helpers::UrlHelper
 
     def notify_cmd(slack_notifier, team)
       average_demand_cost_info = TeamService.instance.average_demand_cost_stats_info_hash(team)
@@ -143,7 +142,7 @@ module Slack
       demand_transition.update(transition_notified: true)
     end
 
-    def notify_item_assigned(item_assignment)
+    def notify_item_assigned(item_assignment, demand_url)
       return if item_assignment.valid? == false
 
       slack_configuration = SlackConfiguration.find_by(team: item_assignment.demand.team, info_type: 'item_assigned', active: true)
@@ -157,15 +156,16 @@ module Slack
 
       slack_notifier = Slack::Notifier.new(slack_configuration.room_webhook)
 
-      message_title =  { type: 'section', text: { type: 'mrkdwn', text: "#{item_assignment.team_member_name} puxou a _#{item_assignment.demand.external_id}_ em _#{item_assignment.assigned_at&.name || 'sem etapa'}_ as #{I18n.l(item_assignment.start_time, format: :short)}" } }
-      message_divider = { type: 'divider' }
-      message_previous_pull = { type: 'section', text: { type: 'mrkdwn', text: "Anterior: #{item_assignment.previous_assignment&.demand&.external_id}" } }
-      message_ongoing = { type: 'section', text: { type: 'mrkdwn', text: ":computer: #{item_assignment.membership_open_assignments.map(&:demand).flatten.map { |demand| "#{demand.external_id} (#{demand.current_stage_name})" }.join(', ')}" } }
-      message_idle = { type: 'context', elements: [{ type: 'mrkdwn', text: ":zzz: #{time_distance_in_words(item_assignment.pull_interval)} :zzz: :busts_in_silhouette: #{number_to_percentage(item_assignment.membership.team.percentage_idle_members * 100, precision: 0)}" }] }
+      demand_title = "*<#{demand_url}|#{item_assignment.demand.external_id} - #{item_assignment.demand.demand_title}>*"
+      assign_message =  "#{item_assignment.team_member_name} puxou a demanda em _#{item_assignment.assigned_at&.name || 'sem etapa'}_ às #{I18n.l(item_assignment.start_time, format: :short)}"
+      message_previous_pull = "Anterior: #{item_assignment.previous_assignment&.demand&.external_id}"
+      message_ongoing = ":computer: #{item_assignment.membership_open_assignments.map(&:demand).flatten.map { |demand| "#{demand.external_id} (#{demand.current_stage_name})" }.join(', ')}"
+      message_idle = ":zzz: #{time_distance_in_words(item_assignment.pull_interval)} :zzz: :busts_in_silhouette: #{number_to_percentage(item_assignment.membership.team.percentage_idle_members * 100, precision: 0)}"
 
+      info_block = {type: 'section', text: {type: 'mrkdwn', text: ">#{demand_title}\n>#{assign_message}\n>#{message_previous_pull}\n>#{message_ongoing}\n>#{message_idle}" }}
       divider_block = { type: 'divider' }
 
-      slack_notifier.post(blocks: [message_title, message_divider, message_previous_pull, message_ongoing, message_idle, divider_block])
+      slack_notifier.post(blocks: [info_block, divider_block])
 
       item_assignment.update(assignment_notified: true)
     end
