@@ -77,3 +77,7 @@
     padding-top: 8px;
     position: absolute;
 }
+
+.azure-list-actions {
+    width: 70px;
+}

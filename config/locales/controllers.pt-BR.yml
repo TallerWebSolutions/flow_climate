@@ -1450,6 +1450,10 @@ pt-BR:
   azure_accounts:
     update:
       title: "Sincronizar empresa com o Azure Devops"
+    edit:
+      title: "Editar Conta no Azure"
+      success: "Conta no azure foi atualizada."
+      failure: "Problemas foram encontrados no salvamento da conta. Verifique os campos."
   tasks:
     index:
       title: "Tarefas"

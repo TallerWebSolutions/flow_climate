@@ -1460,6 +1460,10 @@ en:
   azure_accounts:
     update:
       title: "Sync company with Azure Devops"
+    edit:
+      title: "Edit Azure Account"
+      success: "Azure account was updated."
+      failure: "Problems were found while saving the account. Check the fields."
   tasks:
     index:
       title: "Tasks"

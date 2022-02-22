@@ -124,7 +124,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :azure_accounts, only: [], module: 'azure' do
+    resources :azure_accounts, only: %i[edit update], module: 'azure' do
       post :synchronize_azure, on: :collection
     end
 
