@@ -206,7 +206,7 @@ class ProjectsController < AuthenticatedController
   private
 
   def tasks
-    @tasks ||= Task.where(id: @project.tasks.map(&:id)).order(:created_date)
+    @tasks ||= Task.where(id: @project.tasks.kept.map(&:id)).order(:created_date)
   end
 
   def assign_projects

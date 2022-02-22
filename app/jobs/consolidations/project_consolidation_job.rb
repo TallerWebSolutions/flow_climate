@@ -56,8 +56,8 @@ module Consolidations
         code_needed_blocks_per_demand = code_needed_blocks_count.to_f / demands_finished.count
       end
 
-      tasks = project.tasks.where('tasks.created_date <= :limit_date', limit_date: end_of_day)
-      tasks_finished = Task.where(id: project.tasks.where('tasks.end_date <= :limit_date', limit_date: end_of_day).order('tasks.end_date').map(&:id))
+      tasks = project.tasks.not_discarded_until(cache_date).where('tasks.created_date <= :limit_date', limit_date: end_of_day)
+      tasks_finished = Task.where(id: project.tasks.not_discarded_until(cache_date).where('tasks.end_date <= :limit_date', limit_date: end_of_day).order('tasks.end_date').map(&:id))
       tasks_not_finished = tasks - tasks_finished
       tasks_throughputs = tasks_finished.group('EXTRACT(week FROM tasks.end_date)').group('EXTRACT(isoyear FROM tasks.end_date)').count
 

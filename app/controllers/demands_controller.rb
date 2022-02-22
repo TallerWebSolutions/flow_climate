@@ -153,7 +153,7 @@ class DemandsController < DemandsListController
   end
 
   def read_tasks
-    @tasks_list = @demand.tasks.order(created_date: :desc)
+    @tasks_list = @demand.tasks.kept.order(created_date: :desc)
     @paged_tasks = @tasks_list.page(params['page'])
   end
 

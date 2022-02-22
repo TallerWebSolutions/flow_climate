@@ -25,7 +25,7 @@ class TasksController < AuthenticatedController
   end
 
   def show
-    @task = @company.tasks.find(params['id'])
+    @task = @company.tasks.kept.find(params['id'])
   end
 
   private

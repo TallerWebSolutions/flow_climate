@@ -35,8 +35,8 @@
         <td><%= initiative.projects.count %></td>
         <td><%= initiative.demands.count %></td>
         <% if @company.use_tasks? %>
-          <td><%= initiative.tasks.count %></td>
-          <td><%= initiative.tasks.finished.count %></td>
+          <td><%= initiative.tasks.kept.count %></td>
+          <td><%= initiative.tasks.kept.finished.count %></td>
           <td><span><%= number_to_percentage(initiative.remaining_backlog_tasks_percentage * 100, precision: 2) %></td>
         <% end %>
       </tr>

@@ -7,7 +7,7 @@ module Consolidations
     def perform(initiative, cache_date = Time.zone.today)
       end_of_day = cache_date.end_of_day
 
-      tasks = initiative.tasks.where('tasks.created_date <= :analysed_date', analysed_date: end_of_day)
+      tasks = initiative.tasks.not_discarded_until(cache_date).where('tasks.created_date <= :analysed_date', analysed_date: end_of_day)
       tasks_finished = tasks.finished(end_of_day)
       tasks_finished_in_month = tasks_finished.where('tasks.end_date BETWEEN :upper_limit AND :bottom_limit', upper_limit: cache_date.beginning_of_month, bottom_limit: cache_date)
       tasks_finished_in_week = tasks_finished.where('tasks.end_date BETWEEN :upper_limit AND :bottom_limit', upper_limit: cache_date.beginning_of_week, bottom_limit: cache_date)

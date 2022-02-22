@@ -9,7 +9,7 @@ class InitiativesController < AuthenticatedController
   end
 
   def show
-    tasks = Task.where(id: @initiative.tasks.map(&:id))
+    tasks = Task.where(id: @initiative.tasks.map(&:id)).kept
     @initiative_consolidations = @initiative.initiative_consolidations.weekly_data.order(:consolidation_date)
     @tasks_completed = tasks.finished.count
     @tasks_to_do = tasks.count - @tasks_completed
