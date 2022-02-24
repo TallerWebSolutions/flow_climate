@@ -1,8 +1,10 @@
 import { gql, useQuery } from "@apollo/client"
 import { Backdrop, CircularProgress, Box, Typography } from "@mui/material"
 import { useParams } from "react-router-dom"
-import { Bar } from "@nivo/bar"
-import { Pie } from "@nivo/pie"
+import { ResponsiveBar } from "@nivo/bar"
+import { ResponsivePie } from "@nivo/pie"
+import { dinero, toFormat } from "dinero.js"
+import { BRL } from "@dinero.js/currencies"
 
 import BasicPage from "../components/BasicPage"
 import { Project } from "../components/ReplenishingProjectsInfo"
@@ -75,18 +77,44 @@ const StatusReport = () => {
       name: "Status Report",
     },
   ]
+  const projectTabs = [
+    {
+      label: "Gráficos",
+      to: `/companies/${companySlug}/projects/${projectId}`,
+    },
+    {
+      label: "Estatísticas",
+      to: `/companies/${companySlug}/projects/${projectId}/statistics_tab`,
+    },
+    {
+      label: "Relatório de Status",
+      to: `/companies/${companySlug}/projects/${projectId}/status_report_dashboard`,
+    },
+  ]
 
   const leadtime = data?.project.leadTimeP80
+  const cost = Number(data?.project.currentCost.toFixed(2))
+  const formattedCost = toFormat(
+    dinero({ amount: cost, currency: BRL }),
+    ({ amount }) => `R$ ${amount}`
+  )
+
   const currentNumbersData = [
-    { title: "Custo", value: data?.project.currentCost },
-    { title: "Esforço", value: data?.project.totalHoursConsumed?.toFixed(2) },
+    { title: "Custo", value: formattedCost },
+    {
+      title: "Esforço",
+      value: data?.project.totalHoursConsumed?.toFixed(2),
+      unity: "horas",
+    },
     {
       title: "Velocidade média",
       value: data?.project.averageSpeed?.toFixed(2),
+      unity: "demandas/dia",
     },
     {
       title: "Idade média dos itens",
       value: data?.project.averageDemandAging?.toFixed(2),
+      unity: "dias",
     },
   ]
   const deadlineChangesData = [
@@ -95,6 +123,7 @@ const StatusReport = () => {
     {
       title: "Última diferença",
       value: data?.project.daysDifferenceBetweenFirstAndLastDeadlines,
+      unity: "dias",
     },
     {
       title: "Quantidade de mudanças",
@@ -102,10 +131,18 @@ const StatusReport = () => {
     },
   ]
   const flowData = [
-    { title: "Entrega", value: data?.project.totalThroughput },
-    { title: "Backlog restante", value: data?.project.remainingBacklog },
-    { title: "Carga de falha", value: data?.project.failureLoad },
-    { title: "Leadtime (80%)", value: leadtime && formatLeadtime(leadtime) },
+    { title: "Entrega", value: data?.project.totalThroughput, unity: "itens" },
+    {
+      title: "Backlog restante",
+      value: data?.project.remainingBacklog,
+      unity: "itens",
+    },
+    { title: "Carga de falha", value: data?.project.failureLoad, unity: "%" },
+    {
+      title: "Leadtime (80%)",
+      value: leadtime && formatLeadtime(leadtime),
+      unity: "dias",
+    },
   ]
   const throughputData = data?.project.weeklyThroughputs.map((th, index) => ({
     week: `${th}--${index}`,
@@ -130,6 +167,7 @@ const StatusReport = () => {
       title={projectName}
       breadcrumbsLinks={breadcrumbsLinks}
       company={data?.project.company}
+      tabs={projectTabs}
     >
       <TicketGroup title="Números atuais" data={currentNumbersData} />
       <TicketGroup title="Mudanças no prazo" data={deadlineChangesData} />
@@ -137,10 +175,11 @@ const StatusReport = () => {
       <Typography component="h2" variant="h5" mb={3}>
         Itens de Trabalho
       </Typography>
-      <Box display="flex">
+      <Box display="flex" pb={4} height={300}>
         <Box
-          height={300}
           sx={{
+            display: "flex",
+            flexDirection: "column",
             flexGrow: 1,
             flexBasis: 1,
           }}
@@ -148,16 +187,12 @@ const StatusReport = () => {
           <Typography component="h3" variant="h6" mb={3}>
             Descobertas
           </Typography>
-          <Pie
-            data={discoveryData}
-            colors={{ scheme: "pastel2" }}
-            width={400}
-            height={300}
-          />
+          <ResponsivePie data={discoveryData} colors={{ scheme: "pastel2" }} />
         </Box>
         <Box
-          height={300}
           sx={{
+            display: "flex",
+            flexDirection: "column",
             flexGrow: 1,
             flexBasis: 1,
           }}
@@ -166,13 +201,11 @@ const StatusReport = () => {
             Entregas
           </Typography>
           {throughputData && (
-            <Bar
+            <ResponsiveBar
               data={throughputData}
               colors={{ scheme: "pastel2" }}
               keys={["throughput"]}
               indexBy="week"
-              width={400}
-              height={300}
             />
           )}
         </Box>

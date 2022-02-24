@@ -10,3 +10,7 @@ export default {
 export const Primary: ComponentStory<typeof Ticket> = () => (
   <Ticket title="Custo" value="R$ 175.000,00" />
 )
+
+export const WithUnit: ComponentStory<typeof Ticket> = () => (
+  <Ticket title="Envelhecimento" value="35" unity="dias" />
+)

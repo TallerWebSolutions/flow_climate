@@ -13,11 +13,7 @@ const TicketGroup = ({ title, data }: TicketGroupProps) => (
     </Typography>
     <Box sx={{ display: "flex" }}>
       {data.map((item) => (
-        <Ticket
-          title={item.title}
-          value={item.value}
-          sx={{ flexGrow: 1, flexBasis: 1 }}
-        />
+        <Ticket {...item} sx={{ flexGrow: 1, flexBasis: 1 }} />
       ))}
     </Box>
   </Box>
