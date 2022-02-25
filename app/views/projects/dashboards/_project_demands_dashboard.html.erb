@@ -4,7 +4,7 @@
       <div class="tab">
         <%= link_to I18n.t('navbar.charts'), company_project_path(@company, @project), class: 'btn btn-default active' %>
         <%= link_to I18n.t('navbar.statistics'), statistics_tab_company_project_path(@company, @project), class: 'btn btn-default' %>
-        <%= link_to I18n.t('general.risk.detail'), risk_drill_down_company_project_path(@company, @project), class: 'btn btn-default', remote: true %>
+        <%= link_to I18n.t('general.risk.detail'), risk_drill_down_company_project_path(@company, @project), class: 'btn btn-default' %>
         <%= link_to I18n.t('projects.show.status_report.title'), status_report_dashboard_company_project_path(@company, @project), class: 'btn btn-default' %>
         <%= link_to I18n.t('projects.show.lead_time.title'), lead_time_dashboard_company_project_path(@company, @project), class: 'btn btn-default', remote: true %>
         <% unless @project.executing? %>

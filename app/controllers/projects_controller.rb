@@ -121,8 +121,8 @@ class ProjectsController < AuthenticatedController
   end
 
   def risk_drill_down
-    @project_consolidations = @project.project_consolidations.order(:consolidation_date)
-    respond_to { |format| format.js { render 'projects/risk_drill_down' } }
+    prepend_view_path Rails.root.join('public')
+    render 'spa-build/index'
   end
 
   def closing_dashboard

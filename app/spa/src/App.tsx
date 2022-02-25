@@ -6,6 +6,7 @@ import ApiProvider from "./lib/ApiProvider"
 import ThemeProvider from "./lib/ThemeProvider"
 import Replenishing from "./pages/Replenishing"
 import StatusReport from "./pages/StatusReport"
+import RiskDrill from "./pages/RiskDrill"
 
 import "./lib/i18n"
 
@@ -23,6 +24,10 @@ const App = () => (
         <Route
           path="/companies/taller/projects/:projectId/status_report_dashboard"
           element={<StatusReport />}
+        />
+        <Route
+          path="/companies/taller/projects/:projectId/risk_drill_down"
+          element={<RiskDrill />}
         />
       </Routes>
     </BrowserRouter>
