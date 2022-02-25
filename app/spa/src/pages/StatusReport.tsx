@@ -137,7 +137,11 @@ const StatusReport = () => {
       value: data?.project.remainingBacklog,
       unity: "itens",
     },
-    { title: "Carga de falha", value: data?.project.failureLoad, unity: "%" },
+    {
+      title: "Carga de falha",
+      value: data?.project.failureLoad.toFixed(2),
+      unity: "%",
+    },
     {
       title: "Leadtime (80%)",
       value: leadtime && formatLeadtime(leadtime),
