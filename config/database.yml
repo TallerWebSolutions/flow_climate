@@ -7,8 +7,8 @@ development:
   <<: *default
   database: flowcontrol_development
   host: localhost
-  username:
-  password:
+  username: postgres
+  password: postgres
 
 test:
   <<: *default

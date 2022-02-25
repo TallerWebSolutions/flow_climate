@@ -17,6 +17,10 @@ module Types
     field :qty_selected, Int, null: false
     field :qty_in_progress, Int, null: false
     field :monte_carlo_p80, Float, null: false
+    field :current_monte_carlo_weeks_min, Int, null: true
+    field :current_monte_carlo_weeks_max, Int, null: true
+    field :current_monte_carlo_weeks_std_dev, Int, null: true
+    field :current_weeks_by_little_law, Int, null: true
     field :lead_time_p80, Float, null: false
 
     field :work_in_progress_limit, Int, null: false
@@ -56,6 +60,7 @@ module Types
     delegate :team_monte_carlo_weeks_max, to: :object
     delegate :team_monte_carlo_weeks_min, to: :object
     delegate :team_based_odds_to_deadline, to: :object
+    delegate :project_consolidations, to: :object
 
     def qty_in_progress
       object.in_wip.count
@@ -96,6 +101,22 @@ module Types
     def discovered_scope
       project_summary = ProjectsSummaryData.new([object])
       project_summary.discovered_scope['discovered_after']
+    end
+
+    def current_monte_carlo_weeks_min
+      object.project_consolidations.last.monte_carlo_weeks_min
+    end
+
+    def current_monte_carlo_weeks_max
+      object.project_consolidations.last.monte_carlo_weeks_max
+    end
+
+    def current_monte_carlo_weeks_std_dev
+      object.project_consolidations.last.monte_carlo_weeks_std_dev
+    end
+
+    def current_weeks_by_little_law
+      object.project_consolidations.last.weeks_by_little_law
     end
   end
 end

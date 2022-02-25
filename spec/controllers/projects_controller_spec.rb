@@ -831,17 +831,11 @@ RSpec.describe ProjectsController, type: :controller do
       let(:customer) { Fabricate :customer, company: company }
       let!(:project) { Fabricate :project, company: company }
 
-      let!(:project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: Time.zone.today }
-      let!(:other_project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago }
-
-      let!(:out_project_consolidation) { Fabricate :project_consolidation }
-
       context 'passing valid parameters' do
         it 'assigns the instance variables and renders the template' do
           get :risk_drill_down, params: { company_id: company, id: project }, xhr: true
 
-          expect(response).to render_template 'projects/risk_drill_down'
-          expect(assigns(:project_consolidations)).to eq [other_project_consolidation, project_consolidation]
+          expect(response).to render_template 'spa-build/index'
         end
       end
 

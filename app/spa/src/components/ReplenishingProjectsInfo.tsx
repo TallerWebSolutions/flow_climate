@@ -41,6 +41,10 @@ export type Project = {
   weeklyThroughputs: number[]
   modeWeeklyTroughputs: number
   stdDevWeeklyTroughputs: number
+  currentMonteCarloWeeksMin: number
+  currentMonteCarloWeeksMax: number
+  currentMonteCarloWeeksStdDev: number
+  currentWeeksByLittleLaw: number
   teamMonteCarloP80: number
   teamMonteCarloWeeksMin: number
   teamMonteCarloWeeksMax: number
