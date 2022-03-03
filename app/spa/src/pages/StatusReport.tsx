@@ -87,6 +87,10 @@ const StatusReport = () => {
       to: `/companies/${companySlug}/projects/${projectId}/statistics_tab`,
     },
     {
+      label: "Detalhamento do Risco",
+      to: `/companies/${companySlug}/projects/${projectId}/risk_drill_down`,
+    },
+    {
       label: "Relatório de Status",
       to: `/companies/${companySlug}/projects/${projectId}/status_report_dashboard`,
     },
