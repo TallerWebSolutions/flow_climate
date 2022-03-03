@@ -17,14 +17,28 @@ export const PROJECT_STATUS_REPORT_QUERY = gql`
       daysDifferenceBetweenFirstAndLastDeadlines
       deadlinesChangeCount
       currentCost
-      totalHoursConsumed
       averageSpeed
       averageDemandAging
       totalThroughput
-      remainingBacklog
       failureLoad
       leadTimeP80
+
       weeklyThroughputs
+      workInProgressLimit
+      currentWeeksByLittleLaw
+      # totalScope
+      remainingBacklog
+      totalHoursConsumed
+      remainingWeeks
+      monteCarloP80
+      currentMonteCarloWeeksMin
+      currentMonteCarloWeeksMax
+      currentMonteCarloWeeksStdDev
+      teamMonteCarloP80
+      teamMonteCarloWeeksMin
+      teamMonteCarloWeeksMax
+      teamMonteCarloWeeksStdDev
+
       company {
         id
         name
@@ -50,8 +64,6 @@ export const RiskDrill = () => {
       },
     }
   )
-
-  useEffect(() => console.log(data), [data])
 
   if (loading)
     return (
@@ -96,16 +108,17 @@ export const RiskDrill = () => {
   const flowLastFewWeeks = [
     {
       title: "Vazão",
-      value: 2,
+      value: data?.project.weeklyThroughputs,
+      unity: "Itens/semana",
     },
     {
       title: "Limite do WiP",
-      value: data?.project.totalHoursConsumed?.toFixed(2),
+      value: data?.project.workInProgressLimit,
       unity: "demandas",
     },
     {
       title: "Lei de Little",
-      value: data?.project.averageSpeed?.toFixed(2),
+      value: data?.project.currentWeeksByLittleLaw?.toFixed(2),
       unity: "semanas",
     },
   ]
@@ -123,12 +136,12 @@ export const RiskDrill = () => {
     },
     {
       title: "Tempo decorrido",
-      value: data?.project.averageSpeed?.toFixed(2),
-      unity: "demandas",
+      value: data?.project.totalHoursConsumed.toFixed(2),
+      unity: "semanas",
     },
     {
       title: "Tempo restante",
-      value: data?.project.averageSpeed?.toFixed(2),
+      value: data?.project.remainingWeeks,
       unity: "semanas",
     },
   ]
@@ -136,22 +149,22 @@ export const RiskDrill = () => {
   const monteCarloProject = [
     {
       title: "Mínimo",
-      value: 2,
+      value: data?.project.currentMonteCarloWeeksMin,
       unity: "semanas",
     },
     {
       title: "Máximo",
-      value: data?.project.totalHoursConsumed?.toFixed(2),
+      value: data?.project.currentMonteCarloWeeksMax,
       unity: "semanas",
     },
     {
       title: "Percentil 80",
-      value: data?.project.totalHoursConsumed?.toFixed(2),
+      value: data?.project.monteCarloP80,
       unity: "semanas",
     },
     {
       title: "Desvio padrão",
-      value: data?.project.averageSpeed?.toFixed(2),
+      value: data?.project.currentMonteCarloWeeksStdDev,
       unity: "semanas",
     },
   ]
@@ -159,22 +172,22 @@ export const RiskDrill = () => {
   const monteCarloTeam = [
     {
       title: "Mínimo",
-      value: 2,
+      value: data?.project.teamMonteCarloWeeksMin,
       unity: "semanas",
     },
     {
       title: "Máximo",
-      value: data?.project.totalHoursConsumed?.toFixed(2),
+      value: data?.project.teamMonteCarloWeeksMax,
       unity: "semanas",
     },
     {
       title: "Percentil 80",
-      value: data?.project.totalHoursConsumed?.toFixed(2),
+      value: data?.project.teamMonteCarloP80,
       unity: "semanas",
     },
     {
       title: "Desvio padrão",
-      value: data?.project.averageSpeed?.toFixed(2),
+      value: data?.project.teamMonteCarloWeeksStdDev.toFixed(2),
       unity: "semanas",
     },
   ]
