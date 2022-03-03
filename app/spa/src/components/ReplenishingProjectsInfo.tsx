@@ -30,8 +30,11 @@ export type Project = {
   name: string
   remainingWeeks: number
   remainingBacklog: number
+  backlogCountFor: number
   flowPressure: number
   flowPressurePercentage: number
+  pastWeeks: number
+  remainingWork: number
   leadTimeP80: number
   qtySelected: number
   qtyInProgress: number

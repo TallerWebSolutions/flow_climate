@@ -6,29 +6,16 @@ import BasicPage from "../components/BasicPage"
 import { Project } from "../components/ReplenishingProjectsInfo"
 import TicketGroup from "../components/TicketGroup"
 
-// TODO: cut this query to only necessary data
 export const PROJECT_STATUS_REPORT_QUERY = gql`
   query ProjectStatusReport($id: Int!) {
     project(id: $id) {
-      id
       name
-      endDate
-      firstDeadline
-      daysDifferenceBetweenFirstAndLastDeadlines
-      deadlinesChangeCount
-      currentCost
-      averageSpeed
-      averageDemandAging
-      totalThroughput
-      failureLoad
-      leadTimeP80
-
       weeklyThroughputs
       workInProgressLimit
       currentWeeksByLittleLaw
-      # totalScope
-      remainingBacklog
-      totalHoursConsumed
+      backlogCountFor
+      remainingWork
+      pastWeeks
       remainingWeeks
       monteCarloP80
       currentMonteCarloWeeksMin
@@ -38,7 +25,6 @@ export const PROJECT_STATUS_REPORT_QUERY = gql`
       teamMonteCarloWeeksMin
       teamMonteCarloWeeksMax
       teamMonteCarloWeeksStdDev
-
       company {
         id
         name
@@ -126,17 +112,17 @@ export const RiskDrill = () => {
   const scopeAndDeadline = [
     {
       title: "Escopo",
-      value: 2,
+      value: data?.project.backlogCountFor,
       unity: "demandas",
     },
     {
       title: "Backlog",
-      value: data?.project.remainingBacklog,
+      value: data?.project.remainingWork,
       unity: "demandas",
     },
     {
       title: "Tempo decorrido",
-      value: data?.project.totalHoursConsumed.toFixed(2),
+      value: data?.project.pastWeeks,
       unity: "semanas",
     },
     {
@@ -159,12 +145,12 @@ export const RiskDrill = () => {
     },
     {
       title: "Percentil 80",
-      value: data?.project.monteCarloP80,
+      value: data?.project.monteCarloP80.toFixed(2),
       unity: "semanas",
     },
     {
       title: "Desvio padrão",
-      value: data?.project.currentMonteCarloWeeksStdDev,
+      value: data?.project.currentMonteCarloWeeksStdDev.toFixed(2),
       unity: "semanas",
     },
   ]
@@ -182,7 +168,7 @@ export const RiskDrill = () => {
     },
     {
       title: "Percentil 80",
-      value: data?.project.teamMonteCarloP80,
+      value: data?.project.teamMonteCarloP80.toFixed(2),
       unity: "semanas",
     },
     {
