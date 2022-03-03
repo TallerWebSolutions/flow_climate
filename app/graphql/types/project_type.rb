@@ -16,6 +16,8 @@ module Types
     field :flow_pressure_percentage, Float, null: false
     field :qty_selected, Int, null: false
     field :qty_in_progress, Int, null: false
+    field :past_weeks, Int, null: false
+    field :remaining_work, Int, null: false
     field :monte_carlo_p80, Float, null: false
     field :current_monte_carlo_weeks_min, Int, null: true
     field :current_monte_carlo_weeks_max, Int, null: true
