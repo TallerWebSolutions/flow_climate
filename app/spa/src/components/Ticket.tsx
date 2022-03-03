@@ -48,12 +48,10 @@ const Ticket = ({ title, value, unity, sx }: TicketProps) => {
       >
         {isThroughputData ? (
           value.slice(-MAX_ARRAY_SIZE).map((data, index) => {
-            console.log(index, MAX_ARRAY_SIZE)
             return (
               <>
                 <Box
                   sx={{
-                    flex: 1,
                     display: "flex",
                     alignItems: "center",
                   }}

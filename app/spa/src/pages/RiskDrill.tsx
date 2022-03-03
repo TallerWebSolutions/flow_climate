@@ -1,13 +1,12 @@
 import { gql, useQuery } from "@apollo/client"
 import { Backdrop, CircularProgress } from "@mui/material"
-import { useEffect } from "react"
 import { useParams } from "react-router-dom"
 import BasicPage from "../components/BasicPage"
 import { Project } from "../components/ReplenishingProjectsInfo"
 import TicketGroup from "../components/TicketGroup"
 
-export const PROJECT_STATUS_REPORT_QUERY = gql`
-  query ProjectStatusReport($id: Int!) {
+export const PROJECT_RISK_DRILL_QUERY = gql`
+  query ProjectRiskDrill($id: Int!) {
     project(id: $id) {
       name
       weeklyThroughputs
@@ -43,7 +42,7 @@ type ProjectStatusReportDTO = ProjectStatusReportResult | undefined
 export const RiskDrill = () => {
   const { projectId } = useParams()
   const { data, loading } = useQuery<ProjectStatusReportDTO>(
-    PROJECT_STATUS_REPORT_QUERY,
+    PROJECT_RISK_DRILL_QUERY,
     {
       variables: {
         id: Number(projectId),
