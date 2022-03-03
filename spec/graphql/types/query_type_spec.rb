@@ -272,7 +272,7 @@ RSpec.describe Types::QueryType do
         customer = Fabricate :customer, company: company
         product = Fabricate :product, company: company, customer: customer
         project = Fabricate :project, company: company, customers: [customer], products: [product], team: team, status: :executing, start_date: 4.days.ago, end_date: 1.day.from_now, max_work_in_progress: 2
-        project_consolidation = Fabricate :project_consolidation, project: project
+        project_consolidation = Fabricate :project_consolidation, project: project, monte_carlo_weeks_min: 9, monte_carlo_weeks_max: 85, monte_carlo_weeks_std_dev: 7
 
         query =
           %(query {
@@ -297,6 +297,12 @@ RSpec.describe Types::QueryType do
           projectConsolidations {
             id
           }
+          pastWeeks
+          remainingWork
+          currentWeeksByLittleLaw
+          currentMonteCarloWeeksMin
+          currentMonteCarloWeeksMax
+          currentMonteCarloWeeksStdDev
         }
       })
 
@@ -322,6 +328,12 @@ RSpec.describe Types::QueryType do
                                                       'endDate' => project.end_date.to_s,
                                                       'deadlinesChangeCount' => 0,
                                                       'discoveredScope' => nil,
+                                                      'pastWeeks' => 1,
+                                                      'currentWeeksByLittleLaw' => 0,
+                                                      'currentMonteCarloWeeksMin' => 9,
+                                                      'currentMonteCarloWeeksMax' => 85,
+                                                      'currentMonteCarloWeeksStdDev' => 7,
+                                                      'remainingWork' => 30,
                                                       'company' => {
                                                         'id' => company.id.to_s,
                                                         'name' => company.name

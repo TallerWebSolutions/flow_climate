@@ -62,7 +62,6 @@ module Types
     delegate :team_monte_carlo_weeks_max, to: :object
     delegate :team_monte_carlo_weeks_min, to: :object
     delegate :team_based_odds_to_deadline, to: :object
-    delegate :project_consolidations, to: :object
 
     def qty_in_progress
       object.in_wip.count
