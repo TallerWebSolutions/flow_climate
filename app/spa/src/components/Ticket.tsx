@@ -1,11 +1,10 @@
 import { Box, SxProps, Typography } from "@mui/material"
-import { Dinero } from "dinero.js"
 
 const MAX_ARRAY_SIZE = 10
 
 export type TicketProps = {
   title: string
-  value?: string | number | Dinero<number> | number[]
+  value?: string | number | number[]
   unity?: string
   sx?: SxProps
 }

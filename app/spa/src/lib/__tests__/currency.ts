@@ -1,5 +1,4 @@
-import { toFormat } from "dinero.js"
-import { currencyFromFloat } from "../currency"
+import { formatCurrency } from "../currency"
 
 describe("Formatted cost", () => {
   it("should formart with zero cost", () => {
@@ -10,30 +9,22 @@ describe("Formatted cost", () => {
     }
 
     const cost = Number(data?.project.currentCost.toFixed(2))
+    const formattedCost = formatCurrency(cost)
 
-    const formattedCost = toFormat(
-      currencyFromFloat({ amount: cost }),
-      ({ amount }) => `R$ ${amount}`
-    )
-
-    expect(formattedCost).toBe("R$ 0")
+    expect(formattedCost).toBe("R$ 0,00")
   })
 
-  it("should formart with less than R$1 cost", () => {
+  it("should formart with less than zero cost", () => {
     const data = {
       project: {
         currentCost: 0.99,
       },
     }
 
-    const cost = Number(data?.project.currentCost.toFixed(2))
+    const cost = Number(data?.project.currentCost)
+    const formattedCost = formatCurrency(cost)
 
-    const formattedCost = toFormat(
-      currencyFromFloat({ amount: cost }),
-      ({ amount }) => `R$ ${amount}`
-    )
-
-    expect(formattedCost).toBe("R$ 0.99")
+    expect(formattedCost).toBe("R$ 0,99")
   })
 
   it("should formart zero", () => {
@@ -43,13 +34,22 @@ describe("Formatted cost", () => {
       },
     }
 
+    const cost = Number(data?.project.currentCost)
+    const formattedCost = formatCurrency(cost)
+
+    expect(formattedCost).toBe("R$ 1,24")
+  })
+
+  it("should formart on hundred of cost", () => {
+    const data = {
+      project: {
+        currentCost: 161909.99,
+      },
+    }
+
     const cost = Number(data?.project.currentCost.toFixed(2))
+    const formattedCost = formatCurrency(cost)
 
-    const formattedCost = toFormat(
-      currencyFromFloat({ amount: cost }),
-      ({ amount }) => `R$ ${amount}`
-    )
-
-    expect(formattedCost).toBe("R$ 1.24")
+    expect(formattedCost).toBe("R$ 161.909,99")
   })
 })

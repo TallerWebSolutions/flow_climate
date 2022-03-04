@@ -3,13 +3,12 @@ import { Backdrop, CircularProgress, Box, Typography } from "@mui/material"
 import { useParams } from "react-router-dom"
 import { ResponsiveBar } from "@nivo/bar"
 import { ResponsivePie } from "@nivo/pie"
-import { dinero, toFormat } from "dinero.js"
 
 import BasicPage from "../components/BasicPage"
 import { Project } from "../components/ReplenishingProjectsInfo"
 import TicketGroup from "../components/TicketGroup"
 import { formatLeadtime } from "../lib/func"
-import { currencyFromFloat } from "../lib/currency"
+import { formatCurrency } from "../lib/currency"
 
 export const QUERY = gql`
   query ProjectStatusReport($id: Int!) {
@@ -97,11 +96,8 @@ const StatusReport = () => {
   ]
 
   const leadtime = data?.project.leadTimeP80
-  const cost = Number(data?.project.currentCost.toFixed(2))
-  const formattedCost = toFormat(
-    currencyFromFloat({ amount: cost }),
-    ({ amount }) => `R$ ${amount}`
-  )
+  const cost = Number(data?.project.currentCost)
+  const formattedCost = formatCurrency(cost)
 
   const currentNumbersData = [
     { title: "Custo", value: formattedCost },
