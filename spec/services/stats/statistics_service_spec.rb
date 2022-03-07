@@ -143,7 +143,7 @@ RSpec.describe Stats::StatisticsService, type: :service do
     end
 
     context 'with no data' do
-      it { expect(described_class.instance.mode([])).to eq nil }
+      it { expect(described_class.instance.mode([])).to be_nil }
     end
   end
 

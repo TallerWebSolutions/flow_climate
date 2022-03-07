@@ -76,7 +76,7 @@ RSpec.describe UserPlan, type: :model do
 
     before { user_plan.activate }
 
-    it { expect(user_plan.active).to eq true }
+    it { expect(user_plan.active).to be true }
   end
 
   describe '#deactivate' do
@@ -84,7 +84,7 @@ RSpec.describe UserPlan, type: :model do
 
     before { user_plan.deactivate }
 
-    it { expect(user_plan.active).to eq false }
+    it { expect(user_plan.active).to be false }
   end
 
   describe '#pay' do
@@ -92,7 +92,7 @@ RSpec.describe UserPlan, type: :model do
 
     before { user_plan.pay }
 
-    it { expect(user_plan.paid?).to eq true }
+    it { expect(user_plan.paid?).to be true }
   end
 
   describe '#unpay' do
@@ -100,6 +100,6 @@ RSpec.describe UserPlan, type: :model do
 
     before { user_plan.unpay }
 
-    it { expect(user_plan.paid?).to eq false }
+    it { expect(user_plan.paid?).to be false }
   end
 end

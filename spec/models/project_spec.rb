@@ -777,7 +777,7 @@ RSpec.describe Project, type: :model do
     end
 
     context 'having no alerts to the type' do
-      it { expect(project.last_alert_for(third_risk_config.risk_type)).to eq nil }
+      it { expect(project.last_alert_for(third_risk_config.risk_type)).to be_nil }
     end
   end
 

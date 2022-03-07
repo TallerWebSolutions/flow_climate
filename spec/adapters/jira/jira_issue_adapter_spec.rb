@@ -181,7 +181,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
 
         before { described_class.instance.process_issue(jira_account, jira_issue, product, first_project) }
 
-        it { expect(discarded_demand.reload.discarded_at).to be nil }
+        it { expect(discarded_demand.reload.discarded_at).to be_nil }
       end
     end
 

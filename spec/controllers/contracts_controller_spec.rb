@@ -98,7 +98,7 @@ RSpec.describe ContractsController, type: :controller do
           expect(created_contract.total_value).to eq 100
           expect(created_contract.hours_per_demand).to eq 30
           expect(created_contract.renewal_period).to eq 'yearly'
-          expect(created_contract.automatic_renewal).to eq true
+          expect(created_contract.automatic_renewal).to be true
 
           expect(ContractEstimationChangeHistory.count).to eq 1
           expect(ContractEstimationChangeHistory.last.change_date.to_date).to eq Time.zone.today
@@ -195,7 +195,7 @@ RSpec.describe ContractsController, type: :controller do
             expect(updated_contract.total_value).to eq 100
             expect(updated_contract.hours_per_demand).to eq 30
             expect(updated_contract.renewal_period).to eq 'yearly'
-            expect(updated_contract.automatic_renewal).to eq true
+            expect(updated_contract.automatic_renewal).to be true
 
             expect(ContractEstimationChangeHistory.count).to eq 2
             expect(ContractEstimationChangeHistory.last.change_date.to_date).to eq Time.zone.today
@@ -219,7 +219,7 @@ RSpec.describe ContractsController, type: :controller do
             expect(updated_contract.total_value).to eq 100
             expect(updated_contract.hours_per_demand).to eq 10
             expect(updated_contract.renewal_period).to eq 'yearly'
-            expect(updated_contract.automatic_renewal).to eq true
+            expect(updated_contract.automatic_renewal).to be true
 
             expect(ContractEstimationChangeHistory.count).to eq 1
             expect(ContractEstimationChangeHistory.last.change_date.to_date).to eq Time.zone.today

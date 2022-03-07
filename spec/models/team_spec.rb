@@ -327,9 +327,9 @@ RSpec.describe Team, type: :model do
       Fabricate :project, company: company, team: active_team, status: :finished, initial_scope: 410, end_date: 30.weeks.from_now
       Fabricate :project, company: company, team: active_team, status: :finished, initial_scope: 410, end_date: 30.weeks.from_now
 
-      expect(active_team.active?).to eq true
-      expect(inactive_team.active?).to eq false
-      expect(no_projects_team.active?).to eq false
+      expect(active_team.active?).to be true
+      expect(inactive_team.active?).to be false
+      expect(no_projects_team.active?).to be false
     end
   end
 

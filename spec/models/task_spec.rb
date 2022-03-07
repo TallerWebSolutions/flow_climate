@@ -61,7 +61,7 @@ RSpec.describe Task, type: :model do
       context 'without end date' do
         it 'does not define the seconds to complete' do
           task = Fabricate :task, created_date: 2.days.ago, end_date: nil
-          expect(task.seconds_to_complete).to eq nil
+          expect(task.seconds_to_complete).to be_nil
         end
       end
     end

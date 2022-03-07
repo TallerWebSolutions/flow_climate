@@ -25,10 +25,10 @@ RSpec.describe Initiative, type: :model do
           third_initiative = Fabricate :initiative, name: 'foo'
           invalid = Fabricate.build :initiative, company: company, name: 'foo'
 
-          expect(first_initiative.valid?).to eq true
-          expect(second_initiative.valid?).to eq true
-          expect(third_initiative.valid?).to eq true
-          expect(invalid.valid?).to eq false
+          expect(first_initiative.valid?).to be true
+          expect(second_initiative.valid?).to be true
+          expect(third_initiative.valid?).to be true
+          expect(invalid.valid?).to be false
         end
       end
     end

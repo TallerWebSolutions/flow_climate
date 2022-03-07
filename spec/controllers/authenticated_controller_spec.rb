@@ -51,7 +51,7 @@ RSpec.describe AuthenticatedController, type: :controller do
 
       it 'validates the plan and renders the correct template' do
         get :some_action
-        expect(controller.send(:user_gold_check)).to eq true
+        expect(controller.send(:user_gold_check)).to be true
         expect(response.status).to eq 200
         expect(response.body).to eq 'success'
       end
@@ -64,7 +64,7 @@ RSpec.describe AuthenticatedController, type: :controller do
 
       it 'has free and full access' do
         get :some_action
-        expect(controller.send(:user_gold_check)).to eq true
+        expect(controller.send(:user_gold_check)).to be true
         expect(response.status).to eq 200
         expect(response.body).to eq 'success'
       end

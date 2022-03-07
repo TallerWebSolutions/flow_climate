@@ -27,10 +27,10 @@ RSpec.describe Highchart::TasksChartsAdapter do
           allow(Task).to(receive(:where)).and_return(Task.none)
           task_chart = described_class.new(Task.all.map(&:id), 3.weeks.ago, 3.weeks.from_now)
 
-          expect(task_chart.x_axis).to eq nil
-          expect(task_chart.tasks_in_chart).to eq nil
-          expect(task_chart.creation_chart_data).to eq nil
-          expect(task_chart.throughput_chart_data).to eq nil
+          expect(task_chart.x_axis).to be_nil
+          expect(task_chart.tasks_in_chart).to be_nil
+          expect(task_chart.creation_chart_data).to be_nil
+          expect(task_chart.throughput_chart_data).to be_nil
         end
       end
     end

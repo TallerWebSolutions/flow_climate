@@ -58,7 +58,7 @@ RSpec.describe DemandBlock, type: :model do
             demand_block = Fabricate :demand_block, demand: demand, block_time: 1.day.ago
             allow_any_instance_of(described_class).to(receive(:block_working_time_duration)).and_return(nil)
             demand_block.update(block_time: 3.hours.ago, unblock_time: nil)
-            expect(demand_block.reload.block_working_time_duration).to eq nil
+            expect(demand_block.reload.block_working_time_duration).to be_nil
             expect(demand.reload.total_bloked_working_time).to eq 0.0
           end
         end
