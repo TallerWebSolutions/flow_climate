@@ -62,7 +62,6 @@ RSpec.describe UserNotifierMailer, type: :mailer do
   end
 
   describe '#notify_new_red_alert' do
-
     it 'renders the email' do
       travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) do
         first_project = Fabricate :project, company: company, name: 'first_project', customers: [customer], products: [product], status: :executing, start_date: 2.months.ago, end_date: Time.zone.today

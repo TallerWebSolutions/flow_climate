@@ -37,6 +37,7 @@ class Team < ApplicationRecord
   has_many :team_resources, through: :team_resource_allocations
   has_many :demand_blocks, -> { distinct }, through: :demands
   has_many :team_consolidations, class_name: 'Consolidations::TeamConsolidation', dependent: :destroy
+  has_many :flow_events, dependent: :destroy
 
   validates :name, :max_work_in_progress, presence: true
   validates :name, uniqueness: { scope: :company, message: I18n.t('team.name.uniqueness') }

@@ -40,6 +40,8 @@ class DemandEffortService
 
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/PerceivedComplexity
   def compute_and_save_effort(day_to_effort, assignment, top_effort_assignment, transition)
     start_time = [assignment.start_time, transition.last_time_in].compact.max
     effort_start_date = [start_time, day_to_effort.beginning_of_day].max
@@ -48,6 +50,12 @@ class DemandEffortService
     end_date = [end_time, day_to_effort.end_of_day].min
 
     demand = assignment.demand
+    team = demand.team
+    company = team.company
+    flow_events = team.flow_events.day_off + company.flow_events.day_off
+
+    days_off = flow_events.map { |event| (event.event_date..event.event_end_date).cover?(day_to_effort) }
+    return if days_off.compact.uniq.include?(true)
 
     demand_effort = demand.demand_efforts.where(demand_transition: transition, item_assignment: assignment, start_time_to_computation: effort_start_date).first_or_initialize
     return unless demand_effort.automatic_update?
@@ -95,14 +103,16 @@ class DemandEffortService
 
     demand_effort.id
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/CyclomaticComplexity
+  # rubocop:enable Metrics/PerceivedComplexity
 
   def compute_effort_blocked(demand, effort_start_date, end_date, management_percentage, stage_percentage)
     effort_blocked_in_transition = effort_blocked_into_time(demand, effort_start_date, end_date)
     effort_blocked_in_transition * (1 + management_percentage) * stage_percentage
   end
 
-  # rubocop:enable Metrics/AbcSize
-  # rubocop:enable Metrics/MethodLength
   def effort_blocked_into_time(demand, start_date, end_date)
     demand_blocks_into_effort_time = demand.demand_blocks.active.for_date_interval(start_date, end_date)
 
