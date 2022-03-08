@@ -56,6 +56,7 @@ class Company < ApplicationRecord
   before_save :generate_token
 
   delegate :count, to: :active_projects, prefix: true
+  delegate :count, to: :projects, prefix: true
 
   def to_hash
     { id: id, name: name, customers_count: customers_count, products_count: products_count,
@@ -87,8 +88,6 @@ class Company < ApplicationRecord
   def waiting_projects_count
     projects.waiting.count
   end
-
-  delegate :count, to: :projects, prefix: true
 
   def products_count
     customers.sum(&:products_count)

@@ -570,6 +570,8 @@ pt-BR:
       azure/azure_team:
         azure_product_config: Config de Produto no Azure
       consolidations/project_consolidation:
+        operational_risk: Risco
+        tasks_based_operational_risk: Risco (Tarefas)
         last_8_throughput_per_week_data: Throughput das últimas 8 Semanas
       consolidations/initiative_consolidation:
         tasks_operational_risk: Risco Operacional para Tarefas

@@ -31,6 +31,10 @@
         <th><%= Project.human_attribute_name :end_date %></th>
         <th><%= Project.human_attribute_name :status %></th>
         <th><%= Project.human_attribute_name :project_type %></th>
+        <th><%= Consolidations::ProjectConsolidation.human_attribute_name(:operational_risk) %></th>
+        <% if company.use_tasks? %>
+          <th><%= Consolidations::ProjectConsolidation.human_attribute_name(:tasks_based_operational_risk) %></th>
+        <% end %>
         <th><%= Project.human_attribute_name :qty_hours %></th>
         <th><%= I18n.t('projects.index.consumed_hours') %></th>
         <th><%= I18n.t('projects.show.demand_blocks_count') %></th>
@@ -64,6 +68,12 @@
           <td><%= I18n.l(project.end_date) %></td>
           <td><%= I18n.t("activerecord.attributes.project.enums.status.#{project.status}") %></td>
           <td><%= I18n.t("activerecord.attributes.project.enums.project_type.#{project.project_type}") %></td>
+          <td><%= number_to_percentage(project.current_risk_to_deadline * 100, precision: 2) %></td>
+
+          <% if company.use_tasks? %>
+            <td><%= number_to_percentage(project.tasks_based_current_risk_to_deadline * 100, precision: 2) %></td>
+          <% end %>
+
           <td><%= number_with_precision(project.qty_hours, precision: 2) %></td>
           <td><%= number_with_precision(project.consumed_hours, precision: 2) %></td>
           <td>
