@@ -1062,6 +1062,8 @@ pt-BR:
     in_week: "Na Semana"
     initiatives_completed:
       title: "Tarefas Terminadas"
+    hours_per_stage:
+      title: "Horas por Etapa"
   finances_params:
     edit:
       title: "Editar Informação Financeira"

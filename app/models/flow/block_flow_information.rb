@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Flow
-  class BlockFlowInformations < SystemFlowInformation
+  class BlockFlowInformation < SystemFlowInformation
     attr_reader :blocks_count, :blocks_time
 
     def initialize(demands)

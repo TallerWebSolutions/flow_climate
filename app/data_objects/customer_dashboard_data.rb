@@ -7,7 +7,7 @@ class CustomerDashboardData
   def initialize(customer_demands)
     @array_of_dates = TimeService.instance.months_between_of(start_date(customer_demands), end_date(customer_demands))
 
-    time_flow_information = Flow::TimeFlowInformations.new(customer_demands)
+    time_flow_information = Flow::TimeFlowInformation.new(customer_demands)
 
     build_flow_services(time_flow_information)
 

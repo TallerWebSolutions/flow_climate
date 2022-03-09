@@ -19,7 +19,7 @@ RSpec.describe UserNotifierMailer, type: :mailer do
           first_project = Fabricate :project, company: company, name: 'first_project', customers: [customer], products: [product], status: :executing, start_date: 2.months.ago, end_date: Time.zone.today
           second_project = Fabricate :project, company: company, name: 'second_project', customers: [customer], products: [product], status: :waiting, start_date: 2.days.from_now, end_date: 1.month.from_now
           third_project = Fabricate :project, company: company, name: 'third_project', customers: [customer], products: [product], status: :waiting, start_date: 4.days.from_now, end_date: 2.months.from_now
-          fourth_project = Fabricate :project, company: company, name: 'fourth_project', customers: [customer], products: [product], status: :executing, start_date: 2.months.ago, end_date: 3.months.from_now
+          Fabricate :project, company: company, name: 'fourth_project', customers: [customer], products: [product], status: :executing, start_date: 2.months.ago, end_date: 3.months.from_now
 
           Fabricate :demand, discarded_at: nil, end_date: 1.week.ago
           Fabricate :demand, discarded_at: nil, end_date: 1.week.ago
@@ -43,7 +43,6 @@ RSpec.describe UserNotifierMailer, type: :mailer do
           expect(mail.body.encoded).to match first_project.name
           expect(mail.body.encoded).to match second_project.name
           expect(mail.body.encoded).to match third_project.name
-          expect(mail.body.encoded).to match fourth_project.name
           expect(mail.body.encoded).to match red_project.name
           expect(mail.body.encoded).to match other_red_project.name
           expect(mail.body.encoded).to match I18n.t('general.signature.regards')

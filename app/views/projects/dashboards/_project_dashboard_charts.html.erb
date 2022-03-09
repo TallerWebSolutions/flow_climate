@@ -332,3 +332,21 @@
 
   </div>
 </div>
+
+<div class="row">
+  <div class="col-xs-6">
+    <div id="project-dashboard-hours-per-stage-column"
+         class="flow-chart"
+         data-title="<%= I18n.t('charts.hours_per_stage.title') %>"
+         data-xcategories="<%= status_report_data.hours_per_stage[:x_axis].to_json %>"
+         data-xtitle="<%= Stage.model_name.human(count: 2) %>"
+         data-ytitle="<%= I18n.t('general.hours') %>"
+         data-prefix=""
+         data-tooltipsuffix="<%= I18n.t('general.hours') %>"
+         data-datalabelsuffix=" h"
+         data-series="<%= [status_report_data.hours_per_stage[:y_axis]].to_json %>"
+         data-stacking=""
+         data-decimals="0">
+    </div>
+  </div>
+</div>

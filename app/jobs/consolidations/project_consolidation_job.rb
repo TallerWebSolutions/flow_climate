@@ -32,8 +32,8 @@ module Consolidations
 
       team = project.team
 
-      project_work_item_flow_information = Flow::WorkItemFlowInformations.new(project.demands, project.initial_scope, consolidation_period_for_montecarlo.length, consolidation_period_for_montecarlo.last, 'week')
-      team_work_item_flow_information = Flow::WorkItemFlowInformations.new(team.demands, team.projects.map(&:initial_scope).compact.sum, consolidation_period_for_montecarlo.length, consolidation_period_for_montecarlo.last, 'week')
+      project_work_item_flow_information = Flow::WorkItemFlowInformation.new(project.demands, project.initial_scope, consolidation_period_for_montecarlo.length, consolidation_period_for_montecarlo.last, 'week')
+      team_work_item_flow_information = Flow::WorkItemFlowInformation.new(team.demands, team.projects.map(&:initial_scope).compact.sum, consolidation_period_for_montecarlo.length, consolidation_period_for_montecarlo.last, 'week')
 
       consolidation_period_for_montecarlo.each_with_index do |analysed_date, distribution_index|
         project_work_item_flow_information.work_items_flow_behaviour(consolidation_period_for_montecarlo.first, analysed_date, distribution_index, true)

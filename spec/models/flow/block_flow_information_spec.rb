@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Flow::BlockFlowInformations, type: :model do
+RSpec.describe Flow::BlockFlowInformation, type: :model do
   let(:company) { Fabricate :company }
   let(:customer) { Fabricate :customer, company: company }
   let(:product) { Fabricate :product, company: company, customer: customer }

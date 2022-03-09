@@ -973,6 +973,8 @@ en:
     in_week: "In Week"
     initiatives_completed:
       title: "Tasks Completed"
+    hours_per_stage:
+      title: "Hours Per Stage"
   finances_params:
     edit:
       title: "Edit Financial Information"

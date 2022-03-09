@@ -171,7 +171,7 @@ class TeamsController < DemandsListController
     project_demands = project.demands
     project_period = TimeService.instance.weeks_between_of(project.start_date, Time.zone.today)
 
-    statistics_informations = Flow::StatisticsFlowInformations.new(project_demands)
+    statistics_informations = Flow::StatisticsFlowInformation.new(project_demands)
     project_period.each { |analysed_date| statistics_informations.statistics_flow_behaviour(analysed_date) }
 
     { project_period: project_period, project_data: { name: project.name, data: statistics_informations.lead_time_accumulated } }
@@ -182,7 +182,7 @@ class TeamsController < DemandsListController
     start_date = [membership.start_date, membership_demands.kept.filter_map(&:commitment_date).min].compact.max
     membership_period = TimeService.instance.weeks_between_of(start_date, Time.zone.today)
 
-    statistics_informations = Flow::StatisticsFlowInformations.new(membership_demands)
+    statistics_informations = Flow::StatisticsFlowInformation.new(membership_demands)
     membership_period.each { |analysed_date| statistics_informations.statistics_flow_behaviour(analysed_date) }
 
     { membership_period: membership_period, membership_data: { name: membership.team_member_name, data: statistics_informations.lead_time_accumulated } }
@@ -194,8 +194,8 @@ class TeamsController < DemandsListController
 
   def build_charts_data(demands)
     @array_of_dates = TimeService.instance.weeks_between_of(start_date, end_date)
-    @work_item_flow_information = Flow::WorkItemFlowInformations.new(demands, uncertain_scope, @array_of_dates.length, @array_of_dates.last, 'week')
-    @statistics_flow_information = Flow::StatisticsFlowInformations.new(demands)
+    @work_item_flow_information = Flow::WorkItemFlowInformation.new(demands, uncertain_scope, @array_of_dates.length, @array_of_dates.last, 'week')
+    @statistics_flow_information = Flow::StatisticsFlowInformation.new(demands)
 
     build_chart_objects
   end

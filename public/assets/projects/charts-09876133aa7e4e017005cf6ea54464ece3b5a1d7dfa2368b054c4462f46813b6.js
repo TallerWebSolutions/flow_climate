@@ -89,4 +89,4 @@ if (projectHoursConsumedRoleMonth.length !== 0) {
 const projectHoursConsumedStage = $("#project-dashboard-hours-per-stage-column");
 if (projectHoursConsumedStage.length !== 0) {
     buildColumnChart(projectHoursConsumedStage);
-}
+};

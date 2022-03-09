@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Flow::TimeFlowInformations, type: :model do
+RSpec.describe Flow::TimeFlowInformation, type: :model do
   let(:company) { Fabricate :company }
   let(:customer) { Fabricate :customer, company: company }
   let(:product) { Fabricate :product, company: company, customer: customer }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Flow::StatisticsFlowInformations, type: :model do
+RSpec.describe Flow::StatisticsFlowInformation, type: :model do
   before { travel_to Time.zone.local(2019, 5, 7, 18, 35, 0) }
 
   shared_context 'demand data' do

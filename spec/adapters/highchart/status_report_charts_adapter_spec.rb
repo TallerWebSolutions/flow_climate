@@ -16,14 +16,14 @@ RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
             second_project = Fabricate :project, team: team, customers: [customer], products: [product], status: :waiting, name: 'second_project', start_date: Date.new(2018, 3, 13), end_date: Date.new(2018, 3, 21), qty_hours: 400, initial_scope: 10
             third_project = Fabricate :project, team: team, customers: [customer], products: [product], status: :maintenance, name: 'third_project', start_date: Date.new(2018, 3, 12), end_date: Date.new(2018, 5, 13), qty_hours: 800, initial_scope: 10
 
-            queue_ongoing_stage = Fabricate :stage, teams: [team], company: company, stage_stream: :downstream, queue: false, name: 'queue_stage'
-            touch_ongoing_stage = Fabricate :stage, teams: [team], company: company, stage_stream: :downstream, queue: true, name: 'ongoing_stage'
+            queue_ongoing_stage = Fabricate :stage, teams: [team], company: company, stage_stream: :downstream, queue: false, name: 'queue_stage', order: 6
+            touch_ongoing_stage = Fabricate :stage, teams: [team], company: company, stage_stream: :downstream, queue: true, name: 'ongoing_stage', order: 7
 
-            first_stage = Fabricate :stage, company: company, teams: [team], stage_stream: :downstream, projects: [first_project, second_project, third_project], queue: false, end_point: true, name: 'first_stage'
-            second_stage = Fabricate :stage, company: company, teams: [team], stage_stream: :downstream, projects: [first_project, second_project, third_project], queue: false, end_point: true, name: 'second_stage'
-            third_stage = Fabricate :stage, company: company, teams: [team], stage_stream: :downstream, projects: [first_project, second_project, third_project], queue: true, end_point: true, name: 'third_stage'
-            fourth_stage = Fabricate :stage, company: company, teams: [team], stage_stream: :upstream, projects: [first_project, second_project, third_project], queue: false, end_point: true, name: 'fourth_stage'
-            fifth_stage = Fabricate :stage, company: company, teams: [team], stage_stream: :upstream, projects: [first_project, second_project, third_project], queue: true, end_point: true, name: 'fifth_stage'
+            first_stage = Fabricate :stage, company: company, teams: [team], stage_stream: :downstream, projects: [first_project, second_project, third_project], queue: false, end_point: true, name: 'first_stage', order: 1
+            second_stage = Fabricate :stage, company: company, teams: [team], stage_stream: :downstream, projects: [first_project, second_project, third_project], queue: false, end_point: true, name: 'second_stage', order: 2
+            third_stage = Fabricate :stage, company: company, teams: [team], stage_stream: :downstream, projects: [first_project, second_project, third_project], queue: true, end_point: true, name: 'third_stage', order: 3
+            fourth_stage = Fabricate :stage, company: company, teams: [team], stage_stream: :upstream, projects: [first_project, second_project, third_project], queue: false, end_point: true, name: 'fourth_stage', order: 4
+            fifth_stage = Fabricate :stage, company: company, teams: [team], stage_stream: :upstream, projects: [first_project, second_project, third_project], queue: true, end_point: true, name: 'fifth_stage', order: 5
 
             Fabricate :stage_project_config, project: first_project, stage: queue_ongoing_stage, compute_effort: true, pairing_percentage: 60, stage_percentage: 100, management_percentage: 10
             Fabricate :stage_project_config, project: first_project, stage: touch_ongoing_stage, compute_effort: true, pairing_percentage: 60, stage_percentage: 100, management_percentage: 10
@@ -62,7 +62,8 @@ RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
             expect(report_data.x_axis).to eq [Date.new(2018, 2, 25), Date.new(2018, 3, 4), Date.new(2018, 3, 11), Date.new(2018, 3, 18), Date.new(2018, 3, 25), Date.new(2018, 4, 1), Date.new(2018, 4, 8), Date.new(2018, 4, 15), Date.new(2018, 4, 22), Date.new(2018, 4, 29), Date.new(2018, 5, 6), Date.new(2018, 5, 13)]
             expect(report_data.delivered_vs_remaining).to eq([{ name: I18n.t('projects.show.delivered_demands.opened_in_period'), data: [27] }, { name: I18n.t('projects.show.delivered_demands.delivered'), data: [5] }])
             expect(report_data.deadline).to eq [{ data: [13], name: I18n.t('projects.index.total_remaining_days') }, { color: '#F45830', data: [71], name: I18n.t('projects.index.passed_time') }]
-            expect(report_data.cumulative_flow_diagram_downstream).to match_array([{ name: 'queue_stage', data: [2, 2, 2, 2, 3, 3, 4, 4, 4, 4, 4] }, { name: 'ongoing_stage', data: [2, 2, 2, 2, 3, 3, 4, 4, 4, 4, 4] }, { name: 'first_stage', data: [2, 2, 2, 2, 3, 3, 4, 4, 4, 4, 4] }, { name: 'second_stage', data: [2, 2, 2, 2, 3, 3, 4, 4, 4, 4, 4] }, { name: 'third_stage', data: [2, 2, 2, 2, 3, 3, 4, 4, 4, 4, 4] }])
+            expect(report_data.cumulative_flow_diagram_downstream).to match_array([{ name: 'first_stage', data: [2, 2, 2, 2, 3, 3, 4, 4, 4, 4, 4] }, { name: 'second_stage', data: [2, 2, 2, 2, 3, 3, 4, 4, 4, 4, 4] }, { name: 'third_stage', data: [1, 1, 1, 1, 2, 2, 3, 3, 3, 3, 3] }, { name: 'queue_stage', data: [1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2] }, { name: 'ongoing_stage', data: [0, 0, 1, 1, 1, 2, 2, 2, 2, 2, 2] }])
+            expect(report_data.hours_per_stage).to match_array([[:x_axis, %w[queue_stage ongoing_stage]], [:y_axis, { data: [240.0, 768.0], name: I18n.t('general.hours') }]])
           end
         end
       end

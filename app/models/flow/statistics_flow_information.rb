@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Flow
-  class StatisticsFlowInformations < SystemFlowInformation
+  class StatisticsFlowInformation < SystemFlowInformation
     attr_reader :average_aging_per_period, :lead_time_bins, :lead_time_histogram_data, :throughput_bins, :demands_charts_ids, :lead_time_data_array, :lead_time_accumulated, :lead_time_95p, :lead_time_80p, :lead_time_65p, :first_lead_time_zone, :second_lead_time_zone, :third_lead_time_zone, :first_zone_demand_count, :second_zone_demand_count, :third_zone_demand_count, :fourth_zone_demand_count
 
     def initialize(demands)
@@ -11,7 +11,7 @@ module Flow
 
       return if demands.blank?
 
-      demands_with_lead_time = demands.finished_with_leadtime.order(:end_date) # query
+      demands_with_lead_time = demands.finished_with_leadtime.order(:end_date)
 
       @demands_charts_ids = demands_with_lead_time.map(&:external_id)
 

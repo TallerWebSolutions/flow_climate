@@ -13,7 +13,7 @@ RSpec.describe CustomerDashboardData, type: :data_object do
 
       array_of_dates = [Time.zone.yesterday.to_date, Time.zone.today]
 
-      expect(Flow::TimeFlowInformations).to(receive(:new).once { time_info })
+      expect(Flow::TimeFlowInformation).to(receive(:new).once { time_info })
       expect(TimeService.instance).to(receive(:months_between_of).once { array_of_dates })
 
       expect(time_info).to(receive(:hours_flow_behaviour)).twice

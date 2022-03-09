@@ -8,7 +8,7 @@ module Highchart
     def initialize(demands, start_date, end_date, chart_period_interval)
       super(demands, start_date, end_date, chart_period_interval)
 
-      @work_item_flow_information = Flow::WorkItemFlowInformations.new(demands_list, uncertain_scope, @x_axis.length, end_date, chart_period_interval)
+      @work_item_flow_information = Flow::WorkItemFlowInformation.new(demands_list, uncertain_scope, @x_axis.length, end_date, chart_period_interval)
 
       return unless @all_projects.count.positive?
 
@@ -37,12 +37,19 @@ module Highchart
       stages = teams.first.stages.downstream.where('stages.order >= 0').order(:order)
       demands_stages_count = build_cfd_hash(demands.map(&:id), stages, TimeService.instance.end_of_period_for_date(Time.zone.today, @chart_period_interval))
 
-      demands_stages_count.map { |key, value| { name: key, data: value } } # build the chart
+      demands_stages_count.map { |key, value| { name: key, data: value } }
+    end
+
+    def hours_per_stage
+      projects = demands.map(&:project).uniq
+      hours_per_stage = DemandTransitionsRepository.instance.hours_per_stage(projects, :downstream, @start_date)
+
+      { x_axis: hours_per_stage.to_h.keys, y_axis: { name: I18n.t('general.hours'), data: hours_per_stage.to_h.values.map { |hours| hours.to_f / 1.hour } } }
     end
 
     private
 
-    # TODO: remove duplication with StatusReportChartsAdapter
+    # TODO: remove duplication with WorkItemWorkflowInformation
     def build_cfd_hash(demands_ids, stages, bottom_limit_date)
       demands_stages_count = {}
 
