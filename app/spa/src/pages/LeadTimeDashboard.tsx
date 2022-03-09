@@ -9,11 +9,27 @@ export const LEAD_TIME_DASHBOARD_QUERY = gql`
   query ProjectLeadTimeDashboard($id: Int!) {
     project(id: $id) {
       name
-
       company {
         id
         name
         slug
+      }
+
+      projectConsolidations {
+        leadTimeMin
+        leadTimeMax
+        leadTimeP80
+        leadTimeFeature
+        leadTimeBug
+        leadTimeChore
+        leadTimeStandard
+        leadTimeFixedDate
+        leadTimeExpedite
+        leadTimeStdDev
+        leadTimeAverage
+        demandsFinishedIds
+        leadTimeHistogramBinMin
+        leadTimeHistogramBinMax
       }
     }
   }
@@ -43,6 +59,7 @@ const LeadTimeDashboard = () => {
       </Backdrop>
     )
 
+  const lastProjectConsolidation = data?.project.projectConsolidations.pop()
   const projectName = data?.project.name || ""
   const companyName = data?.project.company.name || ""
   const companySlug = data?.project.company.slug
@@ -54,9 +71,10 @@ const LeadTimeDashboard = () => {
       url: `/companies/${companySlug}/projects/${data?.project.id}`,
     },
     {
-      name: "Status Report",
+      name: "Lead Time Dashboard",
     },
   ]
+
   const projectTabs = [
     {
       label: "Gráficos",
@@ -80,6 +98,71 @@ const LeadTimeDashboard = () => {
     },
   ]
 
+  const currentLeadTime = [
+    {
+      title: "Mínimo",
+      value: lastProjectConsolidation?.leadTimeMin,
+    },
+    {
+      title: "Máximo",
+      value: lastProjectConsolidation?.leadTimeMax,
+    },
+    {
+      title: "Percentil 80",
+      value: lastProjectConsolidation?.leadTimeP80,
+    },
+    {
+      title: "Desvio padrão",
+      value: lastProjectConsolidation?.leadTimeStdDev,
+    },
+    {
+      title: "Bin mínimo do histograma",
+      value: lastProjectConsolidation?.leadTimeHistogramBinMin,
+    },
+    {
+      title: "Bin máximo do histograma ",
+      value: lastProjectConsolidation?.leadTimeHistogramBinMax,
+    },
+    {
+      title: "Média",
+      value: lastProjectConsolidation?.leadTimeAverage,
+    },
+    {
+      title: "Tamanho da amostra",
+      value: lastProjectConsolidation?.demandsFinishedIds.length,
+    },
+  ]
+
+  const currentLeadTimeByType = [
+    {
+      title: "Nova funcionalidade",
+      value: lastProjectConsolidation?.leadTimeFeature,
+    },
+    {
+      title: "Bug",
+      value: lastProjectConsolidation?.leadTimeBug,
+    },
+    {
+      title: "Chore",
+      value: lastProjectConsolidation?.leadTimeChore,
+    },
+  ]
+
+  const currentLeadTimeByServiceClass = [
+    {
+      title: "Padrão",
+      value: lastProjectConsolidation?.leadTimeStandard,
+    },
+    {
+      title: "Data fixa",
+      value: lastProjectConsolidation?.leadTimeFixedDate,
+    },
+    {
+      title: "Expedição",
+      value: lastProjectConsolidation?.leadTimeExpedite,
+    },
+  ]
+
   return (
     <BasicPage
       title={projectName}
@@ -87,7 +170,15 @@ const LeadTimeDashboard = () => {
       company={data?.project.company}
       tabs={projectTabs}
     >
-      <p>None</p>
+      <TicketGroup title="Leadtime" data={currentLeadTime} />
+      <TicketGroup
+        title="Leadtime por tipo - 80%"
+        data={currentLeadTimeByType}
+      />
+      <TicketGroup
+        title="Leadtime por classe de serviço - 80%"
+        data={currentLeadTimeByServiceClass}
+      />
     </BasicPage>
   )
 }

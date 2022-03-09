@@ -68,7 +68,7 @@ export const RiskDrill = () => {
       url: `/companies/${companySlug}/projects/${data?.project.id}`,
     },
     {
-      name: "Status Report",
+      name: "Risk Drill",
     },
   ]
   const projectTabs = [

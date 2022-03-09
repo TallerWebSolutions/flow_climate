@@ -25,6 +25,23 @@ type Product = {
   name: string
 }
 
+type ProjectConsolidation = {
+  leadTimeMin: number
+  leadTimeMax: number
+  leadTimeP80: number
+  leadTimeFeature: number
+  leadTimeBug: number
+  leadTimeChore: number
+  leadTimeStandard: number
+  leadTimeFixedDate: number
+  leadTimeExpedite: number
+  leadTimeStdDev: number
+  leadTimeAverage: number
+  demandsFinishedIds: number[]
+  leadTimeHistogramBinMin: number
+  leadTimeHistogramBinMax: number
+}
+
 export type Project = {
   id: string
   name: string
@@ -71,6 +88,7 @@ export type Project = {
   failureLoad: number
   discoveredScope: number
   scope: number
+  projectConsolidations: ProjectConsolidation[]
 }
 
 type ReplenishingProjectsInfoProps = {
