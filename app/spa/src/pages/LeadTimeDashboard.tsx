@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom"
 import BasicPage from "../components/BasicPage"
 import { Project } from "../components/ReplenishingProjectsInfo"
 import TicketGroup from "../components/TicketGroup"
+import { secondsToReadbleDate } from "../lib/date"
 
 export const LEAD_TIME_DASHBOARD_QUERY = gql`
   query ProjectLeadTimeDashboard($id: Int!) {
@@ -101,65 +102,74 @@ const LeadTimeDashboard = () => {
   const currentLeadTime = [
     {
       title: "Mínimo",
-      value: lastProjectConsolidation?.leadTimeMin,
+      value: secondsToReadbleDate(lastProjectConsolidation?.leadTimeMin!),
     },
     {
       title: "Máximo",
-      value: lastProjectConsolidation?.leadTimeMax,
+      value: secondsToReadbleDate(lastProjectConsolidation?.leadTimeMax!),
     },
     {
       title: "Percentil 80",
-      value: lastProjectConsolidation?.leadTimeP80,
+      value: secondsToReadbleDate(lastProjectConsolidation?.leadTimeP80!),
     },
     {
       title: "Desvio padrão",
-      value: lastProjectConsolidation?.leadTimeStdDev,
+      value: secondsToReadbleDate(lastProjectConsolidation?.leadTimeStdDev!),
     },
     {
       title: "Bin mínimo do histograma",
-      value: lastProjectConsolidation?.leadTimeHistogramBinMin,
+      value: secondsToReadbleDate(
+        lastProjectConsolidation?.leadTimeHistogramBinMin!
+      ),
     },
     {
-      title: "Bin máximo do histograma ",
-      value: lastProjectConsolidation?.leadTimeHistogramBinMax,
+      title: "Bin máximo do histograma",
+      value: secondsToReadbleDate(
+        lastProjectConsolidation?.leadTimeHistogramBinMax!
+      ),
     },
     {
       title: "Média",
-      value: lastProjectConsolidation?.leadTimeAverage,
+      value: secondsToReadbleDate(lastProjectConsolidation?.leadTimeAverage!),
     },
     {
       title: "Tamanho da amostra",
       value: lastProjectConsolidation?.demandsFinishedIds.length,
+      unity: "demandas",
     },
   ]
 
   const currentLeadTimeByType = [
     {
       title: "Nova funcionalidade",
-      value: lastProjectConsolidation?.leadTimeFeature,
+      value: secondsToReadbleDate(lastProjectConsolidation?.leadTimeFeature!),
     },
     {
       title: "Bug",
       value: lastProjectConsolidation?.leadTimeBug,
+      unity: "segundos",
     },
     {
       title: "Chore",
       value: lastProjectConsolidation?.leadTimeChore,
+      unity: "segundos",
     },
   ]
 
   const currentLeadTimeByServiceClass = [
     {
       title: "Padrão",
-      value: lastProjectConsolidation?.leadTimeStandard,
+      value: secondsToReadbleDate(lastProjectConsolidation?.leadTimeStandard!),
     },
     {
       title: "Data fixa",
       value: lastProjectConsolidation?.leadTimeFixedDate,
+      unity: "segundos",
     },
     {
       title: "Expedição",
       value: lastProjectConsolidation?.leadTimeExpedite,
+      unity: "segundos",
     },
   ]
 

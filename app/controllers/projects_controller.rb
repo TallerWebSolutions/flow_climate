@@ -134,14 +134,12 @@ class ProjectsController < AuthenticatedController
 
   def status_report_dashboard
     prepend_view_path Rails.root.join('public')
-
     render 'spa-build/index'
   end
 
   def lead_time_dashboard
-    @project_consolidations = @project.project_consolidations.order(:consolidation_date)
-
-    respond_to { |format| format.js { render 'projects/lead_time_dashboard' } }
+    prepend_view_path Rails.root.join('public')
+    render 'spa-build/index'
   end
 
   def search_projects
