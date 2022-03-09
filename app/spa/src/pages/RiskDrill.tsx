@@ -33,15 +33,15 @@ export const PROJECT_RISK_DRILL_QUERY = gql`
   }
 `
 
-type ProjectStatusReportResult = {
+type ProjectRiskDrillResult = {
   project: Project
 }
 
-type ProjectStatusReportDTO = ProjectStatusReportResult | undefined
+type ProjectRiskDrillDTO = ProjectRiskDrillResult | undefined
 
 export const RiskDrill = () => {
   const { projectId } = useParams()
-  const { data, loading } = useQuery<ProjectStatusReportDTO>(
+  const { data, loading } = useQuery<ProjectRiskDrillDTO>(
     PROJECT_RISK_DRILL_QUERY,
     {
       variables: {

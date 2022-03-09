@@ -7,6 +7,7 @@ import ThemeProvider from "./lib/ThemeProvider"
 import Replenishing from "./pages/Replenishing"
 import StatusReport from "./pages/StatusReport"
 import RiskDrill from "./pages/RiskDrill"
+import LeadTimeDashboard from "./pages/LeadTimeDashboard"
 
 import "./lib/i18n"
 
@@ -28,6 +29,10 @@ const App = () => (
         <Route
           path="/companies/taller/projects/:projectId/risk_drill_down"
           element={<RiskDrill />}
+        />
+        <Route
+          path="/companies/taller/projects/:projectId/lead_time_dashboard"
+          element={<LeadTimeDashboard />}
         />
       </Routes>
     </BrowserRouter>
