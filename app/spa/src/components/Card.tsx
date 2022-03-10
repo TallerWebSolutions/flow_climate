@@ -4,6 +4,7 @@ import {
   CardContent,
   CardContentProps,
   Typography,
+  Box,
 } from "@mui/material"
 import ErrorIcon from "@mui/icons-material/Error"
 import CheckCircleIcon from "@mui/icons-material/CheckCircle"
@@ -11,18 +12,27 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle"
 type CustomCardContentProps = {
   title: string
   subtitle: string
+  type: CardType
 } & CardContentProps
 
 const CustomCardContent = ({
   children,
   title,
   subtitle,
+  type,
   ...props
 }: CustomCardContentProps) => (
   <CardContent {...props} sx={{ ":last-child": { paddingBottom: 2 } }}>
-    <Typography variant="h6" component="h6">
-      {title}
-    </Typography>
+    <Box sx={{ display: "flex", alignItems: "center" }}>
+      {type === CardType.WARNING && <ErrorIcon color={type} sx={{ mr: 1 }} />}
+      {type === CardType.SUCCESS && (
+        <CheckCircleIcon color={type} sx={{ mr: 1 }} />
+      )}
+      <Typography variant="h6" component="h6">
+        {title}
+      </Typography>
+    </Box>
+
     <Typography
       variant="body2"
       component="span"
@@ -61,13 +71,7 @@ const Card = ({
       borderColor: type === CardType.PRIMARY ? "#ccc" : `${type}.light`,
     }}
   >
-    {type === CardType.WARNING && (
-      <ErrorIcon color={type} sx={{ float: "right", margin: 2 }} />
-    )}
-    {type === CardType.SUCCESS && (
-      <CheckCircleIcon color={type} sx={{ float: "right", margin: 2 }} />
-    )}
-    <CustomCardContent title={title} subtitle={subtitle}>
+    <CustomCardContent title={title} subtitle={subtitle} type={type}>
       {children}
     </CustomCardContent>
   </MUICard>
