@@ -57,43 +57,7 @@ export const RiskDrill = () => {
       </Backdrop>
     )
 
-  const projectName = data?.project.name || ""
-  const companyName = data?.project.company.name || ""
-  const companySlug = data?.project.company.slug
-  const breadcrumbsLinks = [
-    { name: companyName, url: `/companies/${companySlug}` },
-    { name: "Projetos", url: `/companies/${companySlug}/projects` },
-    {
-      name: projectName,
-      url: `/companies/${companySlug}/projects/${data?.project.id}`,
-    },
-    {
-      name: "Risk Drill",
-    },
-  ]
-  const projectTabs = [
-    {
-      label: "Gráficos",
-      to: `/companies/${companySlug}/projects/${projectId}`,
-    },
-    {
-      label: "Estatísticas",
-      to: `/companies/${companySlug}/projects/${projectId}/statistics_tab`,
-    },
-    {
-      label: "Detalhamento do Risco",
-      to: `/companies/${companySlug}/projects/${projectId}/risk_drill_down`,
-    },
-    {
-      label: "Relatório de Status",
-      to: `/companies/${companySlug}/projects/${projectId}/status_report_dashboard`,
-    },
-    {
-      label: "Lead time dashboard",
-      to: `/companies/${companySlug}/projects/${projectId}/lead_time_dashboard`,
-    },
-  ]
-
+  const project = data?.project!
   const flowLastFewWeeks = [
     {
       title: "Vazão",
@@ -182,12 +146,7 @@ export const RiskDrill = () => {
   ]
 
   return (
-    <ProjectPage
-      title={projectName}
-      breadcrumbsLinks={breadcrumbsLinks}
-      company={data?.project.company}
-      tabs={projectTabs}
-    >
+    <ProjectPage pageName={"Risk Drill"} project={project}>
       <TicketGroup
         title="Fluxo das últimas 10 semanas"
         data={flowLastFewWeeks}

@@ -44,15 +44,11 @@ type ProjectStatusReportDTO = ProjectStatusReportResult | undefined
 
 const StatusReport = () => {
   const { projectId } = useParams()
-  const { data, loading, error } = useQuery<ProjectStatusReportDTO>(QUERY, {
+  const { data, loading } = useQuery<ProjectStatusReportDTO>(QUERY, {
     variables: {
       id: Number(projectId),
     },
   })
-
-  if (error) {
-    console.error(error)
-  }
 
   if (loading)
     return (
@@ -61,43 +57,7 @@ const StatusReport = () => {
       </Backdrop>
     )
 
-  const projectName = data?.project.name || ""
-  const companyName = data?.project.company.name || ""
-  const companySlug = data?.project.company.slug
-  const breadcrumbsLinks = [
-    { name: companyName, url: `/companies/${companySlug}` },
-    { name: "Projetos", url: `/companies/${companySlug}/projects` },
-    {
-      name: projectName,
-      url: `/companies/${companySlug}/projects/${data?.project.id}`,
-    },
-    {
-      name: "Status Report",
-    },
-  ]
-  const projectTabs = [
-    {
-      label: "Gráficos",
-      to: `/companies/${companySlug}/projects/${projectId}`,
-    },
-    {
-      label: "Estatísticas",
-      to: `/companies/${companySlug}/projects/${projectId}/statistics_tab`,
-    },
-    {
-      label: "Detalhamento do Risco",
-      to: `/companies/${companySlug}/projects/${projectId}/risk_drill_down`,
-    },
-    {
-      label: "Relatório de Status",
-      to: `/companies/${companySlug}/projects/${projectId}/status_report_dashboard`,
-    },
-    {
-      label: "Lead time dashboard",
-      to: `/companies/${companySlug}/projects/${projectId}/lead_time_dashboard`,
-    },
-  ]
-
+  const project = data?.project!
   const leadtime = data?.project.leadTimeP80
   const cost = Number(data?.project.currentCost)
   const formattedCost = formatCurrency(cost)
@@ -170,12 +130,7 @@ const StatusReport = () => {
   ]
 
   return (
-    <ProjectPage
-      title={projectName}
-      breadcrumbsLinks={breadcrumbsLinks}
-      company={data?.project.company}
-      tabs={projectTabs}
-    >
+    <ProjectPage pageName={"Status Report"} project={project}>
       <TicketGroup title="Números atuais" data={currentNumbersData} />
       <TicketGroup title="Mudanças no prazo" data={deadlineChangesData} />
       <TicketGroup title="Fluxo" data={flowData} />
