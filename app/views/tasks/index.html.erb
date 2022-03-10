@@ -13,7 +13,7 @@
     <div class="col-xs-12 center">
       <div class="tab">
         <%= link_to I18n.t('general.list'), '#', class: 'btn btn-default active' %>
-        <%= link_to I18n.t('general.tabs.charts'), charts_company_tasks_path(@company, tasks_search: params['tasks_search'], tasks_start_date: params['tasks_start_date'], tasks_end_date: params['tasks_end_date']), class: 'btn btn-default', method: :post %>
+        <%= link_to I18n.t('general.tabs.charts'), charts_company_tasks_path(@company, tasks_search: params['tasks_search'], tasks_start_date: params['tasks_start_date'], tasks_end_date: params['tasks_end_date'], tasks_project: params['tasks_project']), class: 'btn btn-default', method: :post %>
       </div>
     </div>
   </div>
@@ -30,6 +30,13 @@
     <div class="col-xs-6">
       <%= label_tag Task.human_attribute_name(:end_date), nil, class: 'control-label' %>
       <%= select_tag :task_status, options_for_select([[I18n.t('general.open'), :not_finished], [I18n.t('general.finished'), :finished]], params[:task_status]), include_blank: I18n.t('general.select'), class: 'form-control' %>
+    </div>
+  </div>
+
+  <div class="row row-equal">
+    <div class="col-xs-12 bottom-spaced-component">
+      <%= label_tag Project.model_name.human, nil, class: 'control-label' %>
+      <%= select_tag :tasks_project, options_for_select(projects_for_search_options(@company), params[:tasks_project]), include_blank: I18n.t('general.select'), class: 'form-control' %>
     </div>
   </div>
 

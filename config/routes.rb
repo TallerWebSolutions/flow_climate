@@ -119,7 +119,7 @@ Rails.application.routes.draw do
 
     resources :tasks, only: %i[index show] do
       collection do
-        post 'charts/(:tasks_search)/(:tasks_start_date)', action: :charts, as: 'charts'
+        post 'charts', action: :charts, as: 'charts'
         post 'search', action: :search, as: 'search'
       end
     end

@@ -98,7 +98,6 @@ RSpec.describe TasksController, type: :controller do
               post :search, params: { company_id: company, tasks_search: 'foo', task_status: 'finished' }
 
               expect(assigns(:tasks)).to eq [other_task, task]
-              expect(assigns(:tasks)).to eq [other_task, task]
               expect(response).to render_template :index
             end
           end
@@ -153,6 +152,29 @@ RSpec.describe TasksController, type: :controller do
               Fabricate :task, demand: demand, created_date: 4.days.ago, end_date: 3.days.ago
 
               post :search, params: { company_id: company, tasks_start_date: 26.hours.ago.to_date, tasks_end_date: 1.minute.ago.to_date, task_status: 'finished' }
+
+              expect(assigns(:tasks)).to eq [other_task, task]
+              expect(response).to render_template :index
+            end
+          end
+        end
+
+        context 'with search by project' do
+          it 'assigns the instance variables and renders the template according to the search' do
+            travel_to Time.zone.local(2022, 2, 16, 10, 0, 0) do
+              project = Fabricate :project, company: company
+              other_project = Fabricate :project, company: company
+              demand = Fabricate :demand, company: company, project: project
+              other_demand = Fabricate :demand, company: company, project: other_project
+              discarded_demand = Fabricate :demand, company: company, discarded_at: 2.days.ago
+
+              task = Fabricate :task, demand: demand, created_date: 2.days.ago, end_date: 1.day.ago, title: 'fOo'
+              other_task = Fabricate :task, demand: demand, created_date: 1.day.ago, end_date: 1.hour.ago, title: 'fOObar'
+
+              Fabricate :task, demand: discarded_demand, created_date: 1.day.ago, end_date: 1.hour.ago, title: 'fOObar'
+              Fabricate :task, demand: other_demand
+
+              post :search, params: { company_id: company, tasks_project: project.id }
 
               expect(assigns(:tasks)).to eq [other_task, task]
               expect(response).to render_template :index

@@ -41,10 +41,15 @@ class TasksController < AuthenticatedController
     tasks
     @tasks = @tasks.where('title ILIKE :task_name_search', task_name_search: "%#{params['tasks_search']}%") if params['tasks_search'].present?
 
+    @tasks = search_by_project(@tasks) if params['tasks_project'].present?
     @tasks = search_by_status(@tasks) if params['task_status'].present?
-    @tasks = search_by_date(@tasks) if params['tasks_start_date'].present? && params['tasks_end_date'].present?
+    @tasks = search_by_date(@tasks) if search_date?
 
     @paged_tasks = @tasks.page(page_param)
+  end
+
+  def search_date?
+    params['tasks_start_date'].present? && params['tasks_end_date'].present?
   end
 
   def search_by_status(tasks)
@@ -52,6 +57,10 @@ class TasksController < AuthenticatedController
     return tasks.open if params['task_status'] == 'not_finished'
 
     tasks
+  end
+
+  def search_by_project(tasks)
+    tasks.joins(:demand).where(demand: { project_id: params['tasks_project'] })
   end
 
   def search_by_date(tasks)
