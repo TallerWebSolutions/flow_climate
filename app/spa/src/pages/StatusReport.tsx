@@ -3,12 +3,11 @@ import { Backdrop, CircularProgress, Box, Typography } from "@mui/material"
 import { useParams } from "react-router-dom"
 import { ResponsiveBar } from "@nivo/bar"
 import { ResponsivePie } from "@nivo/pie"
-
-import BasicPage from "../components/BasicPage"
 import { Project } from "../components/ReplenishingProjectsInfo"
 import TicketGroup from "../components/TicketGroup"
 import { formatLeadtime } from "../lib/func"
 import { formatCurrency } from "../lib/currency"
+import { ProjectPage } from "../components/ProjectPage"
 
 export const QUERY = gql`
   query ProjectStatusReport($id: Int!) {
@@ -171,7 +170,7 @@ const StatusReport = () => {
   ]
 
   return (
-    <BasicPage
+    <ProjectPage
       title={projectName}
       breadcrumbsLinks={breadcrumbsLinks}
       company={data?.project.company}
@@ -218,7 +217,7 @@ const StatusReport = () => {
           )}
         </Box>
       </Box>
-    </BasicPage>
+    </ProjectPage>
   )
 }
 

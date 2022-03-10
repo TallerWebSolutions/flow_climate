@@ -1,7 +1,7 @@
 import { gql, useQuery } from "@apollo/client"
 import { Backdrop, CircularProgress } from "@mui/material"
 import { useParams } from "react-router-dom"
-import BasicPage from "../components/BasicPage"
+import { ProjectPage } from "../components/ProjectPage"
 import { Project } from "../components/ReplenishingProjectsInfo"
 import TicketGroup from "../components/TicketGroup"
 import { secondsToReadbleDate } from "../lib/date"
@@ -170,7 +170,7 @@ const LeadTimeDashboard = () => {
   ]
 
   return (
-    <BasicPage
+    <ProjectPage
       title={projectName}
       breadcrumbsLinks={breadcrumbsLinks}
       company={data?.project.company}
@@ -185,7 +185,7 @@ const LeadTimeDashboard = () => {
         title="Leadtime por classe de serviço - 80%"
         data={currentLeadTimeByServiceClass}
       />
-    </BasicPage>
+    </ProjectPage>
   )
 }
 

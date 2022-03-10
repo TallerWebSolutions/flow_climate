@@ -1,19 +1,15 @@
 import { createContext, ReactElement, useState } from "react"
 import { Container, Box, Typography } from "@mui/material"
-
 import Header from "./Header"
-import { Tabs, Tab } from "./Tabs"
 import MessagesBox, { Message } from "./MessagesBox"
 import Breadcrumbs, { BreadcrumbsLink } from "./Breadcrumbs"
 import { Company } from "../modules/company/company.types"
-import { useLocation } from "react-router-dom"
 
-type BasicPageProps = {
+export type BasicPageProps = {
   title: string
   breadcrumbsLinks: BreadcrumbsLink[]
   children?: ReactElement | ReactElement[]
   company?: Company
-  tabs?: Tab[]
 }
 
 export const MessagesContext = createContext<{
@@ -39,9 +35,7 @@ const BasicPage = ({
   title,
   breadcrumbsLinks,
   company,
-  tabs,
 }: BasicPageProps) => {
-  const { pathname } = useLocation()
   const [messages, pushMessage] = useMessages()
 
   return (
@@ -52,17 +46,6 @@ const BasicPage = ({
         <Typography component="h1" variant="h4" mb={3}>
           {title}
         </Typography>
-        {tabs && (
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Tabs tabs={tabs} currentPath={pathname} />
-          </Box>
-        )}
         {children}
         <MessagesBox messages={messages} />
       </Container>
