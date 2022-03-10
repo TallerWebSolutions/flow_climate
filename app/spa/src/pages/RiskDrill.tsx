@@ -1,7 +1,7 @@
 import { gql, useQuery } from "@apollo/client"
 import { Backdrop, CircularProgress } from "@mui/material"
 import { useParams } from "react-router-dom"
-import BasicPage from "../components/BasicPage"
+import { ProjectPage } from "../components/ProjectPage"
 import { Project } from "../components/ReplenishingProjectsInfo"
 import TicketGroup from "../components/TicketGroup"
 
@@ -182,7 +182,7 @@ export const RiskDrill = () => {
   ]
 
   return (
-    <BasicPage
+    <ProjectPage
       title={projectName}
       breadcrumbsLinks={breadcrumbsLinks}
       company={data?.project.company}
@@ -195,7 +195,7 @@ export const RiskDrill = () => {
       <TicketGroup title="Escopo e prazo" data={scopeAndDeadline} />
       <TicketGroup title="Monte Carlo (Projeto)" data={monteCarloProject} />
       <TicketGroup title="Monte Carlo (Time)" data={monteCarloTeam} />
-    </BasicPage>
+    </ProjectPage>
   )
 }
 
