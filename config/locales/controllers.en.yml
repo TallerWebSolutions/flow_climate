@@ -1496,3 +1496,8 @@ en:
   initiatives:
     index:
       title: "Initiatives"
+    create:
+      success: "Iniciativa criada."
+      error: "The initiative was not saved. Check the form for further information."
+    new:
+      title: "New Initiative"

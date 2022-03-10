@@ -2,7 +2,7 @@
 
 class InitiativesController < AuthenticatedController
   before_action :assign_company
-  before_action :assign_initiative, except: :index
+  before_action :assign_initiative, except: %i[index new create]
 
   def index
     @initiatives = @company.initiatives.order(start_date: :desc)
@@ -33,9 +33,29 @@ class InitiativesController < AuthenticatedController
     redirect_to company_initiative_path(@company, @initiative)
   end
 
+  def new
+    @initiative = Initiative.new(company: @company)
+  end
+
+  def create
+    @initiative = Initiative.new(initiative_params.merge(company: @company))
+
+    if @initiative.save
+      flash[:notice] = I18n.t('initiatives.create.success')
+      redirect_to company_initiatives_path(@company)
+    else
+      flash[:error] = I18n.t('initiatives.create.error')
+      render :new
+    end
+  end
+
   private
 
   def assign_initiative
     @initiative = @company.initiatives.find(params[:id])
+  end
+
+  def initiative_params
+    params.require(:initiative).permit(:name, :start_date, :end_date)
   end
 end

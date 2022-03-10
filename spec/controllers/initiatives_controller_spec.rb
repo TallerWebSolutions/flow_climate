@@ -19,6 +19,18 @@ RSpec.describe InitiativesController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'GET #new' do
+      before { get :new, params: { company_id: 'foo' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
+
+    describe 'POST #create' do
+      before { post :create, params: { company_id: 'foo' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -126,6 +138,80 @@ RSpec.describe InitiativesController, type: :controller do
         post :generate_cache, params: { company_id: company, id: initiative }
 
         expect(flash[:notice]).to eq I18n.t('general.enqueued')
+      end
+    end
+
+    describe 'GET #new' do
+      context 'valid parameters' do
+        before { get :new, params: { company_id: company } }
+
+        it 'instantiates a new initiative and renders the template' do
+          expect(response).to render_template :new
+          expect(assigns(:company)).to eq company
+          expect(assigns(:initiative)).to be_a_new Initiative
+        end
+      end
+
+      context 'invalid' do
+        context 'company' do
+          before { get :new, params: { company_id: 'foo' } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'and not permitted company' do
+          let(:company) { Fabricate :company }
+
+          before { get :new, params: { company_id: company } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'POST #create' do
+      context 'passing valid parameters' do
+        it 'creates the new initiative and redirects' do
+          start_date = 2.days.ago
+          end_date = 3.days.from_now
+
+          post :create, params: { company_id: company, initiative: { name: 'foo', start_date: start_date, end_date: end_date } }
+
+          expect(assigns(:company)).to eq company
+
+          created_initiative = Initiative.last
+          expect(created_initiative.name).to eq 'foo'
+          expect(created_initiative.start_date).to eq start_date.to_date
+          expect(created_initiative.end_date).to eq end_date.to_date
+
+          expect(response).to redirect_to company_initiatives_path(company)
+        end
+      end
+
+      context 'invalid' do
+        context 'parameters' do
+          before { post :create, params: { company_id: company, initiative: { name: nil, start_date: nil, end_date: nil } } }
+
+          it 'does not create the initiative and re-render the template with the errors' do
+            expect(Initiative.last).to be_nil
+            expect(response).to render_template :new
+            expect(assigns(:initiative).errors.full_messages).to eq ['Nome não pode ficar em branco', 'Dt Início não pode ficar em branco', 'Dt Fim não pode ficar em branco']
+          end
+        end
+
+        context 'company' do
+          before { post :create, params: { company_id: 'foo', initiative: { name: 'foo', start_date: 2.days.ago, end_date: 2.days.from_now } } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'and not permitted company' do
+          let(:company) { Fabricate :company }
+
+          before { post :create, params: { company_id: company, initiative: { name: 'foo', start_date: 2.days.ago, end_date: 2.days.from_now } } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
       end
     end
   end

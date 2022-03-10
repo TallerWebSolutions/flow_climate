@@ -8,6 +8,12 @@
   </div>
 </div>
 
+<div class="row pull-right">
+  <div class="col-xs-12">
+    <%= link_to I18n.t('initiatives.new.title'), new_company_initiative_path(@company, @initiative), class: 'btn btn-primary' %>
+  </div>
+</div>
+
 <% if @initiatives.present? %>
   <table class="table">
     <thead>
@@ -44,5 +50,9 @@
     </tbody>
   </table>
 <% else %>
-  <%= render 'layouts/no_data', missing_data: Initiative.model_name.human(count: 2) %>
+  <div class="row">
+    <div class="col-xs-12">
+      <%= render 'layouts/no_data', missing_data: Initiative.model_name.human(count: 2) %>
+    </div>
+  </div>
 <% end %>

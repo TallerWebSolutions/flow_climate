@@ -1486,3 +1486,8 @@ pt-BR:
   initiatives:
     index:
       title: "Iniciativas"
+    create:
+      success: "Initiative created."
+      error: "A iniciative não foi salva. Verifique o formulário para mais informações."
+    new:
+      title: "Nova Iniciativa"
