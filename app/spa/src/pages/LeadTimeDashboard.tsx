@@ -146,13 +146,11 @@ const LeadTimeDashboard = () => {
     },
     {
       title: "Bug",
-      value: lastProjectConsolidation?.leadTimeBug,
-      unity: "segundos",
+      value: secondsToReadbleDate(lastProjectConsolidation?.leadTimeBug!),
     },
     {
       title: "Chore",
-      value: lastProjectConsolidation?.leadTimeChore,
-      unity: "segundos",
+      value: secondsToReadbleDate(lastProjectConsolidation?.leadTimeChore!),
     },
   ]
 
@@ -163,13 +161,11 @@ const LeadTimeDashboard = () => {
     },
     {
       title: "Data fixa",
-      value: lastProjectConsolidation?.leadTimeFixedDate,
-      unity: "segundos",
+      value: secondsToReadbleDate(lastProjectConsolidation?.leadTimeFixedDate!),
     },
     {
       title: "Expedição",
-      value: lastProjectConsolidation?.leadTimeExpedite,
-      unity: "segundos",
+      value: secondsToReadbleDate(lastProjectConsolidation?.leadTimeExpedite!),
     },
   ]
 
