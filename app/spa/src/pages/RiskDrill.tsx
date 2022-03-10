@@ -88,6 +88,10 @@ export const RiskDrill = () => {
       label: "Relatório de Status",
       to: `/companies/${companySlug}/projects/${projectId}/status_report_dashboard`,
     },
+    {
+      label: "Lead time dashboard",
+      to: `/companies/${companySlug}/projects/${projectId}/lead_time_dashboard`,
+    },
   ]
 
   const flowLastFewWeeks = [
