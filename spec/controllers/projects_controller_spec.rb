@@ -940,8 +940,7 @@ RSpec.describe ProjectsController, type: :controller do
       context 'passing valid parameters' do
         it 'assigns the instance variables and renders the template' do
           get :lead_time_dashboard, params: { company_id: company, id: project }, xhr: true
-          expect(response).to render_template 'projects/lead_time_dashboard'
-          expect(assigns(:project)).to eq project
+          expect(response).to render_template 'spa-build/index'
         end
       end
 

@@ -6,6 +6,6 @@ describe("secondsToReadbleDate", () => {
   })
 
   it("should '174410's be formated to readble human PTBR format", () => {
-    expect(secondsToReadbleDate(174410)).toBe("2 dias e 26 minutos")
+    expect(secondsToReadbleDate(174410)).toBe("2 dias")
   })
 })

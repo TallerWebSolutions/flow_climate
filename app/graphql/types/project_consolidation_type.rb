@@ -23,8 +23,7 @@ module Types
     field :lead_time_chore, Int, null: true
     field :lead_time_standard, Int, null: true
     field :lead_time_fixed_date, Int, null: true
-    field :lead_time_expedite, Int, null: true    
-
+    field :lead_time_expedite, Int, null: true
     field :total, [Int], null: false
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
 
