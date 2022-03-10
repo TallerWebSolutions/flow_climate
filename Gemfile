@@ -47,7 +47,7 @@ group :test, :development do
   gem 'rails-controller-testing'
   gem 'rspec-collection_matchers'
   gem 'rspec-rails'
-  gem 'rubocop', '~> 1.24', require: false
+  gem 'rubocop'
   gem 'rubocop-graphql', require: false
   gem 'rubocop-performance', require: false
   gem 'rubocop-rails', require: false

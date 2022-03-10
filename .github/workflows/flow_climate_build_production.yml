@@ -79,7 +79,9 @@ jobs:
           PG_USER: "postgres"
           PG_PASSWORD: "postgres"
           PG_PORT: ${{ job.services.postgres.ports['5432'] }}
-        run: bundle exec rspec --fail-fast
+        run: |
+          rake parallel:setup
+          rake parallel:spec
 
   deploy-production:
     runs-on: ubuntu-latest

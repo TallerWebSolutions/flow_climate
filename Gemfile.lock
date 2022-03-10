@@ -518,7 +518,7 @@ DEPENDENCIES
   rspec-collection_matchers
   rspec-rails
   rspec_junit_formatter
-  rubocop (~> 1.24)
+  rubocop
   rubocop-graphql
   rubocop-performance
   rubocop-rails
