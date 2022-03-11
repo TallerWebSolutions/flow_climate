@@ -8,6 +8,7 @@ import Replenishing from "./pages/Replenishing"
 import StatusReport from "./pages/StatusReport"
 import RiskDrill from "./pages/RiskDrill"
 import LeadTimeDashboard from "./pages/LeadTimeDashboard"
+import Statistics from "./pages/Statistics"
 
 import "./lib/i18n"
 
@@ -33,6 +34,10 @@ const App = () => (
         <Route
           path="/companies/taller/projects/:projectId/lead_time_dashboard"
           element={<LeadTimeDashboard />}
+        />
+        <Route
+          path="/companies/taller/projects/:projectId/statistics_tab"
+          element={<Statistics />}
         />
       </Routes>
     </BrowserRouter>
