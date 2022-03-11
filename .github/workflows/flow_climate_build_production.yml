@@ -81,7 +81,9 @@ jobs:
           PG_PORT: ${{ job.services.postgres.ports['5432'] }}
           TEST_ENV_NUMBER: 4
         run: |
-          bundle exec rake parallel:setup
+          bundle exec rake parallel:create
+          bundle exec rake parallel:prepare
+          bundle exec rake parallel:migrate
           bundle exec rake parallel:spec
 
   deploy-production:
