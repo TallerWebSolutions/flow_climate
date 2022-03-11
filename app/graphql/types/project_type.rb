@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Types
+  # rubocop:disable Metrics/ClassLength
   class ProjectType < Types::BaseObject
     field :id, ID, null: false
     field :company, Types::CompanyType, null: false
@@ -24,7 +25,6 @@ module Types
     field :current_monte_carlo_weeks_std_dev, Int, null: true
     field :current_weeks_by_little_law, Int, null: true
     field :lead_time_p80, Float, null: false
-
     field :work_in_progress_limit, Int, null: false
     field :weekly_throughputs, [Int], null: false
     field :mode_weekly_troughputs, Int, null: false
@@ -49,6 +49,10 @@ module Types
     field :percentage_standard, Float, null: true
     field :percentage_expedite, Float, null: true
     field :percentage_fixed_date, Float, null: true
+    field :current_risk_to_deadline, Float, null: true
+    field :remaining_days, Int, null: true
+    field :current_team_based_risk, Float, null: true
+    field :running, Boolean, null: true
 
     field :customers, [Types::CustomerType], null: true
     field :products, [Types::ProductType], null: true
@@ -62,6 +66,10 @@ module Types
     delegate :team_monte_carlo_weeks_max, to: :object
     delegate :team_monte_carlo_weeks_min, to: :object
     delegate :team_based_odds_to_deadline, to: :object
+
+    def running
+      object.running?
+    end
 
     def qty_in_progress
       object.in_wip.count
@@ -119,5 +127,10 @@ module Types
     def current_weeks_by_little_law
       object.project_consolidations.last.weeks_by_little_law
     end
+
+    def current_team_based_risk
+      object.project_consolidations.last.team_based_operational_risk
+    end
   end
+  # rubocop:enable Metrics/ClassLength
 end

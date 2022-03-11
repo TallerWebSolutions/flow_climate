@@ -24,6 +24,7 @@ module Types
     field :lead_time_standard, Int, null: true
     field :lead_time_fixed_date, Int, null: true
     field :lead_time_expedite, Int, null: true
+    field :team_based_operational_risk, Float, null: true
     field :total, [Int], null: false
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
 
