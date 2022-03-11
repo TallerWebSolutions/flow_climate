@@ -13,7 +13,7 @@
     <div class="col-xs-12 center">
       <div class="tab">
         <%= link_to I18n.t('general.list'), '#', class: 'btn btn-default active' %>
-        <%= link_to I18n.t('general.tabs.charts'), charts_company_tasks_path(@company, tasks_search: params['tasks_search'], tasks_start_date: params['tasks_start_date'], tasks_end_date: params['tasks_end_date'], tasks_project: params['tasks_project']), class: 'btn btn-default', method: :post %>
+        <%= link_to I18n.t('general.tabs.charts'), charts_company_tasks_path(@company, tasks_search: params['tasks_search'], tasks_start_date: params['tasks_start_date'], tasks_end_date: params['tasks_end_date'], tasks_project: params['tasks_project'], tasks_team: params['tasks_team']), class: 'btn btn-default', method: :post %>
       </div>
     </div>
   </div>
@@ -34,9 +34,13 @@
   </div>
 
   <div class="row row-equal">
-    <div class="col-xs-12 bottom-spaced-component">
+    <div class="col-xs-6 bottom-spaced-component">
       <%= label_tag Project.model_name.human, nil, class: 'control-label' %>
       <%= select_tag :tasks_project, options_for_select(projects_for_search_options(@company), params[:tasks_project]), include_blank: I18n.t('general.select'), class: 'form-control' %>
+    </div>
+    <div class="col-xs-6 bottom-spaced-component">
+      <%= label_tag Team.model_name.human, nil, class: 'control-label' %>
+      <%= select_tag :tasks_team, options_for_select(teams_for_search_options(@company), params[:tasks_team]), include_blank: I18n.t('general.select'), class: 'form-control' %>
     </div>
   </div>
 
@@ -62,3 +66,8 @@
 <hr>
 
 <%= render 'tasks/tasks_table', company: @company, tasks_list: @tasks, paged_tasks: @paged_tasks, finished_tasks: @finished_tasks %>
+
+<% content_for :javascript do %>
+  <%= javascript_include_tag 'tasks/index' %>
+
+<% end %>

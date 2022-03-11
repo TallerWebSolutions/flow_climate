@@ -47,6 +47,30 @@ RSpec.describe Task, type: :model do
         expect(described_class.not_discarded_until(5.days.ago)).to match_array [first_task, second_task]
       end
     end
+
+    describe '.opened_between' do
+      it 'returns the opened tasks between the given dates' do
+        discarded_demand = Fabricate :demand, discarded_at: 4.days.ago
+        first_task = Fabricate :task, created_date: 2.days.ago, end_date: nil
+        second_task = Fabricate :task, created_date: 3.days.ago, end_date: nil
+        Fabricate :task, demand: discarded_demand, created_date: 3.days.ago, end_date: nil
+        Fabricate :task, created_date: 4.days.ago, end_date: 1.day.ago
+
+        expect(described_class.opened_between(3.days.ago, 2.days.ago)).to match_array [first_task, second_task]
+      end
+    end
+
+    describe '.finished_between' do
+      it 'returns the finished tasks between the given dates' do
+        discarded_demand = Fabricate :demand, discarded_at: 4.days.ago
+        first_task = Fabricate :task, created_date: 4.days.ago, end_date: 3.days.ago
+        second_task = Fabricate :task, created_date: 3.days.ago, end_date: 2.days.ago
+        Fabricate :task, demand: discarded_demand, created_date: 3.days.ago, end_date: nil
+        Fabricate :task, created_date: 2.days.ago, end_date: 1.day.ago
+
+        expect(described_class.finished_between(3.days.ago, 2.days.ago)).to match_array [first_task, second_task]
+      end
+    end
   end
 
   context 'callbacks' do

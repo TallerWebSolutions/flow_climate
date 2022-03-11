@@ -32,6 +32,8 @@ class Task < ApplicationRecord
   scope :not_discarded_until, ->(date) { where('tasks.discarded_at IS NULL OR tasks.discarded_at > :limit_date', limit_date: date) }
   scope :finished, ->(date = Time.zone.now) { not_discarded_until(date).where('tasks.end_date <= :limit_date', limit_date: date).order(:end_date) }
   scope :open, ->(date = Time.zone.now) { not_discarded_until(date).where('tasks.created_date <= :limit_date AND tasks.end_date IS NULL', limit_date: date).order(:created_date) }
+  scope :finished_between, ->(start_date, end_date) { kept.where('tasks.end_date BETWEEN :start_date AND :end_date', start_date: start_date.to_date.beginning_of_day, end_date: end_date.to_date.end_of_day) }
+  scope :opened_between, ->(start_date, end_date) { kept.where('tasks.created_date BETWEEN :start_date AND :end_date', start_date: start_date.to_date.beginning_of_day, end_date: end_date.to_date.end_of_day) }
 
   validates :title, :created_date, presence: true
 

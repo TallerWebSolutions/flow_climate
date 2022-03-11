@@ -8,7 +8,7 @@ RSpec.describe Flow::TimeFlowInformation, type: :model do
   describe '.initialize' do
     context 'with data' do
       it 'assigns the correct information' do
-        travel_to Date.new(2018, 4, 26) do
+        travel_to Time.zone.local(2018, 4, 26, 10, 0, 0) do
           first_project = Fabricate :project, products: [product], customers: [customer], status: :executing, name: 'first_project', start_date: Date.new(2018, 2, 20), end_date: Date.new(2018, 4, 22), qty_hours: 1000, initial_scope: 10
           second_project = Fabricate :project, products: [product], customers: [customer], status: :waiting, name: 'second_project', start_date: Date.new(2018, 3, 13), end_date: Date.new(2018, 3, 21), qty_hours: 400, initial_scope: 10
           third_project = Fabricate :project, products: [product], customers: [customer], status: :maintenance, name: 'third_project', start_date: Date.new(2018, 3, 12), end_date: Date.new(2018, 5, 13), qty_hours: 800, initial_scope: 10

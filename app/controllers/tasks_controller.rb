@@ -41,9 +41,10 @@ class TasksController < AuthenticatedController
     tasks
     @tasks = @tasks.where('title ILIKE :task_name_search', task_name_search: "%#{params['tasks_search']}%") if params['tasks_search'].present?
 
-    @tasks = search_by_project(@tasks) if params['tasks_project'].present?
-    @tasks = search_by_status(@tasks) if params['task_status'].present?
-    @tasks = search_by_date(@tasks) if search_date?
+    search_by_project
+    search_by_team
+    search_by_status
+    search_by_date
 
     @paged_tasks = @tasks.page(page_param)
   end
@@ -52,23 +53,33 @@ class TasksController < AuthenticatedController
     params['tasks_start_date'].present? && params['tasks_end_date'].present?
   end
 
-  def search_by_status(tasks)
-    return tasks.finished if params['task_status'] == 'finished'
-    return tasks.open if params['task_status'] == 'not_finished'
+  def search_by_status
+    return if params['task_status'].blank?
 
-    tasks
+    @tasks = @tasks.finished if params['task_status'] == 'finished'
+    @tasks = @tasks.open if params['task_status'] == 'not_finished'
   end
 
-  def search_by_project(tasks)
-    tasks.joins(:demand).where(demand: { project_id: params['tasks_project'] })
+  def search_by_project
+    return if params['tasks_project'].blank?
+
+    @tasks = tasks.joins(:demand).where(demand: { project_id: params['tasks_project'] })
   end
 
-  def search_by_date(tasks)
-    if params['task_status'] == 'finished'
-      tasks.where('tasks.end_date BETWEEN :start_date AND :end_date', start_date: params['tasks_start_date'].to_date.beginning_of_day, end_date: params['tasks_end_date'].to_date.end_of_day)
-    else
-      tasks.where('tasks.created_date BETWEEN :start_date AND :end_date', start_date: params['tasks_start_date'].to_date.beginning_of_day, end_date: params['tasks_end_date'].to_date.end_of_day)
-    end
+  def search_by_team
+    return if params['tasks_team'].blank?
+
+    @tasks = tasks.joins(:demand).where(demand: { team_id: params['tasks_team'] })
+  end
+
+  def search_by_date
+    return unless search_date?
+
+    @tasks = if params['task_status'] == 'finished'
+               @tasks.finished_between(params['tasks_start_date'], params['tasks_end_date'])
+             else
+               @tasks.opened_between(params['tasks_start_date'], params['tasks_end_date'])
+             end
   end
 
   def tasks

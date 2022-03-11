@@ -182,6 +182,29 @@ RSpec.describe TasksController, type: :controller do
           end
         end
 
+        context 'with search by team' do
+          it 'assigns the instance variables and renders the template according to the search' do
+            travel_to Time.zone.local(2022, 2, 16, 10, 0, 0) do
+              team = Fabricate :team, company: company
+              other_team = Fabricate :team, company: company
+              demand = Fabricate :demand, company: company, team: team
+              other_demand = Fabricate :demand, company: company, team: other_team
+              discarded_demand = Fabricate :demand, company: company, discarded_at: 2.days.ago
+
+              task = Fabricate :task, demand: demand, created_date: 2.days.ago, end_date: 1.day.ago, title: 'fOo'
+              other_task = Fabricate :task, demand: demand, created_date: 1.day.ago, end_date: 1.hour.ago, title: 'fOObar'
+
+              Fabricate :task, demand: discarded_demand, created_date: 1.day.ago, end_date: 1.hour.ago, title: 'fOObar'
+              Fabricate :task, demand: other_demand
+
+              post :search, params: { company_id: company, tasks_team: team.id }
+
+              expect(assigns(:tasks)).to eq [other_task, task]
+              expect(response).to render_template :index
+            end
+          end
+        end
+
         context 'with no search params' do
           it 'assigns the instance variables and renders the template' do
             travel_to Time.zone.local(2022, 2, 16, 10, 0, 0) do
