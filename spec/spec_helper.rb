@@ -56,6 +56,13 @@ RSpec.configure do |config|
 
   config.shared_context_metadata_behavior = :apply_to_host_groups
 
+  config.before(:all) do
+    spa_build = 'app/spa/build'
+    FileUtils.mkdir_p(spa_build) unless File.directory?(spa_build)
+    spa_index = "#{spa_build}/index.html"
+    FileUtils.touch(spa_index) unless File.exist?(spa_index)
+  end
+
   config.before do
     DatabaseCleaner.strategy = :transaction
   end
