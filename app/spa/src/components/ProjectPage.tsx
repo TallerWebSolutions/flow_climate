@@ -13,6 +13,16 @@ type ProjectPageProps = {
   children: ReactElement | ReactElement[]
 }
 
+const assignCardTypeByRisk = (risk: number) => {
+  if (risk > 0.5 && risk <= 0.7) {
+    return CardType.WARNING
+  } else if (risk > 0.7) {
+    return CardType.ERROR
+  }
+
+  return CardType.SUCCESS
+}
+
 export const ProjectPage = ({
   project,
   pageName,
@@ -20,6 +30,7 @@ export const ProjectPage = ({
 }: ProjectPageProps) => {
   const { pathname } = useLocation()
   const projectId = project.id
+  const projectIsRugging = project.running
   const projectName = project.name || ""
   const company = project.company || ""
   const companyName = company.name || ""
@@ -58,6 +69,16 @@ export const ProjectPage = ({
     },
   ]
 
+  const currentOperationalRisk = project.currentRiskToDeadline
+  const currentRiskToDeadlinePercentage = (
+    currentOperationalRisk * 100
+  ).toFixed(2)
+  const remainingDays = project.remainingDays
+  const currentTeamRisk = project.currentTeamBasedRisk
+  const currentTeamRiskPercentage = (currentTeamRisk * 100).toFixed(2)
+  const cardTypeTeamRisk = assignCardTypeByRisk(currentTeamRisk)
+  const cardTypeOperationalRisk = assignCardTypeByRisk(currentOperationalRisk)
+
   return (
     <BasicPage
       title={projectName}
@@ -65,17 +86,23 @@ export const ProjectPage = ({
       company={company}
     >
       <>
-        <Card
-          title="Risco Operacional"
-          subtitle="Faltam 86 dia(s) para o fim do projeto e o risco operacional deste prazo é de 92,60%"
-          type={CardType.WARNING}
-        />
+        {projectIsRugging && (
+          <Box sx={{ display: "flex", my: 2 }}>
+            <Card
+              style={{ width: "300px", marginRight: "20px" }}
+              title="Risco Operacional"
+              subtitle={`Faltam ${remainingDays} dia(s) para o fim do projeto e o risco operacional deste prazo é de ${currentRiskToDeadlinePercentage}%`}
+              type={cardTypeOperationalRisk}
+            />
 
-        <Card
-          title="Risco Atual"
-          subtitle="Com a estratégia de WiP e pelos dados do time, o risco atual é de 52,00%"
-          type={CardType.SUCCESS}
-        />
+            <Card
+              style={{ width: "300px" }}
+              title="Risco Atual"
+              subtitle={`Com a estratégia de WiP e pelos dados do time, o risco atual é de ${currentTeamRiskPercentage}%`}
+              type={cardTypeTeamRisk}
+            />
+          </Box>
+        )}
         {projectTabs && (
           <Box
             sx={{
