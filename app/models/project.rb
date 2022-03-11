@@ -536,6 +536,10 @@ class Project < ApplicationRecord
     demands.kept.in_wip(date)
   end
 
+  def running?
+    executing? || maintenance?
+  end
+
   private
 
   def replenishing_consolidations_to_date(date)
@@ -545,10 +549,6 @@ class Project < ApplicationRecord
 
   def backlog_for(date = Time.zone.now)
     DemandsRepository.instance.known_scope_to_date(demands.map(&:id), date)
-  end
-
-  def running?
-    executing? || maintenance?
   end
 
   def no_pressure_set(date)
