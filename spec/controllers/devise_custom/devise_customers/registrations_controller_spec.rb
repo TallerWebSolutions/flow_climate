@@ -13,12 +13,13 @@ RSpec.describe DeviseCustom::DeviseCustomers::RegistrationsController, type: :co
     context 'with simple new registration' do
       it 'signs in the user and redirects to the boards index' do
         expect_any_instance_of(Devise::RegistrationsController).to receive(:sign_up).once.and_call_original
-        post :create, params: { devise_customer: { first_name: 'Xpto', last_name: 'Bla', email: 'foo@bar.com', password: 'abc123', password_confirmation: 'abc123' } }
+        post :create, params: { devise_customer: { first_name: 'Xpto', last_name: 'Bla', email: 'foo@bar.com', language: 'en', password: 'abc123', password_confirmation: 'abc123' } }
 
         expect(assigns(:devise_customer).valid?).to be true
         expect(assigns(:devise_customer).first_name).to eq 'Xpto'
         expect(assigns(:devise_customer).last_name).to eq 'Bla'
         expect(assigns(:devise_customer).email).to eq 'foo@bar.com'
+        expect(assigns(:devise_customer).language).to eq 'en'
         expect(response).to redirect_to root_path
       end
     end

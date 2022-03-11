@@ -53,6 +53,20 @@ en:
         sign_in_count: Sign in Count
       project:
         percentage_effort_to_bugs: "% Effort Charged in Bugs"
+        enums:
+          status:
+            waiting: Waiting
+            executing: Executing
+            maintenance: Maintenance
+            finished: Finished
+            cancelled: Cancelled
+            negotiating: Negotiating
+          project_type:
+            outsourcing: Outsourcing
+            consulting: Consulting
+            training: Training
+            domestic_product: Domestic Product
+            marketing: Marketing
       project_risk_config:
         enums:
           risk_type:
@@ -221,6 +235,7 @@ en:
     models:
       jira/jira_account: "Jira Accounts"
       portfolio_unit:
+        one: "Portfolio Units"
         other: "Portfolio Units"
   product:
     name:

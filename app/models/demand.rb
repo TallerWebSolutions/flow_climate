@@ -4,45 +4,45 @@
 #
 # Table name: demands
 #
-#  id                           :bigint           not null, primary key
-#  class_of_service             :integer          default("standard"), not null
-#  commitment_date              :datetime
-#  cost_to_project              :decimal(, )      default(0.0)
-#  created_date                 :datetime         not null
-#  demand_score                 :decimal(, )      default(0.0)
-#  demand_tags                  :string           default([]), is an Array
-#  demand_title                 :string
-#  demand_type                  :integer          not null
-#  demand_url                   :string
-#  discarded_at                 :datetime
-#  effort_design                :decimal(, )      default(0.0), not null
-#  effort_development           :decimal(, )      default(0.0), not null
-#  effort_downstream            :decimal(, )      default(0.0)
-#  effort_management            :decimal(, )      default(0.0), not null
-#  effort_upstream              :decimal(, )      default(0.0)
-#  end_date                     :datetime
-#  external_url                 :string
-#  lead_time_percentile_ranking :float
-#  leadtime                     :decimal(, )
-#  manual_effort                :boolean          default(FALSE)
-#  slug                         :string
-#  total_bloked_working_time    :decimal(, )      default(0.0)
-#  total_queue_time             :integer          default(0)
-#  total_touch_blocked_time     :decimal(, )      default(0.0)
-#  total_touch_time             :integer          default(0)
-#  created_at                   :datetime         not null
-#  updated_at                   :datetime         not null
-#  company_id                   :integer          not null
-#  contract_id                  :integer
-#  current_stage_id             :integer
-#  customer_id                  :integer
-#  external_id                  :string           not null
-#  portfolio_unit_id            :integer
-#  product_id                   :integer
-#  project_id                   :integer
-#  risk_review_id               :integer
-#  service_delivery_review_id   :integer
-#  team_id                      :integer          not null
+#  id                                   :bigint           not null, primary key
+#  class_of_service                     :integer          default("standard"), not null
+#  commitment_date                      :datetime
+#  cost_to_project                      :decimal(, )      default(0.0)
+#  created_date                         :datetime         not null
+#  demand_score                         :decimal(, )      default(0.0)
+#  demand_tags                          :string           default([]), is an Array
+#  demand_title                         :string
+#  demand_type                          :integer          not null
+#  demand_url                           :string
+#  discarded_at                         :datetime
+#  effort_design                        :decimal(, )      default(0.0), not null
+#  effort_development                   :decimal(, )      default(0.0), not null
+#  effort_downstream                    :decimal(, )      default(0.0)
+#  effort_management                    :decimal(, )      default(0.0), not null
+#  effort_upstream                      :decimal(, )      default(0.0)
+#  end_date                             :datetime
+#  external_url                         :string
+#  lead_time_percentile_project_ranking :float
+#  leadtime                             :decimal(, )
+#  manual_effort                        :boolean          default(FALSE)
+#  slug                                 :string
+#  total_bloked_working_time            :decimal(, )      default(0.0)
+#  total_queue_time                     :integer          default(0)
+#  total_touch_blocked_time             :decimal(, )      default(0.0)
+#  total_touch_time                     :integer          default(0)
+#  created_at                           :datetime         not null
+#  updated_at                           :datetime         not null
+#  company_id                           :integer          not null
+#  contract_id                          :integer
+#  current_stage_id                     :integer
+#  customer_id                          :integer
+#  external_id                          :string           not null
+#  portfolio_unit_id                    :integer
+#  product_id                           :integer
+#  project_id                           :integer
+#  risk_review_id                       :integer
+#  service_delivery_review_id           :integer
+#  team_id                              :integer          not null
 #
 # Indexes
 #

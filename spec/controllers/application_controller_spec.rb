@@ -25,4 +25,55 @@ RSpec.describe ApplicationController, type: :controller do
       expect(response.body).to eq('404 Not Found')
     end
   end
+
+  describe '#set_locale' do
+    controller do
+      def index
+        head :ok, params: { content_type: 'text/html' }
+      end
+    end
+
+    context 'with no request parameter' do
+      context 'with no current_user nor language' do
+        it 'uses the en locale' do
+          routes.draw { get 'index' => 'anonymous#index' }
+
+          get :index
+          expect(I18n.locale).to eq I18n.default_locale
+        end
+      end
+
+      context 'with current_user and language' do
+        let(:user) { Fabricate :user, language: 'en' }
+
+        it 'uses the en locale' do
+          routes.draw { get 'index' => 'anonymous#index' }
+          sign_in user
+
+          get :index
+          expect(I18n.locale).to eq :en
+        end
+      end
+    end
+
+    context 'with pt as browser language' do
+      it 'uses the pt locale' do
+        routes.draw { get 'index' => 'anonymous#index' }
+
+        request.headers['HTTP_ACCEPT_LANGUAGE'] = 'en-US,en;q=0.9,pt-BR;q=0.8,pt;q=0.7'
+        get :index
+        expect(I18n.locale).to eq :'pt-BR'
+      end
+    end
+
+    context 'without pt as browser language' do
+      it 'uses the en locale' do
+        routes.draw { get 'index' => 'anonymous#index' }
+
+        request.headers['HTTP_ACCEPT_LANGUAGE'] = 'en-US,en;q=0.9'
+        get :index
+        expect(I18n.locale).to eq :en
+      end
+    end
+  end
 end

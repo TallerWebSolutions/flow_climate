@@ -1510,7 +1510,8 @@ CREATE TABLE public.devise_customers (
     current_sign_in_ip inet,
     last_sign_in_ip inet,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    language character varying DEFAULT 'pt-BR'::character varying NOT NULL
 );
 
 
@@ -3408,7 +3409,8 @@ CREATE TABLE public.users (
     last_company_id integer,
     email_notifications boolean DEFAULT false NOT NULL,
     user_money_credits numeric DEFAULT 0 NOT NULL,
-    avatar character varying
+    avatar character varying,
+    language character varying DEFAULT 'pt-BR'::character varying NOT NULL
 );
 
 
@@ -7086,6 +7088,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220131144645'),
 ('20220202200413'),
 ('20220214141346'),
-('20220221210259');
+('20220221210259'),
+('20220311184239');
 
 

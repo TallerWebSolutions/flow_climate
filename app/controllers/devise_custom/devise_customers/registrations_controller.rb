@@ -12,7 +12,7 @@ module DeviseCustom
       private
 
       def sign_up_params
-        params.require(:devise_customer).permit(:first_name, :last_name, :email, :password, :password_confirmation)
+        params.require(:devise_customer).permit(:first_name, :last_name, :email, :language, :password, :password_confirmation)
       end
 
       def check_invites

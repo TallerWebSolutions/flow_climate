@@ -218,6 +218,7 @@ pt-BR:
         remember_me: Lembrar
         created_at: Chegou em
         sign_in_count: Qty Logins
+        language: Idioma
       company:
         customers: Clientes
         products: Produtos

@@ -293,13 +293,14 @@ RSpec.describe UsersController, type: :controller do
           let(:file) { Rack::Test::UploadedFile.new(Rails.root.join('spec/fixtures/default_image.png'), 'image/png') }
 
           it 'updates the user and redirects to the show' do
-            put :update, params: { id: user, user: { first_name: 'Bla', last_name: 'Foo', avatar: file } }
+            put :update, params: { id: user, user: { first_name: 'Bla', last_name: 'Foo', avatar: file, language: 'en' } }
 
             updated_user = User.last
 
             expect(updated_user.first_name).to eq 'Bla'
             expect(updated_user.last_name).to eq 'Foo'
             expect(updated_user.avatar.file.file).to match 'default_image.png'
+            expect(updated_user.language).to eq 'en'
             expect(response).to redirect_to user_path(user)
           end
         end

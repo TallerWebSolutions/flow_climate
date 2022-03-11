@@ -22,15 +22,19 @@
     </div>
     <div class="col-xs-10">
       <div class="row">
-        <div class='col-xs-6 form-group <%= 'has-error' if @user.errors[:first_name].present? %>'>
+        <div class='col-xs-4 form-group <%= 'has-error' if @user.errors[:first_name].present? %>'>
           <%= form.label :first_name, class: 'control-label required' %>
           <%= form.text_field :first_name, class: 'form-control', step: 1 %>
           <span class="help-block"><%= @user.errors[:first_name].join(', ') %></span>
         </div>
-        <div class='col-xs-6 form-group <%= 'has-error' if @user.errors[:last_name].present? %>'>
+        <div class='col-xs-4 form-group <%= 'has-error' if @user.errors[:last_name].present? %>'>
           <%= form.label :last_name, class: 'control-label required' %>
           <%= form.text_field :last_name, class: 'form-control' %>
           <span class="help-block"><%= @user.errors[:last_name].join(', ') %></span>
+        </div>
+        <div class='col-xs-4 form-group'>
+          <%= form.label :language, class: 'control-label' %>
+          <%= form.select :language, [%w[English en], %w[Português pt-BR]], {}, { class: 'form-control' } %>
         </div>
       </div>
       <%= form.submit I18n.t('general.buttons.save'), class: 'btn btn-success' %>
