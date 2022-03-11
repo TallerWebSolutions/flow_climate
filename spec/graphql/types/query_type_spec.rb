@@ -272,7 +272,7 @@ RSpec.describe Types::QueryType do
         customer = Fabricate :customer, company: company
         product = Fabricate :product, company: company, customer: customer
         project = Fabricate :project, company: company, customers: [customer], products: [product], team: team, status: :executing, start_date: 4.days.ago, end_date: 1.day.from_now, max_work_in_progress: 2
-        project_consolidation = Fabricate :project_consolidation, project: project, monte_carlo_weeks_min: 9, monte_carlo_weeks_max: 85, monte_carlo_weeks_std_dev: 7
+        project_consolidation = Fabricate :project_consolidation, project: project, monte_carlo_weeks_min: 9, monte_carlo_weeks_max: 85, monte_carlo_weeks_std_dev: 7, team_based_operational_risk: 0.5
 
         query =
           %(query {
@@ -303,6 +303,10 @@ RSpec.describe Types::QueryType do
           currentMonteCarloWeeksMin
           currentMonteCarloWeeksMax
           currentMonteCarloWeeksStdDev
+          currentTeamBasedRisk
+          currentRiskToDeadline
+          remainingDays
+          running
         }
       })
 
@@ -334,6 +338,10 @@ RSpec.describe Types::QueryType do
                                                       'currentMonteCarloWeeksMax' => 85,
                                                       'currentMonteCarloWeeksStdDev' => 7,
                                                       'remainingWork' => 30,
+                                                      'currentTeamBasedRisk' => 0.5,
+                                                      'currentRiskToDeadline' => 0.0,
+                                                      'remainingDays' => 2,
+                                                      'running' => true,
                                                       'company' => {
                                                         'id' => company.id.to_s,
                                                         'name' => company.name
