@@ -184,7 +184,8 @@ class ProjectsController < AuthenticatedController
   end
 
   def statistics_tab
-    @all_project_consolidations = Consolidations::ProjectConsolidation.for_project(@project).weekly_data.order(:consolidation_date)
+    prepend_view_path Rails.root.join('public')
+    render 'spa-build/index'
   end
 
   def tasks_tab

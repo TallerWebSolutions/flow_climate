@@ -1240,7 +1240,7 @@ RSpec.describe ProjectsController, type: :controller do
           it 'retrieves all the projects to the company' do
             get :statistics_tab, params: { company_id: company, id: project }
 
-            expect(response).to render_template 'projects/statistics_tab'
+            expect(response).to render_template 'spa-build/index'
           end
         end
       end
