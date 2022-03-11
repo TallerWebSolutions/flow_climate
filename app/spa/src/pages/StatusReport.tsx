@@ -14,6 +14,16 @@ export const QUERY = gql`
     project(id: $id) {
       id
       name
+      currentRiskToDeadline
+      currentTeamBasedRisk
+      remainingDays
+      running
+      company {
+        id
+        name
+        slug
+      }
+
       endDate
       firstDeadline
       daysDifferenceBetweenFirstAndLastDeadlines
@@ -27,11 +37,6 @@ export const QUERY = gql`
       failureLoad
       leadTimeP80
       weeklyThroughputs
-      company {
-        id
-        name
-        slug
-      }
     }
   }
 `

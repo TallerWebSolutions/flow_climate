@@ -89,6 +89,10 @@ export type Project = {
   discoveredScope: number
   scope: number
   projectConsolidations: ProjectConsolidation[]
+  currentRiskToDeadline: number
+  remainingDays: number
+  currentTeamBasedRisk: number
+  running: boolean
 }
 
 type ReplenishingProjectsInfoProps = {

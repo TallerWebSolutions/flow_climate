@@ -8,7 +8,18 @@ import TicketGroup from "../components/TicketGroup"
 export const PROJECT_RISK_DRILL_QUERY = gql`
   query ProjectRiskDrill($id: Int!) {
     project(id: $id) {
+      id
       name
+      currentRiskToDeadline
+      currentTeamBasedRisk
+      remainingDays
+      running
+      company {
+        id
+        name
+        slug
+      }
+
       weeklyThroughputs
       workInProgressLimit
       currentWeeksByLittleLaw
@@ -24,11 +35,6 @@ export const PROJECT_RISK_DRILL_QUERY = gql`
       teamMonteCarloWeeksMin
       teamMonteCarloWeeksMax
       teamMonteCarloWeeksStdDev
-      company {
-        id
-        name
-        slug
-      }
     }
   }
 `

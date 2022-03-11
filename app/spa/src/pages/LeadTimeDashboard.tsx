@@ -9,7 +9,12 @@ import { secondsToReadbleDate } from "../lib/date"
 export const LEAD_TIME_DASHBOARD_QUERY = gql`
   query ProjectLeadTimeDashboard($id: Int!) {
     project(id: $id) {
+      id
       name
+      currentRiskToDeadline
+      currentTeamBasedRisk
+      remainingDays
+      running
       company {
         id
         name
