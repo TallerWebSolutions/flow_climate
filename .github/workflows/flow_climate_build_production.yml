@@ -35,14 +35,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install spa dependencies
+      - name: Run SPA tests
         run: |
           cd app/spa
           npm install
-      - name: Run Build
-        run: npm run build
-      - name: Run Tests
-        run: npm run test
+          npm run build
+          npm run test
 
   tests:
     name: Tests
