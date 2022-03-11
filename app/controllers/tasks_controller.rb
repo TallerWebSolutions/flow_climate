@@ -41,6 +41,7 @@ class TasksController < AuthenticatedController
     tasks
     @tasks = @tasks.where('title ILIKE :task_name_search', task_name_search: "%#{params['tasks_search']}%") if params['tasks_search'].present?
 
+    search_by_initiative
     search_by_project
     search_by_team
     search_by_status
@@ -64,6 +65,12 @@ class TasksController < AuthenticatedController
     return if params['tasks_project'].blank?
 
     @tasks = tasks.joins(:demand).where(demand: { project_id: params['tasks_project'] })
+  end
+
+  def search_by_initiative
+    return if params['tasks_initiative'].blank?
+
+    @tasks = tasks.joins(demand: :project).where(demand: { projects: { initiative_id: params['tasks_initiative'] } })
   end
 
   def search_by_team

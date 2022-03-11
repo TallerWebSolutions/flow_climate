@@ -1,6 +1,13 @@
 # frozen_string_literal: true
 
 RSpec.describe TasksHelper, type: :helper do
+  describe '#initiatives_for_search_options' do
+    let(:company) { Fabricate :company }
+    let!(:initiative) { Fabricate :initiative, company: company }
+
+    it { expect(helper.initiatives_for_search_options(company)).to eq(company.initiatives.order(:name).map { |initiative| [initiative.name, initiative.id] }) }
+  end
+
   describe '#projects_for_search_options' do
     let(:company) { Fabricate :company }
     let!(:project) { Fabricate :project, company: company }

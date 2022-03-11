@@ -159,6 +159,35 @@ RSpec.describe TasksController, type: :controller do
           end
         end
 
+        context 'with search by initiative' do
+          it 'assigns the instance variable and renders the template according to the search' do
+            travel_to Time.zone.local(2022, 2, 16, 10, 0, 0) do
+              initiative = Fabricate :initiative, company: company
+              other_initiative = Fabricate :initiative, company: company
+
+              project = Fabricate :project, company: company, initiative: initiative
+              other_project = Fabricate :project, company: company, initiative: initiative
+              other_initiative_project = Fabricate :project, company: company, initiative: other_initiative
+
+              demand = Fabricate :demand, company: company, project: project
+              other_demand = Fabricate :demand, company: company, project: other_project
+              other_initiative_demand = Fabricate :demand, company: company, project: other_initiative_project
+              discarded_demand = Fabricate :demand, company: company, project: other_project, discarded_at: 2.days.ago
+
+              task = Fabricate :task, demand: demand, created_date: 2.days.ago, end_date: 1.day.ago, title: 'first-task'
+              other_task = Fabricate :task, demand: other_demand, created_date: 1.day.ago, end_date: 1.hour.ago, title: 'second-task'
+
+              Fabricate :task, demand: discarded_demand, created_date: 1.day.ago, end_date: 1.hour.ago, title: 'third-task'
+              Fabricate :task, demand: other_initiative_demand, title: 'fourth-task'
+
+              post :search, params: { company_id: company, tasks_initiative: initiative.id }
+
+              expect(assigns(:tasks)).to eq [other_task, task]
+              expect(response).to render_template :index
+            end
+          end
+        end
+
         context 'with search by project' do
           it 'assigns the instance variables and renders the template according to the search' do
             travel_to Time.zone.local(2022, 2, 16, 10, 0, 0) do
@@ -166,7 +195,7 @@ RSpec.describe TasksController, type: :controller do
               other_project = Fabricate :project, company: company
               demand = Fabricate :demand, company: company, project: project
               other_demand = Fabricate :demand, company: company, project: other_project
-              discarded_demand = Fabricate :demand, company: company, discarded_at: 2.days.ago
+              discarded_demand = Fabricate :demand, company: company, project: project, discarded_at: 2.days.ago
 
               task = Fabricate :task, demand: demand, created_date: 2.days.ago, end_date: 1.day.ago, title: 'fOo'
               other_task = Fabricate :task, demand: demand, created_date: 1.day.ago, end_date: 1.hour.ago, title: 'fOObar'
