@@ -10,6 +10,19 @@ import ErrorIcon from "@mui/icons-material/Error"
 import WarningIcon from "@mui/icons-material/Warning"
 import CheckCircleIcon from "@mui/icons-material/CheckCircle"
 
+export enum CardType {
+  PRIMARY = "primary",
+  WARNING = "warning",
+  SUCCESS = "success",
+  ERROR = "error",
+}
+
+type CustomCardProps = {
+  subtitle: string
+  title: string
+  type: CardType
+} & CardProps
+
 type CustomCardContentProps = {
   title: string
   subtitle: string
@@ -47,19 +60,6 @@ const CustomCardContent = ({
     {children}
   </CardContent>
 )
-
-export enum CardType {
-  PRIMARY = "primary",
-  WARNING = "warning",
-  SUCCESS = "success",
-  ERROR = "error",
-}
-
-type CustomCardProps = {
-  subtitle: string
-  title: string
-  type: CardType
-} & CardProps
 
 const Card = ({
   children,

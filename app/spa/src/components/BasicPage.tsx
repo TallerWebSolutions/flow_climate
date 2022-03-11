@@ -1,5 +1,5 @@
 import { createContext, ReactElement, useState } from "react"
-import { Container, Box, Typography } from "@mui/material"
+import { Container, Typography } from "@mui/material"
 import Header from "./Header"
 import MessagesBox, { Message } from "./MessagesBox"
 import Breadcrumbs, { BreadcrumbsLink } from "./Breadcrumbs"
