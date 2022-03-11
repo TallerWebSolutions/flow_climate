@@ -7,6 +7,7 @@ import {
   Box,
 } from "@mui/material"
 import ErrorIcon from "@mui/icons-material/Error"
+import WarningIcon from "@mui/icons-material/Warning"
 import CheckCircleIcon from "@mui/icons-material/CheckCircle"
 
 type CustomCardContentProps = {
@@ -24,7 +25,8 @@ const CustomCardContent = ({
 }: CustomCardContentProps) => (
   <CardContent {...props} sx={{ ":last-child": { paddingBottom: 2 } }}>
     <Box sx={{ display: "flex", alignItems: "center" }}>
-      {type === CardType.WARNING && <ErrorIcon color={type} sx={{ mr: 1 }} />}
+      {type === CardType.ERROR && <ErrorIcon color={type} sx={{ mr: 1 }} />}
+      {type === CardType.WARNING && <WarningIcon color={type} sx={{ mr: 1 }} />}
       {type === CardType.SUCCESS && (
         <CheckCircleIcon color={type} sx={{ mr: 1 }} />
       )}
@@ -50,6 +52,7 @@ export enum CardType {
   PRIMARY = "primary",
   WARNING = "warning",
   SUCCESS = "success",
+  ERROR = "error",
 }
 
 type CustomCardProps = {
