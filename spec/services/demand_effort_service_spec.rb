@@ -11,20 +11,22 @@ RSpec.describe DemandEffortService, type: :service do
 
     context 'with one assignment matching the transition' do
       it 'builds a demand_effort to the demand' do
-        Fabricate :stage_project_config, stage: stage, project: project, compute_effort: true, stage_percentage: 100, management_percentage: 20, pairing_percentage: 50
-        Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: Time.zone.parse('2021-05-24 10:51'), last_time_out: Time.zone.parse('2021-05-24 12:51')
-        Fabricate :item_assignment, demand: demand, start_time: Time.zone.parse('2021-05-24 10:51'), finish_time: Time.zone.parse('2021-05-24 12:51')
-        Fabricate :item_assignment, demand: demand, start_time: Time.zone.parse('2021-05-24 10:51'), finish_time: Time.zone.parse('2021-05-24 11:11')
+        travel_to Time.zone.local(2022, 3, 14, 10, 0, 0) do
+          Fabricate :stage_project_config, stage: stage, project: project, compute_effort: true, stage_percentage: 100, management_percentage: 20, pairing_percentage: 50
+          Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: Time.zone.parse('2021-05-24 10:51'), last_time_out: Time.zone.parse('2021-05-24 12:51')
+          Fabricate :item_assignment, demand: demand, start_time: Time.zone.parse('2021-05-24 10:51'), finish_time: Time.zone.parse('2021-05-24 12:51')
+          Fabricate :item_assignment, demand: demand, start_time: Time.zone.parse('2021-05-24 10:51'), finish_time: Time.zone.parse('2021-05-24 11:11')
 
-        described_class.instance.build_efforts_to_demand(demand)
+          described_class.instance.build_efforts_to_demand(demand)
 
-        expect(DemandEffort.all.count).to eq 2
-        expect(DemandEffort.all.sum(&:effort_value)).to eq 2.4
-        expect(DemandEffort.all.sum(&:effort_with_blocks)).to eq 2.4
-        expect(DemandEffort.all.sum(&:total_blocked)).to eq 0
-        expect(demand.reload.effort_development).to eq 2.4
-        expect(demand.reload.effort_design).to eq 0
-        expect(demand.reload.effort_management).to eq 0
+          expect(DemandEffort.all.count).to eq 2
+          expect(DemandEffort.all.sum(&:effort_value)).to be_within(0.1).of(2.5)
+          expect(DemandEffort.all.sum(&:effort_with_blocks)).to be_within(0.1).of(2.5)
+          expect(DemandEffort.all.sum(&:total_blocked)).to eq 0
+          expect(demand.reload.effort_development).to be_within(0.1).of(2.5)
+          expect(demand.reload.effort_design).to eq 0
+          expect(demand.reload.effort_management).to eq 0
+        end
       end
     end
 

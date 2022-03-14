@@ -60,7 +60,7 @@ class DemandEffortService
     demand_effort = demand.demand_efforts.where(demand_transition: transition, item_assignment: assignment, start_time_to_computation: effort_start_date).first_or_initialize
     return unless demand_effort.automatic_update?
 
-    hours_in_assignment = ((end_date - effort_start_date) / 1.hour).to_i
+    hours_in_assignment = (end_date - effort_start_date) / 1.hour
 
     previous_efforts_to_day = demand.demand_efforts.joins(item_assignment: :membership).where(item_assignment: { membership: assignment.membership }).for_day(day_to_effort)
     previous_efforts_to_day -= [demand_effort]
