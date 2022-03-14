@@ -21,6 +21,14 @@ module Types
       argument :id, Int
     end
 
+    field :project_consolidations,
+          [Types::ProjectConsolidationType],
+          null: true,
+          description: 'Project consolidations' do
+      argument :project_id, Int
+      argument :last_data_in_week, Boolean, required: false
+    end
+
     field :me, Types::UserType, null: false
 
     def teams
@@ -29,6 +37,10 @@ module Types
 
     def team(id:)
       Team.find(id)
+    end
+
+    def project_consolidations(project_id:, last_data_in_week: false)
+      Consolidations::ProjectConsolidation.where(project_id: project_id, last_data_in_week: last_data_in_week).order(:consolidation_date)
     end
 
     def project(id:)
