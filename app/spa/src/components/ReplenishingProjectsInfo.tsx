@@ -43,6 +43,10 @@ export type ProjectConsolidation = {
   leadTimeRangeMonth: number
   leadTimeMinMonth: number
   leadTimeMaxMonth: number
+  histogramRange: number
+  interquartileRange: number
+  leadTimeP25: number
+  leadTimeP75: number
 }
 
 export type Project = {

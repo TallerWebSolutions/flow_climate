@@ -296,6 +296,13 @@ RSpec.describe Types::QueryType do
           }
           projectConsolidations {
             id
+            leadTimeHistogramBinMin
+            leadTimeHistogramBinMax
+            leadTimeMinMonth
+            leadTimeMaxMonth
+            interquartileRange
+            leadTimeP25
+            leadTimeP75
           }
           pastWeeks
           remainingWork
@@ -307,6 +314,17 @@ RSpec.describe Types::QueryType do
           currentRiskToDeadline
           remainingDays
           running
+        }
+
+        projectConsolidations(projectId: #{project.id}) {
+          id
+          leadTimeHistogramBinMin
+          leadTimeHistogramBinMax
+          leadTimeMinMonth
+          leadTimeMaxMonth
+          interquartileRange
+          leadTimeP25
+          leadTimeP75
         }
       })
 
@@ -347,9 +365,26 @@ RSpec.describe Types::QueryType do
                                                         'name' => company.name
                                                       },
                                                       'projectConsolidations' => [{
-                                                        'id' => project_consolidation.id.to_s
+                                                        'id' => project_consolidation.id.to_s,
+                                                        'interquartileRange' => 0.0,
+                                                        'leadTimeHistogramBinMax' => 0.0,
+                                                        'leadTimeHistogramBinMin' => 0.0,
+                                                        'leadTimeMaxMonth' => 0.0,
+                                                        'leadTimeMinMonth' => 0.0,
+                                                        'leadTimeP25' => 0.0,
+                                                        'leadTimeP75' => 0.0
                                                       }]
                                                     })
+        expect(result.dig('data', 'projectConsolidations')).to eq([{
+                                                                    'id' => project_consolidation.id.to_s,
+                                                                    'interquartileRange' => 0.0,
+                                                                    'leadTimeHistogramBinMax' => 0.0,
+                                                                    'leadTimeHistogramBinMin' => 0.0,
+                                                                    'leadTimeMaxMonth' => 0.0,
+                                                                    'leadTimeMinMonth' => 0.0,
+                                                                    'leadTimeP25' => 0.0,
+                                                                    'leadTimeP75' => 0.0
+                                                                  }])
       end
     end
   end

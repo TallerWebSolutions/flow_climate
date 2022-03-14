@@ -14,8 +14,8 @@ module Types
     field :lead_time_max, Int, null: true
     field :lead_time_p80, Int, null: true
     field :lead_time_std_dev, Int, null: true
-    field :lead_time_histogram_bin_min, Int, null: true
-    field :lead_time_histogram_bin_max, Int, null: true
+    field :lead_time_histogram_bin_min, Float, null: false
+    field :lead_time_histogram_bin_max, Float, null: false
     field :lead_time_average, Float, null: true
     field :demands_finished_ids, [Int], null: false
     field :lead_time_feature, Int, null: true
@@ -28,6 +28,10 @@ module Types
     field :lead_time_range_month, Float, null: false
     field :lead_time_min_month, Float, null: false
     field :lead_time_max_month, Float, null: false
+    field :histogram_range, Float, null: false
+    field :interquartile_range, Float, null: false
+    field :lead_time_p25, Float, null: false
+    field :lead_time_p75, Float, null: false
     field :total, [Int], null: false
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
 
@@ -38,7 +42,15 @@ module Types
     end
 
     def lead_time_max_month
-      object.lead_time_min_month.to_f
+      object.lead_time_max_month.to_f
+    end
+
+    def lead_time_histogram_bin_min
+      object.lead_time_histogram_bin_min.to_f
+    end
+
+    def lead_time_histogram_bin_max
+      object.lead_time_histogram_bin_max.to_f
     end
   end
 end
