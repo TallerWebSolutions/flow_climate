@@ -25,7 +25,7 @@ type Product = {
   name: string
 }
 
-type ProjectConsolidation = {
+export type ProjectConsolidation = {
   leadTimeMin: number
   leadTimeMax: number
   leadTimeP80: number
@@ -40,6 +40,9 @@ type ProjectConsolidation = {
   demandsFinishedIds: number[]
   leadTimeHistogramBinMin: number
   leadTimeHistogramBinMax: number
+  leadTimeRangeMonth: number
+  leadTimeMinMonth: number
+  leadTimeMaxMonth: number
 }
 
 export type Project = {
