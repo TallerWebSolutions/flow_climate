@@ -102,6 +102,9 @@ RSpec.describe Types::QueryType do
         me {
           id
           fullName
+          currentCompany {
+            name
+          }
           avatar {
             imageSource
           }
@@ -158,7 +161,7 @@ RSpec.describe Types::QueryType do
         }
       })
 
-          user = Fabricate :user
+          user = Fabricate :user, companies: [company], last_company_id: company.id
 
           context = {
             current_user: user
@@ -168,6 +171,9 @@ RSpec.describe Types::QueryType do
           expect(result.dig('data', 'me')).to eq({
                                                    'id' => user.id.to_s,
                                                    'fullName' => user.full_name,
+                                                   'currentCompany' => {
+                                                     'name' => user.last_company&.name
+                                                   },
                                                    'avatar' => {
                                                      'imageSource' => user.avatar.url
                                                    }
