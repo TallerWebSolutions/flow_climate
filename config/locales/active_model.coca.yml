@@ -63,6 +63,15 @@ coca:
       portfolio_unit:
         one: "Portfolio Units"
         other: "Portfolio Units"
+      team:
+        one: "Team"
+        other: "Teams"
+      initiative:
+        one: "Iniciative"
+        other: "Iniciatives"
+      project:
+        one: "Project"
+        other: "Projects"
     attributes:
       user:
         created_at: Joined At
