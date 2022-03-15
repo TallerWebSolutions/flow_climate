@@ -25,6 +25,9 @@ AllCops:
 Rails/UniqueValidationWithoutIndex:
   Enabled: false
 
+Rails/I18nLocaleTexts:
+  Enabled: false
+
 Layout/LineLength:
   Enabled: false
 

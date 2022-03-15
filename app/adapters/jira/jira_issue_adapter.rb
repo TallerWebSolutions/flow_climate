@@ -229,14 +229,14 @@ module Jira
       ItemAssignment.transaction do
         already_assigned = demand.item_assignments.where(membership: membership, finish_time: nil)
 
-        return if already_assigned.present?
+        if already_assigned.blank?
+          item_assignment = demand.item_assignments.where(membership: membership, start_time: history_date).first_or_create
+          item_assignment.update(finish_time: nil)
 
-        item_assignment = demand.item_assignments.where(membership: membership, start_time: history_date).first_or_create
-        item_assignment.update(finish_time: nil)
+          demand_url = company_demand_url(demand.company, demand)
 
-        demand_url = company_demand_url(demand.company, demand)
-
-        Slack::SlackNotificationService.instance.notify_item_assigned(item_assignment, demand_url)
+          Slack::SlackNotificationService.instance.notify_item_assigned(item_assignment, demand_url)
+        end
       end
     end
 
