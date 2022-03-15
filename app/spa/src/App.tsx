@@ -1,6 +1,7 @@
 import { Fragment } from "react"
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import { Helmet } from "react-helmet"
+import { ConfirmProvider } from "material-ui-confirm"
 
 import ApiProvider from "./lib/ApiProvider"
 import ThemeProvider from "./lib/ThemeProvider"
@@ -49,7 +50,9 @@ const App = () => (
 const AppWithProviders = () => (
   <ApiProvider>
     <ThemeProvider>
-      <App />
+      <ConfirmProvider>
+        <App />
+      </ConfirmProvider>
     </ThemeProvider>
   </ApiProvider>
 )
