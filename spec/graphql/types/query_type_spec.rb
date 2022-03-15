@@ -2,10 +2,6 @@
 
 RSpec.describe Types::QueryType do
   describe 'teams' do
-    subject(:result) do
-      FlowClimateSchema.execute(query).as_json
-    end
-
     describe '#teams' do
       let(:query) do
         %(query {
@@ -20,23 +16,55 @@ RSpec.describe Types::QueryType do
       })
       end
 
-      it 'returns all teams' do
-        company = Fabricate :company
-        Fabricate :team, company: company
-        Fabricate :team, company: company
+      context 'when the user has no a last company setted' do
+        it 'returns nothing' do
+          user = Fabricate :user
 
-        expect(result.dig('data', 'teams')).to match_array(
-          Team.all.map do |team|
-            {
-              'id' => team.id.to_s,
-              'name' => team.name,
-              'company' => {
-                'id' => company.id.to_s,
-                'name' => company.name
+          context = {
+            current_user: user
+          }
+
+          company = Fabricate :company
+          other_company = Fabricate :company
+
+          Fabricate :team, company: company
+          Fabricate :team, company: company
+          Fabricate :team, company: other_company
+
+          result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
+          expect(result.dig('data', 'teams')).to be_nil
+        end
+      end
+
+      context 'when the user has last company setted' do
+        it 'returns nothing' do
+          company = Fabricate :company
+          other_company = Fabricate :company
+
+          user = Fabricate :user, companies: [company], last_company_id: company.id
+
+          context = {
+            current_user: user
+          }
+
+          Fabricate :team, company: company
+          Fabricate :team, company: company
+          Fabricate :team, company: other_company
+
+          result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
+          expect(result.dig('data', 'teams')).to match_array(
+            company.teams.map do |team|
+              {
+                'id' => team.id.to_s,
+                'name' => team.name,
+                'company' => {
+                  'id' => company.id.to_s,
+                  'name' => company.name
+                }
               }
-            }
-          end
-        )
+            end
+          )
+        end
       end
     end
 
