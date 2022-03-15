@@ -92,23 +92,19 @@ const Teams = () => {
   ]
 
   const handleOnDeleteTeam = (id: string) => {
-    pushMessage({
-      text: "Sua solicitação foi colocada na fila. Em poucos minutos estará pronta.",
-      severity: "info",
-    })
-    // deleteTeamModal({
-    //   title: "Tem certeza?",
-    //   description: "Essa ação é permanente!",
-    // }).then(() => {
-    //   deleteTeam({
-    //     variables: { teamId: id },
-    //   })
+    deleteTeamModal({
+      title: "Tem certeza?",
+      description: "Essa ação é permanente!",
+    }).then(() => {
+      deleteTeam({
+        variables: { teamId: id },
+      })
 
-    //   pushMessage({
-    //     text: "Time deletado",
-    //     severity: "info",
-    //   })
-    // })
+      pushMessage({
+        text: "Time deletado",
+        severity: "info",
+      })
+    })
   }
 
   return (
