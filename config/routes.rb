@@ -137,6 +137,8 @@ Rails.application.routes.draw do
         get :search_memberships, on: :collection
       end
 
+      resources :team_resource_allocations, only: %i[new create destroy]
+
       resources :replenishing_consolidations, only: :index do
         put :refresh_cache, on: :collection
       end
