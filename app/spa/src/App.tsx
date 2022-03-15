@@ -11,6 +11,7 @@ import LeadTimeDashboard from "./pages/LeadTimeDashboard"
 import Statistics from "./pages/Statistics"
 
 import "./lib/i18n"
+import Teams from "./pages/Teams"
 
 const App = () => (
   <Fragment>
@@ -39,6 +40,7 @@ const App = () => (
           path="/companies/taller/projects/:projectId/statistics_tab"
           element={<Statistics />}
         />
+        <Route path="/companies/taller/teams" element={<Teams />} />
       </Routes>
     </BrowserRouter>
   </Fragment>

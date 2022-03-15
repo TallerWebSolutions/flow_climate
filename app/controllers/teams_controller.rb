@@ -4,7 +4,12 @@ class TeamsController < DemandsListController
   before_action :user_gold_check
 
   before_action :assign_company
-  before_action :assign_team, except: %i[new create]
+  before_action :assign_team, except: %i[new create index]
+
+  def index
+    prepend_view_path Rails.root.join('public')
+    render 'spa-build/index'
+  end
 
   def show
     build_cache_object
