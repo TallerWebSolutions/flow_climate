@@ -32,7 +32,7 @@ module Types
     field :me, Types::UserType, null: false
 
     def teams
-      Team.preload(:company)
+      me.last_company.teams.preload(:company) if me.last_company.present?
     end
 
     def team(id:)
