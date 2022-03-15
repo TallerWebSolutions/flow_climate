@@ -30,7 +30,7 @@ module FlowControl
     config.action_controller.default_protect_from_forgery = true
 
     config.i18n.enforce_available_locales = false
-    config.i18n.available_locales = %w[pt-BR en]
+    config.i18n.available_locales = %w[pt-BR en en-coca]
     config.i18n.default_locale = 'pt-BR'
 
     config.time_zone = 'Brasilia'

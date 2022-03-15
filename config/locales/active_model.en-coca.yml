@@ -1,0 +1,335 @@
+en-coca:
+  errors:
+    format: "%{attribute} %{message}"
+    messages:
+      accepted: must be accepted
+      blank: can't be blank
+      present: must be blank
+      confirmation: doesn't match %{attribute}
+      empty: can't be empty
+      equal_to: must be equal to %{count}
+      even: must be even
+      exclusion: is reserved
+      greater_than: must be greater than %{count}
+      greater_than_or_equal_to: must be greater than or equal to %{count}
+      inclusion: is not included in the list
+      invalid: is invalid
+      less_than: must be less than %{count}
+      less_than_or_equal_to: must be less than or equal to %{count}
+      model_invalid: "Validation failed: %{errors}"
+      not_a_number: is not a number
+      not_an_integer: must be an integer
+      odd: must be odd
+      required: must exist
+      taken: has already been taken
+      too_long:
+        one: is too long (maximum is 1 character)
+        other: is too long (maximum is %{count} characters)
+      too_short:
+        one: is too short (minimum is 1 character)
+        other: is too short (minimum is %{count} characters)
+      wrong_length:
+        one: is the wrong length (should be 1 character)
+        other: is the wrong length (should be %{count} characters)
+      other_than: must be other than %{count}
+    template:
+      body: 'There were problems with the following fields:'
+      header:
+        one: 1 error prohibited this %{model} from being saved
+        other: "%{count} errors prohibited this %{model} from being saved"
+  activerecord:
+    models:
+      plan:
+        one: Plan
+        other: Plans
+      user_plan:
+        one: User Plan
+        other: User Plans
+      risk_review_action_item:
+        one: Risk Review Action Item
+        other: Risk Review Action Items
+      demand:
+        one: Activity
+        other: Activities
+      task:
+        one: Deliverable
+        other: Deliverables
+      demand_block:
+        one: Activity Block
+        other: Acitivity Blocks
+      jira/jira_account:
+        one: "Jira Account"
+        other: "Jira Accounts"
+      portfolio_unit:
+        one: "Portfolio Units"
+        other: "Portfolio Units"
+    attributes:
+      user:
+        created_at: Joined At
+        sign_in_count: Sign in Count
+      project:
+        percentage_effort_to_bugs: "% Effort Charged in Bugs"
+        enums:
+          status:
+            waiting: Waiting
+            executing: Executing
+            maintenance: Maintenance
+            finished: Finished
+            cancelled: Cancelled
+            negotiating: Negotiating
+          project_type:
+            outsourcing: Outsourcing
+            consulting: Consulting
+            training: Training
+            domestic_product: Domestic Product
+            marketing: Marketing
+      project_risk_config:
+        enums:
+          risk_type:
+            no_money_to_deadline: "No Money to Deadline"
+            backlog_growth_rate: "Backlog Growth Rate"
+            not_enough_available_hours: "Not Enough Available Hours"
+            profit_margin: "Profit Margin"
+            flow_pressure: "Flow Pressure"
+      company_settings:
+        max_flow_pressure: Maximum Total Flow Pressure
+        max_active_parallel_projects: Maximum Parallel Active Projects
+      stage:
+        commitment_point: Commitment Point?
+        end_point: End Point?
+        enums:
+          stage_type:
+            backlog: Backlog
+            design: Design
+            analysis: Analysis
+            development: Development
+            test: Test
+            homologation: Homologation
+            ready_to_deploy: Ready to Deploy
+            delivered: Delivered
+            archived: Archived
+          stage_stream:
+            upstream: Upstream
+            downstream: Downstream
+            out_stream: Out Stream
+        help:
+          integration_pipe_id: "Flow ID, board ID, rapidView ID (Jira)..."
+      demand_block:
+        demand: Activity
+        demand_block_id: Id
+        blocker_username: Blocked by
+        block_time: Blocked at
+        unblocker_username: Unblocked by
+        unblock_time: Unblocked at
+        block_working_time_duration: Working Time Duration
+        block_duration: Block Duration
+        active: Active?
+        enums:
+          coding_needed: Coding Needed
+          specification_needed: Specification Needed
+          waiting_external_supplier: Waiting for External Supplier
+          customer_low_urgency: Customer Low Urgency
+          integration_needed: Integration Needed
+          customer_unavailable: Customer Unavailable
+          other_demand_dependency: Other Activity Dependency
+          external_dependency: External Dependency
+          other_demand_priority: Other Activity Priority
+          waiting_for_code_review: Waiting for Code Review
+          budget_approval: Budget Approval
+          waiting_deploy_window: Waiting Deploy Window
+          infrastructure: Infrastructure
+          scope_changed: Scope Changed
+      demand:
+        enums:
+          class_of_service:
+            expedite: "Expedite"
+            standard: "Standard"
+            fixed_date: "Fixed Date"
+            intangible: "Intangible"
+          demand_type:
+            feature: "Feature"
+            bug: "Bug"
+            performance_improvement: "Performance Improvement"
+            chore: "Chore"
+            ui: "UI"
+            wireframe: "Wireframe"
+          artifact_type:
+            story: Story
+            epic: Epic
+            theme: Theme
+        demand_url: "Activity URL"
+        external_url: "External Link"
+      slack_configuration:
+        enums:
+          weekday_to_notify:
+            all_weekdays: "All"
+            monday: "Monday"
+            tuesday: "Tuesday"
+            wednesday: "Wednesday"
+            thursday: "Thursday"
+            friday: "Friday"
+      project_consolidation:
+        last_8_throughput_per_week_data: "Last 8 Weeks Throughput"
+      portfolio_unit:
+        enums:
+          portfolio_unit_type:
+            product_module: "Product Module"
+            key_result: "Key Result"
+            source: "Source"
+            epic: "Epic"
+      jira/jira_project_config:
+        fix_version_name: "Fix Version Name"
+      team_member:
+        validations:
+          name_unique: "Only one name by company and jira account id is allowed"
+      jira/jira_custom_field_machine_name:
+        enums:
+          custom_field_type:
+            class_of_service: "Class of Service"
+            responsibles: "Responsibles"
+      flow_event:
+        user: Created by
+        project: Project
+        event_type: Event Type
+        event_size: Event Size
+        event_description: Event Description
+        demand: Activity
+        event_date: Event Date
+        enums:
+          event_type:
+            other_team_dependency: Other team dependency
+            api_not_ready: API is not ready
+            customer_not_available: Customer unavailable
+            other_demand_dependency: Other Activity dependency
+            fixes_out_of_scope: Fixes outside scope
+            external_service_unavailable: External service unavailable
+            waiting_for_code_review: Waiting for code review
+          event_size:
+            small: Small
+            medium: Medium
+            large: Large
+      risk_review_action_item:
+        action_type: Action Type
+        created_date: Creation Dt
+        deadline: Deadline
+        description: Description
+        done_date: Done Dt
+        membership: Responsible
+        risk_review: Risk Review
+        enums:
+          action_type:
+            technical_change: Technical Change
+            permissions_update: Permissions Update
+            customer_alignment: Customer Alignment
+            internal_process_change: Internal Process Change
+            cadences_change: Cadences Change
+            internal_comunication_change: Internal Comunication Change
+      score_matrix_question:
+        enums:
+          question_type:
+            customer_dimension: "Customer Dimension"
+            service_provider_dimension: "Service Provider Dimension"
+      contract:
+        hours_per_demand: Hours per Activity (HpD)
+      user_company_role:
+        user: User
+        company: Company
+        user_role: User role
+        start_date: Start
+        end_date: End
+        slack_user: Slack User
+        enums:
+          user_role:
+            operations: Operation
+            manager: Management
+            director: Director
+            customer: Customer
+    errors:
+      messages:
+        record_invalid: 'Validation failed: %{errors}'
+        restrict_dependent_destroy:
+          has_one: Cannot delete record because a dependent %{record} exists
+          has_many: Cannot delete record because dependent %{record} exist
+      models:
+        demand_transition:
+          stage:
+            not_same: "The stage needs to be the same as the stage in project"
+        membership:
+          team_member:
+            already_existent_active: "You should have only one active membership to the same team to team member"
+        demand_score_matrix:
+          already_answered: "Already answered question."
+        score_matrix_answer:
+          value_already_used: "Value already used."
+  product:
+    name:
+      uniqueness: "Should have only one to the same customer."
+  project:
+    name:
+      uniqueness: "Should have only one to the same company."
+  team:
+    name:
+      uniqueness: "Should have only one to the same company."
+  customer:
+    name:
+      uniqueness: "Should have only one to the same company."
+  projects:
+    portfolio_bulletin:
+      delivered_demands: "Delivered activitys in last week"
+  stage_project_config:
+    validations:
+      stage_project_unique:
+        message: "You can have only one configuration to stage and project."
+  demand:
+    validations:
+      external_id_unique:
+        message: "You can have only one activity id per company."
+  jira_custom_field_mapping:
+    uniqueness:
+      custom_field_type: "Should have only one activity field per Jira account."
+  jira_product_config:
+    validations:
+      jira_product_key_uniqueness:
+        message: "Should have only one Jira product key per product"
+  user_plan:
+    validations:
+      user_plan_active: "Você já tem um plano para o período."
+  slack_configurations:
+    notifications:
+      cmd_text: "> *%{team_name}* | Average Activity Cost: %{cmd_value} | Variation: *%{cmd_difference_to_last_week}%* for the average of previous 4 weeks (%{previous_cmd}) | Last week: *%{last_week_cmd}*"
+      th_week_text: "> *%{team_name}* | Throughput: %{th_current_week} activitys | Variation: *%{difference_last_week_th_value}%* for the average of previous 4 weeks (%{four_weeks_th_average})."
+      th_last_week_text: "> *%{team_name}* | Throughput: %{th_last_week} activitys last week."
+      th_last_week_demand_info_text: "> *%{external_id}* %{demand_title} | *Responsibles:* %{responsibles_names} | *Cost to Project:* %{cost_to_project}"
+      qty_demands_in_wip: "> *%{team_name}* | Work in Progress: %{in_wip} activitys."
+      demands_in_wip_info_text: "> *%{external_id}* %{demand_title} | *Responsibles:* %{responsibles_names} | *Cost to Project:* %{cost_to_project} | *Current Stage:* %{current_stage} | *Time in Stage:* %{time_in_current_stage} | *% Flow Concluded:* %{percentage_concluded}"
+      outdated_demands_info_text: "> *%{external_id}* %{demand_title} | *Current Stage:* %{current_stage} | *Time in Stage:* %{time_in_current_stage}"
+      failure_load: "> *%{team_name}* | Team failure load: %{failure_load}."
+      project_failure_load: "> *%{team_name}* | *%{project_name}* | Project failure load: *%{failure_load}*."
+  portfolio_unit:
+    validations:
+      name: "You can have only one unit name to each product."
+  jira_project_config:
+    validations:
+      fix_version_name_uniqueness:
+        message: "You should have only one fix version name per product."
+  item_assignment:
+    validations:
+      demand_unique: "You can have only one activity assigned to the same team member at the same time."
+  service_delivery_review:
+    attributes:
+      validations:
+        product_uniqueness: "You can have only one meeting to the product starting at the same date."
+    help:
+      delayed_expedite_top_threshold: "Maximum delayed expedites percentage (0%, 10%, 22%, etc.)"
+      delayed_expedite_bottom_threshold: "Minimum delayed expedites percentage (0%, 10%, 22%, etc.)"
+      expedite_max_pull_time_sla: "Max hours to pull an expedite"
+      lead_time_top_threshold: "Top threshold to lead time"
+      lead_time_bottom_threshold: "Bottom threshold to lead time"
+      quality_bottom_threshold: "Minimum share of defects"
+      quality_top_threshold: "Maximum share of defects"
+  flow_events:
+    show:
+      event_duration: "Event Duration"
+  user_company_role:
+    validations:
+      user_company: "You can't have the same user twice in the company."

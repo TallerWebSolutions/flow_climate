@@ -1,0 +1,1503 @@
+en-coca:
+  general:
+    buttons:
+      back: Back
+      show: Show
+      cancel: Cancel
+      save: Save
+      delete: Delete
+      add: Add
+      edit: Edit
+      i_am_done: I'm done
+      send: Send
+      import: "Import"
+      sign_up: "Sign Up"
+    no_records: You have no %{record} yet! Why not create your first?
+    messages:
+      saved: Saved!
+      save_error: We couldn't save it now! Please reload and try again.
+    search:
+      start_date: "From"
+      end_date: "Until"
+      title: "Search"
+    home:
+      title: "Home"
+    result: "Result"
+    month: "Month"
+    week: "Week"
+    year: "Year"
+    table:
+      actions: "Actions"
+      title: "Raw Data"
+    current_week: "Current Week"
+    current_year: "Current Year"
+    select: "Select"
+    user_not_found: "User not found"
+    enqueued: "Your request was enqueued. In a few minutes it will be done."
+    charts:
+      title: "Charts"
+      xlabel:
+        weekdays: "Weekdays"
+        monthdays: "Month Days"
+      hours: "hour(s)"
+    stamps:
+      cmd:
+        title: "Avg Demand Cost"
+      flow_pressure: "Flow Pressure"
+      hours_per_demand: "Hours per Demand"
+    no_data: "There is no %{missing_data} to show yet."
+    download_csv: "Download CSV"
+    percentage:
+      title: "Percentage"
+      delivered: "% Delivered"
+    destroy:
+      confirm: "You are about to delete a record. Are you sure?"
+      success: "Excluded"
+      confirm_physical: "You are about to detroy physically a record. Are you sure?"
+    period: "Period"
+    throughput: "Throughput (items/week)"
+    delivered: "Delivered"
+    filter:
+      period:
+        option:
+          last_month: "Last Month"
+          last_quarter: "Last quarter"
+          all_period: "All Period"
+          last_week: "Last Week"
+    total: "Total"
+    days_text:
+      zero: "no data"
+      one: "%{count} day"
+      other: "%{count} days"
+    search_text: "Search"
+    data: "Data"
+    error:
+      not_found:
+        title: "Error 404"
+        desc: "Page not found"
+        back: "Back to the path"
+    monthly: "Monthly"
+    weekly: "Weekly"
+    daily: "Daily"
+    start: "Start"
+    finish: "Finish"
+    min: "Minimum"
+    max: "Maximum"
+    partial: "(partial)"
+    money: "US$ "
+    weeks_text:
+      one: "%{count} week"
+      other: "%{count} weeks"
+    tabs:
+      config: "Configuration"
+      charts: "Charts"
+      transitions: "Transitions"
+      projects_associations: "Project Associations"
+      teams_associations: "Team Associations"
+    last_update:
+      text: "Last update: %{last_update}"
+    risk:
+      text: "Risk: %{risk_value}"
+      deadline:
+        label: "Deadline Risk"
+      label: "Risk"
+      detail: "Risk Detail"
+    minimum: "Minimum"
+    maximum: "Maximum"
+    statistics:
+      p80: "Percentile 80"
+      standard_deviation: "Standard Deviation"
+      histogram_bin_min: "Histogram Bin Min"
+      histogram_bin_max: "Histogram Bin Max"
+      average: "Average"
+      sample_size: "Sample Size"
+    demands_text:
+      zero: "no demands"
+      one: "%{count} demand"
+      other: "%{count} demands"
+    months: "months"
+    weeks: "weeks"
+    days: "days"
+    hours: "hours"
+    hours_text:
+      one: "%{count} hour"
+      other: "%{count} hours"
+    score_text:
+      zero: "no score"
+      one: "%{count} point"
+      other: "%{count} points"
+    demands: "demands"
+    items_text: "%{items_count} item(ns)"
+    flow: "Flow"
+    class_of_service: "Class of Service"
+    leadtime: "Lead time"
+    list: "List"
+    map: "Map"
+    effort_hours_text: "Total: %{hours_value} hours of effort"
+    demand_blocks_text:
+      zero: "no blocks"
+      one: "%{count} block"
+      other: "%{count} blocks"
+    demand_comments_text:
+      zero: "no comments"
+      one: "%{count} comment"
+      other: "%{count} comments"
+    leadtime_p80_label: "Lead time (p80)"
+    demand_blocks: "block(s)"
+    pull_transaction: "Pull Transaction"
+    demand_event: "event"
+    projects_count:
+      one: "%{count} Project"
+      other: "%{count} Projects"
+    demands_per_day:
+      one: "%{count} demand/day"
+      other: "%{count} demands/day"
+    scope: "Scope"
+    all: "All"
+    active: "Active"
+    finished: "Finished"
+    name: "Name"
+    bugs: "Bugs"
+    people: "People"
+    quality:
+      bugs: "Quality: Bugs"
+      blocks: "Quality: Blocks for coding"
+      blocks_per_demand: "Quality: Blocks for Coding per Demand"
+    role: "Role"
+    show_montecarlo: "Show Monte Carlo Projection"
+    demands_per_day_text: "demandas por dia"
+    invite_user: "Invite by Email"
+    dashboards:
+      lead_time_accumulated_p80: "Lead time accumulated (p80)"
+      lead_time_p80: "Lead time (p80)"
+      hours_delivered: "Hours"
+      hours_delivered_acc: "Hours Accumulated"
+      first_delivery: "First delivery"
+      lead_time_in_month: "Lead time (p80) in month"
+    backlog: "Backlog"
+    update_cache: "Update Cache"
+    updated:
+      success: "Updated"
+      error: "Failed"
+    hours_per_demand: "Hours per Demand"
+    no_cache: "There is no cache to show the charts. Use the sync button bellow to create some."
+    ordering:
+      direction: "Direction"
+      title: "Ordering"
+    created_demands: "Created Demands"
+    no_register: "No Register"
+    upstream: "Upstream"
+    downstream: "Downstream"
+    discarded_demands: "Discarded"
+    consolidations:
+      no_cache: "No consolidations. Click on the button to get some."
+    open: "Open"
+  header:
+    logout: Logout
+    explore: Explore
+    sign_up: Register
+    login: Login
+  users:
+    change_last_company:
+      title: "Change to this company"
+    show:
+      title: "User Profile"
+      pairing_counts: "Pairings"
+      manager:
+        active_projects: "Active projects"
+        active_products: "Active products"
+        active_customers: "Active customers"
+        value_per_demand: "Value per Demand"
+        flow_pressure: "Flow Pressure"
+        running_projects: "Running projects"
+      dashboard:
+        invalid_role: "You don't have a valid role in this company. Please ask an admin for help."
+      running_projects_charts: "see charts"
+    index:
+      title: "Users"
+      turn_off_notifications: "Turn Off Notifications"
+      turn_on_notifications: "Turn On Notifications"
+    account:
+      self: "My Account"
+    edit:
+      title: "Edit User"
+    admin_dashboard:
+      users_table:
+        title: "Users"
+      companies_table:
+        title: "Companies"
+    company:
+      invitation_missing: "You must be invited to a company first."
+    team_member:
+      missing: "You should assign your membership."
+  companies:
+    index:
+      title: "Companies"
+    new:
+      title: "New Company"
+    show:
+      active_project_count: "Active Projects"
+      waiting_project_count: "Waiting"
+      red_project_count: "RED PROJECTS"
+      project_count: "Projects"
+      product_count: "Products"
+      customers_count: "Customers"
+      current_hours_per_demand: "Hours/demand in Month"
+      current_month_throughput: "Throughput in Month"
+      current_cost_per_hour: "Cost/Hour in Month"
+      current_month_closed_bugs: "Closed Bugs in Month"
+      current_month_opened_bugs: "Open Bugs in Month"
+    edit:
+      title: "Edit Company"
+    add_user:
+      email_field: "Email"
+      title: "Add user"
+    users_in_company: "Users in company"
+    send_company_bulletin:
+      sent: "Your request was sent."
+      button: "Send Bulletin to Me"
+      error: "There is no email enabled to notify."
+    charts:
+      active_projects:
+        title: "Active Projects Count to Months for %{target_name}"
+      hours_per_month:
+        title: "Project Hours per Month for %{target_name}"
+      flowpressure_per_month:
+        title: "Flow Pressure for %{target_name}"
+      money_per_month:
+        title: "Money Distribution by Competency for %{target_name}"
+  team_members:
+    index:
+      title: "Team members"
+      elapsed_time: "Elapsed Time"
+      search:
+        actives_members_checkbox: "active members"
+    new:
+      title: "New Team Member"
+    show:
+      deliveries: "Deliveries"
+      member_pair: "Paired with"
+      paired_times: "Paired times"
+      its_me: "It's me!"
+      its_not_me: "It's not me"
+    charts:
+      hours_per_project:
+        title: "Delivered Hours per Project"
+  projects:
+    index:
+      title: "Projects"
+      all_filter: "All"
+      waiting_filter: "Waiting"
+      executing_filter: "Executing"
+      finished_filter: "Finished"
+      cancelled_filter: "Cancelled"
+      total_days: "Days (total)"
+      total_remaining_days: "Days (remaining)"
+      consumed_hours: "Consumed Hours"
+      percentage_remaining_days: "% Time Remaining"
+      remaining_money: "Remaining ($$)"
+      percentage_remaining_money: "% Remaining ($$)"
+      flow_pressure: "Flow Pressure"
+      percentage_flow_pressure: "% Flow Pressure"
+      remaining_backlog: "Backlog"
+      percentage_remaining_scope: "% Remaining Scope"
+      no_data: "There are no projects. Add one."
+      remaining_hours: "Remaining Hours"
+      risk_alerts: "Risk Alerts"
+      maintenance_filter: "Maintenance"
+      passed_time: "Time Passed"
+      leadtime:
+        title: "Lead time in days"
+      total_remaining_weeks: "Remaining Weeks"
+      inconsistent_demands_count: "Qty Inconsistent Demands"
+      active_projects: "Active Projects"
+      average_speed: "Average Speed"
+      consumed_hours_role: "Consumed Hours by Role"
+      consumed_hours_role_in_month: "Consumed Hours by Role in Month"
+    show:
+      initial_scope: "Initial Scope"
+      last_team: "Current team"
+      avg_hours_per_demand: "Avg Hours/Demand"
+      scope_gap: "Scope Gap"
+      scope_growth: "Scope Growth (%)"
+      scope_unit_growth: "Scope Growth (unity)"
+      current_week_scope: "Scope (current)"
+      cost_in_month: "Monthly Cost"
+      deadline:
+        title: "Deadline Negotiations"
+      deadline_countdown:
+        first_part: "Remaining "
+        second_part: " till D-day!"
+        days: "%{remaining_days} day(s)"
+        risk: "and the operational risk of this deadline is "
+      cmd: "Average Demand Cost"
+      status_information_html: "This project is <b>%{status_description}</b>"
+      delivered_demands:
+        text: "Delivered Scope"
+        opened_in_period: "Opened in Period"
+        delivered: "Delivered in Period"
+      throughput: "Last Week Throughput"
+      leadtime_80_confidence: "Leadtime 80%"
+      demands_count: "Demands Count"
+      bugs_count: "Bugs Count"
+      features_count: "Features Count"
+      chore_count: "Chore Count"
+      demand_blocks_count: "Blocks Count"
+      demand_blocks_duration_average: "Block Duration Avg"
+      import_stages: "Import Stages"
+      sync_jira: "Sync Project"
+      jira_area:
+        title: "Jira Area"
+        no_stages: "But does not have configurated stages."
+        not_integrated: "This is not a JIRA integrated project."
+        integrated_project: "This is a project integrated to JIRA."
+        configured_stages: "This project has %{count} stages."
+      not_associated_customers: "Not associated customers"
+      project_customers: "Customers in project"
+      inconsistent_demands:
+        title: "Inconsistent Demands"
+        no_demands: "No inconsistent demands"
+        demands: "%{value} demands"
+        help: "Inconsistent demands are demands committed before project's start date or ended after project's end date."
+      not_associated_products: "Not associated products"
+      project_products: "Products in Project"
+      closing_info:
+        title: "Closing Informations for %{project_name}"
+        project_name: "Project Name"
+        discovered_after_demands: "Discovered after project begins"
+        discovered_before_demands: "Discovered before project begins"
+        discovered_demands: "Scope Discoveries"
+        final_numbers: "Final Numbers"
+        hours: "Time Consumed"
+        average_speed_per_week: "Average Speed"
+        class_of_service: "Classes of Service"
+        failure_load: "Failure Load"
+        cost: "Final Cost"
+        delivered_items: "Delivered"
+        deadline_changes: "Changes in Deadline"
+        delivered_at: "Delivered at"
+        first_deadline: "First deadline"
+        deadlines_difference: "Last Difference"
+        deadlines_change_count: "Change Deadline Times"
+      status_report:
+        title: "Status Report"
+        cost: "Current Cost"
+        deadline: "Current Deadline"
+        current_numbers: "Current Numbers"
+        remaining_scope: "Remaining Backlog"
+        average_demand_aging: "Average Item Aging"
+      lead_time:
+        title: "Lead time dashboard"
+      unscored_demands:
+        no_demands: "no unscored demands"
+        title: "Unscored Demands"
+      update_consolidations: "Update Cache"
+      charts:
+        total_effort: "Total Effort"
+    charts:
+      xlabel:
+        weeks: "Weeks"
+        projects: "Projects"
+        days: "Days"
+        months: "Months"
+        demands_per_week: "Demands per week"
+        time: "In Time"
+      burnup:
+        ylabel: "Demands"
+        tooltipsufix: " demands"
+        demands:
+          title: "Demands Burnup for %{target_name}"
+        hours:
+          title: "Hours Burnup for %{target_name}"
+      hours_per_demand:
+        title: "Hours per demand on time for %{target_name}"
+        ylabel: "Hours/Demand"
+        tooltipsufix: " hours/demand"
+      flow_pressure:
+        title: "Flow Pressure for %{target_name}"
+        ylabel: "Flow Pressure"
+        tooltipsufix: " demands/day"
+        data_suffix: "demands/day"
+      flow_pressure_per_project:
+        ylabel: "Flow Pressure"
+      throughput:
+        title: "Throughput to %{target_name}"
+        tooltipsufix: " demands"
+        ylabel: "Demands"
+        stage_stream:
+          downstream: "Downstream"
+          upstream: "Upstream"
+      cmd:
+        title: "Average Demand Cost to %{target_name}"
+        ylabel: "Average Demand Cost"
+        tooltipsufix: "dollars"
+        tooltip_prefix: "$ "
+      delivered:
+        title: "Delivered vs Remaining Scope to %{target_name}"
+      deadline:
+        title: "Deadline for %{target_name}"
+      date_odds:
+        tooltipsufix: "weeks"
+      hours_per_month:
+        ylabel: "Produced Hours"
+        title: "Effort Hours to %{target_name}"
+        xlabel: "Months"
+      lead_time_chart:
+        title: "Lead time control chart for %{target_name}"
+        ylabel: "days"
+      leadtime_histogram:
+        title: "Lead time histogram for %{target_name}"
+        ylabel: "hits"
+      throughput_histogram:
+        title: "Throughput Histogram for %{target_name}"
+        ylabel: "hits"
+      bugs_in_time:
+        title: "Bugs in time for %{target_name}"
+        opened: "Bugs Opened"
+        closed: "Bugs Closed"
+        ylabel: "bugs"
+        share: "Percentage of Bugs"
+        suffix: "bug(s)"
+      bugs_percentage_in_time:
+        title: "Percentage of bugs in time for %{target_name}"
+      accumulated_bugs_in_time:
+        title: "Accumulated bugs in time for %{target_name}"
+      accumulated_bugs_percentage_in_time:
+        title: "Accumulated bugs in time for %{target_name}"
+      queue_touch_time:
+        title: "Hours in Queue x Work for %{target_name}"
+        ylabel: "hours"
+        queue: "Queue"
+        touch: "Touch"
+      flow_efficiency:
+        title: "Flow Efficiency"
+        share: "Flow Efficiency"
+      leadtime_evolution:
+        title: "Lead time confidence evolution"
+        ylabel: "Days"
+        legend:
+          leadtime_80_confidence: "LT 80% Confidence"
+          leadtime_80_confidence_accumulated: "80% lead time accumulated"
+      class_of_service_pie:
+        title: "Share of Classes of Service"
+      deadline_vs_montecarlo_durations:
+        confidence_95: "95% of Confidence"
+        confidence_80: "80% of Confidence"
+        confidence_60: "60% of Confidence"
+        confidence: "Lead time confidence"
+      montecarlo_dates:
+        project_date: "Project Deadline"
+        confidence_95: "Date having 95% of Confidence"
+        confidence_80: "Date having 80% of Confidence"
+        confidence_60: "Date having 60% of Confidence"
+      scope_variation:
+        title: "Scope variation in time"
+      risk_evolution_in_time: "Operational Math Risk Evolution"
+      risk_evolution_in_time_team_based: "Operational Math Risk Evolution - Team Data"
+      quality_block_per_demand: "blocks per demand"
+      throughput_hours_six_months:
+        title: "Projects' Hours per Month - Last 6 months"
+    project_risk_alert_table: "Risk alerts to the project"
+    portfolio_bulletin:
+      red_projects: "Red Alert Projects"
+    general:
+      scope: "Escopo"
+      deadline: "Deadline"
+      leadtime: "LT (%{percentil})"
+      accumulated_leadtime: "Accumulated LT (%{percentil})"
+      discovered_scope: "Discovered Scope"
+      work_items: "Work Items"
+    finish_project:
+      success_message: "Project finished."
+    actions:
+      edit:
+        title: "Edit"
+      delete:
+        tooltip: "Delete Project"
+      finish:
+        tooltip: "Finish Project"
+      statistics:
+        tooltip: "Statistics"
+      products:
+        tooltip: "Products in this project"
+      customers:
+        tooltip: "Customers in this project"
+    status_report_chart:
+      hours_per_stage:
+        series:
+          hours_per_stage: "Hours per Stage"
+        labels:
+          y: "Hours in Stage"
+        title_upstream: "Hours per Stage in Upstream for %{target_name}"
+        title_downstream: "Hours per Stage in Downstream for %{target_name}"
+    settings:
+      risks: "Risks"
+      stages: "Stages"
+      jira: "Jira"
+      customers: "Customers"
+      products: "Products"
+    data_analysis:
+      risk_deadline: "Deadline"
+      risk_money: "Cost"
+      risk_scope: "Scope"
+    replenishing:
+      weeks_to_finish: "Remaining"
+      weeks_montecarlo: "Monte Carlo (80%)"
+      team_based_weeks_montecarlo: "Monte Carlo (80%) - Team (std dev)"
+      customer_happiness: "Customer Happiness"
+      last_four_weeks_throughput: "Last 4 Weeks Throughput"
+      average_throughput: "Avg Throughput Last 4 Weeks"
+      qty_using_pressure: "Qty Using Pressure"
+      wip: "WiP"
+      throughput_last_week: "TH Last Week"
+      selected_last_week: "Selected Last Week"
+      team_wip: "Max Team WiP"
+      throughput_data_size: "Throughput Data Size"
+      throughput_data_stddev: "Throughput Std Dev"
+      aging: "Aging"
+      throughput_data_mode: "Throughput Mode"
+      last_four_weeks_lead_time: "Last 4 Weeks Lead Time"
+      monte_carlo_factor: "Factor"
+      monte_carlo_factor_help: "Remaining weeks / Monte Carlo weeks"
+    statistics:
+      scope_tab: "Scope Variation"
+      leadtime_tab: "Lead time variation"
+      accumulated_blocks:
+        data_title: "Accumulated Blocks"
+        chart_title: "Block Count Accumulated in Time"
+        ytitle: "Block"
+      block_tab: "Blocks"
+      blocks_by_project:
+        data_title: "Blocks by Projects"
+      block_by_project_tab: "Blocks by Project"
+      aging_by_project_tab: "Aging per Project"
+      lead_time_data_range_tab: "Lead Time Range"
+      lead_time_histogram_data_range_tab: "Histogram LT Range"
+      lead_time_interquartile_data_range_evolution_tab: "Interquartile Range"
+      lead_time_interquartile_histogram_range_evolution_tab: "Histogram X Interquartile"
+      montecarlo:
+        title: "Monte Carlo (Project)"
+    risk:
+      drill_down_title: "Risk Drill Down for %{target_name}"
+      drill_down_flow_title: "Flow (Last 10 weeks)"
+      drill_down_wip_title: "WiP Limit"
+      drill_down_little_law_title: "Little's Law"
+      drill_down_scope_deadline: "Scope and Deadline"
+    remaining_time: "Remaining Time"
+    leadtime:
+      drill_down_title: "Lead time drill down for %{target_name}"
+    running_projects_charts:
+      title: "Running Projects Charts"
+  project:
+    new:
+      title: "New Project"
+    edit:
+      title: "Edit Project"
+    validations:
+      no_value: "Value or Hour value is mandatory"
+      customer_not_same: "The customer in the project must be the same in the product"
+      product_blank: "it is mandatory to outsourcing projects"
+    destroy:
+      confirm: "Are you sure? All demands in this project will be deleted as well."
+      success: "Project deleted."
+      error: "The project was not deleted"
+    modal:
+      statistics: "Statistics for %{target_name}"
+    help:
+      initial_scope: "This value is used to map the planned scope without demand created yet."
+  team_member:
+    edit:
+      title: "Edit Team Member"
+    team_members_count:
+      one: "%{count} team member"
+      other: "%{count} team members"
+  team:
+    edit:
+      title: "Edit Team"
+  products:
+    index:
+      no_data: "There is no products here. Register a new one."
+      title: "Products"
+    new:
+      title: "New Product"
+    edit:
+      title: "Edit Product"
+    statistics:
+      montecarlo:
+        title: "Monte Carlo (Product)"
+    show:
+      score_matrices:
+        answers: "Possible Answers"
+  customers:
+    new:
+      title: "New Customer"
+      hours_per_demand:
+        placeholder: "Estimated hours per demand for the contract"
+    index:
+      title: "Customers List"
+      no_customers_message: "You do not have teams yet."
+    show:
+      total_value: "Projects Total Value"
+      no_data: "customer cache"
+    add_user_to_customer:
+      success: "User added"
+    charts:
+      avg_hours_per_month:
+        title: "Avg Hours Per Month to %{target_name}"
+  customer:
+    edit:
+      title: "Edit Customer"
+    charts:
+      contracts_cost_burnup:
+        title: "Contracts Finances Burn-up"
+      contracts_hours_burnup:
+        title: "Contracts Hours Burn-up"
+      contracts_scope_burnup:
+        title: "Scope Burn-up for Active Contracts"
+      quality_info:
+        title: "Quality"
+      lead_time:
+        title: "Lead time"
+      throughput:
+        title: "Throughput"
+      delivered_scope: "% Delivered Scope"
+      delivered_hours: "% Delivered Hours"
+      operational_risk:
+        title: "Operational Risk"
+      hours_blocked_per_delivery:
+        title: "Hours Blocked Per Delivery"
+      external_dependency:
+        title: "External Dependencies"
+      effort_hours_info: "Effort Hours"
+  demands:
+    new:
+      title: "Create Demand"
+    index:
+      title: "Demands List"
+      effort_upstream: "Effort in Upstream"
+      effort_downstream: "Effort in Downstream"
+      blocked_working_time_upstream: "Blocked Working Time in Upstream"
+      blocked_working_time_downstream: "Blocked Working Time in Downstream"
+      downstream: "Downstream?"
+      manual_effort: "Effort Updated Manually"
+      count: "%{demands_count} demands"
+      current_stage: "Current Stage"
+      qty_closed_blocks: "Closed Blocks"
+      hours_blocks_queue: "Hours Blocked in Queues"
+      hours_blocks_touch: "Hours Blocked in Queues"
+      total_blocked_time: "Time Blocked"
+      grouping_to_charts: "Grouping to Charts"
+      total_blocked_work_time: "Work Time Blocked"
+      discarded_stage: "Discarded Stage"
+      cost_to_project: "Cost to Project"
+      total_queue_time: "Queue"
+      total_touch_time: "Touch"
+      montecarlo_projection:
+        80_percent_data: "Weeks With 80% of Confidence"
+        remaining_scope: "Remaining Scope"
+        total_delivered: "Scope Delivered"
+        throughput_per_period: "Used Throughput"
+      search:
+        text:
+          placeholder: "customer, product, project, portfolio unit, demand title, id or responsible"
+      last_deliveries: "Last deliveries"
+      last_larger_lead_times_four_weeks: "Last five largest lead times (4 weeks)"
+      last_larger_lead_times: "Last five largest lead times"
+    edit:
+      title: "Edit Demand"
+    show:
+      no_demand_transitions: "No transitions to this demand."
+      progress_bars:
+        streams: "Flow Streams Occupation"
+      sync_jira: "Sync Demand"
+      flow_efficiency_tab: "Flow Efficiency"
+      blocks_tab: "Blocks"
+      transitions_tab: "Transitions"
+      structure_tab: "Structure"
+      comments_tab: "Comments"
+      responsibles_tab: "Responsibles"
+      consolidations: "Consolidations"
+      memberships:
+        blank: "No role in the team %{team_name}"
+      efforts_tab: "Efforts"
+      tasks_tab: "Tasks"
+    sync:
+      enqueued: "Your request was enqueued. It will be processed soon."
+      done: "The sync is done."
+    charts:
+      processing_rate:
+        title: "Processing rate for %{name}"
+        ylabel: "Demands"
+        tooltipsufix: "demands"
+        processed: "Total Processed"
+        arrived: "Total Arrived"
+        processed_downstream: "Downstream Processed"
+        processed_upstream: "Upstream Processed"
+      wip_per_day:
+        title: "Work in Progress per day for %{name}"
+        ylabel: "Work in Progress"
+        tooltipsufix: " demand(s)"
+      hours_per_month:
+        title: "Hours per Month for %{name}"
+      throughput:
+        tooltipsufix: "demand(s)"
+        title: "Throughput"
+      creation_date: "Created"
+      commitment_date: "Commitment Date"
+      committed_date: "Committed to"
+      aging_per_demand:
+        title: "Average age when the demand was finished"
+        ylabel: "day(s)"
+        legend: "day(s)"
+      aging:
+        series: "aging"
+      demands_by_project:
+        title: "Demands by Project"
+      flow_data: "Flow Data"
+      demands:
+        title: "Demands"
+      hours:
+        suffix: "hour(s)"
+      title: "Demands Charts"
+    flow:
+      processed_demand: "Processed Demands"
+      wip: "Work in Progress"
+      committed_with: "Committed With"
+      real_throughput: "Throughput Real"
+    data_analysis:
+      demands_list: "Data"
+      consolidation: "Consolidation"
+      charts: "Charts"
+      list: "List"
+      discarded_demands: "Discarded"
+    stats:
+      std_committed_with: "STD Committed with"
+      std_throughput: "STD Throughput"
+      avg_touch: "Average Touch (hours)"
+      avg_queue: "Average Queue (hours)"
+      avg_work_hours_per_demand: "Hours per Demand (HpD)"
+    filter:
+      grouping:
+        title: "Grouped By"
+        no_grouping: "No Grouping"
+        grouped_by_month: "Grouped By Month"
+        grouped_by_customer: "Grouped by Customer"
+        grouped_by_stage: "Grouped by Stage"
+      demand_state:
+        title: "Flow Status"
+        all_demands: "All Demands"
+        not_committed: "Not Committed"
+        work_in_progress: "Work in Progress"
+        delivered_demands: "Delivered"
+        not_started: "Not Started"
+        discarded_demands: "Discarded"
+        not_discarded_demands: "Not Discarded"
+      demand_type:
+        title: "Demand Type"
+        all_types: "All Types"
+      class_of_service:
+        title: "Class of Service"
+        all_classes: "All Classes"
+      block_categories:
+        title: "Demand Blocks"
+      event_categories:
+        title: "Flow Events"
+    grouped_by_stage:
+      time_in_stage: "Time in Stage"
+      hours_in_stage: "Hours in Stage"
+    statistics:
+      leadtime_by_type:
+        title: "Lead time by type - 80%"
+        feature: "New Feature"
+        bug: "Bug"
+        chore: "Chore"
+      leadtime_by_class_of_service:
+        title: "Lead time by class of service - 80%"
+        standard: "Standard"
+        fixed_date: "Fixed Date"
+        expedite: "Expedite"
+    score_research:
+      title: "Score Research"
+      go_to_list: "Go to the list"
+    destroy:
+      tip: "Delete demand permanentely"
+  navbar:
+    details: "Details"
+    charts: "Project Charts"
+    risk_alerts: "Project Risk Alerts"
+    settings: "Settings"
+    projects_list: "Projects"
+    members_table: "Team Members"
+    strategic: "Strategic Informations"
+    finance: "Financial Informations"
+    teams: "Teams"
+    flow: "Flow"
+    demands: "Demands"
+    risks: "Risks"
+    replenishing: "Replenishing"
+    customers_list: "Customers"
+    products_list: "Products"
+    statistics: ""
+    demand_blocks: "Demands Blocks"
+    flow_events: "Flow Events"
+    jira: "Jira"
+    stages: "Stages"
+    portfolio_units: "Portfolio Units"
+    risk_reviews: "Risk Reviews"
+    service_delivery_reviews: "Service Delivery Review"
+    azure: "Azure"
+    initiatives_list: "Initiatives"
+    tasks: "Tasks"
+  charts:
+    xlabel:
+      months: "Months"
+    ylabel:
+      projects:
+        text: "Projects"
+      total_hours:
+        text: "Hours In Projects"
+      available:
+        text: "Available Hours"
+      flow_pressure:
+        text: "Flow Pressure"
+      money:
+        text: "Money"
+      expenses:
+        text: "Expenses"
+      incomes:
+        text: "Incomes"
+      wip_per_day:
+        text: "Days"
+      hours:
+        text: "Hours"
+    tooltipsufix:
+      projects:
+        text: "projects"
+    series:
+      consumed_hours:
+        text: "Consumed Hours"
+    hours_available:
+      title: "Hours Sold"
+      tooltipsuffix: "Hours Consumed"
+    team_hours_available:
+      title: "Available Hours"
+    risk_alert_color:
+      title: "Risks on %{risk_type}"
+    montecarlo:
+      title: "Monte Carlo Dates to %{target_name}"
+    date_odds:
+      ytitle: "Durations in Weeks"
+      xtitle: "Dates"
+      project_date: "{project_deadline} (Project)"
+      montecarlo_date: "{montecarlo_deadline} (Monte Carlo)"
+      title: "Durations with Confidence"
+    projections:
+      title: "Projections"
+    current_situation:
+      title: "Current Situation"
+    demand:
+      title: "demand(s)"
+    cfd:
+      title_downstream: "Cumulative Flow Diagram for %{target_name}"
+      ytitle: "Demands"
+      data_suffix: "demands"
+    period:
+      label: "Period"
+    lead_time_data_range_evolution:
+      title: "Lead Time Range Evolution In Time"
+      total_range: "Lead Time Total Range"
+      total_range_max: "Lead Time Max"
+      total_range_min: "Lead Time Min"
+    lead_time_histogram_data_range_evolution:
+      total_range: "Total Range"
+      total_range_max: "Bin Max"
+      total_range_min: "Bin Min"
+    lead_time_histogram_range_evolution:
+      title: "Lead Time Histogram Range Variation"
+      frequency: "Frequency"
+    lead_time_interquartile_data_range_evolution:
+      title: "Lead Time Interquartile Range"
+      total_range: "Total Range"
+      percentile_25: "Percentile 25"
+      percentile_75: "Percentile 75"
+    lead_time_interquartile_histogram_range_evolution:
+      title: "Interquartile and Histogram Range"
+      total_range: "Total Range"
+      interquartile: "Interquartile"
+      histogram: "Histogram"
+    scope:
+      uncertainty: "Uncertainty Scope"
+      created: "Created Scope"
+      uncertainty_title: "Scope Uncertainty"
+    burnup:
+      scope: "Scope"
+      ideal: "Ideal"
+      current: "Current"
+      title: "Burn-up"
+    lead_time:
+      text: "Lead time"
+    histogram:
+      text: "Histogram"
+    lead_time_zones:
+      title: "Lead time zones (days)"
+      series_name: "Lead time zones"
+    no_data: "Not enough data"
+    tags_cloud:
+      title: "Tags Cloud"
+    hours_burnup:
+      title: "Hours Burn"
+    quality_info:
+      bugs_by_delivery: "Bugs by Delivery"
+      bugs_by_delivery_month: "Bugs by delivery in month"
+    hours_blocked_per_delivery:
+      label: "Hours Blocked per Delivery"
+    external_dependency:
+      label: "Blocks"
+    bugs_in_month:
+      title: "Bugs in Month"
+      opened: "Opened"
+      closed: "Closed"
+    accumulated: "Accumulated"
+    in_month: "In Month"
+    in_quarter: "In Quarter"
+    in_year: "In Year"
+    effort_development: "Effort Development"
+    effort_design: "Effort Design"
+    effort_management: "Effort Management"
+    effort_design_month: "Design Effort In Month"
+    effort_development_month: "Development Hours in Month"
+    effort_management_month: "Management Hours in Month"
+    total_effort_month: "Total Effort in Month"
+    risk_evolution:
+      ytitle: "Risk (%)"
+    in_week: "In Week"
+    initiatives_completed:
+      title: "Tasks Completed"
+    hours_per_stage:
+      title: "Hours Per Stage"
+  finances_params:
+    edit:
+      title: "Edit Financial Information"
+  stages:
+    new:
+      title: "New Stage"
+    index:
+      title: "Configured Stages"
+      project_count: "Qty Projects"
+      time_in_stage: "Stage Time"
+    edit:
+      title: "Edit Stage"
+    show:
+      not_associated_projects: "Not Associated Projects"
+      stage_projects: "Stage Projects"
+      transitions: "Transitions"
+      import_projects: "Import Projetct from Stage"
+      not_associated_teams: "Not Associated Teams"
+      stage_teams: "Teams in Stage"
+    charts:
+      entrances_per_weekday:
+        ylabel: "demands in"
+        tooltip_prefix: "demands in"
+        title: "Demands In for %{target_name}"
+      avg_hours_in_stage:
+        title: "Average Hours in %{target_name}"
+        ylabel: "avg of hours in the stage"
+      out_per_weekday:
+        title: "Demands Out of %{target_name}"
+        ylabel: "demands out"
+        tooltip_prefix: "demands_out"
+    import_from_jira:
+      title: "Import from Jira"
+      warning: "This action will import all statuses from all configured workflows. It will not work if you are running a new gen project."
+  demand_blocks:
+    index:
+      title: "Blocks"
+      filter:
+        team_member: "Team Member"
+        stage: "Stage"
+        ordering: "Order"
+        start_date: "Start date"
+        end_date: "End date"
+        block_type: "Type"
+        project: "Projects"
+        finished_projects: "In Finished Projects"
+        inactive_blocks: "Inactive blocks"
+      average_time_per_block: "Tempo Médio por Bloqueio"
+      total_blocks: "Total"
+      total_time: "Total Time"
+      notified_blocked: "Block Notified?"
+      notified_unblocked: "Unblock Notification?"
+      average_time_blocked_per_demand: "Time blocked per demand"
+    edit:
+      title: "Edit Block"
+    charts:
+      hours_blocked:
+        title: "Hours Blocked for %{target_name}"
+        ylabel: "Hours"
+        legend: "Hours Blocked"
+      blocks:
+        title: "Blocks for %{target_name}"
+        ylabel: "block(s)"
+        legend: "blocks"
+  demand_transitions:
+    total_time_in_transition: "Total time in transition"
+    working_time_in_transition: "Working time in transition"
+    index:
+      title: "Demand Transitions"
+    block_time_in_transition: "Block Time in Transition"
+    effort_time_in_transition: "Effort in Transition"
+    new:
+      title: "New Transition"
+  financial_informations:
+    index:
+      throughput: "Throughput"
+      project_delivered_hours_count: "Total Hours (Projects)"
+      delivered_hours: "Delivered Hours"
+      hours_per_demand: "Hours/Demand"
+      cost_per_hour: "Cost/Hour"
+      income_per_hour: "Income per Hour"
+      monthly_cash_balance: "Monthly Cash Balance"
+      title: "Financial Informations"
+      total_income_in_period: "Total Incomes in Period"
+      total_outcome_in_period: "Total Outcomes in Period"
+      total_balance_in_period: "Balance in Period"
+      accumulated_financial_result: "Accumulated Financial Result"
+      std_dev_cost_per_hour: "Std Dev Cost/Hour"
+      mean_cost_per_hour: "Mean Cost/Hour"
+      tail_events_after: "Tail Events After"
+      std_dev_expenses: "Std Dev Expenses"
+      std_dev_income: "Std Dev Incomes"
+      tabs:
+        finances_list: "List"
+        finances_charts: "Charts"
+        finances_stats: "Statistics"
+    new:
+      title: "New Financial Information"
+  project_change_deadline_histories:
+    index:
+      dates_difference: "Difference (days)"
+  stage_project_configs:
+    edit:
+      title: "Edit Configuration to Stage and Project"
+      project_list: "Projects with configuration on the stage"
+      replicate_to_projects: "Replicate to others projects in this stage?"
+      recompute_manual_efforts: "Recompute Manual Efforts"
+    form:
+      max_seconds_in_stage: "Max Time in Stage"
+      max_seconds_in_stage_period: "Period"
+    index:
+      title:
+        zero: "%{count} Stages in Project"
+        one: "%{count} Stages in Project"
+        other: "%{count} Stages in Project"
+  finances:
+    charts:
+      finance_result:
+        title: "Finances Result for the Period"
+        ylabel: "Money"
+        line_title: "Monthly Balance"
+        income_column_name: "Incomes Total"
+        line_name: "Monthly Balance"
+        expense_column_name: "Expenses Total"
+      finance:
+        cost_per_hour: "Outcomes per Hour"
+        income_per_hour: "Incomes per Hour"
+        cost_income_per_hour: "Income and Outcome per Hour"
+        std_dev_cost_per_hour: "Std Dev Outcomes"
+        std_dev_income_per_hour: "Std Dev Incomes"
+        std_dev_income_outcome: "Std Dev Income and Outcome"
+        mean_cost_per_hour: "Mean of Cost per Hour in Time"
+  jira_project_configs:
+    new:
+      title: "New Jira Config"
+      fix_version_field:
+        help: "We are using fix versions and labels to split the work itens into a large batch for planning and predictability."
+    index:
+      title:
+        zero: "%{count} Jira Settings"
+        one: "%{count} Jira Setting"
+        other: "%{count} Jira Settings"
+  exports:
+    request_project_information:
+      title: "Receive informations from Jira"
+      no_result_alert: "Your query returned no results. Review the informations."
+      queued: "Your request was queued. You'll receive an email having the data and you also can download it through your profile page."
+      csv_attached: "The information you requested is attached."
+      address_in_web: "You can also find it here."
+  plans:
+    buttons:
+      inactive_plan_present: "You're already have an inactive plan"
+    validations:
+      no_gold_plan: "You need a gold plan to access this section."
+      no_lite_plan: "You need at least the lite plan to access it."
+  user_plans:
+    index:
+      table:
+        title: "All Plans"
+  user_profile:
+    show:
+      data_processed_table: "Data Processed"
+  teams:
+    show:
+      demands_flow:
+        title: "Flow between %{start_date} and %{end_date}"
+      general_info: "General"
+      lead_time_p80_accumulated: "Accumulated Lead Time p80"
+      quality_share:
+        title: "Bugs Share (%)"
+        series: "Bugs (%)"
+      projects_info: "Projects"
+      active_projects_count: "Active Projects"
+      active_projects_value: "Active Projects Value"
+      lead_time_p80: "Lead time p80"
+      search_info: "Search Info"
+      dashboard_tab: "Dashboard"
+      lead_time_p95: "Lead time p95"
+      lead_time_p65: "Lead time p65"
+      average_queue_time: "Average Queue Time"
+      average_touch_time: "Average Queue Time"
+      dashboard:
+        tab_one: "Main operational charts"
+        tab_two: "Average demand cost"
+        tab_three: "Downstream details"
+        tab_four: "Portfolio charts"
+        tab_five: "Memberships Charts"
+      projects_tab: "Projects"
+      lead_time_p80_in_month: "Lead Time p80 (Month)"
+      quality_share_in_month:
+        series: "Bugs In Month (%)"
+      quality_opened_bugs:
+        series: "Bugs Opened"
+      quality_opened_in_month_bugs:
+        series: "Bugs Opened in Month"
+      data_range: "6 months data"
+    new:
+      title: "New Team"
+    index:
+      title: "Teams"
+    replenishing:
+      title: "Flow Replenishing"
+    charts:
+      average_demand_cost:
+        data_legend: "Average Demand Cost"
+        title: "Average Demand Cost"
+        ylabel: "$ / Demand"
+        xlabel: "period"
+      hours_efficiency:
+        title: "Hours Efficiency"
+        xlabel: "Time"
+        ylabel: "hours"
+      hours_consumed:
+        data_legend: "Hours Consumed"
+      available_hours:
+        data_legend: "Available Hours"
+      operational_loss:
+        data_legend: "Operational Loss"
+    destroy:
+      success: "Team %{team_name} deleted."
+    statistics:
+      montecarlo:
+        title: "Monte Carlo (Team)"
+  activerecord:
+    attributes:
+      demand:
+        external_id: "Demand ID"
+      service_delivery_review:
+        lead_time_bottom_threshold: "Lead Time Bottom Threshold"
+        lead_time_top_threshold: "Lead Time Top Threshold"
+      contract:
+        enums:
+          renewal_period:
+            monthly: "Monthly"
+            yearly: "Yearly"
+      score_matrix_question:
+        enum:
+          question_type:
+            service_provider_dimension: "Service Provider Dimension"
+      project:
+        initial_scope: "Initial Scope"
+    models:
+      demand_comment:
+        other: "Demand Comments"
+      slack_configuration:
+        other: "No Slack Configurations Data"
+    errors:
+      models:
+        user_invite:
+          invite_email:
+            not_same: "You can have only one not cancelled invite for the same email and company"
+  stats:
+    period:
+      variation: "Period Variation"
+    population:
+      variation: "Population Variation"
+  portfolio:
+    charts:
+      block_count: "Block Count"
+      aging_by_project:
+        data_title: "days"
+        title: "Aging by Project"
+      throughput_by_project:
+        data_title: "Throughput"
+        chart_title: "Throughput by Project for %{target_name}"
+        xtitle: "Projects"
+  flow_events:
+    new:
+      title: "New Event"
+    destroy:
+      tooltip: "Delete Event"
+    create:
+      success: "Flow event created."
+      error: "Problems were found while creating the Flow Event"
+    edit:
+      tooltip: "Edit Event"
+      title: "Edit Event"
+    index:
+      title: "Flow Events"
+  jira_accounts:
+    new:
+      title: "New Jira Account"
+    create:
+      success: "Jira Account created"
+      failed: "The jira account was not saved"
+    destroy:
+      tooltip: "Delete Jira Account"
+    webhooks:
+      help: "We can receive Jira notifications through two webhooks"
+      link_form_hint: "Jira webhooks configuration"
+      help_create_update_card: "Add and update card webhook address https://flowclimateapp.herokuapp.com/jira_webhook"
+      link_form_help_hint: "Webhook form config example"
+      help_delete_card: "Webhook exclude card form address https://flowclimateapp.herokuapp.com/jira_delete_card_webhook"
+  filters:
+    options:
+      project_status: "Project Status"
+      demand_status: "Demand Status"
+  slack_configuration:
+    info_type:
+      uniqueness: "You can have only one type of configuration to each team."
+  slack_configurations:
+    new:
+      title: "New Slack Config"
+    notifications:
+      beyond_expected_title: "The team %{team_name} has %{beyond_expected_count} outdated demands."
+      block_change_type_text: "Click on the type to classify the block"
+    index:
+      active: "Active?"
+  portfolio_units:
+    index:
+      title: "Portfolio Units"
+    new:
+      button: "New Portfolio Unit"
+    show:
+      navbar:
+        demands: "Demands"
+        structure: "Structure"
+  jira_product_configs:
+    new:
+      button: "New Jira Product Config"
+  memberships:
+    new:
+      title: "New Membership"
+    edit:
+      title: "New Membership"
+    index:
+      search:
+        actives_members_checkbox: "active memberships"
+  risk_review:
+    attributes:
+      validations:
+        product_uniqueness: "You can have only one meeting to the product starting at the same date."
+    help:
+      lead_time_outlier_limit: "Max days to be an outlier"
+  risk_reviews:
+    new:
+      title: "New Risk Review"
+    show:
+      outlier_demands_label: "Outlier Demands"
+      demands_blocks_label: "Demands Blocks"
+      class_of_services:
+        title: "Class of Services"
+      demands_label: "Demands"
+      flow_events_label: "Flow Events"
+      events_per_demand_label: "Event/Demand"
+      bugs_label: "Bugs"
+      blocks_per_demand_label: "Blocks/Demand"
+      projects_broken_wip: "Broken WiP Count"
+      average_blocked_time: "Average Blocked Time"
+    update:
+      enqueued_associations: "The building of your risk review was enqueued. You will receive an email when it finishes."
+  team_resources:
+    new:
+      title: "New Resource"
+  team_resource_allocations:
+    new:
+      title: "New Resource Allocation"
+  service_delivery_reviews:
+    new:
+      title: "New Review"
+    show:
+      bugs_label: "Bugs"
+      class_of_services:
+        title: "Classes of Service"
+      demands_label: "Demands"
+      expedites_delayded:
+        title: "Expedites Delayed"
+      expedites_not_delayded:
+        title: "In Deadline Expedites"
+      no_bugs_label: "demands"
+      lead_time_breakdown_label: "Lead Time Breakdown"
+      stages: "Stages"
+      portfolio_units:
+        title: "Portfolio Units Progress"
+      highest_stage_time: "Longest Stage"
+      discarded_demands_label: "Discarded"
+      general_info: "General"
+      kpis: "KPIs"
+      see_demands: "see demands"
+    update:
+      enqueued_associations: "The building of your service delivery review was enqueued. You will receive an email when it finishes."
+  jira_custom_field_mappings:
+    new:
+      title: "New Field Mapping"
+  views:
+    pagination:
+      first: "&laquo; First"
+      last: "Last &raquo;"
+      previous: "&lsaquo; Prev"
+      next: "Next &rsaquo;"
+      truncate: "&hellip;"
+  helpers:
+    page_entries_info:
+      one_page:
+        display_entries:
+          zero: "No %{entry_name} found"
+          one: "Displaying <b>1</b> %{entry_name}"
+          other: "Displaying <b>all %{count}</b> %{entry_name}"
+      more_pages:
+        display_entries: "Displaying %{entry_name} <b>%{first}&nbsp;-&nbsp;%{last}</b> of <b>%{total}</b> in total"
+  user:
+    dashboard:
+      pairing_info: "Pairing"
+      general_info: "General Info"
+      lead_time_min: "Shortest lead time"
+      lead_time_max: "Largest lead time"
+  user_company_roles:
+    new:
+      title: "New User Role"
+    edit:
+      title: "Edit User Role"
+  risk_review_action_items:
+    create:
+      success: "The action was created."
+  user_invites:
+    create:
+      error: "The e-mail address should not be blank"
+      success: "User invited"
+  contract:
+    new:
+      title: "New Contract"
+    edit:
+      title: "Edit Contract"
+  contracts:
+    new:
+      title: "New Contract"
+    save:
+      error: "Problems occurred while saving the contract. Check the form fields."
+    create:
+      success: "Contract created."
+    update:
+      success: "Contract updated."
+    index:
+      current_hours_per_demand: "Current HpD"
+      hours_estimate_gap: "Gap"
+      update_consolidations: "Update Consolidations"
+      average_hours_per_month: "Avg Hours Month"
+  score_matrix_questions:
+    create:
+      success: "Score matrix question created."
+    update:
+      success: "Score question updated."
+    new:
+      title: "New Question"
+  score_matrix_answers:
+    create:
+      success: "Answer created."
+    new:
+      no_answer: "I don't know"
+  demand_score_matrices:
+    destroy:
+      tip: "Remove answer"
+    new:
+      title: "Score Demand"
+  score_matrices:
+    show:
+      title: "Score Demands"
+      ordering: "Order Score"
+  operations_dashboard:
+    lead_time_control_chart:
+      title: "Lead Time Control Chart"
+    lead_time_histogram:
+      title: "Lead Time Histogram"
+    effort_chart:
+      title: "Working Hours in Development"
+    pull_interval:
+      title: "Average Demand Pull Interval"
+  project_risk_configs:
+    index:
+      title:
+        zero: "%{count} Project Risk Configurations"
+        one: "%{count} Project Risk Configuration"
+        other: "%{count} Project Risk Configurations"
+    new:
+      title: "New Risk Configuration"
+  project_risk_alerts:
+    index:
+      title: "%{count} Risk Alerts"
+  replenishing_consolidations:
+    index:
+      title: "Replenishing"
+  demand_efforts:
+    index:
+      title: "Efforts"
+  azure_accounts:
+    update:
+      title: "Sync company with Azure Devops"
+    edit:
+      title: "Edit Azure Account"
+      success: "Azure account was updated."
+      failure: "Problems were found while saving the account. Check the fields."
+  tasks:
+    index:
+      title: "Tasks"
+      count: "%{count} Tasks"
+      search:
+        placeholder: "search by task name"
+        helpers:
+          date: "When searching by finished tasks it will search by the delivered date, else it will search by the created date."
+      finished:
+        count: "%{count} finished"
+    charts:
+      completion_time:
+        title: "Completion Time (P80)"
+        ytitle: "days"
+      completion_control_chart:
+        title: "Control Chart to Completion Time"
+        ylabel: "Days"
+      risk:
+        ytitle: "Operational Risk (%)"
+        title: "Operational Risk Evolution"
+      scope:
+        ytitle: "Tasks"
+      throughput:
+        title: "Throughput"
+      tasks: "Tasks"
+      wip_completion_control_chart:
+        title: "Current Partial Times to Tasks in Progress"
+  initiatives:
+    index:
+      title: "Initiatives"
+    create:
+      success: "Iniciativa criada."
+      error: "The initiative was not saved. Check the form for further information."
+    new:
+      title: "New Initiative"
