@@ -1,4 +1,4 @@
-en-coca:
+coca:
   teams:
     average_demand_cost:
       message: "Average Activity Cost"

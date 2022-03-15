@@ -1,4 +1,4 @@
-en-coca:
+coca:
   errors:
     format: "%{attribute} %{message}"
     messages:

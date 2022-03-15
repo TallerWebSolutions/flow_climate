@@ -34,7 +34,7 @@
         </div>
         <div class='col-xs-4 form-group'>
           <%= form.label :language, class: 'control-label' %>
-          <%= form.select :language, [%w[English en], %w[Português pt-BR], ['English - Coca', 'en-coca']], {}, { class: 'form-control' } %>
+          <%= form.select :language, [%w[English en], %w[Português pt-BR], ['English - Coca', 'coca']], {}, { class: 'form-control' } %>
         </div>
       </div>
       <%= form.submit I18n.t('general.buttons.save'), class: 'btn btn-success' %>
