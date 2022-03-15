@@ -42,9 +42,9 @@ coca:
       hours: "hour(s)"
     stamps:
       cmd:
-        title: "Avg Demand Cost"
+        title: "Avg Activity Cost"
       flow_pressure: "Flow Pressure"
-      hours_per_demand: "Hours per Demand"
+      hours_per_demand: "Hours per Activity"
     no_data: "There is no %{missing_data} to show yet."
     download_csv: "Download CSV"
     percentage:
@@ -112,9 +112,9 @@ coca:
       average: "Average"
       sample_size: "Sample Size"
     demands_text:
-      zero: "no demands"
-      one: "%{count} demand"
-      other: "%{count} demands"
+      zero: "no activities"
+      one: "%{count} activity"
+      other: "%{count} activities"
     months: "months"
     weeks: "weeks"
     days: "days"
@@ -126,7 +126,7 @@ coca:
       zero: "no score"
       one: "%{count} point"
       other: "%{count} points"
-    demands: "demands"
+    demands: "activities"
     items_text: "%{items_count} item(ns)"
     flow: "Flow"
     class_of_service: "Class of Service"
@@ -150,8 +150,8 @@ coca:
       one: "%{count} Project"
       other: "%{count} Projects"
     demands_per_day:
-      one: "%{count} demand/day"
-      other: "%{count} demands/day"
+      one: "%{count} activity/day"
+      other: "%{count} activities/day"
     scope: "Scope"
     all: "All"
     active: "Active"
@@ -162,10 +162,10 @@ coca:
     quality:
       bugs: "Quality: Bugs"
       blocks: "Quality: Blocks for coding"
-      blocks_per_demand: "Quality: Blocks for Coding per Demand"
+      blocks_per_demand: "Quality: Blocks for Coding per Activity"
     role: "Role"
     show_montecarlo: "Show Monte Carlo Projection"
-    demands_per_day_text: "demandas por dia"
+    demands_per_day_text: "activities per day"
     invite_user: "Invite by Email"
     dashboards:
       lead_time_accumulated_p80: "Lead time accumulated (p80)"
@@ -179,12 +179,12 @@ coca:
     updated:
       success: "Updated"
       error: "Failed"
-    hours_per_demand: "Hours per Demand"
+    hours_per_demand: "Hours per Activity"
     no_cache: "There is no cache to show the charts. Use the sync button bellow to create some."
     ordering:
       direction: "Direction"
       title: "Ordering"
-    created_demands: "Created Demands"
+    created_demands: "Created Activities"
     no_register: "No Register"
     upstream: "Upstream"
     downstream: "Downstream"
@@ -207,7 +207,7 @@ coca:
         active_projects: "Active projects"
         active_products: "Active products"
         active_customers: "Active customers"
-        value_per_demand: "Value per Demand"
+        value_per_demand: "Value per Activity"
         flow_pressure: "Flow Pressure"
         running_projects: "Running projects"
       dashboard:
@@ -242,7 +242,7 @@ coca:
       project_count: "Projects"
       product_count: "Products"
       customers_count: "Customers"
-      current_hours_per_demand: "Hours/demand in Month"
+      current_hours_per_demand: "Hours/activity in Month"
       current_month_throughput: "Throughput in Month"
       current_cost_per_hour: "Cost/Hour in Month"
       current_month_closed_bugs: "Closed Bugs in Month"
@@ -309,7 +309,7 @@ coca:
       leadtime:
         title: "Lead time in days"
       total_remaining_weeks: "Remaining Weeks"
-      inconsistent_demands_count: "Qty Inconsistent Demands"
+      inconsistent_demands_count: "Qty Inconsistent Activities"
       active_projects: "Active Projects"
       average_speed: "Average Speed"
       consumed_hours_role: "Consumed Hours by Role"
@@ -317,7 +317,7 @@ coca:
     show:
       initial_scope: "Initial Scope"
       last_team: "Current team"
-      avg_hours_per_demand: "Avg Hours/Demand"
+      avg_hours_per_demand: "Avg Hours/Activity"
       scope_gap: "Scope Gap"
       scope_growth: "Scope Growth (%)"
       scope_unit_growth: "Scope Growth (unity)"
@@ -330,7 +330,7 @@ coca:
         second_part: " till D-day!"
         days: "%{remaining_days} day(s)"
         risk: "and the operational risk of this deadline is "
-      cmd: "Average Demand Cost"
+      cmd: "Average Activity Cost"
       status_information_html: "This project is <b>%{status_description}</b>"
       delivered_demands:
         text: "Delivered Scope"
@@ -338,7 +338,7 @@ coca:
         delivered: "Delivered in Period"
       throughput: "Last Week Throughput"
       leadtime_80_confidence: "Leadtime 80%"
-      demands_count: "Demands Count"
+      demands_count: "Activities Count"
       bugs_count: "Bugs Count"
       features_count: "Features Count"
       chore_count: "Chore Count"
@@ -355,10 +355,10 @@ coca:
       not_associated_customers: "Not associated customers"
       project_customers: "Customers in project"
       inconsistent_demands:
-        title: "Inconsistent Demands"
-        no_demands: "No inconsistent demands"
-        demands: "%{value} demands"
-        help: "Inconsistent demands are demands committed before project's start date or ended after project's end date."
+        title: "Inconsistent Activities"
+        no_demands: "No inconsistent activities"
+        demands: "%{value} activities"
+        help: "Inconsistent activities are activities committed before project's start date or ended after project's end date."
       not_associated_products: "Not associated products"
       project_products: "Products in Project"
       closing_info:
@@ -389,8 +389,8 @@ coca:
       lead_time:
         title: "Lead time dashboard"
       unscored_demands:
-        no_demands: "no unscored demands"
-        title: "Unscored Demands"
+        no_demands: "no unscored activities"
+        title: "Unscored Activities"
       update_consolidations: "Update Cache"
       charts:
         total_effort: "Total Effort"
@@ -400,36 +400,36 @@ coca:
         projects: "Projects"
         days: "Days"
         months: "Months"
-        demands_per_week: "Demands per week"
+        demands_per_week: "Activities per week"
         time: "In Time"
       burnup:
-        ylabel: "Demands"
-        tooltipsufix: " demands"
+        ylabel: "Activities"
+        tooltipsufix: " activities"
         demands:
-          title: "Demands Burnup for %{target_name}"
+          title: "Activities Burnup for %{target_name}"
         hours:
           title: "Hours Burnup for %{target_name}"
       hours_per_demand:
-        title: "Hours per demand on time for %{target_name}"
-        ylabel: "Hours/Demand"
-        tooltipsufix: " hours/demand"
+        title: "Hours per activity on time for %{target_name}"
+        ylabel: "Hours/Activity"
+        tooltipsufix: " hours/activity"
       flow_pressure:
         title: "Flow Pressure for %{target_name}"
         ylabel: "Flow Pressure"
-        tooltipsufix: " demands/day"
-        data_suffix: "demands/day"
+        tooltipsufix: " activities/day"
+        data_suffix: "activities/day"
       flow_pressure_per_project:
         ylabel: "Flow Pressure"
       throughput:
         title: "Throughput to %{target_name}"
-        tooltipsufix: " demands"
-        ylabel: "Demands"
+        tooltipsufix: " activities"
+        ylabel: "Activities"
         stage_stream:
           downstream: "Downstream"
           upstream: "Upstream"
       cmd:
-        title: "Average Demand Cost to %{target_name}"
-        ylabel: "Average Demand Cost"
+        title: "Average Activity Cost to %{target_name}"
+        ylabel: "Average Activity Cost"
         tooltipsufix: "dollars"
         tooltip_prefix: "$ "
       delivered:
@@ -494,7 +494,7 @@ coca:
         title: "Scope variation in time"
       risk_evolution_in_time: "Operational Math Risk Evolution"
       risk_evolution_in_time_team_based: "Operational Math Risk Evolution - Team Data"
-      quality_block_per_demand: "blocks per demand"
+      quality_block_per_demand: "blocks per activity"
       throughput_hours_six_months:
         title: "Projects' Hours per Month - Last 6 months"
     project_risk_alert_table: "Risk alerts to the project"
@@ -598,13 +598,13 @@ coca:
       customer_not_same: "The customer in the project must be the same in the product"
       product_blank: "it is mandatory to outsourcing projects"
     destroy:
-      confirm: "Are you sure? All demands in this project will be deleted as well."
+      confirm: "Are you sure? All activities in this project will be deleted as well."
       success: "Project deleted."
       error: "The project was not deleted"
     modal:
       statistics: "Statistics for %{target_name}"
     help:
-      initial_scope: "This value is used to map the planned scope without demand created yet."
+      initial_scope: "This value is used to map the planned scope without activity created yet."
   team_member:
     edit:
       title: "Edit Team Member"
@@ -632,7 +632,7 @@ coca:
     new:
       title: "New Customer"
       hours_per_demand:
-        placeholder: "Estimated hours per demand for the contract"
+        placeholder: "Estimated hours per activity for the contract"
     index:
       title: "Customers List"
       no_customers_message: "You do not have teams yet."
@@ -671,16 +671,16 @@ coca:
       effort_hours_info: "Effort Hours"
   demands:
     new:
-      title: "Create Demand"
+      title: "Create Activity"
     index:
-      title: "Demands List"
+      title: "Activities List"
       effort_upstream: "Effort in Upstream"
       effort_downstream: "Effort in Downstream"
       blocked_working_time_upstream: "Blocked Working Time in Upstream"
       blocked_working_time_downstream: "Blocked Working Time in Downstream"
       downstream: "Downstream?"
       manual_effort: "Effort Updated Manually"
-      count: "%{demands_count} demands"
+      count: "%{demands_count} activities"
       current_stage: "Current Stage"
       qty_closed_blocks: "Closed Blocks"
       hours_blocks_queue: "Hours Blocked in Queues"
@@ -699,17 +699,17 @@ coca:
         throughput_per_period: "Used Throughput"
       search:
         text:
-          placeholder: "customer, product, project, portfolio unit, demand title, id or responsible"
+          placeholder: "customer, product, project, portfolio unit, activity title, id or responsible"
       last_deliveries: "Last deliveries"
       last_larger_lead_times_four_weeks: "Last five largest lead times (4 weeks)"
       last_larger_lead_times: "Last five largest lead times"
     edit:
-      title: "Edit Demand"
+      title: "Edit Activity"
     show:
-      no_demand_transitions: "No transitions to this demand."
+      no_demand_transitions: "No transitions to this activity."
       progress_bars:
         streams: "Flow Streams Occupation"
-      sync_jira: "Sync Demand"
+      sync_jira: "Sync Activity"
       flow_efficiency_tab: "Flow Efficiency"
       blocks_tab: "Blocks"
       transitions_tab: "Transitions"
@@ -720,15 +720,15 @@ coca:
       memberships:
         blank: "No role in the team %{team_name}"
       efforts_tab: "Efforts"
-      tasks_tab: "Tasks"
+      tasks_tab: "Deliverables"
     sync:
       enqueued: "Your request was enqueued. It will be processed soon."
       done: "The sync is done."
     charts:
       processing_rate:
         title: "Processing rate for %{name}"
-        ylabel: "Demands"
-        tooltipsufix: "demands"
+        ylabel: "Activities"
+        tooltipsufix: "activities"
         processed: "Total Processed"
         arrived: "Total Arrived"
         processed_downstream: "Downstream Processed"
@@ -736,31 +736,31 @@ coca:
       wip_per_day:
         title: "Work in Progress per day for %{name}"
         ylabel: "Work in Progress"
-        tooltipsufix: " demand(s)"
+        tooltipsufix: " activity(ies)"
       hours_per_month:
         title: "Hours per Month for %{name}"
       throughput:
-        tooltipsufix: "demand(s)"
+        tooltipsufix: "activity(s)"
         title: "Throughput"
       creation_date: "Created"
       commitment_date: "Commitment Date"
       committed_date: "Committed to"
       aging_per_demand:
-        title: "Average age when the demand was finished"
+        title: "Average age when the activity was finished"
         ylabel: "day(s)"
         legend: "day(s)"
       aging:
         series: "aging"
       demands_by_project:
-        title: "Demands by Project"
+        title: "Activities by Project"
       flow_data: "Flow Data"
       demands:
-        title: "Demands"
+        title: "Activities"
       hours:
         suffix: "hour(s)"
-      title: "Demands Charts"
+      title: "Activities Charts"
     flow:
-      processed_demand: "Processed Demands"
+      processed_demand: "Processed Activities"
       wip: "Work in Progress"
       committed_with: "Committed With"
       real_throughput: "Throughput Real"
@@ -775,7 +775,7 @@ coca:
       std_throughput: "STD Throughput"
       avg_touch: "Average Touch (hours)"
       avg_queue: "Average Queue (hours)"
-      avg_work_hours_per_demand: "Hours per Demand (HpD)"
+      avg_work_hours_per_demand: "Hours per Activity (HpD)"
     filter:
       grouping:
         title: "Grouped By"
@@ -785,7 +785,7 @@ coca:
         grouped_by_stage: "Grouped by Stage"
       demand_state:
         title: "Flow Status"
-        all_demands: "All Demands"
+        all_demands: "All Activities"
         not_committed: "Not Committed"
         work_in_progress: "Work in Progress"
         delivered_demands: "Delivered"
@@ -793,13 +793,13 @@ coca:
         discarded_demands: "Discarded"
         not_discarded_demands: "Not Discarded"
       demand_type:
-        title: "Demand Type"
+        title: "Activity Type"
         all_types: "All Types"
       class_of_service:
         title: "Class of Service"
         all_classes: "All Classes"
       block_categories:
-        title: "Demand Blocks"
+        title: "Activity Blocks"
       event_categories:
         title: "Flow Events"
     grouped_by_stage:
@@ -820,7 +820,7 @@ coca:
       title: "Score Research"
       go_to_list: "Go to the list"
     destroy:
-      tip: "Delete demand permanentely"
+      tip: "Delete activity permanentely"
   navbar:
     details: "Details"
     charts: "Project Charts"
@@ -832,13 +832,13 @@ coca:
     finance: "Financial Informations"
     teams: "Teams"
     flow: "Flow"
-    demands: "Demands"
+    demands: "Activities"
     risks: "Risks"
     replenishing: "Replenishing"
     customers_list: "Customers"
     products_list: "Products"
     statistics: ""
-    demand_blocks: "Demands Blocks"
+    demand_blocks: "Activities Blocks"
     flow_events: "Flow Events"
     jira: "Jira"
     stages: "Stages"
@@ -847,7 +847,7 @@ coca:
     service_delivery_reviews: "Service Delivery Review"
     azure: "Azure"
     initiatives_list: "Initiatives"
-    tasks: "Tasks"
+    tasks: "Deliverables"
   charts:
     xlabel:
       months: "Months"
@@ -896,11 +896,11 @@ coca:
     current_situation:
       title: "Current Situation"
     demand:
-      title: "demand(s)"
+      title: "activity(s)"
     cfd:
       title_downstream: "Cumulative Flow Diagram for %{target_name}"
-      ytitle: "Demands"
-      data_suffix: "demands"
+      ytitle: "Activities"
+      data_suffix: "activities"
     period:
       label: "Period"
     lead_time_data_range_evolution:
@@ -972,7 +972,7 @@ coca:
       ytitle: "Risk (%)"
     in_week: "In Week"
     initiatives_completed:
-      title: "Tasks Completed"
+      title: "Deliverables Completed"
     hours_per_stage:
       title: "Hours Per Stage"
   finances_params:
@@ -996,16 +996,16 @@ coca:
       stage_teams: "Teams in Stage"
     charts:
       entrances_per_weekday:
-        ylabel: "demands in"
-        tooltip_prefix: "demands in"
-        title: "Demands In for %{target_name}"
+        ylabel: "activities in"
+        tooltip_prefix: "activities in"
+        title: "Activities In for %{target_name}"
       avg_hours_in_stage:
         title: "Average Hours in %{target_name}"
         ylabel: "avg of hours in the stage"
       out_per_weekday:
-        title: "Demands Out of %{target_name}"
-        ylabel: "demands out"
-        tooltip_prefix: "demands_out"
+        title: "Activities Out of %{target_name}"
+        ylabel: "activities out"
+        tooltip_prefix: "activities_out"
     import_from_jira:
       title: "Import from Jira"
       warning: "This action will import all statuses from all configured workflows. It will not work if you are running a new gen project."
@@ -1027,7 +1027,7 @@ coca:
       total_time: "Total Time"
       notified_blocked: "Block Notified?"
       notified_unblocked: "Unblock Notification?"
-      average_time_blocked_per_demand: "Time blocked per demand"
+      average_time_blocked_per_demand: "Time blocked per activity"
     edit:
       title: "Edit Block"
     charts:
@@ -1043,7 +1043,7 @@ coca:
     total_time_in_transition: "Total time in transition"
     working_time_in_transition: "Working time in transition"
     index:
-      title: "Demand Transitions"
+      title: "Activity Transitions"
     block_time_in_transition: "Block Time in Transition"
     effort_time_in_transition: "Effort in Transition"
     new:
@@ -1053,7 +1053,7 @@ coca:
       throughput: "Throughput"
       project_delivered_hours_count: "Total Hours (Projects)"
       delivered_hours: "Delivered Hours"
-      hours_per_demand: "Hours/Demand"
+      hours_per_demand: "Hours/Activity"
       cost_per_hour: "Cost/Hour"
       income_per_hour: "Income per Hour"
       monthly_cash_balance: "Monthly Cash Balance"
@@ -1158,7 +1158,7 @@ coca:
       average_touch_time: "Average Queue Time"
       dashboard:
         tab_one: "Main operational charts"
-        tab_two: "Average demand cost"
+        tab_two: "Average activity cost"
         tab_three: "Downstream details"
         tab_four: "Portfolio charts"
         tab_five: "Memberships Charts"
@@ -1179,9 +1179,9 @@ coca:
       title: "Flow Replenishing"
     charts:
       average_demand_cost:
-        data_legend: "Average Demand Cost"
-        title: "Average Demand Cost"
-        ylabel: "$ / Demand"
+        data_legend: "Average Activity Cost"
+        title: "Average Activity Cost"
+        ylabel: "$ / Activity"
         xlabel: "period"
       hours_efficiency:
         title: "Hours Efficiency"
@@ -1201,7 +1201,7 @@ coca:
   activerecord:
     attributes:
       demand:
-        external_id: "Demand ID"
+        external_id: "Activity ID"
       service_delivery_review:
         lead_time_bottom_threshold: "Lead Time Bottom Threshold"
         lead_time_top_threshold: "Lead Time Top Threshold"
@@ -1218,7 +1218,7 @@ coca:
         initial_scope: "Initial Scope"
     models:
       demand_comment:
-        other: "Demand Comments"
+        other: "Activity Comments"
       slack_configuration:
         other: "No Slack Configurations Data"
     errors:
@@ -1271,7 +1271,7 @@ coca:
   filters:
     options:
       project_status: "Project Status"
-      demand_status: "Demand Status"
+      demand_status: "Activity Status"
   slack_configuration:
     info_type:
       uniqueness: "You can have only one type of configuration to each team."
@@ -1279,7 +1279,7 @@ coca:
     new:
       title: "New Slack Config"
     notifications:
-      beyond_expected_title: "The team %{team_name} has %{beyond_expected_count} outdated demands."
+      beyond_expected_title: "The team %{team_name} has %{beyond_expected_count} outdated activities."
       block_change_type_text: "Click on the type to classify the block"
     index:
       active: "Active?"
@@ -1290,7 +1290,7 @@ coca:
       button: "New Portfolio Unit"
     show:
       navbar:
-        demands: "Demands"
+        demands: "Activities"
         structure: "Structure"
   jira_product_configs:
     new:
@@ -1313,15 +1313,15 @@ coca:
     new:
       title: "New Risk Review"
     show:
-      outlier_demands_label: "Outlier Demands"
-      demands_blocks_label: "Demands Blocks"
+      outlier_demands_label: "Outlier Activities"
+      demands_blocks_label: "Activities Blocks"
       class_of_services:
         title: "Class of Services"
-      demands_label: "Demands"
+      demands_label: "Activities"
       flow_events_label: "Flow Events"
-      events_per_demand_label: "Event/Demand"
+      events_per_demand_label: "Event/Activity"
       bugs_label: "Bugs"
-      blocks_per_demand_label: "Blocks/Demand"
+      blocks_per_demand_label: "Blocks/Activity"
       projects_broken_wip: "Broken WiP Count"
       average_blocked_time: "Average Blocked Time"
     update:
@@ -1339,12 +1339,12 @@ coca:
       bugs_label: "Bugs"
       class_of_services:
         title: "Classes of Service"
-      demands_label: "Demands"
+      demands_label: "Activities"
       expedites_delayded:
         title: "Expedites Delayed"
       expedites_not_delayded:
         title: "In Deadline Expedites"
-      no_bugs_label: "demands"
+      no_bugs_label: "activities"
       lead_time_breakdown_label: "Lead Time Breakdown"
       stages: "Stages"
       portfolio_units:
@@ -1353,7 +1353,7 @@ coca:
       discarded_demands_label: "Discarded"
       general_info: "General"
       kpis: "KPIs"
-      see_demands: "see demands"
+      see_demands: "see activities"
     update:
       enqueued_associations: "The building of your service delivery review was enqueued. You will receive an email when it finishes."
   jira_custom_field_mappings:
@@ -1428,10 +1428,10 @@ coca:
     destroy:
       tip: "Remove answer"
     new:
-      title: "Score Demand"
+      title: "Score Activity"
   score_matrices:
     show:
-      title: "Score Demands"
+      title: "Score Activities"
       ordering: "Order Score"
   operations_dashboard:
     lead_time_control_chart:
@@ -1441,7 +1441,7 @@ coca:
     effort_chart:
       title: "Working Hours in Development"
     pull_interval:
-      title: "Average Demand Pull Interval"
+      title: "Average Activity Pull Interval"
   project_risk_configs:
     index:
       title:
@@ -1468,12 +1468,12 @@ coca:
       failure: "Problems were found while saving the account. Check the fields."
   tasks:
     index:
-      title: "Tasks"
-      count: "%{count} Tasks"
+      title: "Deliverables"
+      count: "%{count} Deliverables"
       search:
-        placeholder: "search by task name"
+        placeholder: "search by deliverable name"
         helpers:
-          date: "When searching by finished tasks it will search by the delivered date, else it will search by the created date."
+          date: "When searching by finished deliverables it will search by the delivered date, else it will search by the created date."
       finished:
         count: "%{count} finished"
     charts:
@@ -1487,12 +1487,12 @@ coca:
         ytitle: "Operational Risk (%)"
         title: "Operational Risk Evolution"
       scope:
-        ytitle: "Tasks"
+        ytitle: "Deliverables"
       throughput:
         title: "Throughput"
-      tasks: "Tasks"
+      tasks: "Deliverables"
       wip_completion_control_chart:
-        title: "Current Partial Times to Tasks in Progress"
+        title: "Current Partial Times to Deliverables in Progress"
   initiatives:
     index:
       title: "Initiatives"

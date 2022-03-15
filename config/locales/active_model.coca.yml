@@ -67,8 +67,8 @@ coca:
         one: "Team"
         other: "Teams"
       initiative:
-        one: "Iniciative"
-        other: "Iniciatives"
+        one: "Initiative"
+        other: "Initiatives"
       project:
         one: "Project"
         other: "Projects"

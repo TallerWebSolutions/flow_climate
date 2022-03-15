@@ -1564,7 +1564,7 @@ RSpec.describe Project, type: :model do
 
     describe '#update_initiative' do
       context 'with initiative' do
-        it 'updates the iniciative with the new date information if the dates are sooner or later than the other projects date' do
+        it 'updates the initiative with the new date information if the dates are sooner or later than the other projects date' do
           company = Fabricate :company
           initiative = Fabricate :initiative, company: company, start_date: 4.weeks.ago, end_date: 2.weeks.from_now
           project = Fabricate :project, company: company, start_date: 4.weeks.ago, end_date: 2.weeks.from_now, initiative: initiative
