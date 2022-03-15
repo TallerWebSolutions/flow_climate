@@ -112,6 +112,12 @@ RSpec.describe TeamsController, type: :controller do
       let!(:fifth_assignment) { Fabricate :item_assignment, demand: third_demand, membership: second_membership }
     end
 
+    describe 'GET #index' do
+      before { get :index, params: { company_id: company } }
+
+      it { expect(response).to render_template 'spa-build/index' }
+    end
+
     describe 'GET #show' do
       include_context 'demands to filters'
 
