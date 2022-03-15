@@ -73,4 +73,32 @@ RSpec.describe Types::MutationType do
       end
     end
   end
+
+  describe 'delete_team' do
+    describe '.resolve' do
+      let(:team) { Fabricate :team }
+      let(:mutation) do
+        %(mutation {
+            deleteTeam(teamId: "#{team.id}") {
+              statusMessage
+            }
+          })
+      end
+
+      context 'when the team exists' do
+        it 'succeeds to delete the object' do
+          result = FlowClimateSchema.execute(mutation).as_json
+          expect(result['data']['deleteTeam']['statusMessage']).to eq('SUCCESS')
+        end
+      end
+
+      context 'when the object is not valid' do
+        it 'fails to put the job in the queue' do
+          allow_any_instance_of(Team).to(receive(:destroy)).and_return(false)
+          result = FlowClimateSchema.execute(mutation).as_json
+          expect(result['data']['deleteTeam']['statusMessage']).to eq('FAIL')
+        end
+      end
+    end
+  end
 end
