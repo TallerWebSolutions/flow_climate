@@ -35,15 +35,15 @@
 
   <div class="row row-equal">
     <div class="col-xs-4 bottom-spaced-component">
-      <%= label_tag Initiative.model_name.human, nil, class: 'control-label' %>
+      <%= label_tag Initiative.model_name.human(count: 1), nil, class: 'control-label' %>
       <%= select_tag :tasks_initiative, options_for_select(initiatives_for_search_options(@company), params[:tasks_initiative]), include_blank: I18n.t('general.select'), class: 'form-control' %>
     </div>
     <div class="col-xs-4 bottom-spaced-component">
-      <%= label_tag Project.model_name.human, nil, class: 'control-label' %>
+      <%= label_tag Project.model_name.human(count: 1), nil, class: 'control-label' %>
       <%= select_tag :tasks_project, options_for_select(projects_for_search_options(@company), params[:tasks_project]), include_blank: I18n.t('general.select'), class: 'form-control' %>
     </div>
     <div class="col-xs-4 bottom-spaced-component">
-      <%= label_tag Team.model_name.human, nil, class: 'control-label' %>
+      <%= label_tag Team.model_name.human(count: 1), nil, class: 'control-label' %>
       <%= select_tag :tasks_team, options_for_select(teams_for_search_options(@company), params[:tasks_team]), include_blank: I18n.t('general.select'), class: 'form-control' %>
     </div>
   </div>

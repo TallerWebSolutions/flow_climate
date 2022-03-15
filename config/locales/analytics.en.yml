@@ -1,8 +1,0 @@
-en:
-  flow_analytics:
-    best_month_to_start:
-      no_config: "Please configure your company."
-      best_month_html: "The best month to start projects is %{best_month}. <b>We will have space to %{project_portfolio_room} projects</b>."
-    financial_debt:
-      no_finances: "You do not have financial informations to this company."
-      financial_debt_month_html: "The incomes in month <b>%{debt_month}</b> is lower than the expenses by %{debt_difference}."

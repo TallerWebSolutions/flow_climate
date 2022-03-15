@@ -244,6 +244,8 @@ en-coca:
             manager: Management
             director: Director
             customer: Customer
+      task:
+        end_date: End date
     errors:
       messages:
         record_invalid: 'Validation failed: %{errors}'
