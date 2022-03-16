@@ -11,8 +11,9 @@ import ReplenishingTeamInfo, {
 import ReplenishingProjectsInfo, {
   Project,
 } from "../components/ReplenishingProjectsInfo"
-import BasicPage, { MessagesContext } from "../components/BasicPage"
+import BasicPage from "../components/BasicPage"
 import { Company } from "../modules/company/company.types"
+import { MessagesContext } from "../contexts/MessageContext"
 
 export const QUERY = gql`
   query Replenishing($teamId: Int!) {
@@ -120,6 +121,8 @@ const Replenishing = () => {
     variables: { teamId: Number(teamId) },
   })
   const { pushMessage } = useContext(MessagesContext)
+
+  console.log({ pushMessage })
 
   const [generateReplenishingCache] = useMutation<ReplenishingCacheDTO>(
     GENERATE_REPLENISHING_MUTATION,

@@ -13,6 +13,8 @@ import Statistics from "./pages/Statistics"
 
 import "./lib/i18n"
 import Teams from "./pages/Teams"
+import { MessagesContext } from "./contexts/MessageContext"
+import { useMessages } from "./hooks/useMessages"
 
 const App = () => (
   <Fragment>
@@ -47,14 +49,20 @@ const App = () => (
   </Fragment>
 )
 
-const AppWithProviders = () => (
-  <ApiProvider>
-    <ThemeProvider>
-      <ConfirmProvider>
-        <App />
-      </ConfirmProvider>
-    </ThemeProvider>
-  </ApiProvider>
-)
+const AppWithProviders = () => {
+  const [messages, pushMessage] = useMessages()
+
+  return (
+    <ApiProvider>
+      <ThemeProvider>
+        <ConfirmProvider>
+          <MessagesContext.Provider value={{ messages, pushMessage }}>
+            <App />
+          </MessagesContext.Provider>
+        </ConfirmProvider>
+      </ThemeProvider>
+    </ApiProvider>
+  )
+}
 
 export default AppWithProviders

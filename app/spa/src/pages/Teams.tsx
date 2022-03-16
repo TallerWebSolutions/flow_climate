@@ -14,12 +14,13 @@ import {
 } from "@mui/material"
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined"
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined"
-import BasicPage, { MessagesContext } from "../components/BasicPage"
+import BasicPage from "../components/BasicPage"
 import { Team } from "./Replenishing"
 import { Company } from "../modules/company/company.types"
 import { capitalizeFirstLetter } from "../lib/func"
 import { useConfirm } from "material-ui-confirm"
 import { useContext } from "react"
+import { MessagesContext } from "../contexts/MessageContext"
 
 const TEAMS_QUERY = gql`
   query Teams {

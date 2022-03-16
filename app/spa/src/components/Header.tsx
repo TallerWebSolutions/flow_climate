@@ -4,8 +4,8 @@ import { useState } from "react"
 import { gql, useMutation, useQuery } from "@apollo/client"
 
 import { t } from "../lib/i18n"
-import { MessagesContext } from "./BasicPage"
 import { Company } from "../modules/company/company.types"
+import { MessagesContext } from "../contexts/MessageContext"
 
 const buildLinks = (companyName: string) => [
   { name: "Taller", href: `/companies/${companyName}` },
