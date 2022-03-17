@@ -10,9 +10,9 @@ import StatusReport from "./pages/StatusReport"
 import RiskDrill from "./pages/RiskDrill"
 import LeadTimeDashboard from "./pages/LeadTimeDashboard"
 import Statistics from "./pages/Statistics"
+import Teams from "./pages/Teams"
 
 import "./lib/i18n"
-import Teams from "./pages/Teams"
 import { MessagesContext } from "./contexts/MessageContext"
 import { useMessages } from "./hooks/useMessages"
 

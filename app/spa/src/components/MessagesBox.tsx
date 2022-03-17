@@ -2,7 +2,7 @@ import { useState } from "react"
 import { Alert, Collapse, Stack } from "@mui/material"
 
 export type Message = {
-  severity: string
+  severity: "info" | "error" | "success" | "warning" | undefined
   text: string
 }
 
@@ -11,7 +11,11 @@ const MessageBox = ({ message }: { message: Message }) => {
 
   return (
     <Collapse in={open}>
-      <Alert data-testid="message-box" onClose={() => setOpen(() => false)}>
+      <Alert
+        color={message.severity}
+        data-testid="message-box"
+        onClose={() => setOpen(() => false)}
+      >
         {message.text}
       </Alert>
     </Collapse>
