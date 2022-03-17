@@ -1,8 +1,8 @@
 {
   "userMenu": {
-    "myAccount": "My Account",
-    "turnOnNotifications": "Turn On Notifications",
-    "adminDashboard": "Admin Dashboard",
-    "logout": "Log Out"
+    "myAccount": "Minha Conta",
+    "turnOnNotifications": "Ligar Notificações",
+    "adminDashboard": "Painel do Admin",
+    "logout": "Sair"
   }
 }
