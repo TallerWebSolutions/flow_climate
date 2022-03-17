@@ -2,7 +2,7 @@ import { useState } from "react"
 import { Alert, Collapse, Stack } from "@mui/material"
 
 export type Message = {
-  severity: "info" | "error" | "success" | "warning" | undefined
+  severity?: "info" | "error" | "success" | "warning" | undefined
   text: string
 }
 
