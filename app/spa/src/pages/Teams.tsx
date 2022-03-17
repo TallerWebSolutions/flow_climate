@@ -16,12 +16,12 @@ import EditOutlinedIcon from "@mui/icons-material/EditOutlined"
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined"
 import BasicPage from "../components/BasicPage"
 import { Team } from "./Replenishing"
-import { Company } from "../modules/company/company.types"
 import { capitalizeFirstLetter } from "../lib/func"
 import { useConfirm } from "material-ui-confirm"
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 import { MessagesContext } from "../contexts/MessageContext"
 import { useTranslation } from "react-i18next"
+import User from "../modules/user/user.types"
 
 export const TEAMS_QUERY = gql`
   query Teams {
@@ -31,6 +31,7 @@ export const TEAMS_QUERY = gql`
     }
 
     me {
+      language
       currentCompany {
         name
         slug
@@ -53,17 +54,13 @@ type DeleteTeamDTO = {
   }
 }
 
-type LoggedUser = {
-  currentCompany: Company
-}
-
 export type TeamsDTO = {
   teams: Team[]
-  me: LoggedUser
+  me: User
 }
 
 const Teams = () => {
-  const { t } = useTranslation(["teams"])
+  const { t, i18n } = useTranslation(["teams"])
   const { data, loading } = useQuery<TeamsDTO>(TEAMS_QUERY)
   const [deleteTeam] = useMutation<DeleteTeamDTO>(DELETE_TEAM_MUTATION, {
     update: (_, { data }) => {
@@ -81,6 +78,10 @@ const Teams = () => {
 
   const { pushMessage } = useContext(MessagesContext)
   const deleteTeamModal = useConfirm()
+
+  useEffect(() => {
+    if (!loading) i18n.changeLanguage(data?.me.language)
+  }, [loading, data])
 
   if (loading)
     return (
