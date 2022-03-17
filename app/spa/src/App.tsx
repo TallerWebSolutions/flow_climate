@@ -10,7 +10,7 @@ import StatusReport from "./pages/StatusReport"
 import RiskDrill from "./pages/RiskDrill"
 import LeadTimeDashboard from "./pages/LeadTimeDashboard"
 import Statistics from "./pages/Statistics"
-import Teams from "./pages/Teams"
+import Teams from "./pages/Teams/Teams"
 
 import "./lib/i18n"
 import { MessagesContext } from "./contexts/MessageContext"
@@ -44,6 +44,7 @@ const App = () => (
           element={<Statistics />}
         />
         <Route path="/companies/taller/teams" element={<Teams />} />
+        <Route path="/companies/taller/teams/1/edit" element={<Teams />} />
       </Routes>
     </BrowserRouter>
   </Fragment>

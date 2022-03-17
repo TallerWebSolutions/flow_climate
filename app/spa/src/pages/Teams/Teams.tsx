@@ -14,14 +14,14 @@ import {
 } from "@mui/material"
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined"
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined"
-import BasicPage from "../components/BasicPage"
-import { Team } from "./Replenishing"
-import { capitalizeFirstLetter } from "../lib/func"
+import BasicPage from "../../components/BasicPage"
+import { Team } from "../Replenishing"
+import { capitalizeFirstLetter } from "../../lib/func"
 import { useConfirm } from "material-ui-confirm"
 import { useContext, useEffect } from "react"
-import { MessagesContext } from "../contexts/MessageContext"
+import { MessagesContext } from "../../contexts/MessageContext"
 import { useTranslation } from "react-i18next"
-import User from "../modules/user/user.types"
+import User from "../../modules/user/user.types"
 
 export const TEAMS_QUERY = gql`
   query Teams {
