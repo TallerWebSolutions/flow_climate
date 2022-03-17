@@ -1218,6 +1218,7 @@ coca:
         initial_scope: "Initial Scope"
     models:
       demand_comment:
+        one: "Activity Comment"
         other: "Activity Comments"
       slack_configuration:
         other: "No Slack Configurations Data"
