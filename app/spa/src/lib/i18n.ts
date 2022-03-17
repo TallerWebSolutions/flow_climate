@@ -1,34 +1,29 @@
 import i18n from "i18next"
 import { initReactI18next } from "react-i18next"
+import resourcesToBackend from "i18next-resources-to-backend"
 
-i18n.use(initReactI18next).init({
-  resources: {
-    en: {
-      translation: {
-        userMenu: {
-          myAccount: "My Account",
-          turnOnNotifications: "Turn on Notifications",
-          adminDashboard: "Admin Dashboard",
-          logout: "Log Out",
-        },
-      },
+i18n
+  .use(
+    resourcesToBackend((language, namespace, callback) => {
+      import(`../locales/${language}/${namespace}.json`)
+        .then((resources) => {
+          callback(null, resources)
+        })
+        .catch((error) => {
+          callback(error, null)
+        })
+    })
+  )
+  .use(initReactI18next)
+  .init({
+    lng: "pt",
+    fallbackLng: "en",
+    react: {
+      useSuspense: false,
     },
-    pt: {
-      translation: {
-        userMenu: {
-          myAccount: "Minha Conta",
-          turnOnNotifications: "Ligar Notificações",
-          adminDashboard: "Painel do Admin",
-          logout: "Sair",
-        },
-      },
+    interpolation: {
+      escapeValue: false,
     },
-  },
-  lng: "pt",
-  fallbackLng: "pt",
-  interpolation: {
-    escapeValue: false,
-  },
-})
+  })
 
 export const t = i18n.t
