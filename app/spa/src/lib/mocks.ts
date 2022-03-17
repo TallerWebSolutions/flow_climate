@@ -76,3 +76,7 @@ export const replenishingMock = {
     },
   },
 }
+
+export const meMock = {
+  currentCompany: companyMock,
+}
