@@ -7,23 +7,20 @@ import { Project } from "../components/ReplenishingProjectsInfo"
 import TicketGroup from "../components/TicketGroup"
 import { formatLeadtime } from "../lib/func"
 import { formatCurrency } from "../lib/currency"
-import { ProjectPage } from "../components/ProjectPage"
+import {
+  ProjectPage,
+  PROJECT_STANDARD_FRAGMENT,
+} from "../components/ProjectPage"
 
 export const QUERY = gql`
   query ProjectStatusReport($id: Int!) {
     project(id: $id) {
-      id
-      name
+      ...ProjectStandardFragment
+
       currentRiskToDeadline
       currentTeamBasedRisk
       remainingDays
       running
-      company {
-        id
-        name
-        slug
-      }
-
       endDate
       firstDeadline
       daysDifferenceBetweenFirstAndLastDeadlines
@@ -39,6 +36,7 @@ export const QUERY = gql`
       weeklyThroughputs
     }
   }
+  ${PROJECT_STANDARD_FRAGMENT}
 `
 
 type ProjectStatusReportResult = {

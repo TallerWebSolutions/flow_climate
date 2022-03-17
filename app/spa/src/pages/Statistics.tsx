@@ -3,7 +3,10 @@ import { Backdrop, Box, CircularProgress, Typography } from "@mui/material"
 import { ResponsiveLine, Serie } from "@nivo/line"
 import { ReactElement } from "react"
 import { useParams } from "react-router-dom"
-import { ProjectPage } from "../components/ProjectPage"
+import {
+  ProjectPage,
+  PROJECT_STANDARD_FRAGMENT,
+} from "../components/ProjectPage"
 import {
   Project,
   ProjectConsolidation,
@@ -14,17 +17,12 @@ const ONE_DAY_IN_SECONDS = 60 * 60 * 24
 export const PROJECT_STATISTICS_QUERY = gql`
   query ProjectStatistics($id: Int!) {
     project(id: $id) {
-      id
-      name
+      ...ProjectStandardFragment
+
       currentRiskToDeadline
       currentTeamBasedRisk
       remainingDays
       running
-      company {
-        id
-        name
-        slug
-      }
     }
 
     projectConsolidations(projectId: $id, lastDataInWeek: true) {
@@ -39,6 +37,7 @@ export const PROJECT_STATISTICS_QUERY = gql`
       leadTimeP75
     }
   }
+  ${PROJECT_STANDARD_FRAGMENT}
 `
 
 type ProjectStatisticsResult = {

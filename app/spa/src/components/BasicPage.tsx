@@ -12,6 +12,7 @@ export type BasicPageProps = {
   children?: ReactElement | ReactElement[]
   company?: Company
 }
+
 const BasicPage = ({
   children,
   title,

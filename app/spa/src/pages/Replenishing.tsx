@@ -14,23 +14,19 @@ import ReplenishingProjectsInfo, {
 import BasicPage from "../components/BasicPage"
 import { Company } from "../modules/company/company.types"
 import { MessagesContext } from "../contexts/MessageContext"
+import { PROJECT_STANDARD_FRAGMENT } from "../components/ProjectPage"
 
 export const QUERY = gql`
   query Replenishing($teamId: Int!) {
     team(id: $teamId) {
-      id
-      name
+      ...ProjectStandardFragment
+
       throughputData
       averageThroughput
       increasedAvgThroughtput
       leadTime
       increasedLeadtime80
       workInProgress
-      company {
-        id
-        name
-        slug
-      }
       lastReplenishingConsolidations {
         id
         consolidationDate
@@ -70,6 +66,7 @@ export const QUERY = gql`
       }
     }
   }
+  ${PROJECT_STANDARD_FRAGMENT}
 `
 
 const GENERATE_REPLENISHING_MUTATION = gql`

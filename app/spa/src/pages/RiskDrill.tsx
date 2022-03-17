@@ -1,25 +1,22 @@
 import { gql, useQuery } from "@apollo/client"
 import { Backdrop, CircularProgress } from "@mui/material"
 import { useParams } from "react-router-dom"
-import { ProjectPage } from "../components/ProjectPage"
+import {
+  ProjectPage,
+  PROJECT_STANDARD_FRAGMENT,
+} from "../components/ProjectPage"
 import { Project } from "../components/ReplenishingProjectsInfo"
 import TicketGroup from "../components/TicketGroup"
 
 export const PROJECT_RISK_DRILL_QUERY = gql`
   query ProjectRiskDrill($id: Int!) {
     project(id: $id) {
-      id
-      name
+      ...ProjectStandardFragment
+
       currentRiskToDeadline
       currentTeamBasedRisk
       remainingDays
       running
-      company {
-        id
-        name
-        slug
-      }
-
       weeklyThroughputs
       workInProgressLimit
       currentWeeksByLittleLaw
@@ -37,6 +34,7 @@ export const PROJECT_RISK_DRILL_QUERY = gql`
       teamMonteCarloWeeksStdDev
     }
   }
+  ${PROJECT_STANDARD_FRAGMENT}
 `
 
 type ProjectRiskDrillResult = {

@@ -5,6 +5,19 @@ import BasicPage from "./BasicPage"
 import { Tab, Tabs } from "./Tabs"
 import Card, { CardType } from "./Card"
 import { Project } from "./ReplenishingProjectsInfo"
+import { gql } from "@apollo/client"
+
+export const PROJECT_STANDARD_FRAGMENT = gql`
+  fragment ProjectStandardFragment on Project {
+    id
+    name
+    company {
+      id
+      name
+      slug
+    }
+  }
+`
 
 type ProjectPageProps = {
   tabs?: Tab[]

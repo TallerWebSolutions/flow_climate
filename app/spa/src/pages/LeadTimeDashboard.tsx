@@ -1,7 +1,10 @@
 import { gql, useQuery } from "@apollo/client"
 import { Backdrop, CircularProgress } from "@mui/material"
 import { useParams } from "react-router-dom"
-import { ProjectPage } from "../components/ProjectPage"
+import {
+  ProjectPage,
+  PROJECT_STANDARD_FRAGMENT,
+} from "../components/ProjectPage"
 import { Project } from "../components/ReplenishingProjectsInfo"
 import TicketGroup from "../components/TicketGroup"
 import { secondsToReadbleDate } from "../lib/date"
@@ -9,18 +12,12 @@ import { secondsToReadbleDate } from "../lib/date"
 export const LEAD_TIME_DASHBOARD_QUERY = gql`
   query ProjectLeadTimeDashboard($id: Int!) {
     project(id: $id) {
-      id
-      name
+      ...ProjectStandardFragment
+
       currentRiskToDeadline
       currentTeamBasedRisk
       remainingDays
       running
-      company {
-        id
-        name
-        slug
-      }
-
       projectConsolidations {
         leadTimeMin
         leadTimeMax
@@ -39,6 +36,7 @@ export const LEAD_TIME_DASHBOARD_QUERY = gql`
       }
     }
   }
+  ${PROJECT_STANDARD_FRAGMENT}
 `
 
 type ProjectLeadTimeDashboardResult = {
