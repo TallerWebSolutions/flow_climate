@@ -3,9 +3,9 @@ import { Avatar, Box, Container, Link, Menu, MenuItem } from "@mui/material"
 import { useState } from "react"
 import { gql, useMutation, useQuery } from "@apollo/client"
 
-import { t } from "../lib/i18n"
 import { Company } from "../modules/company/company.types"
 import { MessagesContext } from "../contexts/MessageContext"
+import { useTranslation } from "react-i18next"
 
 const buildLinks = (companyName: string) => [
   { name: "Taller", href: `/companies/${companyName}` },
@@ -70,6 +70,7 @@ const normalizeUser = (data: UserDTO): HeaderUser => ({
 })
 
 const Header = ({ company }: HeaderProps) => {
+  const { t } = useTranslation(["header"])
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const handleClose = () => setAnchorEl(null)
   const { data: userData } = useQuery<UserDTO>(USER_QUERY)
