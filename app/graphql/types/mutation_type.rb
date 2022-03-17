@@ -5,6 +5,7 @@ module Types
     field :generate_replenishing_cache, mutation: Mutations::GenerateReplenishingCacheMutation
     field :send_auth_token, mutation: Mutations::SendAuthTokenMutation
     field :delete_team, mutation: Mutations::DeleteTeamMutation
+    field :update_team, mutation: Mutations::UpdateTeamMutation
     field :me, Types::UserType, null: false
 
     def me

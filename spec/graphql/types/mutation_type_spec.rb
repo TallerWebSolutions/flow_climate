@@ -89,6 +89,7 @@ RSpec.describe Types::MutationType do
         it 'succeeds to delete the object' do
           result = FlowClimateSchema.execute(mutation).as_json
           expect(result['data']['deleteTeam']['statusMessage']).to eq('SUCCESS')
+          expect(Team.all.count).to eq 0
         end
       end
 
@@ -97,6 +98,36 @@ RSpec.describe Types::MutationType do
           allow_any_instance_of(Team).to(receive(:destroy)).and_return(false)
           result = FlowClimateSchema.execute(mutation).as_json
           expect(result['data']['deleteTeam']['statusMessage']).to eq('FAIL')
+        end
+      end
+    end
+  end
+
+  describe 'update_team' do
+    describe '.resolve' do
+      let(:team) { Fabricate :team }
+      let(:mutation) do
+        %(mutation {
+            updateTeam(teamId: "#{team.id}", name: "foo", maxWorkInProgress: 2) {
+              statusMessage
+            }
+          })
+      end
+
+      context 'when the team exists' do
+        it 'succeeds to delete the object' do
+          result = FlowClimateSchema.execute(mutation).as_json
+          expect(result['data']['updateTeam']['statusMessage']).to eq('SUCCESS')
+          expect(team.reload.name).to eq 'foo'
+          expect(team.reload.max_work_in_progress).to eq 2
+        end
+      end
+
+      context 'when the object is not valid' do
+        it 'fails to put the job in the queue' do
+          allow_any_instance_of(Team).to(receive(:update)).and_return(false)
+          result = FlowClimateSchema.execute(mutation).as_json
+          expect(result['data']['updateTeam']['statusMessage']).to eq('FAIL')
         end
       end
     end
