@@ -1221,7 +1221,8 @@ coca:
         one: "Activity Comment"
         other: "Activity Comments"
       slack_configuration:
-        other: "No Slack Configurations Data"
+        one: "Slack Configuration"
+        other: "Slack Configurations"
     errors:
       models:
         user_invite:
