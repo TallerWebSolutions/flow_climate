@@ -5,11 +5,11 @@ import MessagesBox from "../MessagesBox"
 describe("components/MessagesBox", () => {
   const messages = [
     {
-      severity: "alert",
+      severity: "info",
       text: "this is an alert, dumbass",
     },
     {
-      severity: "danger",
+      severity: "error",
       text: "this is a danger alert, dumbass",
     },
   ]
