@@ -71,7 +71,7 @@ const Teams = () => {
 
       pushMessage({
         text: mutationResult
-          ? t("deleted_team_message_succes")
+          ? t("deleted_team_message_success")
           : t("deleted_team_message_fail"),
         severity: mutationResult ? "success" : "error",
       })
