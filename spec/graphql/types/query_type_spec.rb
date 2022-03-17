@@ -102,6 +102,7 @@ RSpec.describe Types::QueryType do
         me {
           id
           fullName
+          language
           currentCompany {
             name
           }
@@ -171,6 +172,7 @@ RSpec.describe Types::QueryType do
           expect(result.dig('data', 'me')).to eq({
                                                    'id' => user.id.to_s,
                                                    'fullName' => user.full_name,
+                                                   'language' => user.language,
                                                    'currentCompany' => {
                                                      'name' => user.last_company&.name
                                                    },

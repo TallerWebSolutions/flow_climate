@@ -4,6 +4,7 @@ module Types
   class UserType < Types::BaseObject
     field :id, ID, null: false
     field :full_name, String, null: false
+    field :language, String, null: false
     field :current_company, CompanyType, null: true
 
     field :avatar, Types::AvatarType, null: false

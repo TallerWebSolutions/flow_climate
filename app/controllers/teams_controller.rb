@@ -33,29 +33,6 @@ class TeamsController < DemandsListController
     render :new
   end
 
-  def edit; end
-
-  def update
-    @team.update(team_params.merge(company: @company))
-    return redirect_to company_team_path(@company, @team) if @team.save
-
-    render :edit
-  end
-
-  def destroy
-    team_name = @team.name
-
-    @team.destroy
-    if @team.errors.full_messages.present?
-      flash[:error] = @team.errors.full_messages.join(' | ')
-    else
-      flash[:notice] = I18n.t('teams.destroy.success', team_name: team_name)
-    end
-
-    @teams = @company.teams.order(:name)
-    respond_to { |format| format.js { render 'teams/destroy' } }
-  end
-
   def team_projects_tab
     executing_projects = @team.projects.running
 
