@@ -53,7 +53,7 @@ RSpec.describe Types::MutationType do
         end
       end
 
-      context 'when context does not have current user' do
+      context 'when context does not have the current user' do
         let(:mutation) do
           %(mutation {
               sendAuthToken(companyId: #{company.id}) {
@@ -128,6 +128,52 @@ RSpec.describe Types::MutationType do
           allow_any_instance_of(Team).to(receive(:update)).and_return(false)
           result = FlowClimateSchema.execute(mutation).as_json
           expect(result['data']['updateTeam']['statusMessage']).to eq('FAIL')
+        end
+      end
+    end
+  end
+
+  describe 'create_team' do
+    let(:company) { Fabricate :company }
+    let(:user) { Fabricate :user, companies: [company], last_company_id: company.id }
+    let(:context) { { current_user: user } }
+
+    describe '.resolve' do
+      let(:team) { Fabricate :team }
+      let(:mutation) do
+        %(mutation {
+            createTeam(name: "foo", maxWorkInProgress: 2) {
+              statusMessage
+            }
+          })
+      end
+
+      context 'when the team exists' do
+        it 'succeeds to delete the object' do
+          result = FlowClimateSchema.execute(mutation, variables: nil, context: context).as_json
+          expect(result['data']['createTeam']['statusMessage']).to eq('SUCCESS')
+          created_team = Team.last
+          expect(created_team.name).to eq 'foo'
+          expect(created_team.max_work_in_progress).to eq 2
+        end
+      end
+
+      context 'when the object is not valid' do
+        it 'fails to put the job in the queue' do
+          allow_any_instance_of(Team).to(receive(:valid?)).and_return(false)
+          result = FlowClimateSchema.execute(mutation, variables: nil, context: context).as_json
+          expect(result['data']['createTeam']['statusMessage']).to eq('FAIL')
+        end
+      end
+
+      context 'when context does not have the current user' do
+        it 'fails to send the auth token to the user' do
+          context = {
+            current_user: nil
+          }
+
+          result = FlowClimateSchema.execute(mutation, variables: nil, context: context).as_json
+          expect(result['data']['createTeam']['statusMessage']).to eq('FAIL')
         end
       end
     end
