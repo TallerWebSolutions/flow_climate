@@ -18,6 +18,7 @@ i18n
   .init({
     lng: "pt",
     fallbackLng: "en",
+    initImmediate: false,
     react: {
       useSuspense: false,
     },
@@ -26,4 +27,4 @@ i18n
     },
   })
 
-export const t = i18n.t
+export default i18n

@@ -21,8 +21,9 @@ import { capitalizeFirstLetter } from "../lib/func"
 import { useConfirm } from "material-ui-confirm"
 import { useContext } from "react"
 import { MessagesContext } from "../contexts/MessageContext"
+import { useTranslation } from "react-i18next"
 
-const TEAMS_QUERY = gql`
+export const TEAMS_QUERY = gql`
   query Teams {
     teams {
       id
@@ -62,10 +63,18 @@ export type TeamsDTO = {
 }
 
 const Teams = () => {
+  const { t } = useTranslation(["teams"])
   const { data, loading } = useQuery<TeamsDTO>(TEAMS_QUERY)
   const [deleteTeam] = useMutation<DeleteTeamDTO>(DELETE_TEAM_MUTATION, {
     update: (_, { data }) => {
-      console.log({ data })
+      const mutationResult = data?.deleteTeam.statusMessage === "SUCCESS"
+
+      pushMessage({
+        text: mutationResult
+          ? t("deleted_team_message_succes")
+          : t("deleted_team_message_fail"),
+        severity: mutationResult ? "success" : "error",
+      })
     },
     refetchQueries: [{ query: TEAMS_QUERY }],
   })
@@ -88,22 +97,17 @@ const Teams = () => {
   const breadcrumbsLinks = [
     { name: capitalizeFirstLetter(companyName!), url: companyUrl! },
     {
-      name: "Lista dos Times",
+      name: t("teams_list"),
     },
   ]
 
   const handleOnDeleteTeam = (id: string) => {
     deleteTeamModal({
-      title: "Tem certeza?",
-      description: "Essa ação é permanente!",
+      title: t("delete_team_modal_title"),
+      description: t("delete_team_modal_body"),
     }).then(() => {
       deleteTeam({
         variables: { teamId: id },
-      })
-
-      pushMessage({
-        text: "Time deletado",
-        severity: "info",
       })
     })
   }
@@ -111,7 +115,7 @@ const Teams = () => {
   return (
     <>
       <BasicPage
-        title={"Teams"}
+        title={t("teams")}
         company={company}
         breadcrumbsLinks={breadcrumbsLinks}
       >
@@ -121,13 +125,13 @@ const Teams = () => {
               <TableRow>
                 <TableCell>
                   <Typography color="text.primary" sx={{ fontSize: "1.25rem" }}>
-                    Times
+                    {t("teams")}
                   </Typography>
                 </TableCell>
               </TableRow>
             </TableHead>
 
-            <TableBody>
+            <TableBody data-testid="teams-list">
               {teams?.map(({ name, id }, index) => {
                 const teamLinkBase = `/companies/taller/teams/${id}`
 
@@ -169,7 +173,7 @@ const Teams = () => {
             variant="contained"
             sx={{ height: "35", textTransform: "uppercase", color: "primary" }}
           >
-            Criar Time
+            {t("create_team")}
           </Button>
         </Box>
       </BasicPage>
