@@ -5,6 +5,8 @@ module Mutations
     argument :name, String, required: true
     argument :max_work_in_progress, Int, required: true
 
+    field :id, Int, null: true
+    field :company, Types::CompanyType, null: true
     field :status_message, Types::CreateResponses, null: false
 
     def resolve(name:, max_work_in_progress:)
@@ -13,7 +15,7 @@ module Mutations
       team = Team.create(company_id: current_user.last_company_id, name: name, max_work_in_progress: max_work_in_progress)
 
       if team.valid?
-        { status_message: 'SUCCESS' }
+        { status_message: 'SUCCESS', id: team.id, company: team.company }
       else
         { status_message: 'FAIL' }
       end
