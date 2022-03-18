@@ -141,7 +141,7 @@ RSpec.describe Consolidations::ReplenishingConsolidationJob do
         expect(new_consolidation_project.max_work_in_progress).to eq 5
         expect(new_consolidation_project.montecarlo_80_percent).to eq 0
         expect(new_consolidation_project.project_based_risks_to_deadline).to eq 1
-        expect(new_consolidation_project.project_throughput_data).to eq []
+        expect(new_consolidation_project.project_throughput_data).to eq [0, 0, 0]
         expect(new_consolidation_project.qty_selected_last_week).to eq 0
         expect(new_consolidation_project.qty_using_pressure).to eq 0
         expect(new_consolidation_project.relative_flow_pressure).to eq 0
@@ -159,7 +159,7 @@ RSpec.describe Consolidations::ReplenishingConsolidationJob do
         expect(new_consolidation_other_project.max_work_in_progress).to eq 3
         expect(new_consolidation_other_project.montecarlo_80_percent).to eq 0
         expect(new_consolidation_other_project.project_based_risks_to_deadline).to eq 1
-        expect(new_consolidation_other_project.project_throughput_data).to eq []
+        expect(new_consolidation_other_project.project_throughput_data).to eq [0, 0, 0, 0]
         expect(new_consolidation_other_project.qty_selected_last_week).to eq 0
         expect(new_consolidation_other_project.qty_using_pressure).to eq 0
         expect(new_consolidation_other_project.relative_flow_pressure).to eq 0
