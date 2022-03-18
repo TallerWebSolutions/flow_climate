@@ -23,7 +23,8 @@ class TeamsController < DemandsListController
   end
 
   def new
-    @team = Team.new(company: @company)
+    prepend_view_path Rails.root.join('public')
+    render 'spa-build/index'
   end
 
   def create
