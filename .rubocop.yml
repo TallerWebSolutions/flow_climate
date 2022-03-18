@@ -109,6 +109,9 @@ Metrics/ParameterLists:
 Rails/NotNullColumn:
   Enabled: false
 
+Rails/Presence:
+  Enabled: false
+
 RSpec/ContextWording:
   Enabled: false
 

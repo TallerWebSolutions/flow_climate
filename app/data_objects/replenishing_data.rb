@@ -26,17 +26,17 @@ class ReplenishingData
 
   def build_summary_infos
     if @running_projects.present? && @team_demands.present?
-      th_for_team_per_week_hash = build_throughput_per_period_array(@team_demands, @start_date, @end_date, @running_projects.filter_map(&:initial_scope).sum)
-      build_basic_summary_infos(th_for_team_per_week_hash)
+      build_throughput_per_period_array(@team_demands, @start_date, @end_date)
+      build_basic_summary_infos
       @summary_infos[:average_throughput] = @summary_infos[:four_last_throughputs].sum / @summary_infos[:four_last_throughputs].count
     else
       @summary_infos = {}
     end
   end
 
-  def build_basic_summary_infos(th_per_week_hash)
+  def build_basic_summary_infos
     @summary_infos = {
-      four_last_throughputs: th_per_week_hash.last(4),
+      four_last_throughputs: @throughput_per_period_array.last(4),
       team_wip: @team.max_work_in_progress,
       team_lead_time: @team.lead_time(4.weeks.ago.beginning_of_week, 1.week.ago.end_of_week) / 1.day
     }
@@ -46,9 +46,9 @@ class ReplenishingData
     @project_data_to_replenish = []
     @running_projects.each do |project|
       project_info_hash = build_project_hash(project)
-      throughput_grouped_per_week_hash = build_throughput_per_period_array(project.demands, project.start_date.beginning_of_week, 1.week.ago.end_of_week, project.initial_scope)
+      build_throughput_per_period_array(project.demands, project.start_date.beginning_of_week, 1.week.ago.end_of_week)
 
-      project_info_hash = project_info_hash.merge(build_stats_info(project, throughput_grouped_per_week_hash))
+      project_info_hash = project_info_hash.merge(build_stats_info(project))
       project_info_hash = project_info_hash.merge(build_qty_items_info(project))
 
       project_info_hash[:customer_happiness] = compute_customer_happiness(project_info_hash)
@@ -74,18 +74,18 @@ class ReplenishingData
     project_data_to_replenish.merge(build_customers_products_names(project))
   end
 
-  def build_stats_info(project, throughput_grouped_per_week_hash)
+  def build_stats_info(project)
     stats_hash = {}
 
-    stats_hash[:throughput_data] = throughput_grouped_per_week_hash
-    stats_hash[:throughput_last_week] = throughput_grouped_per_week_hash.last
-    stats_hash[:montecarlo_80_percent] = build_monte_carlo_info(project, throughput_grouped_per_week_hash.last(10))
+    stats_hash[:throughput_data] = @throughput_per_period_array
+    stats_hash[:throughput_last_week] = @throughput_per_period_array.last
+    stats_hash[:montecarlo_80_percent] = build_monte_carlo_info(project)
     stats_hash[:project_based_risks_to_deadline] = project.current_risk_to_deadline
-    stats_hash[:team_based_montecarlo_80_percent] = build_monte_carlo_info(project, build_project_share_in_team_throughput(project, build_throughput_per_period_array(@team_demands, @start_date, @end_date, uncertain_scope_for_team).last(10)))
+    stats_hash[:team_based_montecarlo_80_percent] = build_monte_carlo_info(project)
 
     build_team_based_consolidation_data(project.last_project_consolidation, stats_hash)
 
-    stats_hash[:throughput_data_size] = throughput_grouped_per_week_hash.count
+    stats_hash[:throughput_data_size] = @throughput_per_period_array.count
 
     stats_hash
   end
@@ -101,23 +101,33 @@ class ReplenishingData
     stats_hash[:team_monte_carlo_weeks_max] = project_consolidation&.team_based_monte_carlo_weeks_max || 0
   end
 
-  def build_throughput_per_period_array(demands, start_date, end_date, initial_scope)
+  def build_throughput_per_period_array(demands, start_date, end_date)
     dates_array = TimeService.instance.weeks_between_of(start_date, end_date)
-    work_item_flow_information = Flow::WorkItemFlowInformation.new(demands, initial_scope, dates_array.length, dates_array.last, 'week')
+    demands_throughputs = Demand.where(id: demands.kept.order(:end_date).map(&:id))
+                                .group('EXTRACT(week FROM demands.end_date)::INTEGER')
+                                .group('EXTRACT(isoyear FROM demands.end_date)::INTEGER')
+                                .count
 
-    dates_array.each_with_index do |analysed_date, distribution_index|
-      work_item_flow_information.work_items_flow_behaviour(dates_array.first, analysed_date, distribution_index, true)
+    @throughput_per_period_array = []
+    dates_array.each do |analysed_date|
+      week = analysed_date.cweek
+      year = analysed_date.cwyear
+
+      @throughput_per_period_array << if demands_throughputs[[week, year]].present?
+                                        demands_throughputs[[week, year]]
+                                      else
+                                        0
+                                      end
     end
-    @throughput_per_period_array = work_item_flow_information.throughput_per_period
   end
 
-  def build_project_share_in_team_throughput(project, team_throughput_per_week_array)
+  def build_project_share_in_team_throughput(project)
     project_wip = project.max_work_in_progress
     team_wip = @team.max_work_in_progress
     project_share_in_flow = 0
     project_share_in_flow = project_wip.to_f / team_wip if team_wip.positive?
 
-    team_throughput_per_week_array.map { |throughput| throughput * project_share_in_flow }
+    @throughput_per_period_array.map { |throughput| throughput * project_share_in_flow }
   end
 
   def build_qty_items_info(project)
@@ -134,8 +144,8 @@ class ReplenishingData
     project_data_to_replenish[:weeks_to_end_date].to_f / project_data_to_replenish[:montecarlo_80_percent]
   end
 
-  def build_monte_carlo_info(project, throughput_data)
-    montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(project.remaining_work, throughput_data, 100)
+  def build_monte_carlo_info(project)
+    montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(project.remaining_work, @throughput_per_period_array.last(10), 100)
     Stats::StatisticsService.instance.percentile(80, montecarlo_durations)
   end
 
