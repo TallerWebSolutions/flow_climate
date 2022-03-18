@@ -134,8 +134,14 @@ const EditTeam = () => {
   return (
     <BasicPage company={company} breadcrumbsLinks={breadcrumbsLinks}>
       <form onSubmit={handleSubmit(handleEditTeam)}>
-        <FormGroup sx={{ flexWrap: "wrap" }} row={true}>
-          <FormControl sx={{ flex: "1 0 45%", mr: 1 }}>
+        <FormGroup
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "repeat(2, 1fr)",
+            gridColumnGap: "30px",
+          }}
+        >
+          <FormControl>
             <InputLabel htmlFor="teamName">
               {t("edit_team.edit_team_name")} *
             </InputLabel>
@@ -143,7 +149,7 @@ const EditTeam = () => {
             <Input defaultValue={teamName} {...register("teamName")} />
           </FormControl>
 
-          <FormControl sx={{ flex: "1 0 45%", ml: 1 }}>
+          <FormControl>
             <InputLabel htmlFor="teamMaxWip">
               {t("edit_team.edit_team_max_wip")} *
             </InputLabel>
@@ -154,11 +160,11 @@ const EditTeam = () => {
               {...register("teamMaxWip")}
             />
           </FormControl>
-
-          <Button sx={{ mt: 2 }} variant="contained" type="submit">
-            {t("edit_team_button")}
-          </Button>
         </FormGroup>
+
+        <Button sx={{ mt: 2 }} variant="contained" type="submit">
+          {t("edit_team_button")}
+        </Button>
       </form>
     </BasicPage>
   )

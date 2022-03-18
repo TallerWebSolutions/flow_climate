@@ -115,8 +115,14 @@ const CreateTeam = () => {
   return (
     <BasicPage company={company} breadcrumbsLinks={breadcrumbsLinks}>
       <form onSubmit={handleSubmit(handleCreateNewTeam)}>
-        <FormGroup sx={{ flexWrap: "wrap" }} row={true}>
-          <FormControl sx={{ flex: "1 0 45%", mr: 1 }}>
+        <FormGroup
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "repeat(2, 1fr)",
+            gridColumnGap: "30px",
+          }}
+        >
+          <FormControl>
             <InputLabel htmlFor="teamName">
               {t("create_team.new_team_name")} *
             </InputLabel>
@@ -124,18 +130,17 @@ const CreateTeam = () => {
             <Input {...register("teamName")} />
           </FormControl>
 
-          <FormControl sx={{ flex: "1 0 45%", ml: 1 }}>
+          <FormControl>
             <InputLabel htmlFor="teamMaxWip">
               {t("create_team.new_team_max_wip")} *
             </InputLabel>
 
             <Input type="number" {...register("teamMaxWip")} />
           </FormControl>
-
-          <Button sx={{ mt: 2 }} variant="contained" type="submit">
-            {t("create_team_button")}
-          </Button>
         </FormGroup>
+        <Button sx={{ mt: 2 }} variant="contained" type="submit">
+          {t("create_team_button")}
+        </Button>
       </form>
     </BasicPage>
   )
