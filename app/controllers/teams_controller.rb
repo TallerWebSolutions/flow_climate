@@ -27,6 +27,11 @@ class TeamsController < DemandsListController
     render 'spa-build/index'
   end
 
+  def edit
+    prepend_view_path Rails.root.join('public')
+    render 'spa-build/index'
+  end
+
   def create
     @team = Team.new(team_params.merge(company: @company))
     return redirect_to company_team_path(@company, @team) if @team.save

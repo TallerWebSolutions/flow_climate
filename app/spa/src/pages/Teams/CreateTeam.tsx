@@ -25,6 +25,7 @@ export const LOGGED_USER_QUERY = gql`
     me {
       language
       currentCompany {
+        id
         name
         slug
       }
@@ -61,7 +62,7 @@ const CreateTeam = () => {
   const [createTeam] = useMutation<CreateTeamDTO>(CREATE_TEAM_MUTATION, {
     update: (_, { data }) => {
       const newTeamID = data?.createTeam.id
-      const company = data?.createTeam.company.slug
+      const companySlug = data?.createTeam.company.slug
       const mutationResult = data?.createTeam.statusMessage === "SUCCESS"
 
       pushMessage({
@@ -72,7 +73,7 @@ const CreateTeam = () => {
       })
 
       setTimeout(function () {
-        window.location.assign(`/companies/${company}/teams/${newTeamID}`)
+        window.location.assign(`/companies/${companySlug}/teams/${newTeamID}`)
       }, 2000)
     },
   })
@@ -103,8 +104,6 @@ const CreateTeam = () => {
   const handleCreateNewTeam = (data: any) => {
     const { teamName, teamMaxWip } = data
 
-    console.log(data)
-
     createTeam({
       variables: {
         name: teamName,
@@ -114,7 +113,7 @@ const CreateTeam = () => {
   }
 
   return (
-    <BasicPage breadcrumbsLinks={breadcrumbsLinks}>
+    <BasicPage company={company} breadcrumbsLinks={breadcrumbsLinks}>
       <form onSubmit={handleSubmit(handleCreateNewTeam)}>
         <FormGroup sx={{ flexWrap: "wrap" }} row={true}>
           <FormControl sx={{ flex: "1 0 45%", mr: 1 }}>

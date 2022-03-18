@@ -12,5 +12,12 @@
     "new_team_max_wip": "Máximo de trabalho em andamento",
     "create_team_message_success": "Time criado com sucesso!",
     "create_team_message_fail": "Não foi possível criar o time!"
+  },
+  "edit_team": {
+    "edit_team": "Editar Time",
+    "edit_team_name": "Nome",
+    "edit_team_max_wip": "Máximo de trabalho em andamento",
+    "edit_team_message_success": "Time criado com sucesso!",
+    "edit_team_message_fail": "Não foi possível criar o time!"
   }
 }

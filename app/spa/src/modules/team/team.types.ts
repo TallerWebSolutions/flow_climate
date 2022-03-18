@@ -11,5 +11,6 @@ export type Team = {
   increasedAvgThroughtput: boolean
   leadTime: number
   workInProgress: number
+  maxWorkInProgress: number
   lastReplenishingConsolidations: ReplenishingConsolidation[]
 }

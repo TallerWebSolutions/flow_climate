@@ -2,6 +2,7 @@
   "teams": "Teams",
   "teams_list": "Teams List",
   "create_team_button": "Create Team",
+  "edit_team_button": "Update Team",
   "delete_team_modal_title": "Are you sure?",
   "delete_team_modal_body": "This action is permanent!",
   "deleted_team_message_success": "Time deleted!",
@@ -12,5 +13,12 @@
     "new_team_max_wip": "Max work in progress",
     "create_team_message_success": "New team created with success!",
     "create_team_message_fail": "Unable to create team at this time!"
+  },
+  "edit_team": {
+    "edit_team": "Edit Team",
+    "edit_team_name": "Name",
+    "edit_team_max_wip": "Max work in progress",
+    "edit_team_message_success": "Team updated with success!",
+    "edit_team_message_fail": "Unable to update team at this time!"
   }
 }

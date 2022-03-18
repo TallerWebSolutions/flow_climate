@@ -11,11 +11,12 @@ import RiskDrill from "./pages/RiskDrill"
 import LeadTimeDashboard from "./pages/LeadTimeDashboard"
 import Statistics from "./pages/Statistics"
 import Teams from "./pages/Teams/Teams"
+import CreateTeam from "./pages/Teams/CreateTeam"
+import EditTeam from "./pages/Teams/EditTeam"
 
 import "./lib/i18n"
 import { MessagesContext } from "./contexts/MessageContext"
 import { useMessages } from "./hooks/useMessages"
-import CreateTeam from "./pages/Teams/CreateTeam"
 
 const App = () => (
   <Fragment>
@@ -29,23 +30,30 @@ const App = () => (
           element={<Replenishing />}
         />
         <Route
-          path="/companies/taller/projects/:projectId/status_report_dashboard"
+          path="/companies/:companyNickName/projects/:projectId/status_report_dashboard"
           element={<StatusReport />}
         />
         <Route
-          path="/companies/taller/projects/:projectId/risk_drill_down"
+          path="/companies/:companyNickName/projects/:projectId/risk_drill_down"
           element={<RiskDrill />}
         />
         <Route
-          path="/companies/taller/projects/:projectId/lead_time_dashboard"
+          path="/companies/:companyNickName/projects/:projectId/lead_time_dashboard"
           element={<LeadTimeDashboard />}
         />
         <Route
-          path="/companies/taller/projects/:projectId/statistics_tab"
+          path="/companies/:companyNickName/projects/:projectId/statistics_tab"
           element={<Statistics />}
         />
-        <Route path="/companies/taller/teams" element={<Teams />} />
-        <Route path="/companies/taller/teams/new" element={<CreateTeam />} />
+        <Route path="/companies/:companyNickName/teams" element={<Teams />} />
+        <Route
+          path="/companies/:companyNickName/teams/new"
+          element={<CreateTeam />}
+        />
+        <Route
+          path="/companies/:companyNickName/teams/:teamId/edit"
+          element={<EditTeam />}
+        />
       </Routes>
     </BrowserRouter>
   </Fragment>

@@ -15,6 +15,7 @@ module Types
     field :increased_leadtime_80, Boolean, null: true
 
     field :work_in_progress, Int, null: true
+    field :max_work_in_progress, Int, null: false
 
     field :last_replenishing_consolidations, [Types::ReplenishingConsolidationType], null: false
 
