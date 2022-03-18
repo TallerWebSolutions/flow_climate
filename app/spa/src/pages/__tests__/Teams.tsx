@@ -1,5 +1,5 @@
-import Teams, { TEAMS_QUERY } from "../Teams"
-import { render, within, waitForElement, waitFor } from "@testing-library/react"
+import Teams, { TEAMS_QUERY } from "../Teams/Teams"
+import { render, waitFor } from "@testing-library/react"
 import { MockedProvider } from "@apollo/client/testing"
 import { MemoryRouter, Routes, Route } from "react-router-dom"
 import { meMock, teamMock } from "../../lib/mocks"
