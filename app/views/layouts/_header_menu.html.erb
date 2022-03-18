@@ -5,6 +5,7 @@
 <div class="col-xs-8 header-nav">
   <% if company.present? && company.persisted? %>
     <span class="top-nav-bar-text"><%= link_to company.abbreviation.capitalize, company_path(company), class: 'nav-link top-nav-bar-item' %> | </span>
+    <span class="top-nav-bar-text"><%= link_to Team.model_name.human(count: 2), company_teams_path(company), class: 'nav-link top-nav-bar-item' %> | </span>
     <span class="top-nav-bar-text"><%= link_to I18n.t('navbar.customers_list'), company_customers_path(company), class: 'nav-link top-nav-bar-item' %> | </span>
     <span class="top-nav-bar-text"><%= link_to I18n.t('navbar.products_list'), company_products_path(company), class: 'nav-link top-nav-bar-item' %> | </span>
     <span class="top-nav-bar-text"><%= link_to I18n.t('navbar.initiatives_list'), company_initiatives_path(company), class: 'nav-link top-nav-bar-item' %> | </span>

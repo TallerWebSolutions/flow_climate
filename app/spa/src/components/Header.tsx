@@ -9,10 +9,10 @@ import { useTranslation } from "react-i18next"
 
 const buildLinks = (companyName: string) => [
   { name: "Taller", href: `/companies/${companyName}` },
+  { name: "Times", href: `/companies/${companyName}/teams` },
   { name: "Clientes", href: `/companies/${companyName}/customers` },
   { name: "Produtos", href: `/companies/${companyName}/products` },
   { name: "Iniciativas", href: `/companies/${companyName}/initiatives` },
-  { name: "Times", href: `/companies/${companyName}/teams` },
   { name: "Projetos", href: `/companies/${companyName}/projects` },
   { name: "Demandas", href: `/companies/${companyName}/demands` },
   { name: "Bloqueios", href: `/companies/${companyName}/demand_blocks` },
