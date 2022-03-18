@@ -90,10 +90,6 @@ class ReplenishingData
     stats_hash
   end
 
-  def uncertain_scope_for_team
-    @team_projects.filter_map(&:initial_scope).sum
-  end
-
   def build_team_based_consolidation_data(project_consolidation, stats_hash)
     stats_hash[:team_based_odds_to_deadline] = 1 - (project_consolidation&.team_based_operational_risk || 0)
     stats_hash[:team_monte_carlo_weeks_std_dev] = project_consolidation&.team_based_monte_carlo_weeks_std_dev || 0
@@ -119,15 +115,6 @@ class ReplenishingData
                                         0
                                       end
     end
-  end
-
-  def build_project_share_in_team_throughput(project)
-    project_wip = project.max_work_in_progress
-    team_wip = @team.max_work_in_progress
-    project_share_in_flow = 0
-    project_share_in_flow = project_wip.to_f / team_wip if team_wip.positive?
-
-    @throughput_per_period_array.map { |throughput| throughput * project_share_in_flow }
   end
 
   def build_qty_items_info(project)
