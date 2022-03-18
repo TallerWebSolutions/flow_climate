@@ -61,6 +61,7 @@ export type TeamsDTO = {
 
 const Teams = () => {
   const { t, i18n } = useTranslation(["teams"])
+  const { pushMessage } = useContext(MessagesContext)
   const { data, loading } = useQuery<TeamsDTO>(TEAMS_QUERY)
   const [deleteTeam] = useMutation<DeleteTeamDTO>(DELETE_TEAM_MUTATION, {
     update: (_, { data }) => {
@@ -75,13 +76,11 @@ const Teams = () => {
     },
     refetchQueries: [{ query: TEAMS_QUERY }],
   })
-
-  const { pushMessage } = useContext(MessagesContext)
   const deleteTeamModal = useConfirm()
 
   useEffect(() => {
     if (!loading) i18n.changeLanguage(data?.me.language)
-  }, [loading, data])
+  }, [loading, data, i18n])
 
   if (loading)
     return (
@@ -174,7 +173,7 @@ const Teams = () => {
             variant="contained"
             sx={{ height: "35", textTransform: "uppercase", color: "primary" }}
           >
-            {t("create_team")}
+            {t("create_team_button")}
           </Button>
         </Box>
       </BasicPage>

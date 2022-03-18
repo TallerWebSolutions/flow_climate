@@ -7,7 +7,7 @@ import { Company } from "../modules/company/company.types"
 import { MessagesContext } from "../contexts/MessageContext"
 
 export type BasicPageProps = {
-  title: string
+  title?: string
   breadcrumbsLinks: BreadcrumbsLink[]
   children?: ReactElement | ReactElement[]
   company?: Company

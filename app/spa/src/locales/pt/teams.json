@@ -1,9 +1,16 @@
 {
   "teams": "Times",
   "teams_list": "Lista dos Times",
-  "create_team": "Criar Time",
+  "create_team_button": "Criar Time",
   "delete_team_modal_title": "Tem certeza?",
   "delete_team_modal_body": "Essa ação é permanente!",
   "deleted_team_message_success": "Time deletado!",
-  "deleted_team_message_fail": "Não foi possível deletar o time no momento!"
+  "deleted_team_message_fail": "Não foi possível deletar o time no momento!",
+  "create_team": {
+    "new_team": "Novo Time",
+    "new_team_name": "Nome",
+    "new_team_max_wip": "Máximo de trabalho em andamento",
+    "create_team_message_success": "Time criado com sucesso!",
+    "create_team_message_fail": "Não foi possível criar o time!"
+  }
 }

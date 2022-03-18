@@ -15,6 +15,7 @@ import Teams from "./pages/Teams/Teams"
 import "./lib/i18n"
 import { MessagesContext } from "./contexts/MessageContext"
 import { useMessages } from "./hooks/useMessages"
+import CreateTeam from "./pages/Teams/CreateTeam"
 
 const App = () => (
   <Fragment>
@@ -44,7 +45,7 @@ const App = () => (
           element={<Statistics />}
         />
         <Route path="/companies/taller/teams" element={<Teams />} />
-        <Route path="/companies/taller/teams/1/edit" element={<Teams />} />
+        <Route path="/companies/taller/teams/new" element={<CreateTeam />} />
       </Routes>
     </BrowserRouter>
   </Fragment>
