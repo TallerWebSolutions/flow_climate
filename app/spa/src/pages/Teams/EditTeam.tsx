@@ -106,13 +106,14 @@ const EditTeam = () => {
     )
 
   const team = data?.team!
+  const teamID = data?.team.id
+  const teamMaxWip = data?.team.maxWorkInProgress
   const teamName = team.name
-  const teamMaxWip = team.maxWorkInProgress
   const company = data?.me.currentCompany!
-  const companyName = company.name
-  const companyUrl = company.slug
+  const companySlug = company.slug
   const breadcrumbsLinks = [
-    { name: capitalizeFirstLetter(companyName!), url: companyUrl! },
+    { name: capitalizeFirstLetter(companySlug!), url: companySlug! },
+    { name: teamName, url: `/companies/${companySlug}/teams/${teamID}` },
     {
       name: t("edit_team.edit_team"),
     },
@@ -123,7 +124,7 @@ const EditTeam = () => {
 
     updateTeam({
       variables: {
-        teamId: Number(team.id),
+        teamId: String(teamID),
         name: teamName,
         wip: Number(teamMaxWip),
       },
@@ -139,7 +140,7 @@ const EditTeam = () => {
               {t("edit_team.edit_team_name")} *
             </InputLabel>
 
-            <Input value={teamName} {...register("teamName")} />
+            <Input defaultValue={teamName} {...register("teamName")} />
           </FormControl>
 
           <FormControl sx={{ flex: "1 0 45%", ml: 1 }}>
@@ -148,7 +149,7 @@ const EditTeam = () => {
             </InputLabel>
 
             <Input
-              value={teamMaxWip}
+              defaultValue={teamMaxWip}
               type="number"
               {...register("teamMaxWip")}
             />

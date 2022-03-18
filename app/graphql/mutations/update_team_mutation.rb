@@ -6,13 +6,15 @@ module Mutations
     argument :name, String, required: true
     argument :max_work_in_progress, Int, required: true
 
+    field :id, Int, null: true
+    field :company, Types::CompanyType, null: true
     field :status_message, Types::UpdateResponses, null: false
 
     def resolve(team_id:, name:, max_work_in_progress:)
       team = Team.find(team_id)
 
       if team.update(name: name, max_work_in_progress: max_work_in_progress)
-        { status_message: 'SUCCESS' }
+        { status_message: 'SUCCESS', id: team.id, company: team.company }
       else
         { status_message: 'FAIL' }
       end

@@ -10,7 +10,6 @@ import ReplenishingTeamInfo, {
 import ReplenishingProjectsInfo from "../components/ReplenishingProjectsInfo"
 import BasicPage from "../components/BasicPage"
 import { MessagesContext } from "../contexts/MessageContext"
-import { PROJECT_STANDARD_FRAGMENT } from "../components/ProjectPage"
 import { Team } from "../modules/team/team.types"
 import { Project } from "../modules/project/project.types"
 import { ReplenishingConsolidation } from "../modules/replenishing/replenishingConsolidation.types"
@@ -18,14 +17,19 @@ import { ReplenishingConsolidation } from "../modules/replenishing/replenishingC
 export const QUERY = gql`
   query Replenishing($teamId: Int!) {
     team(id: $teamId) {
-      ...ProjectStandardFragment
-
+      id
+      name
       throughputData
       averageThroughput
       increasedAvgThroughtput
       leadTime
       increasedLeadtime80
       workInProgress
+      company {
+        id
+        name
+        slug
+      }
       lastReplenishingConsolidations {
         id
         consolidationDate
@@ -65,7 +69,6 @@ export const QUERY = gql`
       }
     }
   }
-  ${PROJECT_STANDARD_FRAGMENT}
 `
 
 const GENERATE_REPLENISHING_MUTATION = gql`
@@ -96,8 +99,6 @@ const Replenishing = () => {
     variables: { teamId: Number(teamId) },
   })
   const { pushMessage } = useContext(MessagesContext)
-
-  console.log({ pushMessage })
 
   const [generateReplenishingCache] = useMutation<ReplenishingCacheDTO>(
     GENERATE_REPLENISHING_MUTATION,

@@ -2,6 +2,7 @@
   "teams": "Times",
   "teams_list": "Lista dos Times",
   "create_team_button": "Criar Time",
+  "edit_team_button": "Atualizar Time",
   "delete_team_modal_title": "Tem certeza?",
   "delete_team_modal_body": "Essa ação é permanente!",
   "deleted_team_message_success": "Time deletado!",
