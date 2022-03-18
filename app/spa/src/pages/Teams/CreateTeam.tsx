@@ -138,6 +138,7 @@ const CreateTeam = () => {
             <Input type="number" {...register("teamMaxWip")} />
           </FormControl>
         </FormGroup>
+
         <Button sx={{ mt: 2 }} variant="contained" type="submit">
           {t("create_team_button")}
         </Button>

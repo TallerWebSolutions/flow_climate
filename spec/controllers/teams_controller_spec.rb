@@ -170,8 +170,7 @@ RSpec.describe TeamsController, type: :controller do
       context 'valid parameters' do
         it 'instantiates a new Team and renders the template' do
           get :new, params: { company_id: company }
-          expect(response).to render_template :new
-          expect(assigns(:team)).to be_a_new Team
+          expect(response).to render_template 'spa-build/index'
         end
       end
 
