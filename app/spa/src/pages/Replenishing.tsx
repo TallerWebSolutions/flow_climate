@@ -4,17 +4,16 @@ import { gql, useQuery, useMutation } from "@apollo/client"
 import CachedIcon from "@mui/icons-material/Cached"
 import { useParams } from "react-router-dom"
 import { format } from "date-fns"
-
 import ReplenishingTeamInfo, {
   TeamReplenishment,
 } from "../components/ReplenishingTeamInfo"
-import ReplenishingProjectsInfo, {
-  Project,
-} from "../components/ReplenishingProjectsInfo"
+import ReplenishingProjectsInfo from "../components/ReplenishingProjectsInfo"
 import BasicPage from "../components/BasicPage"
-import { Company } from "../modules/company/company.types"
 import { MessagesContext } from "../contexts/MessageContext"
 import { PROJECT_STANDARD_FRAGMENT } from "../components/ProjectPage"
+import { Team } from "../modules/team/team.types"
+import { Project } from "../modules/project/project.types"
+import { ReplenishingConsolidation } from "../modules/replenishing/replenishingConsolidation.types"
 
 export const QUERY = gql`
   query Replenishing($teamId: Int!) {
@@ -76,27 +75,6 @@ const GENERATE_REPLENISHING_MUTATION = gql`
     }
   }
 `
-
-type ReplenishingConsolidation = {
-  id: string
-  consolidationDate: string
-  createdAt: string
-  project: Project
-  customerHappiness: number
-}
-
-export type Team = {
-  id: string
-  name: string
-  company: Company
-  increasedLeadtime80: boolean
-  throughputData: number[]
-  averageThroughput: number
-  increasedAvgThroughtput: boolean
-  leadTime: number
-  workInProgress: number
-  lastReplenishingConsolidations: ReplenishingConsolidation[]
-}
 
 type ReplenishingResult = {
   team: Team

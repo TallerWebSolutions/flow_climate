@@ -3,7 +3,6 @@ import { Backdrop, CircularProgress, Box, Typography } from "@mui/material"
 import { useParams } from "react-router-dom"
 import { ResponsiveBar } from "@nivo/bar"
 import { ResponsivePie } from "@nivo/pie"
-import { Project } from "../components/ReplenishingProjectsInfo"
 import TicketGroup from "../components/TicketGroup"
 import { formatLeadtime } from "../lib/func"
 import { formatCurrency } from "../lib/currency"
@@ -11,6 +10,7 @@ import {
   ProjectPage,
   PROJECT_STANDARD_FRAGMENT,
 } from "../components/ProjectPage"
+import { Project } from "../modules/project/project.types"
 
 export const QUERY = gql`
   query ProjectStatusReport($id: Int!) {

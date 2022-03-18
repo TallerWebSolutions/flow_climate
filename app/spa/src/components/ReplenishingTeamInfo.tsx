@@ -1,8 +1,7 @@
 import { Typography, Grid, Divider } from "@mui/material"
 import { Box } from "@mui/system"
 import { Fragment } from "react"
-
-import { Project } from "./ReplenishingProjectsInfo"
+import { Project } from "../modules/project/project.types"
 import Card, { CardType } from "./Card"
 
 type ComparativeValue = {

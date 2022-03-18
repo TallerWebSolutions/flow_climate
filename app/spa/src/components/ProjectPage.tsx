@@ -4,8 +4,8 @@ import { Box } from "@mui/material"
 import BasicPage from "./BasicPage"
 import { Tab, Tabs } from "./Tabs"
 import Card, { CardType } from "./Card"
-import { Project } from "./ReplenishingProjectsInfo"
 import { gql } from "@apollo/client"
+import { Project } from "../modules/project/project.types"
 
 export const PROJECT_STANDARD_FRAGMENT = gql`
   fragment ProjectStandardFragment on Project {

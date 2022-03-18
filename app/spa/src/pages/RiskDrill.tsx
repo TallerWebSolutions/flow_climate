@@ -5,8 +5,8 @@ import {
   ProjectPage,
   PROJECT_STANDARD_FRAGMENT,
 } from "../components/ProjectPage"
-import { Project } from "../components/ReplenishingProjectsInfo"
 import TicketGroup from "../components/TicketGroup"
+import { Project } from "../modules/project/project.types"
 
 export const PROJECT_RISK_DRILL_QUERY = gql`
   query ProjectRiskDrill($id: Int!) {

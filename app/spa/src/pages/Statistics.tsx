@@ -7,10 +7,8 @@ import {
   ProjectPage,
   PROJECT_STANDARD_FRAGMENT,
 } from "../components/ProjectPage"
-import {
-  Project,
-  ProjectConsolidation,
-} from "../components/ReplenishingProjectsInfo"
+import { Project } from "../modules/project/project.types"
+import { ProjectConsolidation } from "../modules/project/projectConsolidation.types"
 
 const ONE_DAY_IN_SECONDS = 60 * 60 * 24
 
