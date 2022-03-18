@@ -14,6 +14,12 @@ RSpec.describe TeamsController, type: :controller do
       it { expect(response).to redirect_to new_user_session_path }
     end
 
+    describe 'GET #edit' do
+      before { get :new, params: { company_id: 'bar', id: 'foo' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
+
     describe 'POST #create' do
       before { post :create, params: { company_id: 'bar' } }
 
@@ -166,9 +172,18 @@ RSpec.describe TeamsController, type: :controller do
       end
     end
 
+    describe 'GET #edit' do
+      context 'valid parameters' do
+        it 'renders the team template' do
+          get :edit, params: { company_id: company, id: team }
+          expect(response).to render_template 'spa-build/index'
+        end
+      end
+    end
+
     describe 'GET #new' do
       context 'valid parameters' do
-        it 'instantiates a new Team and renders the template' do
+        it 'renders the team template' do
           get :new, params: { company_id: company }
           expect(response).to render_template 'spa-build/index'
         end
