@@ -1,0 +1,14 @@
+{
+  "tasks": "Tarefas",
+  "tasks_list": "Tasks List",
+  "finished_tasks": "finished",
+  "tasks_table": {
+    "demand": "Demand",
+    "demand_title": "Title",
+    "creation_date": "Criation date",
+    "delivery_date": "Delivery date",
+    "time_to_finish": "Time to finish",
+    "rows_per_page": "Rows per page:",
+    "count_displayed_items_separator": "of"
+  }
+}

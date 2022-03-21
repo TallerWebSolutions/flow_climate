@@ -1,0 +1,14 @@
+{
+  "tasks": "Tarefas",
+  "tasks_list": "Lista de tarefas",
+  "finished_tasks": "finalizadas",
+  "tasks_table": {
+    "demand": "Demanda",
+    "demand_title": "Título",
+    "creation_date": "Data de criação",
+    "delivery_date": "Data de entrega",
+    "time_to_finish": "Tempo para concluir",
+    "rows_per_page": "Linhas por página:",
+    "count_displayed_items_separator": "de"
+  }
+}
