@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Types::QueryType do
-  describe 'teams' do
+  describe '#teams' do
     describe '#teams' do
       let(:query) do
         %(query {
@@ -68,7 +68,7 @@ RSpec.describe Types::QueryType do
       end
     end
 
-    describe 'team' do
+    describe '#team' do
       context 'with replenishing consolidations' do
         it 'returns the team and its fields' do
           company = Fabricate :company
@@ -300,7 +300,7 @@ RSpec.describe Types::QueryType do
     end
   end
 
-  describe 'project' do
+  describe '#project' do
     context 'with project' do
       it 'returns the project and its fields' do
         company = Fabricate :company
@@ -421,6 +421,69 @@ RSpec.describe Types::QueryType do
                                                                     'leadTimeP25' => 0.0,
                                                                     'leadTimeP75' => 0.0
                                                                   }])
+      end
+    end
+  end
+
+  describe '#tasks' do
+    let(:company) { Fabricate :company }
+    let(:team) { Fabricate :team, company: company }
+    let(:initiative) { Fabricate :initiative, company: company }
+    let(:project) { Fabricate :project, company: company, initiative: initiative, team: team }
+
+    let(:first_demand) { Fabricate :demand, company: company, project: project, team: team }
+    let(:second_demand) { Fabricate :demand, company: company, project: project, team: team }
+
+    let(:query) do
+      %(query {
+        tasks(pageParam: 1, title: "bar") {
+          id
+          title
+          demand {
+            id
+            demandTitle
+          }
+        }
+      })
+    end
+
+    context 'when the user has no a last company setted' do
+      it 'returns nothing' do
+        user = Fabricate :user
+
+        context = {
+          current_user: user
+        }
+
+        result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
+        expect(result.dig('data', 'teams')).to be_nil
+      end
+    end
+
+    context 'when the user has last company setted' do
+      it 'returns the tasks' do
+        user = Fabricate :user, companies: [company], last_company_id: company.id
+
+        context = {
+          current_user: user
+        }
+
+        first_task = Fabricate :task, demand: first_demand, title: 'foo BaR', created_date: 3.days.ago, end_date: 2.days.ago
+        second_task = Fabricate :task, demand: second_demand, title: 'BaR', created_date: 2.days.ago, end_date: 1.day.ago
+
+        result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
+        expect(result.dig('data', 'tasks')).to match_array(
+          [first_task, second_task].map do |task|
+            {
+              'id' => task.id.to_s,
+              'title' => task.title,
+              'demand' => {
+                'id' => task.demand.id.to_s,
+                'demandTitle' => task.demand.demand_title
+              }
+            }
+          end
+        )
       end
     end
   end

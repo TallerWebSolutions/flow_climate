@@ -21,6 +21,20 @@ module Types
       argument :id, Int
     end
 
+    field :tasks,
+          [Types::TaskType],
+          null: true,
+          description: 'A list of tasks using the arguments as search parameters' do
+      argument :title, String, required: false
+      argument :status, String, required: false
+      argument :initiative_id, ID, required: false
+      argument :project_id, ID, required: false
+      argument :team_id, ID, required: false
+      argument :from_date, GraphQL::Types::ISO8601Date, required: false
+      argument :until_date, GraphQL::Types::ISO8601Date, required: false
+      argument :page_param, Int, required: true
+    end
+
     field :project_consolidations,
           [Types::ProjectConsolidationType],
           null: true,
@@ -45,6 +59,16 @@ module Types
 
     def project(id:)
       Project.find(id)
+    end
+
+    def tasks(page_param:, title: nil, status: nil, initiative_id: nil, project_id: nil, team_id: nil, from_date: nil, until_date: nil)
+      return [] if me.last_company.blank?
+
+      tasks = TasksRepository.instance.search(me.last_company_id,
+                                              title: title, status: status, initiative_id: initiative_id,
+                                              project_id: project_id, team_id: team_id, from_date: from_date, until_date: until_date)
+
+      tasks.page(page_param)
     end
 
     def me
