@@ -3,7 +3,6 @@ import { Backdrop, CircularProgress, Box, Typography } from "@mui/material"
 import { gql, useQuery, useMutation } from "@apollo/client"
 import CachedIcon from "@mui/icons-material/Cached"
 import { useParams } from "react-router-dom"
-import { format } from "date-fns"
 import ReplenishingTeamInfo, {
   TeamReplenishment,
 } from "../components/ReplenishingTeamInfo"
@@ -13,6 +12,7 @@ import { MessagesContext } from "../contexts/MessageContext"
 import { Team } from "../modules/team/team.types"
 import { Project } from "../modules/project/project.types"
 import { ReplenishingConsolidation } from "../modules/replenishing/replenishingConsolidation.types"
+import { formatDate } from "../lib/date"
 
 export const QUERY = gql`
   query Replenishing($teamId: Int!) {
@@ -127,7 +127,11 @@ const Replenishing = () => {
   const companyUrl = `/companies/${company?.slug}`
   const teamName = data?.team.name
   const teamUrl = `/companies/${company?.slug}/teams/${data?.team.id}`
-
+  const lastReplenishingConsolidations =
+    data?.team.lastReplenishingConsolidations
+  const hasReplenishing =
+    Array.isArray(lastReplenishingConsolidations) &&
+    lastReplenishingConsolidations.length
   const breadcrumbsLinks = [
     { name: companyName || "", url: companyUrl },
     { name: teamName || "", url: teamUrl },
@@ -146,18 +150,16 @@ const Replenishing = () => {
             display="flex"
             justifyContent="space-between"
             alignItems="center"
+            mb={2}
           >
             <Typography ml="auto" mr={1} variant="subtitle2">
-              Última atualização em{" "}
-              {format(
-                new Date(data.team.lastReplenishingConsolidations[0].createdAt),
-                "d/m/y"
-              )}{" "}
-              às{" "}
-              {format(
-                new Date(data.team.lastReplenishingConsolidations[0].createdAt),
-                "h:mm"
-              )}
+              {hasReplenishing
+                ? `Última atualização em
+              ${formatDate({
+                date: data.team.lastReplenishingConsolidations[0].createdAt,
+                format: "dd/MM/yyyy' às 'HH:mm",
+              })}`
+                : "Sem dados suficientes para atualizar"}
             </Typography>
             <CachedIcon
               onClick={() =>
@@ -168,6 +170,7 @@ const Replenishing = () => {
               sx={{ cursor: "pointer" }}
             />
           </Box>
+
           <ReplenishingTeamInfo team={normalizeTeamInfo(data)} />
           <ReplenishingProjectsInfo
             projects={normalizeProjectInfo(data)}

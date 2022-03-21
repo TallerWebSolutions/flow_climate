@@ -1,4 +1,4 @@
-import { secondsToReadbleDate } from "../date"
+import { formatDate, secondsToReadbleDate } from "../date"
 
 describe("secondsToReadbleDate", () => {
   it("should '86400's be formated to readble human PTBR format", () => {
@@ -31,5 +31,21 @@ describe("secondsToReadbleDate", () => {
 
   it("should format zero to readble", () => {
     expect(secondsToReadbleDate(null)).toBe("0 segundos")
+  })
+})
+
+describe("formatDate", () => {
+  it("should format the date according to the format passed when its ISO", () => {
+    const date = "2022-03-21T00:00:40-03:00"
+    expect(formatDate({ date: date, format: "dd/MM/yyyy' às 'HH:mm" })).toBe(
+      "21/03/2022 às 00:00"
+    )
+  })
+
+  it("should format the date according to the format passed when its DateTime", () => {
+    const date = new Date("2022-03-21T00:00:40-03:00")
+    expect(formatDate({ date: date, format: "dd/MM/yyyy' às 'HH:mm" })).toBe(
+      "21/03/2022 às 00:00"
+    )
   })
 })

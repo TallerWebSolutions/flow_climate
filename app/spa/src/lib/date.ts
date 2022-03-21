@@ -1,4 +1,5 @@
 import {
+  format as dateFnsFormat,
   formatDuration,
   intervalToDuration,
   secondsToMilliseconds,
@@ -8,7 +9,7 @@ import { ptBR } from "date-fns/locale"
 const SECONDS_IN_A_DAY = 24 * 60 * 60
 const SECONDS_IN_MINUTES = 60
 
-export const secondsToReadbleDate = (seconds: number) => {
+export const secondsToReadbleDate = (seconds: number, separator = " e ") => {
   if (!seconds || seconds <= 0) return "0 segundos"
 
   const secondsIntoInterger = parseInt(seconds.toString())
@@ -30,6 +31,15 @@ export const secondsToReadbleDate = (seconds: number) => {
   return formatDuration(msDuration, {
     format: dateFormat,
     locale: ptBR,
-    delimiter: " e ",
+    delimiter: separator,
   })
+}
+
+type FormatDateProps = {
+  date: string | Date
+  format: string
+}
+
+export const formatDate = ({ date, format }: FormatDateProps) => {
+  return dateFnsFormat(new Date(date), format)
 }
