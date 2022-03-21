@@ -36,14 +36,20 @@ describe("secondsToReadbleDate", () => {
 
 describe("formatDate", () => {
   it("should format the date according to the format passed when its ISO", () => {
-    const date = "2022-03-21T00:00:40-03:00"
+    const date = new Date("2022-03-21T00:00:40-03:00").toLocaleString("pr-BR", {
+      timeZone: "America/Sao_Paulo",
+    })
+
     expect(formatDate({ date: date, format: "dd/MM/yyyy' às 'HH:mm" })).toBe(
       "21/03/2022 às 00:00"
     )
   })
 
   it("should format the date according to the format passed when its DateTime", () => {
-    const date = new Date("2022-03-21T00:00:40-03:00")
+    const date = new Date("2022-03-21T00:00:40-03:00").toLocaleString("pr-BR", {
+      timeZone: "America/Sao_Paulo",
+    })
+
     expect(formatDate({ date: date, format: "dd/MM/yyyy' às 'HH:mm" })).toBe(
       "21/03/2022 às 00:00"
     )
