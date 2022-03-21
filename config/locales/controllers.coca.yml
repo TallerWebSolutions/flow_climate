@@ -509,7 +509,7 @@ coca:
       work_items: "Work Items"
     finish_project:
       success_message: "Project finished."
-      confirm: "This action will finish all the still open demands and will use the current date as the end date for the project. Do you want to continue?"
+      confirm: "This action is going to finish all the still open demands and will use the current date as the end date for the project. Do you want to continue?"
     actions:
       edit:
         title: "Edit"

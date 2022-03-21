@@ -117,12 +117,7 @@ Rails.application.routes.draw do
       post :generate_cache, on: :member
     end
 
-    resources :tasks, only: %i[index show] do
-      collection do
-        post 'charts', action: :charts, as: 'charts'
-        post 'search', action: :search, as: 'search'
-      end
-    end
+    resources :tasks, only: %i[index show]
 
     resources :azure_accounts, only: %i[edit update], module: 'azure' do
       post :synchronize_azure, on: :collection
