@@ -96,8 +96,8 @@ RSpec.describe Highchart::PortfolioChartsAdapter, type: :service do
       context 'and having throughputs' do
         it 'builds the data structure for scope_data_evolution' do
           travel_to Time.zone.local(2018, 2, 20, 10, 0, 0) do
-            first_project = Fabricate :project, customers: [customer], status: :maintenance, start_date: 3.days.ago, end_date: 1.day.ago
-            second_project = Fabricate :project, customers: [customer], status: :executing, start_date: 3.days.ago, end_date: Time.zone.today
+            first_project = Fabricate :project, customers: [customer], status: :maintenance, start_date: 3.days.ago, end_date: 1.day.ago, name: 'zzz'
+            second_project = Fabricate :project, customers: [customer], status: :executing, start_date: 3.days.ago, end_date: Time.zone.today, name: 'aaa'
 
             Fabricate :demand, project: first_project, end_date: 1.day.ago
             Fabricate :demand, project: first_project, end_date: Time.zone.today
@@ -110,7 +110,7 @@ RSpec.describe Highchart::PortfolioChartsAdapter, type: :service do
             expect(portfolio_data.throughput_by_project[:series][0][:data]).to match_array([4, 1])
             expect(portfolio_data.throughput_by_project[:series][0][:marker]).to eq({ enabled: true })
             expect(portfolio_data.throughput_by_project[:series][0][:name]).to eq(I18n.t('portfolio.charts.throughput_by_project.data_title'))
-            expect(portfolio_data.throughput_by_project[:x_axis]).to eq [first_project.name, second_project.name]
+            expect(portfolio_data.throughput_by_project[:x_axis]).to eq [second_project.name, first_project.name]
           end
         end
       end

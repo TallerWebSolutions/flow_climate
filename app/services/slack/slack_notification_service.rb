@@ -148,7 +148,7 @@ module Slack
       slack_configuration = SlackConfiguration.find_by(team: item_assignment.demand.team, info_type: 'item_assigned', active: true)
 
       if slack_configuration.blank?
-        item_assignment.update(assignment_notified: true)
+        ItemAssignment.transaction { item_assignment.update(assignment_notified: true) }
         return
       end
 
@@ -167,7 +167,7 @@ module Slack
 
       slack_notifier.post(blocks: [info_block, divider_block])
 
-      item_assignment.update(assignment_notified: true)
+      ItemAssignment.transaction { item_assignment.update(assignment_notified: true) }
     end
 
     def notify_item_blocked(demand_block, demand_url, edit_block_url, block_state = 'blocked')

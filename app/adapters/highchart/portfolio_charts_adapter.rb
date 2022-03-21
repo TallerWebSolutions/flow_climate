@@ -38,7 +38,7 @@ module Highchart
     def throughput_by_project
       return {} if @start_date.blank? || @end_date.blank?
 
-      throughput_by_project_data = DemandsRepository.instance.demands_delivered_grouped_by_projects_to_period(@demands, @start_date, @end_date)
+      throughput_by_project_data = DemandsRepository.instance.demands_delivered_grouped_by_projects_to_period(@demands, @start_date, @end_date).sort.to_h
       x_axis = throughput_by_project_data.keys
       { x_axis: x_axis, series: [{ name: I18n.t('portfolio.charts.throughput_by_project.data_title'), data: throughput_by_project_data.values.map(&:count), marker: { enabled: true } }] }
     end

@@ -22,12 +22,12 @@ module Slack
     end
 
     def process_assignments(demand)
-      demand.item_assignments.select { |assignment| assignment.valid? == false }.map(&:destroy)
+      demand.item_assignments.select { |assignment| assignment.valid? == false }.map(&:delete)
 
-      demand.item_assignments.each do |assignment|
-        next if assignment.assignment_notified?
+      demand.item_assignments.reload.where(assignment_notified: false).each do |assignment|
         demand_url = company_demand_url(demand.company, demand)
         Slack::SlackNotificationService.instance.notify_item_assigned(assignment, demand_url)
+        ItemAssignment.transaction { assignment.update(assignment_notified: true) }
       end
     end
 
