@@ -535,6 +535,7 @@ pt-BR:
       work_items: "Items de Trabalho"
     finish_project:
       success_message: "Projeto finalizado."
+      confirm: "Esta ação finalizará todas as demandas ainda em aberto e utilizará a data atual como data final do projeto. Você quer continuar?"
     actions:
       edit:
         title: "Editar"

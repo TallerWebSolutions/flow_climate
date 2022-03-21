@@ -2,7 +2,7 @@
   <i class="fa fa-times" title='<%= I18n.t('projects.actions.delete.tooltip') %>'></i>
 <% end %>
 
-<%= link_to finish_project_company_project_path(company, project), method: :patch do %>
+<%= link_to finish_project_company_project_path(company, project), method: :patch, data: { confirm: I18n.t('projects.finish_project.confirm') } do %>
   <i class="far fa-calendar-check" title='<%= I18n.t('projects.actions.finish.tooltip') %>'></i>
 <% end %>
 
