@@ -36,14 +36,14 @@ module Azure
       if work_item_response.respond_to?(:code) && work_item_response.code != 200
         Rails.logger.error("[AzureAPI] Failed to request - #{work_item_response.code}")
       else
-        read_work_item(azure_project, company, work_item_response, project_custom_field, team_custom_field)
+        read_work_item(azure_project, company, work_item_response.parsed_response, project_custom_field, team_custom_field)
       end
     end
 
     private
 
     def read_work_item(azure_project, company, work_item_response, project_custom_field, team_custom_field)
-      product = Product.find_by(name: azure_project.project_name, company: company) # PMO Marketing E2E
+      product = Product.find_by(name: azure_project.project_name, company: company)
 
       process_valid_area(product, work_item_response, team_custom_field, azure_project, company, project_custom_field)
     end
@@ -64,9 +64,9 @@ module Azure
 
     def read_feature(product, azure_project, work_item_response, project_custom_field, team)
       parent_response = client.work_item(work_item_response['fields']['System.Parent'], azure_project.project_id)
-      return if parent_response.blank?
+      return if parent_response.blank? || parent_response.code != 200
 
-      demand = read_epic(product, project_custom_field, team, parent_response)
+      demand = read_epic(product, project_custom_field, team, parent_response.parsed_response)
 
       task = Task.where(demand: demand, external_id: work_item_response['id']).first_or_initialize
       task.update(title: work_item_response['fields']['System.Title'], created_date: work_item_response['fields']['System.CreatedDate'],
