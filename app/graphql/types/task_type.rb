@@ -10,6 +10,7 @@ module Types
     field :title, String, null: false
     field :created_date, GraphQL::Types::ISO8601Date, null: false
     field :end_date, GraphQL::Types::ISO8601Date, null: true
-    field :completion_time, Float, null: true
+    field :seconds_to_complete, Float, null: true
+    field :partial_completion_time, Float, null: true
   end
 end
