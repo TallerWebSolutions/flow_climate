@@ -254,7 +254,11 @@ coca:
             director: Director
             customer: Customer
       task:
+        demand: Activity
+        title: Title
+        created_date: Creation Date
         end_date: End date
+        completion_time: Completion Time
     errors:
       messages:
         record_invalid: 'Validation failed: %{errors}'
