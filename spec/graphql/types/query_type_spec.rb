@@ -436,7 +436,7 @@ RSpec.describe Types::QueryType do
 
     let(:query) do
       %(query {
-        tasks(pageParam: 1, title: "bar") {
+        tasks(pageParam: 1, limit: 2, title: "bar") {
           id
           title
           demand {
@@ -468,8 +468,9 @@ RSpec.describe Types::QueryType do
           current_user: user
         }
 
-        first_task = Fabricate :task, demand: first_demand, title: 'foo BaR', created_date: 3.days.ago, end_date: 2.days.ago
-        second_task = Fabricate :task, demand: second_demand, title: 'BaR', created_date: 2.days.ago, end_date: 1.day.ago
+        first_task = Fabricate :task, demand: first_demand, title: 'foo BaR', created_date: 2.days.ago, end_date: 2.days.ago
+        second_task = Fabricate :task, demand: second_demand, title: 'BaR', created_date: 1.day.ago, end_date: 1.hour.ago
+        Fabricate :task, demand: second_demand, title: 'BaRco', created_date: 3.days.ago, end_date: Time.zone.now
 
         result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
         expect(result.dig('data', 'tasks')).to match_array(
