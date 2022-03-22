@@ -69,7 +69,7 @@ module Types
                                               title: title, status: status, initiative_id: initiative_id,
                                               project_id: project_id, team_id: team_id, from_date: from_date, until_date: until_date)
 
-      tasks.page(page_param).last(limit)
+      tasks.page(page_param)
     end
 
     def me
