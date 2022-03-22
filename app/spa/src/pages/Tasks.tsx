@@ -1,5 +1,9 @@
+import { gql, useQuery } from "@apollo/client"
 import {
+  Backdrop,
   Box,
+  CircularProgress,
+  Link,
   Table,
   TableBody,
   TableCell,
@@ -11,33 +15,64 @@ import {
 } from "@mui/material"
 import { ChangeEvent, useState } from "react"
 import { useTranslation } from "react-i18next"
+import { useParams } from "react-router-dom"
 import BasicPage from "../components/BasicPage"
+import { secondsToReadbleDate } from "../lib/date"
+import { Task } from "../modules/task/task.types"
+
+const TASKS_QUERY = gql`
+  query Tasks($page: Int!, $limit: Int) {
+    tasks(pageParam: $page, limit: $limit) {
+      id
+      demand {
+        id
+        demandTitle
+      }
+      createdDate
+      endDate
+      secondsToComplete
+      partialCompletionTime
+    }
+  }
+`
+
+type TasksDTO = {
+  tasks: Task[]
+}
+
+const normalizeTimeToFinish = (
+  secondsToComplete: number,
+  partialCompletionTime: number
+) => {
+  if (!secondsToComplete) {
+    return secondsToReadbleDate(partialCompletionTime)
+  }
+
+  return secondsToReadbleDate(secondsToComplete)
+}
 
 const Tasks = () => {
   const { t } = useTranslation(["tasks"])
-  const [rowsPerPage, setRowsPerPage] = useState(10)
+  const { companyNickName } = useParams()
   const [listPage, setListPage] = useState(1)
+  const [rowsPerPage, setRowsPerPage] = useState(10)
 
-  const data = [
-    {
-      id: 1,
-      demand: "2465",
-      title: "Title",
-      creation_date: "12/02/22",
-      deleivery_date: "12/02/22",
-      time_to_finish: "21 dias e 11 horas",
+  const { data, loading } = useQuery<TasksDTO>(TASKS_QUERY, {
+    variables: {
+      page: listPage,
+      limit: rowsPerPage,
     },
-    {
-      id: 1,
-      demand: "2465",
-      title: "Title",
-      creation_date: "12/02/22",
-      deleivery_date: "12/02/22",
-      time_to_finish: "21 dias e 11 horas",
-    },
-  ]
-  const numberOfTasks = data.length
+  })
 
+  if (loading)
+    return (
+      <Backdrop open>
+        <CircularProgress color="secondary" />
+      </Backdrop>
+    )
+
+  const tasks = data?.tasks!
+  const numberOfTasks = tasks.length
   const taskListHeadCells = [
     "ID",
     t("tasks_table.demand"),
@@ -59,7 +94,7 @@ const Tasks = () => {
   }
 
   return (
-    <BasicPage title={"Tarefas"} breadcrumbsLinks={[]}>
+    <BasicPage title={t("tasks")} breadcrumbsLinks={[]}>
       <Box>
         <TableContainer>
           <Typography color="primary" variant="h6" component="h6">
@@ -83,7 +118,7 @@ const Tasks = () => {
             </TableHead>
 
             <TableBody>
-              {data.map((row, index) => (
+              {tasks.map((row, index) => (
                 <TableRow
                   sx={{
                     borderBottom: "1px solid",
@@ -91,9 +126,25 @@ const Tasks = () => {
                   }}
                   key={`${row.demand}--${index}`}
                 >
-                  {Object.values(row).map((value) => (
-                    <TableCell padding="checkbox">{value}</TableCell>
-                  ))}
+                  <TableCell padding="checkbox">
+                    <Link
+                      href={`/companies/${companyNickName}/tasks/${row.id}`}
+                    >
+                      {row.id}
+                    </Link>
+                  </TableCell>
+                  <TableCell padding="checkbox">{row.demand.id}</TableCell>
+                  <TableCell padding="checkbox">
+                    {row.demand.demandTitle}
+                  </TableCell>
+                  <TableCell padding="checkbox">{row.createdDate}</TableCell>
+                  <TableCell padding="checkbox">{row.endDate}</TableCell>
+                  <TableCell padding="checkbox">
+                    {normalizeTimeToFinish(
+                      row.secondsToComplete,
+                      row.partialCompletionTime
+                    )}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
