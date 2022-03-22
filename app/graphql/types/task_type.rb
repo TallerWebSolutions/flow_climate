@@ -4,6 +4,7 @@ module Types
   class TaskType < Types::BaseObject
     field :id, ID, null: false
     field :team, Types::TeamType, null: false
+    field :company, Types::CompanyType, null: false
     field :initiative, Types::InitiativeType, null: false
     field :project, Types::ProjectType, null: false
     field :demand, Types::DemandType, null: false
@@ -16,6 +17,14 @@ module Types
 
     def delivered
       object.end_date.present?
+    end
+
+    def team
+      object.demand.team
+    end
+
+    def company
+      object.demand.company
     end
   end
 end
