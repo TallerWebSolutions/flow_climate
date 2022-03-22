@@ -69,7 +69,7 @@ module Types
                                               title: title, status: status, initiative_id: initiative_id,
                                               project_id: project_id, team_id: team_id, from_date: from_date, until_date: until_date)
 
-      tasks.page(page_param)
+      tasks.order(created_date: :desc).page(page_param).per(limit)
     end
 
     def me
