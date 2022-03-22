@@ -436,12 +436,17 @@ RSpec.describe Types::QueryType do
 
     let(:query) do
       %(query {
-        tasks(pageParam: 1, limit: 2, title: "bar") {
-          id
-          title
-          demand {
-            id
-            demandTitle
+        tasksConnection(first: 2, title: "bar") {
+          totalCount
+          edges {
+            node {
+              id
+              title
+                demand {
+                  id
+                  demandTitle
+                }
+            }
           }
         }
       })
@@ -473,14 +478,18 @@ RSpec.describe Types::QueryType do
         Fabricate :task, demand: second_demand, title: 'BaRco', created_date: 3.days.ago, end_date: Time.zone.now
 
         result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
-        expect(result.dig('data', 'tasks')).to match_array(
+
+        expect(result.dig('data', 'tasksConnection')['totalCount']).to eq 3
+        expect(result.dig('data', 'tasksConnection', 'edges')).to match_array(
           [first_task, second_task].map do |task|
             {
-              'id' => task.id.to_s,
-              'title' => task.title,
-              'demand' => {
-                'id' => task.demand.id.to_s,
-                'demandTitle' => task.demand.demand_title
+              'node' => {
+                'id' => task.id.to_s,
+                'title' => task.title,
+                'demand' => {
+                  'id' => task.demand.id.to_s,
+                  'demandTitle' => task.demand.demand_title
+                }
               }
             }
           end
