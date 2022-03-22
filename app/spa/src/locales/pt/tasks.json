@@ -10,5 +10,17 @@
     "time_to_finish": "Tempo para concluir",
     "rows_per_page": "Linhas por página:",
     "count_displayed_items_separator": "de"
+  },
+  "filter": {
+    "search": "Buscar",
+    "search_helper": "Buscar pelo nome da tarefa",
+    "initial_date": "Data inicial",
+    "end_date": "Data final",
+    "status": "Status",
+    "status_open": "Aberta",
+    "status_finished": "Não finalizada",
+    "initiative": "Iniciativa",
+    "project": "Projeto",
+    "team": "time"
   }
 }
