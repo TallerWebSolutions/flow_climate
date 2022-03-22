@@ -10,5 +10,17 @@
     "time_to_finish": "Time to finish",
     "rows_per_page": "Rows per page:",
     "count_displayed_items_separator": "of"
+  },
+  "filter": {
+    "search": "Search",
+    "search_helper": "Search by task name",
+    "initial_date": "Initial date",
+    "end_date": "Final date",
+    "status": "Status",
+    "status_open": "Open",
+    "status_finished": "Not finished",
+    "initiative": "Initiative",
+    "project": "Project",
+    "team": "Team"
   }
 }
