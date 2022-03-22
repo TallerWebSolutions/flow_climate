@@ -32,6 +32,12 @@ coca:
     general:
       connector:
         and: "e"
+  date:
+    formats:
+      default: "%m/%d/%Y"
+      long: "%A, %d of %B of %Y"
+      short: "%d of %B"
+      month_year: "%B/%Y"
 
   datetime:
     date_attributes:

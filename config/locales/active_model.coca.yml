@@ -78,6 +78,7 @@ coca:
         sign_in_count: Sign in Count
       project:
         percentage_effort_to_bugs: "% Effort Charged in Bugs"
+        start_date: Start Date
         enums:
           status:
             waiting: Waiting
@@ -149,6 +150,10 @@ coca:
           infrastructure: Infrastructure
           scope_changed: Scope Changed
       demand:
+        demand_title: Title
+        demand_type: Type
+        demand_score: Score
+        demand_tags: Tags
         enums:
           class_of_service:
             expedite: "Expedite"
