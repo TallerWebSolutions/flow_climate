@@ -24,47 +24,77 @@ import User from "../modules/user/user.types"
 
 const TASKS_QUERY = gql`
   query TasksPage(
-    $pageParam: Int!
-    $limit: Int
-    $title: String
+    $page: Int!
     $status: String
+    $title: String
+    $teamId: ID
+    $projectId: ID
+    $initiativeId: ID
+    $limit: Int
   ) {
-    tasks(
-      pageParam: $pageParam
-      limit: $limit
-      title: $title
+    tasksList(
+      pageNumber: $page
       status: $status
+      title: $title
+      teamId: $teamId
+      projectId: $projectId
+      initiativeId: $initiativeId
+      limit: $limit
     ) {
-      id
-      demand {
+      totalCount
+      totalDeliveredCount
+      totalPages
+
+      tasks {
         id
-        demandTitle
+        title
+        createdDate
+        endDate
+        secondsToComplete
+        partialCompletionTime
+        team {
+          name
+        }
+        initiative {
+          name
+        }
+        project {
+          name
+        }
+        demand {
+          demandTitle
+        }
       }
-      createdDate
-      endDate
-      secondsToComplete
-      partialCompletionTime
     }
 
     me {
-      language
       currentCompany {
-        name
-        slug
+        initiatives {
+          id
+          name
+        }
+        projects {
+          id
+          name
+        }
+        teams {
+          id
+          name
+        }
       }
-    }
-
-    teams {
-      id
-      name
     }
   }
 `
 
 type TasksDTO = {
-  tasks: Task[]
+  tasksList: {
+    totalCount: number
+    totalDeliveredCount: number
+    lastPage: number
+    totalPages: number
+    tasks: Task[]
+  }
   me: User
-  teams: Team[]
 }
 
 const normalizeTimeToFinish = (
@@ -78,14 +108,23 @@ const normalizeTimeToFinish = (
   return secondsToReadbleDate(secondsToComplete)
 }
 
+type TaskFilters = {
+  page: number
+  limit: number
+  status?: string
+  title?: string
+  teamId?: string
+  projectId?: string
+  initiativeId?: string
+}
+
 const Tasks = () => {
   const { t } = useTranslation(["tasks"])
   const [taskSearchName, setTaskSearchName] = useState("")
-  const [taskFilters, setTaskFilters] = useState({
-    pageParam: 1,
+  const [taskFilters, setTaskFilters] = useState<TaskFilters>({
+    page: 1,
     limit: 10,
     title: "",
-    status: "not_finished",
   })
 
   const { data, loading } = useQuery<TasksDTO>(TASKS_QUERY, {
@@ -93,6 +132,7 @@ const Tasks = () => {
   })
 
   useEffect(() => console.log({ ...taskFilters }), [taskFilters])
+  useEffect(() => console.log({ data }), [data])
 
   useEffect(() => {
     const bounceTime = setTimeout(() => {
@@ -108,6 +148,24 @@ const Tasks = () => {
     [taskFilters]
   )
 
+  const handleSelectFilters = useCallback(
+    (
+      event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+      prop: string
+    ) => {
+      const value = String(event.target.value)
+
+      return setTaskFilters((prevState) => {
+        delete prevState.initiativeId
+        delete prevState.projectId
+        delete prevState.teamId
+
+        return { ...prevState, [prop]: value }
+      })
+    },
+    [taskFilters]
+  )
+
   if (loading)
     return (
       <Backdrop open>
@@ -115,15 +173,22 @@ const Tasks = () => {
       </Backdrop>
     )
 
-  const tasks = data?.tasks!
-  const numberOfTasks = tasks.length
+  const totalOfTasksPage = Number(data?.tasksList.totalPages)
+  const totalOfTasks = Number(data?.tasksList.totalCount)
+  const totalOfDeliveredTasks = Number(data?.tasksList.totalDeliveredCount)
+  const tasks = data?.tasksList.tasks!
   const company = data?.me.currentCompany!
-  const teams = data?.teams!
+  const projects = company.projects
+  const initiatives = company.initiatives
+  const teams = company.teams
 
   const taskListHeadCells = [
     "ID",
-    t("tasks_table.demand"),
+    "Team",
+    "Initiative",
+    "Project",
     t("tasks_table.demand_title"),
+    t("tasks_table.title"),
     t("tasks_table.creation_date"),
     t("tasks_table.delivery_date"),
     t("tasks_table.time_to_finish"),
@@ -141,7 +206,7 @@ const Tasks = () => {
   }
 
   const handlePage = (newPage: number) => {
-    setTaskFilters((prevState) => ({ ...prevState, pageParam: newPage }))
+    setTaskFilters((prevState) => ({ ...prevState, page: newPage }))
   }
 
   const handleStatus = (
@@ -149,13 +214,6 @@ const Tasks = () => {
   ) => {
     const status = event.target.value
     setTaskFilters((prevState) => ({ ...prevState, status }))
-  }
-
-  const handleTeam = (
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const teamId = Number(event.target.value)
-    setTaskFilters((prevState) => ({ ...prevState, teamId }))
   }
 
   return (
@@ -176,18 +234,25 @@ const Tasks = () => {
         >
           <TextField
             value={taskSearchName}
+            defaultValue=""
             onChange={handleSearchByName}
             label={t("filter.search")}
             helperText={t("filter.search_helper")}
           />
-          <TextField placeholder={t("filter.initial_date")} type="date" />
-          <TextField label={t("filter.end_date")} type="date" />
+          <TextField
+            defaultValue=""
+            label={t("filter.initial_date")}
+            type="date"
+            id="initial-date"
+          />
+          <TextField defaultValue="" label={t("filter.end_date")} type="date" />
 
           <TextField
             select
             label={t("filter.status")}
+            defaultValue=""
             value={taskFilters.status}
-            onChange={handleStatus}
+            onChange={(event) => handleStatus(event)}
             SelectProps={{
               native: true,
             }}
@@ -199,15 +264,17 @@ const Tasks = () => {
           <TextField
             select
             label={t("filter.initiative")}
-            value={teams[0]}
-            onChange={() => {}}
+            defaultValue=""
+            value={taskFilters.initiativeId}
+            onChange={(event) => handleSelectFilters(event, "initiativeId")}
             SelectProps={{
               native: true,
             }}
           >
-            {teams.map((team) => (
-              <option key={team.id} value={team.id}>
-                {team.name}
+            <option value="">{t("filter.select_initiative")}</option>
+            {initiatives.map((initiative) => (
+              <option key={initiative.id} value={initiative.id}>
+                {initiative.name}
               </option>
             ))}
           </TextField>
@@ -215,15 +282,17 @@ const Tasks = () => {
           <TextField
             select
             label={t("filter.project")}
-            value={teams[0]}
-            onChange={() => {}}
+            defaultValue=""
+            value={taskFilters.projectId}
+            onChange={(event) => handleSelectFilters(event, "projectId")}
             SelectProps={{
               native: true,
             }}
           >
-            {teams.map((team) => (
-              <option key={team.id} value={team.id}>
-                {team.name}
+            <option value="">{t("filter.select_project")}</option>
+            {projects.map((project) => (
+              <option key={project.id} value={project.id}>
+                {project.name}
               </option>
             ))}
           </TextField>
@@ -231,12 +300,13 @@ const Tasks = () => {
           <TextField
             select
             label={t("filter.team")}
-            value={teams[0]}
-            onChange={handleTeam}
+            value={taskFilters.teamId}
+            onChange={(event) => handleSelectFilters(event, "teamId")}
             SelectProps={{
               native: true,
             }}
           >
+            <option value="">{t("filter.select_team")}</option>
             {teams.map((team) => (
               <option key={team.id} value={team.id}>
                 {team.name}
@@ -247,7 +317,9 @@ const Tasks = () => {
 
         <TableContainer>
           <Typography color="primary" variant="h6" component="h6">
-            {`877 ${t("tasks")} - 405 ${t("finished_tasks")}`}
+            {`${totalOfTasks} ${t("tasks")} - ${totalOfDeliveredTasks} ${t(
+              "finished_tasks"
+            )}`}
           </Typography>
 
           <Table>
@@ -267,33 +339,54 @@ const Tasks = () => {
             </TableHead>
 
             <TableBody>
-              {tasks.map((row, index) => (
-                <TableRow
-                  sx={{
-                    borderBottom: "1px solid",
-                    borderBottomColor: "#ccc",
-                  }}
-                  key={`${row.demand}--${index}`}
-                >
-                  <TableCell padding="checkbox">
-                    <Link href={`/companies/${company.slug}/tasks/${row.id}`}>
-                      {row.id}
-                    </Link>
-                  </TableCell>
-                  <TableCell padding="checkbox">{row.demand.id}</TableCell>
-                  <TableCell padding="checkbox">
-                    {row.demand.demandTitle}
-                  </TableCell>
-                  <TableCell padding="checkbox">{row.createdDate}</TableCell>
-                  <TableCell padding="checkbox">{row.endDate}</TableCell>
-                  <TableCell padding="checkbox">
-                    {normalizeTimeToFinish(
-                      row.secondsToComplete,
-                      row.partialCompletionTime
-                    )}
-                  </TableCell>
-                </TableRow>
-              ))}
+              {tasks.map((task, index) => {
+                const baseLink = `/companies/${company.slug}`
+
+                return (
+                  <TableRow
+                    sx={{
+                      borderBottom: "1px solid",
+                      borderBottomColor: "#ccc",
+                    }}
+                    key={`${task.title}--${index}`}
+                  >
+                    <TableCell padding="checkbox">
+                      <Link href={`${baseLink}/tasks/${task.id}`}>
+                        {task.id}
+                      </Link>
+                    </TableCell>
+                    <TableCell padding="checkbox">
+                      <Link href={`${baseLink}/teams/${task.team.id}`}>
+                        {task.team.name}
+                      </Link>
+                    </TableCell>
+                    <TableCell padding="checkbox">
+                      <Link
+                        href={`${baseLink}/initiatives/${task.initiative.id}`}
+                      >
+                        {task.initiative.name}
+                      </Link>
+                    </TableCell>
+                    <TableCell padding="checkbox">
+                      <Link href={`${baseLink}/projects/${task.project.id}`}>
+                        {task.project.name}
+                      </Link>
+                    </TableCell>
+                    <TableCell padding="checkbox">
+                      {task.demand.demandTitle}
+                    </TableCell>
+                    <TableCell padding="checkbox">{task.title}</TableCell>
+                    <TableCell padding="checkbox">{task.createdDate}</TableCell>
+                    <TableCell padding="checkbox">{task.endDate}</TableCell>
+                    <TableCell padding="checkbox">
+                      {normalizeTimeToFinish(
+                        task.secondsToComplete,
+                        task.partialCompletionTime
+                      )}
+                    </TableCell>
+                  </TableRow>
+                )
+              })}
             </TableBody>
           </Table>
 
@@ -306,9 +399,9 @@ const Tasks = () => {
             }}
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={numberOfTasks}
+            count={totalOfTasks}
             rowsPerPage={taskFilters.limit}
-            page={taskFilters.pageParam}
+            page={totalOfTasksPage}
             onPageChange={(_, page) => handlePage(page)}
             onRowsPerPageChange={(event) => handleRowsPerPage(event)}
           />

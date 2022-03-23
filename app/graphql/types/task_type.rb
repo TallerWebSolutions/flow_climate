@@ -26,5 +26,13 @@ module Types
     def company
       object.demand.company
     end
+
+    def initiative
+      object.demand.project.initiative
+    end
+
+    def project
+      object.demand.project
+    end
   end
 end
