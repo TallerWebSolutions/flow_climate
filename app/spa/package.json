@@ -10,6 +10,7 @@
     "@material-ui/data-grid": "^4.0.0-alpha.37",
     "@material-ui/icons": "^4.11.2",
     "@mui/icons-material": "^5.2.5",
+    "@mui/lab": "^5.0.0-alpha.74",
     "@mui/material": "^5.2.3",
     "@nivo/bar": "^0.79.1",
     "@nivo/core": "^0.79.0",

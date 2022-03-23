@@ -43,3 +43,7 @@ type FormatDateProps = {
 export const formatDate = ({ date, format }: FormatDateProps) => {
   return dateFnsFormat(new Date(date), format)
 }
+
+export const toISOFormat = (date: string | Date): string => {
+  return new Date(date).toISOString()
+}
