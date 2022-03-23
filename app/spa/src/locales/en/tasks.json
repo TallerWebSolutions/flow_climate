@@ -9,7 +9,11 @@
     "delivery_date": "Delivery date",
     "time_to_finish": "Time to finish",
     "rows_per_page": "Rows per page:",
-    "count_displayed_items_separator": "of"
+    "count_displayed_items_separator": "of",
+    "initiative": "Initiative",
+    "project": "Project",
+    "team": "Team",
+    "title": "Title"
   },
   "filter": {
     "search": "Search",

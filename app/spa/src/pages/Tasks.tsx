@@ -185,7 +185,7 @@ const Tasks = () => {
   const { t } = useTranslation(["tasks"])
   const [taskSearchName, setTaskSearchName] = useState("")
   const [taskFilters, setTaskFilters] = useState<TaskFilters>({
-    page: 1,
+    page: 0,
     limit: 10,
     title: "",
     status: "",
@@ -234,7 +234,6 @@ const Tasks = () => {
       </Backdrop>
     )
 
-  const totalOfTasksPage = Number(data?.tasksList.totalPages)
   const totalOfTasks = Number(data?.tasksList.totalCount)
   const totalOfDeliveredTasks = Number(data?.tasksList.totalDeliveredCount)
   const tasks = data?.tasksList.tasks!
@@ -245,9 +244,9 @@ const Tasks = () => {
 
   const taskListHeadCells = [
     "ID",
-    "Team",
-    "Initiative",
-    "Project",
+    t("tasks_table.team"),
+    t("tasks_table.initiative"),
+    t("tasks_table.project"),
     t("tasks_table.demand_title"),
     t("tasks_table.title"),
     t("tasks_table.creation_date"),
@@ -267,6 +266,7 @@ const Tasks = () => {
   }
 
   const handlePage = (newPage: number) => {
+    console.log({ newPage })
     setTaskFilters((prevState) => ({ ...prevState, page: newPage }))
   }
 
@@ -446,7 +446,7 @@ const Tasks = () => {
             component="div"
             count={totalOfTasks}
             rowsPerPage={taskFilters.limit}
-            page={totalOfTasksPage}
+            page={taskFilters.page}
             onPageChange={(_, page) => handlePage(page)}
             onRowsPerPageChange={(event) => handleRowsPerPage(event)}
           />
