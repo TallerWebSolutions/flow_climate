@@ -3,21 +3,30 @@
 class TasksRepository
   include Singleton
 
-  def search(company_id, search_fields = {})
-    tasks = search_by_title(tasks(company_id), search_fields[:title])
-    tasks = search_by_initiative(tasks, search_fields[:initiative_id])
-    tasks = search_by_project(tasks, search_fields[:project_id])
-    tasks = search_by_team(tasks, search_fields[:team_id])
-    tasks = search_by_status(tasks, search_fields[:status])
-    tasks = search_by_date(tasks, search_fields[:status], search_fields[:from_date], search_fields[:until_date])
+  def search(company_id, page_number, limit, search_fields = {})
+    tasks = search_tasks(company_id, search_fields[:initiative_id], search_fields[:project_id], search_fields[:team_id],
+                         search_fields[:status], search_fields[:title], search_fields[:from_date], search_fields[:until_date])
 
-    TasksList.new(tasks.count, tasks.finished.count, tasks.order(created_date: :desc))
+    tasks_page = tasks.order(created_date: :desc).page(page_number).per(limit)
+    TasksList.new(tasks.count,
+                  tasks.finished.count,
+                  tasks_page.last_page?,
+                  tasks_page.total_pages,
+                  tasks_page)
   end
 
   private
 
-  def tasks(company_id)
-    Company.find(company_id).tasks.not_discarded_until(Time.zone.now).order(created_date: :desc)
+  def search_tasks(company_id, initiative_id, project_id, team_id, status, title, from_date, until_date)
+    tasks = Company.find(company_id).tasks.not_discarded_until(Time.zone.now)
+
+    tasks = search_by_title(tasks, title)
+    tasks = search_by_initiative(tasks, initiative_id)
+    tasks = search_by_project(tasks, project_id)
+    tasks = search_by_team(tasks, team_id)
+    tasks = search_by_status(tasks, status)
+
+    search_by_date(tasks, status, from_date, until_date)
   end
 
   def search_by_title(tasks, title)

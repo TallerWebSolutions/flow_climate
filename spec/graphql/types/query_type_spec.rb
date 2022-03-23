@@ -436,9 +436,11 @@ RSpec.describe Types::QueryType do
 
     let(:query) do
       %(query {
-        tasksList {
+        tasksList(pageNumber: 1, limit: 2, title: "bar") {
           totalCount
           totalDeliveredCount
+          lastPage
+          totalPages
           tasks {
             id
             title
@@ -467,7 +469,7 @@ RSpec.describe Types::QueryType do
         }
 
         result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
-        expect(result.dig('data', 'tasksList')).to eq({ 'tasks' => [], 'totalCount' => 0, 'totalDeliveredCount' => 0 })
+        expect(result.dig('data', 'tasksList')).to eq({ 'lastPage' => false, 'tasks' => [], 'totalCount' => 0, 'totalDeliveredCount' => 0, 'totalPages' => 0 })
       end
     end
 
@@ -481,14 +483,16 @@ RSpec.describe Types::QueryType do
 
         first_task = Fabricate :task, demand: first_demand, title: 'foo BaR', created_date: 2.days.ago, end_date: 2.days.ago
         second_task = Fabricate :task, demand: second_demand, title: 'BaR', created_date: 1.day.ago, end_date: 1.hour.ago
-        third_task = Fabricate :task, demand: second_demand, title: 'BaRco', created_date: 3.days.ago, end_date: nil
+        Fabricate :task, demand: second_demand, title: 'BaRco', created_date: 3.days.ago, end_date: nil
 
         result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
 
         expect(result.dig('data', 'tasksList')['totalCount']).to eq 3
         expect(result.dig('data', 'tasksList')['totalDeliveredCount']).to eq 2
+        expect(result.dig('data', 'tasksList')['lastPage']).to be false
+        expect(result.dig('data', 'tasksList')['totalPages']).to eq 2
         expect(result.dig('data', 'tasksList', 'tasks')).to match_array(
-          [first_task, second_task, third_task].map do |task|
+          [first_task, second_task].map do |task|
             {
               'id' => task.id.to_s,
               'title' => task.title,
