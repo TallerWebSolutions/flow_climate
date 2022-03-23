@@ -13,14 +13,23 @@ import {
   TableRow,
   Typography,
   TextField,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  FormControl,
 } from "@mui/material"
+import DatePicker from "@mui/lab/DatePicker"
+import AdapterDateFns from "@mui/lab/AdapterDateFns"
+import LocalizationProvider from "@mui/lab/LocalizationProvider"
 import { ChangeEvent, useEffect, useState, useCallback } from "react"
 import { useTranslation } from "react-i18next"
 import BasicPage from "../components/BasicPage"
-import { secondsToReadbleDate } from "../lib/date"
+import { secondsToReadbleDate, toISOFormat } from "../lib/date"
 import { Task } from "../modules/task/task.types"
-import { Team } from "../modules/team/team.types"
 import User from "../modules/user/user.types"
+import { Project } from "../modules/project/project.types"
+import { Team } from "../modules/team/team.types"
 
 const TASKS_QUERY = gql`
   query TasksPage(
@@ -31,6 +40,8 @@ const TASKS_QUERY = gql`
     $projectId: ID
     $initiativeId: ID
     $limit: Int
+    $untilDate: ISO8601Date
+    $fromDate: ISO8601Date
   ) {
     tasksList(
       pageNumber: $page
@@ -40,6 +51,8 @@ const TASKS_QUERY = gql`
       projectId: $projectId
       initiativeId: $initiativeId
       limit: $limit
+      untilDate: $untilDate
+      fromDate: $fromDate
     ) {
       totalCount
       totalDeliveredCount
@@ -69,6 +82,8 @@ const TASKS_QUERY = gql`
 
     me {
       currentCompany {
+        name
+        slug
         initiatives {
           id
           name
@@ -116,6 +131,54 @@ type TaskFilters = {
   teamId?: string
   projectId?: string
   initiativeId?: string
+  fromDate?: string
+  untilDate?: string
+}
+
+const normalizeDateToDatePicker = (date: any): string | null => {
+  return date != undefined ? date : null
+}
+
+type BasicSelectItem =
+  | {
+      id: number
+      name: string
+    }
+  | Project
+  | Team
+
+type SelectItemsProps = {
+  id: string
+  label: string
+  defaultValue: string
+  value: any
+  items: BasicSelectItem[]
+  onChange:
+    | ((event: SelectChangeEvent<any>, child: React.ReactNode) => void)
+    | undefined
+}
+
+const SelectItems = ({
+  id,
+  label,
+  items,
+  value,
+  defaultValue,
+  onChange,
+}: SelectItemsProps) => {
+  return (
+    <FormControl fullWidth>
+      <InputLabel id={id}>{label}</InputLabel>
+      <Select labelId={id} value={value} label={label} onChange={onChange}>
+        <MenuItem value="">{defaultValue}</MenuItem>
+        {items.map((item) => (
+          <MenuItem key={`${item.id}--${item.name}`} value={item.id}>
+            {item.name}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  )
 }
 
 const Tasks = () => {
@@ -125,6 +188,7 @@ const Tasks = () => {
     page: 1,
     limit: 10,
     title: "",
+    status: "",
   })
 
   const { data, loading } = useQuery<TasksDTO>(TASKS_QUERY, {
@@ -149,10 +213,7 @@ const Tasks = () => {
   )
 
   const handleSelectFilters = useCallback(
-    (
-      event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-      prop: string
-    ) => {
+    (event: SelectChangeEvent<any>, queryParam: string) => {
       const value = String(event.target.value)
 
       return setTaskFilters((prevState) => {
@@ -160,7 +221,7 @@ const Tasks = () => {
         delete prevState.projectId
         delete prevState.teamId
 
-        return { ...prevState, [prop]: value }
+        return { ...prevState, [queryParam]: value }
       })
     },
     [taskFilters]
@@ -209,11 +270,14 @@ const Tasks = () => {
     setTaskFilters((prevState) => ({ ...prevState, page: newPage }))
   }
 
-  const handleStatus = (
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleStatus = (event: SelectChangeEvent<any>) => {
     const status = event.target.value
     setTaskFilters((prevState) => ({ ...prevState, status }))
+  }
+
+  const handleDateFilters = (date: string, queryParam: string) => {
+    const isoDate = toISOFormat(date)
+    setTaskFilters((prevState) => ({ ...prevState, [queryParam]: isoDate }))
   }
 
   return (
@@ -223,97 +287,78 @@ const Tasks = () => {
       breadcrumbsLinks={breadcrumbsLinks}
     >
       <Box>
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
-            gridTemplateRows: "repeat(2, 1fr)",
-            gridColumnGap: "16px",
-            gridRowGap: "20px",
-          }}
-        >
-          <TextField
-            value={taskSearchName}
-            defaultValue=""
-            onChange={handleSearchByName}
-            label={t("filter.search")}
-            helperText={t("filter.search_helper")}
-          />
-          <TextField
-            defaultValue=""
-            label={t("filter.initial_date")}
-            type="date"
-            id="initial-date"
-          />
-          <TextField defaultValue="" label={t("filter.end_date")} type="date" />
-
-          <TextField
-            select
-            label={t("filter.status")}
-            defaultValue=""
-            value={taskFilters.status}
-            onChange={(event) => handleStatus(event)}
-            SelectProps={{
-              native: true,
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "repeat(4, 1fr)",
+              gridTemplateRows: "repeat(2, 1fr)",
+              gridColumnGap: "16px",
+              gridRowGap: "20px",
             }}
           >
-            <option value="not_finished">{t("filter.status_open")}</option>
-            <option value="finished">{t("filter.status_finished")}</option>
-          </TextField>
-
-          <TextField
-            select
-            label={t("filter.initiative")}
-            defaultValue=""
-            value={taskFilters.initiativeId}
-            onChange={(event) => handleSelectFilters(event, "initiativeId")}
-            SelectProps={{
-              native: true,
-            }}
-          >
-            <option value="">{t("filter.select_initiative")}</option>
-            {initiatives.map((initiative) => (
-              <option key={initiative.id} value={initiative.id}>
-                {initiative.name}
-              </option>
-            ))}
-          </TextField>
-
-          <TextField
-            select
-            label={t("filter.project")}
-            defaultValue=""
-            value={taskFilters.projectId}
-            onChange={(event) => handleSelectFilters(event, "projectId")}
-            SelectProps={{
-              native: true,
-            }}
-          >
-            <option value="">{t("filter.select_project")}</option>
-            {projects.map((project) => (
-              <option key={project.id} value={project.id}>
-                {project.name}
-              </option>
-            ))}
-          </TextField>
-
-          <TextField
-            select
-            label={t("filter.team")}
-            value={taskFilters.teamId}
-            onChange={(event) => handleSelectFilters(event, "teamId")}
-            SelectProps={{
-              native: true,
-            }}
-          >
-            <option value="">{t("filter.select_team")}</option>
-            {teams.map((team) => (
-              <option key={team.id} value={team.id}>
-                {team.name}
-              </option>
-            ))}
-          </TextField>
-        </Box>
+            <TextField
+              value={taskSearchName}
+              defaultValue=""
+              onChange={handleSearchByName}
+              label={t("filter.search")}
+              helperText={t("filter.search_helper")}
+            />
+            <DatePicker
+              label={t("filter.initial_date")}
+              value={normalizeDateToDatePicker(taskFilters.fromDate)}
+              onChange={(date) => handleDateFilters(String(date), "fromDate")}
+              renderInput={(params) => <TextField {...params} />}
+            />
+            <DatePicker
+              label={t("filter.end_date")}
+              value={normalizeDateToDatePicker(taskFilters.untilDate)}
+              onChange={(date) => handleDateFilters(String(date), "untilDate")}
+              renderInput={(params) => <TextField {...params} />}
+            />
+            <FormControl fullWidth>
+              <InputLabel id="status-filter">{t("filter.status")}</InputLabel>
+              <Select
+                labelId="status-filter"
+                label={t("filter.status")}
+                value={taskFilters.status}
+                onChange={(event) => handleStatus(event)}
+              >
+                <MenuItem value="">{t("filter.select_status")}</MenuItem>
+                <MenuItem value="not_finished">
+                  {t("filter.status_open")}
+                </MenuItem>
+                <MenuItem value="finished">
+                  {t("filter.status_finished")}
+                </MenuItem>
+              </Select>
+            </FormControl>
+            <SelectItems
+              label={t("filter.initiative")}
+              id="filter-status"
+              defaultValue=""
+              items={initiatives}
+              value={taskFilters.initiativeId}
+              onChange={(event) => handleSelectFilters(event, "initiativeId")}
+            />
+            <SelectItems
+              label={t("filter.project")}
+              id="filter-status"
+              defaultValue=""
+              items={projects}
+              value={taskFilters.projectId}
+              onChange={(event) => handleSelectFilters(event, "projectId")}
+            />
+            <SelectItems
+              label={t("filter.team")}
+              id="filter-status"
+              defaultValue=""
+              items={teams}
+              value={taskFilters.teamId}
+              onChange={(event) => handleSelectFilters(event, "teamId")}
+            />
+          </Box>
+        </LocalizationProvider>
 
         <TableContainer>
           <Typography color="primary" variant="h6" component="h6">
