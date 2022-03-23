@@ -436,16 +436,22 @@ RSpec.describe Types::QueryType do
 
     let(:query) do
       %(query {
-        tasksConnection(first: 2, title: "bar") {
+        tasksList {
           totalCount
-          edges {
-            node {
+          totalDeliveredCount
+          tasks {
+            id
+            title
+            delivered
+            demand {
               id
-              title
-                demand {
-                  id
-                  demandTitle
-                }
+              demandTitle
+            }
+            team {
+              id
+            }
+            company {
+              id
             }
           }
         }
@@ -461,7 +467,7 @@ RSpec.describe Types::QueryType do
         }
 
         result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
-        expect(result.dig('data', 'teams')).to be_nil
+        expect(result.dig('data', 'tasksList')).to eq({ 'tasks' => [], 'totalCount' => 0, 'totalDeliveredCount' => 0 })
       end
     end
 
@@ -475,21 +481,27 @@ RSpec.describe Types::QueryType do
 
         first_task = Fabricate :task, demand: first_demand, title: 'foo BaR', created_date: 2.days.ago, end_date: 2.days.ago
         second_task = Fabricate :task, demand: second_demand, title: 'BaR', created_date: 1.day.ago, end_date: 1.hour.ago
-        Fabricate :task, demand: second_demand, title: 'BaRco', created_date: 3.days.ago, end_date: Time.zone.now
+        third_task = Fabricate :task, demand: second_demand, title: 'BaRco', created_date: 3.days.ago, end_date: nil
 
         result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
 
-        expect(result.dig('data', 'tasksConnection')['totalCount']).to eq 3
-        expect(result.dig('data', 'tasksConnection', 'edges')).to match_array(
-          [first_task, second_task].map do |task|
+        expect(result.dig('data', 'tasksList')['totalCount']).to eq 3
+        expect(result.dig('data', 'tasksList')['totalDeliveredCount']).to eq 2
+        expect(result.dig('data', 'tasksList', 'tasks')).to match_array(
+          [first_task, second_task, third_task].map do |task|
             {
-              'node' => {
-                'id' => task.id.to_s,
-                'title' => task.title,
-                'demand' => {
-                  'id' => task.demand.id.to_s,
-                  'demandTitle' => task.demand.demand_title
-                }
+              'id' => task.id.to_s,
+              'title' => task.title,
+              'delivered' => task.end_date.present?,
+              'demand' => {
+                'id' => task.demand.id.to_s,
+                'demandTitle' => task.demand.demand_title
+              },
+              'team' => {
+                'id' => task.demand.team.id.to_s
+              },
+              'company' => {
+                'id' => task.demand.company.id.to_s
               }
             }
           end

@@ -27,24 +27,26 @@ RSpec.describe TasksRepository, type: :repository do
         fourth_task = Fabricate :task, demand: fourth_demand, title: 'xpTo', created_date: 3.days.ago, end_date: 2.days.ago
         Fabricate :task, title: 'BaR', created_date: 3.days.ago, end_date: 2.days.ago
 
-        expect(described_class.instance.search(company.id)).to match_array [first_task, second_task, third_task, fourth_task]
-        expect(described_class.instance.search(company.id, title: 'bar')).to match_array [first_task, second_task]
-        expect(described_class.instance.search(company.id, project_id: second_project.id)).to eq [third_task]
-        expect(described_class.instance.search(company.id, initiative_id: initiative.id)).to match_array [first_task, second_task, third_task]
-        expect(described_class.instance.search(company.id, team_id: team.id)).to match_array [first_task, second_task, third_task]
-        expect(described_class.instance.search(company.id, status: 'finished')).to match_array [first_task, second_task, fourth_task]
-        expect(described_class.instance.search(company.id, status: 'not_finished')).to eq [third_task]
-        expect(described_class.instance.search(company.id, status: 'bla')).to match_array [first_task, second_task, third_task, fourth_task]
-        expect(described_class.instance.search(company.id, from_date: 2.days.ago, until_date: Time.zone.now)).to match_array [second_task, third_task]
-        expect(described_class.instance.search(company.id, from_date: 2.days.ago)).to match_array [first_task, second_task, third_task, fourth_task]
-        expect(described_class.instance.search(company.id, until_date: Time.zone.now)).to match_array [first_task, second_task, third_task, fourth_task]
-        expect(described_class.instance.search(company.id, status: 'finished', from_date: 2.days.ago, until_date: Time.zone.now)).to match_array [first_task, second_task, fourth_task]
+        expect(described_class.instance.search(company.id).total_count).to eq 4
+        expect(described_class.instance.search(company.id).total_delivered_count).to eq 3
+        expect(described_class.instance.search(company.id).tasks).to match_array [first_task, second_task, third_task, fourth_task]
+        expect(described_class.instance.search(company.id, title: 'bar').tasks).to match_array [first_task, second_task]
+        expect(described_class.instance.search(company.id, project_id: second_project.id).tasks).to eq [third_task]
+        expect(described_class.instance.search(company.id, initiative_id: initiative.id).tasks).to match_array [first_task, second_task, third_task]
+        expect(described_class.instance.search(company.id, team_id: team.id).tasks).to match_array [first_task, second_task, third_task]
+        expect(described_class.instance.search(company.id, status: 'finished').tasks).to match_array [first_task, second_task, fourth_task]
+        expect(described_class.instance.search(company.id, status: 'not_finished').tasks).to eq [third_task]
+        expect(described_class.instance.search(company.id, status: 'bla').tasks).to match_array [first_task, second_task, third_task, fourth_task]
+        expect(described_class.instance.search(company.id, from_date: 2.days.ago, until_date: Time.zone.now).tasks).to match_array [second_task, third_task]
+        expect(described_class.instance.search(company.id, from_date: 2.days.ago).tasks).to match_array [first_task, second_task, third_task, fourth_task]
+        expect(described_class.instance.search(company.id, until_date: Time.zone.now).tasks).to match_array [first_task, second_task, third_task, fourth_task]
+        expect(described_class.instance.search(company.id, status: 'finished', from_date: 2.days.ago, until_date: Time.zone.now).tasks).to match_array [first_task, second_task, fourth_task]
       end
     end
 
     context 'without data' do
       it 'returns an empty set' do
-        expect(described_class.instance.search(company.id)).to eq []
+        expect(described_class.instance.search(company.id).tasks).to eq []
       end
     end
   end

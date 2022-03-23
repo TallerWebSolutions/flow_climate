@@ -21,8 +21,8 @@ module Types
       argument :id, Int
     end
 
-    field :tasks_connection,
-          Types::TaskType.connection_type,
+    field :tasks_list,
+          Types::TasksListType,
           null: true,
           description: 'A list of tasks using the arguments as search parameters' do
       argument :title, String, required: false
@@ -60,14 +60,12 @@ module Types
       Project.find(id)
     end
 
-    def tasks_connection(title: nil, status: nil, initiative_id: nil, project_id: nil, team_id: nil, from_date: nil, until_date: nil)
-      return [] if me.last_company.blank?
+    def tasks_list(title: nil, status: nil, initiative_id: nil, project_id: nil, team_id: nil, from_date: nil, until_date: nil)
+      return TasksList.new(0, 0, []) if me.last_company.blank?
 
-      tasks = TasksRepository.instance.search(me.last_company_id,
-                                              title: title, status: status, initiative_id: initiative_id,
-                                              project_id: project_id, team_id: team_id, from_date: from_date, until_date: until_date)
-
-      tasks.order(created_date: :desc)
+      TasksRepository.instance.search(me.last_company_id,
+                                      title: title, status: status, initiative_id: initiative_id,
+                                      project_id: project_id, team_id: team_id, from_date: from_date, until_date: until_date)
     end
 
     def me
