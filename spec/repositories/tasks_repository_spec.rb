@@ -27,26 +27,29 @@ RSpec.describe TasksRepository, type: :repository do
         fourth_task = Fabricate :task, demand: fourth_demand, title: 'xpTo', created_date: 3.days.ago, end_date: 2.days.ago
         Fabricate :task, title: 'BaR', created_date: 3.days.ago, end_date: 2.days.ago
 
-        expect(described_class.instance.search(company.id).total_count).to eq 4
-        expect(described_class.instance.search(company.id).total_delivered_count).to eq 3
-        expect(described_class.instance.search(company.id).tasks).to match_array [first_task, second_task, third_task, fourth_task]
-        expect(described_class.instance.search(company.id, title: 'bar').tasks).to match_array [first_task, second_task]
-        expect(described_class.instance.search(company.id, project_id: second_project.id).tasks).to eq [third_task]
-        expect(described_class.instance.search(company.id, initiative_id: initiative.id).tasks).to match_array [first_task, second_task, third_task]
-        expect(described_class.instance.search(company.id, team_id: team.id).tasks).to match_array [first_task, second_task, third_task]
-        expect(described_class.instance.search(company.id, status: 'finished').tasks).to match_array [first_task, second_task, fourth_task]
-        expect(described_class.instance.search(company.id, status: 'not_finished').tasks).to eq [third_task]
-        expect(described_class.instance.search(company.id, status: 'bla').tasks).to match_array [first_task, second_task, third_task, fourth_task]
-        expect(described_class.instance.search(company.id, from_date: 2.days.ago, until_date: Time.zone.now).tasks).to match_array [second_task, third_task]
-        expect(described_class.instance.search(company.id, from_date: 2.days.ago).tasks).to match_array [first_task, second_task, third_task, fourth_task]
-        expect(described_class.instance.search(company.id, until_date: Time.zone.now).tasks).to match_array [first_task, second_task, third_task, fourth_task]
-        expect(described_class.instance.search(company.id, status: 'finished', from_date: 2.days.ago, until_date: Time.zone.now).tasks).to match_array [first_task, second_task, fourth_task]
+        tasks_search = described_class.instance.search(company.id, 1, 2)
+        expect(tasks_search.total_count).to eq 4
+        expect(tasks_search.total_delivered_count).to eq 3
+        expect(tasks_search.last_page).to be false
+        expect(tasks_search.total_pages).to eq 2
+        expect(described_class.instance.search(company.id, 1, 5).tasks).to match_array [first_task, second_task, third_task, fourth_task]
+        expect(described_class.instance.search(company.id, 1, 5, title: 'bar').tasks).to match_array [first_task, second_task]
+        expect(described_class.instance.search(company.id, 1, 5, project_id: second_project.id).tasks).to eq [third_task]
+        expect(described_class.instance.search(company.id, 1, 5, initiative_id: initiative.id).tasks).to match_array [first_task, second_task, third_task]
+        expect(described_class.instance.search(company.id, 1, 5, team_id: team.id).tasks).to match_array [first_task, second_task, third_task]
+        expect(described_class.instance.search(company.id, 1, 5, status: 'finished').tasks).to match_array [first_task, second_task, fourth_task]
+        expect(described_class.instance.search(company.id, 1, 5, status: 'not_finished').tasks).to eq [third_task]
+        expect(described_class.instance.search(company.id, 1, 5, status: 'bla').tasks).to match_array [first_task, second_task, third_task, fourth_task]
+        expect(described_class.instance.search(company.id, 1, 5, from_date: 2.days.ago, until_date: Time.zone.now).tasks).to match_array [second_task, third_task]
+        expect(described_class.instance.search(company.id, 1, 5, from_date: 2.days.ago).tasks).to match_array [first_task, second_task, third_task, fourth_task]
+        expect(described_class.instance.search(company.id, 1, 5, until_date: Time.zone.now).tasks).to match_array [first_task, second_task, third_task, fourth_task]
+        expect(described_class.instance.search(company.id, 1, 5, status: 'finished', from_date: 2.days.ago, until_date: Time.zone.now).tasks).to match_array [first_task, second_task, fourth_task]
       end
     end
 
     context 'without data' do
       it 'returns an empty set' do
-        expect(described_class.instance.search(company.id).tasks).to eq []
+        expect(described_class.instance.search(company.id, 1, 5).tasks).to eq []
       end
     end
   end

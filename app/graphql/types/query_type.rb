@@ -25,6 +25,8 @@ module Types
           Types::TasksListType,
           null: true,
           description: 'A list of tasks using the arguments as search parameters' do
+      argument :page_number, Int, required: false
+      argument :limit, Int, required: false
       argument :title, String, required: false
       argument :status, String, required: false
       argument :initiative_id, ID, required: false
@@ -60,10 +62,10 @@ module Types
       Project.find(id)
     end
 
-    def tasks_list(title: nil, status: nil, initiative_id: nil, project_id: nil, team_id: nil, from_date: nil, until_date: nil)
-      return TasksList.new(0, 0, []) if me.last_company.blank?
+    def tasks_list(page_number: 1, limit: 25, title: nil, status: nil, initiative_id: nil, project_id: nil, team_id: nil, from_date: nil, until_date: nil)
+      return TasksList.new(0, 0, false, 0, []) if me.last_company.blank?
 
-      TasksRepository.instance.search(me.last_company_id,
+      TasksRepository.instance.search(me.last_company_id, page_number, limit,
                                       title: title, status: status, initiative_id: initiative_id,
                                       project_id: project_id, team_id: team_id, from_date: from_date, until_date: until_date)
     end
