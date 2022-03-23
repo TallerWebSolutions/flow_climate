@@ -4,17 +4,21 @@ class TasksRepository
   include Singleton
 
   def search(company_id, search_fields = {})
-    tasks = Company.find(company_id).tasks.not_discarded_until(Time.zone.now).order(created_date: :desc)
-
-    tasks = search_by_title(tasks, search_fields[:title])
+    tasks = search_by_title(tasks(company_id), search_fields[:title])
     tasks = search_by_initiative(tasks, search_fields[:initiative_id])
     tasks = search_by_project(tasks, search_fields[:project_id])
     tasks = search_by_team(tasks, search_fields[:team_id])
     tasks = search_by_status(tasks, search_fields[:status])
-    search_by_date(tasks, search_fields[:status], search_fields[:from_date], search_fields[:until_date])
+    tasks = search_by_date(tasks, search_fields[:status], search_fields[:from_date], search_fields[:until_date])
+
+    TasksList.new(tasks.count, tasks.finished.count, tasks.order(created_date: :desc))
   end
 
   private
+
+  def tasks(company_id)
+    Company.find(company_id).tasks.not_discarded_until(Time.zone.now).order(created_date: :desc)
+  end
 
   def search_by_title(tasks, title)
     return tasks if title.blank?
