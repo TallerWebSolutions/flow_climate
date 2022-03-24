@@ -1,6 +1,6 @@
 {
   "tasks": "Deliverables",
-  "tasks_list": "Deliverables",
+  "tasks_list": "Deliverables List",
   "finished_tasks": "finished",
   "tasks_table": {
     "demand_title": "Activity",
@@ -16,7 +16,7 @@
   },
   "filter": {
     "search": "Search",
-    "search_helper": "Search by task name",
+    "search_helper": "Search by deliverable name",
     "initial_date": "Creation date",
     "end_date": "End date",
     "status": "Status",

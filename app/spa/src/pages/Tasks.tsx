@@ -136,7 +136,7 @@ type TaskFilters = {
 }
 
 const normalizeDateToDatePicker = (date: any): string | null => {
-  return date != undefined ? date : null
+  return date !== undefined ? date : null
 }
 
 type BasicSelectItem =
@@ -195,9 +195,6 @@ const Tasks = () => {
     variables: { ...taskFilters },
   })
 
-  useEffect(() => console.log({ ...taskFilters }), [taskFilters])
-  useEffect(() => console.log({ data }), [data])
-
   useEffect(() => {
     const bounceTime = setTimeout(() => {
       setTaskFilters((prevState) => ({ ...prevState, title: taskSearchName }))
@@ -209,7 +206,7 @@ const Tasks = () => {
   const handleSearchByName = useCallback(
     (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
       setTaskSearchName(String(event.target.value)),
-    [taskFilters]
+    []
   )
 
   const handleSelectFilters = useCallback(
@@ -224,7 +221,7 @@ const Tasks = () => {
         return { ...prevState, [queryParam]: value }
       })
     },
-    [taskFilters]
+    []
   )
 
   if (loading)
@@ -255,7 +252,7 @@ const Tasks = () => {
   ]
   const breadcrumbsLinks = [
     { name: company.name || "", url: company.slug },
-    { name: t("tasks") },
+    { name: t("tasks_list") },
   ]
 
   const handleRowsPerPage = (
@@ -266,7 +263,6 @@ const Tasks = () => {
   }
 
   const handlePage = (newPage: number) => {
-    console.log({ newPage })
     setTaskFilters((prevState) => ({ ...prevState, page: newPage }))
   }
 
