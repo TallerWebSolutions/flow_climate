@@ -27,5 +27,9 @@
     "project": "Projeto",
     "team": "Time",
     "select_status": "Status"
+  },
+  "tabs": {
+    "charts": "Gráficos",
+    "list": "Lista"
   }
 }

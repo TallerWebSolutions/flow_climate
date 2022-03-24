@@ -21,7 +21,7 @@ const Separator = ({ last }: SeparatorProps) => (
       height: 4,
       mx: 1,
       borderRadius: "100%",
-      backgroundColor: "#CCCCCC",
+      backgroundColor: "grey.200",
     }}
   />
 )
