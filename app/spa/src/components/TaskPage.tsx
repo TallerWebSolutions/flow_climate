@@ -140,7 +140,8 @@ const TasksPage = ({
 
   useEffect(() => {
     onFiltersChange(taskFilters)
-  }, [taskFilters, onFiltersChange])
+    // eslint-disable-next-line
+  }, [taskFilters])
 
   const handleSearchByName = useCallback(
     (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>

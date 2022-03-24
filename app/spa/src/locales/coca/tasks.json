@@ -26,5 +26,9 @@
     "project": "Project",
     "team": "Team",
     "select_status": "Status"
+  },
+  "tabs": {
+    "charts": "charts",
+    "list": "List"
   }
 }

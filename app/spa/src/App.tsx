@@ -13,7 +13,8 @@ import Statistics from "./pages/Statistics"
 import Teams from "./pages/Teams/Teams"
 import CreateTeam from "./pages/Teams/CreateTeam"
 import EditTeam from "./pages/Teams/EditTeam"
-import Tasks from "./pages/Tasks"
+import TasksList from "./pages/Tasks/List"
+import Charts from "./pages/Tasks/Charts"
 
 import i18n, { loadLanguage } from "./lib/i18n"
 import { MessagesContext } from "./contexts/MessageContext"
@@ -80,7 +81,14 @@ const App = () => {
             path="/companies/:companyNickName/teams/:teamId/edit"
             element={<EditTeam />}
           />
-          <Route path="/companies/:companyNickName/tasks" element={<Tasks />} />
+          <Route
+            path="/companies/:companyNickName/tasks"
+            element={<TasksList />}
+          />
+          <Route
+            path="/companies/:companyNickName/tasks/charts"
+            element={<Charts />}
+          />
         </Routes>
       </BrowserRouter>
     </Fragment>
