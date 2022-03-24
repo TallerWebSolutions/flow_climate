@@ -1,4 +1,14 @@
 {
+  "teams": "Teams",
+  "customers": "Customer",
+  "products": "Products",
+  "initiatives": "Initiatives",
+  "projects": "Projects",
+  "demands": "Demands",
+  "tasks": "Tasks",
+  "demand_blocks": "Demands Blocks",
+  "flow_events": "Flow Events",
+  "token_success_message": "Token sent successfully! In few minutes will be available in your email.",
   "userMenu": {
     "myAccount": "My Account",
     "turnOnNotifications": "Turn on notifications",

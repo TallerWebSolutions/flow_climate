@@ -1,23 +1,12 @@
-import React, { useContext } from "react"
+import { useContext } from "react"
 import { Avatar, Box, Container, Link, Menu, MenuItem } from "@mui/material"
 import { useState } from "react"
 import { gql, useMutation, useQuery } from "@apollo/client"
 
 import { Company } from "../modules/company/company.types"
 import { MessagesContext } from "../contexts/MessageContext"
+import { capitalizeFirstLetter } from "../lib/func"
 import { useTranslation } from "react-i18next"
-
-const buildLinks = (companyName: string) => [
-  { name: "Taller", href: `/companies/${companyName}` },
-  { name: "Times", href: `/companies/${companyName}/teams` },
-  { name: "Clientes", href: `/companies/${companyName}/customers` },
-  { name: "Produtos", href: `/companies/${companyName}/products` },
-  { name: "Iniciativas", href: `/companies/${companyName}/initiatives` },
-  { name: "Projetos", href: `/companies/${companyName}/projects` },
-  { name: "Demandas", href: `/companies/${companyName}/demands` },
-  { name: "Bloqueios", href: `/companies/${companyName}/demand_blocks` },
-  { name: "Eventos", href: `/companies/${companyName}/flow_events` },
-]
 
 const USER_QUERY = gql`
   query UserQuery {
@@ -80,10 +69,29 @@ const Header = ({ company }: HeaderProps) => {
   const [sendAuthTokenMutation] = useMutation(SEND_API_TOKEN_MUTATION, {
     update: () =>
       pushMessage({
-        text: "Token enviado com sucesso! Em poucos minutos estará disponível em seu e-mail.",
+        text: t("token_success_message"),
         severity: "info",
       }),
   })
+
+  const buildLinks = (companySlug: string) => [
+    {
+      name: capitalizeFirstLetter(companySlug),
+      href: `/companies/${companySlug}`,
+    },
+    { name: t("teams"), href: `/companies/${companySlug}/teams` },
+    { name: t("customers"), href: `/companies/${companySlug}/customers` },
+    { name: t("products"), href: `/companies/${companySlug}/products` },
+    { name: t("initiatives"), href: `/companies/${companySlug}/initiatives` },
+    { name: t("projects"), href: `/companies/${companySlug}/projects` },
+    { name: t("demands"), href: `/companies/${companySlug}/demands` },
+    { name: t("tasks"), href: `/companies/${companySlug}/tasks` },
+    {
+      name: t("demand_blocks"),
+      href: `/companies/${companySlug}/demand_blocks`,
+    },
+    { name: t("flow_events"), href: `/companies/${companySlug}/flow_events` },
+  ]
 
   return (
     <Box py={1} sx={{ backgroundColor: "primary.main" }}>
