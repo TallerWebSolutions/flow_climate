@@ -24,7 +24,7 @@ import SearchIcon from "@mui/icons-material/Search"
 import DatePicker from "@mui/lab/DatePicker"
 import AdapterDateFns from "@mui/lab/AdapterDateFns"
 import LocalizationProvider from "@mui/lab/LocalizationProvider"
-import { ChangeEvent, useEffect, useState, useCallback } from "react"
+import { ChangeEvent, useState, useCallback } from "react"
 import { useTranslation } from "react-i18next"
 import BasicPage from "../components/BasicPage"
 import { secondsToReadbleDate, toISOFormat } from "../lib/date"
@@ -137,10 +137,6 @@ type TaskFilters = {
   untilDate?: string
 }
 
-const normalizeDateToDatePicker = (date: any): string | null => {
-  return date !== undefined ? date : null
-}
-
 type BasicSelectItem =
   | {
       id: number
@@ -186,6 +182,8 @@ const SelectItems = ({
 const Tasks = () => {
   const { t } = useTranslation(["tasks"])
   const [taskSearchName, setTaskSearchName] = useState("")
+  const [fromDate, setFromDate] = useState<string | null>(null)
+  const [untilDate, setUntilDate] = useState<string | null>(null)
   const [taskFilters, setTaskFilters] = useState<TaskFilters>({
     page: 0,
     limit: 10,
@@ -265,13 +263,13 @@ const Tasks = () => {
     setTaskFilters((prevState) => ({ ...prevState, status }))
   }
 
-  const handleDateFilters = (date: string, queryParam: string) => {
-    const isoDate = toISOFormat(date)
-    setTaskFilters((prevState) => ({ ...prevState, [queryParam]: isoDate }))
-  }
-
   const handleRefectSearch = () => {
-    setTaskFilters((prevState) => ({ ...prevState, title: taskSearchName }))
+    setTaskFilters((prevState) => ({
+      ...prevState,
+      title: taskSearchName,
+      fromDate: toISOFormat(fromDate!),
+      untilDate: toISOFormat(untilDate!),
+    }))
   }
 
   return (
@@ -300,14 +298,14 @@ const Tasks = () => {
             />
             <DatePicker
               label={t("filter.initial_date")}
-              value={normalizeDateToDatePicker(taskFilters.fromDate)}
-              onChange={(date) => handleDateFilters(String(date), "fromDate")}
+              value={fromDate}
+              onChange={setFromDate}
               renderInput={(params) => <TextField {...params} />}
             />
             <DatePicker
               label={t("filter.end_date")}
-              value={normalizeDateToDatePicker(taskFilters.untilDate)}
-              onChange={(date) => handleDateFilters(String(date), "untilDate")}
+              value={untilDate}
+              onChange={setUntilDate}
               renderInput={(params) => <TextField {...params} />}
             />
             <FormControl fullWidth>
