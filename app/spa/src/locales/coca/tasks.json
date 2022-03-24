@@ -17,8 +17,8 @@
   "filter": {
     "search": "Search",
     "search_helper": "Search by task name",
-    "initial_date": "Initial date",
-    "end_date": "Final date",
+    "initial_date": "Creation date",
+    "end_date": "End date",
     "status": "Status",
     "status_open": "Open",
     "status_finished": "Not finished",

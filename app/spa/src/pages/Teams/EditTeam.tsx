@@ -9,7 +9,7 @@ import {
   InputLabel,
 } from "@mui/material"
 import { useForm } from "react-hook-form"
-import { useContext, useEffect } from "react"
+import { useContext } from "react"
 import { useTranslation } from "react-i18next"
 import BasicPage from "../../components/BasicPage"
 import { MessagesContext } from "../../contexts/MessageContext"
@@ -65,7 +65,7 @@ const UPDATE_TEAM_MUTATION = gql`
 `
 
 const EditTeam = () => {
-  const { t, i18n } = useTranslation(["teams"])
+  const { t } = useTranslation(["teams"])
   const { teamId } = useParams()
   const { pushMessage } = useContext(MessagesContext)
   const { data, loading } = useQuery<TeamDTO>(TEAM_QUERY, {
@@ -93,10 +93,6 @@ const EditTeam = () => {
   })
 
   const { register, handleSubmit } = useForm()
-
-  useEffect(() => {
-    if (!loading) i18n.changeLanguage(data?.me.language)
-  }, [loading, data, i18n])
 
   if (loading)
     return (

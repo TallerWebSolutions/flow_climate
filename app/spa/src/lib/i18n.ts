@@ -27,4 +27,8 @@ i18n
     },
   })
 
+export const loadLanguage = (language: string | undefined) => {
+  i18n.changeLanguage(language)
+}
+
 export default i18n

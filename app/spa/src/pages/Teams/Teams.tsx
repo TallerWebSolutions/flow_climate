@@ -17,7 +17,7 @@ import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined
 import BasicPage from "../../components/BasicPage"
 import { capitalizeFirstLetter } from "../../lib/func"
 import { useConfirm } from "material-ui-confirm"
-import { useContext, useEffect } from "react"
+import { useContext } from "react"
 import { MessagesContext } from "../../contexts/MessageContext"
 import { useTranslation } from "react-i18next"
 import User from "../../modules/user/user.types"
@@ -60,7 +60,7 @@ export type TeamsDTO = {
 }
 
 const Teams = () => {
-  const { t, i18n } = useTranslation(["teams"])
+  const { t } = useTranslation(["teams"])
   const { pushMessage } = useContext(MessagesContext)
   const { data, loading } = useQuery<TeamsDTO>(TEAMS_QUERY)
   const [deleteTeam] = useMutation<DeleteTeamDTO>(DELETE_TEAM_MUTATION, {
@@ -77,10 +77,6 @@ const Teams = () => {
     refetchQueries: [{ query: TEAMS_QUERY }],
   })
   const deleteTeamModal = useConfirm()
-
-  useEffect(() => {
-    if (!loading) i18n.changeLanguage(data?.me.language)
-  }, [loading, data, i18n])
 
   if (loading)
     return (
