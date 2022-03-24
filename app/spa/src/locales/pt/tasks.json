@@ -25,6 +25,7 @@
     "status_finished": "Não finalizada",
     "initiative": "Iniciativa",
     "project": "Projeto",
-    "team": "Time"
+    "team": "Time",
+    "select_status": "Status"
   }
 }
