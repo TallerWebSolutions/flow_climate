@@ -1,4 +1,4 @@
-import { Fragment } from "react"
+import { Fragment, useEffect } from "react"
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import { Helmet } from "react-helmet"
 import { ConfirmProvider } from "material-ui-confirm"
@@ -15,51 +15,77 @@ import CreateTeam from "./pages/Teams/CreateTeam"
 import EditTeam from "./pages/Teams/EditTeam"
 import Tasks from "./pages/Tasks"
 
-import "./lib/i18n"
+import i18n, { loadLanguage } from "./lib/i18n"
 import { MessagesContext } from "./contexts/MessageContext"
 import { useMessages } from "./hooks/useMessages"
+import { I18nextProvider } from "react-i18next"
+import { gql, useQuery } from "@apollo/client"
 
-const App = () => (
-  <Fragment>
-    <Helmet>
-      <title>Flow Climate - Mastering the flow management</title>
-    </Helmet>
-    <BrowserRouter>
-      <Routes>
-        <Route
-          path="/companies/:companyNickName/teams/:teamId/replenishing_consolidations"
-          element={<Replenishing />}
-        />
-        <Route
-          path="/companies/:companyNickName/projects/:projectId/status_report_dashboard"
-          element={<StatusReport />}
-        />
-        <Route
-          path="/companies/:companyNickName/projects/:projectId/risk_drill_down"
-          element={<RiskDrill />}
-        />
-        <Route
-          path="/companies/:companyNickName/projects/:projectId/lead_time_dashboard"
-          element={<LeadTimeDashboard />}
-        />
-        <Route
-          path="/companies/:companyNickName/projects/:projectId/statistics_tab"
-          element={<Statistics />}
-        />
-        <Route path="/companies/:companyNickName/teams" element={<Teams />} />
-        <Route
-          path="/companies/:companyNickName/teams/new"
-          element={<CreateTeam />}
-        />
-        <Route
-          path="/companies/:companyNickName/teams/:teamId/edit"
-          element={<EditTeam />}
-        />
-        <Route path="/companies/:companyNickName/tasks" element={<Tasks />} />
-      </Routes>
-    </BrowserRouter>
-  </Fragment>
-)
+const LANGUAGE_LOGGED_USER_QUERY = gql`
+  query LanguageOfLoggedUser {
+    me {
+      language
+    }
+  }
+`
+
+type UserLoggedLanguageDTO = {
+  me: {
+    language: string
+  }
+}
+
+const App = () => {
+  const { data, loading } = useQuery<UserLoggedLanguageDTO>(
+    LANGUAGE_LOGGED_USER_QUERY
+  )
+
+  useEffect(() => {
+    if (!loading) loadLanguage(data?.me.language)
+  }, [data, loading])
+
+  return (
+    <Fragment>
+      <Helmet>
+        <title>Flow Climate - Mastering the flow management</title>
+      </Helmet>
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path="/companies/:companyNickName/teams/:teamId/replenishing_consolidations"
+            element={<Replenishing />}
+          />
+          <Route
+            path="/companies/:companyNickName/projects/:projectId/status_report_dashboard"
+            element={<StatusReport />}
+          />
+          <Route
+            path="/companies/:companyNickName/projects/:projectId/risk_drill_down"
+            element={<RiskDrill />}
+          />
+          <Route
+            path="/companies/:companyNickName/projects/:projectId/lead_time_dashboard"
+            element={<LeadTimeDashboard />}
+          />
+          <Route
+            path="/companies/:companyNickName/projects/:projectId/statistics_tab"
+            element={<Statistics />}
+          />
+          <Route path="/companies/:companyNickName/teams" element={<Teams />} />
+          <Route
+            path="/companies/:companyNickName/teams/new"
+            element={<CreateTeam />}
+          />
+          <Route
+            path="/companies/:companyNickName/teams/:teamId/edit"
+            element={<EditTeam />}
+          />
+          <Route path="/companies/:companyNickName/tasks" element={<Tasks />} />
+        </Routes>
+      </BrowserRouter>
+    </Fragment>
+  )
+}
 
 const AppWithProviders = () => {
   const [messages, pushMessage] = useMessages()
@@ -69,7 +95,9 @@ const AppWithProviders = () => {
       <ThemeProvider>
         <ConfirmProvider>
           <MessagesContext.Provider value={{ messages, pushMessage }}>
-            <App />
+            <I18nextProvider i18n={i18n}>
+              <App />
+            </I18nextProvider>
           </MessagesContext.Provider>
         </ConfirmProvider>
       </ThemeProvider>
