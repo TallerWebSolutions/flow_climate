@@ -1,0 +1,36 @@
+<div class="row">
+  <div class="col-xs-12">
+    <ul class="breadcrumb">
+      <li><%= link_to I18n.t('general.home.title'), root_path %></li>
+      <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
+      <li><%= link_to Task.model_name.human(count: 2), company_tasks_path(@company) %></li>
+      <li><%= @task.title %></li>
+    </ul>
+  </div>
+</div>
+
+<h1><%= @task.demand.project&.initiative&.name %></h1>
+<h2><%= @task.demand.demand_title %></h2>
+<h3><%= @task.title %></h3>
+
+<hr>
+
+<table class="table">
+  <thead>
+  <tr>
+    <th><%= Task.human_attribute_name :external_id %></th>
+    <th><%= Task.human_attribute_name :created_date %></th>
+    <th><%= Task.human_attribute_name :end_date %></th>
+    <th><%= Task.human_attribute_name :seconds_to_complete %></th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <tr>
+    <td><%= @task.external_id %></td>
+    <td><%= I18n.l(@task.created_date, format: :short) %></td>
+    <td><%= I18n.l(@task.end_date, format: :short) if @task.end_date.present? %></td>
+    <td><%= time_distance_in_words(@task.seconds_to_complete) %></td>
+  </tr>
+  </tbody>
+</table>
