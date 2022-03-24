@@ -24,6 +24,7 @@
     "status_finished": "Not finished",
     "initiative": "Initiative",
     "project": "Project",
-    "team": "Team"
+    "team": "Team",
+    "select_status": "Status"
   }
 }

@@ -18,7 +18,9 @@ import {
   Select,
   SelectChangeEvent,
   FormControl,
+  Button,
 } from "@mui/material"
+import SearchIcon from "@mui/icons-material/Search"
 import DatePicker from "@mui/lab/DatePicker"
 import AdapterDateFns from "@mui/lab/AdapterDateFns"
 import LocalizationProvider from "@mui/lab/LocalizationProvider"
@@ -195,14 +197,6 @@ const Tasks = () => {
     variables: { ...taskFilters },
   })
 
-  useEffect(() => {
-    const bounceTime = setTimeout(() => {
-      setTaskFilters((prevState) => ({ ...prevState, title: taskSearchName }))
-    }, 1000)
-
-    return () => clearTimeout(bounceTime)
-  }, [taskSearchName])
-
   const handleSearchByName = useCallback(
     (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
       setTaskSearchName(String(event.target.value)),
@@ -274,6 +268,10 @@ const Tasks = () => {
   const handleDateFilters = (date: string, queryParam: string) => {
     const isoDate = toISOFormat(date)
     setTaskFilters((prevState) => ({ ...prevState, [queryParam]: isoDate }))
+  }
+
+  const handleRefectSearch = () => {
+    setTaskFilters((prevState) => ({ ...prevState, title: taskSearchName }))
   }
 
   return (
@@ -353,6 +351,12 @@ const Tasks = () => {
               value={taskFilters.teamId}
               onChange={(event) => handleSelectFilters(event, "teamId")}
             />
+            <Button
+              onClick={handleRefectSearch}
+              sx={{ width: "60px", height: "55px" }}
+            >
+              <SearchIcon fontSize="large" color="primary" />
+            </Button>
           </Box>
         </LocalizationProvider>
 
