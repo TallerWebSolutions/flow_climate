@@ -8,6 +8,11 @@ class TasksController < AuthenticatedController
     render 'spa-build/index'
   end
 
+  def charts
+    prepend_view_path Rails.root.join('public')
+    render 'spa-build/index'
+  end
+
   def show
     @task = @company.tasks.kept.find(params['id'])
   end
