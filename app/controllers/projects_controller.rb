@@ -192,7 +192,7 @@ class ProjectsController < AuthenticatedController
     start_date = @project.start_date
     end_date = @project.end_date
 
-    @tasks_charts_adapter = Highchart::TasksChartsAdapter.new(tasks.map(&:id), start_date, end_date)
+    @tasks_charts_adapter = ViewCharts::TasksCharts.new(tasks.map(&:id), start_date, end_date, 'WEEKLY')
     @burnup_adapter = Highchart::BurnupAdapter.new(tasks, start_date, end_date)
     @project_consolidations = Consolidations::ProjectConsolidation.for_project(@project).weekly_data.order(:consolidation_date)
 

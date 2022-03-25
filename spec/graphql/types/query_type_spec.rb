@@ -441,9 +441,12 @@ RSpec.describe Types::QueryType do
           totalDeliveredCount
           lastPage
           totalPages
-          distributionLeadTimeP65
-          distributionLeadTimeP80
-          distributionLeadTimeP95
+          deliveredLeadTimeP65
+          deliveredLeadTimeP80
+          deliveredLeadTimeP95
+          inProgressLeadTimeP65
+          inProgressLeadTimeP80
+          inProgressLeadTimeP95
           tasks {
             id
             title
@@ -458,6 +461,13 @@ RSpec.describe Types::QueryType do
             company {
               id
             }
+          }
+          tasksCharts {
+            xAxis
+            creationArray
+            throughputArray
+            completionPercentilesOnTimeArray
+            accumulatedCompletionPercentilesOnTimeArray
           }
         }
       })
@@ -474,14 +484,24 @@ RSpec.describe Types::QueryType do
         result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
         expect(result.dig('data', 'tasksList')).to eq(
           {
-            'distributionLeadTimeP65' => 0,
-            'distributionLeadTimeP80' => 0,
-            'distributionLeadTimeP95' => 0,
+            'deliveredLeadTimeP65' => 0,
+            'deliveredLeadTimeP80' => 0,
+            'deliveredLeadTimeP95' => 0,
+            'inProgressLeadTimeP65' => 0,
+            'inProgressLeadTimeP80' => 0,
+            'inProgressLeadTimeP95' => 0,
             'lastPage' => false,
             'tasks' => [],
             'totalCount' => 0,
             'totalDeliveredCount' => 0,
-            'totalPages' => 0
+            'totalPages' => 0,
+            'tasksCharts' => {
+              'xAxis' => [],
+              'creationArray' => [],
+              'throughputArray' => [],
+              'completionPercentilesOnTimeArray' => [],
+              'accumulatedCompletionPercentilesOnTimeArray' => []
+            }
           }
         )
       end
@@ -506,9 +526,22 @@ RSpec.describe Types::QueryType do
           expect(result.dig('data', 'tasksList')['totalDeliveredCount']).to eq 2
           expect(result.dig('data', 'tasksList')['lastPage']).to be false
           expect(result.dig('data', 'tasksList')['totalPages']).to eq 2
-          expect(result.dig('data', 'tasksList')['distributionLeadTimeP65']).to eq 53_820
-          expect(result.dig('data', 'tasksList')['distributionLeadTimeP80']).to eq 66_240
-          expect(result.dig('data', 'tasksList')['distributionLeadTimeP95']).to eq 78_660
+          expect(result.dig('data', 'tasksList')['deliveredLeadTimeP65']).to eq 53_820
+          expect(result.dig('data', 'tasksList')['deliveredLeadTimeP80']).to eq 66_240
+          expect(result.dig('data', 'tasksList')['deliveredLeadTimeP95']).to eq 78_660
+          expect(result.dig('data', 'tasksList')['inProgressLeadTimeP65']).to eq 259_200
+          expect(result.dig('data', 'tasksList')['inProgressLeadTimeP80']).to eq 259_200
+          expect(result.dig('data', 'tasksList')['inProgressLeadTimeP95']).to eq 259_200
+          expect(result.dig('data', 'tasksList')['tasksCharts']).to match_array(
+            {
+              'accumulatedCompletionPercentilesOnTimeArray' => [66_240.0],
+              'completionPercentilesOnTimeArray' => [66_240.0],
+              'creationArray' => [2],
+              'throughputArray' => [2],
+              'xAxis' => ['2022-03-27']
+            }
+          )
+
           expect(result.dig('data', 'tasksList', 'tasks')).to match_array(
             [first_task, second_task].map do |task|
               {
