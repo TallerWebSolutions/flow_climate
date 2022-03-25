@@ -31,5 +31,18 @@
   "tabs": {
     "charts": "charts",
     "list": "List"
+  },
+  "graphs": {
+    "completion_time_data_legend": "Completion Time (P80)",
+    "flow_data_created_data_legend": "Created",
+    "flow_data_delivered_data_legend": "Delivered",
+    "lead_time_confidence_p80_data_legend": "Lead time (80%) Confidence",
+    "lead_time_confidence_p80_acumulated_data_legend": "Lead time 80% accumulated",
+    "flow_data_title": "Flow Data",
+    "lead_time_evolution_title": "Lead Time Confidence Evolution",
+    "control_completion_time_title": "Control Chart to Completion Time",
+    "current_partial_completion_title": "Current Partial Times to Tasks in Progress",
+    "days": "Dias",
+    "demands": "Demandas"
   }
 }
