@@ -12,8 +12,8 @@
            data-tooltipsuffix="<%= I18n.t('projects.charts.throughput.tooltipsufix') %>"
            data-datalabelsuffix=""
            data-series="<%= [
-                              { name: I18n.t('demands.charts.creation_date'), data: tasks_chart_adapter.creation_chart_data },
-                              { name: I18n.t('general.delivered'), data: tasks_chart_adapter.throughput_chart_data }
+                              { name: I18n.t('demands.charts.creation_date'), data: tasks_chart_adapter.creation_array },
+                              { name: I18n.t('general.delivered'), data: tasks_chart_adapter.throughput_array }
                             ].to_json %>"
            data-stacking=""
            data-decimals="0">

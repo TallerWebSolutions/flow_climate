@@ -99,7 +99,6 @@ RSpec.describe InitiativesController, type: :controller do
             expect(assigns(:burnup_adapter)).to be_a Highchart::BurnupAdapter
             expect(assigns(:tasks_completed)).to eq 2
             expect(assigns(:tasks_to_do)).to eq 1
-            expect(assigns(:tasks_charts_adapter).tasks_in_chart).to eq [unfinished_task, other_task, task]
 
             expect(response).to render_template 'initiatives/show'
           end

@@ -1290,7 +1290,6 @@ RSpec.describe ProjectsController, type: :controller do
               get :tasks_tab, params: { company_id: company, id: project }, xhr: true
 
               expect(response).to render_template 'projects/dashboards/tasks_dashboard'
-              expect(assigns(:tasks_charts_adapter).tasks_in_chart).to eq [other_task, task]
               expect(assigns(:project_consolidations).map(&:consolidation_date)).to eq [consolidation.consolidation_date, other_consolidation.consolidation_date]
               expect(assigns(:burnup_adapter).work_items).to eq [other_task, task]
               expect(assigns(:task_completion_control_chart_data).items_ids).to eq [other_task.external_id, task.external_id]
