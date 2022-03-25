@@ -441,6 +441,9 @@ RSpec.describe Types::QueryType do
           totalDeliveredCount
           lastPage
           totalPages
+          distributionLeadTimeP65
+          distributionLeadTimeP80
+          distributionLeadTimeP95
           tasks {
             id
             title
@@ -469,47 +472,63 @@ RSpec.describe Types::QueryType do
         }
 
         result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
-        expect(result.dig('data', 'tasksList')).to eq({ 'lastPage' => false, 'tasks' => [], 'totalCount' => 0, 'totalDeliveredCount' => 0, 'totalPages' => 0 })
+        expect(result.dig('data', 'tasksList')).to eq(
+          {
+            'distributionLeadTimeP65' => 0,
+            'distributionLeadTimeP80' => 0,
+            'distributionLeadTimeP95' => 0,
+            'lastPage' => false,
+            'tasks' => [],
+            'totalCount' => 0,
+            'totalDeliveredCount' => 0,
+            'totalPages' => 0
+          }
+        )
       end
     end
 
     context 'when the user has last company setted' do
       it 'returns the tasks' do
-        user = Fabricate :user, companies: [company], last_company_id: company.id
+        travel_to Time.zone.local(2022, 3, 25, 10, 0, 0) do
+          user = Fabricate :user, companies: [company], last_company_id: company.id
 
-        context = {
-          current_user: user
-        }
+          context = {
+            current_user: user
+          }
 
-        first_task = Fabricate :task, demand: first_demand, title: 'foo BaR', created_date: 2.days.ago, end_date: 2.days.ago
-        second_task = Fabricate :task, demand: second_demand, title: 'BaR', created_date: 1.day.ago, end_date: 1.hour.ago
-        Fabricate :task, demand: second_demand, title: 'BaRco', created_date: 3.days.ago, end_date: nil
+          first_task = Fabricate :task, demand: first_demand, title: 'foo BaR', created_date: 2.days.ago, end_date: 2.days.ago
+          second_task = Fabricate :task, demand: second_demand, title: 'BaR', created_date: 1.day.ago, end_date: 1.hour.ago
+          Fabricate :task, demand: second_demand, title: 'BaRco', created_date: 3.days.ago, end_date: nil
 
-        result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
+          result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
 
-        expect(result.dig('data', 'tasksList')['totalCount']).to eq 3
-        expect(result.dig('data', 'tasksList')['totalDeliveredCount']).to eq 2
-        expect(result.dig('data', 'tasksList')['lastPage']).to be false
-        expect(result.dig('data', 'tasksList')['totalPages']).to eq 2
-        expect(result.dig('data', 'tasksList', 'tasks')).to match_array(
-          [first_task, second_task].map do |task|
-            {
-              'id' => task.id.to_s,
-              'title' => task.title,
-              'delivered' => task.end_date.present?,
-              'demand' => {
-                'id' => task.demand.id.to_s,
-                'demandTitle' => task.demand.demand_title
-              },
-              'team' => {
-                'id' => task.demand.team.id.to_s
-              },
-              'company' => {
-                'id' => task.demand.company.id.to_s
+          expect(result.dig('data', 'tasksList')['totalCount']).to eq 3
+          expect(result.dig('data', 'tasksList')['totalDeliveredCount']).to eq 2
+          expect(result.dig('data', 'tasksList')['lastPage']).to be false
+          expect(result.dig('data', 'tasksList')['totalPages']).to eq 2
+          expect(result.dig('data', 'tasksList')['distributionLeadTimeP65']).to eq 53_820
+          expect(result.dig('data', 'tasksList')['distributionLeadTimeP80']).to eq 66_240
+          expect(result.dig('data', 'tasksList')['distributionLeadTimeP95']).to eq 78_660
+          expect(result.dig('data', 'tasksList', 'tasks')).to match_array(
+            [first_task, second_task].map do |task|
+              {
+                'id' => task.id.to_s,
+                'title' => task.title,
+                'delivered' => task.end_date.present?,
+                'demand' => {
+                  'id' => task.demand.id.to_s,
+                  'demandTitle' => task.demand.demand_title
+                },
+                'team' => {
+                  'id' => task.demand.team.id.to_s
+                },
+                'company' => {
+                  'id' => task.demand.company.id.to_s
+                }
               }
-            }
-          end
-        )
+            end
+          )
+        end
       end
     end
   end
