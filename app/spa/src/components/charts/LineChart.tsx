@@ -5,7 +5,7 @@ type LineGraphProps = {
   axisLeftLegend: string
 }
 
-export const LineGraph = ({ data, axisLeftLegend }: LineGraphProps) => {
+export const LineChart = ({ data, axisLeftLegend }: LineGraphProps) => {
   return (
     <ResponsiveLine
       data={data}

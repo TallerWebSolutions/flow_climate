@@ -16,6 +16,7 @@
     "@nivo/core": "^0.79.0",
     "@nivo/line": "^0.79.1",
     "@nivo/pie": "^0.79.1",
+    "@nivo/scatterplot": "^0.79.1",
     "@testing-library/jest-dom": "^5.15.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",

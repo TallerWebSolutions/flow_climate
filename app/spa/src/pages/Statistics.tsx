@@ -2,7 +2,7 @@ import { gql, useQuery } from "@apollo/client"
 import { Backdrop, Box, CircularProgress, Typography } from "@mui/material"
 import { ReactElement } from "react"
 import { useParams } from "react-router-dom"
-import { LineGraph } from "../components/LineGraph"
+import { LineChart } from "../components/charts/LineChart"
 import {
   ProjectPage,
   PROJECT_STANDARD_FRAGMENT,
@@ -226,21 +226,21 @@ const Statistics = () => {
     <ProjectPage pageName={"Statistics"} project={project}>
       <Box sx={{ display: "flex", flexWrap: "wrap" }}>
         <GraphBox title={"Variação da Amplitude do Lead Time no Tempo"}>
-          <LineGraph
+          <LineChart
             data={leadTimeAmplitudeVariationDataGraph}
             axisLeftLegend={"Dias"}
           />
         </GraphBox>
 
         <GraphBox title={"Amplitude do Histograma do Lead Time"}>
-          <LineGraph
+          <LineChart
             data={leadTimeAmplitudeHistogramDataGraph}
             axisLeftLegend={"Frequência"}
           />
         </GraphBox>
 
         <GraphBox title={"Amplitude do Interquartil do Lead Time"}>
-          <LineGraph
+          <LineChart
             data={leadTimeAmplitudeInterquartileDataGraph}
             axisLeftLegend={"Dias"}
           />
