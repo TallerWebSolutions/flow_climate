@@ -3,6 +3,7 @@
 module Types
   class TaskType < Types::BaseObject
     field :id, ID, null: false
+    field :external_id, ID, null: true
     field :team, Types::TeamType, null: false
     field :company, Types::CompanyType, null: false
     field :initiative, Types::InitiativeType, null: false

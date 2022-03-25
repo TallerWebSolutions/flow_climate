@@ -8,9 +8,11 @@ type Demand = {
 
 export type Task = {
   id: number
+  externalId: number
   title: string
   createdDate: string
   endDate: string
+  delivered: boolean
   secondsToComplete: number
   partialCompletionTime: number
   team: Team
