@@ -31,5 +31,18 @@
   "tabs": {
     "charts": "Gráficos",
     "list": "Lista"
+  },
+  "graphs": {
+    "completion_time_data_legend": "Tempo para Finalizar (P80)",
+    "flow_data_created_data_legend": "Criadas",
+    "flow_data_delivered_data_legend": "Entregas",
+    "lead_time_confidence_p80_data_legend": "Lead time (80%)",
+    "lead_time_confidence_p80_acumulated_data_legend": "Lead time 80% acumulado",
+    "flow_data_title": "Dados do FLuxo",
+    "lead_time_evolution_title": "Evolução do Lead Time",
+    "control_completion_time_title": "Gráfico de Dispersão do Tempo de Resolução",
+    "current_partial_completion_title": "Tempos Parciais Atuais para Tarefas em Andamento",
+    "days": "Dias",
+    "demands": "Demandas"
   }
 }

@@ -176,14 +176,14 @@ const Charts = () => {
 
   const completionTimeChartData = [
     {
-      id: "group A",
+      id: t("graphs.completion_time_data_legend"),
       data: completionTimeData,
     },
   ]
 
   const partialCompletionTimeChartData = [
     {
-      id: "group A",
+      id: t("graphs.completion_time_data_legend"),
       data: partialCompletionTimeData,
     },
   ]
@@ -231,26 +231,29 @@ const Charts = () => {
             gridRowGap: "20px",
           }}
         >
-          <ChartBox title="Gráfico de Dispersão do Tempo de Resolução">
+          <ChartBox title={t("graphs.control_completion_time_title")}>
             <ScatterChart
-              axisLeftLegend="Days"
+              axisLeftLegend={t("graphs.days")}
               data={completionTimeChartData}
             />
           </ChartBox>
 
-          <ChartBox title="Tempos Parciais Atuais para Tarefas em Andamento">
+          <ChartBox title={t("graphs.current_partial_completion_title")}>
             <ScatterChart
-              axisLeftLegend="Days"
+              axisLeftLegend={t("graphs.days")}
               data={partialCompletionTimeChartData}
             />
           </ChartBox>
 
-          <ChartBox title="Dados do Fluxo">
-            <BarChart axisLeftLegend="Days" data={barMock} />
+          <ChartBox title={t("graphs.flow_data_title")}>
+            <BarChart axisLeftLegend={t("graphs.demands")} data={barMock} />
           </ChartBox>
 
-          <ChartBox title="Evolução da confiança do Lead Time">
-            <LineChart axisLeftLegend="Days" data={completionTimeChartData} />
+          <ChartBox title={t("graphs.lead_time_evolution_title")}>
+            <LineChart
+              axisLeftLegend={t("graphs.days")}
+              data={completionTimeChartData}
+            />
           </ChartBox>
         </Box>
       )}
