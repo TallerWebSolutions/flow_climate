@@ -451,6 +451,12 @@ RSpec.describe Types::QueryType do
             id
             title
             delivered
+            initiative {
+              id
+            }
+            project {
+              id
+            }
             demand {
               id
               demandTitle
@@ -549,6 +555,12 @@ RSpec.describe Types::QueryType do
                 'id' => task.id.to_s,
                 'title' => task.title,
                 'delivered' => task.end_date.present?,
+                'initiative' => {
+                  'id' => task.demand.project.initiative.id.to_s
+                },
+                'project' => {
+                  'id' => task.demand.project.id.to_s
+                },
                 'demand' => {
                   'id' => task.demand.id.to_s,
                   'demandTitle' => task.demand.demand_title
