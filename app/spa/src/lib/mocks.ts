@@ -1,10 +1,78 @@
-export const companyMock = {
+import { Company } from "../modules/company/company.types"
+import { Project } from "../modules/project/project.types"
+import { Team } from "../modules/team/team.types"
+import User from "../modules/user/user.types"
+
+export const companyMock: Company = {
   id: "1",
   name: "Taller",
   slug: "taller",
+  initiatives: [],
+  projects: [
+    {
+      id: "1",
+      name: "Project X",
+      remainingWeeks: 10,
+      remainingBacklog: 20,
+      flowPressure: 12,
+      flowPressurePercentage: 43,
+      leadTimeP80: 32,
+      qtySelected: 8,
+      qtyInProgress: 9,
+      monteCarloP80: 89,
+      workInProgressLimit: 9,
+      lastWeekThroughput: 54,
+      weeklyThroughputs: [0, 1, 2, 3, 4, 3],
+      modeWeeklyTroughputs: 3,
+      stdDevWeeklyTroughputs: 4,
+      teamMonteCarloP80: 3,
+      teamMonteCarloWeeksMin: 1,
+      teamMonteCarloWeeksMax: 9,
+      teamMonteCarloWeeksStdDev: 3,
+      teamBasedOddsToDeadline: 4.9999999999,
+      customerHappiness: 1,
+      startDate: "11/11/11",
+      endDate: "12/12/12",
+      aging: 5,
+      customers: [],
+      products: [],
+      currentCost: 1000,
+      failureLoad: 20,
+      totalThroughput: 30,
+      deadlinesChangeCount: 4,
+      daysDifferenceBetweenFirstAndLastDeadlines: 130,
+      firstDeadline: "10/10/10",
+      averageDemandAging: 180,
+      averageSpeed: 34,
+      totalHoursConsumed: 5000,
+      scope: 90,
+      discoveredScope: 30,
+      backlogCountFor: 20,
+      pastWeeks: 0,
+      remainingWork: 0,
+      currentMonteCarloWeeksMin: 0,
+      currentMonteCarloWeeksMax: 0,
+      currentMonteCarloWeeksStdDev: 0,
+      currentWeeksByLittleLaw: 0,
+      company: {
+        id: "0",
+        initiatives: [],
+        name: "void",
+        projects: [],
+        slug: "void",
+        teams: [],
+      },
+      projectConsolidations: [],
+      currentRiskToDeadline: 0,
+      remainingDays: 0,
+      currentTeamBasedRisk: 0,
+      running: false,
+    },
+  ],
+  teams: [],
 }
 
-export const projectMock = {
+export const projectMock: Project = {
   id: "1",
   name: "Project X",
   remainingWeeks: 10,
@@ -31,7 +99,6 @@ export const projectMock = {
   aging: 5,
   customers: [],
   products: [],
-  company: companyMock,
   currentCost: 1000,
   failureLoad: 20,
   totalThroughput: 30,
@@ -43,9 +110,22 @@ export const projectMock = {
   totalHoursConsumed: 5000,
   scope: 90,
   discoveredScope: 30,
+  backlogCountFor: 20,
+  pastWeeks: 0,
+  remainingWork: 0,
+  currentMonteCarloWeeksMin: 0,
+  currentMonteCarloWeeksMax: 0,
+  currentMonteCarloWeeksStdDev: 0,
+  currentWeeksByLittleLaw: 0,
+  company: companyMock,
+  projectConsolidations: [],
+  currentRiskToDeadline: 0,
+  remainingDays: 0,
+  currentTeamBasedRisk: 0,
+  running: false,
 }
 
-export const teamMock = {
+export const teamMock: Team = {
   id: "1",
   name: "Vingadores",
   increasedLeadtime80: false,
@@ -54,7 +134,6 @@ export const teamMock = {
   increasedAvgThroughtput: true,
   leadTime: 10,
   workInProgress: 10,
-  company: companyMock,
   lastReplenishingConsolidations: [
     {
       id: "1",
@@ -64,6 +143,8 @@ export const teamMock = {
       customerHappiness: 1,
     },
   ],
+  company: companyMock,
+  maxWorkInProgress: 0,
 }
 
 export const replenishingMock = {
@@ -77,6 +158,66 @@ export const replenishingMock = {
   },
 }
 
-export const meMock = {
+export const meMock: User = {
+  language: "pt-BR",
   currentCompany: companyMock,
+}
+
+export const tasksMock = {
+  data: {
+    tasksList: {
+      totalCount: 2,
+      totalDeliveredCount: 1,
+      totalPages: 1,
+      tasks: [
+        {
+          id: 1,
+          title: "Task #1",
+          externalId: 220,
+          createdDate: new Date(1, 1, 2020).toISOString(),
+          delivered: true,
+          demand: {
+            demandTitle: "Demand",
+          },
+          endDate: new Date(1, 2, 2020).toISOString(),
+          initiative: {
+            id: 1,
+            name: "I1",
+          },
+          partialCompletionTime: 1000,
+          secondsToComplete: 1000,
+          project: projectMock,
+          team: teamMock,
+        },
+        {
+          id: 2,
+          title: "Task #2",
+          externalId: 222,
+          createdDate: new Date(1, 3, 2020).toISOString(),
+          delivered: true,
+          demand: {
+            demandTitle: "Demand",
+          },
+          endDate: new Date(1, 4, 2020).toISOString(),
+          initiative: {
+            id: 1,
+            name: "I2",
+          },
+          partialCompletionTime: 1000,
+          secondsToComplete: 1000,
+          project: projectMock,
+          team: teamMock,
+        },
+      ],
+    },
+    me: meMock,
+  },
+}
+
+export const tasksSelectsMock = {
+  data: {
+    me: {
+      currentCompany: companyMock,
+    },
+  },
 }

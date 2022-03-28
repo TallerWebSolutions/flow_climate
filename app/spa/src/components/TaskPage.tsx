@@ -9,6 +9,7 @@ import {
   Button,
   CircularProgress,
   FormControl,
+  InputBaseComponentProps,
   InputLabel,
   MenuItem,
   Select,
@@ -31,7 +32,7 @@ import BasicPage from "./BasicPage"
 import { BreadcrumbsLink } from "./Breadcrumbs"
 import { Tabs } from "./Tabs"
 
-const SELECT_FILTERS_QUERY = gql`
+export const SELECT_FILTERS_QUERY = gql`
   query TasksSelectFilters {
     me {
       currentCompany {
@@ -83,6 +84,7 @@ type SelectFilterProps = {
   label: string
   defaultValue: string
   value: any
+  inputProps?: InputBaseComponentProps
   items: BasicSelectItem[]
   onChange:
     | ((event: SelectChangeEvent<any>, child: React.ReactNode) => void)
@@ -96,11 +98,18 @@ const SelectFilter = ({
   value,
   defaultValue,
   onChange,
+  inputProps,
 }: SelectFilterProps) => {
   return (
     <FormControl fullWidth>
       <InputLabel id={id}>{label}</InputLabel>
-      <Select labelId={id} value={value} label={label} onChange={onChange}>
+      <Select
+        labelId={id}
+        value={value}
+        label={label}
+        onChange={onChange}
+        inputProps={{ ...inputProps }}
+      >
         <MenuItem value="">{defaultValue}</MenuItem>
         {items.map((item) => (
           <MenuItem key={`${item.id}--${item.name}`} value={item.id}>
@@ -139,9 +148,10 @@ const TasksPage = ({
   const { data, loading } = useQuery<TaskFiltersDTO>(SELECT_FILTERS_QUERY)
 
   useEffect(() => {
+    console.log(data?.me.currentCompany.projects)
     onFiltersChange(taskFilters)
     // eslint-disable-next-line
-  }, [taskFilters])
+  }, [taskFilters, data])
 
   const handleSearchByName = useCallback(
     (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
@@ -259,7 +269,7 @@ const TasksPage = ({
             </FormControl>
             <SelectFilter
               label={t("filter.initiative")}
-              id="filter-status"
+              id="filter-initiative"
               defaultValue=""
               items={initiatives}
               value={taskFilters.initiativeId}
@@ -267,15 +277,18 @@ const TasksPage = ({
             />
             <SelectFilter
               label={t("filter.project")}
-              id="filter-status"
+              id="filter-project"
               defaultValue=""
               items={projects}
+              inputProps={{
+                "data-testid": "select-project",
+              }}
               value={taskFilters.projectId}
               onChange={(event) => handleSelectFilters(event, "projectId")}
             />
             <SelectFilter
               label={t("filter.team")}
-              id="filter-status"
+              id="filter-team"
               defaultValue=""
               items={teams}
               value={taskFilters.teamId}

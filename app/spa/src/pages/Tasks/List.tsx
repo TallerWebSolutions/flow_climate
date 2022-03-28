@@ -21,7 +21,7 @@ import { Company } from "../../modules/company/company.types"
 import { Task } from "../../modules/task/task.types"
 import User from "../../modules/user/user.types"
 
-const TASKS_LIST_QUERY = gql`
+export const TASKS_LIST_QUERY = gql`
   query TasksPage(
     $page: Int!
     $status: String
@@ -83,7 +83,6 @@ type TasksListDTO = {
   tasksList: {
     totalCount: number
     totalDeliveredCount: number
-    lastPage: number
     totalPages: number
     tasks: Task[]
   }
@@ -182,7 +181,7 @@ const TasksList = () => {
             )}`}
           </Typography>
 
-          <Table>
+          <Table data-testid="task-list">
             <TableHead
               sx={{
                 borderBottom: "1px solid",
