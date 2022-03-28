@@ -436,7 +436,7 @@ RSpec.describe Types::QueryType do
 
     let(:query) do
       %(query {
-        tasksList(pageNumber: 1, limit: 2, title: "bar") {
+        tasksList(pageNumber: 1, limit: 3, title: "bar") {
           totalCount
           totalDeliveredCount
           lastPage
@@ -518,32 +518,33 @@ RSpec.describe Types::QueryType do
 
           first_task = Fabricate :task, demand: first_demand, title: 'foo BaR', created_date: 2.days.ago, end_date: 2.days.ago
           second_task = Fabricate :task, demand: second_demand, title: 'BaR', created_date: 1.day.ago, end_date: 1.hour.ago
+          third_task = Fabricate :task, demand: second_demand, title: 'BaR', created_date: 1.day.ago, end_date: nil
           Fabricate :task, demand: second_demand, title: 'BaRco', created_date: 3.days.ago, end_date: nil
 
           result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
 
-          expect(result.dig('data', 'tasksList')['totalCount']).to eq 3
+          expect(result.dig('data', 'tasksList')['totalCount']).to eq 4
           expect(result.dig('data', 'tasksList')['totalDeliveredCount']).to eq 2
           expect(result.dig('data', 'tasksList')['lastPage']).to be false
           expect(result.dig('data', 'tasksList')['totalPages']).to eq 2
           expect(result.dig('data', 'tasksList')['deliveredLeadTimeP65']).to eq 53_820
           expect(result.dig('data', 'tasksList')['deliveredLeadTimeP80']).to eq 66_240
           expect(result.dig('data', 'tasksList')['deliveredLeadTimeP95']).to eq 78_660
-          expect(result.dig('data', 'tasksList')['inProgressLeadTimeP65']).to eq 259_200
-          expect(result.dig('data', 'tasksList')['inProgressLeadTimeP80']).to eq 259_200
-          expect(result.dig('data', 'tasksList')['inProgressLeadTimeP95']).to eq 259_200
+          expect(result.dig('data', 'tasksList')['inProgressLeadTimeP65']).to eq 198_720
+          expect(result.dig('data', 'tasksList')['inProgressLeadTimeP80']).to eq 224_640
+          expect(result.dig('data', 'tasksList')['inProgressLeadTimeP95']).to eq 250_560
           expect(result.dig('data', 'tasksList')['tasksCharts']).to match_array(
             {
               'accumulatedCompletionPercentilesOnTimeArray' => [66_240.0],
               'completionPercentilesOnTimeArray' => [66_240.0],
-              'creationArray' => [2],
+              'creationArray' => [3],
               'throughputArray' => [2],
               'xAxis' => ['2022-03-27']
             }
           )
 
           expect(result.dig('data', 'tasksList', 'tasks')).to match_array(
-            [first_task, second_task].map do |task|
+            [first_task, second_task, third_task].map do |task|
               {
                 'id' => task.id.to_s,
                 'title' => task.title,

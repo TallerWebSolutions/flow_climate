@@ -22,7 +22,7 @@ module Types
     end
     def tasks_charts(period: 'WEEKLY')
       start_date = object.tasks.map(&:created_date).min
-      end_date = [object.tasks.map(&:created_date).max, object.tasks.map(&:end_date).max].compact.max
+      end_date = [object.tasks.map(&:created_date).max, object.tasks.filter_map(&:end_date).max].compact.max
       ViewCharts::TasksCharts.new(object.tasks.map(&:id), start_date, end_date, period)
     end
   end
