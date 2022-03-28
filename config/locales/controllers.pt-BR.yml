@@ -10,1485 +10,1486 @@ pt-BR:
       edit: Editar
       i_am_done: 'Pronto!'
       send: Enviar
-      import: "Importar"
-      sign_up: "Assinar"
+      import: 'Importar'
+      sign_up: 'Assinar'
     no_records: Você ainda não tem %{record}! Que tal criar o seu primeiro?
     messages:
       saved: Salvo!
       save_error: Não foi possível salvar! Por favor recarregue a página e tente novamente.
     search:
-      start_date: "De"
-      end_date: "Até"
-      title: "Buscar"
+      start_date: 'De'
+      end_date: 'Até'
+      title: 'Buscar'
     home:
-      title: "Home"
-    result: "Resultado"
-    month: "Mês"
-    week: "Semana"
-    year: "Ano"
+      title: 'Home'
+    result: 'Resultado'
+    month: 'Mês'
+    week: 'Semana'
+    year: 'Ano'
     table:
-      actions: "Ações"
-      title: "Dados"
-    current_week: "Semana Atual"
-    current_year: "Ano Atual"
-    select: "Selecione"
-    user_not_found: "Usuário não encontrado"
-    enqueued: "Sua solicitação foi colocada na fila. Em poucos minutos estará pronta."
+      actions: 'Ações'
+      title: 'Dados'
+    current_week: 'Semana Atual'
+    current_year: 'Ano Atual'
+    select: 'Selecione'
+    user_not_found: 'Usuário não encontrado'
+    enqueued: 'Sua solicitação foi colocada na fila. Em poucos minutos estará pronta.'
     charts:
-      title: "Gráficos"
+      title: 'Gráficos'
       xlabel:
-        weekdays: "Dias da Semana"
-        monthdays: "Dias do Mês"
-      hours: "hora(s)"
+        weekdays: 'Dias da Semana'
+        monthdays: 'Dias do Mês'
+      hours: 'hora(s)'
     stamps:
       cmd:
-        title: "Custo Médio por Demanda"
-      flow_pressure: "Pressão do Fluxo"
-      hours_per_demand: "Horas por Demanda"
-    no_data: "Não existem %{missing_data} para essa exibição"
-    download_csv: "Download CSV"
+        title: 'Custo Médio por Demanda'
+      flow_pressure: 'Pressão do Fluxo'
+      hours_per_demand: 'Horas por Demanda'
+    no_data: 'Não existem %{missing_data} para essa exibição'
+    download_csv: 'Download CSV'
     percentage:
-      title: "Porcentagem"
-      delivered: "% Entregue"
+      title: 'Porcentagem'
+      delivered: '% Entregue'
     destroy:
-      confirm: "Confirma a exclusão do registro?"
-      success: "Excluído com sucesso"
-      confirm_physical: "Você vai excluir fisicamente o registro. Tem certeza?"
-    period: "Período"
-    throughput: "Vazão (itens/semana)"
-    delivered: "Entregas"
+      confirm: 'Confirma a exclusão do registro?'
+      success: 'Excluído com sucesso'
+      confirm_physical: 'Você vai excluir fisicamente o registro. Tem certeza?'
+    period: 'Período'
+    throughput: 'Vazão (itens/semana)'
+    delivered: 'Entregas'
     filter:
       period:
         option:
-          last_month: "Último Mês"
-          last_quarter: "Último Trimestre"
-          all_period: "Todo o Período"
-          last_week: "Última Semana"
-    total: "Total"
+          last_month: 'Último Mês'
+          last_quarter: 'Último Trimestre'
+          all_period: 'Todo o Período'
+          last_week: 'Última Semana'
+    total: 'Total'
     days_text:
-      zero: "sem dados"
-      one: "%{count} dia"
-      other: "%{count} dias"
-    search_text: "Buscar"
-    data: "Dados"
+      zero: 'sem dados'
+      one: '%{count} dia'
+      other: '%{count} dias'
+    search_text: 'Buscar'
+    data: 'Dados'
     error:
       not_found:
-        title: "Erro 404"
-        desc: "Página não encontrada"
-        back: "Volte para trilha"
-    monthly: "Mensal"
-    weekly: "Semanal"
-    daily: "Diário"
-    start: "Início"
-    finish: "Fim"
-    min: "Mínimo"
-    max: "Máximo"
-    partial: "(parcial)"
-    money: "R$ "
+        title: 'Erro 404'
+        desc: 'Página não encontrada'
+        back: 'Volte para trilha'
+    monthly: 'Mensal'
+    weekly: 'Semanal'
+    daily: 'Diário'
+    start: 'Início'
+    finish: 'Fim'
+    min: 'Mínimo'
+    max: 'Máximo'
+    partial: '(parcial)'
+    money: 'R$ '
     weeks_text:
-      one: "%{count} semana"
-      other: "%{count} semanas"
+      one: '%{count} semana'
+      other: '%{count} semanas'
     tabs:
-      config: "Configuração"
-      charts: "Gráficos"
-      transitions: "Transições"
-      projects_associations: "Associações com Projetos"
-      teams_associations: "Associações com Times"
+      config: 'Configuração'
+      charts: 'Gráficos'
+      transitions: 'Transições'
+      projects_associations: 'Associações com Projetos'
+      teams_associations: 'Associações com Times'
     last_update:
-      text: "Última atualização em %{last_update}"
+      text: 'Última atualização em %{last_update}'
     risk:
-      text: "Risco: %{risk_value}"
+      text: 'Risco: %{risk_value}'
       deadline:
-        label: "Risco do Prazo"
-      label: "Risco"
-      detail: "Detalhamento do Risco"
-    minimum: "Mínimo"
-    maximum: "Máximo"
+        label: 'Risco do Prazo'
+      label: 'Risco'
+      detail: 'Detalhamento do Risco'
+    minimum: 'Mínimo'
+    maximum: 'Máximo'
     statistics:
-      p80: "Percentil 80"
-      standard_deviation: "Desvio Padrão"
-      histogram_bin_min: "Bin Mínimo do Histograma"
-      histogram_bin_max: "Bin Máximo do Histograma"
-      average: "Média"
-      sample_size: "Tamanho da Amostra"
+      p80: 'Percentil 80'
+      standard_deviation: 'Desvio Padrão'
+      histogram_bin_min: 'Bin Mínimo do Histograma'
+      histogram_bin_max: 'Bin Máximo do Histograma'
+      average: 'Média'
+      sample_size: 'Tamanho da Amostra'
     demands_text:
-      zero: "sem demandas"
-      one: "%{count} demanda"
-      other: "%{count} demandas"
-    months: "meses"
-    weeks: "semanas"
-    days: "dias"
-    hours: "horas"
+      zero: 'sem demandas'
+      one: '%{count} demanda'
+      other: '%{count} demandas'
+    months: 'meses'
+    weeks: 'semanas'
+    days: 'dias'
+    hours: 'horas'
     hours_text:
-      one: "%{count} hora"
-      other: "%{count} horas"
+      one: '%{count} hora'
+      other: '%{count} horas'
     score_text:
-      zero: "sem pontos"
-      one: "%{count} pontos"
-      other: "%{count} pontos"
-    demands: "demandas"
-    items_text: "%{items_count} item(ns)"
-    flow: "Fluxo"
-    class_of_service: "Classe de Serviço"
-    leadtime: "Lead time"
-    list: "Lista"
-    map: "Mapa"
-    effort_hours_text: "Total: %{hours_value} horas de esforço"
+      zero: 'sem pontos'
+      one: '%{count} pontos'
+      other: '%{count} pontos'
+    demands: 'demandas'
+    items_text: '%{items_count} item(ns)'
+    flow: 'Fluxo'
+    class_of_service: 'Classe de Serviço'
+    leadtime: 'Lead time'
+    list: 'Lista'
+    map: 'Mapa'
+    effort_hours_text: 'Total: %{hours_value} horas de esforço'
     demand_blocks_text:
-      zero: "sem bloqueios"
-      one: "%{count} bloqueio"
-      other: "%{count} bloqueios"
+      zero: 'sem bloqueios'
+      one: '%{count} bloqueio'
+      other: '%{count} bloqueios'
     demand_comments_text:
-      zero: "sem comentários"
-      one: "%{count} comentário"
-      other: "%{count} comentários"
-    leadtime_p80_label: "Lead time (p80)"
-    demand_blocks: "bloqueio(s)"
-    pull_transaction: "Pull Transaction"
-    flow_event: "Evento"
+      zero: 'sem comentários'
+      one: '%{count} comentário'
+      other: '%{count} comentários'
+    leadtime_p80_label: 'Lead time (p80)'
+    demand_blocks: 'bloqueio(s)'
+    pull_transaction: 'Pull Transaction'
+    flow_event: 'Evento'
     projects_count:
-      one: "%{count} Projeto"
-      other: "%{count} Projetos"
+      one: '%{count} Projeto'
+      other: '%{count} Projetos'
     demands_per_day:
-      one: "%{count} demanda/dia"
-      other: "%{count} demandas/dia"
-    scope: "Escopo"
-    all: "Todos"
-    active: "Ativo"
-    finished: "Finalizadas"
-    name: "Nome"
-    bugs: "Defeitos"
-    people: "Pessoas"
+      one: '%{count} demanda/dia'
+      other: '%{count} demandas/dia'
+    scope: 'Escopo'
+    all: 'Todos'
+    active: 'Ativo'
+    finished: 'Finalizadas'
+    name: 'Nome'
+    bugs: 'Defeitos'
+    people: 'Pessoas'
     quality:
-      bugs: "Qualidade: Bugs"
-      blocks: "Qualidade: Bloqueios por Necessidade de Código"
-      blocks_per_demand: "Qualidade: Bloqueios por Código por Demanda"
-    role: "Função"
-    show_montecarlo: "Mostrar Simulação de Monte Carlo"
-    demands_per_day_text: "demands per day"
-    invite_user: "Convidar por Email"
+      default: 'Qualidade'
+      bugs: 'Qualidade: Bugs'
+      blocks: 'Qualidade: Bloqueios por Necessidade de Código'
+      blocks_per_demand: 'Qualidade: Bloqueios por Código por Demanda'
+    role: 'Função'
+    show_montecarlo: 'Mostrar Simulação de Monte Carlo'
+    demands_per_day_text: 'demands per day'
+    invite_user: 'Convidar por Email'
     dashboards:
-      lead_time_accumulated_p80: "Lead time acumulado (p80)"
-      lead_time_p80: "Lead time (p80)"
-      hours_delivered: "Horas"
-      hours_delivered_acc: "Horas Acumuladas"
-      first_delivery: "Primeira entrega"
-      lead_time_in_month: "Lead time (p80) no mês"
-    backlog: "Backlog"
-    update_cache: "Atualizar Cache"
+      lead_time_accumulated_p80: 'Lead time acumulado (p80)'
+      lead_time_p80: 'Lead time (p80)'
+      hours_delivered: 'Horas'
+      hours_delivered_acc: 'Horas Acumuladas'
+      first_delivery: 'Primeira entrega'
+      lead_time_in_month: 'Lead time (p80) no mês'
+    backlog: 'Backlog'
+    update_cache: 'Atualizar Cache'
     updated:
-      success: "Atualizado"
-      error: "Falhou"
-    hours_per_demand: "Horas por Demanda"
-    no_cache: "Não existe cache de dados para os gráficos. Use o botão abaixo para gerar algum."
+      success: 'Atualizado'
+      error: 'Falhou'
+    hours_per_demand: 'Horas por Demanda'
+    no_cache: 'Não existe cache de dados para os gráficos. Use o botão abaixo para gerar algum.'
     ordering:
-      direction: "Direção"
-      title: "Ordem"
-    created_demands: "Demandas Criadas"
-    no_register: "Sem Registro"
-    upstream: "Upstream"
-    downstream: "Downstream"
-    discarded_demands: "Descartadas"
+      direction: 'Direção'
+      title: 'Ordem'
+    created_demands: 'Demandas Criadas'
+    no_register: 'Sem Registro'
+    upstream: 'Upstream'
+    downstream: 'Downstream'
+    discarded_demands: 'Descartadas'
     consolidations:
-      no_cache: "Sem consolidações. Clique no botão para gerar."
-    open: "Abertas"
+      no_cache: 'Sem consolidações. Clique no botão para gerar.'
+    open: 'Abertas'
   header:
     logout: Sair
     sign_up: Cadastre-se
     login: Login
   users:
     change_last_company:
-      title: "Mudar para esta empresa"
+      title: 'Mudar para esta empresa'
     show:
-      title: "Perfil do Usuário"
-      pairing_counts: "Pareamentos"
+      title: 'Perfil do Usuário'
+      pairing_counts: 'Pareamentos'
       manager:
-        active_projects: "Projetos ativos"
-        active_products: "Produtos ativos"
-        active_customers: "Clientes ativos"
-        value_per_demand: "Valor por Demanda"
-        flow_pressure: "Pressão do Fluxo"
-        running_projects: "Projetos executando"
+        active_projects: 'Projetos ativos'
+        active_products: 'Produtos ativos'
+        active_customers: 'Clientes ativos'
+        value_per_demand: 'Valor por Demanda'
+        flow_pressure: 'Pressão do Fluxo'
+        running_projects: 'Projetos executando'
       dashboard:
-        invalid_role: "Você não tem um papel válido nesta empresa. Solicite ajuda ao administrator."
-      running_projects_charts: "ver gráficos"
+        invalid_role: 'Você não tem um papel válido nesta empresa. Solicite ajuda ao administrator.'
+      running_projects_charts: 'ver gráficos'
     index:
-      title: "Usuários"
-      turn_off_notifications: "Desligar Notificações"
-      turn_on_notifications: "Ligar Notificações"
+      title: 'Usuários'
+      turn_off_notifications: 'Desligar Notificações'
+      turn_on_notifications: 'Ligar Notificações'
     account:
-      self: "Minha Conta"
+      self: 'Minha Conta'
     edit:
-      title: "Editar Usuário"
+      title: 'Editar Usuário'
     admin_dashboard:
       users_table:
-        title: "Usuários"
+        title: 'Usuários'
       companies_table:
-        title: "Empresas"
+        title: 'Empresas'
     company:
-      invitation_missing: "Você deve ser convidado para uma empresa."
+      invitation_missing: 'Você deve ser convidado para uma empresa.'
     team_member:
-      missing: "Você precisa atribuir a sua membresia."
+      missing: 'Você precisa atribuir a sua membresia.'
   companies:
     index:
-      title: "Empresas"
+      title: 'Empresas'
     new:
-      title: "Nova Empresa"
+      title: 'Nova Empresa'
     show:
-      active_project_count: "Projetos Ativos"
-      waiting_project_count: "Projetos Aguardando Início"
-      red_project_count: "PROJETOS VERMELHOS"
-      project_count: "Projetos"
-      product_count: "Produtos"
-      customers_count: "Clientes"
-      current_hours_per_demand: "Horas/demanda Atual"
-      current_month_throughput: "Throughput do Mês"
-      current_cost_per_hour: "Custo/Hora do Mês"
-      current_month_closed_bugs: "Bugs Fechados no Mês"
-      current_month_opened_bugs: "Bugs Abertos no Mês"
+      active_project_count: 'Projetos Ativos'
+      waiting_project_count: 'Projetos Aguardando Início'
+      red_project_count: 'PROJETOS VERMELHOS'
+      project_count: 'Projetos'
+      product_count: 'Produtos'
+      customers_count: 'Clientes'
+      current_hours_per_demand: 'Horas/demanda Atual'
+      current_month_throughput: 'Throughput do Mês'
+      current_cost_per_hour: 'Custo/Hora do Mês'
+      current_month_closed_bugs: 'Bugs Fechados no Mês'
+      current_month_opened_bugs: 'Bugs Abertos no Mês'
     edit:
-      title: "Editar Empresa"
+      title: 'Editar Empresa'
     add_user:
-      email_field: "Email"
-      title: "Adicionar usuário"
-    users_in_company: "Usuários na empresa"
+      email_field: 'Email'
+      title: 'Adicionar usuário'
+    users_in_company: 'Usuários na empresa'
     send_company_bulletin:
-      sent: "Sua solicitação foi enviada."
-      button: "Me Enviar Boletim"
-      error: "Não existe email habilitado para notificar."
+      sent: 'Sua solicitação foi enviada.'
+      button: 'Me Enviar Boletim'
+      error: 'Não existe email habilitado para notificar.'
     charts:
       active_projects:
-        title: "Contagem de Projetos Ativos no Mês para %{target_name}"
+        title: 'Contagem de Projetos Ativos no Mês para %{target_name}'
       hours_per_month:
-        title: "Horas dos Projetos por Mês para %{target_name}"
+        title: 'Horas dos Projetos por Mês para %{target_name}'
       flowpressure_per_month:
-        title: "Pressão do Fluxo para %{target_name}"
+        title: 'Pressão do Fluxo para %{target_name}'
       money_per_month:
-        title: "Distribuição de Dinheiro de Projetos por Competência para %{target_name}"
+        title: 'Distribuição de Dinheiro de Projetos por Competência para %{target_name}'
   financial_informations:
     new:
-      title: "Nova Informação Financeira"
+      title: 'Nova Informação Financeira'
     index:
-      title: "Informações Financeiras"
-      cost_per_hour: "Custo/Hora"
-      project_delivered_hours_count: "Total de horas (Projetos)"
-      delivered_hours: "Horas Entregues (Operação)"
-      throughput: "Throughput"
-      hours_per_demand: "Horas/Demanda"
-      income_per_hour: "Entradas por Hora"
-      monthly_cash_balance: "Fluxo de Caixa Mensal"
-      total_income_in_period: "Total de Entradas no Período"
-      total_outcome_in_period: "Total de Saídas no Período"
-      total_balance_in_period: "Saldo do Período"
-      accumulated_financial_result: "Saldo Mensal Acumulado"
-      std_dev_cost_per_hour: "Std Dev Custo/Hora"
-      mean_cost_per_hour: "Média do Custo/Hora"
-      tail_events_after: "Eventos de Cauda Depois de"
-      std_dev_expenses: "Std Dev Despesas"
-      std_dev_income: "Std Dev Receitas"
+      title: 'Informações Financeiras'
+      cost_per_hour: 'Custo/Hora'
+      project_delivered_hours_count: 'Total de horas (Projetos)'
+      delivered_hours: 'Horas Entregues (Operação)'
+      throughput: 'Throughput'
+      hours_per_demand: 'Horas/Demanda'
+      income_per_hour: 'Entradas por Hora'
+      monthly_cash_balance: 'Fluxo de Caixa Mensal'
+      total_income_in_period: 'Total de Entradas no Período'
+      total_outcome_in_period: 'Total de Saídas no Período'
+      total_balance_in_period: 'Saldo do Período'
+      accumulated_financial_result: 'Saldo Mensal Acumulado'
+      std_dev_cost_per_hour: 'Std Dev Custo/Hora'
+      mean_cost_per_hour: 'Média do Custo/Hora'
+      tail_events_after: 'Eventos de Cauda Depois de'
+      std_dev_expenses: 'Std Dev Despesas'
+      std_dev_income: 'Std Dev Receitas'
       tabs:
-        finances_list: "Listagem"
-        finances_charts: "Gráficos"
-        finances_stats: "Estatísticas"
+        finances_list: 'Listagem'
+        finances_charts: 'Gráficos'
+        finances_stats: 'Estatísticas'
   team_members:
     index:
-      title: "Membros do Time"
-      elapsed_time: "Tempo"
+      title: 'Membros do Time'
+      elapsed_time: 'Tempo'
       search:
-        actives_members_checkbox: "membros ativos"
+        actives_members_checkbox: 'membros ativos'
     new:
-      title: "Novo Membro do Time"
+      title: 'Novo Membro do Time'
     show:
-      deliveries: "Entregas"
-      member_pair: "Pareado com"
-      paired_times: "Vezes pareado"
-      its_me: "Sou eu!"
-      its_not_me: "Não sou eu"
+      deliveries: 'Entregas'
+      member_pair: 'Pareado com'
+      paired_times: 'Vezes pareado'
+      its_me: 'Sou eu!'
+      its_not_me: 'Não sou eu'
     charts:
       hours_per_project:
-        title: "Horas Entregues por Projeto"
+        title: 'Horas Entregues por Projeto'
   projects:
     index:
-      title: "Projetos"
-      all_filter: "Todos"
-      waiting_filter: "Aguardando Início"
-      executing_filter: "Executando"
-      finished_filter: "Finalizado"
-      cancelled_filter: "Cancelado"
-      total_days: "Dias (total)"
-      total_remaining_days: "Dias (restantes)"
-      consumed_hours: "Horas Consumidas"
-      percentage_remaining_days: "% Tempo Restante"
-      remaining_money: "Restante ($$)"
-      percentage_remaining_money: "% Restante ($$)"
-      flow_pressure: "Pressão do Fluxo"
-      percentage_flow_pressure: "% Pressão do Fluxo"
-      percentage_remaining_scope: "% Escopo Restante"
-      remaining_backlog: "Backlog"
-      no_data: "Não há projetos aqui. Cadastre um."
-      remaining_hours: "Horas Restantes"
-      risk_alerts: "Alertas de Risco"
-      maintenance_filter: "Manutenção"
-      passed_time: "Tempo Decorrido"
+      title: 'Projetos'
+      all_filter: 'Todos'
+      waiting_filter: 'Aguardando Início'
+      executing_filter: 'Executando'
+      finished_filter: 'Finalizado'
+      cancelled_filter: 'Cancelado'
+      total_days: 'Dias (total)'
+      total_remaining_days: 'Dias (restantes)'
+      consumed_hours: 'Horas Consumidas'
+      percentage_remaining_days: '% Tempo Restante'
+      remaining_money: 'Restante ($$)'
+      percentage_remaining_money: '% Restante ($$)'
+      flow_pressure: 'Pressão do Fluxo'
+      percentage_flow_pressure: '% Pressão do Fluxo'
+      percentage_remaining_scope: '% Escopo Restante'
+      remaining_backlog: 'Backlog'
+      no_data: 'Não há projetos aqui. Cadastre um.'
+      remaining_hours: 'Horas Restantes'
+      risk_alerts: 'Alertas de Risco'
+      maintenance_filter: 'Manutenção'
+      passed_time: 'Tempo Decorrido'
       leadtime:
-        title: "Lead time em dias"
-      total_remaining_weeks: "Semanas Restantes"
-      inconsistent_demands_count: "Qtd Demandas Inconsistentes"
-      active_projects: "Projetos Ativos"
-      average_speed: "Velocidade Média"
-      consumed_hours_role: "Horas Consumidas por Função"
-      consumed_hours_role_in_month: "Horas Consumidas por Função por Mês"
+        title: 'Lead time em dias'
+      total_remaining_weeks: 'Semanas Restantes'
+      inconsistent_demands_count: 'Qtd Demandas Inconsistentes'
+      active_projects: 'Projetos Ativos'
+      average_speed: 'Velocidade Média'
+      consumed_hours_role: 'Horas Consumidas por Função'
+      consumed_hours_role_in_month: 'Horas Consumidas por Função por Mês'
     show:
-      initial_scope: "Escopo Inicial"
-      last_team: "Time atual"
-      avg_hours_per_demand: "Média Horas/Demanda"
-      scope_gap: "Restante do escopo"
-      scope_growth: "Crescimento do Escopo (%)"
-      scope_unit_growth: "Crescimento do Escopo (un.)"
-      current_week_scope: "Escopo (atual)"
-      cost_in_month: "Custo Mensal"
+      initial_scope: 'Escopo Inicial'
+      last_team: 'Time atual'
+      avg_hours_per_demand: 'Média Horas/Demanda'
+      scope_gap: 'Restante do escopo'
+      scope_growth: 'Crescimento do Escopo (%)'
+      scope_unit_growth: 'Crescimento do Escopo (un.)'
+      current_week_scope: 'Escopo (atual)'
+      cost_in_month: 'Custo Mensal'
       deadline:
-        title: "Negociações de Prazo"
+        title: 'Negociações de Prazo'
       deadline_countdown:
-        first_part: "Faltam "
-        second_part: " para o fim do projeto"
-        days: "%{remaining_days} dia(s)"
-        risk: " e o risco operacional deste prazo é de "
-      cmd: "CMD"
-      status_information_html: "Este projeto está <i>%{status_description}</i>"
+        first_part: 'Faltam '
+        second_part: ' para o fim do projeto'
+        days: '%{remaining_days} dia(s)'
+        risk: ' e o risco operacional deste prazo é de '
+      cmd: 'CMD'
+      status_information_html: 'Este projeto está <i>%{status_description}</i>'
       delivered_demands:
-        text: "Escopo Entregue"
-        opened_in_period: "Abertas no Período"
-        delivered: "Entregues no Período"
-      throughput: "Throughput Semana Anterior"
-      leadtime_80_confidence: "Lead time 80%"
-      demands_count: "Qtd de Demandas"
-      bugs_count: "Qtd de Bugs"
-      features_count: "Qtd Features"
-      chore_count: "Qtd Tarefas Técnicas"
-      demand_blocks_count: "Qtd Bloqueios"
-      demand_blocks_duration_average: "Duração Média dos Bloqueios"
-      import_stages: "Importar Etapas"
-      sync_jira: "Sincronizar Projeto"
+        text: 'Escopo Entregue'
+        opened_in_period: 'Abertas no Período'
+        delivered: 'Entregues no Período'
+      throughput: 'Throughput Semana Anterior'
+      leadtime_80_confidence: 'Lead time 80%'
+      demands_count: 'Qtd de Demandas'
+      bugs_count: 'Qtd de Bugs'
+      features_count: 'Qtd Features'
+      chore_count: 'Qtd Tarefas Técnicas'
+      demand_blocks_count: 'Qtd Bloqueios'
+      demand_blocks_duration_average: 'Duração Média dos Bloqueios'
+      import_stages: 'Importar Etapas'
+      sync_jira: 'Sincronizar Projeto'
       jira_area:
-        title: "Área Jira"
-        no_stages: "Mas ainda não possui etapas configuradas."
-        not_integrated: "Este projeto não tem integração com o JIRA."
-        integrated_project: "Este é um projeto integrado ao JIRA."
-        configured_stages: "Este projeto possui %{count} etapas."
-      not_associated_customers: "Clientes não associados"
-      project_customers: "Clientes no projeto"
+        title: 'Área Jira'
+        no_stages: 'Mas ainda não possui etapas configuradas.'
+        not_integrated: 'Este projeto não tem integração com o JIRA.'
+        integrated_project: 'Este é um projeto integrado ao JIRA.'
+        configured_stages: 'Este projeto possui %{count} etapas.'
+      not_associated_customers: 'Clientes não associados'
+      project_customers: 'Clientes no projeto'
       inconsistent_demands:
-        title: "Demandas Inconsistentes"
-        no_demands: "Nenhuma demanda inconsistente"
-        demands: "%{value} demanda(s)"
-        help: "Demandas inconsistentes são demandas com seu ponto de comprometimento antes do início do projeto ou com data fim depois da data final do projeto."
-      not_associated_products: "Produtos não associados"
-      project_products: "Produtos no Projeto"
+        title: 'Demandas Inconsistentes'
+        no_demands: 'Nenhuma demanda inconsistente'
+        demands: '%{value} demanda(s)'
+        help: 'Demandas inconsistentes são demandas com seu ponto de comprometimento antes do início do projeto ou com data fim depois da data final do projeto.'
+      not_associated_products: 'Produtos não associados'
+      project_products: 'Produtos no Projeto'
       closing_info:
-        title: "Informações de Fechamento para %{project_name}"
-        project_name: "Nome do Projeto"
-        discovered_after_demands: "Descobertas depois do início"
-        discovered_before_demands: "Descobertas antes do início"
-        discovered_demands: "Descobertas do Escopo"
-        final_numbers: "Números Finais"
-        hours: "Tempo Consumido"
-        average_speed_per_week: "Velocidade Média"
-        class_of_service: "Classes de Serviço"
-        failure_load: "Carga de Falha"
-        cost: "Custo Final"
-        delivered_items: "Entrega"
-        deadline_changes: "Mudanças no Prazo"
-        delivered_at: "Entregue em"
-        first_deadline: "Primeiro Prazo"
-        deadlines_difference: "Última Diferença"
-        deadlines_change_count: "Qtd Mudanças"
+        title: 'Informações de Fechamento para %{project_name}'
+        project_name: 'Nome do Projeto'
+        discovered_after_demands: 'Descobertas depois do início'
+        discovered_before_demands: 'Descobertas antes do início'
+        discovered_demands: 'Descobertas do Escopo'
+        final_numbers: 'Números Finais'
+        hours: 'Tempo Consumido'
+        average_speed_per_week: 'Velocidade Média'
+        class_of_service: 'Classes de Serviço'
+        failure_load: 'Carga de Falha'
+        cost: 'Custo Final'
+        delivered_items: 'Entrega'
+        deadline_changes: 'Mudanças no Prazo'
+        delivered_at: 'Entregue em'
+        first_deadline: 'Primeiro Prazo'
+        deadlines_difference: 'Última Diferença'
+        deadlines_change_count: 'Qtd Mudanças'
       status_report:
-        title: "Relatório de Status"
-        cost: "Custo Atual"
-        deadline: "Prazo Atual"
-        current_numbers: "Números Atuais"
-        remaining_scope: "Backlog Restante"
-        average_demand_aging: "Idade Média dos Itens"
+        title: 'Relatório de Status'
+        cost: 'Custo Atual'
+        deadline: 'Prazo Atual'
+        current_numbers: 'Números Atuais'
+        remaining_scope: 'Backlog Restante'
+        average_demand_aging: 'Idade Média dos Itens'
       lead_time:
-        title: "Lead time dashboard"
+        title: 'Lead time dashboard'
       unscored_demands:
-        no_demands: "sem demandas sem pontuação"
-        title: "Demandas sem Pontuação"
-      update_consolidations: "Atualizar Cache"
+        no_demands: 'sem demandas sem pontuação'
+        title: 'Demandas sem Pontuação'
+      update_consolidations: 'Atualizar Cache'
       charts:
-        total_effort: "Esforço Total"
+        total_effort: 'Esforço Total'
     charts:
       xlabel:
-        weeks: "Semanas"
-        projects: "Projetos"
-        days: "Dias"
-        demands_per_week: "Demandas por Semana"
-        months: "Meses"
-        time: "No Tempo"
+        weeks: 'Semanas'
+        projects: 'Projetos'
+        days: 'Dias'
+        demands_per_week: 'Demandas por Semana'
+        months: 'Meses'
+        time: 'No Tempo'
       burnup:
-        ylabel: "Demandas"
-        tooltipsufix: " demandas"
+        ylabel: 'Demandas'
+        tooltipsufix: ' demandas'
         demands:
-          title: "Burnup para %{target_name}"
+          title: 'Burnup para %{target_name}'
         hours:
-          title: "Burnup de Horas para %{target_name}"
+          title: 'Burnup de Horas para %{target_name}'
       hours_per_demand:
-        title: "Horas por demanda no tempo para %{target_name}"
-        ylabel: "Horas/Demanda"
-        tooltipsufix: " horas/demanda"
+        title: 'Horas por demanda no tempo para %{target_name}'
+        ylabel: 'Horas/Demanda'
+        tooltipsufix: ' horas/demanda'
       flow_pressure:
-        title: "Pressão do Fluxo para %{target_name}"
-        ylabel: "Pressão do Fluxo"
-        tooltipsufix: " demandas/dia"
-        data_suffix: "demandas/dia"
+        title: 'Pressão do Fluxo para %{target_name}'
+        ylabel: 'Pressão do Fluxo'
+        tooltipsufix: ' demandas/dia'
+        data_suffix: 'demandas/dia'
       flow_pressure_per_project:
-        ylabel: "Pressão do Fluxo"
+        ylabel: 'Pressão do Fluxo'
       throughput:
-        title: "Throughput para %{target_name}"
-        tooltipsufix: " demanda(s)"
-        ylabel: "Demandas"
+        title: 'Throughput para %{target_name}'
+        tooltipsufix: ' demanda(s)'
+        ylabel: 'Demandas'
         stage_stream:
-          upstream: "Upstream"
-          downstream: "Downstream"
+          upstream: 'Upstream'
+          downstream: 'Downstream'
       cmd:
-        title: "Custo Médio por Deamanda para %{target_name}"
-        ylabel: "Custo Médio por Demanda"
-        tooltipsufix: "reais"
-        tooltip_prefix: "R$ "
+        title: 'Custo Médio por Deamanda para %{target_name}'
+        ylabel: 'Custo Médio por Demanda'
+        tooltipsufix: 'reais'
+        tooltip_prefix: 'R$ '
       delivered:
-        title: "Entregue vs Restante para %{target_name}"
+        title: 'Entregue vs Restante para %{target_name}'
       deadline:
-        title: "Prazo para %{target_name}"
+        title: 'Prazo para %{target_name}'
       date_odds:
-        tooltipsufix: "semanas"
+        tooltipsufix: 'semanas'
       hours_per_month:
-        ylabel: "Horas Produzidas"
-        title: "Horas de Esforço para %{target_name}"
-        xlabel: "Meses"
+        ylabel: 'Horas Produzidas'
+        title: 'Horas de Esforço para %{target_name}'
+        xlabel: 'Meses'
       lead_time_chart:
-        title: "Control chart do lead time para %{target_name}"
-        ylabel: "dias"
+        title: 'Control chart do lead time para %{target_name}'
+        ylabel: 'dias'
       leadtime_histogram:
-        title: "Histograma do lead time para %{target_name}"
-        ylabel: "frequências"
+        title: 'Histograma do lead time para %{target_name}'
+        ylabel: 'frequências'
       throughput_histogram:
-        title: "Histograma de Throughput para %{target_name}"
-        ylabel: "Frequências"
+        title: 'Histograma de Throughput para %{target_name}'
+        ylabel: 'Frequências'
       bugs_in_time:
-        title: "Bugs no tempo para %{target_name}"
-        opened: "Bugs Abertos"
-        closed: "Bugs Fechados"
-        ylabel: "bugs"
-        share: "Porcentagem de Bugs"
-        suffix: "bug(s)"
+        title: 'Bugs no tempo para %{target_name}'
+        opened: 'Bugs Abertos'
+        closed: 'Bugs Fechados'
+        ylabel: 'bugs'
+        share: 'Porcentagem de Bugs'
+        suffix: 'bug(s)'
       bugs_percentage_in_time:
-        title: "Porcentagem de Bugs no Tempo para %{target_name}"
+        title: 'Porcentagem de Bugs no Tempo para %{target_name}'
       accumulated_bugs_in_time:
-        title: "Bugs acumulados no tempo para %{target_name}"
+        title: 'Bugs acumulados no tempo para %{target_name}'
       accumulated_bugs_percentage_in_time:
-        title: "Porcentagem de bugs acumulados no tempo para %{target_name}"
+        title: 'Porcentagem de bugs acumulados no tempo para %{target_name}'
       queue_touch_time:
-        title: "Horas em Fila x Trabalho para %{target_name}"
-        ylabel: "horas"
-        queue: "Fila"
-        touch: "Trabalho"
+        title: 'Horas em Fila x Trabalho para %{target_name}'
+        ylabel: 'horas'
+        queue: 'Fila'
+        touch: 'Trabalho'
       flow_efficiency:
-        title: "Eficiência de Fluxo"
-        share: "Eficiência de Fluxo"
+        title: 'Eficiência de Fluxo'
+        share: 'Eficiência de Fluxo'
       leadtime_evolution:
-        title: "Evolução do Lead Time"
-        ylabel: "Dias"
+        title: 'Evolução do Lead Time'
+        ylabel: 'Dias'
         legend:
-          leadtime_80_confidence: "Lead time (80%)"
-          leadtime_80_confidence_accumulated: "Lead time 80% acumulado"
+          leadtime_80_confidence: 'Lead time (80%)'
+          leadtime_80_confidence_accumulated: 'Lead time 80% acumulado'
       class_of_service_pie:
-        title: "Percentual das Classes de Serviço"
+        title: 'Percentual das Classes de Serviço'
       deadline_vs_montecarlo_durations:
-        confidence_95: "95% Confiança"
-        confidence_80: "80% de Confiança"
-        confidence_60: "60% de Confiança"
-        confidence: "Confiança do lead time"
+        confidence_95: '95% Confiança'
+        confidence_80: '80% de Confiança'
+        confidence_60: '60% de Confiança'
+        confidence: 'Confiança do lead time'
       montecarlo_dates:
-        project_date: "Prazo do Projeto"
-        confidence_95: "Data com 95% de Confiança"
-        confidence_80: "Data com 80% de Confiança"
-        confidence_60: "Data com 60% de Confiança"
+        project_date: 'Prazo do Projeto'
+        confidence_95: 'Data com 95% de Confiança'
+        confidence_80: 'Data com 80% de Confiança'
+        confidence_60: 'Data com 60% de Confiança'
       scope_variation:
-        title: "Variação do escopo no tempo"
-      risk_evolution_in_time: "Evolução do Risco Matemático Operacional"
-      risk_evolution_in_time_team_based: "Evolução do Risco Matemático Operacional - Dados do Time"
-      quality_block_per_demand: "bloqueios por demanda"
+        title: 'Variação do escopo no tempo'
+      risk_evolution_in_time: 'Evolução do Risco Matemático Operacional'
+      risk_evolution_in_time_team_based: 'Evolução do Risco Matemático Operacional - Dados do Time'
+      quality_block_per_demand: 'bloqueios por demanda'
       throughput_hours_six_months:
-        title: "Horas de Projetos por Mês - Últimos 6 meses"
-    project_risk_alert_table: "Alertas de risco para o projeto"
+        title: 'Horas de Projetos por Mês - Últimos 6 meses'
+    project_risk_alert_table: 'Alertas de risco para o projeto'
     portfolio_bulletin:
-      delivered_demands: "Demandas entregues na última semana"
-      red_projects: "Projetos em Alerta Vermelho"
-    no_demands_delivered: "Nenhuma demanda registrada para a semana passada."
+      delivered_demands: 'Demandas entregues na última semana'
+      red_projects: 'Projetos em Alerta Vermelho'
+    no_demands_delivered: 'Nenhuma demanda registrada para a semana passada.'
     general:
-      deadline: "Prazo"
-      scope: "Escopo"
-      leadtime: "LT (%{percentil})"
-      accumulated_leadtime: "LT Acumulado (%{percentil})"
-      discovered_scope: "Itens Descobertos"
-      work_items: "Items de Trabalho"
+      deadline: 'Prazo'
+      scope: 'Escopo'
+      leadtime: 'LT (%{percentil})'
+      accumulated_leadtime: 'LT Acumulado (%{percentil})'
+      discovered_scope: 'Itens Descobertos'
+      work_items: 'Items de Trabalho'
     finish_project:
-      success_message: "Projeto finalizado."
-      confirm: "Esta ação finalizará todas as demandas ainda em aberto e utilizará a data atual como data final do projeto. Você quer continuar?"
+      success_message: 'Projeto finalizado.'
+      confirm: 'Esta ação finalizará todas as demandas ainda em aberto e utilizará a data atual como data final do projeto. Você quer continuar?'
     actions:
       edit:
-        title: "Editar"
+        title: 'Editar'
       delete:
-        tooltip: "Excluir Projeto"
+        tooltip: 'Excluir Projeto'
       finish:
-        tooltip: "Finalizar Projeto"
+        tooltip: 'Finalizar Projeto'
       statistics:
-        tooltip: "Estatísticas"
+        tooltip: 'Estatísticas'
       products:
-        tooltip: "Produtos neste projeto"
+        tooltip: 'Produtos neste projeto'
       customers:
-        tooltip: "Clientes neste projeto"
+        tooltip: 'Clientes neste projeto'
     status_report_chart:
       hours_per_stage:
         series:
-          hours_per_stage: "Horas por Etapa"
+          hours_per_stage: 'Horas por Etapa'
         labels:
-          y: "Horas na Etapa"
-        title_upstream: "Horas por Etapa no Upstream para %{target_name}"
-        title_downstream: "Horas por Etapa no Downstream para %{target_name}"
+          y: 'Horas na Etapa'
+        title_upstream: 'Horas por Etapa no Upstream para %{target_name}'
+        title_downstream: 'Horas por Etapa no Downstream para %{target_name}'
     settings:
-      risks: "Riscos"
-      stages: "Etapas"
-      jira: "Jira"
-      customers: "Clientes"
-      products: "Produtos"
+      risks: 'Riscos'
+      stages: 'Etapas'
+      jira: 'Jira'
+      customers: 'Clientes'
+      products: 'Produtos'
     data_analysis:
-      risk_deadline: "Prazo"
-      risk_money: "Custo"
-      risk_scope: "Escopo"
+      risk_deadline: 'Prazo'
+      risk_money: 'Custo'
+      risk_scope: 'Escopo'
     replenishing:
-      weeks_to_finish: "Restante"
-      weeks_montecarlo: "Monte Carlo (80%)"
-      team_based_weeks_montecarlo: "Monte Carlo (80%) - Time (std dev)"
-      customer_happiness: "Felicidade do Cliente"
-      last_four_weeks_throughput: "Throughput das Últimas 4 Semanas"
-      average_throughput: "Throughput Médio das Últ. 4 Semanas"
-      qty_using_pressure: "Qty pela Pressão"
-      wip: "WiP"
-      throughput_last_week: "TH Últ. Semana"
-      selected_last_week: "Selecionadas"
-      team_wip: "WiP Máx do Time"
-      throughput_data_size: "Qtd de Throughputs"
-      throughput_data_stddev: "Throughput Std Dev"
-      aging: "Idade"
-      throughput_data_mode: "Moda do Throughput"
-      last_four_weeks_lead_time: "Lead Time das Últ, 4 Sem."
-      monte_carlo_factor: "Fator"
-      monte_carlo_factor_help: "Semanas restantes / Semanas de Monte Carlo"
+      weeks_to_finish: 'Restante'
+      weeks_montecarlo: 'Monte Carlo (80%)'
+      team_based_weeks_montecarlo: 'Monte Carlo (80%) - Time (std dev)'
+      customer_happiness: 'Felicidade do Cliente'
+      last_four_weeks_throughput: 'Throughput das Últimas 4 Semanas'
+      average_throughput: 'Throughput Médio das Últ. 4 Semanas'
+      qty_using_pressure: 'Qty pela Pressão'
+      wip: 'WiP'
+      throughput_last_week: 'TH Últ. Semana'
+      selected_last_week: 'Selecionadas'
+      team_wip: 'WiP Máx do Time'
+      throughput_data_size: 'Qtd de Throughputs'
+      throughput_data_stddev: 'Throughput Std Dev'
+      aging: 'Idade'
+      throughput_data_mode: 'Moda do Throughput'
+      last_four_weeks_lead_time: 'Lead Time das Últ, 4 Sem.'
+      monte_carlo_factor: 'Fator'
+      monte_carlo_factor_help: 'Semanas restantes / Semanas de Monte Carlo'
     statistics:
-      scope_tab: "Variação do Escopo"
-      leadtime_tab: "Variação do lead time"
+      scope_tab: 'Variação do Escopo'
+      leadtime_tab: 'Variação do lead time'
       accumulated_blocks:
-        data_title: "Bloqueios Acumulados"
-        chart_title: "Quantidade de Bloqueios Fechados Acumulados no Tempo"
-        ytitle: "Bloqueio"
-      block_tab: "Bloqueios"
+        data_title: 'Bloqueios Acumulados'
+        chart_title: 'Quantidade de Bloqueios Fechados Acumulados no Tempo'
+        ytitle: 'Bloqueio'
+      block_tab: 'Bloqueios'
       blocks_by_project:
-        data_title: "Bloqueios por Projeto"
-      block_by_project_tab: "Bloqueios por Projeto"
-      aging_by_project_tab: "Aging por Projeto"
-      lead_time_data_range_tab: "Amplitude do Lead Time"
-      lead_time_histogram_data_range_tab: "Amplitude do Hist. do LT"
-      lead_time_interquartile_data_range_evolution_tab: "Amplitude do Interquartil"
-      lead_time_interquartile_histogram_range_evolution_tab: "Histograma X Interquartil"
+        data_title: 'Bloqueios por Projeto'
+      block_by_project_tab: 'Bloqueios por Projeto'
+      aging_by_project_tab: 'Aging por Projeto'
+      lead_time_data_range_tab: 'Amplitude do Lead Time'
+      lead_time_histogram_data_range_tab: 'Amplitude do Hist. do LT'
+      lead_time_interquartile_data_range_evolution_tab: 'Amplitude do Interquartil'
+      lead_time_interquartile_histogram_range_evolution_tab: 'Histograma X Interquartil'
       montecarlo:
-        title: "Monte Carlo (Projeto)"
+        title: 'Monte Carlo (Projeto)'
     risk:
-      drill_down_title: "Detalhamento do Risco para %{target_name}"
-      drill_down_flow_title: "Fluxo (Últimas 10 semanas)"
-      drill_down_wip_title: "Limite do WiP"
-      drill_down_little_law_title: "Lei de Little"
-      drill_down_scope_deadline: "Escopo e Prazo"
-    remaining_time: "Tempo Restante"
+      drill_down_title: 'Detalhamento do Risco para %{target_name}'
+      drill_down_flow_title: 'Fluxo (Últimas 10 semanas)'
+      drill_down_wip_title: 'Limite do WiP'
+      drill_down_little_law_title: 'Lei de Little'
+      drill_down_scope_deadline: 'Escopo e Prazo'
+    remaining_time: 'Tempo Restante'
     leadtime:
-      drill_down_title: "Detalhamento do lead time de %{target_name}"
+      drill_down_title: 'Detalhamento do lead time de %{target_name}'
     running_projects_charts:
-      title: "Gráficos dos Projetos em Execução"
+      title: 'Gráficos dos Projetos em Execução'
   teams:
     index:
-      title: "Times"
+      title: 'Times'
     new:
-      title: "Novo Time"
+      title: 'Novo Time'
     show:
       demands_flow:
-        title: "Fluxo entre os dias %{start_date} e %{end_date}"
-      general_info: "Geral"
-      lead_time_p80_accumulated: "Lead Time p80 Acumulado"
+        title: 'Fluxo entre os dias %{start_date} e %{end_date}'
+      general_info: 'Geral'
+      lead_time_p80_accumulated: 'Lead Time p80 Acumulado'
       quality_share:
-        title: "Quantidade Relativa de Defeitos (%)"
-        series: "Defeitos (%)"
-      projects_info: "Projetos"
-      active_projects_count: "Projetos Ativos"
-      active_projects_value: "Valor dos Projetos Ativos"
-      lead_time_p80: "Lead time p80"
-      search_info: "Resultados da Busca"
-      dashboard_tab: "Dashboard"
-      lead_time_p95: "Lead time p95"
-      lead_time_p65: "Lead time p65"
-      average_queue_time: "Tempo Médio de Fila"
-      average_touch_time: "Tempo Médio de Trabalho"
+        title: 'Quantidade Relativa de Defeitos (%)'
+        series: 'Defeitos (%)'
+      projects_info: 'Projetos'
+      active_projects_count: 'Projetos Ativos'
+      active_projects_value: 'Valor dos Projetos Ativos'
+      lead_time_p80: 'Lead time p80'
+      search_info: 'Resultados da Busca'
+      dashboard_tab: 'Dashboard'
+      lead_time_p95: 'Lead time p95'
+      lead_time_p65: 'Lead time p65'
+      average_queue_time: 'Tempo Médio de Fila'
+      average_touch_time: 'Tempo Médio de Trabalho'
       dashboard:
-        tab_one: "Principais gráficos operacionais"
-        tab_two: "Custo médio por demanda (CMD)"
-        tab_three: "Detalhes do downstream"
-        tab_four: "Gráficos do portfólio"
-        tab_five: "Gráficos de Membros do Time"
-      projects_tab: "Projetos"
-      lead_time_p80_in_month: "Lead Time p80 (Mês)"
+        tab_one: 'Principais gráficos operacionais'
+        tab_two: 'Custo médio por demanda (CMD)'
+        tab_three: 'Detalhes do downstream'
+        tab_four: 'Gráficos do portfólio'
+        tab_five: 'Gráficos de Membros do Time'
+      projects_tab: 'Projetos'
+      lead_time_p80_in_month: 'Lead Time p80 (Mês)'
       quality_share_in_month:
-        series: "Defeitos no Mês (%)"
+        series: 'Defeitos no Mês (%)'
       quality_opened_bugs:
-        series: "Defeitos Abertos"
+        series: 'Defeitos Abertos'
       quality_opened_in_month_bugs:
-        series: "Defeitos Abertos no Mês"
-      data_range: "6 meses de dados"
+        series: 'Defeitos Abertos no Mês'
+      data_range: '6 meses de dados'
     replenishing:
-      title: "Reabastecimento do Fluxo"
+      title: 'Reabastecimento do Fluxo'
     charts:
       average_demand_cost:
-        data_legend: "Custo Médio por Demanda"
-        title: "Custo Médio por Demanda"
-        ylabel: "$ / Demanda"
-        xlabel: "período"
+        data_legend: 'Custo Médio por Demanda'
+        title: 'Custo Médio por Demanda'
+        ylabel: '$ / Demanda'
+        xlabel: 'período'
       hours_efficiency:
-        title: "Eficiência nas Horas"
-        xlabel: "Tempo"
-        ylabel: "horas"
+        title: 'Eficiência nas Horas'
+        xlabel: 'Tempo'
+        ylabel: 'horas'
       hours_consumed:
-        data_legend: "Horas Consumidas"
+        data_legend: 'Horas Consumidas'
       available_hours:
-        data_legend: "Horas Disponíveis"
+        data_legend: 'Horas Disponíveis'
       operational_loss:
-        data_legend: "Perda Operacional"
+        data_legend: 'Perda Operacional'
     destroy:
       success: 'Time "%{team_name}" excluído.'
     statistics:
       montecarlo:
-        title: "Monte Carlo (Time)"
+        title: 'Monte Carlo (Time)'
   project:
     new:
-      title: "Novo Projeto"
+      title: 'Novo Projeto'
     edit:
-      title: "Editar Projeto"
+      title: 'Editar Projeto'
     validations:
-      no_value: "Valor ou Valor da hora é obrigatório"
-      product_blank: "é obrigatório para projeto de outsourcing"
+      no_value: 'Valor ou Valor da hora é obrigatório'
+      product_blank: 'é obrigatório para projeto de outsourcing'
     destroy:
-      confirm: "Tem certeza que deseja apagar o projeto? Todas as demandas deste projeto também serão excluídas."
-      success: "Projeto excluído."
-      error: "O projeto não foi excluído"
+      confirm: 'Tem certeza que deseja apagar o projeto? Todas as demandas deste projeto também serão excluídas.'
+      success: 'Projeto excluído.'
+      error: 'O projeto não foi excluído'
     modal:
-      statistics: "Estatísticas de %{target_name}"
+      statistics: 'Estatísticas de %{target_name}'
     help:
-      initial_scope: "Este valor é usado para mapear o escopo planejado que ainda não teve demandas criadas."
+      initial_scope: 'Este valor é usado para mapear o escopo planejado que ainda não teve demandas criadas.'
   team_member:
     edit:
-      title: "Editar Membro do Time"
+      title: 'Editar Membro do Time'
     team_members_count:
-      one: "%{count} membro do time"
-      other: "%{count} membros do time"
+      one: '%{count} membro do time'
+      other: '%{count} membros do time'
   team:
     edit:
-      title: "Editar Time"
+      title: 'Editar Time'
   products:
     index:
-      no_data: "Não há produtos aqui. Cadastre um."
-      title: "Produtos"
+      no_data: 'Não há produtos aqui. Cadastre um.'
+      title: 'Produtos'
     new:
-      title: "Novo Produto"
+      title: 'Novo Produto'
     edit:
-      title: "Editar Produto"
+      title: 'Editar Produto'
     statistics:
       montecarlo:
-        title: "Monte Carlo (Produto)"
+        title: 'Monte Carlo (Produto)'
     show:
       score_matrices:
-        answers: "Respostas Possíveis"
+        answers: 'Respostas Possíveis'
   customers:
     new:
-      title: "Novo Cliente"
+      title: 'Novo Cliente'
       hours_per_demand:
-        placeholder: "Horas por demanda estimadas para o contrato"
+        placeholder: 'Horas por demanda estimadas para o contrato'
     index:
-      title: "Lista de Clientes"
-      no_customers_message: "Você ainda não tem times."
+      title: 'Lista de Clientes'
+      no_customers_message: 'Você ainda não tem times.'
     show:
-      total_value: "Valor Total em Projetos"
+      total_value: 'Valor Total em Projetos'
       active_contracts:
-        one: "%{count} contrato ativo"
-        other: "%{count} contratos ativos"
-      no_data: "cache do cliente"
+        one: '%{count} contrato ativo'
+        other: '%{count} contratos ativos'
+      no_data: 'cache do cliente'
     add_user_to_customer:
-      success: "Usuário adicionado"
+      success: 'Usuário adicionado'
     charts:
       avg_hours_per_month:
-        title: "Média de Horas por Mês para %{target_name}"
+        title: 'Média de Horas por Mês para %{target_name}'
   customer:
     edit:
-      title: "Editar Cliente"
+      title: 'Editar Cliente'
     charts:
       contracts_cost_burnup:
-        title: "Burn-up Financeiro dos Contratos"
+        title: 'Burn-up Financeiro dos Contratos'
       contracts_hours_burnup:
-        title: "Burn-up de Horas dos Contratos"
+        title: 'Burn-up de Horas dos Contratos'
       contracts_scope_burnup:
-        title: "Burn-up de Escopo para Contratos Ativos"
+        title: 'Burn-up de Escopo para Contratos Ativos'
       quality_info:
-        title: "Qualidade"
+        title: 'Qualidade'
       lead_time:
-        title: "Lead time"
+        title: 'Lead time'
       throughput:
-        title: "Throughput"
-      delivered_scope: "% Escopo Entregue"
-      delivered_hours: "% Horas Entregues"
+        title: 'Throughput'
+      delivered_scope: '% Escopo Entregue'
+      delivered_hours: '% Horas Entregues'
       operational_risk:
-        title: "Risco Operacional"
+        title: 'Risco Operacional'
       hours_blocked_per_delivery:
-        title: "Horas Bloqueadas por Entrega"
+        title: 'Horas Bloqueadas por Entrega'
       external_dependency:
-        title: "Dependências Externas"
-      effort_hours_info: "Horas de Esforço"
+        title: 'Dependências Externas'
+      effort_hours_info: 'Horas de Esforço'
   demands:
     new:
-      title: "Criar Demanda"
+      title: 'Criar Demanda'
     index:
-      title: "Lista de Demandas"
-      effort_upstream: "Esforço no Upstream"
-      effort_downstream: "Esforço no Downstream"
-      blocked_working_time_upstream: "Tempo Útil Bloqueado no Upstream"
-      blocked_working_time_downstream: "Tempo Útil Bloqueado no Downstream"
-      downstream: "Downstream?"
-      manual_effort: "Esforço Atualizado Manualmente?"
-      count: "%{demands_count} demanda(s)"
-      current_stage: "Etapa Atual"
-      qty_closed_blocks: "Bloqueios Resolvidos"
-      hours_blocks_queue: "Horas Bloqueada em Filas"
-      hours_blocks_touch: "Horas Bloqueadas em Trabalho"
-      total_blocked_time: "Tempo Bloqueado"
-      grouping_to_charts: "Agrupamento para os Gráficos"
-      total_blocked_work_time: "Tempo Útil Bloq."
-      discarded_stage: "Descartada na Etapa"
-      cost_to_project: "Custo pro Projeto"
-      total_queue_time: "Fila"
-      total_touch_time: "Trabalho"
+      title: 'Lista de Demandas'
+      effort_upstream: 'Esforço no Upstream'
+      effort_downstream: 'Esforço no Downstream'
+      blocked_working_time_upstream: 'Tempo Útil Bloqueado no Upstream'
+      blocked_working_time_downstream: 'Tempo Útil Bloqueado no Downstream'
+      downstream: 'Downstream?'
+      manual_effort: 'Esforço Atualizado Manualmente?'
+      count: '%{demands_count} demanda(s)'
+      current_stage: 'Etapa Atual'
+      qty_closed_blocks: 'Bloqueios Resolvidos'
+      hours_blocks_queue: 'Horas Bloqueada em Filas'
+      hours_blocks_touch: 'Horas Bloqueadas em Trabalho'
+      total_blocked_time: 'Tempo Bloqueado'
+      grouping_to_charts: 'Agrupamento para os Gráficos'
+      total_blocked_work_time: 'Tempo Útil Bloq.'
+      discarded_stage: 'Descartada na Etapa'
+      cost_to_project: 'Custo pro Projeto'
+      total_queue_time: 'Fila'
+      total_touch_time: 'Trabalho'
       montecarlo_projection:
-        80_percent_data: "Semanas Restantes com 80% de Confiança"
-        remaining_scope: "Escopo Restante"
-        total_delivered: "Escopo Entregue"
-        throughput_per_period: "Throughput Usado"
+        80_percent_data: 'Semanas Restantes com 80% de Confiança'
+        remaining_scope: 'Escopo Restante'
+        total_delivered: 'Escopo Entregue'
+        throughput_per_period: 'Throughput Usado'
       search:
         text:
-          placeholder: "cliente, produto, projeto, un. de portfólio, ID, responsável ou título"
-      last_deliveries: "Últimas entregas"
-      last_larger_lead_times_four_weeks: "Cinco maiores lead times (4 semanas)"
-      last_larger_lead_times: "Cinco maiores lead times"
+          placeholder: 'cliente, produto, projeto, un. de portfólio, ID, responsável ou título'
+      last_deliveries: 'Últimas entregas'
+      last_larger_lead_times_four_weeks: 'Cinco maiores lead times (4 semanas)'
+      last_larger_lead_times: 'Cinco maiores lead times'
     edit:
-      title: "Editar Demanda"
+      title: 'Editar Demanda'
     show:
-      no_demand_transitions: "Esta demanda não tem transições."
+      no_demand_transitions: 'Esta demanda não tem transições.'
       progress_bars:
-        streams: "Streams do Fluxo"
-      sync_jira: "Sincronizar Demanda"
-      flow_efficiency_tab: "Eficiência de Fluxo"
-      blocks_tab: "Bloqueios"
-      transitions_tab: "Transições"
-      structure_tab: "Estrutura"
-      comments_tab: "Comentários"
-      responsibles_tab: "Responsáveis"
-      consolidations: "Consolidações"
+        streams: 'Streams do Fluxo'
+      sync_jira: 'Sincronizar Demanda'
+      flow_efficiency_tab: 'Eficiência de Fluxo'
+      blocks_tab: 'Bloqueios'
+      transitions_tab: 'Transições'
+      structure_tab: 'Estrutura'
+      comments_tab: 'Comentários'
+      responsibles_tab: 'Responsáveis'
+      consolidations: 'Consolidações'
       memberships:
-        blank: "Sem papel no time %{team_name}"
-      efforts_tab: "Esforços"
-      tasks_tab: "Tarefas"
+        blank: 'Sem papel no time %{team_name}'
+      efforts_tab: 'Esforços'
+      tasks_tab: 'Tarefas'
     sync:
-      enqueued: "Sua solicitação foi colocada na fila. Será processada em breve."
-      done: "Sua sincronização foi realizada."
+      enqueued: 'Sua solicitação foi colocada na fila. Será processada em breve.'
+      done: 'Sua sincronização foi realizada.'
     charts:
       processing_rate:
-        title: "Processamento de demandas para %{name}"
-        ylabel: "Demandas"
-        tooltipsufix: "demanda(s)"
-        arrived: "Total Entrada"
-        processed: "Total Processada"
-        processed_downstream: "Processadas no Downstream"
-        processed_upstream: "Processadas no Upstream"
+        title: 'Processamento de demandas para %{name}'
+        ylabel: 'Demandas'
+        tooltipsufix: 'demanda(s)'
+        arrived: 'Total Entrada'
+        processed: 'Total Processada'
+        processed_downstream: 'Processadas no Downstream'
+        processed_upstream: 'Processadas no Upstream'
       wip_per_day:
-        title: "Trabalho em Progresso (WiP) por dia para %{name}"
-        ylabel: "Trabalho em Progresso"
-        tooltipsufix: " demanda(s)"
+        title: 'Trabalho em Progresso (WiP) por dia para %{name}'
+        ylabel: 'Trabalho em Progresso'
+        tooltipsufix: ' demanda(s)'
       hours_per_month:
-        title: "Horas por Mês para %{name}"
+        title: 'Horas por Mês para %{name}'
       throughput:
-        tooltipsufix: "demanda(s)"
-        title: "Vazão"
-      creation_date: "Criadas"
+        tooltipsufix: 'demanda(s)'
+        title: 'Vazão'
+      creation_date: 'Criadas'
       demands:
-        title: "Demandas"
-      commitment_date: "Compromisso"
-      committed_date: "Comprometidas"
+        title: 'Demandas'
+      commitment_date: 'Compromisso'
+      committed_date: 'Comprometidas'
       aging_per_demand:
-        title: "Idade média quando a demanda foi finalizada"
-        ylabel: "dia(s)"
-        legend: "dia(s)"
+        title: 'Idade média quando a demanda foi finalizada'
+        ylabel: 'dia(s)'
+        legend: 'dia(s)'
       aging:
-        series: "idade"
+        series: 'idade'
       demands_by_project:
-        title: "Demandas por Projeto"
-      flow_data: "Dados do Fluxo"
+        title: 'Demandas por Projeto'
+      flow_data: 'Dados do Fluxo'
       hours:
-        suffix: "hora(s)"
-      title: "Gráficos de Demandas"
+        suffix: 'hora(s)'
+      title: 'Gráficos de Demandas'
     flow:
-      processed_demand: "Demandas Processadas"
-      wip: "Trabalho em Progresso"
-      committed_with: "Comprometeu-se com"
-      real_throughput: "Vazão Real"
+      processed_demand: 'Demandas Processadas'
+      wip: 'Trabalho em Progresso'
+      committed_with: 'Comprometeu-se com'
+      real_throughput: 'Vazão Real'
     data_analysis:
-      demands_list: "Dados"
-      consolidation: "Consolidação"
-      charts: "Gráficos"
-      list: "Listagem"
-      discarded_demands: "Descartadas"
+      demands_list: 'Dados'
+      consolidation: 'Consolidação'
+      charts: 'Gráficos'
+      list: 'Listagem'
+      discarded_demands: 'Descartadas'
     stats:
-      std_throughput: "Desvio Padrão Vazão"
-      std_committed_with: "Desvio Padrão Comprometido"
-      avg_touch: "Trabalho Médio (horas)"
-      avg_queue: "Fila Média (horas)"
-      avg_work_hours_per_demand: "Horas por Demanda (HpD)"
+      std_throughput: 'Desvio Padrão Vazão'
+      std_committed_with: 'Desvio Padrão Comprometido'
+      avg_touch: 'Trabalho Médio (horas)'
+      avg_queue: 'Fila Média (horas)'
+      avg_work_hours_per_demand: 'Horas por Demanda (HpD)'
     filter:
       grouping:
-        title: "Agrupado por"
-        no_grouping: "Sem Agrupamento"
-        grouped_by_month: "Agrupado por Mês"
-        grouped_by_customer: "Agrupado por Cliente"
-        grouped_by_stage: "Agrupado por Etapa"
+        title: 'Agrupado por'
+        no_grouping: 'Sem Agrupamento'
+        grouped_by_month: 'Agrupado por Mês'
+        grouped_by_customer: 'Agrupado por Cliente'
+        grouped_by_stage: 'Agrupado por Etapa'
       demand_state:
-        title: "Estado no Fluxo"
-        all_demands: "Todas as Demandas"
-        not_committed: "Não Comprometidas"
-        work_in_progress: "Trabalho em Progresso"
-        delivered_demands: "Entregues"
-        not_started: "Não Iniciadas"
-        discarded_demands: "Descartadas"
-        not_discarded_demands: "Não Descartadas"
+        title: 'Estado no Fluxo'
+        all_demands: 'Todas as Demandas'
+        not_committed: 'Não Comprometidas'
+        work_in_progress: 'Trabalho em Progresso'
+        delivered_demands: 'Entregues'
+        not_started: 'Não Iniciadas'
+        discarded_demands: 'Descartadas'
+        not_discarded_demands: 'Não Descartadas'
       demand_type:
-        title: "Tipo da Demanda"
-        all_types: "Todos os Tipos"
+        title: 'Tipo da Demanda'
+        all_types: 'Todos os Tipos'
       class_of_service:
-        title: "Classe de Serviço"
-        all_classes: "Todas as Classes"
+        title: 'Classe de Serviço'
+        all_classes: 'Todas as Classes'
       block_categories:
-        title: "Bloqueios de Demanda"
+        title: 'Bloqueios de Demanda'
       event_categories:
-        title: "Eventos no Fluxo"
+        title: 'Eventos no Fluxo'
     grouped_by_stage:
-      time_in_stage: "Tempo na Etapa"
-      hours_in_stage: "Horas na Etapa"
+      time_in_stage: 'Tempo na Etapa'
+      hours_in_stage: 'Horas na Etapa'
     statistics:
       leadtime_by_type:
-        title: "Lead time por tipo - 80%"
-        feature: "Nova Funcionalidade"
-        bug: "Bug"
-        chore: "Chore"
+        title: 'Lead time por tipo - 80%'
+        feature: 'Nova Funcionalidade'
+        bug: 'Bug'
+        chore: 'Chore'
       leadtime_by_class_of_service:
-        title: "Lead time por classe de serviço - 80%"
-        standard: "Padrão"
-        fixed_date: "Data Fixa"
-        expedite: "Expedição"
+        title: 'Lead time por classe de serviço - 80%'
+        standard: 'Padrão'
+        fixed_date: 'Data Fixa'
+        expedite: 'Expedição'
     score_research:
-      title: "Pesquisa de Pontuação"
-      go_to_list: "Ir para a lista"
+      title: 'Pesquisa de Pontuação'
+      go_to_list: 'Ir para a lista'
     destroy:
-      tip: "Apaga a demanda permanentemente"
+      tip: 'Apaga a demanda permanentemente'
   navbar:
-    details: "Detalhes"
-    charts: "Gráficos"
-    risk_alerts: "Alertas de Risco"
-    settings: "Configurações"
-    projects_list: "Projetos"
-    members_table: "Membros do Time"
-    strategic: "Informações Estratégicas"
-    finance: "Informações Financeiras"
-    teams: "Times"
-    flow: "Fluxo"
-    demands: "Demandas"
-    risks: "Riscos"
-    replenishing: "Reabastecimento"
-    customers_list: "Clientes"
-    products_list: "Produtos"
-    statistics: "Estatísticas"
-    demand_blocks: "Bloqueios"
-    flow_events: "Eventos de Fluxo"
-    jira: "Jira"
-    stages: "Etapas"
-    portfolio_units: "Unidades do Portfólio"
-    risk_reviews: "Revisões de Risco"
-    service_delivery_reviews: "Service Delivery Review"
-    azure: "Azure"
-    initiatives_list: "Iniciativas"
-    tasks: "Tarefas"
+    details: 'Detalhes'
+    charts: 'Gráficos'
+    risk_alerts: 'Alertas de Risco'
+    settings: 'Configurações'
+    projects_list: 'Projetos'
+    members_table: 'Membros do Time'
+    strategic: 'Informações Estratégicas'
+    finance: 'Informações Financeiras'
+    teams: 'Times'
+    flow: 'Fluxo'
+    demands: 'Demandas'
+    risks: 'Riscos'
+    replenishing: 'Reabastecimento'
+    customers_list: 'Clientes'
+    products_list: 'Produtos'
+    statistics: 'Estatísticas'
+    demand_blocks: 'Bloqueios'
+    flow_events: 'Eventos de Fluxo'
+    jira: 'Jira'
+    stages: 'Etapas'
+    portfolio_units: 'Unidades do Portfólio'
+    risk_reviews: 'Revisões de Risco'
+    service_delivery_reviews: 'Service Delivery Review'
+    azure: 'Azure'
+    initiatives_list: 'Iniciativas'
+    tasks: 'Tarefas'
   charts:
     xlabel:
-      months: "Meses"
+      months: 'Meses'
     ylabel:
       projects:
-        text: "Projetos"
+        text: 'Projetos'
       total_hours:
-        text: "Horas em Projetos"
+        text: 'Horas em Projetos'
       hours:
-        text: "Horas"
+        text: 'Horas'
       available:
-        text: "Horas Disponíveis"
+        text: 'Horas Disponíveis'
       flow_pressure:
-        text: "Pressão do Fluxo"
+        text: 'Pressão do Fluxo'
       money:
-        text: "Dinheiro"
+        text: 'Dinheiro'
       expenses:
-        text: "Despesas"
+        text: 'Despesas'
       incomes:
-        text: "Receitas"
+        text: 'Receitas'
       wip_per_day:
-        text: "Dias"
+        text: 'Dias'
     tooltipsufix:
       projects:
-        text: "projetos"
+        text: 'projetos'
     series:
       consumed_hours:
-        text: "Horas Consumidas"
+        text: 'Horas Consumidas'
     hours_available:
-      title: "Horas Vendidas"
-      tooltipsuffix: "Horas Consumidas"
+      title: 'Horas Vendidas'
+      tooltipsuffix: 'Horas Consumidas'
     team_hours_available:
-      title: "Horas Disponíveis"
+      title: 'Horas Disponíveis'
     risk_alert_color:
-      title: "Riscos em %{risk_type}"
+      title: 'Riscos em %{risk_type}'
     date_odds:
-      title: "Confiança nas Durações em Semanas"
-      ytitle: "Duração em Semanas"
-      xtitle: "Datas"
-      project_date: "%{project_deadline} (Projeto)"
-      montecarlo_date: "%{montecarlo_deadline} (Monte Carlo)"
+      title: 'Confiança nas Durações em Semanas'
+      ytitle: 'Duração em Semanas'
+      xtitle: 'Datas'
+      project_date: '%{project_deadline} (Projeto)'
+      montecarlo_date: '%{montecarlo_deadline} (Monte Carlo)'
     montecarlo:
-      title: "Datas de Monte Carlo para %{target_name}"
+      title: 'Datas de Monte Carlo para %{target_name}'
     projections:
-      title: "Projeções"
+      title: 'Projeções'
     current_situation:
-      title: "Situação Atual"
+      title: 'Situação Atual'
     demand:
-      title: "demanda(s)"
+      title: 'demanda(s)'
     cfd:
-      title_downstream: "Cumulative Flow Diagram para %{target_name}"
-      ytitle: "Demandas"
-      data_suffix: "demanda(s)"
+      title_downstream: 'Cumulative Flow Diagram para %{target_name}'
+      ytitle: 'Demandas'
+      data_suffix: 'demanda(s)'
     period:
-      label: "Período"
+      label: 'Período'
     lead_time_data_range_evolution:
-      title: "Variação da Amplitude do Lead Time no Tempo"
-      total_range: "Amplitude Total do Lead Time"
-      total_range_max: "Lead Time Max"
-      total_range_min: "Lead Time Min"
+      title: 'Variação da Amplitude do Lead Time no Tempo'
+      total_range: 'Amplitude Total do Lead Time'
+      total_range_max: 'Lead Time Max'
+      total_range_min: 'Lead Time Min'
     lead_time_histogram_data_range_evolution:
-      total_range: "Amplitude Total"
-      total_range_max: "Bin Max"
-      total_range_min: "Bin Min"
+      total_range: 'Amplitude Total'
+      total_range_max: 'Bin Max'
+      total_range_min: 'Bin Min'
     lead_time_histogram_range_evolution:
-      title: "Amplitude do Histograma do Lead Time"
-      frequency: "Frequência"
+      title: 'Amplitude do Histograma do Lead Time'
+      frequency: 'Frequência'
     lead_time_interquartile_data_range_evolution:
-      title: "Amplitude do Interquartil do Lead Time"
-      total_range: "Amplitude (IQR)"
-      percentile_25: "Percentil 25"
-      percentile_75: "Percentil 75"
+      title: 'Amplitude do Interquartil do Lead Time'
+      total_range: 'Amplitude (IQR)'
+      percentile_25: 'Percentil 25'
+      percentile_75: 'Percentil 75'
     lead_time_interquartile_histogram_range_evolution:
-      title: "Amplitude entre o Histograma e o Interquartil"
-      total_range: "Amplitude Total"
-      interquartile: "Interquartil"
-      histogram: "Histograma"
+      title: 'Amplitude entre o Histograma e o Interquartil'
+      total_range: 'Amplitude Total'
+      interquartile: 'Interquartil'
+      histogram: 'Histograma'
     scope:
-      uncertainty: "Escopo Incerto"
-      created: "Escopo Criado"
-      uncertainty_title: "Incerteza do Escopo"
+      uncertainty: 'Escopo Incerto'
+      created: 'Escopo Criado'
+      uncertainty_title: 'Incerteza do Escopo'
     burnup:
-      scope: "Escopo"
-      ideal: "Ideal"
-      current: "Atual"
-      title: "Burn-up"
+      scope: 'Escopo'
+      ideal: 'Ideal'
+      current: 'Atual'
+      title: 'Burn-up'
     lead_time:
-      text: "Lead time"
+      text: 'Lead time'
     histogram:
-      text: "Histograma"
+      text: 'Histograma'
     lead_time_zones:
-      title: "Zonas do lead time (dias)"
-      series_name: "Zonas do lead time"
-    no_data: "Sem dados suficientes"
+      title: 'Zonas do lead time (dias)'
+      series_name: 'Zonas do lead time'
+    no_data: 'Sem dados suficientes'
     tags_cloud:
-      title: "Nuvem de Tags"
+      title: 'Nuvem de Tags'
     hours_burnup:
-      title: "Queima de Horas"
+      title: 'Queima de Horas'
     quality_info:
-      bugs_by_delivery: "Bugs por Entrega"
-      bugs_by_delivery_month: "Bugs por entrega no mês"
+      bugs_by_delivery: 'Bugs por Entrega'
+      bugs_by_delivery_month: 'Bugs por entrega no mês'
     hours_blocked_per_delivery:
-      label: "Horas Bloqueadas por Entrega"
+      label: 'Horas Bloqueadas por Entrega'
     external_dependency:
-      label: "Bloqueios"
+      label: 'Bloqueios'
     bugs_in_month:
-      title: "Defeitos no Mês"
-      opened: "Abertos"
-      closed: "Fechados"
-    accumulated: "Acumulado"
-    in_month: "No Mês"
-    in_quarter: "No Trimestre"
-    in_year: "No Ano"
-    effort_development: "Esforço Desenvolvimento"
-    effort_design: "Esforço de Design"
-    effort_management: "Esforço de Gestão"
-    effort_design_month: "Esforço de Design no Mês"
-    effort_development_month: "Horas de Desenvolvimento no Mês"
-    effort_management_month: "Horas de Gestão no Mês"
-    total_effort_month: "Esforço Total no Mês"
+      title: 'Defeitos no Mês'
+      opened: 'Abertos'
+      closed: 'Fechados'
+    accumulated: 'Acumulado'
+    in_month: 'No Mês'
+    in_quarter: 'No Trimestre'
+    in_year: 'No Ano'
+    effort_development: 'Esforço Desenvolvimento'
+    effort_design: 'Esforço de Design'
+    effort_management: 'Esforço de Gestão'
+    effort_design_month: 'Esforço de Design no Mês'
+    effort_development_month: 'Horas de Desenvolvimento no Mês'
+    effort_management_month: 'Horas de Gestão no Mês'
+    total_effort_month: 'Esforço Total no Mês'
     risk_evolution:
-      ytitle: "Risco (%)"
-    in_week: "Na Semana"
+      ytitle: 'Risco (%)'
+    in_week: 'Na Semana'
     initiatives_completed:
-      title: "Tarefas Terminadas"
+      title: 'Tarefas Terminadas'
     hours_per_stage:
-      title: "Horas por Etapa"
+      title: 'Horas por Etapa'
   finances_params:
     edit:
-      title: "Editar Informação Financeira"
+      title: 'Editar Informação Financeira'
   stages:
     new:
-      title: "Nova Etapa"
+      title: 'Nova Etapa'
     index:
-      title: "Etapas Configuradas"
-      project_count: "Qtd Projetos"
-      time_in_stage: "Tempo na Etapa"
+      title: 'Etapas Configuradas'
+      project_count: 'Qtd Projetos'
+      time_in_stage: 'Tempo na Etapa'
     edit:
-      title: "Editar Etapa"
+      title: 'Editar Etapa'
     show:
-      not_associated_projects: "Projetos não associados"
-      stage_projects: "Projetos na Etapa"
-      transitions: "Transições"
-      import_projects: "Importar Projetos da Etapa"
-      not_associated_teams: "Times não associados"
-      stage_teams: "Times na Etapa"
+      not_associated_projects: 'Projetos não associados'
+      stage_projects: 'Projetos na Etapa'
+      transitions: 'Transições'
+      import_projects: 'Importar Projetos da Etapa'
+      not_associated_teams: 'Times não associados'
+      stage_teams: 'Times na Etapa'
     charts:
       entrances_per_weekday:
-        ylabel: "demanda(s) chegando"
-        tooltip_prefix: "demanda(s) chegando"
-        title: "Demandas Chegando para %{target_name}"
+        ylabel: 'demanda(s) chegando'
+        tooltip_prefix: 'demanda(s) chegando'
+        title: 'Demandas Chegando para %{target_name}'
       avg_hours_in_stage:
-        title: "Média de Horas em %{target_name}"
-        ylabel: "média de horas na etapa"
+        title: 'Média de Horas em %{target_name}'
+        ylabel: 'média de horas na etapa'
       out_per_weekday:
-        title: "Demandas Saindo de %{target_name}"
-        ylabel: "demanda(s) saindo"
-        tooltip_prefix: "demanda(s) saindo"
+        title: 'Demandas Saindo de %{target_name}'
+        ylabel: 'demanda(s) saindo'
+        tooltip_prefix: 'demanda(s) saindo'
     import_from_jira:
-      title: "Importar do Jira"
-      warning: "Esta ação irá importar todos os statuses de todos os workflows configurados. Não funcionará caso você esteja usando projetos new gen."
+      title: 'Importar do Jira'
+      warning: 'Esta ação irá importar todos os statuses de todos os workflows configurados. Não funcionará caso você esteja usando projetos new gen.'
   demand_blocks:
     index:
-      title: "Bloqueios"
+      title: 'Bloqueios'
       filter:
-        team_member: "Membro do Time"
-        stage: "Etapa"
-        ordering: "Ordenação"
-        start_date: "Data inicial"
-        end_date: "Fim"
-        block_type: "Tipo"
-        project: "Projetos"
-        finished_projects: "Em Projetos Finalizados"
-        inactive_blocks: "Bloqueios inativos"
-      average_time_per_block: "Tempo Médio por Bloqueio"
-      total_blocks: "Total"
-      total_time: "Tempo Total"
-      notified_blocked: "Bloqueio Notificado?"
-      notified_unblocked: "Desbloqueio Notificado?"
-      average_time_blocked_per_demand: "Tempo bloqueado por demanda"
+        team_member: 'Membro do Time'
+        stage: 'Etapa'
+        ordering: 'Ordenação'
+        start_date: 'Data inicial'
+        end_date: 'Fim'
+        block_type: 'Tipo'
+        project: 'Projetos'
+        finished_projects: 'Em Projetos Finalizados'
+        inactive_blocks: 'Bloqueios inativos'
+      average_time_per_block: 'Tempo Médio por Bloqueio'
+      total_blocks: 'Total'
+      total_time: 'Tempo Total'
+      notified_blocked: 'Bloqueio Notificado?'
+      notified_unblocked: 'Desbloqueio Notificado?'
+      average_time_blocked_per_demand: 'Tempo bloqueado por demanda'
     edit:
-      title: "Editar Bloqueio"
+      title: 'Editar Bloqueio'
     charts:
       hours_blocked:
-        title: "Horas Bloqueadas para %{target_name}"
-        ylabel: "Horas"
-        legend: "Horas Bloqueadas"
+        title: 'Horas Bloqueadas para %{target_name}'
+        ylabel: 'Horas'
+        legend: 'Horas Bloqueadas'
       blocks:
-        title: "Bloqueios para %{target_name}"
-        ylabel: "bloqueio(s)"
-        legend: "bloqueios"
+        title: 'Bloqueios para %{target_name}'
+        ylabel: 'bloqueio(s)'
+        legend: 'bloqueios'
   demand_transitions:
-    total_time_in_transition: "Tempo total na transição"
-    working_time_in_transition: "Tempo útil na transição"
+    total_time_in_transition: 'Tempo total na transição'
+    working_time_in_transition: 'Tempo útil na transição'
     index:
-      title: "Transições da Demanda"
-    block_time_in_transition: "Tempo Bloqueio na Transição"
-    effort_time_in_transition: "Esforço na Transição"
+      title: 'Transições da Demanda'
+    block_time_in_transition: 'Tempo Bloqueio na Transição'
+    effort_time_in_transition: 'Esforço na Transição'
     new:
-      title: "Nova Transição"
+      title: 'Nova Transição'
   project_change_deadline_histories:
     index:
-      dates_difference: "Diferença (dias)"
+      dates_difference: 'Diferença (dias)'
   stage_project_configs:
     edit:
-      title: "Editar Configuração para Etapa e Projeto"
-      project_list: "Projetos configurados nesta etapa"
-      replicate_to_projects: "Replicar para os outros projetos desta etapa?"
-      recompute_manual_efforts: "Recalcular Esforços Manuais"
+      title: 'Editar Configuração para Etapa e Projeto'
+      project_list: 'Projetos configurados nesta etapa'
+      replicate_to_projects: 'Replicar para os outros projetos desta etapa?'
+      recompute_manual_efforts: 'Recalcular Esforços Manuais'
     registrations:
-      change_password: "Mudar Senha"
+      change_password: 'Mudar Senha'
     form:
-      max_seconds_in_stage: "Tempo Máximo na Etapa"
-      max_seconds_in_stage_period: "Período"
+      max_seconds_in_stage: 'Tempo Máximo na Etapa'
+      max_seconds_in_stage_period: 'Período'
     index:
       title:
-        zero: "%{count} Etapa no Projeto"
-        one: "%{count} Etapa no Projeto"
-        other: "%{count} Etapas no Projeto"
+        zero: '%{count} Etapa no Projeto'
+        one: '%{count} Etapa no Projeto'
+        other: '%{count} Etapas no Projeto'
   finances:
     charts:
       finance_result:
-        title: "Resultado Financeiro para o Período"
-        ylabel: "Dinheiro"
-        line_title: "Saldo Mensal"
-        income_column_name: "Entradas Totais"
-        line_name: "Saldo Mensal"
-        expense_column_name: "Despesas Totais"
+        title: 'Resultado Financeiro para o Período'
+        ylabel: 'Dinheiro'
+        line_title: 'Saldo Mensal'
+        income_column_name: 'Entradas Totais'
+        line_name: 'Saldo Mensal'
+        expense_column_name: 'Despesas Totais'
       finance:
-        cost_per_hour: "Saídas por Hora"
-        income_per_hour: "Entradas por Hora"
-        cost_income_per_hour: "Entradas e Saídas por Hora"
-        std_dev_income_per_hour: "Desvio Padrão das Entradas"
-        std_dev_cost_per_hour: "Desvio Padrão das Saídas"
-        std_dev_income_outcome: "Desvio Padrão das Entradas e Saídas"
-        mean_cost_per_hour: "Evolução da Média do Custo por Hora"
+        cost_per_hour: 'Saídas por Hora'
+        income_per_hour: 'Entradas por Hora'
+        cost_income_per_hour: 'Entradas e Saídas por Hora'
+        std_dev_income_per_hour: 'Desvio Padrão das Entradas'
+        std_dev_cost_per_hour: 'Desvio Padrão das Saídas'
+        std_dev_income_outcome: 'Desvio Padrão das Entradas e Saídas'
+        mean_cost_per_hour: 'Evolução da Média do Custo por Hora'
   jira_project_configs:
     new:
-      title: "Nova Configuração do Jira"
+      title: 'Nova Configuração do Jira'
       fix_version_field:
-        help: "Usamos fix versions ou labels para dividir os itens de trabalho em lotes de planejamento e previsibilidade. Labels possuem precedência sobre as fix versions."
+        help: 'Usamos fix versions ou labels para dividir os itens de trabalho em lotes de planejamento e previsibilidade. Labels possuem precedência sobre as fix versions.'
     index:
       title:
-        zero: "%{count} Configuração do Jira"
-        one: "%{count} Configuração do Jira"
-        other: "%{count} Configurações do Jira"
+        zero: '%{count} Configuração do Jira'
+        one: '%{count} Configuração do Jira'
+        other: '%{count} Configurações do Jira'
   exports:
     request_project_information:
-      title: "Receber Informações do Jira"
-      no_result_alert: "Sua busca não retornou resultados, revise os campos"
-      queued: "Seu pedido foi enfileirado. Você receberá um email com os dados e também poderá baixá-los através da página do seu perfil."
-      csv_attached: ""
-      address_in_web: "Você também pode encontrar essa informação aqui."
+      title: 'Receber Informações do Jira'
+      no_result_alert: 'Sua busca não retornou resultados, revise os campos'
+      queued: 'Seu pedido foi enfileirado. Você receberá um email com os dados e também poderá baixá-los através da página do seu perfil.'
+      csv_attached: ''
+      address_in_web: 'Você também pode encontrar essa informação aqui.'
   plans:
     buttons:
-      inactive_plan_present: "Você já tem um plano inativo"
+      inactive_plan_present: 'Você já tem um plano inativo'
     validations:
-      no_gold_plan: "Você precisa do plano gold para acessar essa área."
-      no_lite_plan: "Você precisa do plano lite no mínimo para acessar isso."
+      no_gold_plan: 'Você precisa do plano gold para acessar essa área.'
+      no_lite_plan: 'Você precisa do plano lite no mínimo para acessar isso.'
     alert:
-      alreary_has_a_plan: "Você já tem um plano"
+      alreary_has_a_plan: 'Você já tem um plano'
   user_plans:
     index:
       table:
-        title: "Todos os planos"
+        title: 'Todos os planos'
   user_profile:
     show:
-      data_processed_table: "Dados Processados"
+      data_processed_table: 'Dados Processados'
   stats:
     period:
-      variation: "Variação no Período"
+      variation: 'Variação no Período'
     population:
-      variation: "Variação da População"
+      variation: 'Variação da População'
   portfolio:
     charts:
-      block_count: "Qtd Bloqueios"
+      block_count: 'Qtd Bloqueios'
       aging_by_project:
-        data_title: "dias"
-        title: "Aging por Projeto"
+        data_title: 'dias'
+        title: 'Aging por Projeto'
       throughput_by_project:
-        data_title: "Throughput"
-        chart_title: "Throughput por Projeto para %{target_name}"
-        xtitle: "Projetos"
+        data_title: 'Throughput'
+        chart_title: 'Throughput por Projeto para %{target_name}'
+        xtitle: 'Projetos'
   flow_events:
     new:
-      title: "Novo Evento"
+      title: 'Novo Evento'
     destroy:
-      tooltip: "Excluir Evento"
+      tooltip: 'Excluir Evento'
     create:
-      success: "Evento de fluxo criado."
-      error: "Problemas foram encontrados para salvar o Evento"
+      success: 'Evento de fluxo criado.'
+      error: 'Problemas foram encontrados para salvar o Evento'
     edit:
-      tooltip: "Editar Evento"
-      title: "Editar Evento"
+      tooltip: 'Editar Evento'
+      title: 'Editar Evento'
     show:
-      event_duration: "Duração do Evento"
+      event_duration: 'Duração do Evento'
     index:
-      title: "Eventos"
+      title: 'Eventos'
   jira_accounts:
     new:
-      title: "Nova Conta do Jira"
+      title: 'Nova Conta do Jira'
     create:
-      success: "Conta do Jira criada"
-      failed: "A conta do jira não foi salva"
+      success: 'Conta do Jira criada'
+      failed: 'A conta do jira não foi salva'
     destroy:
-      tooltip: "Excluir Conta do Jira"
+      tooltip: 'Excluir Conta do Jira'
     webhooks:
-      help: "Podemos ouvir notificações do Jira através de dois webhooks"
-      link_form_hint: "Configuração de webhooks no Jira"
-      help_create_update_card: "Para inclusão ou alteração de cartões https://flowclimateapp.herokuapp.com/jira_webhook"
-      link_form_help_hint: "Exemplo de configuração do webhook"
-      help_delete_card: "Para exclusão de cartões https://flowclimateapp.herokuapp.com/jira_delete_card_webhook"
+      help: 'Podemos ouvir notificações do Jira através de dois webhooks'
+      link_form_hint: 'Configuração de webhooks no Jira'
+      help_create_update_card: 'Para inclusão ou alteração de cartões https://flowclimateapp.herokuapp.com/jira_webhook'
+      link_form_help_hint: 'Exemplo de configuração do webhook'
+      help_delete_card: 'Para exclusão de cartões https://flowclimateapp.herokuapp.com/jira_delete_card_webhook'
   filters:
     options:
-      project_status: "Status do Projeto"
-      demand_status: "Status da Demanda"
+      project_status: 'Status do Projeto'
+      demand_status: 'Status da Demanda'
   slack_configuration:
     info_type:
-      uniqueness: "Você só pode ter um tipo de configuração por cada time."
+      uniqueness: 'Você só pode ter um tipo de configuração por cada time.'
   slack_configurations:
     new:
-      title: "Nova Config do Slack"
+      title: 'Nova Config do Slack'
     notifications:
-      beyond_expected_title: "O time %{team_name} está com %{beyond_expected_count} demanda(s) acima do esperado na etapa"
-      block_change_type_text: "Clique no tipo para classificar o bloqueio"
+      beyond_expected_title: 'O time %{team_name} está com %{beyond_expected_count} demanda(s) acima do esperado na etapa'
+      block_change_type_text: 'Clique no tipo para classificar o bloqueio'
     index:
-      active: "Ativo?"
+      active: 'Ativo?'
   portfolio_units:
     index:
-      title: "Unidades do Portfólio"
+      title: 'Unidades do Portfólio'
     new:
-      button: "Nova Unidade do Portfólio"
+      button: 'Nova Unidade do Portfólio'
     show:
       navbar:
-        demands: "Demandas"
-        structure: "Estrutura"
+        demands: 'Demandas'
+        structure: 'Estrutura'
   jira_product_configs:
     new:
-      button: "Nova Config de Produto"
+      button: 'Nova Config de Produto'
   memberships:
     new:
-      title: "Nova Associação"
+      title: 'Nova Associação'
     edit:
-      title: "Nova Associação"
+      title: 'Nova Associação'
     index:
       search:
-        actives_members_checkbox: "associações ativas"
+        actives_members_checkbox: 'associações ativas'
   risk_review:
     attributes:
       validations:
-        product_uniqueness: "Você só pode ter uma reunião para o produto começando na mesma data."
+        product_uniqueness: 'Você só pode ter uma reunião para o produto começando na mesma data.'
     help:
-      lead_time_outlier_limit: "Máximo de dias pra considerar outliers"
+      lead_time_outlier_limit: 'Máximo de dias pra considerar outliers'
   risk_reviews:
     new:
-      title: "Nova Revisão de Risco"
+      title: 'Nova Revisão de Risco'
     show:
-      outlier_demands_label: "Demandas Outlier"
-      demands_blocks_label: "Bloqueios de Demanda"
+      outlier_demands_label: 'Demandas Outlier'
+      demands_blocks_label: 'Bloqueios de Demanda'
       class_of_services:
-        title: "Classes de Serviço"
-      demands_label: "Demandas"
-      flow_events_label: "Eventos de Fluxo"
-      events_per_demand_label: "Evento/Demanda"
-      bugs_label: "Defeitos"
-      blocks_per_demand_label: "Bloqueios/Demanda"
-      projects_broken_wip: "Qty Quebras de WiP"
-      average_blocked_time: "Tempo Médio de Bloqueio"
+        title: 'Classes de Serviço'
+      demands_label: 'Demandas'
+      flow_events_label: 'Eventos de Fluxo'
+      events_per_demand_label: 'Evento/Demanda'
+      bugs_label: 'Defeitos'
+      blocks_per_demand_label: 'Bloqueios/Demanda'
+      projects_broken_wip: 'Qty Quebras de WiP'
+      average_blocked_time: 'Tempo Médio de Bloqueio'
     update:
-      enqueued_associations: "A construção da sua revisão de risco foi enfileirada. Você receberá um email quando ela estiver completa."
+      enqueued_associations: 'A construção da sua revisão de risco foi enfileirada. Você receberá um email quando ela estiver completa.'
   team_resources:
     new:
-      title: "Novo Recurso"
+      title: 'Novo Recurso'
   team_resource_allocations:
     new:
-      title: "Nova Alocação de Recurso"
+      title: 'Nova Alocação de Recurso'
   service_delivery_reviews:
     new:
-      title: "Nova Revisão"
+      title: 'Nova Revisão'
     show:
-      bugs_label: "Defeitos"
+      bugs_label: 'Defeitos'
       class_of_services:
-        title: "Classes de Serviço"
-      demands_label: "Demandas"
+        title: 'Classes de Serviço'
+      demands_label: 'Demandas'
       expedites_delayded:
-        title: "Expedites Atrasadas"
+        title: 'Expedites Atrasadas'
       expedites_not_delayded:
-        title: "Expedites no Prazo"
-      no_bugs_label: "demandas"
-      lead_time_breakdown_label: "Lead Time Breakdown"
-      stages: "Etapas"
+        title: 'Expedites no Prazo'
+      no_bugs_label: 'demandas'
+      lead_time_breakdown_label: 'Lead Time Breakdown'
+      stages: 'Etapas'
       portfolio_units:
-        title: "Progresso das Unidades de Portfólio"
-      highest_stage_time: "Etapa Mais Longa"
-      discarded_demands_label: "Descartadas"
-      general_info: "Geral"
-      kpis: "KPIs"
-      see_demands: "ver demandas"
+        title: 'Progresso das Unidades de Portfólio'
+      highest_stage_time: 'Etapa Mais Longa'
+      discarded_demands_label: 'Descartadas'
+      general_info: 'Geral'
+      kpis: 'KPIs'
+      see_demands: 'ver demandas'
     update:
-      enqueued_associations: "A construção da sua service delivery review foi enfileirada. Você receberá um email quando ela estiver completa."
+      enqueued_associations: 'A construção da sua service delivery review foi enfileirada. Você receberá um email quando ela estiver completa.'
   jira_custom_field_mappings:
     new:
-      title: "Novo Mapeamento de Campo"
+      title: 'Novo Mapeamento de Campo'
   activerecord:
     attributes:
       demand:
-        external_url: "Link Externo"
+        external_url: 'Link Externo'
     errors:
       models:
         user_invite:
           invite_email:
-            not_same: "Você pode ter apenas um convite não cancelado para o mesmo email e empresa."
+            not_same: 'Você pode ter apenas um convite não cancelado para o mesmo email e empresa.'
   views:
     pagination:
-      first: "&laquo; Primeira"
-      last: "Última &raquo;"
-      previous: "&lsaquo; Anterior"
-      next: "Próxima &rsaquo;"
-      truncate: "&hellip;"
+      first: '&laquo; Primeira'
+      last: 'Última &raquo;'
+      previous: '&lsaquo; Anterior'
+      next: 'Próxima &rsaquo;'
+      truncate: '&hellip;'
   helpers:
     page_entries_info:
       one_page:
         display_entries:
-          zero: "Nenhum %{entry_name} encontrado(a)"
-          one: "Exibindo <b>1</b> %{entry_name}"
-          other: "Exibindo <b>%{count}</b> %{entry_name}"
+          zero: 'Nenhum %{entry_name} encontrado(a)'
+          one: 'Exibindo <b>1</b> %{entry_name}'
+          other: 'Exibindo <b>%{count}</b> %{entry_name}'
       more_pages:
-        display_entries: "Exibindo %{entry_name} <b>%{first}&nbsp;-&nbsp;%{last}</b> de <b>%{total}</b> no total"
+        display_entries: 'Exibindo %{entry_name} <b>%{first}&nbsp;-&nbsp;%{last}</b> de <b>%{total}</b> no total'
   user:
     dashboard:
-      pairing_info: "Pareamento"
-      general_info: "Informações Gerais"
-      lead_time_min: "Lead time menor"
-      lead_time_max: "Lead time maior"
+      pairing_info: 'Pareamento'
+      general_info: 'Informações Gerais'
+      lead_time_min: 'Lead time menor'
+      lead_time_max: 'Lead time maior'
   user_company_roles:
     new:
-      title: "Nova Função de Usuário"
+      title: 'Nova Função de Usuário'
     edit:
-      title: "Editar Função do Usuário"
+      title: 'Editar Função do Usuário'
   risk_review_action_items:
     create:
-      success: "A ação foi criada."
+      success: 'A ação foi criada.'
   user_invites:
     create:
-      error: "O e-mail não deve estar em branco."
-      success: "Usuário convidado"
+      error: 'O e-mail não deve estar em branco.'
+      success: 'Usuário convidado'
   contract:
     new:
-      title: "Novo Contrato"
+      title: 'Novo Contrato'
     edit:
-      title: "Editar Contrato"
+      title: 'Editar Contrato'
   contracts:
     save:
-      error: "Ocorreram problemas durante a gravação do contrato. Verifique os campos do formulário."
+      error: 'Ocorreram problemas durante a gravação do contrato. Verifique os campos do formulário.'
     new:
-      title: "Novo Contrato"
+      title: 'Novo Contrato'
     create:
-      success: "Contrato criado."
+      success: 'Contrato criado.'
     update:
-      success: "Contrato atualizado."
+      success: 'Contrato atualizado.'
     index:
-      current_hours_per_demand: "HpD Atual"
-      hours_estimate_gap: "Gap"
-      update_consolidations: "Atualizar Consolidações"
-      average_hours_per_month: "Média Horas Mês"
+      current_hours_per_demand: 'HpD Atual'
+      hours_estimate_gap: 'Gap'
+      update_consolidations: 'Atualizar Consolidações'
+      average_hours_per_month: 'Média Horas Mês'
   score_matrix_questions:
     create:
-      success: "Pergunta de pontuação criada."
+      success: 'Pergunta de pontuação criada.'
     update:
-      success: "Pergunta de pontuação atualizada."
+      success: 'Pergunta de pontuação atualizada.'
     new:
-      title: "Nova Pergunta"
+      title: 'Nova Pergunta'
   score_matrix_answers:
     create:
-      success: "Resposta criada."
+      success: 'Resposta criada.'
     new:
-      no_answer: "Não sei"
+      no_answer: 'Não sei'
   demand_score_matrices:
     destroy:
-      tip: "Excluir resposta"
+      tip: 'Excluir resposta'
     new:
-      title: "Pontuar Demanda"
+      title: 'Pontuar Demanda'
   score_matrices:
     show:
-      title: "Pontuar Demandas"
-      ordering: "Ordenar Pontuação"
+      title: 'Pontuar Demandas'
+      ordering: 'Ordenar Pontuação'
   operations_dashboard:
     lead_time_control_chart:
-      title: "Control Chart do Lead Time"
+      title: 'Control Chart do Lead Time'
     lead_time_histogram:
-      title: "Histograma do Lead Time"
+      title: 'Histograma do Lead Time'
     effort_chart:
-      title: "Horas Úteis em Desenvolvimento"
+      title: 'Horas Úteis em Desenvolvimento'
     pull_interval:
-      title: "Intervalo Médio entre Demandas Puxadas"
+      title: 'Intervalo Médio entre Demandas Puxadas'
   project_risk_configs:
     index:
       title:
-        zero: "%{count} Configuração de Risco"
-        one: "%{count} Configuração de Risco"
-        other: "%{count} Configurações de Risco"
+        zero: '%{count} Configuração de Risco'
+        one: '%{count} Configuração de Risco'
+        other: '%{count} Configurações de Risco'
     new:
-      title: "Nova Configuração de Risco"
+      title: 'Nova Configuração de Risco'
   project_risk_alerts:
     index:
-      title: "%{count} Alertas de Risco"
+      title: '%{count} Alertas de Risco'
   replenishing_consolidations:
     index:
-      title: "Reabastecimento"
+      title: 'Reabastecimento'
   demand_efforts:
     index:
-      title: "Esforços"
+      title: 'Esforços'
   azure_accounts:
     update:
-      title: "Sincronizar empresa com o Azure Devops"
+      title: 'Sincronizar empresa com o Azure Devops'
     edit:
-      title: "Editar Conta no Azure"
-      success: "Conta no azure foi atualizada."
-      failure: "Problemas foram encontrados no salvamento da conta. Verifique os campos."
+      title: 'Editar Conta no Azure'
+      success: 'Conta no azure foi atualizada.'
+      failure: 'Problemas foram encontrados no salvamento da conta. Verifique os campos.'
   tasks:
     index:
-      title: "Tarefas"
-      count: "%{count} Tarefas"
+      title: 'Tarefas'
+      count: '%{count} Tarefas'
       search:
-        placeholder: "buscar pelo nome da tarefa"
+        placeholder: 'buscar pelo nome da tarefa'
         helpers:
-          date: "Se estiver buscando por tarefas fechadas, a busca será feita pela data de entrega, senão será feita pela data de criação."
+          date: 'Se estiver buscando por tarefas fechadas, a busca será feita pela data de entrega, senão será feita pela data de criação.'
       finished:
-        count: "%{count} finalizadas"
+        count: '%{count} finalizadas'
     charts:
       completion_time:
-        title: "Tempo para Finalizar (P80)"
-        ytitle: "dias"
+        title: 'Tempo para Finalizar (P80)'
+        ytitle: 'dias'
       completion_control_chart:
-        title: "Gráfico de Dispersão do Tempo de Resolução"
-        ylabel: "Dias"
+        title: 'Gráfico de Dispersão do Tempo de Resolução'
+        ylabel: 'Dias'
       risk:
-        ytitle: "Risco Operacional (%)"
-        title: "Evolução do Risco Operacional"
+        ytitle: 'Risco Operacional (%)'
+        title: 'Evolução do Risco Operacional'
       scope:
-        ytitle: "Tarefas"
+        ytitle: 'Tarefas'
       throughput:
-        title: "Vazão"
-      tasks: "Tarefas"
+        title: 'Vazão'
+      tasks: 'Tarefas'
       wip_completion_control_chart:
-        title: "Tempos Parciais para Tarefas em Progresso."
+        title: 'Tempos Parciais para Tarefas em Progresso.'
   initiatives:
     index:
-      title: "Iniciativas"
+      title: 'Iniciativas'
     create:
-      success: "Initiative created."
-      error: "A iniciativa não foi salva. Verifique o formulário para mais informações."
+      success: 'Initiative created.'
+      error: 'A iniciativa não foi salva. Verifique o formulário para mais informações.'
     new:
-      title: "Nova Iniciativa"
+      title: 'Nova Iniciativa'
