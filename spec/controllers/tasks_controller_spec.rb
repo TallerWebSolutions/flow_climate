@@ -94,5 +94,38 @@ RSpec.describe TasksController, type: :controller do
         end
       end
     end
+
+    describe 'GET #charts' do
+      let(:company) { Fabricate :company, users: [user] }
+      let(:customer) { Fabricate :customer, company: company }
+      let(:project) { Fabricate :project, company: company }
+      let(:demand) { Fabricate :demand, company: company, project: project }
+
+      context 'passing valid parameters' do
+        it 'assigns the instance variables and renders the template' do
+          get :charts, params: { company_id: company }, xhr: true
+
+          expect(response).to render_template 'spa-build/index'
+        end
+      end
+
+      context 'passing an invalid' do
+        context 'company' do
+          context 'non-existent' do
+            before { get :charts, params: { company_id: 'foo', id: project } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'not permitted' do
+            let(:company) { Fabricate :company, users: [] }
+
+            before { get :charts, params: { company_id: company, id: project } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
   end
 end
