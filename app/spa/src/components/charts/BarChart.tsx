@@ -3,11 +3,13 @@ import { BarDatum, ResponsiveBar } from "@nivo/bar"
 type BarChartProps = {
   axisLeftLegend?: string
   data: BarDatum[]
+  props?: object
 }
 
-export const BarChart = ({ data, axisLeftLegend }: BarChartProps) => (
+export const BarChart = ({ data, axisLeftLegend, props }: BarChartProps) => (
   <ResponsiveBar
     data={data}
+    indexBy="period"
     margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
     padding={0.3}
     valueScale={{ type: "linear" }}
@@ -43,7 +45,6 @@ export const BarChart = ({ data, axisLeftLegend }: BarChartProps) => (
       tickSize: 5,
       tickPadding: 5,
       tickRotation: 0,
-      legend: "country",
       legendPosition: "middle",
       legendOffset: 32,
     }}
@@ -88,5 +89,6 @@ export const BarChart = ({ data, axisLeftLegend }: BarChartProps) => (
         ],
       },
     ]}
+    {...props}
   />
 )
