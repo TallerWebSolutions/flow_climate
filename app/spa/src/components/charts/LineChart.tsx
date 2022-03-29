@@ -1,14 +1,16 @@
-import { ResponsiveLine, Serie } from "@nivo/line"
+import { ResponsiveLine } from "@nivo/line"
 
 type LineGraphProps = {
-  data: Serie[]
+  data: any
   axisLeftLegend: string
+  props?: object
 }
 
-export const LineChart = ({ data, axisLeftLegend }: LineGraphProps) => {
+export const LineChart = ({ data, axisLeftLegend, props }: LineGraphProps) => {
   return (
     <ResponsiveLine
       data={data}
+      // onClick={}
       colors={{ scheme: "pastel2" }}
       margin={{ left: 80, right: 20, top: 25, bottom: 40 }}
       axisLeft={{
@@ -43,6 +45,7 @@ export const LineChart = ({ data, axisLeftLegend }: LineGraphProps) => {
           ],
         },
       ]}
+      {...props}
     />
   )
 }

@@ -148,7 +148,6 @@ const TasksPage = ({
   const { data, loading } = useQuery<TaskFiltersDTO>(SELECT_FILTERS_QUERY)
 
   useEffect(() => {
-    console.log(data?.me.currentCompany.projects)
     onFiltersChange(taskFilters)
     // eslint-disable-next-line
   }, [taskFilters, data])

@@ -1,5 +1,8 @@
 import { gql, useQuery } from "@apollo/client"
 import { Box, CircularProgress, Typography } from "@mui/material"
+import { BarDatum } from "@nivo/bar"
+import { CartesianMarkerProps } from "@nivo/core"
+import { ScatterPlotValue } from "@nivo/scatterplot"
 import { ReactElement, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useLocation } from "react-router-dom"
@@ -7,13 +10,10 @@ import { BarChart } from "../../components/charts/BarChart"
 import { LineChart } from "../../components/charts/LineChart"
 import { ScatterChart } from "../../components/charts/ScatterChart"
 import TasksPage, { TaskFilters } from "../../components/TaskPage"
+import { secondsToDays } from "../../lib/date"
 import { Company } from "../../modules/company/company.types"
 import { Task } from "../../modules/task/task.types"
 import User from "../../modules/user/user.types"
-
-const HOURS_IN_ONE_DAY = 24
-const ONE_HOUR_IN_SECONDS = 60 * 60
-const ONE_DAY_IN_SECONDS = ONE_HOUR_IN_SECONDS * HOURS_IN_ONE_DAY
 
 const GET_TOTAL_FINISHED_TASKS = gql`
   query GetTotalOfFinishedTasks {
@@ -22,12 +22,6 @@ const GET_TOTAL_FINISHED_TASKS = gql`
     }
   }
 `
-
-type TotalFinishedTasksDTO = {
-  tasksList: {
-    totalCount: number
-  }
-}
 
 const TASKS_CHARTS_QUERY = gql`
   query TasksCharts($limit: Int) {
@@ -38,6 +32,22 @@ const TASKS_CHARTS_QUERY = gql`
         secondsToComplete
         partialCompletionTime
       }
+
+      tasksCharts {
+        xAxis
+        creationArray
+        throughputArray
+        completionPercentilesOnTimeArray
+        accumulatedCompletionPercentilesOnTimeArray
+      }
+
+      deliveredLeadTimeP65
+      deliveredLeadTimeP80
+      deliveredLeadTimeP95
+
+      inProgressLeadTimeP65
+      inProgressLeadTimeP80
+      inProgressLeadTimeP95
     }
 
     me {
@@ -54,13 +64,40 @@ type TasksChartsDTO = {
   tasksList: {
     totalCount: number
     tasks: Task[]
+    tasksCharts: {
+      xAxis: string[]
+      creationArray: number[]
+      throughputArray: number[]
+      completionPercentilesOnTimeArray: number[]
+      accumulatedCompletionPercentilesOnTimeArray: number[]
+    }
+    deliveredLeadTimeP65: number
+    deliveredLeadTimeP80: number
+    deliveredLeadTimeP95: number
+    inProgressLeadTimeP65: number
+    inProgressLeadTimeP80: number
+    inProgressLeadTimeP95: number
   }
 }
 
 type ChartData = {
-  x: number
-  y: number
+  x: number | string
+  y: number | string
 }
+
+type TotalFinishedTasksDTO = {
+  tasksList: {
+    totalCount: number
+  }
+}
+
+type CompletionTimeConfidenceChart = {
+  p80CompletionTime: ChartData[]
+  accumulatedCompletionTime: ChartData[]
+}
+
+const voidTask = {} as Task
+type TaskKey = keyof typeof voidTask
 
 const ChartBox = ({
   children,
@@ -73,7 +110,7 @@ const ChartBox = ({
     <Box
       sx={{
         width: "100%",
-        height: 350,
+        height: 400,
         display: "flex",
         alignItems: "center",
         flexDirection: "column",
@@ -88,9 +125,6 @@ const ChartBox = ({
   )
 }
 
-const voidTask = {} as Task
-type TaskKey = keyof typeof voidTask
-
 const mountTasksChartAxis = ({
   tasks,
   fieldID,
@@ -102,9 +136,7 @@ const mountTasksChartAxis = ({
 }): ChartData[] => {
   return tasks
     ? tasks.map((task) => {
-        const daysToCompleteTask = Number(
-          (Number(task[fieldData]) / ONE_DAY_IN_SECONDS).toFixed(2)
-        )
+        const daysToCompleteTask = secondsToDays(Number(task[fieldData]))
 
         return {
           x: task[fieldID] as number,
@@ -114,6 +146,24 @@ const mountTasksChartAxis = ({
     : []
 }
 
+const buildPercentileYAxisMarker = ({
+  completionTime,
+  color,
+  legend,
+}: {
+  completionTime: number | string
+  legend: string
+  color: string
+}): CartesianMarkerProps<ScatterPlotValue> => {
+  return {
+    axis: "y",
+    value: completionTime,
+    lineStyle: { stroke: color, strokeWidth: 1 },
+    legend: legend,
+    legendOrientation: "horizontal",
+  }
+}
+
 const Charts = () => {
   const { t } = useTranslation(["tasks"])
   const { pathname } = useLocation()
@@ -121,6 +171,11 @@ const Charts = () => {
   const [partialCompletionTimeData, setPartialCompletionTimeData] = useState<
     ChartData[]
   >([])
+  const [flowChartData, setFlowChartData] = useState<BarDatum[]>([])
+  const [
+    completionTimeConfidenceEvolution,
+    setCompletionTimeConfidenceEvolution,
+  ] = useState<CompletionTimeConfidenceChart>()
   const [company, setCompany] = useState<Company | null>(null)
   const [taskFilters, setTaskFilters] = useState<TaskFilters>({
     page: 0,
@@ -166,37 +221,149 @@ const Charts = () => {
       })
 
       setPartialCompletionTimeData(mountedPartialCompletionChartData)
+
+      const tasksChartsData = data?.tasksList.tasksCharts
+
+      const mountedFlowChartData = tasksChartsData
+        ? tasksChartsData.xAxis.map((xAxis, index) => {
+            return {
+              period: xAxis,
+              [t("charts.flow_data_created_legend")]:
+                tasksChartsData.creationArray[index],
+              [t("charts.flow_data_delivered_legend")]:
+                tasksChartsData.throughputArray[index],
+            }
+          })
+        : []
+
+      setFlowChartData(mountedFlowChartData)
+
+      const mountedCompletionTimeConfidenceData = tasksChartsData
+        ? tasksChartsData.xAxis.map((xAxis, index) => {
+            return {
+              x: xAxis,
+              y: secondsToDays(
+                tasksChartsData.completionPercentilesOnTimeArray[index]
+              ),
+            }
+          })
+        : []
+
+      const mountedAccumulatedCompletionTime = tasksChartsData
+        ? tasksChartsData.xAxis.map((xAxis, index) => {
+            return {
+              x: xAxis,
+              y: secondsToDays(
+                tasksChartsData.accumulatedCompletionPercentilesOnTimeArray[
+                  index
+                ]
+              ),
+            }
+          })
+        : []
+
+      setCompletionTimeConfidenceEvolution({
+        accumulatedCompletionTime: mountedAccumulatedCompletionTime,
+        p80CompletionTime: mountedCompletionTimeConfidenceData,
+      })
     }
   }, [data, loading])
 
   const breadcrumbsLinks = [
-    { name: String(company?.name) || "", url: String(company?.slug) },
-    { name: t("charts") },
+    { name: company?.name || "", url: String(company?.slug) },
+    { name: t("tabs.charts") },
   ]
+
+  const deliveredLeadTimeP65 = secondsToDays(
+    Number(data?.tasksList.deliveredLeadTimeP65)
+  )
+  const deliveredLeadTimeP80 = secondsToDays(
+    Number(data?.tasksList.deliveredLeadTimeP80)
+  )
+  const deliveredLeadTimeP95 = secondsToDays(
+    Number(data?.tasksList.deliveredLeadTimeP95)
+  )
+
+  const inProgressLeadTimeP65 = secondsToDays(
+    Number(data?.tasksList.inProgressLeadTimeP65)
+  )
+  const inProgressLeadTimeP80 = secondsToDays(
+    Number(data?.tasksList.inProgressLeadTimeP80)
+  )
+  const inProgressLeadTimeP95 = secondsToDays(
+    Number(data?.tasksList.inProgressLeadTimeP95)
+  )
+
+  const deliveredLeadTimeP65Marker = buildPercentileYAxisMarker({
+    color: "#f80304",
+    completionTime: deliveredLeadTimeP65,
+    legend: t("charts.control_completion_time_p65_marker", {
+      days: deliveredLeadTimeP65,
+    }),
+  })
+
+  const deliveredLeadTimeP80Marker = buildPercentileYAxisMarker({
+    color: "#daa521",
+    completionTime: deliveredLeadTimeP80,
+    legend: t("charts.control_completion_time_p80_marker", {
+      days: deliveredLeadTimeP80,
+    }),
+  })
+
+  const deliveredLeadTimeP95Marker = buildPercentileYAxisMarker({
+    color: "#1e8b16",
+    completionTime: deliveredLeadTimeP95,
+    legend: t("charts.control_completion_time_p95_marker", {
+      days: deliveredLeadTimeP95,
+    }),
+  })
+
+  const inProgressLeadTimeP65Marker = buildPercentileYAxisMarker({
+    color: "#f80304",
+    completionTime: inProgressLeadTimeP65,
+    legend: t("charts.control_completion_time_p65_marker", {
+      days: inProgressLeadTimeP65,
+    }),
+  })
+
+  const inProgressLeadTimeP80Marker = buildPercentileYAxisMarker({
+    color: "#daa521",
+    completionTime: inProgressLeadTimeP80,
+    legend: t("charts.control_completion_time_p80_marker", {
+      days: inProgressLeadTimeP80,
+    }),
+  })
+
+  const inProgressLeadTimeP95Marker = buildPercentileYAxisMarker({
+    color: "#1e8b16",
+    completionTime: inProgressLeadTimeP95,
+    legend: t("charts.control_completion_time_p95_marker", {
+      days: inProgressLeadTimeP95,
+    }),
+  })
 
   const completionTimeChartData = [
     {
-      id: t("graphs.completion_time_data_legend"),
+      id: t("charts.completion_time_legend"),
       data: completionTimeData,
     },
   ]
 
   const partialCompletionTimeChartData = [
     {
-      id: t("graphs.completion_time_data_legend"),
+      id: t("charts.completion_time_legend"),
       data: partialCompletionTimeData,
     },
   ]
 
-  const barMock = [
+  const completionTimeEvolutionChartData = [
     {
-      country: "AD",
-      "hot dog": 30,
-      burger: 32,
-      sandwich: 130,
-      kebab: 20,
-      fries: 106,
-      donut: 149,
+      id: t("charts.completion_time_confidence_p80_legend"),
+      data: completionTimeConfidenceEvolution?.p80CompletionTime,
+    },
+    {
+      id: t("charts.completion_time_confidence_p80_acumulated_legend"),
+      data: completionTimeConfidenceEvolution?.accumulatedCompletionTime,
     },
   ]
 
@@ -229,30 +396,101 @@ const Charts = () => {
             gridTemplateRows: "repeat(2, 1fr)",
             gridColumnGap: "16px",
             gridRowGap: "20px",
+            mb: 6,
           }}
         >
-          <ChartBox title={t("graphs.control_completion_time_title")}>
+          <ChartBox title={t("charts.control_completion_time_title")}>
             <ScatterChart
-              axisLeftLegend={t("graphs.days")}
+              axisLeftLegend={t("charts.days")}
               data={completionTimeChartData}
+              props={{
+                markers: [
+                  deliveredLeadTimeP65Marker,
+                  deliveredLeadTimeP80Marker,
+                  deliveredLeadTimeP95Marker,
+                ],
+              }}
             />
           </ChartBox>
 
-          <ChartBox title={t("graphs.current_partial_completion_title")}>
+          <ChartBox title={t("charts.current_partial_completion_title")}>
             <ScatterChart
-              axisLeftLegend={t("graphs.days")}
+              axisLeftLegend={t("charts.days")}
               data={partialCompletionTimeChartData}
+              props={{
+                markers: [
+                  inProgressLeadTimeP65Marker,
+                  inProgressLeadTimeP80Marker,
+                  inProgressLeadTimeP95Marker,
+                ],
+              }}
             />
           </ChartBox>
 
-          <ChartBox title={t("graphs.flow_data_title")}>
-            <BarChart axisLeftLegend={t("graphs.demands")} data={barMock} />
+          <ChartBox title={t("charts.flow_data_title")}>
+            <BarChart
+              axisLeftLegend={t("charts.demands")}
+              data={flowChartData}
+              props={{
+                groupMode: "grouped",
+                keys: [
+                  t("charts.flow_data_created_legend"),
+                  t("charts.flow_data_delivered_legend"),
+                ],
+                margin: { top: 50, right: 60, bottom: 65, left: 60 },
+                padding: 0.3,
+                axisBottom: {
+                  tickSize: 5,
+                  tickPadding: 5,
+                  legendPosition: "middle",
+                  legendOffset: 60,
+                  tickRotation: -37,
+                  legend: t("charts.flow_data_period_legend"),
+                  indexBy: "period",
+                },
+              }}
+            />
           </ChartBox>
 
-          <ChartBox title={t("graphs.lead_time_evolution_title")}>
+          <ChartBox title={t("charts.completion_time_evolution_title")}>
             <LineChart
-              axisLeftLegend={t("graphs.days")}
-              data={completionTimeChartData}
+              axisLeftLegend={t("charts.days")}
+              data={completionTimeEvolutionChartData}
+              props={{
+                margin: { top: 50, right: 60, bottom: 65, left: 60 },
+                axisBottom: {
+                  legend: t("charts.completion_time_evolution_weeks_legend"),
+                  legendOffset: 60,
+                  tickRotation: -37,
+                  legendPosition: "middle",
+                },
+                legends: [
+                  {
+                    anchor: "top",
+                    direction: "row",
+                    justify: false,
+                    translateX: 0,
+                    translateY: -25,
+                    itemsSpacing: 0,
+                    itemDirection: "left-to-right",
+                    itemWidth: 200,
+                    itemHeight: 20,
+                    itemOpacity: 0.75,
+                    symbolSize: 12,
+                    symbolShape: "circle",
+                    symbolBorderColor: "rgba(0, 0, 0, .5)",
+                    effects: [
+                      {
+                        on: "hover",
+                        style: {
+                          itemBackground: "rgba(0, 0, 0, .03)",
+                          itemOpacity: 1,
+                        },
+                      },
+                    ],
+                  },
+                ],
+              }}
             />
           </ChartBox>
         </Box>

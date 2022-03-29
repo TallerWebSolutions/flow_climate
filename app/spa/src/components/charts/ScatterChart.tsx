@@ -7,17 +7,24 @@ import {
 type ScatterChartProps = {
   axisLeftLegend?: string
   data: ScatterPlotRawSerie<ScatterPlotDatum>[]
+  props?: object
 }
 
-export const ScatterChart = ({ axisLeftLegend, data }: ScatterChartProps) => (
+export const ScatterChart = ({
+  axisLeftLegend,
+  data,
+  props,
+}: ScatterChartProps) => (
   <ResponsiveScatterPlot
     data={data}
     margin={{ left: 65, right: 40, top: 25, bottom: 40 }}
-    xScale={{ type: "linear", min: 0, max: "auto" }}
-    yScale={{ type: "linear", min: 0, max: "auto" }}
-    blendMode="multiply"
+    xScale={{ type: "linear", min: "auto", max: "auto" }}
+    yScale={{ type: "linear", min: "auto", max: "auto" }}
+    colors={{ scheme: "category10" }}
     axisTop={null}
     axisRight={null}
+    blendMode="multiply"
+    nodeSize={6}
     axisBottom={{
       tickSize: 5,
       tickPadding: 5,
@@ -57,5 +64,6 @@ export const ScatterChart = ({ axisLeftLegend, data }: ScatterChartProps) => (
         ],
       },
     ]}
+    {...props}
   />
 )
