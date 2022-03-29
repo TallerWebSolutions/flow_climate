@@ -1,4 +1,6 @@
 import { gql, useMutation, useQuery } from "@apollo/client"
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined"
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined"
 import {
   Backdrop,
   Box,
@@ -12,16 +14,14 @@ import {
   TableRow,
   Typography,
 } from "@mui/material"
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined"
-import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined"
-import BasicPage from "../../components/BasicPage"
-import { capitalizeFirstLetter } from "../../lib/func"
 import { useConfirm } from "material-ui-confirm"
 import { useContext, useEffect } from "react"
-import { MessagesContext } from "../../contexts/MessageContext"
 import { useTranslation } from "react-i18next"
-import User from "../../modules/user/user.types"
+import BasicPage from "../../components/BasicPage"
+import { MessagesContext } from "../../contexts/MessageContext"
+import { capitalizeFirstLetter } from "../../lib/func"
 import { Team } from "../../modules/team/team.types"
+import User from "../../modules/user/user.types"
 
 export const TEAMS_QUERY = gql`
   query Teams {
@@ -90,12 +90,11 @@ const Teams = () => {
     )
 
   const company = data?.me.currentCompany
-  const companyName = company?.slug
-  const companyUrl = `/companies/${company?.slug}`
+  const companySlug = company?.slug
   const teams = data?.teams
 
   const breadcrumbsLinks = [
-    { name: capitalizeFirstLetter(companyName!), url: companyUrl! },
+    { name: capitalizeFirstLetter(companySlug!), url: companySlug! },
     {
       name: t("teams_list"),
     },
@@ -133,7 +132,7 @@ const Teams = () => {
 
             <TableBody data-testid="teams-list">
               {teams?.map(({ name, id }, index) => {
-                const teamLinkBase = `/companies/taller/teams/${id}`
+                const teamLinkBase = `/companies/${companySlug}/teams/${id}`
 
                 return (
                   <TableRow
@@ -169,7 +168,7 @@ const Teams = () => {
           </Table>
 
           <Button
-            href="/companies/taller/teams/new"
+            href={`/companies/${companySlug}/teams/new`}
             variant="contained"
             sx={{ height: "35", textTransform: "uppercase", color: "primary" }}
           >
