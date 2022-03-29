@@ -1,3 +1,4 @@
+import { it } from "date-fns/locale"
 import { formatDate, secondsToReadbleDate } from "../date"
 
 describe("secondsToReadbleDate", () => {
@@ -53,5 +54,12 @@ describe("formatDate", () => {
     expect(formatDate({ date: date, format: "dd/MM/yyyy' às 'HH:mm" })).toBe(
       "21/03/2022 às 00:00"
     )
+  })
+})
+
+describe("secondsToDays", () => {
+  it("should return 1 day for 86400 seconds", () => {
+    const oneDayInSeconds = 86400
+    expect(secondsToDays(oneDayInSeconds)).toEqual(1)
   })
 })

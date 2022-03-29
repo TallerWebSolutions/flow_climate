@@ -6,8 +6,10 @@ import {
 } from "date-fns"
 import { ptBR } from "date-fns/locale"
 
-const SECONDS_IN_A_DAY = 24 * 60 * 60
 const SECONDS_IN_MINUTES = 60
+const HOURS_IN_ONE_DAY = 24
+const ONE_HOUR_IN_SECONDS = 60 * 60
+const ONE_DAY_IN_SECONDS = ONE_HOUR_IN_SECONDS * HOURS_IN_ONE_DAY
 
 export const secondsToReadbleDate = (seconds: number, separator = " e ") => {
   if (!seconds || seconds <= 0) return "0 segundos"
@@ -20,7 +22,7 @@ export const secondsToReadbleDate = (seconds: number, separator = " e ") => {
 
   var dateFormat = ["days", "hours"]
 
-  if (secondsIntoInterger < SECONDS_IN_A_DAY) {
+  if (secondsIntoInterger < ONE_DAY_IN_SECONDS) {
     dateFormat.push("minutes")
   }
 
@@ -46,4 +48,8 @@ export const formatDate = ({ date, format }: FormatDateProps) => {
 
 export const toISOFormat = (date: string | Date): string => {
   return new Date(date).toISOString()
+}
+
+export const secondsToDays = (seconds: number): number => {
+  return Number((seconds / ONE_DAY_IN_SECONDS).toFixed(2))
 }
