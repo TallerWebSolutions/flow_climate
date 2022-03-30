@@ -56,12 +56,15 @@ export const TASKS_LIST_QUERY = gql`
         secondsToComplete
         partialCompletionTime
         team {
+          id
           name
         }
         initiative {
+          id
           name
         }
         project {
+          id
           name
         }
         demand {
