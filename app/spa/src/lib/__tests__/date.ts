@@ -1,5 +1,4 @@
-import { it } from "date-fns/locale"
-import { formatDate, secondsToReadbleDate } from "../date"
+import { formatDate, secondsToDays, secondsToReadbleDate } from "../date"
 
 describe("secondsToReadbleDate", () => {
   it("should '86400's be formated to readble human PTBR format", () => {
