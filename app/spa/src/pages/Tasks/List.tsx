@@ -224,9 +224,13 @@ const TasksList = () => {
                     </TableCell>
                     <TableCell padding="checkbox">
                       <Link
-                        href={`${baseLink}/initiatives/${task.initiative.id}`}
+                        href={
+                          task.initiative
+                            ? `${baseLink}/initiatives/${task.initiative?.id}`
+                            : "#"
+                        }
                       >
-                        {task.initiative.name}
+                        {task.initiative?.name}
                       </Link>
                     </TableCell>
                     <TableCell padding="checkbox">

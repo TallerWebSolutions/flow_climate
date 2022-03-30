@@ -17,6 +17,6 @@ export type Task = {
   partialCompletionTime: number
   team: Team
   project: Project
-  initiative: Initiative
+  initiative: Initiative | null
   demand: Demand
 }

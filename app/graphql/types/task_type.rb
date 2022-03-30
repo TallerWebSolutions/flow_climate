@@ -6,7 +6,7 @@ module Types
     field :external_id, ID, null: true
     field :team, Types::TeamType, null: false
     field :company, Types::CompanyType, null: false
-    field :initiative, Types::InitiativeType, null: false
+    field :initiative, Types::InitiativeType, null: true
     field :project, Types::ProjectType, null: false
     field :demand, Types::DemandType, null: false
     field :delivered, Boolean, null: false
