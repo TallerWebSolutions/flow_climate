@@ -201,7 +201,7 @@ const Charts = () => {
         Number(totalFinishedTasksData?.tasksList.totalCount)
       )
     }
-  }, [loadingFinishedTasksData])
+  }, [loadingFinishedTasksData, totalFinishedTasksData])
 
   useEffect(() => {
     if (!loading) {
@@ -282,7 +282,7 @@ const Charts = () => {
         p80CompletionTime: mountedCompletionTimeConfidenceData,
       })
     }
-  }, [data, loading])
+  }, [data, loading, t])
 
   const companySlug = String(company?.slug)
   const breadcrumbsLinks = [
@@ -292,7 +292,7 @@ const Charts = () => {
 
   const getTaskIDByExternalID = (findedExternalId: number) => {
     return data?.tasksList.tasks.find(
-      ({ externalId }) => externalId == findedExternalId
+      ({ externalId }) => Number(externalId) === findedExternalId
     )
   }
 
