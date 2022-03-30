@@ -8,12 +8,12 @@ import {
   Input,
   InputLabel,
 } from "@mui/material"
-import { useForm } from "react-hook-form"
 import { useContext } from "react"
+import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import BasicPage from "../../components/BasicPage"
 import { MessagesContext } from "../../contexts/MessageContext"
-import { capitalizeFirstLetter } from "../../lib/func"
+import { capitalizeFirstLetter, redirectTo } from "../../lib/func"
 import User from "../../modules/user/user.types"
 
 type LoggedUserDTO = {
@@ -73,7 +73,7 @@ const CreateTeam = () => {
       })
 
       setTimeout(function () {
-        window.location.assign(`/companies/${companySlug}/teams/${newTeamID}`)
+        redirectTo(`/companies/${companySlug}/teams/${newTeamID}`)
       }, 2000)
     },
   })

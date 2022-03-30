@@ -11,6 +11,7 @@ import { LineChart } from "../../components/charts/LineChart"
 import { ScatterChart } from "../../components/charts/ScatterChart"
 import TasksPage, { TaskFilters } from "../../components/TaskPage"
 import { secondsToDays } from "../../lib/date"
+import { openWindow } from "../../lib/func"
 import { Company } from "../../modules/company/company.types"
 import { Task } from "../../modules/task/task.types"
 import User from "../../modules/user/user.types"
@@ -27,8 +28,10 @@ const TASKS_CHARTS_QUERY = gql`
   query TasksCharts($limit: Int) {
     tasksList(limit: $limit) {
       tasks {
+        id
         externalId
         delivered
+        createdDate
         secondsToComplete
         partialCompletionTime
       }
@@ -81,7 +84,8 @@ type TasksChartsDTO = {
 }
 
 type ChartData = {
-  x: number | string
+  id?: number
+  x: number | string | any
   y: number | string
 }
 
@@ -139,7 +143,7 @@ const mountTasksChartAxis = ({
         const daysToCompleteTask = secondsToDays(Number(task[fieldData]))
 
         return {
-          x: task[fieldID] as number,
+          x: task[fieldID],
           y: daysToCompleteTask,
         }
       })
@@ -214,13 +218,24 @@ const Charts = () => {
       const tasksNotDelivered = data?.tasksList.tasks.filter(
         ({ delivered }) => !delivered
       )
-      const mountedPartialCompletionChartData = mountTasksChartAxis({
-        tasks: tasksNotDelivered,
-        fieldID: "externalId",
-        fieldData: "partialCompletionTime",
-      })
 
-      setPartialCompletionTimeData(mountedPartialCompletionChartData)
+      const mountedPartialCompletionChartData = tasksNotDelivered?.map(
+        (task) => {
+          const currentCompletionTime = secondsToDays(
+            Number(task.partialCompletionTime)
+          )
+
+          return {
+            x: task.externalId,
+            y: currentCompletionTime,
+            id: task.id,
+          }
+        }
+      )
+
+      if (mountedPartialCompletionChartData) {
+        setPartialCompletionTimeData(mountedPartialCompletionChartData)
+      }
 
       const tasksChartsData = data?.tasksList.tasksCharts
 
@@ -269,10 +284,17 @@ const Charts = () => {
     }
   }, [data, loading])
 
+  const companySlug = String(company?.slug)
   const breadcrumbsLinks = [
-    { name: company?.name || "", url: String(company?.slug) },
+    { name: company?.name || "", url: companySlug },
     { name: t("tabs.charts") },
   ]
+
+  const getTaskIDByExternalID = (findedExternalId: number) => {
+    return data?.tasksList.tasks.find(
+      ({ externalId }) => externalId == findedExternalId
+    )
+  }
 
   const deliveredLeadTimeP65 = secondsToDays(
     Number(data?.tasksList.deliveredLeadTimeP65)
@@ -410,6 +432,11 @@ const Charts = () => {
                   deliveredLeadTimeP95Marker,
                 ],
               }}
+              onClick={({ xValue }) => {
+                const taskExternalID = Number(xValue)
+                const taskID = getTaskIDByExternalID(taskExternalID)
+                openWindow(`/companies/${companySlug}/tasks/${taskID?.id}`)
+              }}
             />
           </ChartBox>
 
@@ -423,6 +450,17 @@ const Charts = () => {
                   inProgressLeadTimeP80Marker,
                   inProgressLeadTimeP95Marker,
                 ],
+                xScale: {
+                  type: "linear",
+                  min: "auto",
+                  max: "auto",
+                  reverse: true,
+                },
+              }}
+              onClick={({ xValue }) => {
+                const taskExternalID = Number(xValue)
+                const taskID = getTaskIDByExternalID(taskExternalID)
+                openWindow(`/companies/${companySlug}/tasks/${taskID?.id}`)
               }}
             />
           </ChartBox>

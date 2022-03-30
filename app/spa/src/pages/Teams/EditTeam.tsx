@@ -8,15 +8,15 @@ import {
   Input,
   InputLabel,
 } from "@mui/material"
-import { useForm } from "react-hook-form"
 import { useContext } from "react"
+import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
+import { useParams } from "react-router-dom"
 import BasicPage from "../../components/BasicPage"
 import { MessagesContext } from "../../contexts/MessageContext"
-import { capitalizeFirstLetter } from "../../lib/func"
-import User from "../../modules/user/user.types"
+import { capitalizeFirstLetter, redirectTo } from "../../lib/func"
 import { Team } from "../../modules/team/team.types"
-import { useParams } from "react-router-dom"
+import User from "../../modules/user/user.types"
 
 type TeamDTO = {
   me: User
@@ -87,7 +87,7 @@ const EditTeam = () => {
       })
 
       setTimeout(function () {
-        window.location.assign(`/companies/${companySlug}/teams/${newTeamID}`)
+        redirectTo(`/companies/${companySlug}/teams/${newTeamID}`)
       }, 2000)
     },
   })

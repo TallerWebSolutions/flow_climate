@@ -10,8 +10,8 @@ export type Task = {
   id: number
   externalId: number
   title: string
-  createdDate: string
-  endDate: string
+  createdDate: string | Date
+  endDate: string | Date
   delivered: boolean
   secondsToComplete: number
   partialCompletionTime: number

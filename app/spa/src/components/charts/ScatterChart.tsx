@@ -1,6 +1,7 @@
 import {
   ResponsiveScatterPlot,
   ScatterPlotDatum,
+  ScatterPlotMouseHandler,
   ScatterPlotRawSerie,
 } from "@nivo/scatterplot"
 
@@ -8,12 +9,14 @@ type ScatterChartProps = {
   axisLeftLegend?: string
   data: ScatterPlotRawSerie<ScatterPlotDatum>[]
   props?: object
+  onClick?: ScatterPlotMouseHandler<ScatterPlotDatum>
 }
 
 export const ScatterChart = ({
   axisLeftLegend,
   data,
   props,
+  onClick,
 }: ScatterChartProps) => (
   <ResponsiveScatterPlot
     data={data}
@@ -24,6 +27,7 @@ export const ScatterChart = ({
     axisTop={null}
     axisRight={null}
     blendMode="multiply"
+    onClick={onClick}
     nodeSize={6}
     axisBottom={{
       tickSize: 5,
