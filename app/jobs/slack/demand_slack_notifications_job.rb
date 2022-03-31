@@ -22,7 +22,9 @@ module Slack
     end
 
     def process_assignments(demand)
-      demand.item_assignments.select { |assignment| assignment.valid? == false }.map(&:delete)
+      assignments_invalid = demand.item_assignments.select { |assignment| assignment.valid? == false }
+      assignments_invalid.map { |assignment_invalid| assignment_invalid.demand_efforts.map(&:delete) }
+      assignments_invalid.map.map(&:delete)
 
       demand.item_assignments.reload.where(assignment_notified: false).each do |assignment|
         demand_url = company_demand_url(demand.company, demand)

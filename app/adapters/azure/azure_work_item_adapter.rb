@@ -70,7 +70,7 @@ module Azure
 
       task = Task.where(demand: demand, external_id: work_item_response['id']).first_or_initialize
       task.update(title: work_item_response['fields']['System.Title'], created_date: work_item_response['fields']['System.CreatedDate'],
-                  end_date: work_item_response['fields']['Microsoft.VSTS.Common.ClosedDate'])
+                  end_date: work_item_response['fields']['Microsoft.VSTS.Common.ClosedDate'], discarded_at: nil)
     end
 
     def read_epic(product, project_custom_field, team, work_item_response)
@@ -79,12 +79,10 @@ module Azure
 
       demand = Demand.with_discarded.where(company: company, team: team, external_id: work_item_response['id']).first_or_initialize
 
-      return demand if demand.persisted?
-
       demand.update(demand_title: work_item_response['fields']['System.Title'].strip,
                     created_date: work_item_response['fields']['System.CreatedDate'],
                     end_date: work_item_response['fields']['Microsoft.VSTS.Common.ClosedDate'],
-                    product: product, project: project, demand_type: :feature)
+                    product: product, project: project, demand_type: :feature, discarded_at: nil)
       demand
     end
 

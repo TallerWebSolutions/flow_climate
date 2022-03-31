@@ -54,7 +54,7 @@ RSpec.describe Azure::AzureWorkItemAdapter do
 
       context 'when issue' do
         context 'with valid parent' do
-          it 'returns the created demand' do
+          it 'creates the task and the parent' do
             first_item_mocked_azure_return = file_fixture('azure_work_item_1_expanded.json').read
             second_item_mocked_azure_return = file_fixture('azure_work_item_2_expanded.json').read
 
@@ -72,6 +72,36 @@ RSpec.describe Azure::AzureWorkItemAdapter do
             described_class.new(azure_account).work_item(2, azure_product_config.azure_team.azure_project)
 
             expect(Demand.all.count).to eq 1
+            expect(Task.all.count).to eq 1
+          end
+        end
+
+        context 'with an already existent and discarded issue' do
+          it 'updates the issue and the parent and remove the value in the discarded at field' do
+            demand = Fabricate :demand, company: company, team: team, external_id: 1, discarded_at: 2.weeks.ago
+            task = Fabricate :task, demand: demand, external_id: 2, discarded_at: 2.weeks.ago
+
+            first_item_mocked_azure_return = file_fixture('azure_work_item_1_expanded.json').read
+            second_item_mocked_azure_return = file_fixture('azure_work_item_2_expanded.json').read
+
+            first_response = instance_double(HTTParty::Response, code: 200, parsed_response: JSON.parse(first_item_mocked_azure_return))
+            second_response = instance_double(HTTParty::Response, code: 200, parsed_response: JSON.parse(second_item_mocked_azure_return))
+
+            allow(HTTParty).to(receive(:get).with("#{Figaro.env.azure_base_uri}/#{azure_account.azure_organization}/#{azure_project.project_id}/_apis/wit/workitems/1?$expand=all&api-version=6.1-preview.3",
+                                                  basic_auth: { username: azure_account.username, password: azure_account.password },
+                                                  headers: { 'Content-Type' => 'application/json' })).once.and_return(first_response)
+
+            allow(HTTParty).to(receive(:get).with("#{Figaro.env.azure_base_uri}/#{azure_account.azure_organization}/#{azure_project.project_id}/_apis/wit/workitems/2?$expand=all&api-version=6.1-preview.3",
+                                                  basic_auth: { username: azure_account.username, password: azure_account.password },
+                                                  headers: { 'Content-Type' => 'application/json' })).and_return(second_response)
+
+            described_class.new(azure_account).work_item(2, azure_product_config.azure_team.azure_project)
+
+            expect(Demand.all.count).to eq 1
+            expect(Task.all.count).to eq 1
+
+            expect(demand.reload.discarded_at).to be_nil
+            expect(task.reload.discarded_at).to be_nil
           end
         end
 
