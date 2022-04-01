@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe Company, type: :model do
+  context 'enums' do
+    it { is_expected.to define_enum_for(:company_type).with_values(software: 0, marketing: 1) }
+  end
+
   context 'associations' do
     it { is_expected.to have_many(:users).through(:user_company_roles) }
     it { is_expected.to have_many(:user_company_roles) }

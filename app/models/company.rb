@@ -24,6 +24,8 @@ class Company < ApplicationRecord
   extend FriendlyId
   friendly_id :abbreviation, use: :slugged
 
+  enum company_type: { software: 0, marketing: 1 }
+
   has_many :user_company_roles, dependent: :destroy
   has_many :users, through: :user_company_roles
 

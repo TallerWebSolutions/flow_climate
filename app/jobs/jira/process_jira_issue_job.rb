@@ -5,6 +5,8 @@ module Jira
     queue_as :demand_update
 
     def perform(jira_account, project, issue_key, user_email, user_name, demand_url)
+      return unless jira_account.company.active?
+
       started_time = Time.zone.now
       jira_con = Jira::JiraApiService.new(jira_account.username, jira_account.api_token, jira_account.base_uri)
 

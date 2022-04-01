@@ -16,6 +16,8 @@ class WebhookIntegrationsController < ApplicationController
   end
 
   def jira_delete_card_webhook
+    return unless project.company.active?
+
     demand = Demand.find_by(project: project, external_id: Jira::JiraReader.instance.read_demand_key(jira_issue_attrs))
     demand.discard if demand.present?
 

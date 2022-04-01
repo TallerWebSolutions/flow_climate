@@ -873,7 +873,9 @@ CREATE TABLE public.companies (
     abbreviation character varying NOT NULL,
     customers_count integer DEFAULT 0,
     slug character varying,
-    api_token character varying NOT NULL
+    api_token character varying NOT NULL,
+    company_type integer DEFAULT 0 NOT NULL,
+    active boolean DEFAULT false NOT NULL
 );
 
 
@@ -7089,6 +7091,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220202200413'),
 ('20220214141346'),
 ('20220221210259'),
-('20220311184239');
+('20220311184239'),
+('20220401124201');
 
 
