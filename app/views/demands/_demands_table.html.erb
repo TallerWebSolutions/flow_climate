@@ -31,7 +31,15 @@
       </div>
       <div>
         <%= link_to I18n.t('general.download_csv'), demands_csv_company_demands_path(company, demands.map(&:id).to_csv, format: :csv), method: :post, class: 'btn btn-sm btn-primary pull-right grouped-button' %>
-        <%= link_to I18n.t('general.tabs.charts'), demands_charts_company_demands_path(company, session_demands_key: 'searched_ids'), class: 'btn btn-sm btn-primary pull-right grouped-button', target: '_blank' %>
+        <%= link_to I18n.t('general.tabs.charts'), demands_charts_company_demands_path(company,
+                                                                                       demands_start_date: params[:demands_start_date],
+                                                                                       demands_end_date: params[:demands_end_date],
+                                                                                       search_text: params[:search_text],
+                                                                                       demand_state: params[:demand_state],
+                                                                                       demand_type: params[:demand_type],
+                                                                                       class_of_service: params[:class_of_service],
+                                                                                       demand_tags: params[:demand_tags]&.split(' '),
+                                                                                       team_id: params[:team_id]), class: 'btn btn-sm btn-primary pull-right grouped-button', target: '_blank' %>
       </div>
     </div>
   </div>
