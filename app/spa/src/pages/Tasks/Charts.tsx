@@ -25,8 +25,28 @@ const GET_TOTAL_FINISHED_TASKS = gql`
 `
 
 const TASKS_CHARTS_QUERY = gql`
-  query TasksCharts($limit: Int) {
-    tasksList(limit: $limit) {
+  query TasksCharts(
+    $page: Int!
+    $status: String
+    $title: String
+    $teamId: ID
+    $projectId: ID
+    $initiativeId: ID
+    $limit: Int
+    $untilDate: ISO8601Date
+    $fromDate: ISO8601Date
+  ) {
+    tasksList(
+      pageNumber: $page
+      status: $status
+      title: $title
+      teamId: $teamId
+      projectId: $projectId
+      initiativeId: $initiativeId
+      limit: $limit
+      untilDate: $untilDate
+      fromDate: $fromDate
+    ) {
       tasks {
         id
         externalId
@@ -228,7 +248,6 @@ const Charts = () => {
           return {
             x: task.externalId,
             y: currentCompletionTime,
-            id: task.id,
           }
         }
       )
@@ -284,6 +303,7 @@ const Charts = () => {
     }
   }, [data, loading, t])
 
+  const taskList = data?.tasksList
   const companySlug = String(company?.slug)
   const breadcrumbsLinks = [
     { name: company?.name || "", url: companySlug },
@@ -291,29 +311,29 @@ const Charts = () => {
   ]
 
   const getTaskIDByExternalID = (findedExternalId: number) => {
-    return data?.tasksList.tasks.find(
+    return taskList?.tasks.find(
       ({ externalId }) => Number(externalId) === findedExternalId
     )
   }
 
   const deliveredLeadTimeP65 = secondsToDays(
-    Number(data?.tasksList.deliveredLeadTimeP65)
+    Number(taskList?.deliveredLeadTimeP65)
   )
   const deliveredLeadTimeP80 = secondsToDays(
-    Number(data?.tasksList.deliveredLeadTimeP80)
+    Number(taskList?.deliveredLeadTimeP80)
   )
   const deliveredLeadTimeP95 = secondsToDays(
-    Number(data?.tasksList.deliveredLeadTimeP95)
+    Number(taskList?.deliveredLeadTimeP95)
   )
 
   const inProgressLeadTimeP65 = secondsToDays(
-    Number(data?.tasksList.inProgressLeadTimeP65)
+    Number(taskList?.inProgressLeadTimeP65)
   )
   const inProgressLeadTimeP80 = secondsToDays(
-    Number(data?.tasksList.inProgressLeadTimeP80)
+    Number(taskList?.inProgressLeadTimeP80)
   )
   const inProgressLeadTimeP95 = secondsToDays(
-    Number(data?.tasksList.inProgressLeadTimeP95)
+    Number(taskList?.inProgressLeadTimeP95)
   )
 
   const deliveredLeadTimeP65Marker = buildPercentileYAxisMarker({
