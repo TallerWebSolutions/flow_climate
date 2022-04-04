@@ -6,7 +6,9 @@
 #
 #  id              :bigint           not null, primary key
 #  abbreviation    :string           not null
+#  active          :boolean          default(FALSE), not null
 #  api_token       :string           not null
+#  company_type    :integer          default("software"), not null
 #  customers_count :integer          default(0)
 #  name            :string           not null
 #  slug            :string
