@@ -214,10 +214,22 @@ export const tasksMock = {
   },
 }
 
+const taskCompanyMock: Company = {
+  ...companyMock,
+  initiatives: [
+    {
+      id: 1,
+      name: "Q1",
+    },
+  ],
+  projects: [projectMock],
+  teams: [teamMock],
+}
+
 export const tasksSelectsMock = {
   data: {
     me: {
-      currentCompany: companyMock,
+      currentCompany: taskCompanyMock,
     },
   },
 }

@@ -1,20 +1,20 @@
-import { render, within } from "@testing-library/react"
 import { MockedProvider } from "@apollo/client/testing"
-
+import { render, RenderResult, within } from "@testing-library/react"
+import { act } from "react-dom/test-utils"
+import { I18nextProvider } from "react-i18next"
+import { MemoryRouter, Route, Routes } from "react-router-dom"
+import i18n from "../../lib/i18n"
+import {
+  projectMock,
+  replenishingMock as data,
+  teamMock,
+} from "../../lib/mocks"
 import ReplenishingPage, {
+  getProjects,
   normalizeProjectInfo,
   normalizeTeamInfo,
-  getProjects,
   QUERY as REPLENISHING_QUERY,
 } from "../Replenishing"
-
-import {
-  teamMock,
-  projectMock,
-  companyMock,
-  replenishingMock as data,
-} from "../../lib/mocks"
-import { MemoryRouter, Route, Routes } from "react-router-dom"
 
 describe("pages/Replenishing", () => {
   describe("normalizers", () => {
@@ -65,26 +65,29 @@ describe("pages/Replenishing", () => {
         },
       ]
 
-      const page = render(
-        <MockedProvider mocks={mocks} addTypename={false}>
-          <MemoryRouter
-            initialEntries={[
-              "/companies/taller/teams/1/replenishing_consolidations",
-            ]}
-          >
-            <Routes>
-              <Route
-                path="/companies/:companyNickName/teams/:teamId/replenishing_consolidations"
-                element={<ReplenishingPage />}
-              />
-            </Routes>
-          </MemoryRouter>
-        </MockedProvider>
-      )
+      let container: RenderResult
+      act(() => {
+        container = render(
+          <I18nextProvider i18n={i18n}>
+            <MockedProvider mocks={mocks} addTypename={false}>
+              <MemoryRouter
+                initialEntries={[
+                  "/companies/taller/teams/1/replenishing_consolidations",
+                ]}
+              >
+                <Routes>
+                  <Route
+                    path="/companies/:companyNickName/teams/:teamId/replenishing_consolidations"
+                    element={<ReplenishingPage />}
+                  />
+                </Routes>
+              </MemoryRouter>
+            </MockedProvider>
+          </I18nextProvider>
+        )
+      })
 
-      await new Promise((resolve) => setTimeout(resolve, 0))
-
-      const breadcrumbs = await page.findByTestId("breadcrumbs")
+      const breadcrumbs = await container.findByTestId("breadcrumbs")
       const companyLink = within(breadcrumbs).getAllByText("Taller")
       const teamLink = within(breadcrumbs).queryAllByText("Vingadores")
 

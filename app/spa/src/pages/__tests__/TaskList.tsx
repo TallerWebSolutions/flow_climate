@@ -70,7 +70,6 @@ describe("pages/Task/List", () => {
         container = mountTaskPage(mocks)
       })
 
-      await new Promise((resolve) => setTimeout(resolve, 0))
       const taskList = await container.findByTestId("task-list")
 
       await waitFor(
@@ -82,8 +81,9 @@ describe("pages/Task/List", () => {
 
           expect(rowsOnTaskTable).toHaveLength(quantityOfRowsOnTablesTRask)
         },
-        { timeout: 3000 }
-      )
+        { timeout: 3500 }
+      ),
+        3000
     })
   })
 
@@ -113,8 +113,6 @@ describe("pages/Task/List", () => {
         container = mountTaskPage(mocks)
       })
 
-      await new Promise((resolve) => setTimeout(resolve, 0))
-
       const projectIdToBeSelected = "1"
       const taskList = await container.findByTestId("task-list")
       const selectProjectComponent = await container.findByTestId(
@@ -136,8 +134,8 @@ describe("pages/Task/List", () => {
 
           expect(rowsOnTaskTable).toHaveLength(quantityOfRowsOnTablesTRask)
         },
-        { timeout: 3000 }
+        { timeout: 3500 }
       )
-    })
+    }, 4000)
   })
 })

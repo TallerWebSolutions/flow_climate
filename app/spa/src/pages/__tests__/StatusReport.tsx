@@ -1,8 +1,9 @@
 import { MockedProvider } from "@apollo/client/testing"
 import { render, within } from "@testing-library/react"
+import { I18nextProvider } from "react-i18next"
 import { MemoryRouter, Route, Routes } from "react-router-dom"
+import i18n from "../../lib/i18n"
 import { projectMock } from "../../lib/mocks"
-
 import StatusReportPage, { QUERY as STATUS_REPORT_QUERY } from "../StatusReport"
 
 const mocks = [
@@ -22,18 +23,22 @@ const mocks = [
 ]
 
 const PageComponent = () => (
-  <MockedProvider mocks={mocks} addTypename={false}>
-    <MemoryRouter
-      initialEntries={["/companies/taller/projects/1/status_report_dashboard"]}
-    >
-      <Routes>
-        <Route
-          path="/companies/taller/projects/:projectId/status_report_dashboard"
-          element={<StatusReportPage />}
-        />
-      </Routes>
-    </MemoryRouter>
-  </MockedProvider>
+  <I18nextProvider i18n={i18n}>
+    <MockedProvider mocks={mocks} addTypename={false}>
+      <MemoryRouter
+        initialEntries={[
+          "/companies/taller/projects/1/status_report_dashboard",
+        ]}
+      >
+        <Routes>
+          <Route
+            path="/companies/taller/projects/:projectId/status_report_dashboard"
+            element={<StatusReportPage />}
+          />
+        </Routes>
+      </MemoryRouter>
+    </MockedProvider>
+  </I18nextProvider>
 )
 
 // @see: https://github.com/plouc/nivo/issues/1928
