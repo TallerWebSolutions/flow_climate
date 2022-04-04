@@ -71,8 +71,8 @@ RSpec.describe Azure::AzureWorkItemAdapter do
 
             described_class.new(azure_account).work_item(2, azure_product_config.azure_team.azure_project)
 
-            expect(Demand.all.count).to eq 0
-            expect(Task.all.count).to eq 0
+            expect(Demand.all.count).to eq 1
+            expect(Task.all.count).to eq 1
           end
         end
 

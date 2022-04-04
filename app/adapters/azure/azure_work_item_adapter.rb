@@ -58,25 +58,25 @@ module Azure
       if work_item_type.casecmp('epic').zero?
         read_epic(product, project_custom_field, team, work_item_response)
       elsif work_item_type.casecmp('feature').zero?
-        read_feature(azure_project, work_item_response)
+        read_feature(product, project_custom_field, team, azure_project, work_item_response)
       end
     end
 
-    def read_feature(azure_project, work_item_response)
-      demand = feature_parent(azure_project, work_item_response)
+    def read_feature(product, project_custom_field, team, azure_project, work_item_response)
+      demand = feature_parent(product, project_custom_field, team, azure_project, work_item_response)
 
       task = Task.where(demand: demand, external_id: work_item_response['id']).first_or_initialize
       task.update(title: work_item_response['fields']['System.Title'], created_date: work_item_response['fields']['System.CreatedDate'],
                   end_date: work_item_response['fields']['Microsoft.VSTS.Common.ClosedDate'], discarded_at: nil)
     end
 
-    def feature_parent(azure_project, work_item_response)
+    def feature_parent(product, project_custom_field, team, azure_project, work_item_response)
       parent_response = client.work_item(work_item_response['fields']['System.Parent'], azure_project.project_id)
       return if parent_response.blank? || parent_response.code != 200
 
       demand = Demand.with_discarded.find_by(external_id: parent_response.parsed_response['id'])
 
-      return if demand.blank?
+      return read_epic(product, project_custom_field, team, work_item_response) if demand.blank?
 
       demand
     end
