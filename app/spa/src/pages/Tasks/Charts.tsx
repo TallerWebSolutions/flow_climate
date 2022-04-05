@@ -191,6 +191,7 @@ const buildPercentileYAxisMarker = ({
 const Charts = () => {
   const { t } = useTranslation(["tasks"])
   const { pathname } = useLocation()
+
   const [completionTimeData, setCompletionTimeData] = useState<ChartData[]>([])
   const [partialCompletionTimeData, setPartialCompletionTimeData] = useState<
     ChartData[]
@@ -200,6 +201,7 @@ const Charts = () => {
     completionTimeConfidenceEvolution,
     setCompletionTimeConfidenceEvolution,
   ] = useState<CompletionTimeConfidenceChart>()
+
   const [company, setCompany] = useState<Company | null>(null)
   const [taskFilters, setTaskFilters] = useState<TaskFilters>({
     page: 0,
@@ -227,37 +229,33 @@ const Charts = () => {
     if (!loading) {
       setCompany(data?.me.currentCompany!)
 
-      const mountedCompletionTimeChartData = mountTasksChartAxis({
-        tasks: data?.tasksList.tasks,
-        fieldID: "externalId",
-        fieldData: "secondsToComplete",
-      })
-
-      setCompletionTimeData(mountedCompletionTimeChartData)
+      setCompletionTimeData(
+        mountTasksChartAxis({
+          tasks: data?.tasksList.tasks,
+          fieldID: "externalId",
+          fieldData: "secondsToComplete",
+        })
+      )
 
       const tasksNotDelivered = data?.tasksList.tasks.filter(
         ({ delivered }) => !delivered
       )
+      const mountedPartialCompletionChartData = tasksNotDelivered
+        ? tasksNotDelivered?.map((task) => {
+            const currentCompletionTime = secondsToDays(
+              Number(task.partialCompletionTime)
+            )
 
-      const mountedPartialCompletionChartData = tasksNotDelivered?.map(
-        (task) => {
-          const currentCompletionTime = secondsToDays(
-            Number(task.partialCompletionTime)
-          )
+            return {
+              x: task.externalId,
+              y: currentCompletionTime,
+            }
+          })
+        : []
 
-          return {
-            x: task.externalId,
-            y: currentCompletionTime,
-          }
-        }
-      )
-
-      if (mountedPartialCompletionChartData) {
-        setPartialCompletionTimeData(mountedPartialCompletionChartData)
-      }
+      setPartialCompletionTimeData(mountedPartialCompletionChartData)
 
       const tasksChartsData = data?.tasksList.tasksCharts
-
       const mountedFlowChartData = tasksChartsData
         ? tasksChartsData.xAxis.map((xAxis, index) => {
             return {
@@ -492,6 +490,7 @@ const Charts = () => {
                   {
                     anchor: "top",
                     direction: "row",
+                    toggleSerie: true,
                     justify: false,
                     translateX: 0,
                     translateY: -25,

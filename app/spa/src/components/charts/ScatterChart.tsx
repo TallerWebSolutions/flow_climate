@@ -46,6 +46,7 @@ export const ScatterChart = ({
       {
         anchor: "top",
         direction: "row",
+        toggleSerie: true,
         justify: false,
         translateX: 0,
         translateY: -25,

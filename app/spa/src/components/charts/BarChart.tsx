@@ -67,6 +67,7 @@ export const BarChart = ({ data, axisLeftLegend, props }: BarChartProps) => (
         dataFrom: "keys",
         anchor: "top",
         direction: "row",
+        toggleSerie: true,
         justify: false,
         translateX: 0,
         translateY: -25,
