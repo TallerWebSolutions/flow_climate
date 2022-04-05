@@ -81,9 +81,9 @@ describe("pages/Task/List", () => {
 
           expect(rowsOnTaskTable).toHaveLength(quantityOfRowsOnTablesTRask)
         },
-        { timeout: 3500 }
+        { timeout: 4000 }
       ),
-        3000
+        4500
     })
   })
 
@@ -134,8 +134,8 @@ describe("pages/Task/List", () => {
 
           expect(rowsOnTaskTable).toHaveLength(quantityOfRowsOnTablesTRask)
         },
-        { timeout: 3500 }
+        { timeout: 4000 }
       )
-    }, 4000)
+    }, 4500)
   })
 })

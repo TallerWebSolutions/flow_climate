@@ -326,16 +326,6 @@ const Charts = () => {
     Number(taskList?.deliveredLeadTimeP95)
   )
 
-  const inProgressLeadTimeP65 = secondsToDays(
-    Number(taskList?.inProgressLeadTimeP65)
-  )
-  const inProgressLeadTimeP80 = secondsToDays(
-    Number(taskList?.inProgressLeadTimeP80)
-  )
-  const inProgressLeadTimeP95 = secondsToDays(
-    Number(taskList?.inProgressLeadTimeP95)
-  )
-
   const deliveredLeadTimeP65Marker = buildPercentileYAxisMarker({
     color: "#f80304",
     completionTime: deliveredLeadTimeP65,
@@ -357,30 +347,6 @@ const Charts = () => {
     completionTime: deliveredLeadTimeP95,
     legend: t("charts.control_completion_time_p95_marker", {
       days: deliveredLeadTimeP95,
-    }),
-  })
-
-  const inProgressLeadTimeP65Marker = buildPercentileYAxisMarker({
-    color: "#f80304",
-    completionTime: inProgressLeadTimeP65,
-    legend: t("charts.control_completion_time_p65_marker", {
-      days: inProgressLeadTimeP65,
-    }),
-  })
-
-  const inProgressLeadTimeP80Marker = buildPercentileYAxisMarker({
-    color: "#daa521",
-    completionTime: inProgressLeadTimeP80,
-    legend: t("charts.control_completion_time_p80_marker", {
-      days: inProgressLeadTimeP80,
-    }),
-  })
-
-  const inProgressLeadTimeP95Marker = buildPercentileYAxisMarker({
-    color: "#1e8b16",
-    completionTime: inProgressLeadTimeP95,
-    legend: t("charts.control_completion_time_p95_marker", {
-      days: inProgressLeadTimeP95,
     }),
   })
 
@@ -466,9 +432,9 @@ const Charts = () => {
               data={partialCompletionTimeChartData}
               props={{
                 markers: [
-                  inProgressLeadTimeP65Marker,
-                  inProgressLeadTimeP80Marker,
-                  inProgressLeadTimeP95Marker,
+                  deliveredLeadTimeP65Marker,
+                  deliveredLeadTimeP80Marker,
+                  deliveredLeadTimeP95Marker,
                 ],
                 xScale: {
                   type: "linear",
