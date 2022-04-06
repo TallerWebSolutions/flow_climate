@@ -839,7 +839,7 @@ en:
     replenishing: "Replenishing"
     customers_list: "Customers"
     products_list: "Products"
-    statistics: ""
+    statistics: "Statistics"
     demand_blocks: "Demands Blocks"
     flow_events: "Flow Events"
     jira: "Jira"
