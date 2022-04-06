@@ -10,7 +10,13 @@ import { useLocation } from "react-router-dom"
 import { BarChart } from "../../components/charts/BarChart"
 import { LineChart } from "../../components/charts/LineChart"
 import { ScatterChart } from "../../components/charts/ScatterChart"
+import BarChartTooltip, {
+  BarData,
+} from "../../components/charts/tooltips/BarChartTooltip"
 import LineChartTooltip from "../../components/charts/tooltips/LineChartTooltip"
+import ScatterChartTooltip, {
+  ScatterNode,
+} from "../../components/charts/tooltips/ScatterChartTooltip"
 import TasksPage, { TaskFilters } from "../../components/TaskPage"
 import { secondsToDays } from "../../lib/date"
 import { openWindow } from "../../lib/func"
@@ -417,6 +423,16 @@ const Charts = () => {
                   deliveredLeadTimeP80Marker,
                   deliveredLeadTimeP95Marker,
                 ],
+                tooltip: (data: { node: ScatterNode }) => {
+                  return (
+                    <ScatterChartTooltip
+                      xLabel={t(
+                        "charts.control_completion_time_tooltip_x_legend"
+                      )}
+                      node={data.node}
+                    />
+                  )
+                },
               }}
               onClick={({ xValue }) => {
                 const taskExternalID = Number(xValue)
@@ -442,9 +458,15 @@ const Charts = () => {
                   max: "auto",
                   reverse: true,
                 },
-                tooltip: (data: any) => {
-                  console.log({ data })
-                  return <div></div>
+                tooltip: (data: { node: ScatterNode }) => {
+                  return (
+                    <ScatterChartTooltip
+                      xLabel={t(
+                        "charts.current_partial_completion_tooltip_x_legend"
+                      )}
+                      node={data.node}
+                    />
+                  )
                 },
               }}
               onClick={({ xValue }) => {
@@ -475,6 +497,14 @@ const Charts = () => {
                   tickRotation: -37,
                   legend: t("charts.flow_data_period_legend"),
                   indexBy: "period",
+                },
+                tooltip: (data: BarData) => {
+                  return (
+                    <BarChartTooltip
+                      xLabel={t("charts.flow_data_tooltip_x_legend")}
+                      data={data}
+                    />
+                  )
                 },
               }}
             />

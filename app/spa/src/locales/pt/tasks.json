@@ -37,6 +37,7 @@
     "flow_data_created_data_legend": "Criadas",
     "flow_data_delivered_data_legend": "Entregas",
     "flow_data_period_legend": "Período",
+    "flow_data_tooltip_x_legend": "Período",
     "completion_time_confidence_p80_data_legend": "Lead time (80%)",
     "completion_time_confidence_p80_acumulated_data_legend": "Lead time 80% acumulado",
     "flow_data_title": "Dados do FLuxo",
@@ -47,7 +48,9 @@
     "control_completion_time_p65_marker": "Percentil 65% ({{days}} dias)",
     "control_completion_time_p80_marker": "Percentil 80% ({{days}} dias)",
     "control_completion_time_p95_marker": "Percentil 95% ({{days}} dias)",
+    "control_completion_time_tooltip_x_legend": "ID Externo",
     "current_partial_completion_title": "Tempos Parciais Atuais para Tarefas em Andamento",
+    "current_partial_completion_tooltip_x_legend": "ID Externo",
     "days": "Dias",
     "demands": "Demandas"
   }

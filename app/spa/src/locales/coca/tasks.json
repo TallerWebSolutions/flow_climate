@@ -36,6 +36,7 @@
     "flow_data_created_legend": "Created",
     "flow_data_delivered_legend": "Delivered",
     "flow_data_period_legend": "Period",
+    "flow_data_tooltip_x_legend": "Period",
     "completion_time_confidence_p80_legend": "Completion Time (80%) Confidence",
     "completion_time_confidence_p80_acumulated_legend": "Completion Time 80% Accumulated",
     "flow_data_title": "Flow Data",
@@ -46,7 +47,9 @@
     "control_completion_time_p65_marker": "Percentile 65% ({{days}} days)",
     "control_completion_time_p80_marker": "Percentile 80% ({{days}} days)",
     "control_completion_time_p95_marker": "Percentile 95% ({{days}} days)",
+    "control_completion_time_tooltip_x_legend": "External ID",
     "current_partial_completion_title": "Current Partial Times to Tasks in Progress",
+    "current_partial_completion_tooltip_x_legend": "External ID",
     "days": "Days",
     "demands": "Activity"
   }
