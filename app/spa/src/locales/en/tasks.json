@@ -42,10 +42,12 @@
     "flow_data_title": "Flow Data",
     "completion_time_evolution_title": "Completion Time Confidence Evolution",
     "completion_time_evolution_weeks_legend": "Weeks",
+    "completion_time_evolution_tooltip_x_legend": "Week",
     "control_completion_time_title": "Control Chart to Completion Time",
     "control_completion_time_p65_marker": "Percentile 65% ({{days}} days)",
     "control_completion_time_p80_marker": "Percentile 80% ({{days}} days)",
     "control_completion_time_p95_marker": "Percentile 95% ({{days}} days)",
+
     "current_partial_completion_title": "Current Partial Times to Tasks in Progress",
     "days": "Days",
     "demands": "Demand"

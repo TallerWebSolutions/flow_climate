@@ -42,6 +42,7 @@
     "completion_time_evolution_title": "Completion Time Confidence Evolution",
     "control_completion_time_title": "Control Chart to Completion Time",
     "completion_time_evolution_weeks_legend": "Weeks",
+    "completion_time_evolution_tooltip_x_legend": "Week",
     "control_completion_time_p65_marker": "Percentile 65% ({{days}} days)",
     "control_completion_time_p80_marker": "Percentile 80% ({{days}} days)",
     "control_completion_time_p95_marker": "Percentile 95% ({{days}} days)",

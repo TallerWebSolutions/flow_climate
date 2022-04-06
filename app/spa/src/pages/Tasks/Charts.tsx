@@ -2,6 +2,7 @@ import { gql, useQuery } from "@apollo/client"
 import { Box, CircularProgress, Typography } from "@mui/material"
 import { BarDatum } from "@nivo/bar"
 import { CartesianMarkerProps } from "@nivo/core"
+import { SliceTooltipProps } from "@nivo/line"
 import { ScatterPlotValue } from "@nivo/scatterplot"
 import { ReactElement, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
@@ -9,6 +10,7 @@ import { useLocation } from "react-router-dom"
 import { BarChart } from "../../components/charts/BarChart"
 import { LineChart } from "../../components/charts/LineChart"
 import { ScatterChart } from "../../components/charts/ScatterChart"
+import LineChartTooltip from "../../components/charts/tooltips/LineChartTooltip"
 import TasksPage, { TaskFilters } from "../../components/TaskPage"
 import { secondsToDays } from "../../lib/date"
 import { openWindow } from "../../lib/func"
@@ -440,6 +442,10 @@ const Charts = () => {
                   max: "auto",
                   reverse: true,
                 },
+                tooltip: (data: any) => {
+                  console.log({ data })
+                  return <div></div>
+                },
               }}
               onClick={({ xValue }) => {
                 const taskExternalID = Number(xValue)
@@ -486,6 +492,15 @@ const Charts = () => {
                   tickRotation: -37,
                   legendPosition: "middle",
                 },
+                enableSlices: "x",
+                sliceTooltip: ({ slice }: SliceTooltipProps) => (
+                  <LineChartTooltip
+                    slice={slice}
+                    xLabel={t(
+                      "charts.completion_time_evolution_tooltip_x_legend"
+                    )}
+                  />
+                ),
                 legends: [
                   {
                     anchor: "top",

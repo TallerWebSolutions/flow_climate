@@ -42,6 +42,7 @@
     "flow_data_title": "Dados do FLuxo",
     "completion_time_evolution_title": "Evolução do Lead Time",
     "completion_time_evolution_weeks_legend": "Semanas",
+    "completion_time_evolution_tooltip_x_legend": "Semana",
     "control_completion_time_title": "Gráfico de Dispersão do Tempo de Resolução",
     "control_completion_time_p65_marker": "Percentil 65% ({{days}} dias)",
     "control_completion_time_p80_marker": "Percentil 80% ({{days}} dias)",
