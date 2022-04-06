@@ -42,6 +42,7 @@ export const ScatterChart = ({
       legendPosition: "middle",
       legendOffset: -45,
     }}
+    useMesh={true}
     legends={[
       {
         anchor: "top",
