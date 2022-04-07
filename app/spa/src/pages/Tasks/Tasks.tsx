@@ -14,23 +14,20 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
+  Tab,
+  Tabs,
   TextField,
 } from "@mui/material"
-import {
-  ChangeEvent,
-  ReactElement,
-  useCallback,
-  useEffect,
-  useState,
-} from "react"
+import { ChangeEvent, useCallback, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { toISOFormat } from "../lib/date"
-import { Project } from "../modules/project/project.types"
-import { Team } from "../modules/team/team.types"
-import User from "../modules/user/user.types"
-import BasicPage from "./BasicPage"
-import { BreadcrumbsLink } from "./Breadcrumbs"
-import { Tabs } from "./Tabs"
+import BasicPage from "../../components/BasicPage"
+import TabPanel from "../../components/TabPanel"
+import { toISOFormat } from "../../lib/date"
+import { Project } from "../../modules/project/project.types"
+import { Team } from "../../modules/team/team.types"
+import User from "../../modules/user/user.types"
+import TaskCharts from "./Charts"
+import TaskList from "./List"
 
 export const SELECT_FILTERS_QUERY = gql`
   query TasksSelectFilters {
@@ -121,22 +118,20 @@ const SelectFilter = ({
   )
 }
 
-type TasksPageProps = {
-  children: ReactElement | ReactElement[]
-  title: string
-  pathname: string
-  breadcrumbsLinks: BreadcrumbsLink[]
-  onFiltersChange: (filters: TaskFilters) => void
+function a11yProps(index: number) {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  }
 }
 
-const TasksPage = ({
-  children,
-  title,
-  breadcrumbsLinks,
-  pathname,
-  onFiltersChange,
-}: TasksPageProps) => {
+type TasksPageProps = {
+  initialTab?: number
+}
+
+const TasksPage = ({ initialTab = 1 }: TasksPageProps) => {
   const { t } = useTranslation(["tasks"])
+  const [tab, setTab] = useState(initialTab)
   const [taskSearchName, setTaskSearchName] = useState("")
   const [fromDate, setFromDate] = useState<string | null>(null)
   const [untilDate, setUntilDate] = useState<string | null>(null)
@@ -146,12 +141,6 @@ const TasksPage = ({
   })
 
   const { data, loading } = useQuery<TaskFiltersDTO>(SELECT_FILTERS_QUERY)
-
-  useEffect(() => {
-    onFiltersChange(taskFilters)
-    // eslint-disable-next-line
-  }, [taskFilters, data])
-
   const handleSearchByName = useCallback(
     (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
       setTaskSearchName(String(event.target.value)),
@@ -180,6 +169,7 @@ const TasksPage = ({
       </Backdrop>
     )
 
+  const isChartTab = tab === 0
   const company = data?.me.currentCompany!
   const projects = company.projects
   const initiatives = company.initiatives
@@ -188,12 +178,14 @@ const TasksPage = ({
   const taskTabs = [
     {
       label: t("tabs.charts"),
-      to: `/companies/${companySlug}/tasks/charts`,
     },
     {
       label: t("tabs.list"),
-      to: `/companies/${companySlug}/tasks`,
     },
+  ]
+  const breadcrumbsLinks = [
+    { name: String(company?.name) || "", url: String(companySlug) },
+    { name: isChartTab ? t("tabs.charts") : t("tasks_list") },
   ]
 
   const handleStatus = (event: SelectChangeEvent<any>) => {
@@ -213,9 +205,13 @@ const TasksPage = ({
     }))
   }
 
+  const handleChangeTab = (tab: number) => {
+    setTab(tab)
+  }
+
   return (
     <BasicPage
-      title={title}
+      title={t("tasks")}
       company={company}
       breadcrumbsLinks={breadcrumbsLinks}
     >
@@ -311,10 +307,20 @@ const TasksPage = ({
             justifyContent: "center",
           }}
         >
-          <Tabs tabs={taskTabs} currentPath={pathname} />
+          <Tabs value={tab} onChange={(_, tab) => handleChangeTab(tab)}>
+            {taskTabs.map((tab, index) => {
+              return <Tab label={tab.label} {...a11yProps(index)} />
+            })}
+          </Tabs>
         </Box>
 
-        {children}
+        <TabPanel value={tab} index={0}>
+          <TaskCharts filters={taskFilters} />
+        </TabPanel>
+
+        <TabPanel value={tab} index={1}>
+          <TaskList filters={taskFilters} setFilters={setTaskFilters} />
+        </TabPanel>
       </Box>
     </BasicPage>
   )

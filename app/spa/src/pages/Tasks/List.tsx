@@ -14,12 +14,11 @@ import {
 } from "@mui/material"
 import { ChangeEvent, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { useLocation } from "react-router-dom"
-import TasksPage, { TaskFilters } from "../../components/TaskPage"
 import { secondsToReadbleDate } from "../../lib/date"
 import { Company } from "../../modules/company/company.types"
 import { Task } from "../../modules/task/task.types"
 import User from "../../modules/user/user.types"
+import { TaskFilters } from "./Tasks"
 
 export const TASKS_LIST_QUERY = gql`
   query TasksPage(
@@ -103,20 +102,20 @@ const normalizeTimeToFinish = (
   return secondsToReadbleDate(secondsToComplete)
 }
 
-const TasksList = () => {
+type TaskListProps = {
+  filters: TaskFilters
+  setFilters: React.Dispatch<React.SetStateAction<TaskFilters>>
+}
+
+const TaskList = ({ filters, setFilters }: TaskListProps) => {
   const { t } = useTranslation(["tasks"])
-  const { pathname } = useLocation()
   const [tasks, setTasks] = useState<Task[]>([])
   const [company, setCompany] = useState<Company | null>(null)
   const [totalOfTasks, setTotalOfTasks] = useState(0)
   const [totalOfDeliveredTasks, setTotalOfDeliveredTasks] = useState(0)
-  const [taskFilters, setTaskFilters] = useState<TaskFilters>({
-    page: 0,
-    limit: 10,
-  })
 
   const { data, loading } = useQuery<TasksListDTO>(TASKS_LIST_QUERY, {
-    variables: { ...taskFilters },
+    variables: { ...filters },
   })
 
   useEffect(() => {
@@ -139,142 +138,123 @@ const TasksList = () => {
     t("tasks_table.delivery_date"),
     t("tasks_table.time_to_finish"),
   ]
-  const breadcrumbsLinks = [
-    { name: String(company?.name) || "", url: String(company?.slug) },
-    { name: t("tasks_list") },
-  ]
 
   const handleRowsPerPage = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const quantity: number = Number(event.target.value)
-    setTaskFilters((prevState) => ({ ...prevState, limit: quantity }))
+    setFilters((prevState) => ({ ...prevState, limit: quantity }))
   }
 
   const handlePage = (newPage: number) => {
-    setTaskFilters((prevState) => ({ ...prevState, page: newPage }))
+    setFilters((prevState) => ({ ...prevState, page: newPage }))
   }
 
-  return (
-    <TasksPage
-      title={t("tasks")}
-      breadcrumbsLinks={breadcrumbsLinks}
-      pathname={pathname}
-      onFiltersChange={(filters) => {
-        setTaskFilters((prevState) => ({ ...prevState, ...filters }))
+  return loading ? (
+    <Box
+      sx={{
+        width: "100%",
+        height: 200,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
       }}
     >
-      {loading ? (
-        <Box
+      <CircularProgress color="secondary" />
+    </Box>
+  ) : (
+    <TableContainer>
+      <Typography color="primary" variant="h6" component="h6">
+        {`${totalOfTasks} ${t("tasks")} - ${totalOfDeliveredTasks} ${t(
+          "finished_tasks"
+        )}`}
+      </Typography>
+
+      <Table data-testid="task-list">
+        <TableHead
           sx={{
-            width: "100%",
-            height: 200,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+            borderBottom: "1px solid",
+            borderBottomColor: "#ccc",
           }}
         >
-          <CircularProgress color="secondary" />
-        </Box>
-      ) : (
-        <TableContainer>
-          <Typography color="primary" variant="h6" component="h6">
-            {`${totalOfTasks} ${t("tasks")} - ${totalOfDeliveredTasks} ${t(
-              "finished_tasks"
-            )}`}
-          </Typography>
+          <TableRow>
+            {taskListHeadCells.map((cellName, index) => (
+              <TableCell key={`${index}--${cellName}`}>{cellName}</TableCell>
+            ))}
+          </TableRow>
+        </TableHead>
 
-          <Table data-testid="task-list">
-            <TableHead
-              sx={{
-                borderBottom: "1px solid",
-                borderBottomColor: "#ccc",
-              }}
-            >
-              <TableRow>
-                {taskListHeadCells.map((cellName, index) => (
-                  <TableCell key={`${index}--${cellName}`}>
-                    {cellName}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
+        <TableBody>
+          {tasks.map((task, index) => {
+            const baseLink = `/companies/${company?.slug}`
 
-            <TableBody>
-              {tasks.map((task, index) => {
-                const baseLink = `/companies/${company?.slug}`
-
-                return (
-                  <TableRow
-                    sx={{
-                      borderBottom: "1px solid",
-                      borderBottomColor: "#ccc",
-                    }}
-                    key={`${task.title}--${index}`}
+            return (
+              <TableRow
+                sx={{
+                  borderBottom: "1px solid",
+                  borderBottomColor: "#ccc",
+                }}
+                key={`${task.title}--${index}`}
+              >
+                <TableCell padding="checkbox">
+                  <Link href={`${baseLink}/tasks/${task.id}`}>{task.id}</Link>
+                </TableCell>
+                <TableCell padding="checkbox">
+                  <Link href={`${baseLink}/teams/${task.team.id}`}>
+                    {task.team.name}
+                  </Link>
+                </TableCell>
+                <TableCell padding="checkbox">
+                  <Link
+                    href={
+                      task.initiative
+                        ? `${baseLink}/initiatives/${task.initiative?.id}`
+                        : "#"
+                    }
                   >
-                    <TableCell padding="checkbox">
-                      <Link href={`${baseLink}/tasks/${task.id}`}>
-                        {task.id}
-                      </Link>
-                    </TableCell>
-                    <TableCell padding="checkbox">
-                      <Link href={`${baseLink}/teams/${task.team.id}`}>
-                        {task.team.name}
-                      </Link>
-                    </TableCell>
-                    <TableCell padding="checkbox">
-                      <Link
-                        href={
-                          task.initiative
-                            ? `${baseLink}/initiatives/${task.initiative?.id}`
-                            : "#"
-                        }
-                      >
-                        {task.initiative?.name}
-                      </Link>
-                    </TableCell>
-                    <TableCell padding="checkbox">
-                      <Link href={`${baseLink}/projects/${task.project.id}`}>
-                        {task.project.name}
-                      </Link>
-                    </TableCell>
-                    <TableCell padding="checkbox">
-                      {task.demand.demandTitle}
-                    </TableCell>
-                    <TableCell padding="checkbox">{task.title}</TableCell>
-                    <TableCell padding="checkbox">{task.createdDate}</TableCell>
-                    <TableCell padding="checkbox">{task.endDate}</TableCell>
-                    <TableCell padding="checkbox">
-                      {normalizeTimeToFinish(
-                        task.secondsToComplete,
-                        task.partialCompletionTime
-                      )}
-                    </TableCell>
-                  </TableRow>
-                )
-              })}
-            </TableBody>
-          </Table>
+                    {task.initiative?.name}
+                  </Link>
+                </TableCell>
+                <TableCell padding="checkbox">
+                  <Link href={`${baseLink}/projects/${task.project.id}`}>
+                    {task.project.name}
+                  </Link>
+                </TableCell>
+                <TableCell padding="checkbox">
+                  {task.demand.demandTitle}
+                </TableCell>
+                <TableCell padding="checkbox">{task.title}</TableCell>
+                <TableCell padding="checkbox">{task.createdDate}</TableCell>
+                <TableCell padding="checkbox">{task.endDate}</TableCell>
+                <TableCell padding="checkbox">
+                  {normalizeTimeToFinish(
+                    task.secondsToComplete,
+                    task.partialCompletionTime
+                  )}
+                </TableCell>
+              </TableRow>
+            )
+          })}
+        </TableBody>
+      </Table>
 
-          <TablePagination
-            labelRowsPerPage={t("tasks_table.rows_per_page")}
-            labelDisplayedRows={({ from, to, count }) => {
-              return `${from}-${to} ${t(
-                "tasks_table.count_displayed_items_separator"
-              )} ${count}`
-            }}
-            rowsPerPageOptions={[5, 10, 25]}
-            component="div"
-            count={totalOfTasks}
-            rowsPerPage={taskFilters.limit}
-            page={taskFilters.page}
-            onPageChange={(_, page) => handlePage(page)}
-            onRowsPerPageChange={(event) => handleRowsPerPage(event)}
-          />
-        </TableContainer>
-      )}
-    </TasksPage>
+      <TablePagination
+        labelRowsPerPage={t("tasks_table.rows_per_page")}
+        labelDisplayedRows={({ from, to, count }) => {
+          return `${from}-${to} ${t(
+            "tasks_table.count_displayed_items_separator"
+          )} ${count}`
+        }}
+        rowsPerPageOptions={[5, 10, 25]}
+        component="div"
+        count={totalOfTasks}
+        rowsPerPage={filters.limit}
+        page={filters.page}
+        onPageChange={(_, page) => handlePage(page)}
+        onRowsPerPageChange={(event) => handleRowsPerPage(event)}
+      />
+    </TableContainer>
   )
 }
 
-export default TasksList
+export default TaskList

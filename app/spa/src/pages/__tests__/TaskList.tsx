@@ -9,10 +9,10 @@ import {
 import { act } from "react-dom/test-utils"
 import { I18nextProvider } from "react-i18next"
 import { MemoryRouter, Route, Routes } from "react-router-dom"
-import { SELECT_FILTERS_QUERY } from "../../components/TaskPage"
 import i18n from "../../lib/i18n"
 import { tasksMock, tasksSelectsMock } from "../../lib/mocks"
-import TasksList, { TASKS_LIST_QUERY } from "../Tasks/List"
+import { TASKS_LIST_QUERY } from "../Tasks/List"
+import TasksPage, { SELECT_FILTERS_QUERY } from "../Tasks/Tasks"
 
 export type TaskFilters = {
   page: number
@@ -34,7 +34,7 @@ const mountTaskPage = (mocks: any) => {
           <Routes>
             <Route
               path="/companies/:companyNickName/tasks"
-              element={<TasksList />}
+              element={<TasksPage />}
             />
           </Routes>
         </MemoryRouter>

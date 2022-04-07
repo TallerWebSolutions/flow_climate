@@ -1,4 +1,4 @@
-import { Tabs as MUITabs, Tab as MUITab, Link, Typography } from "@mui/material"
+import { Link, Tab as MUITab, Tabs as MUITabs, Typography } from "@mui/material"
 
 export type Tab = {
   label: string

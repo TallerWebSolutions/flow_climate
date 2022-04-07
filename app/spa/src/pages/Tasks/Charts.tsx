@@ -6,7 +6,6 @@ import { SliceTooltipProps } from "@nivo/line"
 import { ScatterPlotValue } from "@nivo/scatterplot"
 import { ReactElement, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { useLocation } from "react-router-dom"
 import { BarChart } from "../../components/charts/BarChart"
 import { LineChart } from "../../components/charts/LineChart"
 import { ScatterChart } from "../../components/charts/ScatterChart"
@@ -17,12 +16,12 @@ import LineChartTooltip from "../../components/charts/tooltips/LineChartTooltip"
 import ScatterChartTooltip, {
   ScatterNode,
 } from "../../components/charts/tooltips/ScatterChartTooltip"
-import TasksPage, { TaskFilters } from "../../components/TaskPage"
 import { secondsToDays } from "../../lib/date"
 import { openWindow } from "../../lib/func"
 import { Company } from "../../modules/company/company.types"
 import { Task } from "../../modules/task/task.types"
 import User from "../../modules/user/user.types"
+import { TaskFilters } from "./Tasks"
 
 const GET_TOTAL_FINISHED_TASKS = gql`
   query GetTotalOfFinishedTasks {
@@ -196,10 +195,12 @@ const buildPercentileYAxisMarker = ({
   }
 }
 
-const Charts = () => {
-  const { t } = useTranslation(["tasks"])
-  const { pathname } = useLocation()
+type TasksChartProps = {
+  filters: TaskFilters
+}
 
+const TaskCharts = ({ filters }: TasksChartProps) => {
+  const { t } = useTranslation(["tasks"])
   const [completionTimeData, setCompletionTimeData] = useState<ChartData[]>([])
   const [partialCompletionTimeData, setPartialCompletionTimeData] = useState<
     ChartData[]
@@ -209,20 +210,13 @@ const Charts = () => {
     completionTimeConfidenceEvolution,
     setCompletionTimeConfidenceEvolution,
   ] = useState<CompletionTimeConfidenceChart>()
-
   const [company, setCompany] = useState<Company | null>(null)
-  const [taskFilters, setTaskFilters] = useState<TaskFilters>({
-    page: 0,
-    limit: 10,
-  })
-
   const [totalOfFinishedTasks, setTotalOfFinishedTasks] = useState<number>(0)
   const { data: totalFinishedTasksData, loading: loadingFinishedTasksData } =
     useQuery<TotalFinishedTasksDTO>(GET_TOTAL_FINISHED_TASKS)
-
   const { data, loading } = useQuery<TasksChartsDTO>(TASKS_CHARTS_QUERY, {
     skip: totalOfFinishedTasks === 0,
-    variables: { ...taskFilters, limit: totalOfFinishedTasks },
+    variables: { ...filters, limit: totalOfFinishedTasks },
   })
 
   useEffect(() => {
@@ -311,10 +305,6 @@ const Charts = () => {
 
   const taskList = data?.tasksList
   const companySlug = String(company?.slug)
-  const breadcrumbsLinks = [
-    { name: company?.name || "", url: companySlug },
-    { name: t("tabs.charts") },
-  ]
 
   const getTaskIDByExternalID = (findedExternalId: number) => {
     return taskList?.tasks.find(
@@ -381,190 +371,175 @@ const Charts = () => {
     },
   ]
 
-  return (
-    <TasksPage
-      title={t("tasks")}
-      breadcrumbsLinks={breadcrumbsLinks}
-      pathname={pathname}
-      onFiltersChange={(filters) => {
-        setTaskFilters((prevState) => ({ ...prevState, ...filters }))
+  return loading || loadingFinishedTasksData ? (
+    <Box
+      sx={{
+        width: "100%",
+        height: 200,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
       }}
     >
-      {loading || loadingFinishedTasksData ? (
-        <Box
-          sx={{
-            width: "100%",
-            height: 200,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+      <CircularProgress color="secondary" />
+    </Box>
+  ) : (
+    <Box
+      sx={{
+        display: "grid",
+        gridTemplateColumns: "repeat(2, 1fr)",
+        gridTemplateRows: "repeat(2, 1fr)",
+        gridColumnGap: "16px",
+        gridRowGap: "20px",
+        mb: 6,
+      }}
+    >
+      <ChartBox title={t("charts.control_completion_time_title")}>
+        <ScatterChart
+          axisLeftLegend={t("charts.days")}
+          data={completionTimeChartData}
+          props={{
+            markers: [
+              deliveredLeadTimeP65Marker,
+              deliveredLeadTimeP80Marker,
+              deliveredLeadTimeP95Marker,
+            ],
+            tooltip: (data: { node: ScatterNode }) => {
+              return (
+                <ScatterChartTooltip
+                  xLabel={t("charts.control_completion_time_tooltip_x_legend")}
+                  node={data.node}
+                />
+              )
+            },
           }}
-        >
-          <CircularProgress color="secondary" />
-        </Box>
-      ) : (
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: "repeat(2, 1fr)",
-            gridTemplateRows: "repeat(2, 1fr)",
-            gridColumnGap: "16px",
-            gridRowGap: "20px",
-            mb: 6,
+          onClick={({ xValue }) => {
+            const taskExternalID = Number(xValue)
+            const taskID = getTaskIDByExternalID(taskExternalID)
+            openWindow(`/companies/${companySlug}/tasks/${taskID?.id}`)
           }}
-        >
-          <ChartBox title={t("charts.control_completion_time_title")}>
-            <ScatterChart
-              axisLeftLegend={t("charts.days")}
-              data={completionTimeChartData}
-              props={{
-                markers: [
-                  deliveredLeadTimeP65Marker,
-                  deliveredLeadTimeP80Marker,
-                  deliveredLeadTimeP95Marker,
-                ],
-                tooltip: (data: { node: ScatterNode }) => {
-                  return (
-                    <ScatterChartTooltip
-                      xLabel={t(
-                        "charts.control_completion_time_tooltip_x_legend"
-                      )}
-                      node={data.node}
-                    />
-                  )
-                },
-              }}
-              onClick={({ xValue }) => {
-                const taskExternalID = Number(xValue)
-                const taskID = getTaskIDByExternalID(taskExternalID)
-                openWindow(`/companies/${companySlug}/tasks/${taskID?.id}`)
-              }}
-            />
-          </ChartBox>
+        />
+      </ChartBox>
 
-          <ChartBox title={t("charts.current_partial_completion_title")}>
-            <ScatterChart
-              axisLeftLegend={t("charts.days")}
-              data={partialCompletionTimeChartData}
-              props={{
-                markers: [
-                  deliveredLeadTimeP65Marker,
-                  deliveredLeadTimeP80Marker,
-                  deliveredLeadTimeP95Marker,
-                ],
-                xScale: {
-                  type: "linear",
-                  min: "auto",
-                  max: "auto",
-                  reverse: true,
-                },
-                tooltip: (data: { node: ScatterNode }) => {
-                  return (
-                    <ScatterChartTooltip
-                      xLabel={t(
-                        "charts.current_partial_completion_tooltip_x_legend"
-                      )}
-                      node={data.node}
-                    />
-                  )
-                },
-              }}
-              onClick={({ xValue }) => {
-                const taskExternalID = Number(xValue)
-                const taskID = getTaskIDByExternalID(taskExternalID)
-                openWindow(`/companies/${companySlug}/tasks/${taskID?.id}`)
-              }}
-            />
-          </ChartBox>
+      <ChartBox title={t("charts.current_partial_completion_title")}>
+        <ScatterChart
+          axisLeftLegend={t("charts.days")}
+          data={partialCompletionTimeChartData}
+          props={{
+            markers: [
+              deliveredLeadTimeP65Marker,
+              deliveredLeadTimeP80Marker,
+              deliveredLeadTimeP95Marker,
+            ],
+            xScale: {
+              type: "linear",
+              min: "auto",
+              max: "auto",
+              reverse: true,
+            },
+            tooltip: (data: { node: ScatterNode }) => {
+              return (
+                <ScatterChartTooltip
+                  xLabel={t(
+                    "charts.current_partial_completion_tooltip_x_legend"
+                  )}
+                  node={data.node}
+                />
+              )
+            },
+          }}
+          onClick={({ xValue }) => {
+            const taskExternalID = Number(xValue)
+            const taskID = getTaskIDByExternalID(taskExternalID)
+            openWindow(`/companies/${companySlug}/tasks/${taskID?.id}`)
+          }}
+        />
+      </ChartBox>
 
-          <ChartBox title={t("charts.flow_data_title")}>
-            <BarChart
-              axisLeftLegend={t("charts.demands")}
-              data={flowChartData}
-              props={{
-                groupMode: "grouped",
-                keys: [
-                  t("charts.flow_data_created_legend"),
-                  t("charts.flow_data_delivered_legend"),
-                ],
-                margin: { top: 50, right: 60, bottom: 65, left: 60 },
-                padding: 0.3,
-                axisBottom: {
-                  tickSize: 5,
-                  tickPadding: 5,
-                  legendPosition: "middle",
-                  legendOffset: 60,
-                  tickRotation: -37,
-                  legend: t("charts.flow_data_period_legend"),
-                  indexBy: "period",
-                },
-                tooltip: (data: BarData) => {
-                  return (
-                    <BarChartTooltip
-                      xLabel={t("charts.flow_data_tooltip_x_legend")}
-                      data={data}
-                    />
-                  )
-                },
-              }}
-            />
-          </ChartBox>
+      <ChartBox title={t("charts.flow_data_title")}>
+        <BarChart
+          axisLeftLegend={t("charts.demands")}
+          data={flowChartData}
+          props={{
+            groupMode: "grouped",
+            keys: [
+              t("charts.flow_data_created_legend"),
+              t("charts.flow_data_delivered_legend"),
+            ],
+            margin: { top: 50, right: 60, bottom: 65, left: 60 },
+            padding: 0.3,
+            axisBottom: {
+              tickSize: 5,
+              tickPadding: 5,
+              legendPosition: "middle",
+              legendOffset: 60,
+              tickRotation: -37,
+              legend: t("charts.flow_data_period_legend"),
+              indexBy: "period",
+            },
+            tooltip: (data: BarData) => {
+              return (
+                <BarChartTooltip
+                  xLabel={t("charts.flow_data_tooltip_x_legend")}
+                  data={data}
+                />
+              )
+            },
+          }}
+        />
+      </ChartBox>
 
-          <ChartBox title={t("charts.completion_time_evolution_title")}>
-            <LineChart
-              axisLeftLegend={t("charts.days")}
-              data={completionTimeEvolutionChartData}
-              props={{
-                margin: { top: 50, right: 60, bottom: 65, left: 60 },
-                axisBottom: {
-                  legend: t("charts.completion_time_evolution_weeks_legend"),
-                  legendOffset: 60,
-                  tickRotation: -37,
-                  legendPosition: "middle",
-                },
-                enableSlices: "x",
-                sliceTooltip: ({ slice }: SliceTooltipProps) => (
-                  <LineChartTooltip
-                    slice={slice}
-                    xLabel={t(
-                      "charts.completion_time_evolution_tooltip_x_legend"
-                    )}
-                  />
-                ),
-                legends: [
+      <ChartBox title={t("charts.completion_time_evolution_title")}>
+        <LineChart
+          axisLeftLegend={t("charts.days")}
+          data={completionTimeEvolutionChartData}
+          props={{
+            margin: { top: 50, right: 60, bottom: 65, left: 60 },
+            axisBottom: {
+              legend: t("charts.completion_time_evolution_weeks_legend"),
+              legendOffset: 60,
+              tickRotation: -37,
+              legendPosition: "middle",
+            },
+            enableSlices: "x",
+            sliceTooltip: ({ slice }: SliceTooltipProps) => (
+              <LineChartTooltip
+                slice={slice}
+                xLabel={t("charts.completion_time_evolution_tooltip_x_legend")}
+              />
+            ),
+            legends: [
+              {
+                anchor: "top",
+                direction: "row",
+                toggleSerie: true,
+                justify: false,
+                translateX: 0,
+                translateY: -25,
+                itemsSpacing: 0,
+                itemDirection: "left-to-right",
+                itemWidth: 200,
+                itemHeight: 20,
+                itemOpacity: 0.75,
+                symbolSize: 12,
+                symbolShape: "circle",
+                symbolBorderColor: "rgba(0, 0, 0, .5)",
+                effects: [
                   {
-                    anchor: "top",
-                    direction: "row",
-                    toggleSerie: true,
-                    justify: false,
-                    translateX: 0,
-                    translateY: -25,
-                    itemsSpacing: 0,
-                    itemDirection: "left-to-right",
-                    itemWidth: 200,
-                    itemHeight: 20,
-                    itemOpacity: 0.75,
-                    symbolSize: 12,
-                    symbolShape: "circle",
-                    symbolBorderColor: "rgba(0, 0, 0, .5)",
-                    effects: [
-                      {
-                        on: "hover",
-                        style: {
-                          itemBackground: "rgba(0, 0, 0, .03)",
-                          itemOpacity: 1,
-                        },
-                      },
-                    ],
+                    on: "hover",
+                    style: {
+                      itemBackground: "rgba(0, 0, 0, .03)",
+                      itemOpacity: 1,
+                    },
                   },
                 ],
-              }}
-            />
-          </ChartBox>
-        </Box>
-      )}
-    </TasksPage>
+              },
+            ],
+          }}
+        />
+      </ChartBox>
+    </Box>
   )
 }
 
-export default Charts
+export default TaskCharts

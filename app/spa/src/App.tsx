@@ -1,26 +1,23 @@
-import { Fragment, useEffect } from "react"
-import { BrowserRouter, Route, Routes } from "react-router-dom"
-import { Helmet } from "react-helmet"
+import { gql, useQuery } from "@apollo/client"
 import { ConfirmProvider } from "material-ui-confirm"
-
-import ApiProvider from "./lib/ApiProvider"
-import ThemeProvider from "./lib/ThemeProvider"
-import Replenishing from "./pages/Replenishing"
-import StatusReport from "./pages/StatusReport"
-import RiskDrill from "./pages/RiskDrill"
-import LeadTimeDashboard from "./pages/LeadTimeDashboard"
-import Statistics from "./pages/Statistics"
-import Teams from "./pages/Teams/Teams"
-import CreateTeam from "./pages/Teams/CreateTeam"
-import EditTeam from "./pages/Teams/EditTeam"
-import TasksList from "./pages/Tasks/List"
-import Charts from "./pages/Tasks/Charts"
-
-import i18n, { loadLanguage } from "./lib/i18n"
+import { Fragment, useEffect } from "react"
+import { Helmet } from "react-helmet"
+import { I18nextProvider } from "react-i18next"
+import { BrowserRouter, Route, Routes } from "react-router-dom"
 import { MessagesContext } from "./contexts/MessageContext"
 import { useMessages } from "./hooks/useMessages"
-import { I18nextProvider } from "react-i18next"
-import { gql, useQuery } from "@apollo/client"
+import ApiProvider from "./lib/ApiProvider"
+import i18n, { loadLanguage } from "./lib/i18n"
+import ThemeProvider from "./lib/ThemeProvider"
+import LeadTimeDashboard from "./pages/LeadTimeDashboard"
+import Replenishing from "./pages/Replenishing"
+import RiskDrill from "./pages/RiskDrill"
+import Statistics from "./pages/Statistics"
+import StatusReport from "./pages/StatusReport"
+import TasksPage from "./pages/Tasks/Tasks"
+import CreateTeam from "./pages/Teams/CreateTeam"
+import EditTeam from "./pages/Teams/EditTeam"
+import Teams from "./pages/Teams/Teams"
 
 const LANGUAGE_LOGGED_USER_QUERY = gql`
   query LanguageOfLoggedUser {
@@ -83,11 +80,11 @@ const App = () => {
           />
           <Route
             path="/companies/:companyNickName/tasks"
-            element={<TasksList />}
+            element={<TasksPage />}
           />
           <Route
             path="/companies/:companyNickName/tasks/charts"
-            element={<Charts />}
+            element={<TasksPage initialTab={0} />}
           />
         </Routes>
       </BrowserRouter>
