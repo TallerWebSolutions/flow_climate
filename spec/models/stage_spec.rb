@@ -8,6 +8,8 @@ RSpec.describe Stage, type: :model do
 
   context 'associations' do
     it { is_expected.to belong_to(:company) }
+    it { is_expected.to belong_to(:parent).class_name('Stage').optional(true).inverse_of(:children) }
+    it { is_expected.to have_many(:children).class_name('Stage').inverse_of(:parent).dependent(:destroy) }
     it { is_expected.to have_many(:stages_teams).dependent(:restrict_with_error) }
     it { is_expected.to have_many(:teams).through(:stages_teams).dependent(:restrict_with_error) }
     it { is_expected.to have_many(:stage_project_configs) }

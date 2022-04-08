@@ -17,14 +17,17 @@
 #  company_id          :integer          not null
 #  integration_id      :string           not null
 #  integration_pipe_id :string
+#  stage_id            :integer
 #
 # Indexes
 #
 #  index_stages_on_integration_id  (integration_id)
 #  index_stages_on_name            (name)
+#  index_stages_on_stage_id        (stage_id)
 #
 # Foreign Keys
 #
+#  fk_rails_79294086b6  (stage_id => stages.id)
 #  fk_rails_ffd4cca0d4  (company_id => companies.id)
 #
 
@@ -33,6 +36,9 @@ class Stage < ApplicationRecord
   enum stage_stream: { upstream: 0, downstream: 1, out_stream: 2 }
 
   belongs_to :company
+
+  belongs_to :parent, optional: true, class_name: 'Stage', inverse_of: :children
+  has_many :children, class_name: 'Stage', foreign_key: :parent_id, inverse_of: :parent, dependent: :destroy
 
   has_many :stages_teams, dependent: :restrict_with_error
   has_many :teams, through: :stages_teams, dependent: :restrict_with_error

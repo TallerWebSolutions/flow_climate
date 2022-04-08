@@ -2916,7 +2916,8 @@ CREATE TABLE public.stages (
     updated_at timestamp without time zone NOT NULL,
     company_id integer NOT NULL,
     "order" integer DEFAULT 0 NOT NULL,
-    integration_pipe_id character varying
+    integration_pipe_id character varying,
+    parent_id integer
 );
 
 
@@ -5613,6 +5614,13 @@ CREATE INDEX index_stages_on_name ON public.stages USING btree (name);
 
 
 --
+-- Name: index_stages_on_parent_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stages_on_parent_id ON public.stages USING btree (parent_id);
+
+
+--
 -- Name: index_stages_teams_on_stage_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6556,6 +6564,14 @@ ALTER TABLE ONLY public.score_matrices
 
 
 --
+-- Name: stages fk_rails_a976eabc6c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stages
+    ADD CONSTRAINT fk_rails_a976eabc6c FOREIGN KEY (parent_id) REFERENCES public.stages(id);
+
+
+--
 -- Name: memberships fk_rails_ae2aedcfaf; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7092,6 +7108,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220214141346'),
 ('20220221210259'),
 ('20220311184239'),
-('20220401124201');
+('20220401124201'),
+('20220408194012');
 
 
