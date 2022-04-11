@@ -460,7 +460,10 @@ class Project < ApplicationRecord
   def current_weekly_scope_ideal_burnup
     period = TimeService.instance.weeks_between_of(start_date, end_date)
     ideal_per_period = []
-    period.each_with_index { |_date, index| ideal_per_period << ((backlog_count_for.to_f / period.size) * (index + 1)) }
+    scope_base = project_consolidations.present? ? project_consolidations.order(:consolidation_date).last.project_scope : backlog_count_for
+
+    period.each_with_index { |_date, index| ideal_per_period << ((scope_base.to_f / period.size) * (index + 1)) }
+
     ideal_per_period
   end
 
