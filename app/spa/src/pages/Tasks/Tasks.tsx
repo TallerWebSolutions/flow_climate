@@ -309,7 +309,13 @@ const TasksPage = ({ initialTab = 1 }: TasksPageProps) => {
         >
           <Tabs value={tab} onChange={(_, tab) => handleChangeTab(tab)}>
             {taskTabs.map((tab, index) => {
-              return <Tab label={tab.label} {...a11yProps(index)} />
+              return (
+                <Tab
+                  key={`${index}--${tab.label}`}
+                  label={tab.label}
+                  {...a11yProps(index)}
+                />
+              )
             })}
           </Tabs>
         </Box>
