@@ -164,13 +164,15 @@ RSpec.describe DemandEffortService, type: :service do
         Fabricate :item_assignment, membership: membership, demand: demand, start_time: Time.zone.parse('2021-05-24 14:55'), finish_time: Time.zone.parse('2021-05-24 15:55')
         Fabricate :item_assignment, membership: membership, demand: demand, start_time: Time.zone.parse('2021-05-24 15:56'), finish_time: Time.zone.parse('2021-05-24 16:56')
         Fabricate :item_assignment, membership: membership, demand: demand, start_time: Time.zone.parse('2021-05-24 16:57'), finish_time: Time.zone.parse('2021-05-25 10:57')
-        Fabricate :item_assignment, membership: other_membership, demand: demand, start_time: Time.zone.parse('2021-05-24 12:53'), finish_time: nil
+
+        Fabricate :item_assignment, membership: other_membership, demand: demand, start_time: Time.zone.parse('2021-05-24 00:00'), finish_time: Time.zone.parse('2021-05-24 16:35')
+        Fabricate :item_assignment, membership: other_membership, demand: demand, start_time: Time.zone.parse('2021-05-24 17:55'), finish_time: Time.zone.parse('2021-05-24 23:59')
 
         allow(Time.zone).to(receive(:now)).and_return(Time.zone.local(2021, 5, 25, 10, 58, 0))
         described_class.instance.build_efforts_to_demand(demand)
 
         expect(DemandEffort.all.count).to eq 10
-        expect(DemandEffort.all.sum(&:effort_value).to_f).to eq 20.4
+        expect(DemandEffort.all.sum(&:effort_value).to_f).to eq 20.08
       end
     end
 

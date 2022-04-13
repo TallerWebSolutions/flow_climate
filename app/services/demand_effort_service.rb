@@ -67,10 +67,10 @@ class DemandEffortService
 
     previous_efforts_value_to_day = previous_efforts_to_day.sum(&:effort_value)
 
-    demand_effort_in_transition = if hours_in_assignment > 6
-                                    TimeService.instance.compute_working_hours_for_dates(effort_start_date, end_date)
-                                  elsif previous_efforts_value_to_day >= 6
+    demand_effort_in_transition = if previous_efforts_value_to_day >= 6
                                     0
+                                  elsif hours_in_assignment > 6
+                                    TimeService.instance.compute_working_hours_for_dates(effort_start_date, end_date)
                                   else
                                     hours_in_assignment
                                   end
