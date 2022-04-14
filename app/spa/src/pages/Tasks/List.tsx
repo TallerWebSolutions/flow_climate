@@ -120,9 +120,13 @@ const TaskList = ({ filters, setFilters }: TaskListProps) => {
 
   useEffect(() => {
     if (!loading) {
-      setTasks(data?.tasksList.tasks!)
+      setTasks(data?.tasksList.tasks ?? [])
       setCompany(data?.me.currentCompany!)
-      setTotalOfTasks(Number(data?.tasksList.totalCount))
+
+      if (data?.tasksList.totalCount) {
+        setTotalOfTasks(0)
+      }
+
       setTotalOfDeliveredTasks(Number(data?.tasksList.totalDeliveredCount))
     }
   }, [data, loading])

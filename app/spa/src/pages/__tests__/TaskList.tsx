@@ -34,7 +34,7 @@ const mountTaskPage = (mocks: any) => {
           <Routes>
             <Route
               path="/companies/:companyNickName/tasks"
-              element={<TasksPage />}
+              element={<TasksPage initialTab={1} />}
             />
           </Routes>
         </MemoryRouter>
@@ -49,19 +49,20 @@ describe("pages/Task/List", () => {
       const mocks = [
         {
           request: {
-            query: SELECT_FILTERS_QUERY,
-          },
-          result: { ...tasksSelectsMock },
-        },
-        {
-          request: {
             query: TASKS_LIST_QUERY,
             variables: {
-              limit: 10,
               page: 0,
+              limit: 10,
+              status: "",
             },
           },
           result: { ...tasksMock },
+        },
+        {
+          request: {
+            query: SELECT_FILTERS_QUERY,
+          },
+          result: { ...tasksSelectsMock },
         },
       ]
 
@@ -81,7 +82,7 @@ describe("pages/Task/List", () => {
 
           expect(rowsOnTaskTable).toHaveLength(quantityOfRowsOnTablesTRask)
         },
-        { timeout: 5000 }
+        { timeout: 2000 }
       ),
         5000
     })
@@ -100,8 +101,9 @@ describe("pages/Task/List", () => {
           request: {
             query: TASKS_LIST_QUERY,
             variables: {
-              limit: 10,
               page: 0,
+              limit: 10,
+              status: "",
             },
           },
           result: { ...tasksMock },
@@ -134,7 +136,7 @@ describe("pages/Task/List", () => {
 
           expect(rowsOnTaskTable).toHaveLength(quantityOfRowsOnTablesTRask)
         },
-        { timeout: 5000 }
+        { timeout: 2000 }
       )
     }, 5000)
   })

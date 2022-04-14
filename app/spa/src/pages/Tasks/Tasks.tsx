@@ -102,7 +102,7 @@ const SelectFilter = ({
       <InputLabel id={id}>{label}</InputLabel>
       <Select
         labelId={id}
-        value={value}
+        value={value ?? ""}
         label={label}
         onChange={onChange}
         inputProps={{ ...inputProps }}
@@ -138,6 +138,7 @@ const TasksPage = ({ initialTab = 1 }: TasksPageProps) => {
   const [taskFilters, setTaskFilters] = useState<TaskFilters>({
     page: 0,
     limit: 10,
+    status: "",
   })
 
   const { data, loading } = useQuery<TaskFiltersDTO>(SELECT_FILTERS_QUERY)
@@ -228,7 +229,6 @@ const TasksPage = ({ initialTab = 1 }: TasksPageProps) => {
           >
             <TextField
               value={taskSearchName}
-              defaultValue=""
               onChange={handleSearchByName}
               label={t("filter.search")}
               helperText={t("filter.search_helper")}
