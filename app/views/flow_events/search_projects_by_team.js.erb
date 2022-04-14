@@ -1,6 +1,7 @@
 var projectSelect = $("#flow_event_project_id")
 
 projectSelect.html("<%= escape_javascript options_from_collection_for_select(@projects_by_team, :id, :name) %>");
+projectSelect.prepend("<option value='' selected='selected'><%= I18n.t('general.select') %></option>");
 
 $("#general-loader").hide();
 
