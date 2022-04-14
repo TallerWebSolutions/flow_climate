@@ -5,13 +5,14 @@ module Consolidations
     queue_as :consolidations
 
     def perform(project, cache_date = Time.zone.today)
+      cache_date = Time.zone.today
       end_of_day = cache_date.end_of_day
 
       demands = project.demands.where('demands.created_date <= :limit_date', limit_date: end_of_day)
       demands_finished = demands.not_discarded_until(end_of_day).finished_until_date(end_of_day).order(end_date: :asc)
       demands_discarded = demands.where('discarded_at <= :limit_date', limit_date: end_of_day)
       start_date = cache_date.beginning_of_month
-      demands_finished_in_month = project.demands.to_end_dates(start_date, cache_date)
+      demands_finished_in_month = project.demands.to_end_dates(start_date, end_of_day)
       demands_lead_time = demands_finished.map(&:leadtime).flatten.compact
       demands_lead_time_in_month = demands_finished_in_month.map(&:leadtime).flatten.compact
 
@@ -20,8 +21,8 @@ module Consolidations
       demand_efforts_manual_downstream = demand_efforts_manual.sum(&:effort_downstream)
 
       demands_ids_to_efforts = (demands.map(&:id) + demands_discarded.map(&:id)) - demand_efforts_manual.map(&:id)
-      demand_efforts = DemandEffort.where(demand_id: demands_ids_to_efforts).to_dates(start_date, cache_date)
-      demand_efforts_accumulated = DemandEffort.where(demand_id: demands_ids_to_efforts).until_date(cache_date)
+      demand_efforts = DemandEffort.where(demand_id: demands_ids_to_efforts).to_dates(start_date, end_of_day)
+      demand_efforts_accumulated = DemandEffort.where(demand_id: demands_ids_to_efforts).until_date(end_of_day)
 
       lead_time_histogram_data = Stats::StatisticsService.instance.leadtime_histogram_hash(demands_lead_time)
       lead_time_histogram_bins = lead_time_histogram_data.keys
@@ -56,8 +57,8 @@ module Consolidations
         code_needed_blocks_per_demand = code_needed_blocks_count.to_f / demands_finished.count
       end
 
-      tasks = project.tasks.not_discarded_until(cache_date).where('tasks.created_date <= :limit_date', limit_date: end_of_day)
-      tasks_finished = Task.where(id: project.tasks.not_discarded_until(cache_date).where('tasks.end_date <= :limit_date', limit_date: end_of_day).order('tasks.end_date').map(&:id))
+      tasks = project.tasks.not_discarded_until(end_of_day).where('tasks.created_date <= :limit_date', limit_date: end_of_day)
+      tasks_finished = Task.where(id: project.tasks.not_discarded_until(end_of_day).where('tasks.end_date <= :limit_date', limit_date: end_of_day).order('tasks.end_date').map(&:id))
       tasks_not_finished = tasks - tasks_finished
       tasks_throughputs = tasks_finished.group('EXTRACT(week FROM tasks.end_date)').group('EXTRACT(isoyear FROM tasks.end_date)').count
 
@@ -72,7 +73,7 @@ module Consolidations
                            demands_ids: demands.map(&:id),
                            demands_finished_ids: demands_finished.map(&:id),
                            project_throughput: demands_finished.count,
-                           project_quality: project.quality(cache_date),
+                           project_quality: project.quality(end_of_day),
                            lead_time_min: demands_lead_time.min,
                            lead_time_max: demands_lead_time.max,
                            lead_time_p25: Stats::StatisticsService.instance.percentile(25, demands_lead_time),
@@ -106,8 +107,8 @@ module Consolidations
                            hours_per_demand_month: DemandService.instance.hours_per_demand(demands_finished_in_month),
                            flow_efficiency: DemandService.instance.flow_efficiency(demands_finished),
                            flow_efficiency_month: DemandService.instance.flow_efficiency(demands_finished_in_month),
-                           bugs_opened: demands.not_discarded_until(cache_date).bug.count,
-                           bugs_closed: demands_finished.not_discarded_until(cache_date).bug.count,
+                           bugs_opened: demands.not_discarded_until(end_of_day).bug.count,
+                           bugs_closed: demands_finished.not_discarded_until(end_of_day).bug.count,
                            code_needed_blocks_count: code_needed_blocks_count,
                            code_needed_blocks_per_demand: code_needed_blocks_per_demand,
                            project_scope_hours: project.qty_hours,
