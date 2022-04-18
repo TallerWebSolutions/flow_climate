@@ -80,10 +80,8 @@ module Types
                                       project_id: project_id, team_id: team_id, from_date: from_date, until_date: until_date)
     end
 
-    def demands(project_id:, finished: false, limit: 25, page: 0)
-      return Demand.where(project_id: project_id).where.not(end_date: nil).limit(limit).offset(page * limit) if finished
-
-      Demand.where(project_id: project_id).limit(limit).offset(page * limit)
+    def demands(project_id:, limit: 10)
+      Demand.where(project_id: project_id).limit(limit)
     end
 
     def me
