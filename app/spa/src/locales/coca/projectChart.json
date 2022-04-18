@@ -1,3 +1,13 @@
 {
-  "charts": "Charts"
+  "charts": "Charts",
+  "project_chart_table" : {
+    "latest_deliveries":"Latest Deliveries",
+    "client": "Client",
+    "product": "Product",
+    "demand_id": "Demand ID",
+    "delivery_date": "Delivery date",
+    "leadtime": "Leadtime",
+    "demand_blocks": "Blocks",
+    "count_displayed_items_separator": "of"
+  }
 }
