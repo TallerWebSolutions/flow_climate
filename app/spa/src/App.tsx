@@ -10,6 +10,7 @@ import ApiProvider from "./lib/ApiProvider"
 import i18n, { loadLanguage } from "./lib/i18n"
 import ThemeProvider from "./lib/ThemeProvider"
 import LeadTimeDashboard from "./pages/LeadTimeDashboard"
+import ProjectsChart from "./pages/ProjectsChart"
 import Replenishing from "./pages/Replenishing"
 import RiskDrill from "./pages/RiskDrill"
 import Statistics from "./pages/Statistics"
@@ -48,7 +49,7 @@ const App = () => {
         <title>Flow Climate - Mastering the flow management</title>
       </Helmet>
       <BrowserRouter>
-        <Routes>
+        <Routes>          
           <Route
             path="/companies/:companyNickName/teams/:teamId/replenishing_consolidations"
             element={<Replenishing />}
@@ -56,6 +57,10 @@ const App = () => {
           <Route
             path="/companies/:companyNickName/projects/:projectId/status_report_dashboard"
             element={<StatusReport />}
+          />
+          <Route
+            path="/companies/:companyNickName/projects/:projectId"
+            element={<ProjectsChart />}
           />
           <Route
             path="/companies/:companyNickName/projects/:projectId/risk_drill_down"

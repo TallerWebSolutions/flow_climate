@@ -5,16 +5,8 @@ class ProjectsController < AuthenticatedController
   before_action :assign_project, except: %i[new create index search_projects running_projects_charts search_projects_by_team status_report_dashboard]
 
   def show
-    assign_project_stages
-    assign_customer_projects
-    assign_product_projects
-    build_charts_adapters
-    build_project_consolidations
-    assign_special_demands
-
-    @lead_time_histogram_data = Stats::StatisticsService.instance.leadtime_histogram_hash(demands_finished_with_leadtime.map(&:leadtime))
-    @demands_blocks = @project.demand_blocks.order(block_time: :desc)
-    @average_speed = DemandService.instance.average_speed(demands)
+    prepend_view_path Rails.root.join('public')
+    render 'spa-build/index'
   end
 
   def index
