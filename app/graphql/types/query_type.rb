@@ -44,6 +44,15 @@ module Types
       argument :last_data_in_week, Boolean, required: false
     end
 
+    field :demands,
+          [Types::DemandType],
+          null: true,
+          description: 'Demands of a project' do
+            argument :project_id, Int, required: true
+            argument :limit, Int
+            argument :page, Int
+    end
+
     field :me, Types::UserType, null: false
 
     def teams
@@ -68,6 +77,10 @@ module Types
       TasksRepository.instance.search(me.last_company_id, page_number, limit,
                                       title: title, status: status, initiative_id: initiative_id,
                                       project_id: project_id, team_id: team_id, from_date: from_date, until_date: until_date)
+    end
+
+    def demands(project_id:, limit: 25, page: 0)
+      Demand.where(project_id: project_id).limit(limit).offset(page * limit)
     end
 
     def me
