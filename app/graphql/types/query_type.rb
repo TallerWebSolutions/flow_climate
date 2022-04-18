@@ -48,10 +48,10 @@ module Types
           [Types::DemandType],
           null: true,
           description: 'Demands of a project' do
-            argument :project_id, Int, required: true
-            argument :limit, Int
-            argument :page, Int
-            argument :finished, Boolean
+      argument :project_id, Int, required: true
+      argument :limit, Int
+      argument :page, Int
+      argument :finished, Boolean
     end
 
     field :me, Types::UserType, null: false
@@ -81,7 +81,8 @@ module Types
     end
 
     def demands(project_id:, finished: false, limit: 25, page: 0)
-      return Demand.where(project_id: project_id).where.not(end_date: nil).limit(limit).offset(page * limit) if finished 
+      return Demand.where(project_id: project_id).where.not(end_date: nil).limit(limit).offset(page * limit) if finished
+
       Demand.where(project_id: project_id).limit(limit).offset(page * limit)
     end
 
