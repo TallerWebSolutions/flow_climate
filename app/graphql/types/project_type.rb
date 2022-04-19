@@ -12,6 +12,7 @@ module Types
     field :aging, Int, null: false
     field :remaining_weeks, Int, null: false
     field :total_scope, Int, null: false
+    field :initial_scope, Int, null: false
     field :backlog_count_for, Int, null: true
     field :remaining_backlog, Int, null: false
     field :flow_pressure, Float, null: false
@@ -25,7 +26,9 @@ module Types
     field :current_monte_carlo_weeks_max, Int, null: true
     field :current_monte_carlo_weeks_std_dev, Int, null: true
     field :current_weeks_by_little_law, Int, null: true
+    field :lead_time_p65, Float, null: false
     field :lead_time_p80, Float, null: false
+    field :lead_time_p95, Float, null: false
     field :work_in_progress_limit, Int, null: false
     field :weekly_throughputs, [Int], null: false
     field :mode_weekly_troughputs, Int, null: false
@@ -39,6 +42,15 @@ module Types
     field :total_hours_consumed, Float, null: true
     field :average_speed, Float, null: true
     field :average_demand_aging, Float, null: true
+    field :average_queue_time, Float, null: true
+    field :average_touch_time, Float, null: true 
+    field :number_of_demands, Int, null: true
+    field :number_of_demands_delivered, Int, null: true  
+    field :number_of_downstream_demands, Int, null: true  
+    field :upstream_demands, [Types::DemandType], null: true   
+    field :discarded_demands, [Types::DemandType], null: true   
+    field :unscored_demands, [Types::DemandType], null: true    
+    field :demand_blocks, [Types::DemandType], null: true    
     field :first_deadline, GraphQL::Types::ISO8601Date, null: true
     field :days_difference_between_first_and_last_deadlines, Int, null: true
     field :deadlines_change_count, Int, null: true
@@ -54,7 +66,6 @@ module Types
     field :remaining_days, Int, null: true
     field :current_team_based_risk, Float, null: true
     field :running, Boolean, null: true
-
     field :customers, [Types::CustomerType], null: true
     field :products, [Types::ProductType], null: true
     field :project_consolidations, [Types::ProjectConsolidationType], null: true
@@ -67,6 +78,27 @@ module Types
     delegate :team_monte_carlo_weeks_max, to: :object
     delegate :team_monte_carlo_weeks_min, to: :object
     delegate :team_based_odds_to_deadline, to: :object
+
+
+    def unscored_demands
+      object.demands.kept.unscored_demands
+    end
+
+    def discarded_demands
+      object.demands.discarded
+    end
+
+    def number_of_downstream_demands
+      object.demands.kept.in_wip(Time.zone.now).count
+    end
+
+    def number_of_demands
+      object.demands.count
+    end
+
+    def number_of_demands_delivered
+      object.demands.kept.finished_until_date(Time.zone.now).count
+    end
 
     def running
       object.running?
@@ -84,8 +116,16 @@ module Types
       object.qty_selected_in_week
     end
 
+    def lead_time_p65
+      object.general_leadtime(65)
+    end
+
     def lead_time_p80
       object.general_leadtime
+    end
+
+    def lead_time_p95
+      object.general_leadtime(95)
     end
 
     def work_in_progress_limit

@@ -50,7 +50,6 @@ module Types
           description: 'Demands of a project' do
       argument :project_id, Int, required: true
       argument :limit, Int
-      argument :page, Int
       argument :finished, Boolean
     end
 
@@ -80,7 +79,8 @@ module Types
                                       project_id: project_id, team_id: team_id, from_date: from_date, until_date: until_date)
     end
 
-    def demands(project_id:, limit: 10)
+    def demands(project_id:, finished: false, limit: 10)
+      return Demand.where(project_id: project_id).where.not(end_date: nil).limit(limit) if finished
       Demand.where(project_id: project_id).limit(limit)
     end
 

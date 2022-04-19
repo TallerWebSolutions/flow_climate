@@ -1,5 +1,6 @@
 import { Company } from "../company/company.types"
 import { Customer } from "../customer/customer.types"
+import { Demand } from "../demand/demand.types"
 import { Product } from "../product/product.types"
 import { ProjectConsolidation } from "./projectConsolidation.types"
 
@@ -13,7 +14,9 @@ export type Project = {
   flowPressurePercentage: number
   pastWeeks: number
   remainingWork: number
+  leadTimeP65: number
   leadTimeP80: number
+  leadTimeP95: number
   qtySelected: number
   qtyInProgress: number
   monteCarloP80: number
@@ -45,13 +48,24 @@ export type Project = {
   totalHoursConsumed: number
   averageSpeed: number
   averageDemandAging: number
+  numberOfDemands: number
+  numberOfDemandsDelivered: number
+  numberOfRemainingBacklog: number
   totalThroughput: number
   failureLoad: number
   discoveredScope: number
   scope: number
+  initialScope: number  
   projectConsolidations: ProjectConsolidation[]
   currentRiskToDeadline: number
   remainingDays: number
   currentTeamBasedRisk: number
   running: boolean
+  upstreamDemands: Demand[]
+  discardedDemands: Demand[]
+  unscoredDemands: Demand[]
+  demandBlocks: Demand[]
+  numberOfDownstreamDemands: number
+  averageQueueTime: number
+  averageTouchTime: number
 }

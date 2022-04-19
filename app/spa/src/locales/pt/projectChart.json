@@ -7,7 +7,6 @@
     "demand_id": "ID da demanda",
     "delivery_date": "Data de entrega",
     "leadtime": "Leadtime",
-    "demand_blocks": "Bloqueios",
-    "count_displayed_items_separator": "de"
+    "demand_blocks": "Bloqueios"
   }
 }
