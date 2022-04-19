@@ -7,7 +7,6 @@
     "demand_id": "Demand ID",
     "delivery_date": "Delivery date",
     "leadtime": "Leadtime",
-    "demand_blocks": "Blocks",
-    "count_displayed_items_separator": "of"
+    "demand_blocks": "Blocks"
   }
 }
