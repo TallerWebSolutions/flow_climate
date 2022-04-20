@@ -3,9 +3,11 @@
 RSpec.describe ProjectsController, type: :controller do
   context 'unauthenticated' do
     describe 'GET #show' do
-      before { get :show, params: { company_id: 'xpto', id: 'foo' } }
+      it 'renders the spa page' do
+        get :show, params: { company_id: 'xpto', id: 'foo' }
 
-      it { expect(response).to redirect_to new_user_session_path }
+        expect(response).to redirect_to new_user_session_path
+      end
     end
 
     describe 'GET #index' do
@@ -140,59 +142,11 @@ RSpec.describe ProjectsController, type: :controller do
 
       context 'with data' do
         context 'with running project' do
-          it 'assigns the instance variables and renders the template' do
-            travel_to Time.zone.local(2020, 12, 6, 10, 0, 0) do
-              first_project = Fabricate :project, company: company, start_date: 15.weeks.ago, end_date: Time.zone.today, status: :executing
+          it 'renders project spa page' do
+            first_project = Fabricate :project, company: company, start_date: 15.weeks.ago, end_date: Time.zone.today, status: :executing
+            get :show, params: { company_id: company, id: first_project }
 
-              first_consolidation = Fabricate :project_consolidation, consolidation_date: 10.weeks.ago, project: first_project, operational_risk: 0.875, last_data_in_week: true, last_data_in_month: true
-              second_consolidation = Fabricate :project_consolidation, consolidation_date: 9.weeks.ago, project: first_project, operational_risk: 0.875, last_data_in_week: true, last_data_in_month: true
-
-              third_consolidation = Fabricate :project_consolidation, consolidation_date: 8.weeks.ago, project: first_project, operational_risk: 0.375, last_data_in_week: true, last_data_in_month: false
-
-              fourth_consolidation = Fabricate :project_consolidation, consolidation_date: 7.weeks.ago, project: first_project, operational_risk: 0.375, last_data_in_week: false, last_data_in_month: true
-
-              first_stage = Fabricate :stage, company: company, projects: [first_project], order: 1
-              second_stage = Fabricate :stage, company: company, projects: [first_project], order: 0
-
-              first_demand = Fabricate :demand, project: first_project, external_id: 'ccc', demand_score: 10.5, end_date: 2.days.ago
-              second_demand = Fabricate :demand, project: first_project, external_id: 'zzz', commitment_date: 3.days.ago, end_date: 1.day.ago
-              third_demand = Fabricate :demand, project: first_project, external_id: 'aaa', commitment_date: 1.day.ago, end_date: nil
-
-              first_block = Fabricate :demand_block, demand: first_demand, block_time: 1.day.ago
-              second_block = Fabricate :demand_block, demand: second_demand, block_time: Time.zone.now
-
-              get :show, params: { company_id: company, id: first_project }
-
-              expect(response).to have_http_status :ok
-              expect(response).to render_template :show
-              expect(assigns(:company)).to eq company
-              expect(assigns(:project)).to eq first_project
-              expect(assigns(:unscored_demands)).to eq [third_demand, second_demand]
-              expect(assigns(:lead_time_histogram_data).keys.map(&:to_f)).to eq [172_800.0]
-              expect(assigns(:lead_time_histogram_data).values.map(&:to_f)).to eq [1.0]
-              expect(assigns(:last_10_deliveries).map(&:external_id)).to eq %w[zzz ccc]
-              expect(assigns(:demands_blocks)).to eq [second_block, first_block]
-              expect(assigns(:stages_list)).to eq [second_stage, first_stage]
-              expect(assigns(:average_speed)).to eq 0.6666666666666666
-              expect(assigns(:all_project_consolidations)).to eq [first_consolidation, second_consolidation, third_consolidation, fourth_consolidation]
-              expect(assigns(:dashboard_project_consolidations_for_months)).to eq [first_consolidation, second_consolidation, fourth_consolidation]
-            end
-          end
-        end
-
-        context 'with ended project' do
-          it 'renders consolidations for finished project' do
-            travel_to Time.zone.local(2022, 1, 5, 19, 0) do
-              project = Fabricate :project, company: company, start_date: 30.weeks.ago, end_date: 10.weeks.ago, status: :finished
-
-              first_consolidation = Fabricate :project_consolidation, consolidation_date: 21.weeks.ago, project: project, operational_risk: 0.875, last_data_in_week: true, last_data_in_month: true
-              second_consolidation = Fabricate :project_consolidation, consolidation_date: 19.weeks.ago, project: project, operational_risk: 0.875, last_data_in_week: true, last_data_in_month: true
-
-              get :show, params: { company_id: company, id: project }
-
-              expect(assigns(:all_project_consolidations)).to eq [first_consolidation, second_consolidation]
-              expect(assigns(:dashboard_project_consolidations_for_months)).to eq [first_consolidation, second_consolidation]
-            end
+            expect(response).to render_template 'spa-build/index'
           end
         end
       end
@@ -202,7 +156,7 @@ RSpec.describe ProjectsController, type: :controller do
           before { get :show, params: { company_id: company, customer_id: customer, id: project } }
 
           it 'assigns the instance variable and renders the template' do
-            expect(response).to render_template :show
+            expect(response).to render_template 'spa-build/index'
             expect(assigns(:company)).to eq company
             expect(assigns(:project)).to eq project
           end

@@ -350,6 +350,10 @@ RSpec.describe Types::QueryType do
           currentRiskToDeadline
           remainingDays
           running
+          hoursPerStageChartData {
+            xAxis
+            yAxis
+          }
         }
 
         projectConsolidations(projectId: #{project.id}) {
@@ -409,7 +413,11 @@ RSpec.describe Types::QueryType do
                                                         'leadTimeMinMonth' => 0.0,
                                                         'leadTimeP25' => 0.0,
                                                         'leadTimeP75' => 0.0
-                                                      }]
+                                                      }],
+                                                      'hoursPerStageChartData' => {
+                                                        'xAxis' => [],
+                                                        'yAxis' => [],
+                                                      }
                                                     })
         expect(result.dig('data', 'projectConsolidations')).to eq([{
                                                                     'id' => project_consolidation.id.to_s,

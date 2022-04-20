@@ -204,39 +204,8 @@ class ProjectsController < AuthenticatedController
     @projects = @company.projects.distinct.includes(:team).order(end_date: :desc).order(end_date: :desc).page(page_param)
   end
 
-  def assign_special_demands
-    @last_10_deliveries = demands.kept.finished_until_date(Time.zone.now).order(end_date: :desc).limit(10)
-    @unscored_demands = demands.kept.unscored_demands.order(external_id: :asc)
-  end
-
-  def build_project_consolidations
-    project_consolidations = @project.project_consolidations.order(:consolidation_date)
-
-    @all_project_consolidations = project_consolidations.weekly_data.order(:consolidation_date)
-    last_consolidation = project_consolidations.last
-    append_current_data(last_consolidation)
-    @dashboard_project_consolidations_for_months = project_consolidations.order(:consolidation_date).select(&:last_data_for_month?)
-  end
-
-  def append_current_data(last_consolidation)
-    return if last_consolidation&.last_data_in_week?
-
-    @all_project_consolidations = Consolidations::ProjectConsolidation.where(id: @all_project_consolidations.map(&:id) + [last_consolidation&.id]).order(:consolidation_date)
-  end
-
-  def build_charts_adapters
-    start_date = @project.start_date
-    end_date = [@project.end_date, Time.zone.today].min
-    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(demands.kept, start_date, end_date, 'week')
-    @status_report_data = Highchart::StatusReportChartsAdapter.new(demands, @project.start_date, end_date, 'week')
-  end
-
   def demands
     @demands ||= @project.demands
-  end
-
-  def demands_finished_with_leadtime
-    @demands_finished_with_leadtime ||= @demands.finished_with_leadtime
   end
 
   def build_projects_search(start_date, end_date, project_status, project_name)
