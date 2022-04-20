@@ -1,7 +1,6 @@
 export type ProjectConsolidation = {
   leadTimeMin: number
   leadTimeMax: number
-  leadTimeP80: number
   leadTimeFeature: number
   leadTimeBug: number
   leadTimeChore: number
@@ -20,6 +19,9 @@ export type ProjectConsolidation = {
   interquartileRange: number
   leadTimeP25: number
   leadTimeP75: number
+  leadTimeP65: number
+  leadTimeP80: number
+  leadTimeP95: number
   projectQuality: number
   consolidationDate: string
   operationalRisk: number
@@ -32,4 +34,11 @@ export type ProjectConsolidation = {
   projectThroughputHours: number
   bugsOpened: number
   bugsClosed: number
+  projectThroughputHoursInMonth: number
+  projectThroughputHoursManagementInMonth: number
+  projectThroughputHoursDevelopmentInMonth: number
+  projectThroughputHoursDesignInMonth: number
+  projectThroughputHoursManagement: number
+  projectThroughputHoursDevelopment: number
+  projectThroughputHoursDesign: number
 }

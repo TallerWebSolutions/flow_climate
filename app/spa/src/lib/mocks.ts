@@ -85,6 +85,13 @@ export const companyMock: Company = {
       weeklyProjectScopeUntilEnd: [],
       currentWeeklyHoursIdealBurnup: [],
       weeklyProjectScopeHoursUntilEnd: [],
+      projectConsolidationsLastMonth: [],
+      demandsFinishedWithLeadtime: [],
+      lastProjectConsolidationsWeekly: [],
+      hoursPerStageChartData: {
+        xAxis: [],
+        yAxis: [],
+      },
     },
   ],
   teams: [],
@@ -159,6 +166,13 @@ export const projectMock: Project = {
   weeklyProjectScopeUntilEnd: [],
   currentWeeklyHoursIdealBurnup: [],
   weeklyProjectScopeHoursUntilEnd: [],
+  projectConsolidationsLastMonth: [],
+  demandsFinishedWithLeadtime: [],
+  lastProjectConsolidationsWeekly: [],
+  hoursPerStageChartData: {
+    xAxis: [],
+    yAxis: [],
+  },
 }
 
 export const teamMock: Team = {
