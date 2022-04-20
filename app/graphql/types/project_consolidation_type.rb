@@ -11,10 +11,19 @@ module Types
     field :project, Types::ProjectType, null: false
     field :project_throughput, Float, null: false
     field :project_throughput_hours, Float, null: false
+    field :project_throughput_hours_design_in_month, Float, null: false
+    field :project_throughput_hours_development_in_month, Float, null: false
+    field :project_throughput_hours_management_in_month, Float, null: false
+    field :project_throughput_hours_in_month, Float, null: false
+    field :project_throughput_hours_design, Float, null: false
+    field :project_throughput_hours_development, Float, null: false
+    field :project_throughput_hours_management, Float, null: false
     field :flow_efficiency, Int, null: false
     field :lead_time_min, Int, null: true
     field :lead_time_max, Int, null: true
+    field :lead_time_p65, Int, null: true
     field :lead_time_p80, Int, null: true
+    field :lead_time_p95, Int, null: true
     field :lead_time_std_dev, Int, null: true
     field :lead_time_histogram_bin_min, Float, null: false
     field :lead_time_histogram_bin_max, Float, null: false

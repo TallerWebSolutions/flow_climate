@@ -51,6 +51,7 @@ module Types
     field :number_of_demands, Int, null: true
     field :number_of_demands_delivered, Int, null: true  
     field :number_of_downstream_demands, Int, null: true  
+    field :demands_finished_with_leadtime, [Types::DemandType], null: true
     field :upstream_demands, [Types::DemandType], null: true   
     field :discarded_demands, [Types::DemandType], null: true   
     field :unscored_demands, [Types::DemandType], null: true    
@@ -73,8 +74,10 @@ module Types
     field :customers, [Types::CustomerType], null: true
     field :products, [Types::ProductType], null: true
     field :project_consolidations_weekly, [Types::ProjectConsolidationType], null: true
+    field :project_consolidations_last_month, [Types::ProjectConsolidationType], null: true
     field :project_consolidations, [Types::ProjectConsolidationType], null: true
-
+    field :last_project_consolidations_weekly, Types::ProjectConsolidationType, null: true
+    field :hours_per_stage_chart_data, Types::Charts::HoursPerStageChartType, null: true
     delegate :remaining_backlog, to: :object
     delegate :remaining_weeks, to: :object
     delegate :flow_pressure, to: :object
@@ -84,13 +87,16 @@ module Types
     delegate :team_monte_carlo_weeks_min, to: :object
     delegate :team_based_odds_to_deadline, to: :object
 
-
     def unscored_demands
       object.demands.kept.unscored_demands
     end
 
     def discarded_demands
       object.demands.discarded
+    end
+
+    def demands_finished_with_leadtime
+      object.demands.finished_with_leadtime
     end
 
     def number_of_downstream_demands
@@ -137,10 +143,6 @@ module Types
       object.max_work_in_progress
     end
 
-    def project_consolidations_weekly
-      object.project_consolidations.order(:consolidation_date).weekly_data
-    end
-
     def weekly_throughputs
       object.last_weekly_throughput
     end
@@ -180,6 +182,24 @@ module Types
 
     def current_team_based_risk
       object.project_consolidations.last.team_based_operational_risk
+    end
+
+    def project_consolidations_weekly
+      object.project_consolidations.order(:consolidation_date).weekly_data
+    end
+
+    def project_consolidations_last_month
+      object.project_consolidations.order(:consolidation_date).select(&:last_data_for_month?)
+    end
+
+    def last_project_consolidations_weekly
+      project_consolidations_weekly.last
+    end
+
+    def hours_per_stage_chart_data
+      start_date = object.start_date
+      end_date = [object.end_date, Time.zone.today].min
+      Highchart::StatusReportChartsAdapter.new(object.demands, object.start_date, object.end_date, 'week').hours_per_stage
     end
   end
   # rubocop:enable Metrics/ClassLength
