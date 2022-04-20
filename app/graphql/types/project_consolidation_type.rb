@@ -10,6 +10,8 @@ module Types
     field :weeks_by_little_law, Float, null: false
     field :project, Types::ProjectType, null: false
     field :project_throughput, Float, null: false
+    field :project_throughput_hours, Float, null: false
+    field :flow_efficiency, Int, null: false
     field :lead_time_min, Int, null: true
     field :lead_time_max, Int, null: true
     field :lead_time_p80, Int, null: true
@@ -18,6 +20,7 @@ module Types
     field :lead_time_histogram_bin_max, Float, null: false
     field :lead_time_average, Float, null: true
     field :project_quality, Float, null: true
+    field :hours_per_demand, Float, null: false
     field :demands_finished_ids, [Int], null: false
     field :lead_time_feature, Int, null: true
     field :lead_time_bug, Int, null: true
@@ -33,6 +36,12 @@ module Types
     field :interquartile_range, Float, null: false
     field :lead_time_p25, Float, null: false
     field :lead_time_p75, Float, null: false
+    field :operational_risk, Float, null: false
+    field :tasks_based_operational_risk, Float, null: false
+    field :code_needed_blocks_count, Int, null: true
+    field :code_needed_blocks_per_demand, Float, null: true
+    field :bugs_opened, Int, null: false
+    field :bugs_closed, Int, null: false
     field :total, [Int], null: false
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
 
