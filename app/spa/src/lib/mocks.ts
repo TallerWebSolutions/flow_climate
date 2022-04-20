@@ -80,6 +80,7 @@ export const companyMock: Company = {
       numberOfDemandsDelivered: 0,
       leadTimeP65: 0,
       leadTimeP95: 0,
+      projectConsolidationsWeekly: [],
     },
   ],
   teams: [],
@@ -149,6 +150,7 @@ export const projectMock: Project = {
   numberOfDemandsDelivered: 0,
   leadTimeP65: 0,
   leadTimeP95: 0,
+  projectConsolidationsWeekly: [],
 }
 
 export const teamMock: Team = {

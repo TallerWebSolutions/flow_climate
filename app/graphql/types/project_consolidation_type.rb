@@ -17,6 +17,7 @@ module Types
     field :lead_time_histogram_bin_min, Float, null: false
     field :lead_time_histogram_bin_max, Float, null: false
     field :lead_time_average, Float, null: true
+    field :project_quality, Float, null: true
     field :demands_finished_ids, [Int], null: false
     field :lead_time_feature, Int, null: true
     field :lead_time_bug, Int, null: true
