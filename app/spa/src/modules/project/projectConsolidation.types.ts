@@ -22,4 +22,14 @@ export type ProjectConsolidation = {
   leadTimeP75: number
   projectQuality: number
   consolidationDate: string
+  operationalRisk: number
+  tasksBasedOperationalRisk: number
+  codeNeededBlocksCount: number
+  codeNeededBlocksPerDemand: number
+  flowEfficiency: number
+  hoursPerDemand: number
+  projectThroughput: number
+  projectThroughputHours: number
+  bugsOpened: number
+  bugsClosed: number
 }

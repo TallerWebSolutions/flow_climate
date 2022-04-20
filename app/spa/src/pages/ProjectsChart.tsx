@@ -6,9 +6,11 @@ import {
   Grid,
   Typography,
 } from "@mui/material"
+import { BarDatum } from "@nivo/bar"
 import { useTranslation } from "react-i18next"
 import { useParams } from "react-router-dom"
-import { LineChart } from "../components/charts/LineChart"
+import { BarChart } from "../components/charts/BarChart"
+import { LineChart, LineGraphProps } from "../components/charts/LineChart"
 import { ProjectChartsTable } from "../components/ProjectChartsTable"
 import {
   ProjectPage,
@@ -60,7 +62,22 @@ export const PROJECT_CHART_QUERY = gql`
         leadTimeP80
         projectQuality
         consolidationDate
+        operationalRisk
+        tasksBasedOperationalRisk
+        codeNeededBlocksCount
+        codeNeededBlocksPerDemand
+        flowEfficiency
+        hoursPerDemand
+        projectThroughput
+        projectThroughputHours
+        bugsOpened
+        bugsClosed
       }
+
+      weeklyProjectScopeUntilEnd
+      currentWeeklyScopeIdealBurnup
+      currentWeeklyHoursIdealBurnup
+      weeklyProjectScopeHoursUntilEnd
     }
 
     demands(projectId: $projectId, limit: $limit, finished: true) {
@@ -89,6 +106,27 @@ type ProjectChartResult = {
 
 type ProjectChartDTO = ProjectChartResult | undefined
 
+type ChartLineboxProps = {
+  title: string
+} & LineGraphProps
+
+const ChartLineBox = ({
+  title,
+  data,
+  axisLeftLegend,
+  props,
+}: ChartLineboxProps) => {
+  return (
+    <Grid item xs={6} sx={{ padding: "8px" }}>
+      <Box sx={{ height: "350px" }}>
+        <Typography>{title}</Typography>
+
+        <LineChart data={data} axisLeftLegend={axisLeftLegend} {...props} />
+      </Box>
+    </Grid>
+  )
+}
+
 const ProjectsChart = () => {
   const { t } = useTranslation(["projectChart"])
   const { projectId } = useParams()
@@ -109,6 +147,101 @@ const ProjectsChart = () => {
   const project = data?.project!
   const projectConsolidationsWeekly = project.projectConsolidationsWeekly
   const demands = data?.demands!
+
+  const operationalRiskChartData = [
+    {
+      id: "Operational Math Risk Evolution",
+      data: projectConsolidationsWeekly.map(
+        ({ consolidationDate, operationalRisk }) => {
+          const operationalRiskInPercentage = operationalRisk * 100
+
+          return {
+            x: consolidationDate,
+            y: operationalRiskInPercentage,
+          }
+        }
+      ),
+    },
+  ]
+
+  const operationalTeamRiskChartData = [
+    {
+      id: "Operational Risk (%)",
+      data: projectConsolidationsWeekly.map(
+        ({ consolidationDate, tasksBasedOperationalRisk }) => {
+          const operationalTeamRiskInPercentage: number =
+            tasksBasedOperationalRisk * 100
+
+          return {
+            x: consolidationDate,
+            y: operationalTeamRiskInPercentage,
+          }
+        }
+      ),
+    },
+  ]
+
+  const projectBugsChartData: BarDatum[] = projectConsolidationsWeekly.map(
+    ({ bugsOpened, bugsClosed }, index) => {
+      return {
+        index: index,
+        ["Bugs Openned"]: bugsOpened,
+        ["Bugs Closed"]: bugsClosed,
+      }
+    }
+  )
+
+  console.log({ projectBugsChartData })
+
+  const projectDemandsBurnupChartData = [
+    {
+      id: "Scope",
+      data: project.weeklyProjectScopeUntilEnd.map((scope, index) => ({
+        x: index,
+        y: scope,
+      })),
+    },
+    {
+      id: "Ideal",
+      data: project.currentWeeklyScopeIdealBurnup.map((idealScope, index) => ({
+        x: index,
+        y: idealScope,
+      })),
+    },
+    {
+      id: "Delivered",
+      data: projectConsolidationsWeekly.map(({ projectThroughput }, index) => ({
+        x: index,
+        y: projectThroughput,
+      })),
+    },
+  ]
+
+  const projectHoursBurnupChartData = [
+    {
+      id: "Scope",
+      data: project.weeklyProjectScopeHoursUntilEnd.map((scope, index) => ({
+        x: index,
+        y: scope,
+      })),
+    },
+    {
+      id: "Ideal",
+      data: project.currentWeeklyHoursIdealBurnup.map((idealScope, index) => ({
+        x: index,
+        y: idealScope,
+      })),
+    },
+    {
+      id: "Delivered", //@todo normalize y - check this
+      data: projectConsolidationsWeekly.map(
+        ({ projectThroughputHours }, index) => ({
+          x: index,
+          y: projectThroughputHours,
+        })
+      ),
+    },
+  ]
 
   const leadTimeP80ChartData = [
     {
@@ -140,28 +273,158 @@ const ProjectsChart = () => {
     },
   ]
 
-  console.log({ projectQualityChartData })
+  const projectQualityForCodingChartData = [
+    {
+      id: project.name,
+      data: projectConsolidationsWeekly.map(
+        ({ consolidationDate, codeNeededBlocksCount }) => ({
+          x: consolidationDate,
+          y: codeNeededBlocksCount,
+        })
+      ),
+    },
+  ]
+
+  const projectQualityForCodingPerDemand = [
+    {
+      id: project.name,
+      data: projectConsolidationsWeekly.map(
+        ({ consolidationDate, codeNeededBlocksPerDemand }) => ({
+          x: consolidationDate,
+          y: codeNeededBlocksPerDemand,
+        })
+      ),
+    },
+  ]
+
+  const flowEfficiencyChartData = [
+    {
+      id: project.name,
+      data: projectConsolidationsWeekly.map(
+        ({ consolidationDate, flowEfficiency }) => ({
+          x: consolidationDate,
+          y: flowEfficiency,
+        })
+      ),
+    },
+  ]
+
+  const hoursPerDemandChartData = [
+    {
+      id: project.name,
+      data: projectConsolidationsWeekly.map(
+        ({ consolidationDate, hoursPerDemand }) => ({
+          x: consolidationDate,
+          y: hoursPerDemand, //@todo - hoursPerDemand(seconds) to hours
+        })
+      ),
+    },
+  ]
 
   return (
     <ProjectPage pageName={t("charts")} project={project}>
       <ProjectChartsTable project={project} demands={demands} />
 
       <Grid container spacing={2} sx={{ marginTop: "32px" }}>
+        <ChartLineBox
+          title={"Operational Math Risk Evolution"}
+          data={operationalRiskChartData}
+          axisLeftLegend={"Risk (%)"}
+        />
+
+        <ChartLineBox
+          title={"Operational Math Risk Evolution - Team Data"}
+          data={operationalTeamRiskChartData}
+          axisLeftLegend={"Risk (%)"}
+        />
+
         <Grid item xs={6} sx={{ padding: "8px" }}>
           <Box sx={{ height: "350px" }}>
-            <Typography>Lead Time (p80)</Typography>
+            <Typography>Bugs</Typography>
 
-            <LineChart data={leadTimeP80ChartData} axisLeftLegend={"Days"} />
+            <BarChart
+              data={[
+                {
+                  index: 0,
+                  Openned: 3,
+                  Closed: 0,
+                },
+                {
+                  index: 1,
+                  Openned: 7,
+                  Closed: 7,
+                },
+                {
+                  index: 2,
+                  Openned: 10,
+                  Closed: 10,
+                },
+              ]}
+              axisLeftLegend={"Bugs"}
+              props={{
+                groupMode: "grouped",
+                keys: ["Openned", "Closed"],
+                margin: { top: 50, right: 60, bottom: 65, left: 60 },
+                padding: 0.3,
+                axisBottom: {
+                  tickSize: 5,
+                  tickPadding: 5,
+                  legendPosition: "middle",
+                  legendOffset: 60,
+                  tickRotation: -37,
+                },
+              }}
+            />
           </Box>
         </Grid>
 
-        <Grid item xs={6} sx={{ padding: "8px" }}>
-          <Box sx={{ height: "350px" }}>
-            <Typography>Quality: Bugs</Typography>
+        <ChartLineBox
+          title={`Demands Burnup for ${project.name}`}
+          data={projectDemandsBurnupChartData}
+          axisLeftLegend={"Demands"}
+        />
 
-            <LineChart data={projectQualityChartData} axisLeftLegend={"Days"} />
-          </Box>
-        </Grid>
+        <ChartLineBox
+          title={`Hours Burnup for ${project.name}`}
+          data={projectHoursBurnupChartData}
+          axisLeftLegend={"Hours"}
+        />
+
+        <ChartLineBox
+          title={"Lead Time (p80)"}
+          data={leadTimeP80ChartData}
+          axisLeftLegend={"Days"}
+        />
+
+        <ChartLineBox
+          title={"Quality: Bugs"}
+          data={projectQualityChartData}
+          axisLeftLegend={"Days"}
+        />
+
+        <ChartLineBox
+          title={"Quality: Blocks for coding"}
+          data={projectQualityForCodingChartData}
+          axisLeftLegend={"Days"}
+        />
+
+        <ChartLineBox
+          title={"Quality: Blocks for Coding per Demand"}
+          data={projectQualityForCodingPerDemand}
+          axisLeftLegend={"blocks per demand"}
+        />
+
+        <ChartLineBox
+          title={"Flow Efficiency"}
+          data={flowEfficiencyChartData}
+          axisLeftLegend={"%"}
+        />
+
+        <ChartLineBox
+          title={"Hours per Demand"}
+          data={hoursPerDemandChartData}
+          axisLeftLegend={"Hours"}
+        />
       </Grid>
     </ProjectPage>
   )
