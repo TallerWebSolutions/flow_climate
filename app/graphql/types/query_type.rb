@@ -81,6 +81,7 @@ module Types
 
     def demands(project_id:, finished: false, limit: 10)
       return Demand.where(project_id: project_id).where.not(end_date: nil).limit(limit) if finished
+
       Demand.where(project_id: project_id).limit(limit)
     end
 
