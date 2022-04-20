@@ -177,7 +177,7 @@ const mountTasksChartAxis = ({
     : []
 }
 
-const buildPercentileYAxisMarker = ({
+export const buildPercentileYAxisMarker = ({
   completionTime,
   color,
   legend,

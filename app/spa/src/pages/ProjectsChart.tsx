@@ -20,6 +20,7 @@ import {
 import { secondsToDays } from "../lib/date"
 import { Demand } from "../modules/demand/demand.types"
 import { Project } from "../modules/project/project.types"
+import { buildPercentileYAxisMarker } from "./Tasks/Charts"
 
 const LIMIT_DEMANDS_PER_PAGE = 10
 
@@ -191,7 +192,7 @@ const ProjectsChart = () => {
       id: "Operational Math Risk Evolution",
       data: projectConsolidationsWeekly.map(
         ({ consolidationDate, operationalRisk }) => {
-          const operationalRiskInPercentage = operationalRisk * 100
+          const operationalRiskInPercentage = (operationalRisk * 100).toFixed(2)
 
           return {
             x: consolidationDate,
@@ -207,8 +208,9 @@ const ProjectsChart = () => {
       id: "Operational Risk (%)",
       data: projectConsolidationsWeekly.map(
         ({ consolidationDate, tasksBasedOperationalRisk }) => {
-          const operationalTeamRiskInPercentage: number =
+          const operationalTeamRiskInPercentage: string = (
             tasksBasedOperationalRisk * 100
+          ).toFixed(2)
 
           return {
             x: consolidationDate,
@@ -332,6 +334,24 @@ const ProjectsChart = () => {
     },
   ]
 
+  const leadTimeControlP65Marker = buildPercentileYAxisMarker({
+    color: "#F80304",
+    completionTime: Number(lastProjectConsolidationsWeekly?.leadTimeP65),
+    legend: "Percentile 65", //@todo - put days with translation
+  })
+
+  const leadTimeControlP80Marker = buildPercentileYAxisMarker({
+    color: "#daa520",
+    completionTime: Number(lastProjectConsolidationsWeekly?.leadTimeP80),
+    legend: "Percentile 80",
+  })
+
+  const leadTimeControlP95Marker = buildPercentileYAxisMarker({
+    color: "#008000",
+    completionTime: Number(lastProjectConsolidationsWeekly?.leadTimeP95),
+    legend: "Percentile 95",
+  })
+
   const projectQualityForCodingChartData = [
     {
       id: project.name,
@@ -381,8 +401,6 @@ const ProjectsChart = () => {
       ),
     },
   ]
-
-  console.log({ hoursPerDemandChartData })
 
   const projectConsumedHoursByRoleChartData = projectConsolidationsWeekly.map(
     ({
@@ -495,7 +513,11 @@ const ProjectsChart = () => {
             <ScatterChart
               data={leadTimeControlChartData}
               props={{
-                gridXValues: String,
+                markers: [
+                  leadTimeControlP65Marker,
+                  leadTimeControlP80Marker,
+                  leadTimeControlP95Marker,
+                ],
               }}
             />
           </Box>
