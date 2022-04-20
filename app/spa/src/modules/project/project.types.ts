@@ -61,7 +61,7 @@ export type Project = {
   projectConsolidations: ProjectConsolidation[]
   projectConsolidationsWeekly: ProjectConsolidation[]
   projectConsolidationsLastMonth: ProjectConsolidation[]
-  lastProjectConsolidationsWeekly: ProjectConsolidation[]
+  lastProjectConsolidationsWeekly?: ProjectConsolidation
   currentRiskToDeadline: number
   remainingDays: number
   currentTeamBasedRisk: number
