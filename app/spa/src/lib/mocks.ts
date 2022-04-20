@@ -81,6 +81,10 @@ export const companyMock: Company = {
       leadTimeP65: 0,
       leadTimeP95: 0,
       projectConsolidationsWeekly: [],
+      currentWeeklyScopeIdealBurnup: [],
+      weeklyProjectScopeUntilEnd: [],
+      currentWeeklyHoursIdealBurnup: [],
+      weeklyProjectScopeHoursUntilEnd: [],
     },
   ],
   teams: [],
@@ -151,6 +155,10 @@ export const projectMock: Project = {
   leadTimeP65: 0,
   leadTimeP95: 0,
   projectConsolidationsWeekly: [],
+  currentWeeklyScopeIdealBurnup: [],
+  weeklyProjectScopeUntilEnd: [],
+  currentWeeklyHoursIdealBurnup: [],
+  weeklyProjectScopeHoursUntilEnd: [],
 }
 
 export const teamMock: Team = {

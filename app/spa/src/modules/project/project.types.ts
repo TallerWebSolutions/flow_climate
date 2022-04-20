@@ -55,6 +55,8 @@ export type Project = {
   failureLoad: number
   discoveredScope: number
   scope: number
+  weeklyProjectScopeUntilEnd: number[]
+  currentWeeklyScopeIdealBurnup: number[]
   initialScope: number
   projectConsolidations: ProjectConsolidation[]
   projectConsolidationsWeekly: ProjectConsolidation[]
@@ -69,4 +71,6 @@ export type Project = {
   numberOfDownstreamDemands: number
   averageQueueTime: number
   averageTouchTime: number
+  currentWeeklyHoursIdealBurnup: number[]
+  weeklyProjectScopeHoursUntilEnd: number[]
 }
