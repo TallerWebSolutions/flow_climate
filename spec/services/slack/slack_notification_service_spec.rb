@@ -131,7 +131,7 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
     describe '#notify_failure_load' do
       context 'with no exceptions' do
         it 'calls slack notification method' do
-          slack_notifier = instance_double('Slack::SlackNotifier')
+          slack_notifier = instance_double(Slack::SlackNotifier)
 
           allow(Project).to receive(:running) { Project.all }
           expect(slack_notifier).to receive(:ping).with(I18n.t('slack_configurations.notifications.failure_load', team_name: team.name, failure_load: number_to_percentage(team.failure_load, precision: 2))).once

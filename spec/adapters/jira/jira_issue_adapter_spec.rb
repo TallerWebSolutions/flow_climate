@@ -317,7 +317,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
 
         context 'in demand transition from saving' do
           it 'saves a Jira integration error' do
-            double_transitions = instance_double('ActiveRecord::Relation')
+            double_transitions = instance_double(ActiveRecord::Relation)
             allow(DemandTransition).to(receive(:where)).and_return(double_transitions)
             allow(double_transitions).to receive(:first_or_create).and_raise(ActiveRecord::RecordNotUnique)
             described_class.instance.process_jira_issue_changelog(jira_account, JSON.parse(jira_issue_changelog), demand, creator)

@@ -9,7 +9,7 @@ RSpec.describe UserInviteService, type: :service do
 
     context 'with no existent user' do
       it 'creates the user invite and sends the email do notify the new user' do
-        mail_message = instance_double('Mail::Message')
+        mail_message = instance_double(Mail::Message)
 
         expect(UserNotifierMailer).to(receive(:user_invite_to_customer).with('foo@bar.com.br', customer.name, 'xpto.com.br/bla').once { mail_message })
         expect(mail_message).to(receive(:deliver)).once
@@ -27,7 +27,7 @@ RSpec.describe UserInviteService, type: :service do
 
     context 'with an existent user' do
       it 'adds the user to the customer' do
-        user_stubbed = instance_double('DeviseCustomer')
+        user_stubbed = instance_double(DeviseCustomer)
         expect(DeviseCustomer).to(receive(:find_by).once { user_stubbed })
         expect_any_instance_of(Customer).to(receive(:add_user).with(user_stubbed))
 

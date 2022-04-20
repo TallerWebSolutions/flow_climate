@@ -42,7 +42,7 @@ class FlowEvent < ApplicationRecord
 
   belongs_to :company
   belongs_to :user
-  belongs_to :team
+  belongs_to :team, optional: true
   belongs_to :project, optional: true
   belongs_to :risk_review, optional: true
 

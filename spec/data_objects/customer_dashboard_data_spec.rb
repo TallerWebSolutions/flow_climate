@@ -9,7 +9,7 @@ RSpec.describe CustomerDashboardData, type: :data_object do
     let(:other_demand) { Fabricate :demand, company: company, customer: customer }
 
     it 'creates the data object computing and assigning the correct values' do
-      time_info = instance_double('Flow::TimeFlowInformations', hours_delivered_upstream: [10], hours_delivered_downstream: [20])
+      time_info = instance_double(Flow::TimeFlowInformations, hours_delivered_upstream: [10], hours_delivered_downstream: [20])
 
       array_of_dates = [Time.zone.yesterday.to_date, Time.zone.today]
 
