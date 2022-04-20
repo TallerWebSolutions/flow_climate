@@ -225,8 +225,8 @@ const ProjectsChart = () => {
     ({ bugsOpened, bugsClosed }, index) => {
       return {
         index: index,
-        ["Bugs Openned"]: bugsOpened,
-        ["Bugs Closed"]: bugsClosed,
+        "Bugs Openned": bugsOpened,
+        "Bugs Closed": bugsClosed,
       }
     }
   )
