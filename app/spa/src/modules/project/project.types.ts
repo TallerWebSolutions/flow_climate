@@ -55,8 +55,9 @@ export type Project = {
   failureLoad: number
   discoveredScope: number
   scope: number
-  initialScope: number  
+  initialScope: number
   projectConsolidations: ProjectConsolidation[]
+  projectConsolidationsWeekly: ProjectConsolidation[]
   currentRiskToDeadline: number
   remainingDays: number
   currentTeamBasedRisk: number

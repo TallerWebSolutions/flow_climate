@@ -49,7 +49,7 @@ const App = () => {
         <title>Flow Climate - Mastering the flow management</title>
       </Helmet>
       <BrowserRouter>
-        <Routes>          
+        <Routes>
           <Route
             path="/companies/:companyNickName/teams/:teamId/replenishing_consolidations"
             element={<Replenishing />}

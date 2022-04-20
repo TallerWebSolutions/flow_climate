@@ -1,7 +1,7 @@
 {
   "charts": "Charts",
-  "project_chart_table" : {
-    "latest_deliveries":"Latest Deliveries",
+  "project_chart_table": {
+    "latest_deliveries": "Latest Deliveries",
     "client": "Client",
     "product": "Product",
     "demand_id": "Activity ID",

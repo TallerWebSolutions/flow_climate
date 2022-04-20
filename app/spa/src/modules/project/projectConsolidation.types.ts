@@ -20,4 +20,6 @@ export type ProjectConsolidation = {
   interquartileRange: number
   leadTimeP25: number
   leadTimeP75: number
+  projectQuality: number
+  consolidationDate: string
 }

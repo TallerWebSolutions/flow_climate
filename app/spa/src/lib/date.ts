@@ -11,7 +11,11 @@ const HOURS_IN_ONE_DAY = 24
 const ONE_HOUR_IN_SECONDS = 60 * 60
 const ONE_DAY_IN_SECONDS = ONE_HOUR_IN_SECONDS * HOURS_IN_ONE_DAY
 
-export const secondsToReadbleDate = (seconds: number, separator = " e ", dateFormat = ["days", "hours"]) => {
+export const secondsToReadbleDate = (
+  seconds: number,
+  separator = " e ",
+  dateFormat = ["days", "hours"]
+) => {
   if (!seconds || seconds <= 0) return "0 segundos"
 
   const secondsIntoInterger = parseInt(seconds.toString())
@@ -39,7 +43,6 @@ type FormatDateProps = {
   date: string | Date
   format: string
 }
-
 
 export const formatDate = ({ date, format }: FormatDateProps) => {
   return dateFnsFormat(new Date(date), format)

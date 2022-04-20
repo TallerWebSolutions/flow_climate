@@ -68,6 +68,7 @@ module Types
     field :running, Boolean, null: true
     field :customers, [Types::CustomerType], null: true
     field :products, [Types::ProductType], null: true
+    field :project_consolidations_weekly, [Types::ProjectConsolidationType], null: true
     field :project_consolidations, [Types::ProjectConsolidationType], null: true
 
     delegate :remaining_backlog, to: :object
@@ -130,6 +131,10 @@ module Types
 
     def work_in_progress_limit
       object.max_work_in_progress
+    end
+
+    def project_consolidations_weekly
+      object.project_consolidations.order(:consolidation_date).weekly_data
     end
 
     def weekly_throughputs
