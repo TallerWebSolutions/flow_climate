@@ -60,6 +60,8 @@ export type Project = {
   initialScope: number
   projectConsolidations: ProjectConsolidation[]
   projectConsolidationsWeekly: ProjectConsolidation[]
+  projectConsolidationsLastMonth: ProjectConsolidation[]
+  lastProjectConsolidationsWeekly: ProjectConsolidation[]
   currentRiskToDeadline: number
   remainingDays: number
   currentTeamBasedRisk: number
@@ -68,9 +70,14 @@ export type Project = {
   discardedDemands: Demand[]
   unscoredDemands: Demand[]
   demandBlocks: Demand[]
+  demandsFinishedWithLeadtime: Demand[]
   numberOfDownstreamDemands: number
   averageQueueTime: number
   averageTouchTime: number
   currentWeeklyHoursIdealBurnup: number[]
   weeklyProjectScopeHoursUntilEnd: number[]
+  hoursPerStageChartData: {
+    xAxis: string[]
+    yAxis: number[]
+  }
 }
