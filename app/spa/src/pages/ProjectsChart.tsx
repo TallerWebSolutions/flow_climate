@@ -372,13 +372,17 @@ const ProjectsChart = () => {
     {
       id: project.name,
       data: projectConsolidationsWeekly.map(
-        ({ consolidationDate, hoursPerDemand }) => ({
-          x: consolidationDate,
-          y: hoursPerDemand, //@todo - hoursPerDemand(seconds) to hours
-        })
+        ({ consolidationDate, hoursPerDemand }) => {
+          return {
+            x: consolidationDate,
+            y: hoursPerDemand.toFixed(2),
+          }
+        }
       ),
     },
   ]
+
+  console.log({ hoursPerDemandChartData })
 
   const projectConsumedHoursByRoleChartData = projectConsolidationsWeekly.map(
     ({

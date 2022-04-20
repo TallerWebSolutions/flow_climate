@@ -47,15 +47,15 @@ module Types
     field :average_speed, Float, null: true
     field :average_demand_aging, Float, null: true
     field :average_queue_time, Float, null: true
-    field :average_touch_time, Float, null: true 
+    field :average_touch_time, Float, null: true
     field :number_of_demands, Int, null: true
-    field :number_of_demands_delivered, Int, null: true  
-    field :number_of_downstream_demands, Int, null: true  
+    field :number_of_demands_delivered, Int, null: true
+    field :number_of_downstream_demands, Int, null: true
     field :demands_finished_with_leadtime, [Types::DemandType], null: true
-    field :upstream_demands, [Types::DemandType], null: true   
-    field :discarded_demands, [Types::DemandType], null: true   
-    field :unscored_demands, [Types::DemandType], null: true    
-    field :demand_blocks, [Types::DemandType], null: true    
+    field :upstream_demands, [Types::DemandType], null: true
+    field :discarded_demands, [Types::DemandType], null: true
+    field :unscored_demands, [Types::DemandType], null: true
+    field :demand_blocks, [Types::DemandType], null: true
     field :first_deadline, GraphQL::Types::ISO8601Date, null: true
     field :days_difference_between_first_and_last_deadlines, Int, null: true
     field :deadlines_change_count, Int, null: true
@@ -199,7 +199,7 @@ module Types
     def hours_per_stage_chart_data
       start_date = object.start_date
       end_date = [object.end_date, Time.zone.today].min
-      Highchart::StatusReportChartsAdapter.new(object.demands, object.start_date, object.end_date, 'week').hours_per_stage
+      Highchart::StatusReportChartsAdapter.new(object.demands, start_date, end_date, 'week').hours_per_stage
     end
   end
   # rubocop:enable Metrics/ClassLength
