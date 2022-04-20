@@ -1,4 +1,16 @@
-import { Grid, TableContainer, Paper, Link, Typography, Box, Table, TableRow, TableCell, TableHead, TableBody } from "@mui/material"
+import {
+  Box,
+  Grid,
+  Link,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+} from "@mui/material"
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { formatDate, secondsToReadbleDate } from "../lib/date"
@@ -11,244 +23,471 @@ type ProjectChartsTableProps = {
   demands: Demand[]
 }
 
-export const ProjectChartsTable = ({project, demands}:ProjectChartsTableProps) => {
+export const ProjectChartsTable = ({
+  project,
+  demands,
+}: ProjectChartsTableProps) => {
   const { t } = useTranslation(["projectChart"])
   const [readMore, setReadMore] = useState(true)
 
   return (
-  <Grid container spacing={2} sx={{marginTop: '32px'}}>
-        <Grid item xs={4} sx={{ padding: '16px '}}>
+    <Grid container spacing={2} sx={{ marginTop: "32px" }}>
+      <Grid item xs={4} sx={{ padding: "16px " }}>
         <TableContainer component={Paper} sx={{ background: "white" }}>
-          <Typography color="primary" variant="h6" component="h6" sx={{ padding: '16px '}}>
-            Informações gerais
+          <Typography
+            color="primary"
+            variant="h6"
+            component="h6"
+            sx={{ padding: "16px " }}
+          >
+            {t("project_chart_table.general_info")}
           </Typography>
-          <Box sx={{
-            position: 'relative',
-            height: readMore ? '570px' : 'auto',
-            overflow: readMore ? 'hidden' : '',
-          }}>
+          <Box
+            sx={{
+              position: "relative",
+              height: readMore ? "570px" : "auto",
+              overflow: readMore ? "hidden" : "",
+            }}
+          >
             <Table>
               <TableRow
                 sx={{
                   borderBottom: "1px solid",
-                  borderBottomColor: "#ccc",                
+                  borderBottomColor: "#ccc",
                 }}
               >
-                <TableCell align="left" sx={{padding: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                  <Box component="span">Início</Box>
-                  {formatDate({ date: project.startDate, format: "dd/MM/yyyy" })}
+                <TableCell
+                  align="left"
+                  sx={{
+                    padding: "16px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Box component="span">{t("project_chart_table.start")}</Box>
+                  {formatDate({
+                    date: project.startDate,
+                    format: "dd/MM/yyyy",
+                  })}
                 </TableCell>
               </TableRow>
               <TableRow
                 sx={{
                   borderBottom: "1px solid",
-                  borderBottomColor: "#ccc",                
+                  borderBottomColor: "#ccc",
                 }}
               >
-                <TableCell align="left" sx={{padding: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                  <Box component="span">Fim</Box>
+                <TableCell
+                  align="left"
+                  sx={{
+                    padding: "16px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Box component="span">{t("project_chart_table.end")}</Box>
                   {formatDate({ date: project.endDate, format: "dd/MM/yyyy" })}
                 </TableCell>
               </TableRow>
               <TableRow
                 sx={{
                   borderBottom: "1px solid",
-                  borderBottomColor: "#ccc",                
+                  borderBottomColor: "#ccc",
                 }}
               >
-                <TableCell align="left" sx={{padding: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                  <Box component="span">Escopo inicial</Box>
+                <TableCell
+                  align="left"
+                  sx={{
+                    padding: "16px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Box component="span">
+                    {t("project_chart_table.initial_scope")}
+                  </Box>
                   {project.initialScope}
                 </TableCell>
               </TableRow>
               <TableRow
                 sx={{
                   borderBottom: "1px solid",
-                  borderBottomColor: "#ccc",                
+                  borderBottomColor: "#ccc",
                 }}
               >
-                <TableCell align="left" sx={{padding: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                  <Box component="span">Demandas Criadas</Box>
-                  <Link href={'#'} sx={{color: 'info.dark', textDecoration: 'none'}} >{project.numberOfDemands}</Link>
+                <TableCell
+                  align="left"
+                  sx={{
+                    padding: "16px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Box component="span">
+                    {t("project_chart_table.created_demands")}
+                  </Box>
+                  <Link
+                    href={"#"}
+                    sx={{ color: "info.dark", textDecoration: "none" }}
+                  >
+                    {project.numberOfDemands}
+                  </Link>
                 </TableCell>
               </TableRow>
               <TableRow
                 sx={{
                   borderBottom: "1px solid",
-                  borderBottomColor: "#ccc",                
+                  borderBottomColor: "#ccc",
                 }}
               >
-                <TableCell align="left" sx={{padding: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                  <Box component="span">Entregas</Box>
-                  <Link href={'#'} sx={{color: 'info.dark', textDecoration: 'none'}} >{project.numberOfDemandsDelivered}</Link>
+                <TableCell
+                  align="left"
+                  sx={{
+                    padding: "16px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  {t("project_chart_table.delivered_demands")}
+                  <Link
+                    href={"#"}
+                    sx={{ color: "info.dark", textDecoration: "none" }}
+                  >
+                    {project.numberOfDemandsDelivered}
+                  </Link>
                 </TableCell>
               </TableRow>
               <TableRow
                 sx={{
                   borderBottom: "1px solid",
-                  borderBottomColor: "#ccc",                
+                  borderBottomColor: "#ccc",
                 }}
               >
-                <TableCell align="left" sx={{padding: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                  <Box component="span">Backlog</Box>
-                  <Link href={'#'} sx={{color: 'info.dark', textDecoration: 'none'}} >{project.remainingBacklog}</Link>
+                <TableCell
+                  align="left"
+                  sx={{
+                    padding: "16px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Box component="span">{t("project_chart_table.backlog")}</Box>
+                  <Link
+                    href={"#"}
+                    sx={{ color: "info.dark", textDecoration: "none" }}
+                  >
+                    {project.remainingBacklog}
+                  </Link>
                 </TableCell>
               </TableRow>
               <TableRow
                 sx={{
                   borderBottom: "1px solid",
-                  borderBottomColor: "#ccc",                
+                  borderBottomColor: "#ccc",
                 }}
               >
-                <TableCell align="left" sx={{padding: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                  <Box component="span">Upstream</Box>
-                  <Link href={'#'} sx={{color: 'info.dark', textDecoration: 'none'}} >{project.upstreamDemands.length}</Link>
+                <TableCell
+                  align="left"
+                  sx={{
+                    padding: "16px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Box component="span">
+                    {t("project_chart_table.upstream_demands")}
+                  </Box>
+                  <Link
+                    href={"#"}
+                    sx={{ color: "info.dark", textDecoration: "none" }}
+                  >
+                    {project.upstreamDemands.length}
+                  </Link>
                 </TableCell>
               </TableRow>
               <TableRow
                 sx={{
                   borderBottom: "1px solid",
-                  borderBottomColor: "#ccc",                
+                  borderBottomColor: "#ccc",
                 }}
               >
-                <TableCell align="left" sx={{padding: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                  <Box component="span">Downstream</Box>
-                  <Link href={'#'} sx={{color: 'info.dark', textDecoration: 'none'}} >{project.numberOfDownstreamDemands}</Link>
+                <TableCell
+                  align="left"
+                  sx={{
+                    padding: "16px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Box component="span">
+                    {t("project_chart_table.downstream_demands")}
+                  </Box>
+                  <Link
+                    href={"#"}
+                    sx={{ color: "info.dark", textDecoration: "none" }}
+                  >
+                    {project.numberOfDownstreamDemands}
+                  </Link>
                 </TableCell>
               </TableRow>
               <TableRow
                 sx={{
                   borderBottom: "1px solid",
-                  borderBottomColor: "#ccc",                
+                  borderBottomColor: "#ccc",
                 }}
               >
-                <TableCell align="left" sx={{padding: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                  <Box component="span">Descartadas</Box>
-                  <Link href={'#'} sx={{color: 'info.dark', textDecoration: 'none'}} >{project.discardedDemands.length}</Link>
+                <TableCell
+                  align="left"
+                  sx={{
+                    padding: "16px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  {t("project_chart_table.discarted_demands")}
+                  <Link
+                    href={"#"}
+                    sx={{ color: "info.dark", textDecoration: "none" }}
+                  >
+                    {project.discardedDemands.length}
+                  </Link>
                 </TableCell>
               </TableRow>
               <TableRow
                 sx={{
                   borderBottom: "1px solid",
-                  borderBottomColor: "#ccc",                
+                  borderBottomColor: "#ccc",
                 }}
               >
-                <TableCell align="left" sx={{padding: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                  <Box component="span">Demandas sem Pontuação</Box>
-                  <Link href={'#'} sx={{color: 'info.dark', textDecoration: 'none'}} >{project.unscoredDemands.length}</Link>
+                <TableCell
+                  align="left"
+                  sx={{
+                    padding: "16px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  {t("project_chart_table.unscored_demands")}
+                  <Link
+                    href={"#"}
+                    sx={{ color: "info.dark", textDecoration: "none" }}
+                  >
+                    {project.unscoredDemands.length}
+                  </Link>
                 </TableCell>
               </TableRow>
               <TableRow
                 sx={{
                   borderBottom: "1px solid",
-                  borderBottomColor: "#ccc",                
+                  borderBottomColor: "#ccc",
                 }}
               >
-                <TableCell align="left" sx={{padding: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                  <Box component="span">Bloqueios</Box>
-                  <Link href={'#'} sx={{color: 'info.dark', textDecoration: 'none'}} >{project.demandBlocks.length}</Link>
+                <TableCell
+                  align="left"
+                  sx={{
+                    padding: "16px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  {t("project_chart_table.blocked_demands")}
+                  <Link
+                    href={"#"}
+                    sx={{ color: "info.dark", textDecoration: "none" }}
+                  >
+                    {project.demandBlocks.length}
+                  </Link>
                 </TableCell>
               </TableRow>
               <TableRow
                 sx={{
                   borderBottom: "1px solid",
-                  borderBottomColor: "#ccc",                
+                  borderBottomColor: "#ccc",
                 }}
               >
-                <TableCell align="left" sx={{padding: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                  <Box component="span">Pressão do Fluxo</Box>
-                  {`${secondsToReadbleDate(project.flowPressure, 'demandas/')}`}
+                <TableCell
+                  align="left"
+                  sx={{
+                    padding: "16px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  {t("project_chart_table.flow_pressure")}
+                  {`${secondsToReadbleDate(project.flowPressure, "demandas/")}`}
                 </TableCell>
               </TableRow>
               <TableRow
                 sx={{
                   borderBottom: "1px solid",
-                  borderBottomColor: "#ccc",                
+                  borderBottomColor: "#ccc",
                 }}
               >
-                <TableCell align="left" sx={{padding: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                  <Box component="span">Velocidade Média</Box>
+                <TableCell
+                  align="left"
+                  sx={{
+                    padding: "16px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  {t("project_chart_table.average_speed")}
                   {`${project.averageSpeed.toFixed(3)} demandas/dia`}
                 </TableCell>
               </TableRow>
               <TableRow
                 sx={{
                   borderBottom: "1px solid",
-                  borderBottomColor: "#ccc",                
+                  borderBottomColor: "#ccc",
                 }}
               >
-                <TableCell align="left" sx={{padding: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                  <Box component="span">Tempo Médio de Fila</Box>
+                <TableCell
+                  align="left"
+                  sx={{
+                    padding: "16px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  {t("project_chart_table.average_queue_time")}
                   {`${project.averageQueueTime.toFixed(2)} horas`}
                 </TableCell>
               </TableRow>
               <TableRow
                 sx={{
                   borderBottom: "1px solid",
-                  borderBottomColor: "#ccc",                
+                  borderBottomColor: "#ccc",
                 }}
               >
-                <TableCell align="left" sx={{padding: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                  <Box component="span">Tempo Médio de Trabalho</Box>
+                <TableCell
+                  align="left"
+                  sx={{
+                    padding: "16px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  {t("project_chart_table.average_work_time")}
                   {`${project.averageTouchTime.toFixed(2)} horas`}
                 </TableCell>
               </TableRow>
               <TableRow
                 sx={{
                   borderBottom: "1px solid",
-                  borderBottomColor: "#ccc",                
+                  borderBottomColor: "#ccc",
                 }}
               >
-                <TableCell align="left" sx={{padding: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                  <Box component="span">Lead time p95</Box>
-                  {`${project.leadTimeP95.toFixed(2)} dias`}
+                <TableCell
+                  align="left"
+                  sx={{
+                    padding: "16px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  {t("project_chart_table.lead_time_p95", {
+                    days: project.leadTimeP95.toFixed(2),
+                  })}
                 </TableCell>
               </TableRow>
               <TableRow
                 sx={{
                   borderBottom: "1px solid",
-                  borderBottomColor: "#ccc",                
+                  borderBottomColor: "#ccc",
                 }}
               >
-                <TableCell align="left" sx={{padding: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                  <Box component="span">Lead time p80</Box>
-                  {`${project.leadTimeP80.toFixed(2)} dias`}
+                <TableCell
+                  align="left"
+                  sx={{
+                    padding: "16px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  {t("project_chart_table.lead_time_p80", {
+                    days: project.leadTimeP80.toFixed(2),
+                  })}
                 </TableCell>
               </TableRow>
               <TableRow
                 sx={{
                   borderBottom: "1px solid",
-                  borderBottomColor: "#ccc",                
+                  borderBottomColor: "#ccc",
                 }}
               >
-                <TableCell align="left" sx={{padding: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                  <Box component="span">Lead time p65</Box>
-                  {`${project.leadTimeP65.toFixed(2)} dias`}
+                <TableCell
+                  align="left"
+                  sx={{
+                    padding: "16px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  {t("project_chart_table.lead_time_p65", {
+                    days: project.leadTimeP65.toFixed(2),
+                  })}
                 </TableCell>
               </TableRow>
-            </Table>          
-          {readMore && <ReadMoreButton handleDisplayPostContent={() => setReadMore(false)} />}
+            </Table>
+            {readMore && (
+              <ReadMoreButton
+                handleDisplayPostContent={() => setReadMore(false)}
+              />
+            )}
           </Box>
         </TableContainer>
-        </Grid>
-        <Grid item xs={8} sx={{ padding: '16px '}}>
+      </Grid>
+
+      <Grid item xs={8} sx={{ padding: "16px " }}>
         <TableContainer component={Paper} sx={{ background: "white" }}>
-        <Typography color="primary" variant="h6" component="h6" sx={{ padding: '16px '}}>
-          {t('project_chart_table.latest_deliveries')}
-        </Typography>
+          <Typography
+            color="primary"
+            variant="h6"
+            component="h6"
+            sx={{ padding: "16px " }}
+          >
+            {t("project_chart_table.latest_deliveries")}
+          </Typography>
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>{t('project_chart_table.client')}</TableCell>
-                <TableCell align="left">{t('project_chart_table.product')}</TableCell>
-                <TableCell align="left">{t('project_chart_table.demand_id')}</TableCell>
-                <TableCell align="left">{t('project_chart_table.delivery_date')}</TableCell>
-                <TableCell align="left">{t('project_chart_table.leadtime')}</TableCell>
-                <TableCell align="left">{t('project_chart_table.demand_blocks')}</TableCell>
+                <TableCell>{t("project_chart_table.client")}</TableCell>
+                <TableCell align="left">
+                  {t("project_chart_table.product")}
+                </TableCell>
+                <TableCell align="left">
+                  {t("project_chart_table.demand_id")}
+                </TableCell>
+                <TableCell align="left">
+                  {t("project_chart_table.delivery_date")}
+                </TableCell>
+                <TableCell align="left">
+                  {t("project_chart_table.leadtime")}
+                </TableCell>
+                <TableCell align="left">
+                  {t("project_chart_table.demand_blocks")}
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              
               {demands.map((demand) => {
                 const baseLink = `/companies/${project?.company?.slug}`
 
@@ -259,31 +498,49 @@ export const ProjectChartsTable = ({project, demands}:ProjectChartsTableProps) =
                       borderBottomColor: "#ccc",
                     }}
                   >
-                    <TableCell align="left" sx={{padding: '16px'}}>
-                      <Link href={`${baseLink}/projects/${project.id}`} sx={{color: 'info.dark', textDecoration: 'none'}} >{demand.customer.name}</Link>
+                    <TableCell align="left" sx={{ padding: "16px" }}>
+                      <Link
+                        href={`${baseLink}/projects/${project.id}`}
+                        sx={{ color: "info.dark", textDecoration: "none" }}
+                      >
+                        {demand.customer.name}
+                      </Link>
                     </TableCell>
-                    <TableCell align="left" sx={{padding: '16px'}}>
-                    <Link href={`${baseLink}/products/${demand.product.id}`} sx={{color: 'info.dark', textDecoration: 'none'}}>{demand.product.name}</Link>
+                    <TableCell align="left" sx={{ padding: "16px" }}>
+                      <Link
+                        href={`${baseLink}/products/${demand.product.id}`}
+                        sx={{ color: "info.dark", textDecoration: "none" }}
+                      >
+                        {demand.product.name}
+                      </Link>
                     </TableCell>
-                    <TableCell align="left" sx={{padding: '16px'}}>
-                    <Link href={`${baseLink}/demands/${demand.externalId}`} sx={{color: 'info.dark', textDecoration: 'none'}}>{demand.externalId}</Link>
+                    <TableCell align="left" sx={{ padding: "16px" }}>
+                      <Link
+                        href={`${baseLink}/demands/${demand.externalId}`}
+                        sx={{ color: "info.dark", textDecoration: "none" }}
+                      >
+                        {demand.externalId}
+                      </Link>
                     </TableCell>
-                    <TableCell align="left" sx={{padding: '16px'}}>
-                      {formatDate({date: demand.endDate, format: "dd/MM/yyyy' 'HH:mm:ss"})}
+                    <TableCell align="left" sx={{ padding: "16px" }}>
+                      {formatDate({
+                        date: demand.endDate,
+                        format: "dd/MM/yyyy' 'HH:mm:ss",
+                      })}
                     </TableCell>
-                    <TableCell align="left" sx={{padding: '16px'}}>
+                    <TableCell align="left" sx={{ padding: "16px" }}>
                       {secondsToReadbleDate(demand.leadtime)}
                     </TableCell>
-                    <TableCell align="left" sx={{padding: '16px'}}>
+                    <TableCell align="left" sx={{ padding: "16px" }}>
                       {demand.numberOfBlocks}
                     </TableCell>
-                </TableRow>
+                  </TableRow>
                 )
-              })} 
+              })}
             </TableBody>
-          </Table>        
+          </Table>
         </TableContainer>
-        </Grid>
+      </Grid>
     </Grid>
   )
 }
