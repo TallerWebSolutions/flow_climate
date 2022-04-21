@@ -350,10 +350,41 @@ RSpec.describe Types::QueryType do
           currentRiskToDeadline
           remainingDays
           running
+          leadTimeP65
+          leadTimeP95
+          numberOfDemandsDelivered
+          numberOfDemands
+          numberOfDownstreamDemands
+          currentWeeklyHoursIdealBurnup
+          demandBlocks {
+            id
+          }
+          unscoredDemands {
+            id
+          }
+          demandsFinishedWithLeadtime {
+            id
+          }
+          discardedDemands {
+            id
+          }
           hoursPerStageChartData {
             xAxis
             yAxis
           }
+          projectConsolidationsWeekly {
+            id
+          }
+          projectConsolidationsLastMonth {
+            id
+          }
+          lastProjectConsolidationsWeekly {
+            id
+          }
+        }
+
+        demands(projectId: #{project.id}, limit: 1, finished: false) {
+          numberOfBlocks
         }
 
         projectConsolidations(projectId: #{project.id}) {
@@ -399,6 +430,7 @@ RSpec.describe Types::QueryType do
                                                       'currentTeamBasedRisk' => 0.5,
                                                       'currentRiskToDeadline' => 0.0,
                                                       'remainingDays' => 2,
+                                                      'currentWeeklyHoursIdealBurnup' => project.current_weekly_hours_ideal_burnup,
                                                       'running' => true,
                                                       'company' => {
                                                         'id' => company.id.to_s,
@@ -414,10 +446,30 @@ RSpec.describe Types::QueryType do
                                                         'leadTimeP25' => 0.0,
                                                         'leadTimeP75' => 0.0
                                                       }],
+                                                      'demandsFinishedWithLeadtime' => [],
+                                                      'discardedDemands' => [],
+                                                      'unscoredDemands' => project.demands.kept.unscored_demands.map do |demand|
+                                                        {
+                                                          'id' => demand.id.to_s
+                                                        }
+                                                      end,
+                                                      'demandBlocks' => [],
+                                                      'numberOfDemands' => project.demands.count,
+                                                      'leadTimeP65' => 0.0,
+                                                      'leadTimeP95' => 0.0,
+                                                      'numberOfDemandsDelivered' => 0,
+                                                      'numberOfDownstreamDemands' => 0,
                                                       'hoursPerStageChartData' => {
                                                         'xAxis' => [],
-                                                        'yAxis' => [],
-                                                      }
+                                                        'yAxis' => []
+                                                      },
+                                                      'projectConsolidationsWeekly' => [],
+                                                      'projectConsolidationsLastMonth' => [
+                                                        {
+                                                          'id' => project_consolidation.id.to_s
+                                                        }
+                                                      ],
+                                                      'lastProjectConsolidationsWeekly' => nil
                                                     })
         expect(result.dig('data', 'projectConsolidations')).to eq([{
                                                                     'id' => project_consolidation.id.to_s,

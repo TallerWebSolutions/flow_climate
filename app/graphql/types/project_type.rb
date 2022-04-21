@@ -13,7 +13,7 @@ module Types
     field :remaining_weeks, Int, null: false
     field :total_scope, Int, null: false
     field :initial_scope, Int, null: false
-    field :current_weekly_hours_ideal_burnup, [Int], null: false
+    field :current_weekly_hours_ideal_burnup, [Float], null: false
     field :weekly_project_scope_hours_until_end, [Int], null: false
     field :weekly_project_scope_until_end, [Int], null: false
     field :current_weekly_scope_ideal_burnup, [Int], null: false
