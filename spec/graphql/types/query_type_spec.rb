@@ -308,6 +308,8 @@ RSpec.describe Types::QueryType do
         customer = Fabricate :customer, company: company
         product = Fabricate :product, company: company, customer: customer
         project = Fabricate :project, company: company, customers: [customer], products: [product], team: team, status: :executing, start_date: 4.days.ago, end_date: 1.day.from_now, max_work_in_progress: 2
+        demand = Fabricate :demand, company: company, project: project, team: team
+        Fabricate :demand_block, demand: demand
         project_consolidation = Fabricate :project_consolidation, project: project, monte_carlo_weeks_min: 9, monte_carlo_weeks_max: 85, monte_carlo_weeks_std_dev: 7, team_based_operational_risk: 0.5
 
         query =
@@ -414,6 +416,10 @@ RSpec.describe Types::QueryType do
                                                  }
                                                })
 
+        expect(result.dig('data', 'demands')).to eq([{
+                                                      'numberOfBlocks' => demand.demand_blocks.count
+                                                    }])
+
         expect(result.dig('data', 'project')).to eq({
                                                       'id' => project.id.to_s,
                                                       'name' => project.name,
@@ -453,7 +459,11 @@ RSpec.describe Types::QueryType do
                                                           'id' => demand.id.to_s
                                                         }
                                                       end,
-                                                      'demandBlocks' => [],
+                                                      'demandBlocks' => demand.demand_blocks.map do |demand_block|
+                                                        {
+                                                          'id' => demand_block.id.to_s
+                                                        }
+                                                      end,
                                                       'numberOfDemands' => project.demands.count,
                                                       'leadTimeP65' => 0.0,
                                                       'leadTimeP95' => 0.0,
