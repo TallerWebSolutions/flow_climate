@@ -1,11 +1,13 @@
-import { ReactElement } from "react"
+import { ReactElement, useContext } from "react"
 import { useLocation } from "react-router-dom"
 import { Box } from "@mui/material"
 import BasicPage from "./BasicPage"
 import { Tab, Tabs } from "./Tabs"
 import Card, { CardType } from "./Card"
-import { gql } from "@apollo/client"
+import { gql, useMutation } from "@apollo/client"
 import { Project } from "../modules/project/project.types"
+import ActionMenu from "./menu/ActionMenu"
+import { MessagesContext } from "../contexts/MessageContext"
 
 export const PROJECT_STANDARD_FRAGMENT = gql`
   fragment ProjectStandardFragment on Project {
@@ -35,6 +37,22 @@ const assignCardTypeByRisk = (risk: number) => {
 
   return CardType.SUCCESS
 }
+
+const GENERATE_PROJECT_MUTATION = gql`
+  mutation GenerateProjectCache($projectId: String!) {
+    generateProjectCache(projectId: $projectId) {
+      statusMessage
+    }
+  }
+`
+
+type ProjectCacheResult = {
+  generateProjectCache: {
+    statusMessage: string
+  }
+}
+
+type ProjectCacheDTO = ProjectCacheResult | undefined
 
 export const ProjectPage = ({
   project,
@@ -91,6 +109,27 @@ export const ProjectPage = ({
   const currentTeamRiskPercentage = (currentTeamRisk * 100).toFixed(2)
   const cardTypeTeamRisk = assignCardTypeByRisk(currentTeamRisk)
   const cardTypeOperationalRisk = assignCardTypeByRisk(currentOperationalRisk)
+  const { pushMessage } = useContext(MessagesContext)
+  const [generateProjectCache] = useMutation<ProjectCacheDTO>(
+    GENERATE_PROJECT_MUTATION,
+    {
+      update: () =>
+        pushMessage({
+          text: "Sua solicitação foi colocada na fila. Em poucos minutos estará pronta.",
+          severity: "info",
+        }),
+    }
+  )
+
+  const actions = [
+    {
+      name: "Atualizar Cache",
+      onClick: () =>
+        generateProjectCache({
+          variables: { projectId: project.id },
+        }),
+    },
+  ]
 
   return (
     <BasicPage
@@ -99,6 +138,7 @@ export const ProjectPage = ({
       company={company}
     >
       <>
+        <ActionMenu items={actions} />
         {projectIsRugging && (
           <Box sx={{ display: "flex", my: 2 }}>
             <Card

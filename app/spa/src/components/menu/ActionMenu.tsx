@@ -6,7 +6,7 @@ import SettingsIcon from "@mui/icons-material/Settings"
 
 type ActionMenuItem = {
   name: string
-  onClick?: () => {}
+  onClick?: () => void
   href?: string
 }
 
@@ -50,7 +50,10 @@ const ActionMenu = ({ items }: ActionMenuProps) => {
             key={`${item.name}--${index}`}
             component="a"
             href={item.href}
-            onClick={item.onClick}
+            onClick={() => {
+              item.onClick && item.onClick()
+              setAnchorEl(null)
+            }}
           >
             {item.name}
           </MenuItem>

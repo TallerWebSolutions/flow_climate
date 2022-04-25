@@ -68,6 +68,9 @@
     "ignorePatterns": [
       "__tests__"
     ],
+    "rules": {
+      "no-console": "error"
+    },
     "overrides": [
       {
         "files": [

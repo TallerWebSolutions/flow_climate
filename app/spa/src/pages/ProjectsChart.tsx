@@ -179,12 +179,12 @@ const ProjectsChart = () => {
     )
 
   const project = data?.project!
-  const projectConsolidationsWeekly = project.projectConsolidationsWeekly
-  const projectConsolidationsLastMonth = project.projectConsolidationsLastMonth
-  const demandsFinishedWithLeadtime = project.demandsFinishedWithLeadtime
+  const projectConsolidationsWeekly = project?.projectConsolidationsWeekly
+  const projectConsolidationsLastMonth = project?.projectConsolidationsLastMonth
+  const demandsFinishedWithLeadtime = project?.demandsFinishedWithLeadtime
   const lastProjectConsolidationsWeekly =
-    project.lastProjectConsolidationsWeekly
-  const hoursPerStageChartData = project.hoursPerStageChartData
+    project?.lastProjectConsolidationsWeekly
+  const hoursPerStageChartData = project?.hoursPerStageChartData
   const demands = data?.demands!
 
   const operationalRiskChartData = [
@@ -230,8 +230,6 @@ const ProjectsChart = () => {
       }
     }
   )
-
-  console.log({ projectBugsChartData })
 
   const projectDemandsBurnupChartData = [
     {
@@ -451,7 +449,6 @@ const ProjectsChart = () => {
   return (
     <ProjectPage pageName={t("charts")} project={project}>
       <ProjectChartsTable project={project} demands={demands} />
-
       <Grid container spacing={2} sx={{ marginTop: "32px" }}>
         <ChartLineBox
           title={"Operational Math Risk Evolution"}
