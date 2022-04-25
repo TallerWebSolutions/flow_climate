@@ -271,11 +271,11 @@ const ProjectsChart = () => {
       })),
     },
     {
-      id: "Delivered", //@todo normalize y - check this
+      id: "Delivered",
       data: projectConsolidationsWeekly.map(
         ({ projectThroughputHours }, index) => ({
           x: index,
-          y: projectThroughputHours,
+          y: projectThroughputHours.toFixed(2),
         })
       ),
     },
@@ -294,9 +294,6 @@ const ProjectsChart = () => {
       }),
     },
   ]
-
-  //@todo
-  const cumulativeFlowDiagramChartData = leadTimeP80ChartData
 
   const projectQualityChartData = [
     {
@@ -410,10 +407,10 @@ const ProjectsChart = () => {
     }) => {
       return {
         period: consolidationDate,
-        "Design Effort": projectThroughputHoursDesign,
-        "Development Hour": projectThroughputHoursDevelopment,
-        "Management Hour": projectThroughputHoursManagement,
-        "Total Effort": projectThroughputHours,
+        "Design Effort": projectThroughputHoursDesign.toFixed(2),
+        "Development Hour": projectThroughputHoursDevelopment.toFixed(2),
+        "Management Hour": projectThroughputHoursManagement.toFixed(2),
+        "Total Effort": projectThroughputHours.toFixed(2),
       }
     }
   )
@@ -429,10 +426,10 @@ const ProjectsChart = () => {
       }) => {
         return {
           period: consolidationDate,
-          "Design Effort in Month": projectThroughputHoursDesignInMonth,
-          "Development Hour in Month": projectThroughputHoursDevelopmentInMonth,
-          "Management Hour in Month": projectThroughputHoursManagementInMonth,
-          "Total Effort in Month": projectThroughputHoursInMonth,
+          "Design Effort": projectThroughputHoursDesignInMonth,
+          "Development Hour": projectThroughputHoursDevelopmentInMonth,
+          "Management Hour": projectThroughputHoursManagementInMonth,
+          "Total Effort": projectThroughputHoursInMonth,
         }
       }
     )
@@ -498,11 +495,6 @@ const ProjectsChart = () => {
           title={"Lead Time (p80)"}
           data={leadTimeP80ChartData}
           axisLeftLegend={"Days"}
-        />
-        <ChartLineBox
-          title={`Cumulative Flow Diagram for ${project.name}`}
-          data={cumulativeFlowDiagramChartData}
-          axisLeftLegend={"Demands"}
         />
         <Grid item xs={6} sx={{ padding: "8px" }}>
           <Box sx={{ height: "350px" }}>
@@ -585,10 +577,10 @@ const ProjectsChart = () => {
               props={{
                 groupMode: "grouped",
                 keys: [
-                  "Design Effort in Month",
-                  "Development Hour in Month",
-                  "Management Hour in Month",
-                  "Total Effort in Month",
+                  "Design Effort",
+                  "Development Hour",
+                  "Management Hour",
+                  "Total Effort",
                 ],
                 indexBy: "period",
                 margin: { top: 50, right: 60, bottom: 65, left: 60 },
