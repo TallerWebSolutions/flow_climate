@@ -179,7 +179,7 @@ const ProjectsChart = () => {
     )
 
   const project = data?.project!
-  const projectConsolidationsWeekly = project?.projectConsolidationsWeekly
+  const projectConsolidationsWeekly = project?.projectConsolidationsWeekly || []
   const projectConsolidationsLastMonth = project?.projectConsolidationsLastMonth
   const demandsFinishedWithLeadtime = project?.demandsFinishedWithLeadtime
   const lastProjectConsolidationsWeekly =

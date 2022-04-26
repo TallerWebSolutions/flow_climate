@@ -71,7 +71,7 @@ export const ProjectPage = ({
     { name: "Projetos", url: `/companies/${companySlug}/projects` },
     {
       name: projectName,
-      url: `/companies/${companySlug}/projects/${project.id}`,
+      url: `/companies/${companySlug}/projects/${projectId}`,
     },
     {
       name: pageName,
@@ -129,6 +129,26 @@ export const ProjectPage = ({
           variables: { projectId: project.id },
         }),
     },
+    {
+      name: "Criar Demanda",
+      href: `/companies/${companySlug}/projects/${projectId}/demands/new`,
+    },
+    {
+      name: "Editar",
+      href: `/companies/${companySlug}/projects/${projectId}/edit`,
+    },
+    {
+      name: "Configuração do Jira",
+      href: `/companies/${companySlug}/jira/projects/${projectId}/jira_project_configs`,
+    },
+    {
+      name: "Etapas no Projeto",
+      href: `/companies/${companySlug}/projects/${projectId}/stage_project_configs`,
+    },
+    {
+      name: "Configuração de Risco",
+      href: `/companies/${companySlug}/projects/${projectId}/project_risk_configs`,
+    },
   ]
 
   return (
@@ -136,9 +156,9 @@ export const ProjectPage = ({
       title={projectName}
       breadcrumbsLinks={breadcrumbsLinks}
       company={company}
+      actions={<ActionMenu items={actions} />}
     >
       <>
-        <ActionMenu items={actions} />
         {projectIsRugging && (
           <Box sx={{ display: "flex", my: 2 }}>
             <Card

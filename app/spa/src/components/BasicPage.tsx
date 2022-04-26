@@ -1,5 +1,5 @@
 import { ReactElement, useContext } from "react"
-import { Container, Typography } from "@mui/material"
+import { Container, Typography, Box } from "@mui/material"
 import Header from "./Header"
 import MessagesBox from "./MessagesBox"
 import Breadcrumbs, { BreadcrumbsLink } from "./Breadcrumbs"
@@ -11,6 +11,7 @@ export type BasicPageProps = {
   breadcrumbsLinks: BreadcrumbsLink[]
   children?: ReactElement | ReactElement[]
   company?: Company
+  actions?: ReactElement | ReactElement[]
 }
 
 const BasicPage = ({
@@ -18,6 +19,7 @@ const BasicPage = ({
   title,
   breadcrumbsLinks,
   company,
+  actions,
 }: BasicPageProps) => {
   const { messages } = useContext(MessagesContext)
 
@@ -26,9 +28,18 @@ const BasicPage = ({
       <Header company={company} />
       <Container maxWidth="xl">
         <Breadcrumbs links={breadcrumbsLinks} />
-        <Typography component="h1" variant="h4" mb={3}>
-          {title}
-        </Typography>
+        <Box
+          sx={{
+            marginBottom: 3,
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <Typography component="h1" variant="h4">
+            {title}
+          </Typography>
+          {actions}
+        </Box>
         {children}
         <MessagesBox messages={messages} />
       </Container>
