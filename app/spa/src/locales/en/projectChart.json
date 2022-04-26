@@ -42,8 +42,10 @@
     "bugs_openned": "Bugs Openned",
     "bugs_closed": "Bugs Closed",
     "demands_burn_up_chart": "Demands Burnup for {{projectName}}",
+    "demands_burn_up_y_label": "Demands",
     "demands_burn_up_label_scope": "Scope",
     "demands_burn_up_label_delivered": "Delivered",
-    "demands_burn_up_label_ideal": "Ideal"
+    "demands_burn_up_label_ideal": "Ideal",
+    "demands_burn_up_tootip_label": "Demands"
   }
 }

@@ -42,8 +42,10 @@
     "bugs_openned": "Bugs Abertos",
     "bugs_closed": "Bugs Fechados",
     "demands_burn_up_chart": "Burn Up de Demandas para {{projectName}}",
+    "demands_burn_up_y_label": "Demandas",
     "demands_burn_up_label_scope": "Escopo",
     "demands_burn_up_label_delivered": "Entregues",
-    "demands_burn_up_label_ideal": "Ideal"
+    "demands_burn_up_label_ideal": "Ideal",
+    "demands_burn_up_tootip_label": "Demandas"
   }
 }

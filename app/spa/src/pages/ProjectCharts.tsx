@@ -225,21 +225,21 @@ const ProjectCharts = () => {
 
   const projectDemandsBurnupChartData = [
     {
-      id: "Scope",
+      id: t("project_charts.demands_burn_up_label_scope"),
       data: project.weeklyProjectScopeUntilEnd.map((scope, index) => ({
         x: index,
         y: scope,
       })),
     },
     {
-      id: "Ideal",
+      id: t("project_charts.demands_burn_up_label_ideal"),
       data: project.currentWeeklyScopeIdealBurnup.map((idealScope, index) => ({
         x: index,
         y: idealScope,
       })),
     },
     {
-      id: "Delivered",
+      id: t("project_charts.demands_burn_up_label_delivered"),
       data: projectConsolidationsWeekly.map(({ projectThroughput }, index) => ({
         x: index,
         y: projectThroughput,
@@ -528,14 +528,28 @@ const ProjectCharts = () => {
           </Box>
         </Grid>
         <ChartLineBox
-          title={`Demands Burnup for ${project.name}`}
+          title={t("project_charts.demands_burn_up_chart", {
+            projectName: project.name,
+          })}
           data={projectDemandsBurnupChartData}
-          axisLeftLegend={"Demands"}
+          axisLeftLegend={t("project_charts.demands_burn_up_y_label")}
+          props={{
+            enableSlices: "x",
+            sliceTooltip: ({ slice }: SliceTooltipProps) => (
+              <LineChartTooltip
+                slice={slice}
+                xLabel={t("project_charts.demands_burn_up_tootip_label")}
+              />
+            ),
+          }}
         />
         <ChartLineBox
           title={`Hours Burnup for ${project.name}`}
           data={projectHoursBurnupChartData}
           axisLeftLegend={"Hours"}
+          props={{
+            yFormat: "=.2f",
+          }}
         />
         <ChartLineBox
           title={"Lead Time (p80)"}
