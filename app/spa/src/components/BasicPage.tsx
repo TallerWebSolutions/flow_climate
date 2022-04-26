@@ -35,7 +35,7 @@ const BasicPage = ({
             alignItems: "center",
           }}
         >
-          <Typography component="h1" variant="h4">
+          <Typography component="h1" variant="h4" mr={2}>
             {title}
           </Typography>
           {actions}
