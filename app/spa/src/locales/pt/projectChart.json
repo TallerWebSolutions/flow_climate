@@ -46,12 +46,11 @@
     "demands_burn_up_label_scope": "Escopo",
     "demands_burn_up_label_delivered": "Entregues",
     "demands_burn_up_label_ideal": "Ideal",
-    "demands_burn_up_tootip_label": "Demandas",
     "quality_bugs_chart": "Qualidade: Bugs",
     "quality_bugs_y_label": "Dias",
     "quality_bugs_tooltip_label": "Semana",
     "quality_bugs_for_coding_chart": "Qualidade: Bloqueios por Código",
-    "quality_bugs_for_coding_y_label": "Período",
+    "quality_bugs_for_coding_y_label": "Bloqueios",
     "quality_bugs_for_coding_tooltip_label": "Dias",
     "quality_bugs_for_coding_per_demand_chart": "Qualidade: Bloqueios por Código por Demanda",
     "quality_bugs_for_coding_per_demand_y_label": "Bloqueios por Demanda",
@@ -59,7 +58,7 @@
     "hours_per_demand_chart": "Horas por Demanda",
     "hours_per_demand_y_label": "Horas",
     "hours_per_demand_tooltip_label": "Período",
-    "lead_time_control_chart": "Lead Time Control Chart",
+    "lead_time_control_chart": "Controle de Lead Time",
     "lead_time_control_label": "Lead Time",
     "lead_time_control_marker_p65": "Percentil 65 ({{leadTime}} dias)",
     "lead_time_control_marker_p80": "Percentil 80 ({{leadTime}} dias)",
@@ -77,6 +76,13 @@
     "consumed_hours_by_role_design_effort": "Esforço de Design",
     "consumed_hours_by_role_development_effort": "Esforço de Desenvolvimento",
     "consumed_hours_by_role_management_effort": "Esforço de Gerencialmento",
-    "consumed_hours_by_role_total_effort": "Esforço Total"
+    "consumed_hours_by_role_total_effort": "Esforço Total",
+    "lead_time_p80_chart": "Lead Time (P80)",
+    "lead_time_p80_y_label": "Dias",
+    "hours_burn_up_chart": "Burn Up de Horas para {{projectName}}",
+    "hours_burn_up_y_label": "Horas",
+    "hours_burn_up_label_scope": "Escopo",
+    "hours_burn_up_label_delivered": "Entregues",
+    "hours_burn_up_label_ideal": "Ideal"
   }
 }

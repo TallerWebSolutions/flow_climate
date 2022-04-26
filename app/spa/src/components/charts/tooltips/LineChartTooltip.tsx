@@ -13,7 +13,7 @@ type Slice = {
 }
 
 type ChartTooltipProps = {
-  xLabel: string
+  xLabel?: string
   slice: Slice
 }
 
@@ -28,9 +28,11 @@ const LineChartTooltip = ({ slice, xLabel }: ChartTooltipProps) => {
         border: "1px solid #ccc",
       }}
     >
-      <p style={{ fontSize: 14, margin: 0, padding: 0 }}>
-        {xLabel}: {xValue}
-      </p>
+      {xLabel && (
+        <p style={{ fontSize: 14, margin: 0, padding: 0 }}>
+          {xLabel}: {xValue}
+        </p>
+      )}
       {slice.points.map((point) => (
         <div
           key={point.id}

@@ -167,7 +167,7 @@ const ChartLineBox = ({
 }
 
 const ProjectCharts = () => {
-  const { t } = useTranslation(["projectChart"])
+  const { t, i18n } = useTranslation(["projectChart"])
   const { projectId } = useParams()
   const { data, loading } = useQuery<ProjectChartDTO>(PROJECT_CHART_QUERY, {
     variables: {
@@ -191,6 +191,7 @@ const ProjectCharts = () => {
     project?.lastProjectConsolidationsWeekly
   const hoursPerStageChartData = project?.hoursPerStageChartData
   const demands = data?.demands!
+  const isLanguagePT = i18n.language === "pt-BR"
 
   const operationalRiskChartData = [
     {
@@ -252,21 +253,21 @@ const ProjectCharts = () => {
 
   const projectHoursBurnupChartData = [
     {
-      id: "Scope",
+      id: t("project_charts.hours_burn_up_label_scope"),
       data: project.weeklyProjectScopeHoursUntilEnd.map((scope, index) => ({
         x: index,
         y: scope,
       })),
     },
     {
-      id: "Ideal",
+      id: t("project_charts.hours_burn_up_label_ideal"),
       data: project.currentWeeklyHoursIdealBurnup.map((idealScope, index) => ({
         x: index,
         y: idealScope,
       })),
     },
     {
-      id: "Delivered",
+      id: t("project_charts.hours_burn_up_label_delivered"),
       data: projectConsolidationsWeekly.map(
         ({ projectThroughputHours }, index) => ({
           x: index,
@@ -296,7 +297,7 @@ const ProjectCharts = () => {
       data: projectConsolidationsWeekly.map(
         ({ consolidationDate, projectQuality }) => ({
           x: consolidationDate,
-          y: projectQuality,
+          y: 1 - projectQuality,
         })
       ),
     },
@@ -562,27 +563,36 @@ const ProjectCharts = () => {
           props={{
             enableSlices: "x",
             sliceTooltip: ({ slice }: SliceTooltipProps) => (
-              <LineChartTooltip
-                slice={slice}
-                xLabel={t("project_charts.demands_burn_up_tootip_label")}
-              />
+              <LineChartTooltip slice={slice} />
             ),
           }}
         />
 
         <ChartLineBox
-          title={`Hours Burnup for ${project.name}`}
+          title={t("project_charts.hours_burn_up_chart", {
+            projectName: project.name,
+          })}
           data={projectHoursBurnupChartData}
-          axisLeftLegend={"Hours"}
+          axisLeftLegend={t("project_charts.hours_burn_up_y_label")}
           props={{
             yFormat: "=.2f",
+            enableSlices: "x",
+            sliceTooltip: ({ slice }: SliceTooltipProps) => (
+              <LineChartTooltip slice={slice} />
+            ),
           }}
         />
 
         <ChartLineBox
-          title={"Lead Time (p80)"}
+          title={t("project_charts.lead_time_p80_chart")}
           data={leadTimeP80ChartData}
-          axisLeftLegend={"Days"}
+          axisLeftLegend={t("project_charts.lead_time_p80_y_label")}
+          props={{
+            enableSlices: "x",
+            sliceTooltip: ({ slice }: SliceTooltipProps) => (
+              <LineChartTooltip slice={slice} />
+            ),
+          }}
         />
 
         <Grid item xs={6} sx={{ padding: "8px" }}>
@@ -774,6 +784,34 @@ const ProjectCharts = () => {
                   legendOffset: 60,
                   tickRotation: -40,
                 },
+                legends: [
+                  {
+                    dataFrom: "keys",
+                    anchor: isLanguagePT ? "top-left" : "top",
+                    direction: isLanguagePT ? "column" : "row",
+                    toggleSerie: true,
+                    justify: false,
+                    translateX: 0,
+                    translateY: -25,
+                    itemsSpacing: 0,
+                    itemDirection: "left-to-right",
+                    itemWidth: 125,
+                    itemHeight: 20,
+                    itemOpacity: 0.75,
+                    symbolSize: 12,
+                    symbolShape: "circle",
+                    symbolBorderColor: "rgba(0, 0, 0, .5)",
+                    effects: [
+                      {
+                        on: "hover",
+                        style: {
+                          itemBackground: "rgba(0, 0, 0, .03)",
+                          itemOpacity: 1,
+                        },
+                      },
+                    ],
+                  },
+                ],
               }}
             />
           </Box>
@@ -815,6 +853,34 @@ const ProjectCharts = () => {
                   legendOffset: 60,
                   tickRotation: -40,
                 },
+                legends: [
+                  {
+                    dataFrom: "keys",
+                    anchor: isLanguagePT ? "top-left" : "top",
+                    direction: isLanguagePT ? "column" : "row",
+                    toggleSerie: true,
+                    justify: false,
+                    translateX: 0,
+                    translateY: -25,
+                    itemsSpacing: 0,
+                    itemDirection: "left-to-right",
+                    itemWidth: 125,
+                    itemHeight: 20,
+                    itemOpacity: 0.75,
+                    symbolSize: 12,
+                    symbolShape: "circle",
+                    symbolBorderColor: "rgba(0, 0, 0, .5)",
+                    effects: [
+                      {
+                        on: "hover",
+                        style: {
+                          itemBackground: "rgba(0, 0, 0, .03)",
+                          itemOpacity: 1,
+                        },
+                      },
+                    ],
+                  },
+                ],
               }}
             />
           </Box>

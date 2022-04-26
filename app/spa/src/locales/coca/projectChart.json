@@ -46,12 +46,11 @@
     "demands_burn_up_label_scope": "Scope",
     "demands_burn_up_label_delivered": "Delivered",
     "demands_burn_up_label_ideal": "Ideal",
-    "demands_burn_up_tootip_label": "Activities",
     "quality_bugs_chart": "Quality: Bugs",
     "quality_bugs_y_label": "Days",
     "quality_bugs_tooltip_label": "Week",
     "quality_bugs_for_coding_chart": "Quality: Blocks for Coding",
-    "quality_bugs_for_coding_y_label": "Period",
+    "quality_bugs_for_coding_y_label": "Blocks",
     "quality_bugs_for_coding_tooltip_label": "Days",
     "quality_bugs_for_coding_per_demand_chart": "Quality: Blocks for Coding per Activity",
     "quality_bugs_for_coding_per_demand_y_label": "Blocks per Activity",
@@ -77,6 +76,13 @@
     "consumed_hours_by_role_design_effort": "Design Effort",
     "consumed_hours_by_role_development_effort": "Development Effort",
     "consumed_hours_by_role_management_effort": "Management Effort",
-    "consumed_hours_by_role_total_effort": "Total Effort"
+    "consumed_hours_by_role_total_effort": "Total Effort",
+    "lead_time_p80_chart": "Lead Time (P80)",
+    "lead_time_p80_y_label": "Days",
+    "hours_burn_up_chart": "Hours Burn Up for {{projectName}}",
+    "hours_burn_up_y_label": "Hours",
+    "hours_burn_up_label_scope": "Scope",
+    "hours_burn_up_label_delivered": "Delivered",
+    "hours_burn_up_label_ideal": "Ideal"
   }
 }
