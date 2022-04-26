@@ -473,7 +473,11 @@ RSpec.describe Types::QueryType do
                                                         'xAxis' => [],
                                                         'yAxis' => []
                                                       },
-                                                      'projectConsolidationsWeekly' => [],
+                                                      'projectConsolidationsWeekly' => [
+                                                        {
+                                                          'id' => project_consolidation.id.to_s
+                                                        }
+                                                      ],
                                                       'projectConsolidationsLastMonth' => [
                                                         {
                                                           'id' => project_consolidation.id.to_s
