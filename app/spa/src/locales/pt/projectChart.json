@@ -65,6 +65,12 @@
     "lead_time_control_marker_p80": "Percentil 80 ({{leadTime}} dias)",
     "lead_time_control_marker_p95": "Percentil 95 ({{leadTime}} dias)",
     "hours_per_stage_chart": "Horas por Etapa",
-    "hours_per_stage_y_label": "Horas"
+    "hours_per_stage_y_label": "Horas",
+    "consumed_hours_by_role_in_month_chart": "Horas Consumidas por Função no Mês",
+    "consumed_hours_by_role_in_month_y_label": "Horas",
+    "consumed_hours_by_role_in_month_design_effort": "Esforço do Design",
+    "consumed_hours_by_role_in_month_development_effort": "Esforço de Desenvolvimento",
+    "consumed_hours_by_role_in_month_management_effort": "Esforço de Gerenciamento",
+    "consumed_hours_by_role_in_month_total_effort": "Esforço Total"
   }
 }

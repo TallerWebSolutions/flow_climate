@@ -435,11 +435,16 @@ const ProjectCharts = () => {
       }) => {
         return {
           period: consolidationDate,
-          "Design Effort": projectThroughputHoursDesignInMonth.toFixed(2),
-          "Development Hour":
-            projectThroughputHoursDevelopmentInMonth.toFixed(2),
-          "Management Hour": projectThroughputHoursManagementInMonth.toFixed(2),
-          "Total Effort": projectThroughputHoursInMonth.toFixed(2),
+          [t("project_charts.consumed_hours_by_role_in_month_design_effort")]:
+            projectThroughputHoursDesignInMonth.toFixed(2),
+          [t(
+            "project_charts.consumed_hours_by_role_in_month_development_effort"
+          )]: projectThroughputHoursDevelopmentInMonth.toFixed(2),
+          [t(
+            "project_charts.consumed_hours_by_role_in_month_management_effort"
+          )]: projectThroughputHoursManagementInMonth.toFixed(2),
+          [t("project_charts.consumed_hours_by_role_in_month_total_effort")]:
+            projectThroughputHoursInMonth.toFixed(2),
         }
       }
     )
@@ -763,18 +768,29 @@ const ProjectCharts = () => {
 
         <Grid item xs={6} sx={{ padding: "8px" }}>
           <Box sx={{ height: "350px" }}>
-            <Typography>Consumed Hours by Role in Month</Typography>
-
+            <Typography>
+              {t("project_charts.consumed_hours_by_role_in_month_chart")}
+            </Typography>
             <BarChart
               data={projectConsumedHoursByRoleInMonthChartData}
-              axisLeftLegend={"Hours"}
+              axisLeftLegend={t(
+                "project_charts.consumed_hours_by_role_in_month_y_label"
+              )}
               props={{
                 groupMode: "grouped",
                 keys: [
-                  "Design Effort",
-                  "Development Hour",
-                  "Management Hour",
-                  "Total Effort",
+                  t(
+                    "project_charts.consumed_hours_by_role_in_month_design_effort"
+                  ),
+                  t(
+                    "project_charts.consumed_hours_by_role_in_month_development_effort"
+                  ),
+                  t(
+                    "project_charts.consumed_hours_by_role_in_month_management_effort"
+                  ),
+                  t(
+                    "project_charts.consumed_hours_by_role_in_month_total_effort"
+                  ),
                 ],
                 indexBy: "period",
                 margin: { top: 50, right: 60, bottom: 65, left: 60 },
@@ -790,6 +806,7 @@ const ProjectCharts = () => {
             />
           </Box>
         </Grid>
+
         <Grid item xs={6} sx={{ padding: "8px" }}>
           <Box sx={{ height: "350px" }}>
             <Typography>{t("project_charts.hours_per_stage_chart")}</Typography>

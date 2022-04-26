@@ -66,6 +66,12 @@
     "lead_time_control_marker_p95": "Percentile 95 ({{leadTime}} days)",
     "lead_time_control_tooltip_label": "Demand",
     "hours_per_stage_chart": "Hours per Stage",
-    "hours_per_stage_y_label": "Hours"
+    "hours_per_stage_y_label": "Hours",
+    "consumed_hours_by_role_in_month_chart": "Consumed Hours by Role in Month",
+    "consumed_hours_by_role_in_month_y_label": "Hours",
+    "consumed_hours_by_role_in_month_design_effort": "Design Effort",
+    "consumed_hours_by_role_in_month_development_effort": "Development Effort",
+    "consumed_hours_by_role_in_month_management_effort": "Management Effort",
+    "consumed_hours_by_role_in_month_total_effort": "Total Effort"
   }
 }
