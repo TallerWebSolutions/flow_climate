@@ -30,6 +30,12 @@
   },
   "project_charts": {
     "flow_efficiency_chart": "Eficiência do Fluxo",
-    "flow_efficiency_tooltip_label": "Período"
+    "flow_efficiency_tooltip_label": "Período",
+    "operational_math_risk_evolution_chart": "Evolução do Risco Matemático de Operação",
+    "operational_math_risk_evolution_tooltip_label": "Período",
+    "operational_math_risk_evolution_y_label": "Risco",
+    "operational_math_risk_evolution_team_data_chart": "Evolução do Risco Matemático de Operação - Dados do Time",
+    "operational_math_risk_evolution_team_data_tooltip_label": "Período",
+    "operational_math_risk_evolution_team_data_y_label": "Risco"
   }
 }
