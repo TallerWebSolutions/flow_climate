@@ -464,6 +464,7 @@ const ProjectCharts = () => {
             ),
           }}
         />
+
         <ChartLineBox
           title={t(
             "project_charts.operational_math_risk_evolution_team_data_chart"
@@ -493,6 +494,7 @@ const ProjectCharts = () => {
             ),
           }}
         />
+
         <Grid item xs={6} sx={{ padding: "8px" }}>
           <Box sx={{ height: "350px" }}>
             <Typography>{t("project_charts.bugs_chart")}</Typography>
@@ -520,6 +522,7 @@ const ProjectCharts = () => {
             />
           </Box>
         </Grid>
+
         <ChartLineBox
           title={t("project_charts.demands_burn_up_chart", {
             projectName: project.name,
@@ -536,6 +539,7 @@ const ProjectCharts = () => {
             ),
           }}
         />
+
         <ChartLineBox
           title={`Hours Burnup for ${project.name}`}
           data={projectHoursBurnupChartData}
@@ -544,11 +548,13 @@ const ProjectCharts = () => {
             yFormat: "=.2f",
           }}
         />
+
         <ChartLineBox
           title={"Lead Time (p80)"}
           data={leadTimeP80ChartData}
           axisLeftLegend={"Days"}
         />
+
         <Grid item xs={6} sx={{ padding: "8px" }}>
           <Box sx={{ height: "350px" }}>
             <Typography>Lead Time Control Chart</Typography>
@@ -564,6 +570,7 @@ const ProjectCharts = () => {
             />
           </Box>
         </Grid>
+
         <ChartLineBox
           title={t("project_charts.quality_bugs_chart")}
           data={projectQualityChartData}
@@ -587,6 +594,7 @@ const ProjectCharts = () => {
             ),
           }}
         />
+
         <ChartLineBox
           title={t("project_charts.quality_bugs_for_coding_chart")}
           data={projectQualityForCodingChartData}
@@ -611,6 +619,7 @@ const ProjectCharts = () => {
             ),
           }}
         />
+
         <ChartLineBox
           title={t("project_charts.quality_bugs_for_coding_per_demand_chart")}
           data={projectQualityForCodingPerDemand}
@@ -638,6 +647,7 @@ const ProjectCharts = () => {
             ),
           }}
         />
+
         <ChartLineBox
           title={t("project_charts.flow_efficiency_chart")}
           data={flowEfficiencyChartData}
@@ -661,10 +671,28 @@ const ProjectCharts = () => {
             ),
           }}
         />
+
         <ChartLineBox
-          title={"Hours per Demand"}
+          title={t("project_charts.hours_per_demand_chart")}
           data={hoursPerDemandChartData}
-          axisLeftLegend={"Hours"}
+          axisLeftLegend={t("project_charts.hours_per_demand_y_label")}
+          props={{
+            margin: { left: 80, right: 20, top: 25, bottom: 65 },
+            axisBottom: {
+              tickSize: 5,
+              tickPadding: 5,
+              legendPosition: "middle",
+              legendOffset: 60,
+              tickRotation: -40,
+            },
+            enableSlices: "x",
+            sliceTooltip: ({ slice }: SliceTooltipProps) => (
+              <LineChartTooltip
+                slice={slice}
+                xLabel={t("project_charts.hours_per_demand_tooltip_label")}
+              />
+            ),
+          }}
         />
 
         <Grid item xs={6} sx={{ padding: "8px" }}>

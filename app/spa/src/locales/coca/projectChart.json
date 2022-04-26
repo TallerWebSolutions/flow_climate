@@ -55,6 +55,9 @@
     "quality_bugs_for_coding_tooltip_label": "Days",
     "quality_bugs_for_coding_per_demand_chart": "Quality: Blocks for Coding per Activity",
     "quality_bugs_for_coding_per_demand_y_label": "Blocks per Activity",
-    "quality_bugs_for_coding_per_demand_tooltip_label": "Period"
+    "quality_bugs_for_coding_per_demand_tooltip_label": "Period",
+    "hours_per_demand_chart": "Hours per Activity",
+    "hours_per_demand_y_label": "Hours",
+    "hours_per_demand_tooltip_label": "Period"
   }
 }
