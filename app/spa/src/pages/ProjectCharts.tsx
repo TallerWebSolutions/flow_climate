@@ -205,16 +205,10 @@ const ProjectCharts = () => {
     {
       id: "Operational Risk (%)",
       data: projectConsolidationsWeekly.map(
-        ({ consolidationDate, tasksBasedOperationalRisk }) => {
-          const operationalTeamRiskInPercentage: string = (
-            tasksBasedOperationalRisk * 100
-          ).toFixed(2)
-
-          return {
-            x: consolidationDate,
-            y: operationalTeamRiskInPercentage,
-          }
-        }
+        ({ consolidationDate, tasksBasedOperationalRisk }) => ({
+          x: consolidationDate,
+          y: tasksBasedOperationalRisk,
+        })
       ),
     },
   ]
@@ -478,9 +472,33 @@ const ProjectCharts = () => {
           }}
         />
         <ChartLineBox
-          title={"Operational Math Risk Evolution - Team Data"}
+          title={t(
+            "project_charts.operational_math_risk_evolution_team_data_chart"
+          )}
           data={operationalTeamRiskChartData}
-          axisLeftLegend={"Risk (%)"}
+          axisLeftLegend={`${t(
+            "project_charts.operational_math_risk_evolution_team_data_y_label"
+          )} (%)`}
+          props={{
+            margin: { left: 80, right: 20, top: 25, bottom: 65 },
+            axisBottom: {
+              tickSize: 5,
+              tickPadding: 5,
+              legendPosition: "middle",
+              legendOffset: 60,
+              tickRotation: -40,
+            },
+            yFormat: "=.2%",
+            enableSlices: "x",
+            sliceTooltip: ({ slice }: SliceTooltipProps) => (
+              <LineChartTooltip
+                slice={slice}
+                xLabel={t(
+                  "project_charts.operational_math_risk_evolution_team_data_tooltip_label"
+                )}
+              />
+            ),
+          }}
         />
         <Grid item xs={6} sx={{ padding: "8px" }}>
           <Box sx={{ height: "350px" }}>
