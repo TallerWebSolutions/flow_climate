@@ -416,10 +416,14 @@ const ProjectCharts = () => {
     }) => {
       return {
         period: consolidationDate,
-        "Design Effort": projectThroughputHoursDesign.toFixed(2),
-        "Development Hour": projectThroughputHoursDevelopment.toFixed(2),
-        "Management Hour": projectThroughputHoursManagement.toFixed(2),
-        "Total Effort": projectThroughputHours.toFixed(2),
+        [t("project_charts.consumed_hours_by_role_design_effort")]:
+          projectThroughputHoursDesign.toFixed(2),
+        [t("project_charts.consumed_hours_by_role_development_effort")]:
+          projectThroughputHoursDevelopment.toFixed(2),
+        [t("project_charts.consumed_hours_by_role_management_effort")]:
+          projectThroughputHoursManagement.toFixed(2),
+        [t("project_charts.consumed_hours_by_role_total_effort")]:
+          projectThroughputHours.toFixed(2),
       }
     }
   )
@@ -738,22 +742,31 @@ const ProjectCharts = () => {
 
         <Grid item xs={6} sx={{ padding: "8px" }}>
           <Box sx={{ height: "350px" }}>
-            <Typography>Consumed Hours by Role</Typography>
+            <Typography>
+              {t("project_charts.consumed_hours_by_role_chart")}
+            </Typography>
 
             <BarChart
               data={projectConsumedHoursByRoleChartData}
-              axisLeftLegend={"Hours"}
               props={{
                 groupMode: "grouped",
                 keys: [
-                  "Design Effort",
-                  "Development Hour",
-                  "Management Hour",
-                  "Total Effort",
+                  t("project_charts.consumed_hours_by_role_design_effort"),
+                  t("project_charts.consumed_hours_by_role_development_effort"),
+                  t("project_charts.consumed_hours_by_role_management_effort"),
+                  t("project_charts.consumed_hours_by_role_total_effort"),
                 ],
                 indexBy: "period",
                 margin: { top: 50, right: 60, bottom: 65, left: 60 },
                 padding: 0.3,
+                axisLeft: {
+                  tickSize: 5,
+                  tickPadding: 5,
+                  tickRotation: 0,
+                  legend: t("project_charts.consumed_hours_by_role_y_label"),
+                  legendPosition: "middle",
+                  legendOffset: -55,
+                },
                 axisBottom: {
                   tickSize: 5,
                   tickPadding: 5,
