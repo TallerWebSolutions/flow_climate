@@ -58,6 +58,12 @@
     "quality_bugs_for_coding_per_demand_tooltip_label": "Period",
     "hours_per_demand_chart": "Hours per Demand",
     "hours_per_demand_y_label": "Hours",
-    "hours_per_demand_tooltip_label": "Period"
+    "hours_per_demand_tooltip_label": "Period",
+    "lead_time_control_chart": "Lead Time Control Chart",
+    "lead_time_control_label": "Lead Time",
+    "lead_time_control_marker_p65": "Percentile 65 ({{leadTime}} days)",
+    "lead_time_control_marker_p80": "Percentile 80 ({{leadTime}} days)",
+    "lead_time_control_marker_p95": "Percentile 95 ({{leadTime}} days)",
+    "lead_time_control_tooltip_label": "Demand"
   }
 }

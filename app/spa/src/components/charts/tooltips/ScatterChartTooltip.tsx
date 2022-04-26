@@ -17,17 +17,23 @@ export type ScatterNode = {
 }
 
 type ChartData = {
-  x: number | String | Date
-  y: number | String | Date
+  x: number | string | Date
+  y: number | string | Date
+  label?: string
 }
 
 type ChartTooltipProps = {
   xLabel: string
+  customXValue?: string
   node: ScatterNode
 }
 
-const ScatterChartTooltip = ({ node, xLabel }: ChartTooltipProps) => {
-  const xValue = node.formattedX
+const ScatterChartTooltip = ({
+  node,
+  xLabel,
+  customXValue,
+}: ChartTooltipProps) => {
+  const xValue = customXValue ? customXValue : node.formattedX
 
   return (
     <div

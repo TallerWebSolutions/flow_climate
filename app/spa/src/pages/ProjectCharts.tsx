@@ -14,6 +14,9 @@ import { BarChart } from "../components/charts/BarChart"
 import { LineChart, LineGraphProps } from "../components/charts/LineChart"
 import { ScatterChart } from "../components/charts/ScatterChart"
 import LineChartTooltip from "../components/charts/tooltips/LineChartTooltip"
+import ScatterChartTooltip, {
+  ScatterNode,
+} from "../components/charts/tooltips/ScatterChartTooltip"
 import { ProjectChartsTable } from "../components/ProjectChartsTable"
 import {
   ProjectPage,
@@ -301,12 +304,14 @@ const ProjectCharts = () => {
 
   const leadTimeControlChartData = [
     {
-      id: "Lead Time",
+      id: t("project_charts.lead_time_control_label"),
       data: demandsFinishedWithLeadtime.map(
         ({ externalId, leadtime }, index) => {
+          const leadTimeInDays = secondsToDays(leadtime)
+
           return {
             x: index,
-            y: leadtime,
+            y: leadTimeInDays,
             label: externalId,
           }
         }
@@ -314,22 +319,38 @@ const ProjectCharts = () => {
     },
   ]
 
+  const leadTimeP65InDays = secondsToDays(
+    Number(lastProjectConsolidationsWeekly?.leadTimeP65)
+  )
+  const leadTimeP80InDays = secondsToDays(
+    Number(lastProjectConsolidationsWeekly?.leadTimeP80)
+  )
+  const leadTimeP95InDays = secondsToDays(
+    Number(lastProjectConsolidationsWeekly?.leadTimeP95)
+  )
+
   const leadTimeControlP65Marker = buildPercentileYAxisMarker({
     color: "#F80304",
-    completionTime: Number(lastProjectConsolidationsWeekly?.leadTimeP65),
-    legend: "Percentile 65", //@todo - put days with translation
+    completionTime: leadTimeP65InDays,
+    legend: t("project_charts.lead_time_control_marker_p65", {
+      leadTime: leadTimeP65InDays,
+    }),
   })
 
   const leadTimeControlP80Marker = buildPercentileYAxisMarker({
     color: "#daa520",
-    completionTime: Number(lastProjectConsolidationsWeekly?.leadTimeP80),
-    legend: "Percentile 80",
+    completionTime: leadTimeP80InDays,
+    legend: t("project_charts.lead_time_control_marker_p80", {
+      leadTime: leadTimeP80InDays,
+    }),
   })
 
   const leadTimeControlP95Marker = buildPercentileYAxisMarker({
     color: "#008000",
-    completionTime: Number(lastProjectConsolidationsWeekly?.leadTimeP95),
-    legend: "Percentile 95",
+    completionTime: leadTimeP95InDays,
+    legend: t("project_charts.lead_time_control_marker_p95", {
+      leadTime: leadTimeP95InDays,
+    }),
   })
 
   const projectQualityForCodingChartData = [
@@ -557,7 +578,9 @@ const ProjectCharts = () => {
 
         <Grid item xs={6} sx={{ padding: "8px" }}>
           <Box sx={{ height: "350px" }}>
-            <Typography>Lead Time Control Chart</Typography>
+            <Typography>
+              {t("project_charts.lead_time_control_chart")}
+            </Typography>
             <ScatterChart
               data={leadTimeControlChartData}
               props={{
@@ -566,6 +589,19 @@ const ProjectCharts = () => {
                   leadTimeControlP80Marker,
                   leadTimeControlP95Marker,
                 ],
+                tooltip: (data: { node: ScatterNode }) => {
+                  const demandExternalID = data.node.data.label
+
+                  return (
+                    <ScatterChartTooltip
+                      xLabel={t(
+                        "project_charts.lead_time_control_tooltip_label"
+                      )}
+                      customXValue={demandExternalID}
+                      node={data.node}
+                    />
+                  )
+                },
               }}
             />
           </Box>
