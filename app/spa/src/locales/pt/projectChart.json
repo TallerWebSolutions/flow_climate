@@ -49,6 +49,12 @@
     "demands_burn_up_tootip_label": "Demandas",
     "quality_bugs_chart": "Qualidade: Bugs",
     "quality_bugs_y_label": "Dias",
-    "quality_bugs_tooltip_label": "Semana"
+    "quality_bugs_tooltip_label": "Semana",
+    "quality_bugs_for_coding_chart": "Qualidade: Bloqueios por Código",
+    "quality_bugs_for_coding_y_label": "Período",
+    "quality_bugs_for_coding_tooltip_label": "Dias",
+    "quality_bugs_for_coding_per_demand_chart": "Qualidade: Bloqueios por Código por Demanda",
+    "quality_bugs_for_coding_per_demand_y_label": "Bloqueios por Demanda",
+    "quality_bugs_for_coding_per_demand_tooltip_label": "Período"
   }
 }

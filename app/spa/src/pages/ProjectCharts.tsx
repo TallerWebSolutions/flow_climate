@@ -588,14 +588,55 @@ const ProjectCharts = () => {
           }}
         />
         <ChartLineBox
-          title={"Quality: Blocks for coding"}
+          title={t("project_charts.quality_bugs_for_coding_chart")}
           data={projectQualityForCodingChartData}
-          axisLeftLegend={"Days"}
+          axisLeftLegend={t("project_charts.quality_bugs_for_coding_y_label")}
+          props={{
+            margin: { left: 80, right: 20, top: 25, bottom: 65 },
+            axisBottom: {
+              tickSize: 5,
+              tickPadding: 5,
+              legendPosition: "middle",
+              legendOffset: 60,
+              tickRotation: -40,
+            },
+            enableSlices: "x",
+            sliceTooltip: ({ slice }: SliceTooltipProps) => (
+              <LineChartTooltip
+                slice={slice}
+                xLabel={t(
+                  "project_charts.quality_bugs_for_coding_tooltip_label"
+                )}
+              />
+            ),
+          }}
         />
         <ChartLineBox
-          title={"Quality: Blocks for Coding per Demand"}
+          title={t("project_charts.quality_bugs_for_coding_per_demand_chart")}
           data={projectQualityForCodingPerDemand}
-          axisLeftLegend={"blocks per demand"}
+          axisLeftLegend={t(
+            "project_charts.quality_bugs_for_coding_per_demand_y_label"
+          )}
+          props={{
+            margin: { left: 80, right: 20, top: 25, bottom: 65 },
+            axisBottom: {
+              tickSize: 5,
+              tickPadding: 5,
+              legendPosition: "middle",
+              legendOffset: 60,
+              tickRotation: -40,
+            },
+            enableSlices: "x",
+            yFormat: "=.2f",
+            sliceTooltip: ({ slice }: SliceTooltipProps) => (
+              <LineChartTooltip
+                slice={slice}
+                xLabel={t(
+                  "project_charts.quality_bugs_for_coding_per_demand_tooltip_label"
+                )}
+              />
+            ),
+          }}
         />
         <ChartLineBox
           title={t("project_charts.flow_efficiency_chart")}
