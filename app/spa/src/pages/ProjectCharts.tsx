@@ -217,8 +217,8 @@ const ProjectCharts = () => {
     ({ bugsOpened, bugsClosed }, index) => {
       return {
         index: index,
-        "Bugs Openned": bugsOpened,
-        "Bugs Closed": bugsClosed,
+        [t("project_charts.bugs_openned")]: bugsOpened,
+        [t("project_charts.bugs_closed")]: bugsClosed,
       }
     }
   )
@@ -443,7 +443,7 @@ const ProjectCharts = () => {
     <ProjectPage pageName={t("charts")} project={project}>
       <ProjectChartsTable project={project} demands={demands} />
 
-      <Grid container spacing={2} rowSpacing={3} sx={{ marginTop: "32px" }}>
+      <Grid container spacing={2} rowSpacing={8} sx={{ marginTop: "32px" }}>
         <ChartLineBox
           title={t("project_charts.operational_math_risk_evolution_chart")}
           data={operationalRiskChartData}
@@ -502,14 +502,17 @@ const ProjectCharts = () => {
         />
         <Grid item xs={6} sx={{ padding: "8px" }}>
           <Box sx={{ height: "350px" }}>
-            <Typography>Bugs</Typography>
+            <Typography>{t("project_charts.bugs_chart")}</Typography>
 
             <BarChart
               data={projectBugsChartData}
-              axisLeftLegend={"Bugs"}
+              axisLeftLegend={t("project_charts.bugs_y_label")}
               props={{
                 groupMode: "grouped",
-                keys: ["Bugs Openned", "Bugs Closed"],
+                keys: [
+                  t("project_charts.bugs_openned"),
+                  t("project_charts.bugs_closed"),
+                ],
                 indexBy: "index",
                 margin: { top: 50, right: 60, bottom: 65, left: 60 },
                 padding: 0.3,
@@ -518,7 +521,7 @@ const ProjectCharts = () => {
                   tickPadding: 5,
                   legendPosition: "middle",
                   legendOffset: 60,
-                  tickRotation: -40,
+                  tickRotation: 0,
                 },
               }}
             />

@@ -36,6 +36,14 @@
     "operational_math_risk_evolution_y_label": "Risk",
     "operational_math_risk_evolution_team_data_chart": "Operational Math Risk Evolution - Team Data",
     "operational_math_risk_evolution_team_data_tooltip_label": "Period",
-    "operational_math_risk_evolution_team_data_y_label": "Risk"
+    "operational_math_risk_evolution_team_data_y_label": "Risk",
+    "bugs_chart": "Bugs",
+    "bugs_y_label": "Bugs",
+    "bugs_openned": "Bugs Openned",
+    "bugs_closed": "Bugs Closed",
+    "demands_burn_up_chart": "Demands Burnup for {{projectName}}",
+    "demands_burn_up_label_scope": "Scope",
+    "demands_burn_up_label_delivered": "Delivered",
+    "demands_burn_up_label_ideal": "Ideal"
   }
 }
