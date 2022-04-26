@@ -46,6 +46,9 @@
     "demands_burn_up_label_scope": "Scope",
     "demands_burn_up_label_delivered": "Delivered",
     "demands_burn_up_label_ideal": "Ideal",
-    "demands_burn_up_tootip_label": "Activities"
+    "demands_burn_up_tootip_label": "Activities",
+    "quality_bugs_chart": "Quality: Bugs",
+    "quality_bugs_y_label": "Days",
+    "quality_bugs_tooltip_label": "Week"
   }
 }

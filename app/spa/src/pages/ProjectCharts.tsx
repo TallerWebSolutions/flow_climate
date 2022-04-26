@@ -291,17 +291,10 @@ const ProjectCharts = () => {
     {
       id: project.name,
       data: projectConsolidationsWeekly.map(
-        ({ consolidationDate, projectQuality }) => {
-          const qualityPercentage: string = (
-            (1 - projectQuality) *
-            100
-          ).toFixed(2)
-
-          return {
-            x: consolidationDate,
-            y: qualityPercentage,
-          }
-        }
+        ({ consolidationDate, projectQuality }) => ({
+          x: consolidationDate,
+          y: projectQuality,
+        })
       ),
     },
   ]
@@ -572,9 +565,27 @@ const ProjectCharts = () => {
           </Box>
         </Grid>
         <ChartLineBox
-          title={"Quality: Bugs"}
+          title={t("project_charts.quality_bugs_chart")}
           data={projectQualityChartData}
-          axisLeftLegend={"Days"}
+          axisLeftLegend={t("project_charts.quality_bugs_y_label")}
+          props={{
+            margin: { left: 80, right: 20, top: 25, bottom: 65 },
+            axisBottom: {
+              tickSize: 5,
+              tickPadding: 5,
+              legendPosition: "middle",
+              legendOffset: 60,
+              tickRotation: -40,
+            },
+            yFormat: "=.2%",
+            enableSlices: "x",
+            sliceTooltip: ({ slice }: SliceTooltipProps) => (
+              <LineChartTooltip
+                slice={slice}
+                xLabel={t("project_charts.quality_bugs_tooltip_label")}
+              />
+            ),
+          }}
         />
         <ChartLineBox
           title={"Quality: Blocks for coding"}
