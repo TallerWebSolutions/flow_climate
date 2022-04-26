@@ -29,6 +29,34 @@ RSpec.describe Types::MutationType do
     end
   end
 
+  describe 'generate_project_cache' do
+    describe '.resolve' do
+      let(:project) { Fabricate :project }
+      let(:mutation) do
+        %(mutation {
+            generateProjectCache(projectId: "#{project.id}") {
+              statusMessage
+            }
+          })
+      end
+
+      context 'when the project exists' do
+        it 'succeeds to put the job in the queue' do
+          result = FlowClimateSchema.execute(mutation).as_json
+          expect(result['data']['generateProjectCache']['statusMessage']).to eq('SUCCESS')
+        end
+      end
+
+      context 'when redis server is not working' do
+        it 'fails to put the job in the queue' do
+          allow(Consolidations::ProjectConsolidationJob).to(receive(:perform_later)).and_raise(Redis::CannotConnectError)
+          result = FlowClimateSchema.execute(mutation).as_json
+          expect(result['data']['generateProjectCache']['statusMessage']).to eq('FAIL')
+        end
+      end
+    end
+  end
+
   describe 'send auth token' do
     describe '.resolve' do
       let(:company) { Fabricate :company }
