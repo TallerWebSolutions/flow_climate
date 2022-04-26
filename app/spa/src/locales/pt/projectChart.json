@@ -63,6 +63,8 @@
     "lead_time_control_label": "Lead Time",
     "lead_time_control_marker_p65": "Percentil 65 ({{leadTime}} dias)",
     "lead_time_control_marker_p80": "Percentil 80 ({{leadTime}} dias)",
-    "lead_time_control_marker_p95": "Percentil 95 ({{leadTime}} dias)"
+    "lead_time_control_marker_p95": "Percentil 95 ({{leadTime}} dias)",
+    "hours_per_stage_chart": "Horas por Etapa",
+    "hours_per_stage_y_label": "Horas"
   }
 }

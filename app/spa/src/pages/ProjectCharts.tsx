@@ -792,11 +792,10 @@ const ProjectCharts = () => {
         </Grid>
         <Grid item xs={6} sx={{ padding: "8px" }}>
           <Box sx={{ height: "350px" }}>
-            <Typography>Hours Per Stage</Typography>
+            <Typography>{t("project_charts.hours_per_stage_chart")}</Typography>
 
             <BarChart
               data={projectHoursPerStage}
-              axisLeftLegend={"Hours"}
               props={{
                 groupMode: "grouped",
                 keys: hoursPerStageChartData.xAxis,
@@ -809,6 +808,14 @@ const ProjectCharts = () => {
                   legendPosition: "middle",
                   legendOffset: 60,
                   tickRotation: -40,
+                },
+                axisLeft: {
+                  tickSize: 5,
+                  tickPadding: 5,
+                  tickRotation: 0,
+                  legend: t("project_charts.hours_per_stage_y_label"),
+                  legendPosition: "middle",
+                  legendOffset: -55,
                 },
               }}
             />

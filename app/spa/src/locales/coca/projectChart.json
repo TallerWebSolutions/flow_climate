@@ -63,6 +63,8 @@
     "lead_time_control_label": "Lead Time",
     "lead_time_control_marker_p65": "Percentile 65 ({{leadTime}} days)",
     "lead_time_control_marker_p80": "Percentile 80 ({{leadTime}} days)",
-    "lead_time_control_marker_p95": "Percentile 95 ({{leadTime}} days)"
+    "lead_time_control_marker_p95": "Percentile 95 ({{leadTime}} days)",
+    "hours_per_stage_chart": "Hours per Stage",
+    "hours_per_stage_y_label": "Hours"
   }
 }
