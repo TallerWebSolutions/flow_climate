@@ -454,9 +454,9 @@ RSpec.describe Types::QueryType do
                                                       }],
                                                       'demandsFinishedWithLeadtime' => [],
                                                       'discardedDemands' => [],
-                                                      'unscoredDemands' => project.demands.kept.unscored_demands.map do |demand|
+                                                      'unscoredDemands' => project.demands.kept.unscored_demands.map do |unscored_demand|
                                                         {
-                                                          'id' => demand.id.to_s
+                                                          'id' => unscored_demand.id.to_s
                                                         }
                                                       end,
                                                       'demandBlocks' => demand.demand_blocks.map do |demand_block|
