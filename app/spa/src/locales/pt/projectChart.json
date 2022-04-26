@@ -27,5 +27,9 @@
     "lead_time_p65": "Lead Time p65 {{days}} dias",
     "lead_time_p80": "Lead Time p80 {{days}} dias",
     "lead_time_p95": "Lead Time p95 {{days}} dias"
+  },
+  "project_charts": {
+    "flow_efficiency_chart": "Eficiência do Fluxo",
+    "flow_efficiency_tooltip_label": "Período"
   }
 }

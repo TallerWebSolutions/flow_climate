@@ -7,11 +7,13 @@ import {
   Typography,
 } from "@mui/material"
 import { BarDatum } from "@nivo/bar"
+import { SliceTooltipProps } from "@nivo/line"
 import { useTranslation } from "react-i18next"
 import { useParams } from "react-router-dom"
 import { BarChart } from "../components/charts/BarChart"
 import { LineChart, LineGraphProps } from "../components/charts/LineChart"
 import { ScatterChart } from "../components/charts/ScatterChart"
+import LineChartTooltip from "../components/charts/tooltips/LineChartTooltip"
 import { ProjectChartsTable } from "../components/ProjectChartsTable"
 import {
   ProjectPage,
@@ -155,13 +157,13 @@ const ChartLineBox = ({
       <Box sx={{ height: "350px" }}>
         <Typography>{title}</Typography>
 
-        <LineChart data={data} axisLeftLegend={axisLeftLegend} {...props} />
+        <LineChart data={data} axisLeftLegend={axisLeftLegend} props={props} />
       </Box>
     </Grid>
   )
 }
 
-const ProjectsChart = () => {
+const ProjectCharts = () => {
   const { t } = useTranslation(["projectChart"])
   const { projectId } = useParams()
   const { data, loading } = useQuery<ProjectChartDTO>(PROJECT_CHART_QUERY, {
@@ -375,10 +377,13 @@ const ProjectsChart = () => {
     {
       id: project.name,
       data: projectConsolidationsWeekly.map(
-        ({ consolidationDate, flowEfficiency }) => ({
-          x: consolidationDate,
-          y: flowEfficiency,
-        })
+        ({ consolidationDate, flowEfficiency }) => {
+          const flowEfficiencyInPercentage = flowEfficiency / 100
+          return {
+            x: consolidationDate,
+            y: flowEfficiencyInPercentage,
+          }
+        }
       ),
     },
   ]
@@ -426,10 +431,11 @@ const ProjectsChart = () => {
       }) => {
         return {
           period: consolidationDate,
-          "Design Effort": projectThroughputHoursDesignInMonth,
-          "Development Hour": projectThroughputHoursDevelopmentInMonth,
-          "Management Hour": projectThroughputHoursManagementInMonth,
-          "Total Effort": projectThroughputHoursInMonth,
+          "Design Effort": projectThroughputHoursDesignInMonth.toFixed(2),
+          "Development Hour":
+            projectThroughputHoursDevelopmentInMonth.toFixed(2),
+          "Management Hour": projectThroughputHoursManagementInMonth.toFixed(2),
+          "Total Effort": projectThroughputHoursInMonth.toFixed(2),
         }
       }
     )
@@ -446,7 +452,8 @@ const ProjectsChart = () => {
   return (
     <ProjectPage pageName={t("charts")} project={project}>
       <ProjectChartsTable project={project} demands={demands} />
-      <Grid container spacing={2} sx={{ marginTop: "32px" }}>
+
+      <Grid container spacing={2} rowSpacing={1} sx={{ marginTop: "32px" }}>
         <ChartLineBox
           title={"Operational Math Risk Evolution"}
           data={operationalRiskChartData}
@@ -475,7 +482,7 @@ const ProjectsChart = () => {
                   tickPadding: 5,
                   legendPosition: "middle",
                   legendOffset: 60,
-                  tickRotation: -37,
+                  tickRotation: -40,
                 },
               }}
             />
@@ -527,9 +534,27 @@ const ProjectsChart = () => {
           axisLeftLegend={"blocks per demand"}
         />
         <ChartLineBox
-          title={"Flow Efficiency"}
+          title={t("project_charts.flow_efficiency_chart")}
           data={flowEfficiencyChartData}
           axisLeftLegend={"%"}
+          props={{
+            margin: { left: 80, right: 20, top: 25, bottom: 65 },
+            axisBottom: {
+              tickSize: 5,
+              tickPadding: 5,
+              legendPosition: "middle",
+              legendOffset: 60,
+              tickRotation: -40,
+            },
+            yFormat: "=.2%",
+            enableSlices: "x",
+            sliceTooltip: ({ slice }: SliceTooltipProps) => (
+              <LineChartTooltip
+                slice={slice}
+                xLabel={t("project_charts.flow_efficiency_tooltip_label")}
+              />
+            ),
+          }}
         />
         <ChartLineBox
           title={"Hours per Demand"}
@@ -560,7 +585,7 @@ const ProjectsChart = () => {
                   tickPadding: 5,
                   legendPosition: "middle",
                   legendOffset: 60,
-                  tickRotation: -37,
+                  tickRotation: -40,
                 },
               }}
             />
@@ -590,7 +615,7 @@ const ProjectsChart = () => {
                   tickPadding: 5,
                   legendPosition: "middle",
                   legendOffset: 60,
-                  tickRotation: -37,
+                  tickRotation: -40,
                 },
               }}
             />
@@ -614,7 +639,7 @@ const ProjectsChart = () => {
                   tickPadding: 5,
                   legendPosition: "middle",
                   legendOffset: 60,
-                  tickRotation: -37,
+                  tickRotation: -40,
                 },
               }}
             />
@@ -625,4 +650,4 @@ const ProjectsChart = () => {
   )
 }
 
-export default ProjectsChart
+export default ProjectCharts

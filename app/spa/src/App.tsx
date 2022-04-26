@@ -10,7 +10,7 @@ import ApiProvider from "./lib/ApiProvider"
 import i18n, { loadLanguage } from "./lib/i18n"
 import ThemeProvider from "./lib/ThemeProvider"
 import LeadTimeDashboard from "./pages/LeadTimeDashboard"
-import ProjectsChart from "./pages/ProjectsChart"
+import ProjectCharts from "./pages/ProjectCharts"
 import Replenishing from "./pages/Replenishing"
 import RiskDrill from "./pages/RiskDrill"
 import Statistics from "./pages/Statistics"
@@ -60,7 +60,7 @@ const App = () => {
           />
           <Route
             path="/companies/:companyNickName/projects/:projectId"
-            element={<ProjectsChart />}
+            element={<ProjectCharts />}
           />
           <Route
             path="/companies/:companyNickName/projects/:projectId/risk_drill_down"
