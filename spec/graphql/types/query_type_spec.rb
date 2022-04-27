@@ -309,6 +309,9 @@ RSpec.describe Types::QueryType do
         product = Fabricate :product, company: company, customer: customer
         project = Fabricate :project, company: company, customers: [customer], products: [product], team: team, status: :executing, start_date: 4.days.ago, end_date: 1.day.from_now, max_work_in_progress: 2
         demand = Fabricate :demand, company: company, project: project, team: team
+        Fabricate :demand, company: company, project: project, team: team
+        Fabricate :demand, project: project, effort_downstream: 200, effort_upstream: 10, end_date: 2.weeks.ago
+        finished_demand = Fabricate :demand, project: project, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago
         Fabricate :demand_block, demand: demand
         project_consolidation = Fabricate :project_consolidation, project: project, monte_carlo_weeks_min: 9, monte_carlo_weeks_max: 85, monte_carlo_weeks_std_dev: 7, team_based_operational_risk: 0.5
 
@@ -383,6 +386,12 @@ RSpec.describe Types::QueryType do
           lastProjectConsolidationsWeekly {
             id
           }
+          demandsFlowChartData {
+            committedChartData
+            creationChartData
+            pullTransactionRate
+            throughputChartData
+          }
         }
 
         demands(projectId: #{project.id}, limit: 1, finished: false) {
@@ -417,7 +426,7 @@ RSpec.describe Types::QueryType do
                                                })
 
         expect(result.dig('data', 'demands')).to eq([{
-                                                      'numberOfBlocks' => demand.demand_blocks.count
+                                                      'numberOfBlocks' => 1
                                                     }])
 
         expect(result.dig('data', 'project')).to eq({
@@ -432,7 +441,7 @@ RSpec.describe Types::QueryType do
                                                       'currentMonteCarloWeeksMin' => 9,
                                                       'currentMonteCarloWeeksMax' => 85,
                                                       'currentMonteCarloWeeksStdDev' => 7,
-                                                      'remainingWork' => 30,
+                                                      'remainingWork' => 28,
                                                       'currentTeamBasedRisk' => 0.5,
                                                       'currentRiskToDeadline' => 0.0,
                                                       'remainingDays' => 2,
@@ -449,10 +458,10 @@ RSpec.describe Types::QueryType do
                                                         'leadTimeHistogramBinMin' => 0.0,
                                                         'leadTimeMaxMonth' => 0.0,
                                                         'leadTimeMinMonth' => 0.0,
-                                                        'leadTimeP25' => 0.0,
-                                                        'leadTimeP75' => 0.0
+                                                        'leadTimeP25' => project_consolidation.lead_time_p65,
+                                                        'leadTimeP75' => project_consolidation.lead_time_p75
                                                       }],
-                                                      'demandsFinishedWithLeadtime' => [],
+                                                      'demandsFinishedWithLeadtime' => [{ 'id' => finished_demand.id.to_s }],
                                                       'discardedDemands' => [],
                                                       'unscoredDemands' => project.demands.kept.unscored_demands.map do |unscored_demand|
                                                         {
@@ -465,9 +474,9 @@ RSpec.describe Types::QueryType do
                                                         }
                                                       end,
                                                       'numberOfDemands' => project.demands.count,
-                                                      'leadTimeP65' => 0.0,
-                                                      'leadTimeP95' => 0.0,
-                                                      'numberOfDemandsDelivered' => 0,
+                                                      'leadTimeP65' => project.general_leadtime(65),
+                                                      'leadTimeP95' => project.general_leadtime(95),
+                                                      'numberOfDemandsDelivered' => project.demands.kept.finished_until_date(Time.zone.now).count,
                                                       'numberOfDownstreamDemands' => 0,
                                                       'hoursPerStageChartData' => {
                                                         'xAxis' => [],
@@ -483,7 +492,13 @@ RSpec.describe Types::QueryType do
                                                           'id' => project_consolidation.id.to_s
                                                         }
                                                       ],
-                                                      'lastProjectConsolidationsWeekly' => nil
+                                                      'lastProjectConsolidationsWeekly' => nil,
+                                                      'demandsFlowChartData' => {
+                                                        'committedChartData' => [1, 0],
+                                                        'creationChartData' => [3, 0],
+                                                        'pullTransactionRate' => [0, 0],
+                                                        'throughputChartData' => [0, 1]
+                                                      }
                                                     })
         expect(result.dig('data', 'projectConsolidations')).to eq([{
                                                                     'id' => project_consolidation.id.to_s,
