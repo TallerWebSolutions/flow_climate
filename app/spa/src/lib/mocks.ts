@@ -91,6 +91,12 @@ export const companyMock: Company = {
         xAxis: [],
         yAxis: [],
       },
+      demandsFlowChartData: {
+        creationChartData: [],
+        committedChartData: [],
+        pullTransactionRate: [],
+        throughputChartData: [],
+      },
     },
   ],
   teams: [],
@@ -170,6 +176,12 @@ export const projectMock: Project = {
   hoursPerStageChartData: {
     xAxis: [],
     yAxis: [],
+  },
+  demandsFlowChartData: {
+    creationChartData: [],
+    committedChartData: [],
+    pullTransactionRate: [],
+    throughputChartData: [],
   },
 }
 
