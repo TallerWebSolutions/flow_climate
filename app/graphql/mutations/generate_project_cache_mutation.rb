@@ -7,7 +7,8 @@ module Mutations
     field :status_message, Types::BackgroundQueueResponses, null: false
 
     def resolve(project_id:)
-      Consolidations::ProjectConsolidationJob.perform_later(project_id)
+      project = Project.find(project_id)
+      Consolidations::ProjectConsolidationJob.perform_later(project)
       { status_message: 'SUCCESS' }
     rescue Redis::CannotConnectError
       { status_message: 'FAIL' }
