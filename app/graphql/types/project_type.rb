@@ -78,6 +78,7 @@ module Types
     field :project_consolidations, [Types::ProjectConsolidationType], null: true
     field :last_project_consolidations_weekly, Types::ProjectConsolidationType, null: true
     field :hours_per_stage_chart_data, Types::Charts::HoursPerStageChartType, null: true
+    field :demands_flow_chart_data, Types::Charts::DemandsFlowChartDataType, null: true
     delegate :remaining_backlog, to: :object
     delegate :remaining_weeks, to: :object
     delegate :flow_pressure, to: :object
@@ -203,6 +204,12 @@ module Types
       start_date = object.start_date
       end_date = [object.end_date, Time.zone.today].min
       Highchart::StatusReportChartsAdapter.new(object.demands, start_date, end_date, 'week').hours_per_stage
+    end
+
+    def demands_flow_chart_data
+      start_date = object.start_date
+      end_date = [object.end_date, Time.zone.today].min
+      Highchart::DemandsChartsAdapter.new(object.demands.kept, start_date, end_date, 'week')
     end
   end
   # rubocop:enable Metrics/ClassLength

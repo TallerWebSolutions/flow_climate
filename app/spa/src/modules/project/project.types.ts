@@ -80,4 +80,10 @@ export type Project = {
     xAxis: string[]
     yAxis: number[]
   }
+  demandsFlowChartData: {
+    creationChartData: number[]
+    committedChartData: number[]
+    pullTransactionRate: number[]
+    throughputChartData: number[]
+  }
 }

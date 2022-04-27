@@ -65,6 +65,13 @@ export const PROJECT_CHART_QUERY = gql`
       leadTimeP80
       leadTimeP95
 
+      demandsFlowChartData {
+        creationChartData
+        committedChartData
+        pullTransactionRate
+        throughputChartData
+      }
+
       projectConsolidationsWeekly {
         leadTimeP80
         projectQuality
@@ -189,6 +196,7 @@ const ProjectCharts = () => {
   const demandsFinishedWithLeadtime = project?.demandsFinishedWithLeadtime
   const lastProjectConsolidationsWeekly =
     project?.lastProjectConsolidationsWeekly
+  const demandsFlowChartData = project?.demandsFlowChartData
   const hoursPerStageChartData = project?.hoursPerStageChartData
   const demands = data?.demands!
   const isLanguagePT = i18n.language === "pt-BR"
@@ -226,6 +234,21 @@ const ProjectCharts = () => {
       }
     }
   )
+
+  const projectFlowChartData: BarDatum[] =
+    demandsFlowChartData.committedChartData.map((el, index) => {
+      return {
+        index,
+        [t("project_charts.flow_data_created")]:
+          demandsFlowChartData.creationChartData[index],
+        [t("project_charts.flow_data_committed_to")]:
+          demandsFlowChartData.committedChartData[index],
+        [t("project_charts.flow_data_pull_transactions")]:
+          demandsFlowChartData.pullTransactionRate[index],
+        [t("project_charts.flow_data_delivered")]:
+          demandsFlowChartData.throughputChartData[index],
+      }
+    })
 
   const projectDemandsBurnupChartData = [
     {
@@ -548,6 +571,44 @@ const ProjectCharts = () => {
                   legendPosition: "middle",
                   legendOffset: 60,
                   tickRotation: 0,
+                },
+              }}
+            />
+          </Box>
+        </Grid>
+
+        <Grid item xs={6} sx={{ padding: "8px" }}>
+          <Box sx={{ height: "350px" }}>
+            <Typography>{t("project_charts.flow_data_chart")}</Typography>
+
+            <BarChart
+              data={projectFlowChartData}
+              props={{
+                groupMode: "grouped",
+                keys: [
+                  t("project_charts.flow_data_created"),
+                  t("project_charts.flow_data_committed_to"),
+                  t("project_charts.flow_data_pull_transactions"),
+                  t("project_charts.flow_data_delivered"),
+                ],
+                indexBy: "index",
+                margin: { top: 50, right: 60, bottom: 65, left: 60 },
+                padding: 0.3,
+                axisLeft: {
+                  tickSize: 5,
+                  tickPadding: 5,
+                  tickRotation: 0,
+                  legend: t("project_charts.flow_data_y_label"),
+                  legendPosition: "middle",
+                  legendOffset: -55,
+                },
+                axisBottom: {
+                  tickSize: 5,
+                  tickPadding: 5,
+                  legend: t("project_charts.flow_data_x_label"),
+                  legendPosition: "middle",
+                  legendOffset: 60,
+                  tickRotation: -40,
                 },
               }}
             />

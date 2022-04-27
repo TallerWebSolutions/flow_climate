@@ -83,6 +83,13 @@
     "hours_burn_up_y_label": "Horas",
     "hours_burn_up_label_scope": "Escopo",
     "hours_burn_up_label_delivered": "Entregues",
-    "hours_burn_up_label_ideal": "Ideal"
+    "hours_burn_up_label_ideal": "Ideal",
+    "flow_data_chart": "Dados do Fluxo",
+    "flow_data_y_label": "Demandas",
+    "flow_data_x_label": "Periodo",
+    "flow_data_created": "Criadas",
+    "flow_data_committed_to": "Compromentidas",
+    "flow_data_pull_transactions": "Pull Transaction",
+    "flow_data_delivered": "Entregas"
   }
 }
