@@ -1,13 +1,14 @@
-import { ReactElement, useContext } from "react"
-import { useLocation } from "react-router-dom"
-import { Box } from "@mui/material"
-import BasicPage from "./BasicPage"
-import { Tab, Tabs } from "./Tabs"
-import Card, { CardType } from "./Card"
 import { gql, useMutation } from "@apollo/client"
-import { Project } from "../modules/project/project.types"
-import ActionMenu from "./menu/ActionMenu"
+import { Box } from "@mui/material"
+import { ReactElement, useContext } from "react"
+import { useTranslation } from "react-i18next"
+import { useLocation } from "react-router-dom"
 import { MessagesContext } from "../contexts/MessageContext"
+import { Project } from "../modules/project/project.types"
+import BasicPage from "./BasicPage"
+import Card, { CardType } from "./Card"
+import ActionMenu from "./menu/ActionMenu"
+import { Tab, Tabs } from "./Tabs"
 
 export const PROJECT_STANDARD_FRAGMENT = gql`
   fragment ProjectStandardFragment on Project {
@@ -60,6 +61,7 @@ export const ProjectPage = ({
   children,
 }: ProjectPageProps) => {
   const { pathname } = useLocation()
+  const { t } = useTranslation(["generalProjectPage"])
   const projectId = project.id
   const projectIsRugging = project.running
   const projectName = project.name || ""
@@ -162,16 +164,21 @@ export const ProjectPage = ({
         {projectIsRugging && (
           <Box sx={{ display: "flex", my: 2 }}>
             <Card
-              style={{ width: "300px", marginRight: "20px" }}
-              title="Risco Operacional"
-              subtitle={`Faltam ${remainingDays} dia(s) para o fim do projeto e o risco operacional deste prazo é de ${currentRiskToDeadlinePercentage}%`}
+              style={{ width: "350px", marginRight: "20px" }}
+              title={t("cards.operational_risk")}
+              subtitle={t("cards.operational_risk_message", {
+                days: remainingDays,
+                percentage: currentRiskToDeadlinePercentage,
+              })}
               type={cardTypeOperationalRisk}
             />
 
             <Card
-              style={{ width: "300px" }}
-              title="Risco Atual"
-              subtitle={`Com a estratégia de WiP e pelos dados do time, o risco atual é de ${currentTeamRiskPercentage}%`}
+              style={{ width: "350px" }}
+              title={t("cards.operational_risk_team_data")}
+              subtitle={t("cards.operational_risk_team_data_message", {
+                risk: currentTeamRiskPercentage,
+              })}
               type={cardTypeTeamRisk}
             />
           </Box>

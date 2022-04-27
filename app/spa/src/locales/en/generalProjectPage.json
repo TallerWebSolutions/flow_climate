@@ -1,0 +1,8 @@
+{
+  "cards": {
+    "operational_risk": "Operational Risk",
+    "operational_risk_message": "There are {{days}} day(s) left for the end of the project and the operational risk of this period is {{percentage}}%",
+    "operational_risk_team_data": "Operational Risk - Team Data",
+    "operational_risk_team_data_message": "With the WiP strategy and the team's data, the current risk is {{risk}}%"
+  }
+}

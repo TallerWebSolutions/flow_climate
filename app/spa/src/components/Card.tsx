@@ -1,14 +1,14 @@
-import {
-  Card as MUICard,
-  CardProps,
-  CardContent,
-  CardContentProps,
-  Typography,
-  Box,
-} from "@mui/material"
+import CheckCircleIcon from "@mui/icons-material/CheckCircle"
 import ErrorIcon from "@mui/icons-material/Error"
 import WarningIcon from "@mui/icons-material/Warning"
-import CheckCircleIcon from "@mui/icons-material/CheckCircle"
+import {
+  Box,
+  Card as MUICard,
+  CardContent,
+  CardContentProps,
+  CardProps,
+  Typography,
+} from "@mui/material"
 
 export enum CardType {
   PRIMARY = "primary",
@@ -43,7 +43,11 @@ const CustomCardContent = ({
       {type === CardType.SUCCESS && (
         <CheckCircleIcon color={type} sx={{ mr: 1 }} />
       )}
-      <Typography variant="h6" component="h6">
+      <Typography
+        variant="h6"
+        component="h6"
+        style={{ lineHeight: 1.2, marginBottom: "10px" }}
+      >
         {title}
       </Typography>
     </Box>
