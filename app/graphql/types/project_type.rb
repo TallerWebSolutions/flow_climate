@@ -189,7 +189,7 @@ module Types
       last_consolidation = object.project_consolidations.last
       all_project_consolidations = object.project_consolidations.weekly_data.order(:consolidation_date)
 
-      Consolidations::ProjectConsolidation.where(id: all_project_consolidations.map(&:id) + [last_consolidation&.id]).order(:consolidation_date)    
+      Consolidations::ProjectConsolidation.where(id: all_project_consolidations.map(&:id) + [last_consolidation&.id]).order(:consolidation_date)
     end
 
     def project_consolidations_last_month
