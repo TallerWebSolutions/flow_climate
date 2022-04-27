@@ -223,7 +223,6 @@ Rails.application.routes.draw do
         patch 'dissociate_customer/:customer_id', action: :dissociate_customer, as: 'dissociate_customer'
         patch 'associate_product/:product_id', action: :associate_product, as: 'associate_product'
         patch 'dissociate_product/:product_id', action: :dissociate_product, as: 'dissociate_product'
-        patch :update_consolidations
       end
 
       collection do

@@ -162,19 +162,6 @@ class ProjectsController < AuthenticatedController
     render 'projects/running_projects_charts'
   end
 
-  def update_consolidations
-    end_date = [Time.zone.today, @project.end_date.end_of_day].min
-
-    @project.remove_outdated_consolidations
-
-    cache_date_arrays = TimeService.instance.days_between_of(@project.start_date, end_date)
-    cache_date_arrays.each { |cache_date| Consolidations::ProjectConsolidationJob.perform_later(@project, cache_date) }
-
-    flash[:notice] = I18n.t('general.enqueued')
-
-    redirect_to company_project_path(@company, @project)
-  end
-
   def statistics_tab
     prepend_view_path Rails.root.join('public')
     render 'spa-build/index'
