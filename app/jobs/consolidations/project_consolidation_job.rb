@@ -65,6 +65,15 @@ module Consolidations
       tasks_based_montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(tasks_not_finished.count, tasks_throughputs.values.last(12), 500)
 
       consolidation = Consolidations::ProjectConsolidation.where(project: project, consolidation_date: cache_date).first_or_create
+
+      if project.remaining_work(end_of_day).positive?
+        operational_risk = 1 - Stats::StatisticsService.instance.compute_odds_to_deadline(project.remaining_weeks(end_of_day.to_date), project_based_montecarlo_durations)
+        team_operational_risk = 1 - Stats::StatisticsService.instance.compute_odds_to_deadline(project.remaining_weeks(end_of_day.to_date), team_based_montecarlo_durations)
+      else
+        operational_risk = 0
+        team_operational_risk = 0
+      end
+
       consolidation.update(last_data_in_week: (cache_date.to_date) == (cache_date.to_date.end_of_week),
                            last_data_in_month: (cache_date.to_date) == (cache_date.to_date.end_of_month),
                            last_data_in_year: (cache_date.to_date) == (cache_date.to_date.end_of_year),
@@ -97,11 +106,11 @@ module Consolidations
                            team_based_monte_carlo_weeks_max: team_based_montecarlo_durations.max,
                            team_based_monte_carlo_weeks_std_dev: Stats::StatisticsService.instance.standard_deviation(team_based_montecarlo_durations),
                            team_based_monte_carlo_weeks_p80: Stats::StatisticsService.instance.percentile(80, team_based_montecarlo_durations),
-                           operational_risk: 1 - Stats::StatisticsService.instance.compute_odds_to_deadline(project.remaining_weeks(end_of_day.to_date), project_based_montecarlo_durations),
+                           operational_risk: operational_risk,
                            project_scope: project.backlog_count_for(end_of_day),
                            flow_pressure: project.flow_pressure(end_of_day),
                            value_per_demand: project.value_per_demand,
-                           team_based_operational_risk: 1 - Stats::StatisticsService.instance.compute_odds_to_deadline(project.remaining_weeks(end_of_day.to_date), team_based_montecarlo_durations),
+                           team_based_operational_risk: team_operational_risk,
                            weeks_by_little_law: weeks_by_little_law,
                            hours_per_demand: DemandService.instance.hours_per_demand(demands_finished),
                            hours_per_demand_month: DemandService.instance.hours_per_demand(demands_finished_in_month),
