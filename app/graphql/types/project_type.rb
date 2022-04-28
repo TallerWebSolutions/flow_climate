@@ -88,7 +88,7 @@ module Types
     delegate :team_monte_carlo_p80, to: :object
     delegate :team_monte_carlo_weeks_max, to: :object
     delegate :team_monte_carlo_weeks_min, to: :object
-    delegate :team_based_odds_to_deadline, to: :object    
+    delegate :team_based_odds_to_deadline, to: :object
 
     def unscored_demands
       object.demands.kept.unscored_demands

@@ -6,13 +6,9 @@ module Types
       field :keys, [Float], null: true
       field :values, [Int], null: true
 
-      def keys
-        object.keys
-      end
+      delegate :keys, to: :object
 
-      def values
-        object.values
-      end
+      delegate :values, to: :object
     end
   end
 end
