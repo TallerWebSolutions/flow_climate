@@ -86,7 +86,6 @@ const Statistics = () => {
     }
   )
 
-  const project = data?.project!
   const projectConsolidations = data?.projectConsolidations
 
   const totalLeadTimeMonthRange = projectConsolidations?.map(

@@ -36,10 +36,12 @@ type ProjectInfo = {
 
 type ProjectInfoDTO = ProjectInfo | undefined
 
-export default (projectId: number) => {
+const useProjectInfo = (projectId: number) => {
   const { data, loading, error } = useQuery<ProjectInfoDTO>(QUERY, {
     variables: { projectId },
   })
 
   return { projectInfo: data?.project, loading, error }
 }
+
+export default useProjectInfo

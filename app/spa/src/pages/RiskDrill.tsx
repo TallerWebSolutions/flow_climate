@@ -61,7 +61,6 @@ export const RiskDrill = () => {
       </Backdrop>
     )
 
-  const project = data?.project!
   const flowLastFewWeeks = [
     {
       title: "Vazão",

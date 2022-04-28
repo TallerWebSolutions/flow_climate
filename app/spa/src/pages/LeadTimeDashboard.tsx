@@ -63,7 +63,6 @@ const LeadTimeDashboard = () => {
       </Backdrop>
     )
 
-  const project = data?.project!
   const lastProjectConsolidation = data?.project.projectConsolidations.pop()
 
   const currentLeadTime = [

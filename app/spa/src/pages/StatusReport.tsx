@@ -60,7 +60,6 @@ const StatusReport = () => {
       </Backdrop>
     )
 
-  const project = data?.project!
   const leadtime = data?.project.leadTimeP80
   const cost = Number(data?.project.currentCost)
   const formattedCost = formatCurrency(cost)
