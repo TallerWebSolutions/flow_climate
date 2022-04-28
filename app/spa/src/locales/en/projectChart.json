@@ -91,6 +91,12 @@
     "flow_data_created": "Created",
     "flow_data_committed_to": "Committed To",
     "flow_data_pull_transactions": "Pull Transactions",
-    "flow_data_delivered": "Delivered"
+    "flow_data_delivered": "Delivered",
+    "hours_consumed_chart": "Hours Consummed",
+    "hours_consumed_upstream": "Upstream",
+    "hours_consumed_downstream": "Downstream",
+    "hours_consumed_total_throughput": "Total Effort",
+    "hours_consumed_y_label": "Hours",
+    "hours_consumed_x_label": "Period"
   }
 }
