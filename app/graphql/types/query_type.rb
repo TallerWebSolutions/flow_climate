@@ -51,6 +51,7 @@ module Types
       argument :project_id, Int, required: true
       argument :limit, Int
       argument :finished, Boolean
+      argument :discarded, Boolean
     end
 
     field :me, Types::UserType, null: false
@@ -79,8 +80,9 @@ module Types
                                       project_id: project_id, team_id: team_id, from_date: from_date, until_date: until_date)
     end
 
-    def demands(project_id:, finished: false, limit: 10)
+    def demands(project_id:, finished: false, discarded: false, limit: 10)
       return Demand.where(project_id: project_id).where.not(end_date: nil).limit(limit) if finished
+      return Demand.where(project_id: project_id).where.not(discarded_at: nil).limit(limit) if discarded
 
       Demand.where(project_id: project_id).limit(limit)
     end
