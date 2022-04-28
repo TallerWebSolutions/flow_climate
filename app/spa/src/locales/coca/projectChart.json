@@ -96,6 +96,8 @@
     "hours_consumed_downstream": "Downstream",
     "hours_consumed_total_throughput": "Total Effort",
     "hours_consumed_y_label": "Hours",
-    "hours_consumed_x_label": "Period"
+    "hours_consumed_x_label": "Period",
+    "cumulative_flow_chart": "Cumulative Flow Chart Diagram for {{projectName}}",
+    "cumulative_flow_y_label": "Activities"
   }
 }

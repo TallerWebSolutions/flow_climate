@@ -122,6 +122,14 @@ const PROJECT_CHART_QUERY = gql`
         yAxis
       }
 
+      cumulativeFlowChartData {
+        xAxis
+        yAxis {
+          name
+          data
+        }
+      }
+
       weeklyProjectScopeUntilEnd
       currentWeeklyScopeIdealBurnup
       currentWeeklyHoursIdealBurnup
@@ -200,6 +208,7 @@ const ProjectCharts = () => {
     project?.lastProjectConsolidationsWeekly
   const demandsFlowChartData = project?.demandsFlowChartData
   const hoursPerStageChartData = project?.hoursPerStageChartData
+  const cumulativeFlowChartData = project?.cumulativeFlowChartData
   const demands = data?.demands!
   const isLanguagePT = i18n.language === "pt-BR"
 
@@ -233,6 +242,20 @@ const ProjectCharts = () => {
         index: index,
         [t("project_charts.bugs_openned")]: bugsOpened,
         [t("project_charts.bugs_closed")]: bugsClosed,
+      }
+    }
+  )
+
+  const projectCumulativeFlowChartData = cumulativeFlowChartData?.xAxis.map(
+    (_, index) => {
+      const currentYAxis = cumulativeFlowChartData.yAxis[index]
+
+      return {
+        id: currentYAxis.name,
+        data: currentYAxis.data.map((cumulativeValue, index) => ({
+          x: cumulativeFlowChartData?.xAxis[index],
+          y: cumulativeValue,
+        })),
       }
     }
   )
@@ -539,7 +562,6 @@ const ProjectCharts = () => {
             ),
           }}
         />
-
         <ChartLineBox
           title={t(
             "project_charts.operational_math_risk_evolution_team_data_chart"
@@ -569,7 +591,6 @@ const ProjectCharts = () => {
             ),
           }}
         />
-
         <Grid item xs={6} sx={{ padding: "8px" }}>
           <Box sx={{ height: "350px" }}>
             <Typography>{t("project_charts.bugs_chart")}</Typography>
@@ -597,7 +618,6 @@ const ProjectCharts = () => {
             />
           </Box>
         </Grid>
-
         <Grid item xs={6} sx={{ padding: "8px" }}>
           <Box sx={{ height: "350px" }}>
             <Typography>{t("project_charts.flow_data_chart")}</Typography>
@@ -637,6 +657,28 @@ const ProjectCharts = () => {
         </Grid>
 
         <ChartLineBox
+          title={t("project_charts.cumulative_flow_chart", {
+            projectName: project.name,
+          })}
+          data={projectCumulativeFlowChartData}
+          axisLeftLegend={t("project_charts.cumulative_flow_y_label")}
+          props={{
+            enableArea: true,
+            enableSlices: "x",
+            sliceTooltip: ({ slice }: SliceTooltipProps) => (
+              <LineChartTooltip slice={slice} />
+            ),
+            margin: { left: 80, right: 20, top: 25, bottom: 65 },
+            axisBottom: {
+              tickSize: 5,
+              tickPadding: 5,
+              legendPosition: "middle",
+              legendOffset: 60,
+              tickRotation: -40,
+            },
+          }}
+        />
+        <ChartLineBox
           title={t("project_charts.demands_burn_up_chart", {
             projectName: project.name,
           })}
@@ -649,7 +691,6 @@ const ProjectCharts = () => {
             ),
           }}
         />
-
         <ChartLineBox
           title={t("project_charts.hours_burn_up_chart", {
             projectName: project.name,
@@ -664,7 +705,6 @@ const ProjectCharts = () => {
             ),
           }}
         />
-
         <ChartLineBox
           title={t("project_charts.lead_time_p80_chart")}
           data={leadTimeP80ChartData}
@@ -676,7 +716,6 @@ const ProjectCharts = () => {
             ),
           }}
         />
-
         <Grid item xs={6} sx={{ padding: "8px" }}>
           <Box sx={{ height: "350px" }}>
             <Typography>
@@ -707,7 +746,6 @@ const ProjectCharts = () => {
             />
           </Box>
         </Grid>
-
         <ChartLineBox
           title={t("project_charts.quality_bugs_chart")}
           data={projectQualityChartData}
@@ -731,7 +769,6 @@ const ProjectCharts = () => {
             ),
           }}
         />
-
         <ChartLineBox
           title={t("project_charts.quality_bugs_for_coding_chart")}
           data={projectQualityForCodingChartData}
@@ -756,7 +793,6 @@ const ProjectCharts = () => {
             ),
           }}
         />
-
         <ChartLineBox
           title={t("project_charts.quality_bugs_for_coding_per_demand_chart")}
           data={projectQualityForCodingPerDemand}
@@ -784,7 +820,6 @@ const ProjectCharts = () => {
             ),
           }}
         />
-
         <ChartLineBox
           title={t("project_charts.flow_efficiency_chart")}
           data={flowEfficiencyChartData}
@@ -808,7 +843,6 @@ const ProjectCharts = () => {
             ),
           }}
         />
-
         <ChartLineBox
           title={t("project_charts.hours_per_demand_chart")}
           data={hoursPerDemandChartData}
@@ -831,7 +865,6 @@ const ProjectCharts = () => {
             ),
           }}
         />
-
         <Grid item xs={6} sx={{ padding: "8px" }}>
           <Box sx={{ height: "350px" }}>
             <Typography>{t("project_charts.hours_consumed_chart")}</Typography>
@@ -868,7 +901,6 @@ const ProjectCharts = () => {
             />
           </Box>
         </Grid>
-
         <Grid item xs={6} sx={{ padding: "8px" }}>
           <Box sx={{ height: "350px" }}>
             <Typography>
@@ -935,7 +967,6 @@ const ProjectCharts = () => {
             />
           </Box>
         </Grid>
-
         <Grid item xs={6} sx={{ padding: "8px" }}>
           <Box sx={{ height: "350px" }}>
             <Typography>
@@ -1004,7 +1035,6 @@ const ProjectCharts = () => {
             />
           </Box>
         </Grid>
-
         <Grid item xs={6} sx={{ padding: "8px" }}>
           <Box sx={{ height: "350px" }}>
             <Typography>{t("project_charts.hours_per_stage_chart")}</Typography>
