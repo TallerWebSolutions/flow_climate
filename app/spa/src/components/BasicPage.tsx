@@ -1,5 +1,5 @@
 import { ReactElement, useContext } from "react"
-import { Container, Typography, Box } from "@mui/material"
+import { Container, Typography, Box, Link } from "@mui/material"
 import Header from "./Header"
 import MessagesBox from "./MessagesBox"
 import Breadcrumbs, { BreadcrumbsLink } from "./Breadcrumbs"
@@ -43,6 +43,17 @@ const BasicPage = ({
         {children}
         <MessagesBox messages={messages} />
       </Container>
+      <Box sx={{ backgroundColor: "primary.main", py: 7, mt: 11 }}>
+        <Container>
+          <Link href="/" sx={{ display: "block" }}>
+            <img
+              src="https://res.cloudinary.com/taller-digital/image/upload/v1599220860/2_taller_branco_horizontal.png"
+              alt="Taller Logo"
+              height={64}
+            />
+          </Link>
+        </Container>
+      </Box>
     </>
   )
 }

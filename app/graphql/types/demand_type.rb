@@ -10,6 +10,9 @@ module Types
     field :demand_title, String, null: false
     field :leadtime, Float, null: true
     field :end_date, GraphQL::Types::ISO8601DateTime, null: true
+    field :cost_to_project, Float, null: true
+    field :effort_downstream, Float, null: true
+    field :effort_upstream, Float, null: true
 
     field :number_of_blocks, Int, null: false
     field :product, Types::ProductType, null: true

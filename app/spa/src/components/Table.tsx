@@ -23,7 +23,7 @@ type TableProps = {
 }
 
 const Table = ({ title, headerCells, rows, footerCells }: TableProps) => (
-  <TableContainer component={Paper} sx={{ background: "white" }}>
+  <TableContainer component={Paper} sx={{ background: "white", my: 4 }}>
     <Typography
       color="primary"
       variant="h6"
@@ -36,7 +36,10 @@ const Table = ({ title, headerCells, rows, footerCells }: TableProps) => (
       <TableHead>
         <TableRow>
           {headerCells.map((cell, index) => (
-            <TableCell key={`${cell}--${index}`} sx={{ padding: 2 }}>
+            <TableCell
+              key={`${cell}--${index}`}
+              sx={{ padding: 2, minWidth: "90px" }}
+            >
               {cell}
             </TableCell>
           ))}

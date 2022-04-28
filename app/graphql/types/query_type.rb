@@ -51,7 +51,7 @@ module Types
       argument :project_id, Int, required: true
       argument :limit, Int
       argument :finished, Boolean
-      argument :discarded, Boolean
+      argument :discarded, Boolean, required: false
     end
 
     field :me, Types::UserType, null: false
