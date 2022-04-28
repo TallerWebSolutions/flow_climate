@@ -310,7 +310,7 @@ RSpec.describe Types::QueryType do
         project = Fabricate :project, company: company, customers: [customer], products: [product], team: team, status: :executing, start_date: 4.days.ago, end_date: 1.day.from_now, max_work_in_progress: 2
         Fabricate :demand, company: company, project: project, team: team
         Fabricate :demand, project: project, effort_downstream: 200, effort_upstream: 10, end_date: 2.weeks.ago
-        finished_demand = Fabricate :demand, project: project, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago
+        finished_demand = Fabricate :demand, project: project, demand_type: :bug, created_date: 1.week.ago, commitment_date: 3.days.ago, end_date: 2.days.ago
         project_consolidation = Fabricate :project_consolidation, project: project, monte_carlo_weeks_min: 9, monte_carlo_weeks_max: 85, monte_carlo_weeks_std_dev: 7, team_based_operational_risk: 0.5
         demand = Fabricate :demand, company: company, project: project, team: team
         Fabricate :demand_block, demand: demand
@@ -391,6 +391,13 @@ RSpec.describe Types::QueryType do
             creationChartData
             pullTransactionRate
             throughputChartData
+          }
+          cumulativeFlowChartData {
+            xAxis
+            yAxis {
+              name
+              data
+            }
           }
         }
 
@@ -486,10 +493,14 @@ RSpec.describe Types::QueryType do
                                                       ],
                                                       'lastProjectConsolidationsWeekly' => nil,
                                                       'demandsFlowChartData' => {
-                                                        'committedChartData' => [0, 0],
+                                                        'committedChartData' => [0, 1],
                                                         'creationChartData' => [3, 0],
                                                         'pullTransactionRate' => [0, 0],
                                                         'throughputChartData' => [0, 1]
+                                                      },
+                                                      'cumulativeFlowChartData' => {
+                                                        'xAxis' => [4.days.ago.to_date.to_s, 3.days.from_now.to_date.to_s],
+                                                        'yAxis' => []
                                                       }
                                                     })
         expect(result.dig('data', 'projectConsolidations')).to eq([{
