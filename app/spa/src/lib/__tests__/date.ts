@@ -39,7 +39,7 @@ describe("formatDate", () => {
     const date = "2022-03-21T00:00:40-03:00"
 
     expect(formatDate({ date: date, format: "dd/MM/yyyy' às 'HH:mm" })).toBe(
-      "21/03/2022 às 00:00"
+      "21/03/2022 às 03:00"
     )
   })
 
@@ -47,7 +47,7 @@ describe("formatDate", () => {
     const date = "2022-03-21T00:00:40-03:00"
 
     expect(formatDate({ date: date, format: "dd/MM/yyyy' às 'HH:mm" })).toBe(
-      "21/03/2022 às 00:00"
+      "21/03/2022 às 03:00"
     )
   })
 })
