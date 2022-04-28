@@ -23,12 +23,29 @@ type ProjectChartsTableProps = {
   demands: Demand[]
 }
 
+type MountSearchLinkProps = {
+  companySlug: string
+  state: string
+  projectID: string
+}
+
+const mountDemandsSearchLink = ({
+  state,
+  projectID,
+  companySlug,
+}: MountSearchLinkProps) => {
+  return `/companies/${companySlug}/demands/demands_list_by_ids?demand_fitness=&demand_state=${state}&demand_type=&flow_object_id=${projectID}&object_type=Project`
+}
+
 export const ProjectChartsTable = ({
   project,
   demands,
 }: ProjectChartsTableProps) => {
   const { t } = useTranslation(["projectChart"])
   const [readMore, setReadMore] = useState(true)
+
+  const projectID = project.id
+  const companySlug = project.company.slug
 
   return (
     <Grid container spacing={2} sx={{ marginTop: "32px" }}>
@@ -131,7 +148,11 @@ export const ProjectChartsTable = ({
                     {t("project_chart_table.created_demands")}
                   </Box>
                   <Link
-                    href={"#"}
+                    href={mountDemandsSearchLink({
+                      projectID,
+                      companySlug,
+                      state: "created",
+                    })}
                     sx={{ color: "info.dark", textDecoration: "none" }}
                   >
                     {project.numberOfDemands}
@@ -155,7 +176,11 @@ export const ProjectChartsTable = ({
                 >
                   {t("project_chart_table.delivered_demands")}
                   <Link
-                    href={"#"}
+                    href={mountDemandsSearchLink({
+                      projectID,
+                      companySlug,
+                      state: "delivered",
+                    })}
                     sx={{ color: "info.dark", textDecoration: "none" }}
                   >
                     {project.numberOfDemandsDelivered}
@@ -179,7 +204,11 @@ export const ProjectChartsTable = ({
                 >
                   <Box component="span">{t("project_chart_table.backlog")}</Box>
                   <Link
-                    href={"#"}
+                    href={mountDemandsSearchLink({
+                      projectID,
+                      companySlug,
+                      state: "backlog",
+                    })}
                     sx={{ color: "info.dark", textDecoration: "none" }}
                   >
                     {project.remainingBacklog}
@@ -205,7 +234,11 @@ export const ProjectChartsTable = ({
                     {t("project_chart_table.upstream_demands")}
                   </Box>
                   <Link
-                    href={"#"}
+                    href={mountDemandsSearchLink({
+                      projectID,
+                      companySlug,
+                      state: "upstream",
+                    })}
                     sx={{ color: "info.dark", textDecoration: "none" }}
                   >
                     {project.upstreamDemands.length}
@@ -231,7 +264,11 @@ export const ProjectChartsTable = ({
                     {t("project_chart_table.downstream_demands")}
                   </Box>
                   <Link
-                    href={"#"}
+                    href={mountDemandsSearchLink({
+                      projectID,
+                      companySlug,
+                      state: "downstream",
+                    })}
                     sx={{ color: "info.dark", textDecoration: "none" }}
                   >
                     {project.numberOfDownstreamDemands}
@@ -255,7 +292,11 @@ export const ProjectChartsTable = ({
                 >
                   {t("project_chart_table.discarted_demands")}
                   <Link
-                    href={"#"}
+                    href={mountDemandsSearchLink({
+                      projectID,
+                      companySlug,
+                      state: "discarded",
+                    })}
                     sx={{ color: "info.dark", textDecoration: "none" }}
                   >
                     {project.discardedDemands.length}
@@ -279,7 +320,11 @@ export const ProjectChartsTable = ({
                 >
                   {t("project_chart_table.unscored_demands")}
                   <Link
-                    href={"#"}
+                    href={mountDemandsSearchLink({
+                      projectID,
+                      companySlug,
+                      state: "unscored",
+                    })}
                     sx={{ color: "info.dark", textDecoration: "none" }}
                   >
                     {project.unscoredDemands.length}
@@ -303,7 +348,9 @@ export const ProjectChartsTable = ({
                 >
                   {t("project_chart_table.blocked_demands")}
                   <Link
-                    href={"#"}
+                    href={`/companies/${companySlug}/demand_blocks/search?demand_blocks_ids=${project.demandBlocks
+                      .map((el) => el.id)
+                      .join()}`}
                     sx={{ color: "info.dark", textDecoration: "none" }}
                   >
                     {project.demandBlocks.length}
