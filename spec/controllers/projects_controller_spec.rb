@@ -1178,6 +1178,20 @@ RSpec.describe ProjectsController, type: :controller do
       end
     end
 
+    describe 'GET #financial_report' do
+      let!(:project) { Fabricate :project, company: company }
+
+      context 'passing valid parameters' do
+        context 'with no search parameters' do
+          it 'retrieves all the projects to the company' do
+            get :financial_report, params: { company_id: company, id: project }
+
+            expect(response).to render_template 'spa-build/index'
+          end
+        end
+      end
+    end
+
     describe 'GET #tasks_tab' do
       let(:project) { Fabricate :project, company: company, customers: [customer] }
 
