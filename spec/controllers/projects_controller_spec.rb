@@ -106,6 +106,12 @@ RSpec.describe ProjectsController, type: :controller do
       it { expect(response).to redirect_to new_user_session_path }
     end
 
+    describe 'GET #financial_report' do
+      before { get :financial_report, params: { company_id: 'foo', id: 'bar' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
+
     describe 'GET #search_projects_by_team' do
       before { get :search_projects_by_team, params: { company_id: 'foo' } }
 
