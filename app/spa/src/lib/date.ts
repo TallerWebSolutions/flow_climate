@@ -2,6 +2,7 @@ import {
   format as dateFnsFormat,
   formatDuration,
   intervalToDuration,
+  parseISO,
   secondsToMilliseconds,
 } from "date-fns"
 import { ptBR } from "date-fns/locale"
@@ -40,16 +41,16 @@ export const secondsToReadbleDate = (
 }
 
 type FormatDateProps = {
-  date: string | Date
+  date: string
   format: string
 }
 
 export const formatDate = ({ date, format }: FormatDateProps) => {
-  return dateFnsFormat(new Date(date), format)
+  return dateFnsFormat(parseISO(date), format)
 }
 
-export const toISOFormat = (date: string | Date): string => {
-  return new Date(date).toISOString()
+export const toISOFormat = (date: string): string => {
+  return parseISO(date).toISOString()
 }
 
 export const secondsToDays = (seconds: number): number => {
