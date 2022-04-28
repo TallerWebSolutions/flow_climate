@@ -45,12 +45,7 @@ type FormatDateProps = {
 }
 
 export const formatDate = ({ date, format }: FormatDateProps) => {
-  // Safari does not recognize dates with the format "yyyy-MM-dd"
-  // @see https://stackoverflow.com/a/5646753/4764960
-  const dateToFormat = typeof date === "string" ? date.replace(/-/g, "/") : date
-  // eslint-disable-next-line no-console
-  console.log({ dateToFormat })
-  return dateFnsFormat(new Date(dateToFormat), format)
+  return dateFnsFormat(new Date(date), format)
 }
 
 export const toISOFormat = (date: string | Date): string => {

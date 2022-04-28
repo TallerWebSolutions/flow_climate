@@ -9,7 +9,7 @@ module Types
     field :project, Types::ProjectType, null: false
     field :demand_title, String, null: false
     field :leadtime, Float, null: true
-    field :end_date, String, null: true
+    field :end_date, GraphQL::Types::ISO8601DateTime, null: true
 
     field :number_of_blocks, Int, null: false
     field :product, Types::ProductType, null: true
