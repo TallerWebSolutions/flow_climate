@@ -20,5 +20,6 @@ export const Primary: ComponentStory<typeof Table> = () => (
     title="Clothes"
     headerCells={["Name", "Price", "Quantity"]}
     rows={rows}
+    footerCells={["Total", "", "39"]}
   />
 )

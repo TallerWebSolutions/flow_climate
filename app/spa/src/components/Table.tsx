@@ -7,6 +7,7 @@ import {
   TableRow,
   TableCell,
   Paper,
+  TableFooter,
 } from "@mui/material"
 import { ReactElement } from "react"
 
@@ -16,11 +17,12 @@ type Row = Cell[]
 
 type TableProps = {
   title: string
-  headerCells: string[]
+  headerCells: Cell[]
   rows: Row[]
+  footerCells?: Cell[]
 }
 
-const Table = ({ title, headerCells, rows }: TableProps) => (
+const Table = ({ title, headerCells, rows, footerCells }: TableProps) => (
   <TableContainer component={Paper} sx={{ background: "white" }}>
     <Typography
       color="primary"
@@ -46,7 +48,7 @@ const Table = ({ title, headerCells, rows }: TableProps) => (
             key={`${row[0]}--${index}`}
             sx={{
               borderBottom: "1px solid",
-              borderBottomColor: "#ccc",
+              borderBottomColor: "grey.200",
             }}
           >
             {row.map((cell, index) => (
@@ -57,6 +59,17 @@ const Table = ({ title, headerCells, rows }: TableProps) => (
           </TableRow>
         ))}
       </TableBody>
+      {footerCells && (
+        <TableFooter>
+          <TableRow>
+            {footerCells.map((cell, index) => (
+              <TableCell key={`${cell}--${index}`} sx={{ padding: 2 }}>
+                {cell}
+              </TableCell>
+            ))}
+          </TableRow>
+        </TableFooter>
+      )}
     </MUITable>
   </TableContainer>
 )
