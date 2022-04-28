@@ -507,9 +507,6 @@ const ProjectCharts = () => {
     }
   )
 
-  // eslint-disable-next-line no-console
-  console.log(data)
-
   return (
     <ProjectPage pageName={t("charts")}>
       <ProjectChartsTable project={project} demands={demands} />
@@ -572,43 +569,6 @@ const ProjectCharts = () => {
             ),
           }}
         />
-
-        <Grid item xs={6} sx={{ padding: "8px" }}>
-          <Box sx={{ height: "350px" }}>
-            <Typography>{t("project_charts.hours_consumed_chart")}</Typography>
-
-            <BarChart
-              data={projectHoursConsummed}
-              props={{
-                groupMode: "grouped",
-                keys: [
-                  t("project_charts.hours_consumed_upstream"),
-                  t("project_charts.hours_consumed_downstream"),
-                  t("project_charts.hours_consumed_total_throughput"),
-                ],
-                indexBy: t("project_charts.hours_consumed_x_label"),
-                margin: { top: 50, right: 60, bottom: 65, left: 60 },
-                padding: 0.3,
-                axisLeft: {
-                  tickSize: 5,
-                  tickPadding: 5,
-                  tickRotation: 0,
-                  legend: t("project_charts.hours_consumed_y_label"),
-                  legendPosition: "middle",
-                  legendOffset: -55,
-                },
-                axisBottom: {
-                  tickSize: 5,
-                  tickPadding: 5,
-                  legend: t("project_charts.hours_consumed_x_label"),
-                  legendPosition: "middle",
-                  legendOffset: 60,
-                  tickRotation: -40,
-                },
-              }}
-            />
-          </Box>
-        </Grid>
 
         <Grid item xs={6} sx={{ padding: "8px" }}>
           <Box sx={{ height: "350px" }}>
@@ -871,6 +831,43 @@ const ProjectCharts = () => {
             ),
           }}
         />
+
+        <Grid item xs={6} sx={{ padding: "8px" }}>
+          <Box sx={{ height: "350px" }}>
+            <Typography>{t("project_charts.hours_consumed_chart")}</Typography>
+
+            <BarChart
+              data={projectHoursConsummed}
+              props={{
+                groupMode: "grouped",
+                keys: [
+                  t("project_charts.hours_consumed_upstream"),
+                  t("project_charts.hours_consumed_downstream"),
+                  t("project_charts.hours_consumed_total_throughput"),
+                ],
+                indexBy: t("project_charts.hours_consumed_x_label"),
+                margin: { top: 50, right: 60, bottom: 65, left: 60 },
+                padding: 0.3,
+                axisLeft: {
+                  tickSize: 5,
+                  tickPadding: 5,
+                  tickRotation: 0,
+                  legend: t("project_charts.hours_consumed_y_label"),
+                  legendPosition: "middle",
+                  legendOffset: -55,
+                },
+                axisBottom: {
+                  tickSize: 5,
+                  tickPadding: 5,
+                  legend: t("project_charts.hours_consumed_x_label"),
+                  legendPosition: "middle",
+                  legendOffset: 60,
+                  tickRotation: -40,
+                },
+              }}
+            />
+          </Box>
+        </Grid>
 
         <Grid item xs={6} sx={{ padding: "8px" }}>
           <Box sx={{ height: "350px" }}>

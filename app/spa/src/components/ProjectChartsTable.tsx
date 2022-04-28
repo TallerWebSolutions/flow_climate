@@ -13,7 +13,7 @@ import {
 } from "@mui/material"
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
-import { formatDate, secondsToReadbleDate } from "../lib/date"
+import { formatDate, secondsToDays, secondsToReadbleDate } from "../lib/date"
 import { Demand } from "../modules/demand/demand.types"
 import { Project } from "../modules/project/project.types"
 import { ReadMoreButton } from "./ReadMoreButton"
@@ -325,8 +325,9 @@ export const ProjectChartsTable = ({
                     justifyContent: "space-between",
                   }}
                 >
-                  {t("project_chart_table.flow_pressure")}
-                  {`${secondsToReadbleDate(project.flowPressure, "demandas/")}`}
+                  {t("project_chart_table.flow_pressure", {
+                    time: secondsToReadbleDate(project.flowPressure),
+                  })}
                 </TableCell>
               </TableRow>
               <TableRow
@@ -344,8 +345,9 @@ export const ProjectChartsTable = ({
                     justifyContent: "space-between",
                   }}
                 >
-                  {t("project_chart_table.average_speed")}
-                  {`${project.averageSpeed.toFixed(3)} demandas/dia`}
+                  {t("project_chart_table.average_speed", {
+                    numberOfDemandsPerDay: project.averageSpeed.toFixed(3),
+                  })}
                 </TableCell>
               </TableRow>
               <TableRow
@@ -363,8 +365,9 @@ export const ProjectChartsTable = ({
                     justifyContent: "space-between",
                   }}
                 >
-                  {t("project_chart_table.average_queue_time")}
-                  {`${project.averageQueueTime.toFixed(2)} horas`}
+                  {t("project_chart_table.average_queue_time", {
+                    time: secondsToDays(project.averageQueueTime).toFixed(2),
+                  })}
                 </TableCell>
               </TableRow>
               <TableRow
@@ -382,8 +385,9 @@ export const ProjectChartsTable = ({
                     justifyContent: "space-between",
                   }}
                 >
-                  {t("project_chart_table.average_work_time")}
-                  {`${project.averageTouchTime.toFixed(2)} horas`}
+                  {t("project_chart_table.average_work_time", {
+                    time: secondsToDays(project.averageTouchTime).toFixed(2),
+                  })}
                 </TableCell>
               </TableRow>
               <TableRow
@@ -402,7 +406,7 @@ export const ProjectChartsTable = ({
                   }}
                 >
                   {t("project_chart_table.lead_time_p95", {
-                    days: project.leadTimeP95.toFixed(2),
+                    days: secondsToDays(project.leadTimeP95).toFixed(2),
                   })}
                 </TableCell>
               </TableRow>
@@ -422,7 +426,7 @@ export const ProjectChartsTable = ({
                   }}
                 >
                   {t("project_chart_table.lead_time_p80", {
-                    days: project.leadTimeP80.toFixed(2),
+                    days: secondsToDays(project.leadTimeP80).toFixed(2),
                   })}
                 </TableCell>
               </TableRow>
@@ -442,7 +446,7 @@ export const ProjectChartsTable = ({
                   }}
                 >
                   {t("project_chart_table.lead_time_p65", {
-                    days: project.leadTimeP65.toFixed(2),
+                    days: secondsToDays(project.leadTimeP65).toFixed(2),
                   })}
                 </TableCell>
               </TableRow>
