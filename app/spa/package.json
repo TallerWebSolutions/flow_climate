@@ -45,7 +45,7 @@
     "start": "react-scripts start",
     "build": "PUBLIC_URL=/spa-build react-scripts build",
     "build:watch": "npm run watch build",
-    "test": "react-scripts test",
+    "test": "TZ=UTC-3 react-scripts test",
     "eject": "react-scripts eject",
     "type-check": "tsc --pretty --noEmit",
     "lint": "eslint . --ext ts --ext tsx",
