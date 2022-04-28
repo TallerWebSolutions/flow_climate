@@ -11,6 +11,7 @@ import i18n, { loadLanguage } from "./lib/i18n"
 import ThemeProvider from "./lib/ThemeProvider"
 import LeadTimeDashboard from "./pages/LeadTimeDashboard"
 import ProjectCharts from "./pages/ProjectCharts"
+import ProjectFinancialReport from "./pages/ProjectFinancialReport"
 import Replenishing from "./pages/Replenishing"
 import RiskDrill from "./pages/RiskDrill"
 import Statistics from "./pages/Statistics"
@@ -51,16 +52,12 @@ const App = () => {
       <BrowserRouter>
         <Routes>
           <Route
-            path="/companies/:companyNickName/teams/:teamId/replenishing_consolidations"
-            element={<Replenishing />}
+            path="/companies/:companyNickName/projects/:projectId"
+            element={<ProjectCharts />}
           />
           <Route
             path="/companies/:companyNickName/projects/:projectId/status_report_dashboard"
             element={<StatusReport />}
-          />
-          <Route
-            path="/companies/:companyNickName/projects/:projectId"
-            element={<ProjectCharts />}
           />
           <Route
             path="/companies/:companyNickName/projects/:projectId/risk_drill_down"
@@ -74,6 +71,10 @@ const App = () => {
             path="/companies/:companyNickName/projects/:projectId/statistics_tab"
             element={<Statistics />}
           />
+          <Route
+            path="/companies/:companyNickName/projects/:projectId/financial_report"
+            element={<ProjectFinancialReport />}
+          />
           <Route path="/companies/:companyNickName/teams" element={<Teams />} />
           <Route
             path="/companies/:companyNickName/teams/new"
@@ -82,6 +83,10 @@ const App = () => {
           <Route
             path="/companies/:companyNickName/teams/:teamId/edit"
             element={<EditTeam />}
+          />
+          <Route
+            path="/companies/:companyNickName/teams/:teamId/replenishing_consolidations"
+            element={<Replenishing />}
           />
           <Route
             path="/companies/:companyNickName/tasks"

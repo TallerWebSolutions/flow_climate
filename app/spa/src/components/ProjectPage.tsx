@@ -1,14 +1,15 @@
 import { gql, useMutation } from "@apollo/client"
-import { Box } from "@mui/material"
+import { useParams } from "react-router-dom"
+import { Box, Backdrop, CircularProgress } from "@mui/material"
 import { ReactElement, useContext } from "react"
 import { useTranslation } from "react-i18next"
 import { useLocation } from "react-router-dom"
 import { MessagesContext } from "../contexts/MessageContext"
-import { Project } from "../modules/project/project.types"
+import useProjectInfo from "../hooks/useProjectInfo"
 import BasicPage from "./BasicPage"
 import Card, { CardType } from "./Card"
 import ActionMenu from "./menu/ActionMenu"
-import { Tab, Tabs } from "./Tabs"
+import { Tabs } from "./Tabs"
 
 export const PROJECT_STANDARD_FRAGMENT = gql`
   fragment ProjectStandardFragment on Project {
@@ -23,9 +24,7 @@ export const PROJECT_STANDARD_FRAGMENT = gql`
 `
 
 type ProjectPageProps = {
-  tabs?: Tab[]
   pageName: string
-  project: Project
   children: ReactElement | ReactElement[]
 }
 
@@ -55,19 +54,38 @@ type ProjectCacheResult = {
 
 type ProjectCacheDTO = ProjectCacheResult | undefined
 
-export const ProjectPage = ({
-  project,
-  pageName,
-  children,
-}: ProjectPageProps) => {
+export const ProjectPage = ({ pageName, children }: ProjectPageProps) => {
   const { pathname } = useLocation()
   const { t } = useTranslation(["generalProjectPage"])
-  const projectId = project.id
-  const projectIsRugging = project.running
-  const projectName = project.name || ""
-  const company = project.company || ""
-  const companyName = company.name || ""
-  const companySlug = company.slug
+  const { pushMessage } = useContext(MessagesContext)
+  const [generateProjectCache] = useMutation<ProjectCacheDTO>(
+    GENERATE_PROJECT_MUTATION,
+    {
+      update: () =>
+        pushMessage({
+          text: "Sua solicitação foi colocada na fila. Em poucos minutos estará pronta.",
+          severity: "info",
+        }),
+    }
+  )
+  const params = useParams()
+  const projectId = params.projectId
+  const { projectInfo, loading } = useProjectInfo(Number(projectId))
+
+  if (loading)
+    return (
+      <Backdrop open>
+        <CircularProgress color="secondary" />
+      </Backdrop>
+    )
+
+  if (!projectInfo) return <strong>No project found</strong>
+
+  const projectIsRunning = projectInfo.running
+  const projectName = projectInfo.name || ""
+  const company = projectInfo.company
+  const companyName = company?.name || ""
+  const companySlug = company?.slug
   const breadcrumbsLinks = [
     { name: companyName, url: `/companies/${companySlug}` },
     { name: "Projetos", url: `/companies/${companySlug}/projects` },
@@ -100,35 +118,28 @@ export const ProjectPage = ({
       label: "Lead time dashboard",
       to: `/companies/${companySlug}/projects/${projectId}/lead_time_dashboard`,
     },
+    {
+      label: "Relatório financeiro",
+      to: `/companies/${companySlug}/projects/${projectId}/financial_report`,
+    },
   ]
 
-  const currentOperationalRisk = project.currentRiskToDeadline
+  const currentOperationalRisk = projectInfo.currentRiskToDeadline
   const currentRiskToDeadlinePercentage = (
     currentOperationalRisk * 100
   ).toFixed(2)
-  const remainingDays = project.remainingDays
-  const currentTeamRisk = project.currentTeamBasedRisk
+  const remainingDays = projectInfo.remainingDays
+  const currentTeamRisk = projectInfo.currentTeamBasedRisk
   const currentTeamRiskPercentage = (currentTeamRisk * 100).toFixed(2)
   const cardTypeTeamRisk = assignCardTypeByRisk(currentTeamRisk)
   const cardTypeOperationalRisk = assignCardTypeByRisk(currentOperationalRisk)
-  const { pushMessage } = useContext(MessagesContext)
-  const [generateProjectCache] = useMutation<ProjectCacheDTO>(
-    GENERATE_PROJECT_MUTATION,
-    {
-      update: () =>
-        pushMessage({
-          text: "Sua solicitação foi colocada na fila. Em poucos minutos estará pronta.",
-          severity: "info",
-        }),
-    }
-  )
 
   const actions = [
     {
       name: "Atualizar Cache",
       onClick: () =>
         generateProjectCache({
-          variables: { projectId: project.id },
+          variables: { projectId },
         }),
     },
     {
@@ -161,7 +172,7 @@ export const ProjectPage = ({
       actions={<ActionMenu items={actions} />}
     >
       <>
-        {projectIsRugging && (
+        {projectIsRunning && (
           <Box sx={{ display: "flex", my: 2 }}>
             <Card
               style={{ width: "350px", marginRight: "20px" }}

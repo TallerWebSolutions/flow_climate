@@ -216,6 +216,7 @@ Rails.application.routes.draw do
         get :status_report_dashboard
         get :lead_time_dashboard
         get :statistics_tab
+        get :financial_report
 
         patch :copy_stages_from
         patch :finish_project

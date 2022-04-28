@@ -29,7 +29,7 @@ import { buildPercentileYAxisMarker } from "./Tasks/Charts"
 
 const LIMIT_DEMANDS_PER_PAGE = 10
 
-export const PROJECT_CHART_QUERY = gql`
+const PROJECT_CHART_QUERY = gql`
   query ProjectCharts($projectId: Int!, $limit: Int!) {
     project(id: $projectId) {
       ...ProjectStandardFragment
@@ -487,7 +487,7 @@ const ProjectCharts = () => {
   )
 
   return (
-    <ProjectPage pageName={t("charts")} project={project}>
+    <ProjectPage pageName={t("charts")}>
       <ProjectChartsTable project={project} demands={demands} />
 
       <Grid container spacing={2} rowSpacing={8} sx={{ marginTop: "32px" }}>

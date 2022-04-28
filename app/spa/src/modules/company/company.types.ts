@@ -6,7 +6,7 @@ export type Company = {
   id: string
   name: string
   slug: string
-  initiatives: Initiative[]
-  projects: Project[]
-  teams: Team[]
+  initiatives?: Initiative[]
+  projects?: Project[]
+  teams?: Team[]
 }

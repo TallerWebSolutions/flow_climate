@@ -133,7 +133,7 @@ const StatusReport = () => {
   ]
 
   return (
-    <ProjectPage pageName={"Status Report"} project={project}>
+    <ProjectPage pageName={"Status Report"}>
       <TicketGroup title="Números atuais" data={currentNumbersData} />
       <TicketGroup title="Mudanças no prazo" data={deadlineChangesData} />
       <TicketGroup title="Fluxo" data={flowData} />

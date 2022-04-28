@@ -167,6 +167,11 @@ class ProjectsController < AuthenticatedController
     render 'spa-build/index'
   end
 
+  def financial_report
+    prepend_view_path Rails.root.join('public')
+    render 'spa-build/index'
+  end
+
   def tasks_tab
     start_date = @project.start_date
     end_date = @project.end_date

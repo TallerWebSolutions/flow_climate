@@ -150,7 +150,7 @@ export const RiskDrill = () => {
   ]
 
   return (
-    <ProjectPage pageName={"Risk Drill"} project={project}>
+    <ProjectPage pageName={"Risk Drill"}>
       <TicketGroup
         title="Fluxo das últimas 10 semanas"
         data={flowLastFewWeeks}

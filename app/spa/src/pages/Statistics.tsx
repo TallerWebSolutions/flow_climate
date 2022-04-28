@@ -223,7 +223,7 @@ const Statistics = () => {
     )
 
   return (
-    <ProjectPage pageName={"Statistics"} project={project}>
+    <ProjectPage pageName={"Statistics"}>
       <Box sx={{ display: "flex", flexWrap: "wrap" }}>
         <GraphBox title={"Variação da Amplitude do Lead Time no Tempo"}>
           <LineChart

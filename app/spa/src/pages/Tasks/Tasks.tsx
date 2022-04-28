@@ -266,7 +266,7 @@ const TasksPage = ({ initialTab = 1 }: TasksPageProps) => {
               label={t("filter.initiative")}
               id="filter-initiative"
               defaultValue=""
-              items={initiatives}
+              items={initiatives || []}
               value={taskFilters.initiativeId}
               onChange={(event) => handleSelectFilters(event, "initiativeId")}
             />
@@ -274,7 +274,7 @@ const TasksPage = ({ initialTab = 1 }: TasksPageProps) => {
               label={t("filter.project")}
               id="filter-project"
               defaultValue=""
-              items={projects}
+              items={projects || []}
               inputProps={{
                 "data-testid": "select-project",
               }}
@@ -285,7 +285,7 @@ const TasksPage = ({ initialTab = 1 }: TasksPageProps) => {
               label={t("filter.team")}
               id="filter-team"
               defaultValue=""
-              items={teams}
+              items={teams || []}
               value={taskFilters.teamId}
               onChange={(event) => handleSelectFilters(event, "teamId")}
             />

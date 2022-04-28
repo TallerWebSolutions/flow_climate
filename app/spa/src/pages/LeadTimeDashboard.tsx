@@ -137,7 +137,7 @@ const LeadTimeDashboard = () => {
   ]
 
   return (
-    <ProjectPage pageName={"Lead Time Dashboard"} project={project}>
+    <ProjectPage pageName={"Lead Time Dashboard"}>
       <TicketGroup title="Leadtime" data={currentLeadTime} />
       <TicketGroup
         title="Leadtime por tipo - 80%"
