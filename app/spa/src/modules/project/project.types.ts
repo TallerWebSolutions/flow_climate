@@ -93,4 +93,8 @@ export type Project = {
       data: number[]
     }[]
   }
+  leadTimeHistogramData: {
+    keys: number[]
+    values: number[]
+  }
 }

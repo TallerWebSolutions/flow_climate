@@ -80,6 +80,7 @@ module Types
     field :hours_per_stage_chart_data, Types::Charts::HoursPerStageChartType, null: true
     field :cumulative_flow_chart_data, Types::Charts::CumulativeFlowChartType, null: true
     field :demands_flow_chart_data, Types::Charts::DemandsFlowChartDataType, null: true
+    field :lead_time_histogram_data, Types::Charts::LeadTimeHistogramDataType, null: true
     delegate :remaining_backlog, to: :object
     delegate :remaining_weeks, to: :object
     delegate :flow_pressure, to: :object
@@ -87,7 +88,7 @@ module Types
     delegate :team_monte_carlo_p80, to: :object
     delegate :team_monte_carlo_weeks_max, to: :object
     delegate :team_monte_carlo_weeks_min, to: :object
-    delegate :team_based_odds_to_deadline, to: :object
+    delegate :team_based_odds_to_deadline, to: :object    
 
     def unscored_demands
       object.demands.kept.unscored_demands
@@ -217,6 +218,10 @@ module Types
       start_date = object.start_date
       end_date = [object.end_date, Time.zone.today].min
       Highchart::DemandsChartsAdapter.new(object.demands.kept, start_date, end_date, 'week')
+    end
+
+    def lead_time_histogram_data
+      Stats::StatisticsService.instance.leadtime_histogram_hash(demands_finished_with_leadtime.map(&:leadtime))
     end
   end
   # rubocop:enable Metrics/ClassLength

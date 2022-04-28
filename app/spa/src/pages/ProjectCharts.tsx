@@ -65,6 +65,11 @@ const PROJECT_CHART_QUERY = gql`
       leadTimeP80
       leadTimeP95
 
+      leadTimeHistogramData {
+        keys
+        values
+      }
+
       demandsFlowChartData {
         creationChartData
         committedChartData
@@ -207,6 +212,7 @@ const ProjectCharts = () => {
   const lastProjectConsolidationsWeekly =
     project?.lastProjectConsolidationsWeekly
   const demandsFlowChartData = project?.demandsFlowChartData
+  const leadTimeHistogramData = project?.leadTimeHistogramData
   const hoursPerStageChartData = project?.hoursPerStageChartData
   const cumulativeFlowChartData = project?.cumulativeFlowChartData
   const demands = data?.demands!
@@ -272,6 +278,20 @@ const ProjectCharts = () => {
           demandsFlowChartData.pullTransactionRate[index],
         [t("project_charts.flow_data_delivered")]:
           demandsFlowChartData.throughputChartData[index],
+      }
+    })
+
+  const projectLeadTimeHistogramData: BarDatum[] =
+    leadTimeHistogramData.keys.map((el, index) => {
+      const projectLeadTimeHistogramDataKeysInDays =
+        secondsToDays(el).toFixed(2)
+
+      return {
+        index,
+        [t("project_charts.lead_time_histogram_chart_x_label")]:
+          projectLeadTimeHistogramDataKeysInDays,
+        [t("project_charts.lead_time_histogram_chart_y_label")]:
+          leadTimeHistogramData.values[index],
       }
     })
 
@@ -747,6 +767,41 @@ const ProjectCharts = () => {
             />
           </Box>
         </Grid>
+
+        <Grid item xs={6} sx={{ padding: "8px" }}>
+          <Box sx={{ height: "350px" }}>
+            <Typography>
+              {t("project_charts.lead_time_histogram_chart")}
+            </Typography>
+
+            <BarChart
+              data={projectLeadTimeHistogramData}
+              props={{
+                groupMode: "grouped",
+                keys: [t("project_charts.lead_time_histogram_chart_hits")],
+                indexBy: t("project_charts.lead_time_histogram_chart_x_label"),
+                margin: { top: 50, right: 60, bottom: 65, left: 60 },
+                padding: 0.3,
+                axisLeft: {
+                  tickSize: 5,
+                  tickPadding: 5,
+                  tickRotation: 0,
+                  legend: t("project_charts.lead_time_histogram_chart_y_label"),
+                  legendPosition: "middle",
+                  legendOffset: -55,
+                },
+                axisBottom: {
+                  tickSize: 5,
+                  tickPadding: 5,
+                  legend: t("project_charts.lead_time_histogram_chart_x_label"),
+                  legendPosition: "middle",
+                  legendOffset: 60,
+                },
+              }}
+            />
+          </Box>
+        </Grid>
+
         <ChartLineBox
           title={t("project_charts.quality_bugs_chart")}
           data={projectQualityChartData}

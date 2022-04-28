@@ -97,6 +97,10 @@ export const companyMock: Company = {
         pullTransactionRate: [],
         throughputChartData: [],
       },
+      leadTimeHistogramData: {
+        keys: [],
+        values: [],
+      },
     },
   ],
   teams: [],
@@ -182,6 +186,10 @@ export const projectMock: Project = {
     committedChartData: [],
     pullTransactionRate: [],
     throughputChartData: [],
+  },
+  leadTimeHistogramData: {
+    keys: [],
+    values: [],
   },
 }
 
