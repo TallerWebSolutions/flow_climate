@@ -3,11 +3,9 @@ import {
   Grid,
   Link,
   Paper,
-  Table,
-  TableBody,
+  Table as MUITable,
   TableCell,
   TableContainer,
-  TableHead,
   TableRow,
   Typography,
 } from "@mui/material"
@@ -17,6 +15,7 @@ import { formatDate, secondsToDays, secondsToReadbleDate } from "../lib/date"
 import { Demand } from "../modules/demand/demand.types"
 import { Project } from "../modules/project/project.types"
 import { ReadMoreButton } from "./ReadMoreButton"
+import Table from "./Table"
 
 type ProjectChartsTableProps = {
   project: Project
@@ -47,6 +46,45 @@ export const ProjectChartsTable = ({
   const projectID = project.id
   const companySlug = project.company.slug
 
+  const latestDeliveriesHeaderCells = [
+    t("project_chart_table.client"),
+    t("project_chart_table.product"),
+    t("project_chart_table.demand_id"),
+    t("project_chart_table.delivery_date"),
+    t("project_chart_table.leadtime"),
+    t("project_chart_table.demand_blocks"),
+  ]
+
+  const baseLink = `/companies/${project?.company?.slug}`
+  const latestDeliveriesRows = demands.map((demand) => {
+    return [
+      <Link
+        href={`${baseLink}/projects/${project.id}`}
+        sx={{ color: "info.dark", textDecoration: "none" }}
+      >
+        {demand.customer.name}
+      </Link>,
+      <Link
+        href={`${baseLink}/products/${demand.product.id}`}
+        sx={{ color: "info.dark", textDecoration: "none" }}
+      >
+        {demand.product.name}
+      </Link>,
+      <Link
+        href={`${baseLink}/demands/${demand.externalId}`}
+        sx={{ color: "info.dark", textDecoration: "none" }}
+      >
+        {demand.externalId}
+      </Link>,
+      formatDate({
+        date: demand.endDate,
+        format: "dd/MM/yyyy' 'HH:mm:ss",
+      }),
+      secondsToReadbleDate(demand.leadtime),
+      demand.numberOfBlocks,
+    ]
+  })
+
   return (
     <Grid container spacing={2} sx={{ marginTop: "32px" }}>
       <Grid item xs={4} sx={{ padding: "16px " }}>
@@ -66,7 +104,7 @@ export const ProjectChartsTable = ({
               overflow: readMore ? "hidden" : "",
             }}
           >
-            <Table>
+            <MUITable>
               <TableRow
                 sx={{
                   borderBottom: "1px solid",
@@ -497,7 +535,7 @@ export const ProjectChartsTable = ({
                   })}
                 </TableCell>
               </TableRow>
-            </Table>
+            </MUITable>
             {readMore && (
               <ReadMoreButton
                 handleDisplayPostContent={() => setReadMore(false)}
@@ -508,89 +546,11 @@ export const ProjectChartsTable = ({
       </Grid>
 
       <Grid item xs={8} sx={{ padding: "16px " }}>
-        <TableContainer component={Paper} sx={{ background: "white" }}>
-          <Typography
-            color="primary"
-            variant="h6"
-            component="h6"
-            sx={{ padding: "16px " }}
-          >
-            {t("project_chart_table.latest_deliveries")}
-          </Typography>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>{t("project_chart_table.client")}</TableCell>
-                <TableCell align="left">
-                  {t("project_chart_table.product")}
-                </TableCell>
-                <TableCell align="left">
-                  {t("project_chart_table.demand_id")}
-                </TableCell>
-                <TableCell align="left">
-                  {t("project_chart_table.delivery_date")}
-                </TableCell>
-                <TableCell align="left">
-                  {t("project_chart_table.leadtime")}
-                </TableCell>
-                <TableCell align="left">
-                  {t("project_chart_table.demand_blocks")}
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {demands.map((demand) => {
-                const baseLink = `/companies/${project?.company?.slug}`
-
-                return (
-                  <TableRow
-                    sx={{
-                      borderBottom: "1px solid",
-                      borderBottomColor: "#ccc",
-                    }}
-                  >
-                    <TableCell align="left" sx={{ padding: "16px" }}>
-                      <Link
-                        href={`${baseLink}/projects/${project.id}`}
-                        sx={{ color: "info.dark", textDecoration: "none" }}
-                      >
-                        {demand.customer.name}
-                      </Link>
-                    </TableCell>
-                    <TableCell align="left" sx={{ padding: "16px" }}>
-                      <Link
-                        href={`${baseLink}/products/${demand.product.id}`}
-                        sx={{ color: "info.dark", textDecoration: "none" }}
-                      >
-                        {demand.product.name}
-                      </Link>
-                    </TableCell>
-                    <TableCell align="left" sx={{ padding: "16px" }}>
-                      <Link
-                        href={`${baseLink}/demands/${demand.externalId}`}
-                        sx={{ color: "info.dark", textDecoration: "none" }}
-                      >
-                        {demand.externalId}
-                      </Link>
-                    </TableCell>
-                    <TableCell align="left" sx={{ padding: "16px" }}>
-                      {formatDate({
-                        date: demand.endDate,
-                        format: "dd/MM/yyyy' 'HH:mm:ss",
-                      })}
-                    </TableCell>
-                    <TableCell align="left" sx={{ padding: "16px" }}>
-                      {secondsToReadbleDate(demand.leadtime)}
-                    </TableCell>
-                    <TableCell align="left" sx={{ padding: "16px" }}>
-                      {demand.numberOfBlocks}
-                    </TableCell>
-                  </TableRow>
-                )
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <Table
+          title={t("project_chart_table.latest_deliveries")}
+          headerCells={latestDeliveriesHeaderCells}
+          rows={latestDeliveriesRows}
+        />
       </Grid>
     </Grid>
   )
