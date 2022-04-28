@@ -308,12 +308,12 @@ RSpec.describe Types::QueryType do
         customer = Fabricate :customer, company: company
         product = Fabricate :product, company: company, customer: customer
         project = Fabricate :project, company: company, customers: [customer], products: [product], team: team, status: :executing, start_date: 4.days.ago, end_date: 1.day.from_now, max_work_in_progress: 2
-        demand = Fabricate :demand, company: company, project: project, team: team
         Fabricate :demand, company: company, project: project, team: team
         Fabricate :demand, project: project, effort_downstream: 200, effort_upstream: 10, end_date: 2.weeks.ago
         finished_demand = Fabricate :demand, project: project, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago
-        Fabricate :demand_block, demand: demand
         project_consolidation = Fabricate :project_consolidation, project: project, monte_carlo_weeks_min: 9, monte_carlo_weeks_max: 85, monte_carlo_weeks_std_dev: 7, team_based_operational_risk: 0.5
+        demand = Fabricate :demand, company: company, project: project, team: team
+        Fabricate :demand_block, demand: demand
 
         query =
           %(query {
@@ -394,10 +394,6 @@ RSpec.describe Types::QueryType do
           }
         }
 
-        demands(projectId: #{project.id}, limit: 1, finished: false) {
-          numberOfBlocks
-        }
-
         projectConsolidations(projectId: #{project.id}) {
           id
           leadTimeHistogramBinMin
@@ -424,10 +420,6 @@ RSpec.describe Types::QueryType do
                                                    'imageSource' => user.avatar.url
                                                  }
                                                })
-
-        expect(result.dig('data', 'demands')).to eq([{
-                                                      'numberOfBlocks' => 1
-                                                    }])
 
         expect(result.dig('data', 'project')).to eq({
                                                       'id' => project.id.to_s,
@@ -494,7 +486,7 @@ RSpec.describe Types::QueryType do
                                                       ],
                                                       'lastProjectConsolidationsWeekly' => nil,
                                                       'demandsFlowChartData' => {
-                                                        'committedChartData' => [1, 0],
+                                                        'committedChartData' => [0, 0],
                                                         'creationChartData' => [3, 0],
                                                         'pullTransactionRate' => [0, 0],
                                                         'throughputChartData' => [0, 1]
@@ -510,6 +502,41 @@ RSpec.describe Types::QueryType do
                                                                     'leadTimeP25' => 0.0,
                                                                     'leadTimeP75' => 0.0
                                                                   }])
+      end
+    end
+  end
+
+  describe '#demands' do
+    context 'with blocks' do
+      it 't' do
+        company = Fabricate :company
+        team = Fabricate :team, company: company
+        customer = Fabricate :customer, company: company
+        product = Fabricate :product, company: company, customer: customer
+        project = Fabricate :project, company: company, customers: [customer], products: [product], team: team, status: :executing, start_date: 10.days.ago, end_date: 5.day.from_now, max_work_in_progress: 4
+        demand = Fabricate :demand, company: company, project: project, team: team
+        Fabricate :demand_block, demand: demand
+
+        query =
+          %(
+        query {
+          demands(projectId: #{project.id}, limit: 1, finished: false) {
+            numberOfBlocks
+          }
+        }
+      )
+
+        user = Fabricate :user
+
+        context = {
+          current_user: user
+        }
+
+        result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
+
+        expect(result.dig('data', 'demands')).to eq([{
+                                                      'numberOfBlocks' => 1
+                                                    }])
       end
     end
   end
