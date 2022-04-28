@@ -657,28 +657,6 @@ const ProjectCharts = () => {
         </Grid>
 
         <ChartLineBox
-          title={t("project_charts.cumulative_flow_chart", {
-            projectName: project.name,
-          })}
-          data={projectCumulativeFlowChartData}
-          axisLeftLegend={t("project_charts.cumulative_flow_y_label")}
-          props={{
-            enableArea: true,
-            enableSlices: "x",
-            sliceTooltip: ({ slice }: SliceTooltipProps) => (
-              <LineChartTooltip slice={slice} />
-            ),
-            margin: { left: 80, right: 20, top: 25, bottom: 65 },
-            axisBottom: {
-              tickSize: 5,
-              tickPadding: 5,
-              legendPosition: "middle",
-              legendOffset: 60,
-              tickRotation: -40,
-            },
-          }}
-        />
-        <ChartLineBox
           title={t("project_charts.demands_burn_up_chart", {
             projectName: project.name,
           })}
@@ -691,6 +669,7 @@ const ProjectCharts = () => {
             ),
           }}
         />
+
         <ChartLineBox
           title={t("project_charts.hours_burn_up_chart", {
             projectName: project.name,
@@ -714,6 +693,28 @@ const ProjectCharts = () => {
             sliceTooltip: ({ slice }: SliceTooltipProps) => (
               <LineChartTooltip slice={slice} />
             ),
+          }}
+        />
+        <ChartLineBox
+          title={t("project_charts.cumulative_flow_chart", {
+            projectName: project.name,
+          })}
+          data={projectCumulativeFlowChartData}
+          axisLeftLegend={t("project_charts.cumulative_flow_y_label")}
+          props={{
+            enableArea: true,
+            enableSlices: "x",
+            sliceTooltip: ({ slice }: SliceTooltipProps) => (
+              <LineChartTooltip slice={slice} />
+            ),
+            margin: { left: 80, right: 20, top: 25, bottom: 65 },
+            axisBottom: {
+              tickSize: 5,
+              tickPadding: 5,
+              legendPosition: "middle",
+              legendOffset: 60,
+              tickRotation: -40,
+            },
           }}
         />
         <Grid item xs={6} sx={{ padding: "8px" }}>
