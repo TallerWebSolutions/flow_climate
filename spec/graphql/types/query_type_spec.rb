@@ -399,6 +399,10 @@ RSpec.describe Types::QueryType do
               data
             }
           }
+          leadTimeHistogramData {
+            keys
+            values
+          }
         }
 
         projectConsolidations(projectId: #{project.id}) {
@@ -501,6 +505,10 @@ RSpec.describe Types::QueryType do
                                                       'cumulativeFlowChartData' => {
                                                         'xAxis' => [4.days.ago.to_date.to_s, 3.days.from_now.to_date.to_s],
                                                         'yAxis' => []
+                                                      },
+                                                      'leadTimeHistogramData' => {
+                                                        'keys' => [86_400.0],
+                                                        'values' => [1]
                                                       }
                                                     })
         expect(result.dig('data', 'projectConsolidations')).to eq([{

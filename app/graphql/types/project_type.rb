@@ -221,7 +221,7 @@ module Types
     end
 
     def lead_time_histogram_data
-      Stats::StatisticsService.instance.leadtime_histogram_hash(demands_finished_with_leadtime.map(&:leadtime))
+      Stats::StatisticsService.instance.leadtime_histogram_hash(demands_finished_with_leadtime.map(&:leadtime).map { |leadtime| leadtime.round(3) })
     end
   end
   # rubocop:enable Metrics/ClassLength
