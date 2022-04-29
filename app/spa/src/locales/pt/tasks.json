@@ -52,6 +52,10 @@
     "current_partial_completion_title": "Tempos Parciais Atuais para Tarefas em Andamento",
     "current_partial_completion_tooltip_x_legend": "ID Externo",
     "days": "Dias",
-    "demands": "Demandas"
+    "demands": "Demandas",
+    "completion_time_histogram_chart": "Completion Time Histograma",
+    "completion_time_histogram_completiontime": "Completion Time",
+    "completion_time_histogram_completiontime_y_label": "Dias",
+    "completion_time_histogram_completiontime_x_label": "Quantidade"
   }
 }

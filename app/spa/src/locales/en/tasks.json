@@ -52,6 +52,10 @@
     "current_partial_completion_title": "Current Partial Times to Tasks in Progress",
     "current_partial_completion_tooltip_x_legend": "External ID",
     "days": "Days",
-    "demands": "Demand"
+    "demands": "Demand",
+    "completion_time_histogram_chart": "Completion Time Histogram",
+    "completion_time_histogram_completiontime": "Completion Time",
+    "completion_time_histogram_completiontime_y_label": "Dias",
+    "completion_time_histogram_completiontime_x_label": "Amount"
   }
 }

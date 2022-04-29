@@ -78,6 +78,11 @@ const TASKS_CHARTS_QUERY = gql`
       inProgressLeadTimeP65
       inProgressLeadTimeP80
       inProgressLeadTimeP95
+
+      completiontimeHistogramChartData {
+        keys
+        values
+      }
     }
 
     me {
@@ -107,6 +112,10 @@ type TasksChartsDTO = {
     inProgressLeadTimeP65: number
     inProgressLeadTimeP80: number
     inProgressLeadTimeP95: number
+    completiontimeHistogramChartData: {
+      keys: number[]
+      values: number[]
+    }
   }
 }
 
@@ -206,6 +215,8 @@ const TaskCharts = ({ filters }: TasksChartProps) => {
     ChartData[]
   >([])
   const [flowChartData, setFlowChartData] = useState<BarDatum[]>([])
+  const [completionTimeHistogramData, setCompletionTimeHistogramData] =
+    useState<BarDatum[]>([])
   const [
     completionTimeConfidenceEvolution,
     setCompletionTimeConfidenceEvolution,
@@ -300,6 +311,27 @@ const TaskCharts = ({ filters }: TasksChartProps) => {
         accumulatedCompletionTime: mountedAccumulatedCompletionTime,
         p80CompletionTime: mountedCompletionTimeConfidenceData,
       })
+
+      const completionTimeHistogramData =
+        data?.tasksList.completiontimeHistogramChartData
+      const mountedCompletionTimeHistogramChartData: BarDatum[] =
+        completionTimeHistogramData
+          ? completionTimeHistogramData?.keys.map((completionTime, index) => {
+              const taskCompletiomHistogramKeysInDays =
+                secondsToDays(completionTime).toFixed(2)
+
+              return {
+                index,
+                [t("charts.completion_time_histogram_completiontime")]:
+                  taskCompletiomHistogramKeysInDays,
+                [t("charts.completion_time_histogram_completiontime_x_label")]:
+                  completionTimeHistogramData.values[index],
+              }
+            })
+          : []
+      // eslint-disable-next-line no-console
+      console.log({ mountedCompletionTimeHistogramChartData })
+      setCompletionTimeHistogramData(mountedCompletionTimeHistogramChartData)
     }
   }, [data, loading, t])
 
@@ -363,11 +395,15 @@ const TaskCharts = ({ filters }: TasksChartProps) => {
   const completionTimeEvolutionChartData = [
     {
       id: t("charts.completion_time_confidence_p80_legend"),
-      data: completionTimeConfidenceEvolution?.p80CompletionTime,
+      data: completionTimeConfidenceEvolution
+        ? completionTimeConfidenceEvolution.p80CompletionTime
+        : [],
     },
     {
       id: t("charts.completion_time_confidence_p80_acumulated_legend"),
-      data: completionTimeConfidenceEvolution?.accumulatedCompletionTime,
+      data: completionTimeConfidenceEvolution
+        ? completionTimeConfidenceEvolution.accumulatedCompletionTime
+        : [],
     },
   ]
 
@@ -535,6 +571,40 @@ const TaskCharts = ({ filters }: TasksChartProps) => {
                 ],
               },
             ],
+          }}
+        />
+      </ChartBox>
+
+      <ChartBox title={t("charts.completion_time_histogram_chart")}>
+        <BarChart
+          data={completionTimeHistogramData}
+          props={{
+            groupMode: "grouped",
+            keys: [t("charts.completion_time_histogram_completiontime")],
+            indexBy: t(
+              "charts.completion_time_histogram_completiontime_x_label"
+            ),
+            margin: { top: 50, right: 60, bottom: 65, left: 60 },
+            padding: 0.3,
+            axisLeft: {
+              tickSize: 5,
+              tickPadding: 5,
+              tickRotation: 0,
+              legend: t(
+                "charts.completion_time_histogram_completiontime_y_label"
+              ),
+              legendPosition: "middle",
+              legendOffset: -55,
+            },
+            axisBottom: {
+              tickSize: 5,
+              tickPadding: 5,
+              legend: t(
+                "charts.completion_time_histogram_completiontime_x_label"
+              ),
+              legendPosition: "middle",
+              legendOffset: 60,
+            },
           }}
         />
       </ChartBox>
