@@ -252,19 +252,21 @@ const ProjectCharts = () => {
     }
   )
 
-  const projectCumulativeFlowChartData = cumulativeFlowChartData?.xAxis.map(
-    (_, index) => {
-      const currentYAxis = cumulativeFlowChartData.yAxis[index]
+  const projectCumulativeFlowChartDataYAxis = cumulativeFlowChartData?.yAxis
+  const projectCumulativeFlowChartData =
+    projectCumulativeFlowChartDataYAxis?.length
+      ? cumulativeFlowChartData?.xAxis.forEach((_, index) => {
+          const yAxis = cumulativeFlowChartData.yAxis
 
-      return {
-        id: currentYAxis.name,
-        data: currentYAxis.data.map((cumulativeValue, index) => ({
-          x: cumulativeFlowChartData?.xAxis[index],
-          y: cumulativeValue,
-        })),
-      }
-    }
-  )
+          return {
+            id: yAxis[index].name,
+            data: yAxis[index].data.map((cumulativeValue, index) => ({
+              x: cumulativeFlowChartData?.xAxis[index],
+              y: cumulativeValue,
+            })),
+          }
+        })
+      : []
 
   const committedChartData = demandsFlowChartData.committedChartData
   const projectFlowChartData: BarDatum[] = committedChartData
