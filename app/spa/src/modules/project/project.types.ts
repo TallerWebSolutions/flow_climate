@@ -81,10 +81,10 @@ export type Project = {
     yAxis: number[]
   }
   demandsFlowChartData: {
-    creationChartData: number[]
-    committedChartData: number[]
-    pullTransactionRate: number[]
-    throughputChartData: number[]
+    creationChartData?: number[]
+    committedChartData?: number[]
+    pullTransactionRate?: number[]
+    throughputChartData?: number[]
   }
   cumulativeFlowChartData?: {
     xAxis: string[]
