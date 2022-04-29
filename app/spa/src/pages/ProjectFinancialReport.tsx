@@ -81,7 +81,7 @@ const ProjectFinancialReport = () => {
         </Link>,
         demand.demandTitle,
         demand.endDate
-          ? formatDate({ date: demand.endDate, format: "dd/mm/yy" })
+          ? formatDate({ date: demand.endDate, format: "dd/MM/yy" })
           : "",
         formatCurrency(demand.costToProject),
         Number(demand.effortUpstream).toFixed(2),
