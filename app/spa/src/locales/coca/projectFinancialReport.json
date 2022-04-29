@@ -1,0 +1,26 @@
+{
+  "title": "Financial Report",
+  "finishedDemands": {
+    "title": "Finished Activities",
+    "code": "Code",
+    "demandTitle": "Activity Title",
+    "deliveryDate": "Delivery Date",
+    "cost": "Cost",
+    "effortUpstream": "Effort Upstream",
+    "effortDownstream": "Effort Downstream",
+    "totalEffort": "Total Effort"
+  },
+  "discardedDemands": {
+    "title": "Discarded Activities",
+    "code": "Code",
+    "demandTitle": "Activity Title",
+    "cost": "Cost",
+    "effortUpstream": "Effort Upstream",
+    "effortDownstream": "Effort Downstream",
+    "totalEffort": "Total Effort"
+  },
+  "footer": {
+    "total": "Total: ",
+    "demands": "Activities"
+  }
+}
