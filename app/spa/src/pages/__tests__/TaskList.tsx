@@ -46,6 +46,7 @@ const mountTaskPage = (mocks: any) => {
 describe("pages/Task/List", () => {
   describe("table rendering", () => {
     it("should render task table from query data", async () => {
+      jest.setTimeout(10_000)
       const mocks = [
         {
           request: {
