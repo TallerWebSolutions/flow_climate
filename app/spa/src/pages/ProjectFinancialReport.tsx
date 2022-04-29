@@ -57,7 +57,8 @@ type FinancialReportDemandsDTO = {
 const sum = (a: number, b: number) => a + b
 
 const ProjectFinancialReport = () => {
-  const { t } = useTranslation(["projectFinancialReport"])
+  const { t, i18n } = useTranslation(["projectFinancialReport"])
+  const dateFormat = i18n.language === "pt-BR" ? "dd/MM/yy" : "MM/dd/yy"
   const { projectId, companyNickName } = useParams()
   const { data, loading } = useQuery<FinancialReportDemandsDTO>(QUERY, {
     variables: {
@@ -81,7 +82,7 @@ const ProjectFinancialReport = () => {
         </Link>,
         demand.demandTitle,
         demand.endDate
-          ? formatDate({ date: demand.endDate, format: "dd/MM/yy" })
+          ? formatDate({ date: demand.endDate, format: dateFormat })
           : "",
         formatCurrency(demand.costToProject),
         Number(demand.effortUpstream).toFixed(2),

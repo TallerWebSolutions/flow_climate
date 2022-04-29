@@ -42,10 +42,10 @@ export const secondsToReadbleDate = (
 
 type FormatDateProps = {
   date: string
-  format: string
+  format?: string
 }
 
-export const formatDate = ({ date, format }: FormatDateProps) => {
+export const formatDate = ({ date, format = "MM/dd/yy" }: FormatDateProps) => {
   return dateFnsFormat(parseISO(date), format)
 }
 

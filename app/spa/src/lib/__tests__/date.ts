@@ -50,6 +50,12 @@ describe("formatDate", () => {
       "21/03/2022 às 03:00"
     )
   })
+
+  it("should heve american date as default", () => {
+    const date = "2022-03-21T00:00:40-03:00"
+
+    expect(formatDate({ date: date })).toBe("03/21/22")
+  })
 })
 
 describe("secondsToDays", () => {
