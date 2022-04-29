@@ -7,7 +7,7 @@ import {
   Typography,
 } from "@mui/material"
 import { BarDatum } from "@nivo/bar"
-import { SliceTooltipProps } from "@nivo/line"
+import { Serie, SliceTooltipProps } from "@nivo/line"
 import { useTranslation } from "react-i18next"
 import { useParams } from "react-router-dom"
 import { BarChart } from "../components/charts/BarChart"
@@ -253,9 +253,9 @@ const ProjectCharts = () => {
   )
 
   const projectCumulativeFlowChartDataYAxis = cumulativeFlowChartData?.yAxis
-  const projectCumulativeFlowChartData =
-    projectCumulativeFlowChartDataYAxis?.length
-      ? cumulativeFlowChartData?.xAxis.forEach((_, index) => {
+  const projectCumulativeFlowChartData: Serie[] =
+    projectCumulativeFlowChartDataYAxis
+      ? cumulativeFlowChartData?.xAxis.map((_, index) => {
           const yAxis = cumulativeFlowChartData.yAxis
 
           return {

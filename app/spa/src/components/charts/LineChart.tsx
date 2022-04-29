@@ -1,7 +1,7 @@
-import { ResponsiveLine } from "@nivo/line"
+import { ResponsiveLine, Serie } from "@nivo/line"
 
 export type LineGraphProps = {
-  data: any
+  data: Serie[]
   axisLeftLegend: string
   props?: object
 }
