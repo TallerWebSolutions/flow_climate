@@ -5,6 +5,7 @@ import { ProjectPage } from "../components/ProjectPage"
 import Table from "../components/Table"
 import { formatCurrency } from "../lib/currency"
 import { formatDate } from "../lib/date"
+import { useTranslation } from "react-i18next"
 
 const QUERY = gql`
   query FinancialReportDemands($projectId: Int!) {
@@ -56,6 +57,7 @@ type FinancialReportDemandsDTO = {
 const sum = (a: number, b: number) => a + b
 
 const ProjectFinancialReport = () => {
+  const { t } = useTranslation(["projectFinancialReport"])
   const { projectId, companyNickName } = useParams()
   const { data, loading } = useQuery<FinancialReportDemandsDTO>(QUERY, {
     variables: {
@@ -100,16 +102,13 @@ const ProjectFinancialReport = () => {
       .map((demand) => demand.effortDownstream)
       .reduce(sum, 0) || 0
   const finishedDemandsFooter = [
-    "Total:",
+    t("footer.total"),
     "",
     "",
     formatCurrency(totalFinishedDemandsCost),
     totalFinishedDemandsUpstreamEffort.toFixed(2),
     totalFinishedDemandsDownstreamEffort.toFixed(2),
   ]
-
-  // eslint-disable-next-line
-  console.log({ asdf: data?.discardedDemands })
 
   const discardedDemandsRows = data?.discardedDemands
     ? data.discardedDemands.map((demand) => [
@@ -139,7 +138,7 @@ const ProjectFinancialReport = () => {
       .reduce(sum, 0) || 0
 
   const discardedDemandsFooter = [
-    "Total:",
+    t("footer.total"),
     "",
     formatCurrency(totalDiscardedDemandsCost),
     totalDiscardedDemandsUpstreamEffort.toFixed(2),
@@ -147,17 +146,17 @@ const ProjectFinancialReport = () => {
   ]
 
   return (
-    <ProjectPage pageName="Relatório Financeiro">
+    <ProjectPage pageName={t("title")}>
       <Container>
         <Table
-          title="Demandas Encerradas"
+          title={t("finishedDemands.title")}
           headerCells={[
-            "Código",
-            "Título",
-            "Data da entrega",
-            "Custo",
-            "Esforço Upstream",
-            "Esforço Downstream",
+            t("finishedDemands.code").toString(),
+            t("finishedDemands.demandTitle").toString(),
+            t("finishedDemands.deliveryDate").toString(),
+            t("finishedDemands.cost").toString(),
+            t("finishedDemands.effortUpstream").toString(),
+            t("finishedDemands.effortDownstream").toString(),
           ]}
           rows={finishedDemandsRows}
           footerCells={finishedDemandsFooter}
@@ -165,11 +164,11 @@ const ProjectFinancialReport = () => {
         <Table
           title="Demandas Descartadas"
           headerCells={[
-            "Código",
-            "Título",
-            "Custo",
-            "Esforço Upstream",
-            "Esforço Downstream",
+            t("discardedDemands.code").toString(),
+            t("discardedDemands.demandTitle").toString(),
+            t("discardedDemands.cost").toString(),
+            t("discardedDemands.effortUpstream").toString(),
+            t("discardedDemands.effortDownstream").toString(),
           ]}
           rows={discardedDemandsRows}
           footerCells={discardedDemandsFooter}

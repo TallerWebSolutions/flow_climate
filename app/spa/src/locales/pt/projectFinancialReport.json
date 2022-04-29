@@ -1,0 +1,23 @@
+{
+  "title": "Relatório Financeiro",
+  "finishedDemands": {
+    "title": "Demandas Entregues",
+    "code": "Código",
+    "demandTitle": "Título",
+    "deliveryDate": "Data de Entrega",
+    "cost": "Custo",
+    "effortUpstream": "Esforço Upstream",
+    "effortDownstream": "Esforço Downstream"
+  },
+  "discardedDemands": {
+    "title": "Demandas Descartadas",
+    "code": "Código",
+    "demandTitle": "Título",
+    "cost": "Custo",
+    "effortUpstream": "Esforço Upstream",
+    "effortDownstream": "Esforço Downstream"
+  },
+  "footer": {
+    "total": "Total: "
+  }
+}
