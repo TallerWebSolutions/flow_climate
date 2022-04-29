@@ -86,6 +86,7 @@ const ProjectFinancialReport = () => {
         formatCurrency(demand.costToProject),
         Number(demand.effortUpstream).toFixed(2),
         Number(demand.effortDownstream).toFixed(2),
+        Number(demand.effortUpstream + demand.effortDownstream).toFixed(2),
       ])
     : []
 
@@ -108,6 +109,9 @@ const ProjectFinancialReport = () => {
     formatCurrency(totalFinishedDemandsCost),
     totalFinishedDemandsUpstreamEffort.toFixed(2),
     totalFinishedDemandsDownstreamEffort.toFixed(2),
+    (
+      totalFinishedDemandsUpstreamEffort + totalFinishedDemandsDownstreamEffort
+    ).toFixed(2),
   ]
 
   const discardedDemandsRows = data?.discardedDemands
@@ -121,6 +125,7 @@ const ProjectFinancialReport = () => {
         formatCurrency(demand.costToProject),
         Number(demand.effortUpstream).toFixed(2),
         Number(demand.effortDownstream).toFixed(2),
+        Number(demand.effortUpstream + demand.effortDownstream).toFixed(2),
       ])
     : []
 
@@ -143,6 +148,10 @@ const ProjectFinancialReport = () => {
     formatCurrency(totalDiscardedDemandsCost),
     totalDiscardedDemandsUpstreamEffort.toFixed(2),
     totalDiscardedDemandsDownstreamEffort.toFixed(2),
+    (
+      totalDiscardedDemandsUpstreamEffort +
+      totalDiscardedDemandsDownstreamEffort
+    ).toFixed(2),
   ]
 
   return (
@@ -157,6 +166,7 @@ const ProjectFinancialReport = () => {
             t("finishedDemands.cost").toString(),
             t("finishedDemands.effortUpstream").toString(),
             t("finishedDemands.effortDownstream").toString(),
+            t("finishedDemands.totalEffort").toString(),
           ]}
           rows={finishedDemandsRows}
           footerCells={finishedDemandsFooter}
@@ -169,6 +179,7 @@ const ProjectFinancialReport = () => {
             t("discardedDemands.cost").toString(),
             t("discardedDemands.effortUpstream").toString(),
             t("discardedDemands.effortDownstream").toString(),
+            t("discardedDemands.totalEffort").toString(),
           ]}
           rows={discardedDemandsRows}
           footerCells={discardedDemandsFooter}

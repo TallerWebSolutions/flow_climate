@@ -7,7 +7,8 @@
     "deliveryDate": "Data de Entrega",
     "cost": "Custo",
     "effortUpstream": "Esforço Upstream",
-    "effortDownstream": "Esforço Downstream"
+    "effortDownstream": "Esforço Downstream",
+    "totalEffort": "Esforço Total"
   },
   "discardedDemands": {
     "title": "Demandas Descartadas",
@@ -15,7 +16,8 @@
     "demandTitle": "Título",
     "cost": "Custo",
     "effortUpstream": "Esforço Upstream",
-    "effortDownstream": "Esforço Downstream"
+    "effortDownstream": "Esforço Downstream",
+    "totalEffort": "Esforço Total"
   },
   "footer": {
     "total": "Total: "
