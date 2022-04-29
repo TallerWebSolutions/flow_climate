@@ -20,6 +20,7 @@
     "totalEffort": "Esforço Total"
   },
   "footer": {
-    "total": "Total: "
+    "total": "Total: ",
+    "demands": "Demandas"
   }
 }

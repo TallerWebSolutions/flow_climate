@@ -104,7 +104,7 @@ const ProjectFinancialReport = () => {
       .reduce(sum, 0) || 0
   const finishedDemandsFooter = [
     t("footer.total"),
-    "",
+    `${finishedDemandsRows.length} ${t("footer.demands")}`,
     "",
     formatCurrency(totalFinishedDemandsCost),
     totalFinishedDemandsUpstreamEffort.toFixed(2),
@@ -144,7 +144,7 @@ const ProjectFinancialReport = () => {
 
   const discardedDemandsFooter = [
     t("footer.total"),
-    "",
+    `${discardedDemandsRows.length} ${t("footer.demands")}`,
     formatCurrency(totalDiscardedDemandsCost),
     totalDiscardedDemandsUpstreamEffort.toFixed(2),
     totalDiscardedDemandsDownstreamEffort.toFixed(2),
