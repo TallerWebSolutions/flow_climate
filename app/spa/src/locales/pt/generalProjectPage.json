@@ -1,8 +1,8 @@
 {
   "cards": {
-    "operational_risk": "Risco Operacional",
+    "operational_risk": "Risco Operacional - Projeto",
     "operational_risk_message": "Faltam {{days}} dia(s) para o fim do projeto e o risco operacional deste prazo é de {{percentage}}%",
-    "operational_risk_team_data": "Risco Operacional - Dados do Time",
+    "operational_risk_team_data": "Risco Operacional - Time",
     "operational_risk_team_data_message": "Com a estratégia de WiP e pelos dados do time, o risco atual é de {{risk}}%"
   }
 }
