@@ -33,6 +33,7 @@ const BasicPage = ({
             marginBottom: 3,
             display: "flex",
             alignItems: "center",
+            justifyContent: "space-between",
           }}
         >
           <Typography component="h1" variant="h4" mr={2}>
