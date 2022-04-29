@@ -1,9 +1,8 @@
 import { gql, useMutation } from "@apollo/client"
-import { useParams } from "react-router-dom"
-import { Box, Backdrop, CircularProgress } from "@mui/material"
+import { Backdrop, Box, CircularProgress } from "@mui/material"
 import { ReactElement, useContext } from "react"
 import { useTranslation } from "react-i18next"
-import { useLocation } from "react-router-dom"
+import { useLocation, useParams } from "react-router-dom"
 import { MessagesContext } from "../contexts/MessageContext"
 import useProjectInfo from "../hooks/useProjectInfo"
 import BasicPage from "./BasicPage"
@@ -63,7 +62,7 @@ export const ProjectPage = ({ pageName, children }: ProjectPageProps) => {
     {
       update: () =>
         pushMessage({
-          text: "Sua solicitação foi colocada na fila. Em poucos minutos estará pronta.",
+          text: t("flash_message.token_generetaed_with_success"),
           severity: "info",
         }),
     }
@@ -88,7 +87,10 @@ export const ProjectPage = ({ pageName, children }: ProjectPageProps) => {
   const companySlug = company?.slug
   const breadcrumbsLinks = [
     { name: companyName, url: `/companies/${companySlug}` },
-    { name: "Projetos", url: `/companies/${companySlug}/projects` },
+    {
+      name: t("breadcrumbs_links.projects"),
+      url: `/companies/${companySlug}/projects`,
+    },
     {
       name: projectName,
       url: `/companies/${companySlug}/projects/${projectId}`,
@@ -99,27 +101,27 @@ export const ProjectPage = ({ pageName, children }: ProjectPageProps) => {
   ]
   const projectTabs = [
     {
-      label: "Gráficos",
+      label: t("breadcrumbs_links.charts"),
       to: `/companies/${companySlug}/projects/${projectId}`,
     },
     {
-      label: "Estatísticas",
+      label: t("breadcrumbs_links.statistics"),
       to: `/companies/${companySlug}/projects/${projectId}/statistics_tab`,
     },
     {
-      label: "Detalhamento do Risco",
+      label: t("breadcrumbs_links.risk_drill_down"),
       to: `/companies/${companySlug}/projects/${projectId}/risk_drill_down`,
     },
     {
-      label: "Relatório de Status",
+      label: t("breadcrumbs_links.status_report_dashboard"),
       to: `/companies/${companySlug}/projects/${projectId}/status_report_dashboard`,
     },
     {
-      label: "Lead time dashboard",
+      label: t("breadcrumbs_links.lead_time_dashboard"),
       to: `/companies/${companySlug}/projects/${projectId}/lead_time_dashboard`,
     },
     {
-      label: "Relatório financeiro",
+      label: t("breadcrumbs_links.financial_report"),
       to: `/companies/${companySlug}/projects/${projectId}/financial_report`,
     },
   ]
@@ -136,30 +138,30 @@ export const ProjectPage = ({ pageName, children }: ProjectPageProps) => {
 
   const actions = [
     {
-      name: "Atualizar Cache",
+      name: t("breadcrumbsLinks.update_cache"),
       onClick: () =>
         generateProjectCache({
           variables: { projectId },
         }),
     },
     {
-      name: "Criar Demanda",
+      name: t("settings_actions.create_demands"),
       href: `/companies/${companySlug}/projects/${projectId}/demands/new`,
     },
     {
-      name: "Editar",
+      name: t("settings_actions.edit_demands"),
       href: `/companies/${companySlug}/projects/${projectId}/edit`,
     },
     {
-      name: "Configuração do Jira",
+      name: t("settings_actions.jira_settings"),
       href: `/companies/${companySlug}/jira/projects/${projectId}/jira_project_configs`,
     },
     {
-      name: "Etapas no Projeto",
+      name: t("settings_actions.projects_stages"),
       href: `/companies/${companySlug}/projects/${projectId}/stage_project_configs`,
     },
     {
-      name: "Configuração de Risco",
+      name: t("settings_actions.risk_settings"),
       href: `/companies/${companySlug}/projects/${projectId}/project_risk_configs`,
     },
   ]

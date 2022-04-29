@@ -4,5 +4,25 @@
     "operational_risk_message": "Faltam {{days}} dia(s) para o fim do projeto e o risco operacional deste prazo é de {{percentage}}%",
     "operational_risk_team_data": "Risco Operacional - Time",
     "operational_risk_team_data_message": "Com a estratégia de WiP e pelos dados do time, o risco atual é de {{risk}}%"
+  },
+  "flash_message": {
+    "token_generetaed_with_success": "Your request was send to queue. In few minutes will be ready."
+  },
+  "breadcrumbs_links": {
+    "projects": "Projetos",
+    "charts": "Gráficos",
+    "statistics": "Estatísticas",
+    "risk_drill_down": "Detalhamento do Risco",
+    "status_report_dashboard": "Relatório de Status",
+    "lead_time_dashboard": "Lead time dashboard",
+    "financial_report": "Relatório financeiro"
+  },
+  "settings_actions": {
+    "update_cache": "Atualizar Cache",
+    "create_demands": "Criar Demandas",
+    "edit_demands": "Editar",
+    "jira_settings": "Configurações do Jira",
+    "projects_stages": "Etapas do Projeto",
+    "risk_settings": "Configurações de Risco"
   }
 }
