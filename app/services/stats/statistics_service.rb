@@ -52,6 +52,10 @@ module Stats
       create_histogram_data(leadtime_data_array)
     end
 
+    def completiontime_histogram_hash(completion_time_data_array)
+      leadtime_histogram_hash(completion_time_data_array)
+    end
+
     def throughput_histogram_hash(throughput_data_array)
       create_histogram_data(throughput_data_array)
     end

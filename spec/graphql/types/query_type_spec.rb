@@ -610,6 +610,10 @@ RSpec.describe Types::QueryType do
             completionPercentilesOnTimeArray
             accumulatedCompletionPercentilesOnTimeArray
           }
+          completiontimeHistogramChartData {
+            keys
+            values
+          }
         }
       })
     end
@@ -642,7 +646,8 @@ RSpec.describe Types::QueryType do
               'throughputArray' => [],
               'completionPercentilesOnTimeArray' => [],
               'accumulatedCompletionPercentilesOnTimeArray' => []
-            }
+            },
+            'completiontimeHistogramChartData' => { 'keys' => [], 'values' => [] }
           }
         )
       end

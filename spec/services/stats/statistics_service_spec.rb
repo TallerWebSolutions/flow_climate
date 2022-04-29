@@ -63,6 +63,10 @@ RSpec.describe Stats::StatisticsService, type: :service do
     it { expect(described_class.instance.leadtime_histogram_hash([1.23, 2.34, 4.2, 3.5])).to eq(1.9725000000000001 => 2.0, 3.4575 => 2.0) }
   end
 
+  describe '#completiontime_histogram_hash' do
+    it { expect(described_class.instance.completiontime_histogram_hash([2.5, 7.64, 9.1, 5.2])).to eq(4.15 => 2.0, 7.449999999999999 => 2.0) }
+  end
+
   describe '#throughput_histogram_hash' do
     it { expect(described_class.instance.throughput_histogram_hash([10, 20, 12, 15, 7, 2, 18])).to eq(5.0 => 2.0, 11.0 => 2.0, 17.0 => 3.0) }
   end
