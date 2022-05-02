@@ -252,8 +252,31 @@ RSpec.describe Demand, type: :model do
       it { expect(described_class.opened_before_date(Time.zone.now).map(&:external_id)).to match_array [first_demand.external_id, second_demand.external_id, third_demand.external_id, fifth_demand.external_id, fourth_demand.external_id] }
     end
 
+    describe '.with_valid_leadtime' do
+      it 'returns the demands having more than 10 minutes' do
+        demand = Fabricate :demand, created_date: 20.minutes.ago, commitment_date: 15.minutes.ago, end_date: 4.minutes.ago
+        Fabricate :demand, created_date: 20.minutes.ago, commitment_date: 15.minutes.ago, end_date: 6.minutes.ago
+
+        expect(described_class.with_valid_leadtime).to eq [demand]
+      end
+    end
+
+    describe '.for_team_member' do
+      it 'returns the unique demands for the member' do
+        demand = Fabricate :demand, created_date: 20.minutes.ago, commitment_date: 15.minutes.ago, end_date: 4.minutes.ago
+        other_demand = Fabricate :demand, created_date: 20.minutes.ago, commitment_date: 15.minutes.ago, end_date: 6.minutes.ago
+
+        team_member = Fabricate :team_member, company: company, name: 'foo'
+        membership = Fabricate :membership, team: team, team_member: team_member
+        Fabricate :item_assignment, demand: demand, membership: membership, start_time: 1.day.ago, finish_time: 1.hour.ago
+        Fabricate :item_assignment, demand: other_demand, membership: membership, start_time: 1.day.ago, finish_time: 1.hour.ago
+        Fabricate :item_assignment, demand: demand, membership: membership, start_time: 30.minutes.ago, finish_time: 20.minutes.ago
+
+        expect(described_class.for_team_member(team_member)).to match_array [demand, other_demand]
+      end
+    end
+
     pending '.unscored_demands'
-    pending '.with_valid_leadtime'
     pending '.dates_inconsistent_to_project'
   end
 

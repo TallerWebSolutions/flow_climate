@@ -241,7 +241,7 @@ module Types
       project_members_list = []
 
       team_members.each do |member|
-        member_demands_count = finished_demands.joins(item_assignments: { membership: :team_member }).where(item_assignments: { memberships: { team_members: member } }).uniq.count
+        member_demands_count = finished_demands.for_team_member(member).count
         project_member = ProjectMember.new(member, member_demands_count)
         project_members_list << project_member
       end

@@ -124,6 +124,7 @@ class Demand < ApplicationRecord
   scope :with_effort, -> { where('demands.effort_downstream > 0 OR demands.effort_upstream > 0') }
   scope :grouped_end_date_by_month, -> { where.not(demands: { end_date: nil }).order(end_date: :desc).group_by { |demand| [demand.end_date.to_date.cwyear, demand.end_date.to_date.month] } }
   scope :with_valid_leadtime, -> { where('demands.leadtime >= :leadtime_data_limit', leadtime_data_limit: 10.minutes.to_i) }
+  scope :for_team_member, ->(member) { joins(item_assignments: { membership: :team_member }).where(item_assignments: { memberships: { team_members: member } }).uniq }
 
   delegate :name, to: :project, prefix: true, allow_nil: true
   delegate :name, to: :product, prefix: true, allow_nil: true
