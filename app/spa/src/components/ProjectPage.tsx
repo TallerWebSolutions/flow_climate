@@ -138,7 +138,7 @@ export const ProjectPage = ({ pageName, children }: ProjectPageProps) => {
 
   const actions = [
     {
-      name: t("breadcrumbsLinks.update_cache"),
+      name: t("settings_actions.update_cache"),
       onClick: () =>
         generateProjectCache({
           variables: { projectId },
