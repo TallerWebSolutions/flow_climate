@@ -1,5 +1,13 @@
 import { useContext } from "react"
-import { Avatar, Box, Container, Link, Menu, MenuItem } from "@mui/material"
+import {
+  Avatar,
+  Box,
+  Container,
+  Divider,
+  Link,
+  Menu,
+  MenuItem,
+} from "@mui/material"
 import { useState } from "react"
 import { gql, useMutation, useQuery } from "@apollo/client"
 
@@ -13,6 +21,11 @@ const USER_QUERY = gql`
     me {
       id
       fullName
+      companies {
+        id
+        name
+        slug
+      }
       avatar {
         imageSource
       }
@@ -24,15 +37,19 @@ type HeaderUser = {
   id: string
   avatarSource: string
   fullName: string
+  companies: Companies[]
 }
 
 type HeaderProps = {
   company?: Company
 }
 
+type Companies = Pick<Company, "id" | "name" | "slug">
+
 type User = {
   id: string
   fullName: string
+  companies: Companies[]
   avatar: {
     imageSource: string
   }
@@ -56,6 +73,7 @@ const normalizeUser = (data: UserDTO): HeaderUser => ({
   id: data?.me.id || "",
   fullName: data?.me.fullName || "",
   avatarSource: data?.me.avatar.imageSource || "",
+  companies: data?.me.companies || [],
 })
 
 const Header = ({ company }: HeaderProps) => {
@@ -159,26 +177,40 @@ const Header = ({ company }: HeaderProps) => {
             >
               {t("userMenu.turnOnNotifications")}
             </MenuItem>
-            {company && [
-              <MenuItem
-                key="sendAuthTokenMutation"
-                onClick={() =>
-                  sendAuthTokenMutation({
-                    variables: { companyId: Number(company.id) },
-                  })
-                }
-                component="a"
-              >
-                Solicitar API Token
-              </MenuItem>,
-              <MenuItem
-                key="company.name"
-                component="a"
-                href={`/companies/${company.slug}`}
-              >
-                {company.name}
-              </MenuItem>,
-            ]}
+            {company && (
+              <>
+                <Divider />
+                <MenuItem
+                  key="sendAuthTokenMutation"
+                  onClick={() =>
+                    sendAuthTokenMutation({
+                      variables: { companyId: Number(company.id) },
+                    })
+                  }
+                  component="a"
+                >
+                  Solicitar API Token
+                </MenuItem>
+                <Divider />
+                {user.companies.length > 1 ? (
+                  <>
+                    {user.companies.map((company) => (
+                      <MenuItem
+                        component="a"
+                        href={`/companies/${company.slug}`}
+                      >
+                        {company.name}
+                      </MenuItem>
+                    ))}
+                  </>
+                ) : (
+                  <MenuItem component="a" href={`/companies/${company.slug}`}>
+                    {company.name}
+                  </MenuItem>
+                )}
+                <Divider />
+              </>
+            )}
             <MenuItem
               key="userMenu.adminDashboard"
               component="a"

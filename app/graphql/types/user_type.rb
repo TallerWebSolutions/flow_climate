@@ -6,6 +6,7 @@ module Types
     field :full_name, String, null: false
     field :language, String, null: false
     field :current_company, CompanyType, null: true
+    field :companies, [Types::CompaniesType], null: false
 
     field :avatar, Types::AvatarType, null: false
 
