@@ -80,6 +80,8 @@ module Types
     field :cumulative_flow_chart_data, Types::Charts::CumulativeFlowChartType, null: true
     field :demands_flow_chart_data, Types::Charts::DemandsFlowChartDataType, null: true
     field :lead_time_histogram_data, Types::Charts::LeadTimeHistogramDataType, null: true
+    field :project_members, [Types::ProjectMemberType], null: true
+
     delegate :remaining_backlog, to: :object
     delegate :remaining_weeks, to: :object
     delegate :flow_pressure, to: :object
@@ -230,6 +232,21 @@ module Types
 
     def lead_time_histogram_data
       Stats::StatisticsService.instance.leadtime_histogram_hash(demands_finished_with_leadtime.map(&:leadtime).map { |leadtime| leadtime.round(3) })
+    end
+
+    def project_members
+      team_members = object.team_members
+      finished_demands = object.demands.finished_until_date(Time.zone.now)
+
+      project_members_list = []
+
+      team_members.each do |member|
+        member_demands_count = finished_demands.joins(item_assignments: { membership: :team_member }).where(item_assignments: { memberships: { team_members: member } }).uniq.count
+        project_member = ProjectMember.new(member, member_demands_count)
+        project_members_list << project_member
+      end
+
+      project_members_list
     end
 
     private

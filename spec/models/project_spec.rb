@@ -17,6 +17,8 @@ RSpec.describe Project, type: :model do
     it { is_expected.to have_many(:tasks).through(:demands) }
     it { is_expected.to have_many(:demand_blocks).through(:demands) }
     it { is_expected.to have_many(:demand_efforts).through(:demands) }
+    it { is_expected.to have_many(:memberships).through(:demands) }
+    it { is_expected.to have_many(:team_members).through(:memberships) }
     it { is_expected.to have_many(:stage_project_configs) }
     it { is_expected.to have_many(:stages).through(:stage_project_configs) }
     it { is_expected.to have_many(:project_change_deadline_histories).dependent(:destroy) }

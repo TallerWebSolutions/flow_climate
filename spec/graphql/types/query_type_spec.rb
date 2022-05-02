@@ -309,11 +309,16 @@ RSpec.describe Types::QueryType do
         product = Fabricate :product, company: company, customer: customer
         project = Fabricate :project, company: company, customers: [customer], products: [product], team: team, status: :executing, start_date: Time.zone.parse('2022-04-23 10:51'), end_date: 1.day.from_now, max_work_in_progress: 2
         Fabricate :demand, company: company, project: project, team: team
-        Fabricate :demand, project: project, effort_downstream: 200, effort_upstream: 10, end_date: Time.zone.parse('2022-04-15 12:30')
-        finished_demand = Fabricate :demand, project: project, demand_type: :bug, created_date: Time.zone.parse('2022-04-23 13:30'), commitment_date: Time.zone.parse('2022-04-24 10:30'), end_date: Time.zone.parse('2022-04-25 17:30')
+        first_finished_demand = Fabricate :demand, project: project, effort_downstream: 200, effort_upstream: 10, end_date: Time.zone.parse('2022-04-15 12:30')
+        second_finished_demand = Fabricate :demand, project: project, demand_type: :bug, created_date: Time.zone.parse('2022-04-23 13:30'), commitment_date: Time.zone.parse('2022-04-24 10:30'), end_date: Time.zone.parse('2022-04-25 17:30')
         project_consolidation = Fabricate :project_consolidation, project: project, monte_carlo_weeks_min: 9, monte_carlo_weeks_max: 85, monte_carlo_weeks_std_dev: 7, team_based_operational_risk: 0.5, consolidation_date: Time.zone.today
         demand = Fabricate :demand, company: company, project: project, team: team
         Fabricate :demand_block, demand: demand
+
+        team_member = Fabricate :team_member, company: company, name: 'foo'
+        membership = Fabricate :membership, team: team, team_member: team_member
+        Fabricate :item_assignment, demand: first_finished_demand, membership: membership
+        Fabricate :item_assignment, demand: second_finished_demand, membership: membership
 
         query =
           %(query {
@@ -409,6 +414,10 @@ RSpec.describe Types::QueryType do
             keys
             values
           }
+          projectMembers {
+            demandsCount
+            memberName
+          }
         }
 
         projectConsolidations(projectId: #{project.id}) {
@@ -472,7 +481,7 @@ RSpec.describe Types::QueryType do
                                                         'leadTimeP25' => project_consolidation.lead_time_p65,
                                                         'leadTimeP75' => project_consolidation.lead_time_p75
                                                       }],
-                                                      'demandsFinishedWithLeadtime' => [{ 'id' => finished_demand.id.to_s }],
+                                                      'demandsFinishedWithLeadtime' => [{ 'id' => second_finished_demand.id.to_s }],
                                                       'discardedDemands' => [],
                                                       'unscoredDemands' => project.demands.kept.unscored_demands.map do |unscored_demand|
                                                         {
@@ -509,7 +518,11 @@ RSpec.describe Types::QueryType do
                                                       'leadTimeHistogramData' => {
                                                         'keys' => [111_600.0],
                                                         'values' => [1]
-                                                      }
+                                                      },
+                                                      'projectMembers' => [{
+                                                        'demandsCount' => 2,
+                                                        'memberName' => 'foo'
+                                                      }]
                                                     })
         expect(result.dig('data', 'projectConsolidations')).to eq([{
                                                                     'id' => project_consolidation.id.to_s,

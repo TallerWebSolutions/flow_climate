@@ -58,10 +58,12 @@ class Project < ApplicationRecord
   has_many :project_risk_alerts, dependent: :destroy
   has_many :demands, dependent: :restrict_with_error
   has_many :tasks, through: :demands
-  has_many :project_change_deadline_histories, dependent: :destroy
-  has_many :stage_project_configs, dependent: :destroy
   has_many :demand_blocks, through: :demands
   has_many :demand_efforts, through: :demands
+  has_many :memberships, -> { distinct }, through: :demands
+  has_many :team_members, -> { distinct }, through: :memberships
+  has_many :project_change_deadline_histories, dependent: :destroy
+  has_many :stage_project_configs, dependent: :destroy
   has_many :stages, through: :stage_project_configs
   has_many :flow_events, dependent: :destroy
   has_many :project_consolidations, dependent: :destroy, class_name: 'Consolidations::ProjectConsolidation'
