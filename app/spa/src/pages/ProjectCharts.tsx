@@ -254,7 +254,9 @@ const ProjectCharts = () => {
 
   const projectCumulativeFlowChartDataYAxis = cumulativeFlowChartData?.yAxis
   const projectCumulativeFlowChartData: Serie[] =
-    projectCumulativeFlowChartDataYAxis
+    Array.isArray(projectCumulativeFlowChartDataYAxis) &&
+    projectCumulativeFlowChartDataYAxis.length > 0 &&
+    cumulativeFlowChartData
       ? cumulativeFlowChartData?.xAxis.map((_, index) => {
           const yAxis = cumulativeFlowChartData.yAxis
 
