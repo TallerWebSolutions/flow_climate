@@ -17,17 +17,17 @@
 #  company_id          :integer          not null
 #  integration_id      :string           not null
 #  integration_pipe_id :string
-#  stage_id            :integer
+#  parent_id           :integer
 #
 # Indexes
 #
 #  index_stages_on_integration_id  (integration_id)
 #  index_stages_on_name            (name)
-#  index_stages_on_stage_id        (stage_id)
+#  index_stages_on_parent_id       (parent_id)
 #
 # Foreign Keys
 #
-#  fk_rails_79294086b6  (stage_id => stages.id)
+#  fk_rails_a976eabc6c  (parent_id => stages.id)
 #  fk_rails_ffd4cca0d4  (company_id => companies.id)
 #
 

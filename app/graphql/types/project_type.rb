@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module Types
-  # rubocop:disable Metrics/ClassLength
   class ProjectType < Types::BaseObject
     field :id, ID, null: false
     field :company, Types::CompanyType, null: false
@@ -168,27 +167,36 @@ module Types
     end
 
     def current_monte_carlo_weeks_min
-      object.project_consolidations.last.monte_carlo_weeks_min
+      return 0 if last_consolidation.blank?
+
+      last_consolidation.monte_carlo_weeks_min
     end
 
     def current_monte_carlo_weeks_max
-      object.project_consolidations.last.monte_carlo_weeks_max
+      return 0 if last_consolidation.blank?
+
+      last_consolidation.monte_carlo_weeks_max
     end
 
     def current_monte_carlo_weeks_std_dev
-      object.project_consolidations.last.monte_carlo_weeks_std_dev
+      return 0 if last_consolidation.blank?
+
+      last_consolidation.monte_carlo_weeks_std_dev
     end
 
     def current_weeks_by_little_law
-      object.project_consolidations.last.weeks_by_little_law
+      return 0 if last_consolidation.blank?
+
+      last_consolidation.weeks_by_little_law
     end
 
     def current_team_based_risk
-      object.project_consolidations.last.team_based_operational_risk
+      return 0 if last_consolidation.blank?
+
+      last_consolidation.team_based_operational_risk
     end
 
     def project_consolidations_weekly
-      last_consolidation = object.project_consolidations.last
       all_project_consolidations = object.project_consolidations.weekly_data.order(:consolidation_date)
 
       Consolidations::ProjectConsolidation.where(id: all_project_consolidations.map(&:id) + [last_consolidation&.id]).order(:consolidation_date)
@@ -223,6 +231,11 @@ module Types
     def lead_time_histogram_data
       Stats::StatisticsService.instance.leadtime_histogram_hash(demands_finished_with_leadtime.map(&:leadtime).map { |leadtime| leadtime.round(3) })
     end
+
+    private
+
+    def last_consolidation
+      @last_consolidation ||= object.project_consolidations.order(:consolidation_date).last
+    end
   end
-  # rubocop:enable Metrics/ClassLength
 end
