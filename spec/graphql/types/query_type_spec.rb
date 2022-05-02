@@ -307,11 +307,11 @@ RSpec.describe Types::QueryType do
         team = Fabricate :team, company: company
         customer = Fabricate :customer, company: company
         product = Fabricate :product, company: company, customer: customer
-        project = Fabricate :project, company: company, customers: [customer], products: [product], team: team, status: :executing, start_date: Time.zone.parse('2022-04-23 10:51'), end_date: Time.zone.parse('2022-04-31 10:51'), max_work_in_progress: 2
+        project = Fabricate :project, company: company, customers: [customer], products: [product], team: team, status: :executing, start_date: Time.zone.parse('2022-04-23 10:51'), end_date: 1.day.from_now, max_work_in_progress: 2
         Fabricate :demand, company: company, project: project, team: team
         Fabricate :demand, project: project, effort_downstream: 200, effort_upstream: 10, end_date: Time.zone.parse('2022-04-15 12:30')
         finished_demand = Fabricate :demand, project: project, demand_type: :bug, created_date: Time.zone.parse('2022-04-23 13:30'), commitment_date: Time.zone.parse('2022-04-24 10:30'), end_date: Time.zone.parse('2022-04-25 17:30')
-        project_consolidation = Fabricate :project_consolidation, project: project, monte_carlo_weeks_min: 9, monte_carlo_weeks_max: 85, monte_carlo_weeks_std_dev: 7, team_based_operational_risk: 0.5
+        project_consolidation = Fabricate :project_consolidation, project: project, monte_carlo_weeks_min: 9, monte_carlo_weeks_max: 85, monte_carlo_weeks_std_dev: 7, team_based_operational_risk: 0.5, consolidation_date: Time.zone.today
         demand = Fabricate :demand, company: company, project: project, team: team
         Fabricate :demand_block, demand: demand
 
@@ -439,7 +439,7 @@ RSpec.describe Types::QueryType do
                                                       'endDate' => project.end_date.to_s,
                                                       'deadlinesChangeCount' => 0,
                                                       'discoveredScope' => nil,
-                                                      'pastWeeks' => 1,
+                                                      'pastWeeks' => project.past_weeks.to_i,
                                                       'currentWeeksByLittleLaw' => 0,
                                                       'currentMonteCarloWeeksMin' => 9,
                                                       'currentMonteCarloWeeksMax' => 85,
@@ -447,7 +447,7 @@ RSpec.describe Types::QueryType do
                                                       'remainingWork' => 28,
                                                       'currentTeamBasedRisk' => 0.5,
                                                       'currentRiskToDeadline' => 0.0,
-                                                      'remainingDays' => 3,
+                                                      'remainingDays' => project.remaining_days,
                                                       'currentWeeklyHoursIdealBurnup' => project.current_weekly_hours_ideal_burnup,
                                                       'running' => true,
                                                       'company' => {
@@ -496,16 +496,8 @@ RSpec.describe Types::QueryType do
                                                         }
                                                       ],
                                                       'lastProjectConsolidationsWeekly' => nil,
-                                                      'demandsFlowChartData' => {
-                                                        'committedChartData' => [0, 0],
-                                                        'creationChartData' => [1, 0],
-                                                        'pullTransactionRate' => [0, 0],
-                                                        'throughputChartData' => [0, 1]
-                                                      },
-                                                      'cumulativeFlowChartData' => {
-                                                        'xAxis' => %w[2022-04-24 2022-05-01],
-                                                        'yAxis' => []
-                                                      },
+                                                      'demandsFlowChartData' => { 'committedChartData' => [0, 0, 0], 'creationChartData' => [1, 2, 0], 'pullTransactionRate' => [0, 0, 0], 'throughputChartData' => [0, 1, 0] },
+                                                      'cumulativeFlowChartData' => { 'xAxis' => %w[2022-04-24 2022-05-01 2022-05-08], 'yAxis' => [] },
                                                       'leadTimeHistogramData' => {
                                                         'keys' => [111_600.0],
                                                         'values' => [1]
