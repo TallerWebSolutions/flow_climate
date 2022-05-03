@@ -10,7 +10,7 @@ export const LineChart = ({ data, axisLeftLegend, props }: LineGraphProps) => {
   return (
     <ResponsiveLine
       data={data}
-      colors={{ scheme: "pastel2" }}
+      colors={{ scheme: "category10" }}
       margin={{ left: 80, right: 20, top: 25, bottom: 40 }}
       axisLeft={{
         legend: axisLeftLegend,

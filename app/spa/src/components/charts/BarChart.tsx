@@ -30,7 +30,7 @@ export const BarChart = ({
       keys={keys}
       margin={{ top: 50, right: 130, bottom: 80, left: 60 }}
       padding={0.3}
-      colors={{ scheme: "nivo" }}
+      colors={{ scheme: "category10" }}
       borderColor={{
         from: "color",
         modifiers: [["darker", 1.6]],
