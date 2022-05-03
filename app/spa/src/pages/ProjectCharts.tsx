@@ -193,7 +193,7 @@ const ChartLineBox = ({
 }
 
 const ProjectCharts = () => {
-  const { t, i18n } = useTranslation(["projectChart"])
+  const { t } = useTranslation(["projectChart"])
   const { projectId } = useParams()
   const { data, loading } = useQuery<ProjectChartDTO>(PROJECT_CHART_QUERY, {
     variables: {
