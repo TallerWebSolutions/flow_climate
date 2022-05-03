@@ -76,6 +76,10 @@ export type Project = {
   averageTouchTime: number
   currentWeeklyHoursIdealBurnup: number[]
   weeklyProjectScopeHoursUntilEnd: number[]
+  projectMembers: {
+    demandsCount: number
+    memberName: string
+  }[]
   hoursPerStageChartData: {
     xAxis: string[]
     yAxis: number[]

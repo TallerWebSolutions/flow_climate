@@ -87,6 +87,10 @@ export const companyMock: Company = {
       weeklyProjectScopeHoursUntilEnd: [],
       projectConsolidationsLastMonth: [],
       demandsFinishedWithLeadtime: [],
+      projectMembers: [{
+        demandsCount: 23,
+        memberName: "Ken Adams"
+      }],
       hoursPerStageChartData: {
         xAxis: [],
         yAxis: [],
@@ -177,6 +181,10 @@ export const projectMock: Project = {
   weeklyProjectScopeHoursUntilEnd: [],
   projectConsolidationsLastMonth: [],
   demandsFinishedWithLeadtime: [],
+  projectMembers: [{
+    demandsCount: 23,
+    memberName: "Ken Adams"
+  }],
   hoursPerStageChartData: {
     xAxis: ['foo', 'bar', 'tor'],
     yAxis: [10, 20, 15],

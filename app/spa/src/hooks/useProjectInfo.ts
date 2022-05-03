@@ -38,13 +38,9 @@ type ProjectInfo = {
 type ProjectInfoDTO = ProjectInfo | undefined
 
 const useProjectInfo = (projectId: number) => {
-  const { data: oldData, loading, error } = useQuery<ProjectInfoDTO>(QUERY, {
+  const { data, loading, error } = useQuery<ProjectInfoDTO>(QUERY, {
     variables: { projectId },
   })
-
-  const data = {
-    project: projectMock
-  }
 
   return { projectInfo: data?.project, loading, error }
 }

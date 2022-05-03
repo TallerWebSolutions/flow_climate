@@ -45,6 +45,10 @@ const PROJECT_CHART_QUERY = gql`
       numberOfDemands
       numberOfDemandsDelivered
       remainingBacklog
+      projectMembers {
+        demandsCount
+        memberName
+      }
       upstreamDemands {
         id
       }
@@ -179,7 +183,7 @@ const ChartLineBox = ({
   props,
 }: ChartLineboxProps) => {
   return (
-    <Grid item xs={6} sx={{ padding: "8px" }}>
+    <Grid item xs={6} sx={{ padding: 1 }}>
       <Box sx={{ height: "350px" }}>
         <Typography>{title}</Typography>
 
@@ -192,17 +196,12 @@ const ChartLineBox = ({
 const ProjectCharts = () => {
   const { t, i18n } = useTranslation(["projectChart"])
   const { projectId } = useParams()
-  const { data: oldData, loading } = useQuery<ProjectChartDTO>(PROJECT_CHART_QUERY, {
+  const { data, loading } = useQuery<ProjectChartDTO>(PROJECT_CHART_QUERY, {
     variables: {
       projectId: Number(projectId),
       limit: LIMIT_DEMANDS_PER_PAGE,
     },
   })
-
-  const data = {
-    project: projectMock,
-    demands: []
-  }
 
   if (loading)
     return (
@@ -579,11 +578,16 @@ const ProjectCharts = () => {
     }
   )
 
+  const demandsCountByTeamMember = project.projectMembers.map(member => ({
+    "Demands Count": member.demandsCount,
+    "name": member.memberName
+  }))
+
   return (
     <ProjectPage pageName={t("charts")}>
       <ProjectChartsTable project={project} demands={demands} />
 
-      <Grid container spacing={2} rowSpacing={8} sx={{ marginTop: "32px" }}>
+      <Grid container spacing={2} rowSpacing={8} sx={{ marginTop: 4 }}>
         <ChartLineBox
           title={t("project_charts.operational_math_risk_evolution_chart")}
           data={operationalRiskChartData}
@@ -640,8 +644,7 @@ const ProjectCharts = () => {
             ),
           }}
         />
-        <Grid item xs={6} sx={{ padding: "8px" }}>
-          <Box sx={{ height: "350px" }}>
+        <Grid item xs={6} sx={{ padding: 1 }}>
             <Typography>{t("project_charts.bugs_chart")}</Typography>
 
             <BarChart
@@ -653,10 +656,8 @@ const ProjectCharts = () => {
               ]}
               indexBy="index"
             />
-          </Box>
         </Grid>
-        <Grid item xs={6} sx={{ padding: "8px" }}>
-          <Box sx={{ height: "350px" }}>
+        <Grid item xs={6} sx={{ padding: 1 }}>
             <Typography>{t("project_charts.flow_data_chart")}</Typography>
 
             <BarChart
@@ -671,7 +672,6 @@ const ProjectCharts = () => {
               axisLeftLegend={t("project_charts.flow_data_y_label")}
               axisBottomLegend={t("project_charts.flow_data_x_label")}
             />
-          </Box>
         </Grid>
 
         <ChartLineBox
@@ -735,51 +735,49 @@ const ProjectCharts = () => {
             },
           }}
         />
-        <Grid item xs={6} sx={{ padding: "8px" }}>
-          <Box sx={{ height: "350px" }}>
-            <Typography>
-              {t("project_charts.lead_time_control_chart")}
-            </Typography>
-            <ScatterChart
-              data={leadTimeControlChartData}
-              props={{
-                markers: [
-                  leadTimeControlP65Marker,
-                  leadTimeControlP80Marker,
-                  leadTimeControlP95Marker,
-                ],
-                tooltip: (data: { node: ScatterNode }) => {
-                  const demandExternalID = data.node.data.label
+        <Grid item xs={6} sx={{ padding: 1 }}>
+          <Box height={350}>
+              <Typography>
+                {t("project_charts.lead_time_control_chart")}
+              </Typography>
+              <ScatterChart
+                data={leadTimeControlChartData}
+                props={{
+                  markers: [
+                    leadTimeControlP65Marker,
+                    leadTimeControlP80Marker,
+                    leadTimeControlP95Marker,
+                  ],
+                  tooltip: (data: { node: ScatterNode }) => {
+                    const demandExternalID = data.node.data.label
 
-                  return (
-                    <ScatterChartTooltip
-                      xLabel={t(
-                        "project_charts.lead_time_control_tooltip_label"
-                      )}
-                      customXValue={demandExternalID}
-                      node={data.node}
-                    />
-                  )
-                },
-              }}
-            />
+                    return (
+                      <ScatterChartTooltip
+                        xLabel={t(
+                          "project_charts.lead_time_control_tooltip_label"
+                        )}
+                        customXValue={demandExternalID}
+                        node={data.node}
+                      />
+                    )
+                  },
+                }}
+              />
           </Box>
         </Grid>
 
-        <Grid item xs={6} sx={{ padding: "8px" }}>
-          <Box sx={{ height: "350px" }}>
-            <Typography>
-              {t("project_charts.lead_time_histogram_chart")}
-            </Typography>
+        <Grid item xs={6} sx={{ padding: 1 }}>
+          <Typography>
+            {t("project_charts.lead_time_histogram_chart")}
+          </Typography>
 
-            <BarChart
-              data={projectLeadTimeHistogramData}
-              keys={[t("project_charts.lead_time_histogram_chart_hits")]}
-              indexBy={t("project_charts.lead_time_histogram_chart_x_label")}
-              axisLeftLegend={t("project_charts.lead_time_histogram_chart_y_label")}
-              axisBottomLegend={t("project_charts.lead_time_histogram_chart_x_label")}
-            />
-          </Box>
+          <BarChart
+            data={projectLeadTimeHistogramData}
+            keys={[t("project_charts.lead_time_histogram_chart_hits")]}
+            indexBy={t("project_charts.lead_time_histogram_chart_x_label")}
+            axisLeftLegend={t("project_charts.lead_time_histogram_chart_y_label")}
+            axisBottomLegend={t("project_charts.lead_time_histogram_chart_x_label")}
+          />
         </Grid>
 
         <ChartLineBox
@@ -901,141 +899,83 @@ const ProjectCharts = () => {
             ),
           }}
         />
-        <Grid item xs={6} sx={{ padding: "8px" }}>
-          <Box sx={{ height: "350px" }}>
-            <Typography>{t("project_charts.hours_consumed_chart")}</Typography>
+        <Grid item xs={6} sx={{ padding: 1 }}>
+          <Typography>{t("project_charts.hours_consumed_chart")}</Typography>
 
-            <BarChart
-              data={projectHoursConsummed}
-              keys={[
-                t("project_charts.hours_consumed_upstream"),
-                t("project_charts.hours_consumed_downstream"),
-                t("project_charts.hours_consumed_total_throughput"),
-              ]}
-              indexBy={t("project_charts.hours_consumed_x_label")}
-              axisLeftLegend={t("project_charts.hours_consumed_y_label")}
-              axisBottomLegend={t("project_charts.hours_consumed_x_label")}
-            />
-          </Box>
+          <BarChart
+            data={projectHoursConsummed}
+            keys={[
+              t("project_charts.hours_consumed_upstream"),
+              t("project_charts.hours_consumed_downstream"),
+              t("project_charts.hours_consumed_total_throughput"),
+            ]}
+            indexBy={t("project_charts.hours_consumed_x_label")}
+            axisLeftLegend={t("project_charts.hours_consumed_y_label")}
+            axisBottomLegend={t("project_charts.hours_consumed_x_label")}
+          />
         </Grid>
-        <Grid item xs={6} sx={{ padding: "8px" }}>
-          <Box sx={{ height: "350px" }}>
-            <Typography>
-              {t("project_charts.consumed_hours_by_role_chart")}
-            </Typography>
+        <Grid item xs={6} sx={{ padding: 1 }}>
+          <Typography>
+            {t("project_charts.consumed_hours_by_role_chart")}
+          </Typography>
 
-            <BarChart
-              data={projectConsumedHoursByRoleChartData}
-              keys={[
-                t("project_charts.consumed_hours_by_role_design_effort"),
-                t("project_charts.consumed_hours_by_role_development_effort"),
-                t("project_charts.consumed_hours_by_role_management_effort"),
-                t("project_charts.consumed_hours_by_role_total_effort"),
-              ]}
-              indexBy="period"
-              axisLeftLegend={t("project_charts.consumed_hours_by_role_y_label")}
-              // props={{
-              //   legends: [
-              //     {
-              //       dataFrom: "keys",
-              //       anchor: isLanguagePT ? "top-left" : "top",
-              //       direction: isLanguagePT ? "column" : "row",
-              //       toggleSerie: true,
-              //       justify: false,
-              //       translateX: 0,
-              //       translateY: -25,
-              //       itemsSpacing: 0,
-              //       itemDirection: "left-to-right",
-              //       itemWidth: 125,
-              //       itemHeight: 20,
-              //       itemOpacity: 0.75,
-              //       symbolSize: 12,
-              //       symbolShape: "circle",
-              //       symbolBorderColor: "rgba(0, 0, 0, .5)",
-              //       effects: [
-              //         {
-              //           on: "hover",
-              //           style: {
-              //             itemBackground: "rgba(0, 0, 0, .03)",
-              //             itemOpacity: 1,
-              //           },
-              //         },
-              //       ],
-              //     },
-              //   ],
-              // }}
-            />
-          </Box>
+          <BarChart
+            data={projectConsumedHoursByRoleChartData}
+            keys={[
+              t("project_charts.consumed_hours_by_role_design_effort"),
+              t("project_charts.consumed_hours_by_role_development_effort"),
+              t("project_charts.consumed_hours_by_role_management_effort"),
+              t("project_charts.consumed_hours_by_role_total_effort"),
+            ]}
+            indexBy="period"
+            axisLeftLegend={t("project_charts.consumed_hours_by_role_y_label")}
+          />
         </Grid>
-        <Grid item xs={6} sx={{ padding: "8px" }}>
-          <Box sx={{ height: "350px" }}>
-            <Typography>
-              {t("project_charts.consumed_hours_by_role_in_month_chart")}
-            </Typography>
-            <BarChart
-              data={projectConsumedHoursByRoleInMonthChartData}
-              axisLeftLegend={t(
-                "project_charts.consumed_hours_by_role_in_month_y_label"
-              )}
-              keys={[
-                t(
-                  "project_charts.consumed_hours_by_role_in_month_design_effort"
-                ),
-                t(
-                  "project_charts.consumed_hours_by_role_in_month_development_effort"
-                ),
-                t(
-                  "project_charts.consumed_hours_by_role_in_month_management_effort"
-                ),
-                t(
-                  "project_charts.consumed_hours_by_role_in_month_total_effort"
-                ),
-              ]}
-              indexBy="period"
-              // props={{
-              //   legends: [
-              //     {
-              //       dataFrom: "keys",
-              //       anchor: isLanguagePT ? "top-left" : "top",
-              //       direction: isLanguagePT ? "column" : "row",
-              //       toggleSerie: true,
-              //       justify: false,
-              //       translateX: 0,
-              //       translateY: -25,
-              //       itemsSpacing: 0,
-              //       itemDirection: "left-to-right",
-              //       itemWidth: 125,
-              //       itemHeight: 20,
-              //       itemOpacity: 0.75,
-              //       symbolSize: 12,
-              //       symbolShape: "circle",
-              //       symbolBorderColor: "rgba(0, 0, 0, .5)",
-              //       effects: [
-              //         {
-              //           on: "hover",
-              //           style: {
-              //             itemBackground: "rgba(0, 0, 0, .03)",
-              //             itemOpacity: 1,
-              //           },
-              //         },
-              //       ],
-              //     },
-              //   ],
-              // }}
-            />
-          </Box>
+        <Grid item xs={6} sx={{ padding: 1 }}>
+          <Typography>
+            {t("project_charts.consumed_hours_by_role_in_month_chart")}
+          </Typography>
+          <BarChart
+            data={projectConsumedHoursByRoleInMonthChartData}
+            axisLeftLegend={t(
+              "project_charts.consumed_hours_by_role_in_month_y_label"
+            )}
+            keys={[
+              t(
+                "project_charts.consumed_hours_by_role_in_month_design_effort"
+              ),
+              t(
+                "project_charts.consumed_hours_by_role_in_month_development_effort"
+              ),
+              t(
+                "project_charts.consumed_hours_by_role_in_month_management_effort"
+              ),
+              t(
+                "project_charts.consumed_hours_by_role_in_month_total_effort"
+              ),
+            ]}
+            indexBy="period"
+            
+          />
         </Grid>
-        <Grid item xs={6} sx={{ padding: "8px" }}>
-          <Box sx={{ height: "350px" }}>
-            <Typography>{t("project_charts.hours_per_stage_chart")}</Typography>
+        <Grid item xs={6} sx={{ padding: 1 }}>
+          <Typography>{t("project_charts.hours_per_stage_chart")}</Typography>
 
-            <BarChart
-              data={projectHoursPerStage}
-              keys={hoursPerStageChartData.xAxis}
-              indexBy="index"
-              axisLeftLegend={t("project_charts.hours_per_stage_y_label")}
-            />
-          </Box>
+          <BarChart
+            data={projectHoursPerStage}
+            keys={hoursPerStageChartData.xAxis}
+            indexBy="index"
+            axisLeftLegend={t("project_charts.hours_per_stage_y_label")}
+          />
+        </Grid>
+        <Grid item xs={6} sx={{ padding: 1 }}>
+          <Typography>{t("project_charts.demandsCountByTeamMember")}</Typography>
+
+          <BarChart
+            data={demandsCountByTeamMember}
+            indexBy="name"
+            keys={["Demands Count"]}
+          />
         </Grid>
       </Grid>
     </ProjectPage>
@@ -1043,3 +983,64 @@ const ProjectCharts = () => {
 }
 
 export default ProjectCharts
+
+// props={{
+            //   legends: [
+            //     {
+            //       dataFrom: "keys",
+            //       anchor: isLanguagePT ? "top-left" : "top",
+            //       direction: isLanguagePT ? "column" : "row",
+            //       toggleSerie: true,
+            //       justify: false,
+            //       translateX: 0,
+            //       translateY: -25,
+            //       itemsSpacing: 0,
+            //       itemDirection: "left-to-right",
+            //       itemWidth: 125,
+            //       itemHeight: 20,
+            //       itemOpacity: 0.75,
+            //       symbolSize: 12,
+            //       symbolShape: "circle",
+            //       symbolBorderColor: "rgba(0, 0, 0, .5)",
+            //       effects: [
+            //         {
+            //           on: "hover",
+            //           style: {
+            //             itemBackground: "rgba(0, 0, 0, .03)",
+            //             itemOpacity: 1,
+            //           },
+            //         },
+            //       ],
+            //     },
+            //   ],
+            // }}
+// props={{
+            //   legends: [
+            //     {
+            //       dataFrom: "keys",
+            //       anchor: isLanguagePT ? "top-left" : "top",
+            //       direction: isLanguagePT ? "column" : "row",
+            //       toggleSerie: true,
+            //       justify: false,
+            //       translateX: 0,
+            //       translateY: -25,
+            //       itemsSpacing: 0,
+            //       itemDirection: "left-to-right",
+            //       itemWidth: 125,
+            //       itemHeight: 20,
+            //       itemOpacity: 0.75,
+            //       symbolSize: 12,
+            //       symbolShape: "circle",
+            //       symbolBorderColor: "rgba(0, 0, 0, .5)",
+            //       effects: [
+            //         {
+            //           on: "hover",
+            //           style: {
+            //             itemBackground: "rgba(0, 0, 0, .03)",
+            //             itemOpacity: 1,
+            //           },
+            //         },
+            //       ],
+            //     },
+            //   ],
+            // }}
