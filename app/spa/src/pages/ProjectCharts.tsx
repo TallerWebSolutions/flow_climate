@@ -23,6 +23,7 @@ import {
   PROJECT_STANDARD_FRAGMENT,
 } from "../components/ProjectPage"
 import { secondsToDays } from "../lib/date"
+import { projectMock } from "../lib/mocks"
 import { Demand } from "../modules/demand/demand.types"
 import { Project } from "../modules/project/project.types"
 import { buildPercentileYAxisMarker } from "./Tasks/Charts"
@@ -191,12 +192,17 @@ const ChartLineBox = ({
 const ProjectCharts = () => {
   const { t, i18n } = useTranslation(["projectChart"])
   const { projectId } = useParams()
-  const { data, loading } = useQuery<ProjectChartDTO>(PROJECT_CHART_QUERY, {
+  const { data: oldData, loading } = useQuery<ProjectChartDTO>(PROJECT_CHART_QUERY, {
     variables: {
       projectId: Number(projectId),
       limit: LIMIT_DEMANDS_PER_PAGE,
     },
   })
+
+  const data = {
+    project: projectMock,
+    demands: []
+  }
 
   if (loading)
     return (
@@ -565,7 +571,7 @@ const ProjectCharts = () => {
     )
 
   const projectHoursPerStage = hoursPerStageChartData.xAxis.map(
-    (xValue, index) => {
+    (xValue, index: number) => {
       return {
         index: index,
         [xValue]: hoursPerStageChartData.yAxis[index],
@@ -641,23 +647,11 @@ const ProjectCharts = () => {
             <BarChart
               data={projectBugsChartData}
               axisLeftLegend={t("project_charts.bugs_y_label")}
-              props={{
-                groupMode: "grouped",
-                keys: [
-                  t("project_charts.bugs_openned"),
-                  t("project_charts.bugs_closed"),
-                ],
-                indexBy: "index",
-                margin: { top: 50, right: 60, bottom: 65, left: 60 },
-                padding: 0.3,
-                axisBottom: {
-                  tickSize: 5,
-                  tickPadding: 5,
-                  legendPosition: "middle",
-                  legendOffset: 60,
-                  tickRotation: 0,
-                },
-              }}
+              keys={[
+                t("project_charts.bugs_openned"),
+                t("project_charts.bugs_closed"),
+              ]}
+              indexBy="index"
             />
           </Box>
         </Grid>
@@ -667,34 +661,15 @@ const ProjectCharts = () => {
 
             <BarChart
               data={projectFlowChartData}
-              props={{
-                groupMode: "grouped",
-                keys: [
-                  t("project_charts.flow_data_created"),
-                  t("project_charts.flow_data_committed_to"),
-                  t("project_charts.flow_data_pull_transactions"),
-                  t("project_charts.flow_data_delivered"),
-                ],
-                indexBy: "index",
-                margin: { top: 50, right: 60, bottom: 65, left: 60 },
-                padding: 0.3,
-                axisLeft: {
-                  tickSize: 5,
-                  tickPadding: 5,
-                  tickRotation: 0,
-                  legend: t("project_charts.flow_data_y_label"),
-                  legendPosition: "middle",
-                  legendOffset: -55,
-                },
-                axisBottom: {
-                  tickSize: 5,
-                  tickPadding: 5,
-                  legend: t("project_charts.flow_data_x_label"),
-                  legendPosition: "middle",
-                  legendOffset: 60,
-                  tickRotation: -40,
-                },
-              }}
+              keys={[
+                t("project_charts.flow_data_created"),
+                t("project_charts.flow_data_committed_to"),
+                t("project_charts.flow_data_pull_transactions"),
+                t("project_charts.flow_data_delivered"),
+              ]}
+              indexBy="index"
+              axisLeftLegend={t("project_charts.flow_data_y_label")}
+              axisBottomLegend={t("project_charts.flow_data_x_label")}
             />
           </Box>
         </Grid>
@@ -799,28 +774,10 @@ const ProjectCharts = () => {
 
             <BarChart
               data={projectLeadTimeHistogramData}
-              props={{
-                groupMode: "grouped",
-                keys: [t("project_charts.lead_time_histogram_chart_hits")],
-                indexBy: t("project_charts.lead_time_histogram_chart_x_label"),
-                margin: { top: 50, right: 60, bottom: 65, left: 60 },
-                padding: 0.3,
-                axisLeft: {
-                  tickSize: 5,
-                  tickPadding: 5,
-                  tickRotation: 0,
-                  legend: t("project_charts.lead_time_histogram_chart_y_label"),
-                  legendPosition: "middle",
-                  legendOffset: -55,
-                },
-                axisBottom: {
-                  tickSize: 5,
-                  tickPadding: 5,
-                  legend: t("project_charts.lead_time_histogram_chart_x_label"),
-                  legendPosition: "middle",
-                  legendOffset: 60,
-                },
-              }}
+              keys={[t("project_charts.lead_time_histogram_chart_hits")]}
+              indexBy={t("project_charts.lead_time_histogram_chart_x_label")}
+              axisLeftLegend={t("project_charts.lead_time_histogram_chart_y_label")}
+              axisBottomLegend={t("project_charts.lead_time_histogram_chart_x_label")}
             />
           </Box>
         </Grid>
@@ -950,33 +907,14 @@ const ProjectCharts = () => {
 
             <BarChart
               data={projectHoursConsummed}
-              props={{
-                groupMode: "grouped",
-                keys: [
-                  t("project_charts.hours_consumed_upstream"),
-                  t("project_charts.hours_consumed_downstream"),
-                  t("project_charts.hours_consumed_total_throughput"),
-                ],
-                indexBy: t("project_charts.hours_consumed_x_label"),
-                margin: { top: 50, right: 60, bottom: 65, left: 60 },
-                padding: 0.3,
-                axisLeft: {
-                  tickSize: 5,
-                  tickPadding: 5,
-                  tickRotation: 0,
-                  legend: t("project_charts.hours_consumed_y_label"),
-                  legendPosition: "middle",
-                  legendOffset: -55,
-                },
-                axisBottom: {
-                  tickSize: 5,
-                  tickPadding: 5,
-                  legend: t("project_charts.hours_consumed_x_label"),
-                  legendPosition: "middle",
-                  legendOffset: 60,
-                  tickRotation: -40,
-                },
-              }}
+              keys={[
+                t("project_charts.hours_consumed_upstream"),
+                t("project_charts.hours_consumed_downstream"),
+                t("project_charts.hours_consumed_total_throughput"),
+              ]}
+              indexBy={t("project_charts.hours_consumed_x_label")}
+              axisLeftLegend={t("project_charts.hours_consumed_y_label")}
+              axisBottomLegend={t("project_charts.hours_consumed_x_label")}
             />
           </Box>
         </Grid>
@@ -988,61 +926,44 @@ const ProjectCharts = () => {
 
             <BarChart
               data={projectConsumedHoursByRoleChartData}
-              props={{
-                groupMode: "grouped",
-                keys: [
-                  t("project_charts.consumed_hours_by_role_design_effort"),
-                  t("project_charts.consumed_hours_by_role_development_effort"),
-                  t("project_charts.consumed_hours_by_role_management_effort"),
-                  t("project_charts.consumed_hours_by_role_total_effort"),
-                ],
-                indexBy: "period",
-                margin: { top: 50, right: 60, bottom: 65, left: 60 },
-                padding: 0.3,
-                axisLeft: {
-                  tickSize: 5,
-                  tickPadding: 5,
-                  tickRotation: 0,
-                  legend: t("project_charts.consumed_hours_by_role_y_label"),
-                  legendPosition: "middle",
-                  legendOffset: -55,
-                },
-                axisBottom: {
-                  tickSize: 5,
-                  tickPadding: 5,
-                  legendPosition: "middle",
-                  legendOffset: 60,
-                  tickRotation: -40,
-                },
-                legends: [
-                  {
-                    dataFrom: "keys",
-                    anchor: isLanguagePT ? "top-left" : "top",
-                    direction: isLanguagePT ? "column" : "row",
-                    toggleSerie: true,
-                    justify: false,
-                    translateX: 0,
-                    translateY: -25,
-                    itemsSpacing: 0,
-                    itemDirection: "left-to-right",
-                    itemWidth: 125,
-                    itemHeight: 20,
-                    itemOpacity: 0.75,
-                    symbolSize: 12,
-                    symbolShape: "circle",
-                    symbolBorderColor: "rgba(0, 0, 0, .5)",
-                    effects: [
-                      {
-                        on: "hover",
-                        style: {
-                          itemBackground: "rgba(0, 0, 0, .03)",
-                          itemOpacity: 1,
-                        },
-                      },
-                    ],
-                  },
-                ],
-              }}
+              keys={[
+                t("project_charts.consumed_hours_by_role_design_effort"),
+                t("project_charts.consumed_hours_by_role_development_effort"),
+                t("project_charts.consumed_hours_by_role_management_effort"),
+                t("project_charts.consumed_hours_by_role_total_effort"),
+              ]}
+              indexBy="period"
+              axisLeftLegend={t("project_charts.consumed_hours_by_role_y_label")}
+              // props={{
+              //   legends: [
+              //     {
+              //       dataFrom: "keys",
+              //       anchor: isLanguagePT ? "top-left" : "top",
+              //       direction: isLanguagePT ? "column" : "row",
+              //       toggleSerie: true,
+              //       justify: false,
+              //       translateX: 0,
+              //       translateY: -25,
+              //       itemsSpacing: 0,
+              //       itemDirection: "left-to-right",
+              //       itemWidth: 125,
+              //       itemHeight: 20,
+              //       itemOpacity: 0.75,
+              //       symbolSize: 12,
+              //       symbolShape: "circle",
+              //       symbolBorderColor: "rgba(0, 0, 0, .5)",
+              //       effects: [
+              //         {
+              //           on: "hover",
+              //           style: {
+              //             itemBackground: "rgba(0, 0, 0, .03)",
+              //             itemOpacity: 1,
+              //           },
+              //         },
+              //       ],
+              //     },
+              //   ],
+              // }}
             />
           </Box>
         </Grid>
@@ -1056,61 +977,51 @@ const ProjectCharts = () => {
               axisLeftLegend={t(
                 "project_charts.consumed_hours_by_role_in_month_y_label"
               )}
-              props={{
-                groupMode: "grouped",
-                keys: [
-                  t(
-                    "project_charts.consumed_hours_by_role_in_month_design_effort"
-                  ),
-                  t(
-                    "project_charts.consumed_hours_by_role_in_month_development_effort"
-                  ),
-                  t(
-                    "project_charts.consumed_hours_by_role_in_month_management_effort"
-                  ),
-                  t(
-                    "project_charts.consumed_hours_by_role_in_month_total_effort"
-                  ),
-                ],
-                indexBy: "period",
-                margin: { top: 50, right: 60, bottom: 65, left: 60 },
-                padding: 0.3,
-                axisBottom: {
-                  tickSize: 5,
-                  tickPadding: 5,
-                  legendPosition: "middle",
-                  legendOffset: 60,
-                  tickRotation: -40,
-                },
-                legends: [
-                  {
-                    dataFrom: "keys",
-                    anchor: isLanguagePT ? "top-left" : "top",
-                    direction: isLanguagePT ? "column" : "row",
-                    toggleSerie: true,
-                    justify: false,
-                    translateX: 0,
-                    translateY: -25,
-                    itemsSpacing: 0,
-                    itemDirection: "left-to-right",
-                    itemWidth: 125,
-                    itemHeight: 20,
-                    itemOpacity: 0.75,
-                    symbolSize: 12,
-                    symbolShape: "circle",
-                    symbolBorderColor: "rgba(0, 0, 0, .5)",
-                    effects: [
-                      {
-                        on: "hover",
-                        style: {
-                          itemBackground: "rgba(0, 0, 0, .03)",
-                          itemOpacity: 1,
-                        },
-                      },
-                    ],
-                  },
-                ],
-              }}
+              keys={[
+                t(
+                  "project_charts.consumed_hours_by_role_in_month_design_effort"
+                ),
+                t(
+                  "project_charts.consumed_hours_by_role_in_month_development_effort"
+                ),
+                t(
+                  "project_charts.consumed_hours_by_role_in_month_management_effort"
+                ),
+                t(
+                  "project_charts.consumed_hours_by_role_in_month_total_effort"
+                ),
+              ]}
+              indexBy="period"
+              // props={{
+              //   legends: [
+              //     {
+              //       dataFrom: "keys",
+              //       anchor: isLanguagePT ? "top-left" : "top",
+              //       direction: isLanguagePT ? "column" : "row",
+              //       toggleSerie: true,
+              //       justify: false,
+              //       translateX: 0,
+              //       translateY: -25,
+              //       itemsSpacing: 0,
+              //       itemDirection: "left-to-right",
+              //       itemWidth: 125,
+              //       itemHeight: 20,
+              //       itemOpacity: 0.75,
+              //       symbolSize: 12,
+              //       symbolShape: "circle",
+              //       symbolBorderColor: "rgba(0, 0, 0, .5)",
+              //       effects: [
+              //         {
+              //           on: "hover",
+              //           style: {
+              //             itemBackground: "rgba(0, 0, 0, .03)",
+              //             itemOpacity: 1,
+              //           },
+              //         },
+              //       ],
+              //     },
+              //   ],
+              // }}
             />
           </Box>
         </Grid>
@@ -1120,28 +1031,9 @@ const ProjectCharts = () => {
 
             <BarChart
               data={projectHoursPerStage}
-              props={{
-                groupMode: "grouped",
-                keys: hoursPerStageChartData.xAxis,
-                indexBy: "index",
-                margin: { top: 50, right: 60, bottom: 65, left: 60 },
-                padding: 0.3,
-                axisBottom: {
-                  tickSize: 5,
-                  tickPadding: 5,
-                  legendPosition: "middle",
-                  legendOffset: 60,
-                  tickRotation: -40,
-                },
-                axisLeft: {
-                  tickSize: 5,
-                  tickPadding: 5,
-                  tickRotation: 0,
-                  legend: t("project_charts.hours_per_stage_y_label"),
-                  legendPosition: "middle",
-                  legendOffset: -55,
-                },
-              }}
+              keys={hoursPerStageChartData.xAxis}
+              indexBy="index"
+              axisLeftLegend={t("project_charts.hours_per_stage_y_label")}
             />
           </Box>
         </Grid>

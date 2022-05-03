@@ -178,8 +178,8 @@ export const projectMock: Project = {
   projectConsolidationsLastMonth: [],
   demandsFinishedWithLeadtime: [],
   hoursPerStageChartData: {
-    xAxis: [],
-    yAxis: [],
+    xAxis: ['foo', 'bar', 'tor'],
+    yAxis: [10, 20, 15],
   },
   demandsFlowChartData: {
     creationChartData: [],

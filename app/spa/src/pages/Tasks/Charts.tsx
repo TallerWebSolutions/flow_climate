@@ -496,31 +496,19 @@ const TaskCharts = ({ filters }: TasksChartProps) => {
         <BarChart
           axisLeftLegend={t("charts.demands")}
           data={flowChartData}
-          props={{
-            groupMode: "grouped",
-            keys: [
-              t("charts.flow_data_created_legend"),
-              t("charts.flow_data_delivered_legend"),
-            ],
-            margin: { top: 50, right: 60, bottom: 65, left: 60 },
-            padding: 0.3,
-            axisBottom: {
-              tickSize: 5,
-              tickPadding: 5,
-              legendPosition: "middle",
-              legendOffset: 60,
-              tickRotation: -37,
-              legend: t("charts.flow_data_period_legend"),
-              indexBy: "period",
-            },
-            tooltip: (data: BarData) => {
-              return (
-                <BarChartTooltip
-                  xLabel={t("charts.flow_data_tooltip_x_legend")}
-                  data={data}
-                />
-              )
-            },
+          keys={[
+            t("charts.flow_data_created_legend"),
+            t("charts.flow_data_delivered_legend"),
+          ]}
+          axisBottomLegend={t("charts.flow_data_period_legend")}
+          indexBy="period"
+          tooltip={(data: BarData) => {
+            return (
+              <BarChartTooltip
+                xLabel={t("charts.flow_data_tooltip_x_legend")}
+                data={data}
+              />
+            )
           }}
         />
       </ChartBox>
@@ -578,34 +566,16 @@ const TaskCharts = ({ filters }: TasksChartProps) => {
       <ChartBox title={t("charts.completion_time_histogram_chart")}>
         <BarChart
           data={completionTimeHistogramData}
-          props={{
-            groupMode: "grouped",
-            keys: [t("charts.completion_time_histogram_completiontime")],
-            indexBy: t(
-              "charts.completion_time_histogram_completiontime_x_label"
-            ),
-            margin: { top: 50, right: 60, bottom: 65, left: 60 },
-            padding: 0.3,
-            axisLeft: {
-              tickSize: 5,
-              tickPadding: 5,
-              tickRotation: 0,
-              legend: t(
-                "charts.completion_time_histogram_completiontime_y_label"
-              ),
-              legendPosition: "middle",
-              legendOffset: -55,
-            },
-            axisBottom: {
-              tickSize: 5,
-              tickPadding: 5,
-              legend: t(
-                "charts.completion_time_histogram_completiontime_x_label"
-              ),
-              legendPosition: "middle",
-              legendOffset: 60,
-            },
-          }}
+          keys={[t("charts.completion_time_histogram_completiontime")]}
+          indexBy={t(
+            "charts.completion_time_histogram_completiontime_x_label"
+          )}
+          axisLeftLegend={t(
+            "charts.completion_time_histogram_completiontime_y_label"
+          )}
+          axisBottomLegend={t(
+            "charts.completion_time_histogram_completiontime_x_label"
+          )}
         />
       </ChartBox>
     </Box>
