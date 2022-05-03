@@ -260,6 +260,13 @@ const ProjectCharts = () => {
       ? cumulativeFlowChartData?.xAxis.map((_, index) => {
           const yAxis = cumulativeFlowChartData.yAxis
 
+          if (yAxis[index]?.name || yAxis[index]?.data === undefined) {
+            return {
+              id: "",
+              data: [],
+            }
+          }
+
           return {
             id: yAxis[index].name,
             data: yAxis[index].data.map((cumulativeValue, index) => ({
