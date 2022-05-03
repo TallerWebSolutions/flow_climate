@@ -11,7 +11,7 @@
 <%= form_for [@company, @stage] do |f| %>
   <div class="row bottom-spaced-component">
     <div class="col-xs-12">
-      <%= render 'stages/form', form: f, stage: @stage, company: @company %>
+      <%= render 'stages/form', form: f, stage: @stage, company: @company, parent_stages: @parent_stages %>
     </div>
   </div>
 <% end %>

@@ -2,11 +2,11 @@
   <div class="modal-content">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-      <h4 class="modal-title" id="myModalLabel"><%= I18n.t('stages.edit.title') %></h4>
+      <h4 class="modal-title" id="myModalLabel"><%= I18n.t('stages.edit.title', stage_name: stage.name) %></h4>
     </div>
     <div class="modal-body">
       <%= form_for stage, url: company_stage_url(company, stage), remote: true, method: :put, class: 'form' do |f| %>
-        <%= render 'stages/form', form: f, stage: stage, company: company %>
+        <%= render 'stages/form', form: f, stage: stage, company: company, parent_stages: parent_stages %>
       <% end %>
     </div>
   </div>

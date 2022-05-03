@@ -1077,7 +1077,7 @@ pt-BR:
       project_count: 'Qtd Projetos'
       time_in_stage: 'Tempo na Etapa'
     edit:
-      title: 'Editar Etapa'
+      title: 'Editar Etapa %{stage_name}'
     show:
       not_associated_projects: 'Projetos não associados'
       stage_projects: 'Projetos na Etapa'

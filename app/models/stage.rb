@@ -10,6 +10,7 @@
 #  name                :string           not null
 #  order               :integer          default(0), not null
 #  queue               :boolean          default(FALSE)
+#  stage_level         :integer          default(0), not null
 #  stage_stream        :integer          default("upstream"), not null
 #  stage_type          :integer          default("backlog"), not null
 #  created_at          :datetime         not null
@@ -34,6 +35,7 @@
 class Stage < ApplicationRecord
   enum stage_type: { backlog: 0, design: 1, analysis: 2, development: 3, test: 4, homologation: 5, ready_to_deploy: 6, delivered: 7, archived: 8, trashcan: 9 }
   enum stage_stream: { upstream: 0, downstream: 1, out_stream: 2 }
+  enum stage_level: { team: 0, coordination: 1 }
 
   belongs_to :company
 

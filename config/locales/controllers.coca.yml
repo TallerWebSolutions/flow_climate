@@ -988,7 +988,7 @@ coca:
       project_count: "Qty Projects"
       time_in_stage: "Stage Time"
     edit:
-      title: "Edit Stage"
+      title: "Edit Stage %{stage_name}"
     show:
       not_associated_projects: "Not Associated Projects"
       stage_projects: "Stage Projects"

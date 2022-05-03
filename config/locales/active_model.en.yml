@@ -96,6 +96,9 @@ en:
             upstream: Upstream
             downstream: Downstream
             out_stream: Out Stream
+          stage_level:
+            team: Team
+            coordination: Coordination
         help:
           integration_pipe_id: "Flow ID, board ID, rapidView ID (Jira)..."
       demand_block:

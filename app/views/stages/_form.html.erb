@@ -9,6 +9,20 @@
       <%= form.text_field :name, class: 'form-control' %>
       <span class="help-block"><%= stage.errors[:name].join(', ') %></span>
     </div>
+  </div>
+  <div class="row">
+    <div class='col-xs-6 form-group <%= 'has-error' if stage.errors[:stage_level].present? %>'>
+      <%= form.label :stage_level, class: 'control-label' %>
+      <%= form.select :stage_level, Stage.stage_levels.map { |key, _value| [I18n.t("activerecord.attributes.stage.enums.stage_level.#{key}"), key] }, { include_blank: I18n.t('general.select'), selected: stage.stage_level }, class: 'form-control' %>
+      <span class="help-block"><%= stage.errors[:stage_level].join(', ') %></span>
+    </div>
+
+    <div class='col-xs-6 form-group'>
+      <%= form.label :parent, class: 'control-label' %>
+      <%= form.select :parent_id, parent_stages.map { |stage| [stage.name, stage.id] }, { include_blank: I18n.t('general.select'), selected: stage.parent_id }, class: 'form-control' %>
+    </div>
+  </div>
+  <div class="row">
     <div class='col-xs-6 form-group <%= 'has-error' if stage.errors[:integration_pipe_id].present? %>'>
       <%= form.label :integration_pipe_id, class: 'control-label' %>
       <i class="far fa-question-circle" title="<%= I18n.t('activerecord.attributes.stage.help.integration_pipe_id') %>"></i>
@@ -20,14 +34,16 @@
       <%= form.text_field :integration_id, class: 'form-control', autofocus: true %>
       <span class="help-block"><%= stage.errors[:integration_id].join(', ') %></span>
     </div>
+  </div>
+  <div class="row">
     <div class='col-xs-6 form-group <%= 'has-error' if stage.errors[:stage_type].present? %>'>
       <%= form.label :stage_type, class: 'control-label' %>
-      <%= form.select :stage_type, Stage.stage_types.map { |key, _value| [t("activerecord.attributes.stage.enums.stage_type.#{key}"), key] }, { include_blank: I18n.t('general.select'), selected: stage.stage_type }, class: 'form-control' %>
+      <%= form.select :stage_type, Stage.stage_types.map { |key, _value| [I18n.t("activerecord.attributes.stage.enums.stage_type.#{key}"), key] }, { include_blank: I18n.t('general.select'), selected: stage.stage_type }, class: 'form-control' %>
       <span class="help-block"><%= stage.errors[:stage_type].join(', ') %></span>
     </div>
     <div class='col-xs-6 form-group <%= 'has-error' if stage.errors[:stage_stream].present? %>'>
       <%= form.label :stage_stream, class: 'control-label' %>
-      <%= form.select :stage_stream, Stage.stage_streams.map { |key, _value| [t("activerecord.attributes.stage.enums.stage_stream.#{key}"), key] }, { include_blank: I18n.t('general.select'), selected: stage.stage_stream }, class: 'form-control' %>
+      <%= form.select :stage_stream, Stage.stage_streams.map { |key, _value| [I18n.t("activerecord.attributes.stage.enums.stage_stream.#{key}"), key] }, { include_blank: I18n.t('general.select'), selected: stage.stage_stream }, class: 'form-control' %>
       <span class="help-block"><%= stage.errors[:stage_stream].join(', ') %></span>
     </div>
   </div>

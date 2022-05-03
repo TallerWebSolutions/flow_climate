@@ -4,6 +4,7 @@ RSpec.describe Stage, type: :model do
   context 'enums' do
     it { is_expected.to define_enum_for(:stage_type).with_values(backlog: 0, design: 1, analysis: 2, development: 3, test: 4, homologation: 5, ready_to_deploy: 6, delivered: 7, archived: 8, trashcan: 9) }
     it { is_expected.to define_enum_for(:stage_stream).with_values(upstream: 0, downstream: 1, out_stream: 2) }
+    it { is_expected.to define_enum_for(:stage_level).with_values(team: 0, coordination: 1) }
   end
 
   context 'associations' do

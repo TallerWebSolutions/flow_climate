@@ -378,6 +378,8 @@ pt-BR:
       stage:
         projects: Projetos
         team: Time
+        order: Ordem
+        stage_level: Nível da Etapa
         demand_transitions: Transições de Demanda
         integration_pipe_id: Id do Fluxo
         integration_id: Id na Integração
@@ -386,6 +388,7 @@ pt-BR:
         stage_stream: Tipo do Stream
         commitment_point: Ponto de Comprometimento?
         end_point: Etapa Final?
+        parent: Etapa Mãe
         help:
           integration_pipe_id: "ID do Fluxo, ID do Quadro, ID do rapidView (Jira)..."
         enums:
@@ -404,6 +407,9 @@ pt-BR:
             upstream: Upstream
             downstream: Downstream
             out_stream: Fora do Stream
+          stage_level:
+            team: Time
+            coordination: Coordenação
       demand_transition:
         demand: Demanda
         stage: Etapa

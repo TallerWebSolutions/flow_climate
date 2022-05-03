@@ -8,6 +8,7 @@ class StagesController < AuthenticatedController
 
   def new
     @stage = Stage.new
+    parent_stages
   end
 
   def create
@@ -15,14 +16,18 @@ class StagesController < AuthenticatedController
     @stage = StagesRepository.instance.save_stage(@stage, stages_params)
     return redirect_to company_path(@company) if @stage.valid?
 
+    parent_stages
     render :new
   end
 
   def edit
+    parent_stages
+
     respond_to { |format| format.js }
   end
 
   def update
+    parent_stages
     @stage = StagesRepository.instance.save_stage(@stage, stages_params)
     render 'stages/update'
   end
@@ -82,6 +87,10 @@ class StagesController < AuthenticatedController
 
   private
 
+  def parent_stages
+    @parent_stages = @company.stages.order(:name) - [@stage]
+  end
+
   def assign_project_stages
     @stage_projects = @stage.projects.includes(:team).sort_by(&:name)
     @not_associated_projects = @company.projects.includes(:team) - @stage_projects
@@ -110,7 +119,7 @@ class StagesController < AuthenticatedController
   end
 
   def stages_params
-    params.require(:stage).permit(:order, :team_id, :integration_pipe_id, :integration_id, :name, :stage_type, :stage_stream, :commitment_point, :end_point, :queue)
+    params.require(:stage).permit(:order, :team_id, :integration_pipe_id, :integration_id, :name, :stage_type, :stage_stream, :commitment_point, :end_point, :queue, :parent_id, :stage_level)
   end
 
   def assign_stage

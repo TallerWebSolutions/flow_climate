@@ -28,8 +28,10 @@
       <th><%= Stage.human_attribute_name :integration_id %></th>
       <th><%= I18n.t('stages.index.project_count') %></th>
       <th><%= DemandTransition.model_name.human(count: 2) %></th>
+      <th><%= Stage.human_attribute_name :stage_level %></th>
       <th><%= Stage.human_attribute_name :stage_type %></th>
       <th><%= Stage.human_attribute_name :stage_stream %></th>
+      <th class="center"><%= Stage.human_attribute_name :parent %></th>
       <th class="center"><%= Stage.human_attribute_name :queue %></th>
       <th class="center"><%= Stage.human_attribute_name :commitment_point %></th>
       <th class="center"><%= Stage.human_attribute_name :end_point %></th>

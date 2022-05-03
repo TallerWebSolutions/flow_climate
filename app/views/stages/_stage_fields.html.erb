@@ -5,8 +5,10 @@
 <td><%= stage.integration_id %></td>
 <td><%= stage.projects.count %></td>
 <td><%= stage.demand_transitions.count %></td>
-<td><%= t("activerecord.attributes.stage.enums.stage_type.#{stage.stage_type}") %></td>
-<td><%= t("activerecord.attributes.stage.enums.stage_stream.#{stage.stage_stream}") %></td>
+<td><%= I18n.t("activerecord.attributes.stage.enums.stage_type.#{stage.stage_type}") %></td>
+<td><%= I18n.t("activerecord.attributes.stage.enums.stage_stream.#{stage.stage_stream}") %></td>
+<td><%= I18n.t("activerecord.attributes.stage.enums.stage_level.#{stage.stage_level}") %></td>
+<td><%= stage.parent&.name %></td>
 <td class="center">
   <% if stage.queue? %>
     <i class="fa fa-check" aria-hidden="true"></i>

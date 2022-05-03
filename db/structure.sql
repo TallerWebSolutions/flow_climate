@@ -2281,7 +2281,8 @@ CREATE TABLE public.stages (
     company_id integer NOT NULL,
     "order" integer DEFAULT 0 NOT NULL,
     integration_pipe_id character varying,
-    parent_id integer
+    parent_id integer,
+    stage_level integer DEFAULT 0 NOT NULL
 );
 
 
@@ -6471,6 +6472,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220221210259'),
 ('20220311184239'),
 ('20220401124201'),
-('20220408194012');
+('20220408194012'),
+('20220503152313');
 
 

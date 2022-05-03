@@ -88,11 +88,16 @@ RSpec.describe StagesController, type: :controller do
 
     describe 'GET #new' do
       context 'valid parameters' do
-        before { get :new, params: { company_id: company } }
+        it 'instantiates a new Stage and renders the template' do
+          parent = Fabricate :stage, company: company, name: 'zzz'
+          other_parent = Fabricate :stage, company: company, name: 'aaa'
+          Fabricate :stage, name: 'ccc'
 
-        it 'instantiates a new Company and renders the template' do
+          get :new, params: { company_id: company }
+
           expect(response).to render_template :new
           expect(assigns(:stage)).to be_a_new Stage
+          expect(assigns(:parent_stages)).to eq [other_parent, parent]
         end
       end
 
@@ -116,9 +121,11 @@ RSpec.describe StagesController, type: :controller do
     describe 'POST #create' do
       context 'passing valid parameters' do
         it 'creates the new financial information to the company and redirects to its show' do
+          parent_stage = Fabricate :stage, company: company, name: 'zzz'
+
           expect(StagesRepository.instance).to receive(:save_stage).once.and_call_original
 
-          post :create, params: { company_id: company, stage: { order: 2, team_id: team.id, name: 'foo', integration_pipe_id: '100', integration_id: '332231', stage_type: :analysis, stage_stream: :downstream, commitment_point: true, end_point: true, queue: true } }
+          post :create, params: { company_id: company, stage: { order: 2, team_id: team.id, name: 'foo', integration_pipe_id: '100', integration_id: '332231', stage_type: :analysis, stage_stream: :downstream, commitment_point: true, end_point: true, queue: true, stage_level: :coordination, parent_id: parent_stage } }
 
           created_stage = Stage.last
           expect(created_stage.company).to eq company
@@ -132,18 +139,26 @@ RSpec.describe StagesController, type: :controller do
           expect(created_stage.commitment_point?).to be true
           expect(created_stage.end_point?).to be true
           expect(created_stage.queue?).to be true
-          expect(response).to redirect_to company_path(Company.last)
+          expect(created_stage.coordination?).to be true
+          expect(created_stage.parent).to eq parent_stage
+
+          expect(response).to redirect_to company_path(company)
         end
       end
 
       context 'passing invalid parameters' do
         context 'invalid attributes' do
-          before { post :create, params: { company_id: company, stage: { name: nil, integration_id: nil, stage_type: nil, stage_stream: nil, commitment_point: nil, end_point: nil, queue: nil } } }
-
           it 'does not create the company and re-render the template with the errors' do
-            expect(Stage.last).to be_nil
+            parent_stage = Fabricate :stage, company: company, name: 'zzz'
+            other_parent = Fabricate :stage, company: company, name: 'aaa'
+            Fabricate :stage, name: 'ccc'
+
+            post :create, params: { company_id: company, stage: { name: nil, integration_id: nil, stage_type: nil, stage_stream: nil, commitment_point: nil, end_point: nil, queue: nil } }
+
+            expect(company.reload.stages.count).to eq 2
             expect(response).to render_template :new
             expect(assigns(:stage).errors.full_messages).to eq ['Nome não pode ficar em branco', 'Tipo da Etapa não pode ficar em branco', 'Tipo do Stream não pode ficar em branco']
+            expect(assigns(:parent_stages)).to eq [other_parent, parent_stage]
           end
         end
 
@@ -168,12 +183,17 @@ RSpec.describe StagesController, type: :controller do
       let(:stage) { Fabricate :stage, company: company }
 
       context 'valid parameters' do
-        before { get :edit, params: { company_id: company, id: stage }, xhr: true }
-
         it 'assigns the instance variables and renders the template' do
+          parent = Fabricate :stage, company: company, name: 'zzz'
+          other_parent = Fabricate :stage, company: company, name: 'aaa'
+          Fabricate :stage, name: 'ccc'
+
+          get :edit, params: { company_id: company, id: stage }, xhr: true
+
           expect(response).to render_template 'stages/edit'
           expect(assigns(:company)).to eq company
           expect(assigns(:stage)).to eq stage
+          expect(assigns(:parent_stages)).to eq [other_parent, parent]
         end
       end
 
@@ -203,9 +223,13 @@ RSpec.describe StagesController, type: :controller do
 
       context 'passing valid parameters' do
         it 'updates the demand and redirects to projects index' do
+          parent_stage = Fabricate :stage, company: company, name: 'zzz'
+          other_parent = Fabricate :stage, company: company, name: 'aaa'
+          Fabricate :stage, name: 'ccc'
+
           expect(StagesRepository.instance).to receive(:save_stage).once.and_call_original
 
-          put :update, params: { company_id: company, id: stage, stage: { order: 2, team_id: team.id, name: 'foo', integration_pipe_id: '100', integration_id: '332231', stage_type: :analysis, stage_stream: :downstream, commitment_point: true, end_point: true, queue: true } }, xhr: true
+          put :update, params: { company_id: company, id: stage, stage: { order: 2, team_id: team.id, name: 'foo', integration_pipe_id: '100', integration_id: '332231', stage_type: :analysis, stage_stream: :downstream, commitment_point: true, end_point: true, queue: true, stage_level: :coordination, parent_id: parent_stage } }, xhr: true
           updated_stage = stage.reload
           expect(updated_stage.company).to eq company
           expect(updated_stage.order).to eq 2
@@ -217,6 +241,9 @@ RSpec.describe StagesController, type: :controller do
           expect(updated_stage.commitment_point?).to be true
           expect(updated_stage.end_point?).to be true
           expect(updated_stage.queue?).to be true
+          expect(updated_stage.coordination?).to be true
+          expect(updated_stage.parent).to eq parent_stage
+          expect(assigns(:parent_stages)).to eq [other_parent, parent_stage]
           expect(response).to render_template 'stages/update'
         end
       end
