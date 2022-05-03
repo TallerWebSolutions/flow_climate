@@ -328,6 +328,7 @@ RSpec.describe Types::QueryType do
           avatar {
             imageSource
           }
+          admin
         }
         project(id: #{project.id}) {
           id
@@ -433,6 +434,7 @@ RSpec.describe Types::QueryType do
                                                  'id' => user.id.to_s,
                                                  'fullName' => user.full_name,
                                                  'companies' => [],
+                                                 'admin' => false,
                                                  'avatar' => {
                                                    'imageSource' => user.avatar.url
                                                  }

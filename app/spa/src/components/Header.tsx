@@ -29,6 +29,7 @@ const USER_QUERY = gql`
       avatar {
         imageSource
       }
+      admin
     }
   }
 `
@@ -38,6 +39,7 @@ type HeaderUser = {
   avatarSource: string
   fullName: string
   companies: Companies[]
+  admin: boolean
 }
 
 type HeaderProps = {
@@ -53,6 +55,7 @@ type User = {
   avatar: {
     imageSource: string
   }
+  admin: boolean
 }
 
 type UserResult = {
@@ -74,6 +77,7 @@ const normalizeUser = (data: UserDTO): HeaderUser => ({
   fullName: data?.me.fullName || "",
   avatarSource: data?.me.avatar.imageSource || "",
   companies: data?.me.companies || [],
+  admin: data?.me.admin || false,
 })
 
 const Header = ({ company }: HeaderProps) => {
@@ -204,20 +208,25 @@ const Header = ({ company }: HeaderProps) => {
                     ))}
                   </>
                 ) : (
-                  <MenuItem component="a" href={`/companies/${company.slug}`}>
-                    {company.name}
-                  </MenuItem>
+                  <>
+                    <MenuItem component="a" href={`/companies/${company.slug}`}>
+                      {company.name}
+                    </MenuItem>
+                    <Divider />
+                  </>
                 )}
-                <Divider />
               </>
             )}
-            <MenuItem
-              key="userMenu.adminDashboard"
-              component="a"
-              href="/users/admin_dashboard"
-            >
-              {t("userMenu.adminDashboard")}
-            </MenuItem>
+            {user.admin && (
+              <MenuItem
+                key="userMenu.adminDashboard"
+                component="a"
+                href="/users/admin_dashboard"
+              >
+                {t("userMenu.adminDashboard")}
+              </MenuItem>
+            )}
+            <Divider />
             <MenuItem
               key="userMenu.logout"
               component="a"

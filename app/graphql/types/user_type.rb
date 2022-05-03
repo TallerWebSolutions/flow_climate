@@ -7,6 +7,7 @@ module Types
     field :language, String, null: false
     field :current_company, CompanyType, null: true
     field :companies, [Types::CompaniesType], null: false
+    field :admin, Boolean, null: false
 
     field :avatar, Types::AvatarType, null: false
 
