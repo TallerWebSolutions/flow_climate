@@ -107,8 +107,8 @@ pt-BR:
         one: Configuração do Slack
         other: Configurações do Slack
       demand_transition:
-        one: Transição da Demanda
-        other: Transições da Demanda
+        one: Transição de Demanda
+        other: Transições de Demanda
       demand_block:
         one: Bloqueio da Demanda
         other: Bloqueios de Demanda

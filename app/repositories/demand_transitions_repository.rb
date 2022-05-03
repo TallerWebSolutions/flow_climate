@@ -18,13 +18,13 @@ class DemandTransitionsRepository
     demands_grouped_in_stages
   end
 
-  def hours_per_stage(projects, stream, limit_date)
+  def hours_per_stage(projects, stream, stage_level, limit_date)
     DemandTransition.kept
                     .joins(:demand)
                     .joins(:stage)
                     .select('stages.name, stages.order, SUM(EXTRACT(EPOCH FROM (last_time_out - last_time_in))) AS sum_duration')
                     .where(demands: { project_id: projects.map(&:id) })
-                    .where('stages.end_point = false AND last_time_in >= :limit_date AND last_time_out IS NOT NULL AND stage_stream = :stage_stream', limit_date: limit_date.beginning_of_day, stage_stream: Stage.stage_streams[stream])
+                    .where('stages.end_point = false AND last_time_in >= :limit_date AND last_time_out IS NOT NULL AND stage_stream = :stage_stream AND stage_level = :stage_level', limit_date: limit_date.beginning_of_day, stage_stream: Stage.stage_streams[stream], stage_level: Stage.stage_levels[stage_level])
                     .group('stages.name, stages.order')
                     .order('stages.order, stages.name')
                     .map { |group_sum| [group_sum.name, group_sum.sum_duration] }

@@ -58,15 +58,15 @@ RSpec.describe DemandTransitionsRepository, type: :repository do
 
       let!(:seventh_transition) { Fabricate :demand_transition, stage: seventh_stage, demand: demand, last_time_in: '2018-03-08T17:09:58-03:00', last_time_out: nil }
 
-      it { expect(described_class.instance.hours_per_stage(Project.all, :upstream, Date.new(2018, 1, 1))).to eq([['fourth_stage', 2_160_000.0]]) }
-      it { expect(described_class.instance.hours_per_stage(Project.all, :upstream, Date.new(2018, 2, 2))).to eq([]) }
+      it { expect(described_class.instance.hours_per_stage(Project.all, :upstream, :team, Date.new(2018, 1, 1))).to eq([['fourth_stage', 2_160_000.0]]) }
+      it { expect(described_class.instance.hours_per_stage(Project.all, :upstream, :team, Date.new(2018, 2, 2))).to eq([]) }
 
-      it { expect(described_class.instance.hours_per_stage(Project.all, :downstream, Date.new(2018, 1, 1))).to eq([['second_stage', 604_800.0], ['first_stage', 259_200.0], ['fifth_stage', 2_160_000.0], ['third_stage', 3_715_200.0]]) }
-      it { expect(described_class.instance.hours_per_stage(Project.all, :downstream, Date.new(2018, 2, 2))).to eq([['second_stage', 604_800.0], ['first_stage', 259_200.0], ['fifth_stage', 2_160_000.0], ['third_stage', 3_715_200.0]]) }
+      it { expect(described_class.instance.hours_per_stage(Project.all, :downstream, :team, Date.new(2018, 1, 1))).to eq([['second_stage', 604_800.0], ['first_stage', 259_200.0], ['fifth_stage', 2_160_000.0], ['third_stage', 3_715_200.0]]) }
+      it { expect(described_class.instance.hours_per_stage(Project.all, :downstream, :team, Date.new(2018, 2, 2))).to eq([['second_stage', 604_800.0], ['first_stage', 259_200.0], ['fifth_stage', 2_160_000.0], ['third_stage', 3_715_200.0]]) }
     end
 
     context 'having no transitions' do
-      it { expect(described_class.instance.hours_per_stage(Project.all, :upstream, Date.new(2018, 1, 1))).to eq [] }
+      it { expect(described_class.instance.hours_per_stage(Project.all, :upstream, :team, Date.new(2018, 1, 1))).to eq [] }
     end
   end
 end

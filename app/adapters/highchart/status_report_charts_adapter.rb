@@ -3,10 +3,12 @@
 module Highchart
   class StatusReportChartsAdapter < HighchartAdapter
     attr_reader :hours_burnup_per_week_data, :hours_burnup_per_month_data, :dates_to_montecarlo_duration, :confidence_95_duration, :confidence_80_duration, :confidence_60_duration,
-                :work_item_flow_information
+                :work_item_flow_information, :stage_level
 
-    def initialize(demands, start_date, end_date, chart_period_interval)
+    def initialize(demands, start_date, end_date, chart_period_interval, stage_level = :team)
       super(demands, start_date, end_date, chart_period_interval)
+
+      @stage_level = stage_level
 
       @work_item_flow_information = Flow::WorkItemFlowInformation.new(demands_list, uncertain_scope, @x_axis.length, end_date, chart_period_interval)
 
@@ -42,7 +44,7 @@ module Highchart
 
     def hours_per_stage
       projects = demands.map(&:project).uniq
-      hours_per_stage = DemandTransitionsRepository.instance.hours_per_stage(projects, :downstream, @start_date)
+      hours_per_stage = DemandTransitionsRepository.instance.hours_per_stage(projects, :downstream, @stage_level, @start_date)
 
       { x_axis: hours_per_stage.to_h.keys, y_axis: { name: I18n.t('general.hours'), data: hours_per_stage.to_h.values.map { |hours| hours.to_f / 1.hour } } }
     end

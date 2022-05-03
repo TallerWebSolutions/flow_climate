@@ -212,10 +212,10 @@ module Types
       object.project_consolidations.order(:consolidation_date).weekly_data.last
     end
 
-    def hours_per_stage_chart_data
+    def hours_per_stage_chart_data(stage_level: :team)
       start_date = object.start_date
       end_date = [object.end_date, Time.zone.today].min
-      Highchart::StatusReportChartsAdapter.new(object.demands, start_date, end_date, 'week').hours_per_stage
+      Highchart::StatusReportChartsAdapter.new(object.demands, start_date, end_date, 'week', stage_level).hours_per_stage
     end
 
     def cumulative_flow_chart_data
