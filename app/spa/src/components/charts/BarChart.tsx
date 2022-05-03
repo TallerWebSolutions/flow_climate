@@ -1,4 +1,4 @@
-import { BarDatum, ResponsiveBar } from "@nivo/bar"
+import { BarDatum, BarLegendProps, ResponsiveBar } from "@nivo/bar"
 import {Box} from "@mui/material"
 import { ReactElement } from "react"
 import { BarData } from "./tooltips/BarChartTooltip"
@@ -10,9 +10,11 @@ type BarChartProps = {
   axisLeftLegend?: string
   axisBottomLegend?: string
   tooltip?: (data: BarData) => ReactElement
+  legendAnchor?: BarLegendProps['anchor']
+  legendDirection?: BarLegendProps['direction']
 }
 
-export const BarChart = ({ data, axisLeftLegend, axisBottomLegend, indexBy, keys, tooltip }: BarChartProps) => (
+export const BarChart = ({ data, axisLeftLegend, axisBottomLegend, indexBy, keys, legendAnchor = "top", legendDirection = "row" }: BarChartProps) => (
   <Box height={350}>
     <ResponsiveBar
     data={data}
@@ -50,8 +52,8 @@ export const BarChart = ({ data, axisLeftLegend, axisBottomLegend, indexBy, keys
     legends={[
       {
         dataFrom: "keys",
-        anchor: "top",
-        direction: "row",
+        anchor: legendAnchor,
+        direction: legendDirection,
         toggleSerie: true,
         justify: false,
         translateX: 0,
