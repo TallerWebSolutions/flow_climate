@@ -30,9 +30,9 @@ export const BarChart = ({ data, axisLeftLegend, axisBottomLegend, indexBy, keys
     axisBottom={{
       tickSize: 5,
       tickPadding: 5,
-      tickRotation: 0,
+      tickRotation: -40,
       legendPosition: "middle",
-      legendOffset: 32,
+      legendOffset: 40,
       legend: axisBottomLegend
     }}
     axisLeft={{
