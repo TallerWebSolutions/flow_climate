@@ -1,5 +1,4 @@
 import { gql, useQuery } from "@apollo/client"
-import { projectMock } from "../lib/mocks"
 
 export const QUERY = gql`
   query ProjectInfo($projectId: Int!) {

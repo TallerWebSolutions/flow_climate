@@ -23,7 +23,6 @@ import {
   PROJECT_STANDARD_FRAGMENT,
 } from "../components/ProjectPage"
 import { secondsToDays } from "../lib/date"
-import { projectMock } from "../lib/mocks"
 import { Demand } from "../modules/demand/demand.types"
 import { Project } from "../modules/project/project.types"
 import { buildPercentileYAxisMarker } from "./Tasks/Charts"
@@ -221,7 +220,6 @@ const ProjectCharts = () => {
   const hoursPerStageChartData = project?.hoursPerStageChartData
   const cumulativeFlowChartData = project?.cumulativeFlowChartData
   const demands = data?.demands!
-  const isLanguagePT = i18n.language === "pt-BR"
 
   const operationalRiskChartData = [
     {
