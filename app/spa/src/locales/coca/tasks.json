@@ -48,7 +48,7 @@
     "control_completion_time_p80_marker": "Percentile 80% ({{days}} days)",
     "control_completion_time_p95_marker": "Percentile 95% ({{days}} days)",
     "control_completion_time_tooltip_x_legend": "External ID",
-    "current_partial_completion_title": "Current Partial Times to Tasks in Progress",
+    "current_partial_completion_title": "Current Partial Times to Deliverables in Progress",
     "current_partial_completion_tooltip_x_legend": "External ID",
     "days": "Days",
     "demands": "Activity",
