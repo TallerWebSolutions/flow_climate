@@ -103,6 +103,8 @@
     "lead_time_histogram_chart": "Lead Time Histogram Chart",
     "lead_time_histogram_chart_y_label": "hits",
     "lead_time_histogram_chart_x_label": "Days",
-    "lead_time_histogram_chart_hits": "hits"
+    "lead_time_histogram_chart_hits": "hits",
+    "demandsCountByTeamMember": "Demands by Team Member",
+    "demandsCount": "Demands Count"
   }
 }

@@ -577,8 +577,8 @@ const ProjectCharts = () => {
   )
 
   const demandsCountByTeamMember = project.projectMembers.map(member => ({
-    "Demands Count": member.demandsCount,
-    "name": member.memberName
+    [t("project_charts.demandsCount")]: member.demandsCount,
+    name: member.memberName
   }))
 
   return (
@@ -972,7 +972,7 @@ const ProjectCharts = () => {
           <BarChart
             data={demandsCountByTeamMember}
             indexBy="name"
-            keys={["Demands Count"]}
+            keys={[t("project_charts.demandsCount")]}
           />
         </Grid>
       </Grid>

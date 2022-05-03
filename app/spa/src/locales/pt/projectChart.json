@@ -102,6 +102,8 @@
     "lead_time_histogram_chart": "Gráfico de Histograma de Lead Time",
     "lead_time_histogram_chart_y_label": "hits",
     "lead_time_histogram_chart_x_label": "Dias",
-    "lead_time_histogram_chart_hits": "hits"
+    "lead_time_histogram_chart_hits": "hits",
+    "demandsCountByTeamMember": "Demandas por Membros do Time",
+    "demandsCount": "Demandas"
   }
 }
