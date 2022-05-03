@@ -768,7 +768,8 @@ CREATE TABLE public.demand_transitions (
     discarded_at timestamp without time zone,
     transition_notified boolean DEFAULT false NOT NULL,
     team_member_id integer,
-    lock_version integer
+    lock_version integer,
+    transition_time_in_sec integer DEFAULT 0
 );
 
 
@@ -6473,6 +6474,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220311184239'),
 ('20220401124201'),
 ('20220408194012'),
-('20220503152313');
+('20220503152313'),
+('20220503213916');
 
 

@@ -4,17 +4,18 @@
 #
 # Table name: demand_transitions
 #
-#  id                  :bigint           not null, primary key
-#  discarded_at        :datetime
-#  last_time_in        :datetime         not null
-#  last_time_out       :datetime
-#  lock_version        :integer
-#  transition_notified :boolean          default(FALSE), not null
-#  created_at          :datetime         not null
-#  updated_at          :datetime         not null
-#  demand_id           :integer          not null
-#  stage_id            :integer          not null
-#  team_member_id      :integer
+#  id                     :bigint           not null, primary key
+#  discarded_at           :datetime
+#  last_time_in           :datetime         not null
+#  last_time_out          :datetime
+#  lock_version           :integer
+#  transition_notified    :boolean          default(FALSE), not null
+#  transition_time_in_sec :integer          default(0)
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  demand_id              :integer          not null
+#  stage_id               :integer          not null
+#  team_member_id         :integer
 #
 # Indexes
 #
@@ -55,6 +56,7 @@ class DemandTransition < ApplicationRecord
 
   delegate :name, to: :stage, prefix: true, allow_nil: true
 
+  before_save :compute_transition_time
   after_save :set_demand_dates
   after_save :set_demand_computed_fields
   after_save :check_project_wip
@@ -138,5 +140,10 @@ class DemandTransition < ApplicationRecord
     return if demands_in_wip.count <= project.max_work_in_progress
 
     ProjectBrokenWipLog.where(project: project, project_wip: project.max_work_in_progress, demands_ids: demands_in_wip.map(&:id)).first_or_create
+  end
+
+  def compute_transition_time
+    exit_time = last_time_out || Time.zone.now
+    self.transition_time_in_sec = exit_time - last_time_in
   end
 end

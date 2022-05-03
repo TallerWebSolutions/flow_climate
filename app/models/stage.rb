@@ -10,7 +10,7 @@
 #  name                :string           not null
 #  order               :integer          default(0), not null
 #  queue               :boolean          default(FALSE)
-#  stage_level         :integer          default(0), not null
+#  stage_level         :integer          default("team"), not null
 #  stage_stream        :integer          default("upstream"), not null
 #  stage_type          :integer          default("backlog"), not null
 #  created_at          :datetime         not null
