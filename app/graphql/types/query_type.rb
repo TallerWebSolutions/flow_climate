@@ -81,10 +81,10 @@ module Types
     end
 
     def demands(project_id:, finished: false, discarded: false, limit: 10)
-      return Demand.where(project_id: project_id).where.not(end_date: nil).limit(limit) if finished
-      return Demand.where(project_id: project_id).where.not(discarded_at: nil).limit(limit) if discarded
+      return Demand.where(project_id: project_id).where.not(end_date: nil).limit(limit).order(:end_date) if finished
+      return Demand.where(project_id: project_id).where.not(discarded_at: nil).limit(limit).order(:end_date) if discarded
 
-      Demand.where(project_id: project_id).limit(limit)
+      Demand.where(project_id: project_id).limit(limit).order(:end_date)
     end
 
     def me
