@@ -1,6 +1,6 @@
 import { BarDatum, BarLegendProps, ResponsiveBar } from "@nivo/bar"
 import { Box, IconButton } from "@mui/material"
-import React, { forwardRef, ReactElement, useRef } from "react"
+import { ReactElement, useRef } from "react"
 import DownloadIcon from '@mui/icons-material/Download';
 
 import { BarData } from "./tooltips/BarChartTooltip"

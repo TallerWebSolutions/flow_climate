@@ -198,7 +198,7 @@ export const projectMock: Project = {
   leadTimeHistogramData: {
     keys: [],
     values: [],
-  },
+  }
 }
 
 export const teamMock: Team = {

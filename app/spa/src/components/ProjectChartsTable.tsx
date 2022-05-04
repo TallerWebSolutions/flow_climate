@@ -5,8 +5,10 @@ import {
   Paper,
   Table as MUITable,
   TableCell,
+  TableCellProps,
   TableContainer,
   TableRow,
+  TableRowProps,
   Typography,
 } from "@mui/material"
 import { useState } from "react"
@@ -35,6 +37,15 @@ const mountDemandsSearchLink = ({
 }: MountSearchLinkProps) => {
   return `/companies/${companySlug}/demands/demands_list_by_ids?demand_fitness=&demand_state=${state}&demand_type=&flow_object_id=${projectID}&object_type=Project`
 }
+
+const Row = (props: TableRowProps) => <TableRow sx={{
+  borderBottom: "1px solid",
+  borderBottomColor: "#ccc",
+}} {...props} />
+
+const Cell = (props: TableCellProps) => <TableCell sx={{
+  padding: 2
+}} {...props} />
 
 export const ProjectChartsTable = ({
   project,
@@ -105,86 +116,42 @@ export const ProjectChartsTable = ({
             }}
           >
             <MUITable>
-              <TableRow
-                sx={{
-                  borderBottom: "1px solid",
-                  borderBottomColor: "#ccc",
-                }}
-              >
-                <TableCell
-                  align="left"
-                  sx={{
-                    padding: "16px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Box component="span">{t("project_chart_table.start")}</Box>
+              <Row>
+                <Cell>
+                  {t("project_chart_table.start")}
+                </Cell>
+                <Cell align="right">
                   {formatDate({
                     date: project.startDate,
                     format: "dd/MM/yyyy",
                   })}
-                </TableCell>
-              </TableRow>
-              <TableRow
-                sx={{
-                  borderBottom: "1px solid",
-                  borderBottomColor: "#ccc",
-                }}
-              >
-                <TableCell
-                  align="left"
-                  sx={{
-                    padding: "16px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
+                </Cell>
+              </Row>
+              <Row>
+                <Cell>
                   <Box component="span">{t("project_chart_table.end")}</Box>
+                </Cell>
+                <Cell align="right">
                   {formatDate({ date: project.endDate, format: "dd/MM/yyyy" })}
-                </TableCell>
-              </TableRow>
-              <TableRow
-                sx={{
-                  borderBottom: "1px solid",
-                  borderBottomColor: "#ccc",
-                }}
-              >
-                <TableCell
-                  align="left"
-                  sx={{
-                    padding: "16px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
+                </Cell>
+              </Row>
+              <Row>
+                <Cell>
                   <Box component="span">
                     {t("project_chart_table.initial_scope")}
                   </Box>
+                </Cell>
+                <Cell align="right">
                   {project.initialScope}
-                </TableCell>
-              </TableRow>
-              <TableRow
-                sx={{
-                  borderBottom: "1px solid",
-                  borderBottomColor: "#ccc",
-                }}
-              >
-                <TableCell
-                  align="left"
-                  sx={{
-                    padding: "16px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
+                </Cell>
+              </Row>
+              <Row>
+                <Cell>
                   <Box component="span">
                     {t("project_chart_table.created_demands")}
                   </Box>
+                </Cell>
+                <Cell align="right">
                   <Link
                     href={mountDemandsSearchLink({
                       projectID,
@@ -195,24 +162,13 @@ export const ProjectChartsTable = ({
                   >
                     {project.numberOfDemands}
                   </Link>
-                </TableCell>
-              </TableRow>
-              <TableRow
-                sx={{
-                  borderBottom: "1px solid",
-                  borderBottomColor: "#ccc",
-                }}
-              >
-                <TableCell
-                  align="left"
-                  sx={{
-                    padding: "16px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
+                </Cell>
+              </Row>
+              <Row>
+                <Cell>
                   {t("project_chart_table.delivered_demands")}
+                </Cell>
+                <Cell align="right">
                   <Link
                     href={mountDemandsSearchLink({
                       projectID,
@@ -223,24 +179,13 @@ export const ProjectChartsTable = ({
                   >
                     {project.numberOfDemandsDelivered}
                   </Link>
-                </TableCell>
-              </TableRow>
-              <TableRow
-                sx={{
-                  borderBottom: "1px solid",
-                  borderBottomColor: "#ccc",
-                }}
-              >
-                <TableCell
-                  align="left"
-                  sx={{
-                    padding: "16px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
+                </Cell>
+              </Row>
+              <Row>
+                <Cell>
                   <Box component="span">{t("project_chart_table.backlog")}</Box>
+                </Cell>
+                <Cell align="right">
                   <Link
                     href={mountDemandsSearchLink({
                       projectID,
@@ -251,26 +196,15 @@ export const ProjectChartsTable = ({
                   >
                     {project.remainingBacklog}
                   </Link>
-                </TableCell>
-              </TableRow>
-              <TableRow
-                sx={{
-                  borderBottom: "1px solid",
-                  borderBottomColor: "#ccc",
-                }}
-              >
-                <TableCell
-                  align="left"
-                  sx={{
-                    padding: "16px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
+                </Cell>
+              </Row>
+              <Row>
+                <Cell>
                   <Box component="span">
                     {t("project_chart_table.upstream_demands")}
                   </Box>
+                </Cell>
+                <Cell align="right">
                   <Link
                     href={mountDemandsSearchLink({
                       projectID,
@@ -281,26 +215,15 @@ export const ProjectChartsTable = ({
                   >
                     {project.upstreamDemands.length}
                   </Link>
-                </TableCell>
-              </TableRow>
-              <TableRow
-                sx={{
-                  borderBottom: "1px solid",
-                  borderBottomColor: "#ccc",
-                }}
-              >
-                <TableCell
-                  align="left"
-                  sx={{
-                    padding: "16px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
+                </Cell>
+              </Row>
+              <Row>
+                <Cell>
                   <Box component="span">
                     {t("project_chart_table.downstream_demands")}
                   </Box>
+                </Cell>
+                <Cell align="right">
                   <Link
                     href={mountDemandsSearchLink({
                       projectID,
@@ -311,24 +234,13 @@ export const ProjectChartsTable = ({
                   >
                     {project.numberOfDownstreamDemands}
                   </Link>
-                </TableCell>
-              </TableRow>
-              <TableRow
-                sx={{
-                  borderBottom: "1px solid",
-                  borderBottomColor: "#ccc",
-                }}
-              >
-                <TableCell
-                  align="left"
-                  sx={{
-                    padding: "16px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
+                </Cell>
+              </Row>
+              <Row>
+                <Cell>
                   {t("project_chart_table.discarted_demands")}
+                </Cell>
+                <Cell align="right">
                   <Link
                     href={mountDemandsSearchLink({
                       projectID,
@@ -339,24 +251,13 @@ export const ProjectChartsTable = ({
                   >
                     {project.discardedDemands.length}
                   </Link>
-                </TableCell>
-              </TableRow>
-              <TableRow
-                sx={{
-                  borderBottom: "1px solid",
-                  borderBottomColor: "#ccc",
-                }}
-              >
-                <TableCell
-                  align="left"
-                  sx={{
-                    padding: "16px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
+                </Cell>
+              </Row>
+              <Row>
+                <Cell>
                   {t("project_chart_table.unscored_demands")}
+                </Cell>
+                <Cell align="right">
                   <Link
                     href={mountDemandsSearchLink({
                       projectID,
@@ -367,24 +268,13 @@ export const ProjectChartsTable = ({
                   >
                     {project.unscoredDemands.length}
                   </Link>
-                </TableCell>
-              </TableRow>
-              <TableRow
-                sx={{
-                  borderBottom: "1px solid",
-                  borderBottomColor: "#ccc",
-                }}
-              >
-                <TableCell
-                  align="left"
-                  sx={{
-                    padding: "16px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
+                </Cell>
+              </Row>
+              <Row>
+                <Cell>
                   {t("project_chart_table.blocked_demands")}
+                </Cell>
+                <Cell align="right">
                   <Link
                     href={`/companies/${companySlug}/demand_blocks/search?demand_blocks_ids=${project.demandBlocks
                       .map((el) => el.id)
@@ -393,148 +283,58 @@ export const ProjectChartsTable = ({
                   >
                     {project.demandBlocks.length}
                   </Link>
-                </TableCell>
-              </TableRow>
-              <TableRow
-                sx={{
-                  borderBottom: "1px solid",
-                  borderBottomColor: "#ccc",
-                }}
-              >
-                <TableCell
-                  align="left"
-                  sx={{
-                    padding: "16px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  {t("project_chart_table.flow_pressure", {
-                    time: secondsToReadbleDate(project.flowPressure),
-                  })}
-                </TableCell>
-              </TableRow>
-              <TableRow
-                sx={{
-                  borderBottom: "1px solid",
-                  borderBottomColor: "#ccc",
-                }}
-              >
-                <TableCell
-                  align="left"
-                  sx={{
-                    padding: "16px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
+                </Cell>
+              </Row>
+              <Row>
+                <Cell>
+                  {t("project_chart_table.flow_pressure")}
+                </Cell>
+                <Cell align="right">
+                  {project.flowPressure}%
+                </Cell>
+              </Row>
+              <Row>
+                <Cell>
                   {t("project_chart_table.average_speed", {
-                    numberOfDemandsPerDay: project.averageSpeed.toFixed(3),
+                    numberOfDemandsPerDay: project.averageSpeed.toFixed(2),
                   })}
-                </TableCell>
-              </TableRow>
-              <TableRow
-                sx={{
-                  borderBottom: "1px solid",
-                  borderBottomColor: "#ccc",
-                }}
-              >
-                <TableCell
-                  align="left"
-                  sx={{
-                    padding: "16px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
+                </Cell>
+              </Row>
+              <Row>
+                <Cell>
                   {t("project_chart_table.average_queue_time", {
                     time: secondsToDays(project.averageQueueTime).toFixed(2),
                   })}
-                </TableCell>
-              </TableRow>
-              <TableRow
-                sx={{
-                  borderBottom: "1px solid",
-                  borderBottomColor: "#ccc",
-                }}
-              >
-                <TableCell
-                  align="left"
-                  sx={{
-                    padding: "16px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
+                </Cell>
+              </Row>
+              <Row>
+                <Cell>
                   {t("project_chart_table.average_work_time", {
                     time: secondsToDays(project.averageTouchTime).toFixed(2),
                   })}
-                </TableCell>
-              </TableRow>
-              <TableRow
-                sx={{
-                  borderBottom: "1px solid",
-                  borderBottomColor: "#ccc",
-                }}
-              >
-                <TableCell
-                  align="left"
-                  sx={{
-                    padding: "16px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
+                </Cell>
+              </Row>
+              <Row>
+                <Cell>
                   {t("project_chart_table.lead_time_p95", {
                     days: secondsToDays(project.leadTimeP95).toFixed(2),
                   })}
-                </TableCell>
-              </TableRow>
-              <TableRow
-                sx={{
-                  borderBottom: "1px solid",
-                  borderBottomColor: "#ccc",
-                }}
-              >
-                <TableCell
-                  align="left"
-                  sx={{
-                    padding: "16px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
+                </Cell>
+              </Row>
+              <Row>
+                <Cell>
                   {t("project_chart_table.lead_time_p80", {
                     days: secondsToDays(project.leadTimeP80).toFixed(2),
                   })}
-                </TableCell>
-              </TableRow>
-              <TableRow
-                sx={{
-                  borderBottom: "1px solid",
-                  borderBottomColor: "#ccc",
-                }}
-              >
-                <TableCell
-                  align="left"
-                  sx={{
-                    padding: "16px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
+                </Cell>
+              </Row>
+              <Row>
+                <Cell>
                   {t("project_chart_table.lead_time_p65", {
                     days: secondsToDays(project.leadTimeP65).toFixed(2),
                   })}
-                </TableCell>
-              </TableRow>
+                </Cell>
+              </Row>
             </MUITable>
             {readMore && (
               <ReadMoreButton

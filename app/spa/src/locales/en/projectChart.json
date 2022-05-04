@@ -20,13 +20,13 @@
     "discarted_demands": "Discarted",
     "unscored_demands": "Unscored Demands",
     "blocked_demands": "Blocks",
-    "flow_pressure": "Flow Pressure {{time}}",
-    "average_speed": "Average Speed {{numberOfDemandsPerDay}} demands/day",
-    "average_queue_time": "Average Queue Time {{time}} hours",
-    "average_work_time": "Average Work Time {{time}} hours",
-    "lead_time_p65": "Lead Time p65 {{days}} days",
-    "lead_time_p80": "Lead Time p80 {{days}} days",
-    "lead_time_p95": "Lead Time p95 {{days}} days"
+    "flow_pressure": "Flow Pressure",
+    "average_speed": "Average Speed: {{numberOfDemandsPerDay}} demands/day",
+    "average_queue_time": "Average Queue Time: {{time}} hours",
+    "average_work_time": "Average Work Time: {{time}} hours",
+    "lead_time_p65": "Lead Time p65: {{days}} days",
+    "lead_time_p80": "Lead Time p80: {{days}} days",
+    "lead_time_p95": "Lead Time p95: {{days}} days"
   },
   "project_charts": {
     "flow_efficiency_chart": "Flow Efficiency",

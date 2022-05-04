@@ -20,13 +20,13 @@
     "discarted_demands": "Descartadas",
     "unscored_demands": "Demandas sem Pontuação",
     "blocked_demands": "Bloqueios",
-    "flow_pressure": "Pressão de Fluxo {{time}}",
-    "average_speed": "Velocidade Média {{numberOfDemandsPerDay}} demandas/dia",
-    "average_queue_time": "Tempo Médio de Fila {{time}} horas",
-    "average_work_time": "Tempo Médio de Trabalho {{time}} horas",
-    "lead_time_p65": "Lead Time p65 {{days}} dias",
-    "lead_time_p80": "Lead Time p80 {{days}} dias",
-    "lead_time_p95": "Lead Time p95 {{days}} dias"
+    "flow_pressure": "Pressão de Fluxo",
+    "average_speed": "Velocidade Média: {{numberOfDemandsPerDay}} demandas/dia",
+    "average_queue_time": "Tempo Médio de Fila: {{time}} horas",
+    "average_work_time": "Tempo Médio de Trabalho: {{time}} horas",
+    "lead_time_p65": "Lead Time p65: {{days}} dias",
+    "lead_time_p80": "Lead Time p80: {{days}} dias",
+    "lead_time_p95": "Lead Time p95: {{days}} dias"
   },
   "project_charts": {
     "flow_efficiency_chart": "Eficiência do Fluxo",
