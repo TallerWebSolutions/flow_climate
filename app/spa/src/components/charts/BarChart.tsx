@@ -29,11 +29,11 @@ export const BarChart = ({
   const chartRef = useRef<HTMLInputElement>(null)
 
   return (
-    <Box>
+    <Box position="relative">
       <IconButton onClick={() => exportComponentAsPNG(chartRef)} sx={{position: "absolute", top: "1rem", right: "1rem", zIndex: 1}}>
         <DownloadIcon />
       </IconButton>
-      <Box ref={chartRef} height={380} position="relative">
+      <Box ref={chartRef} height={380}>
         <ResponsiveBar
           data={data}
           indexBy={indexBy}
