@@ -76,7 +76,10 @@ module Types
     field :project_consolidations_last_month, [Types::ProjectConsolidationType], null: true
     field :project_consolidations, [Types::ProjectConsolidationType], null: true
     field :last_project_consolidations_weekly, Types::ProjectConsolidationType, null: true
-    field :hours_per_stage_chart_data, Types::Charts::HoursPerStageChartType, null: true
+    field :hours_per_stage_chart_data, Types::Charts::HoursPerStageChartType, null: true do
+      argument :stage_level, String, required: false
+    end
+
     field :cumulative_flow_chart_data, Types::Charts::CumulativeFlowChartType, null: true
     field :demands_flow_chart_data, Types::Charts::DemandsFlowChartDataType, null: true
     field :lead_time_histogram_data, Types::Charts::LeadTimeHistogramDataType, null: true
@@ -212,7 +215,7 @@ module Types
       object.project_consolidations.order(:consolidation_date).weekly_data.last
     end
 
-    def hours_per_stage_chart_data(stage_level: :team)
+    def hours_per_stage_chart_data(stage_level: 'team')
       start_date = object.start_date
       end_date = [object.end_date, Time.zone.today].min
       Highchart::StatusReportChartsAdapter.new(object.demands, start_date, end_date, 'week', stage_level).hours_per_stage

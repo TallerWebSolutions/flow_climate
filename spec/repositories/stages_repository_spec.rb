@@ -48,7 +48,7 @@ RSpec.describe StagesRepository, type: :repository do
     let(:demand) { Fabricate :demand, project: project }
     let(:other_demand) { Fabricate :demand, project: project }
 
-    context 'having transitions' do
+    context 'with transitions' do
       include_context 'transitions to hits'
 
       it 'returns with the hits' do
@@ -59,7 +59,7 @@ RSpec.describe StagesRepository, type: :repository do
       end
     end
 
-    context 'having no transitions' do
+    context 'with no transitions' do
       it { expect(described_class.instance.qty_hits_by_day(stage, :last_time_in)).to eq({}) }
       it { expect(described_class.instance.qty_hits_by_day(stage, :last_time_out)).to eq({}) }
     end
@@ -71,7 +71,7 @@ RSpec.describe StagesRepository, type: :repository do
     let(:demand) { Fabricate :demand, project: project }
     let(:other_demand) { Fabricate :demand, project: project }
 
-    context 'having transitions' do
+    context 'with transitions' do
       include_context 'transitions to hits'
 
       it 'returns the hits by hour' do
@@ -83,7 +83,7 @@ RSpec.describe StagesRepository, type: :repository do
       end
     end
 
-    context 'having no transitions' do
+    context 'with no transitions' do
       it { expect(described_class.instance.qty_hits_by_hour(stage, :last_time_in)).to eq({}) }
       it { expect(described_class.instance.qty_hits_by_hour(stage, :last_time_out)).to eq({}) }
     end
@@ -95,13 +95,13 @@ RSpec.describe StagesRepository, type: :repository do
     let(:demand) { Fabricate :demand, project: project }
     let(:other_demand) { Fabricate :demand, project: project }
 
-    context 'having transitions' do
+    context 'with transitions' do
       include_context 'transitions to hits'
 
       it { expect(described_class.instance.average_seconds_in_stage_per_month(stage)).to eq([[2018.0, 5.0, 140_820.0]]) }
     end
 
-    context 'having no transitions' do
+    context 'with no transitions' do
       it { expect(described_class.instance.average_seconds_in_stage_per_month(stage)).to eq [] }
     end
   end
@@ -154,7 +154,7 @@ RSpec.describe StagesRepository, type: :repository do
         expect(described_class.instance.hours_per_stage(Project.all, :upstream, :team, Date.new(2018, 2, 2))).to eq([])
         expect(described_class.instance.hours_per_stage(Project.all, :downstream, :team, Date.new(2018, 1, 1))).to eq([['second_stage', 604_800.0], ['fifth_stage', 2_160_000.0], ['third_stage', 3_715_200.0]])
         expect(described_class.instance.hours_per_stage(Project.all, :downstream, :team, Date.new(2018, 2, 2))).to eq([['second_stage', 604_800.0], ['fifth_stage', 2_160_000.0], ['third_stage', 3_715_200.0]])
-        expect(described_class.instance.hours_per_stage(Project.all, :downstream, :coordination, Date.new(2018, 2, 2))).to eq([['first_stage', 2_764_800.0]])
+        expect(described_class.instance.hours_per_stage(Project.all, :downstream, 'coordination', Date.new(2018, 2, 2))).to eq([['first_stage', 2_764_800.0]])
       end
     end
 

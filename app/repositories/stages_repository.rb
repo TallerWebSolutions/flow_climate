@@ -20,7 +20,7 @@ class StagesRepository
   end
 
   def hours_per_stage(projects, stream, stage_level, limit_date)
-    stages_transitions_time = if stage_level == :coordination
+    stages_transitions_time = if stage_level == 'coordination'
                                 stages_time_to_coordination_level(limit_date, projects, stream)
                               else
                                 stages_time_to_team_level(limit_date, projects, stream)

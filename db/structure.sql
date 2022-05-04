@@ -5013,6 +5013,13 @@ CREATE INDEX index_stages_on_parent_id ON public.stages USING btree (parent_id);
 
 
 --
+-- Name: index_stages_on_stage_level; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stages_on_stage_level ON public.stages USING btree (stage_level);
+
+
+--
 -- Name: index_stages_teams_on_stage_id; Type: INDEX; Schema: public; Owner: -
 --
 
