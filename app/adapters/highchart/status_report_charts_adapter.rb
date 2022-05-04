@@ -44,7 +44,7 @@ module Highchart
 
     def hours_per_stage
       projects = demands.map(&:project).uniq
-      hours_per_stage = DemandTransitionsRepository.instance.hours_per_stage(projects, :downstream, @stage_level, @start_date)
+      hours_per_stage = StagesRepository.instance.hours_per_stage(projects, :downstream, @stage_level, @start_date)
 
       { x_axis: hours_per_stage.to_h.keys, y_axis: { name: I18n.t('general.hours'), data: hours_per_stage.to_h.values.map { |hours| hours.to_f / 1.hour } } }
     end

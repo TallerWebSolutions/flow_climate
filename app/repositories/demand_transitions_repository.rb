@@ -18,29 +18,6 @@ class DemandTransitionsRepository
     demands_grouped_in_stages
   end
 
-  def hours_per_stage(projects, stream, stage_level, limit_date)
-    demand_transitions = DemandTransition.kept
-                                         .joins(:demand)
-                                         .joins(:stage)
-                                         .select('stages.name, stages.order, SUM(EXTRACT(EPOCH FROM (demand_transitions.last_time_out - demand_transitions.last_time_in))) AS sum_duration')
-                                         .where(demands: { project_id: projects.map(&:id) })
-                                         .where('stages.end_point = false AND demand_transitions.last_time_in >= :limit_date AND demand_transitions.last_time_out IS NOT NULL AND stages.stage_stream = :stage_stream',
-                                                limit_date: limit_date.beginning_of_day, stage_stream: Stage.stage_streams[stream])
-
-    demand_transitions = if stage_level == :coordination
-                           Stage.select('stages.name, SUM(transition_time_in_sec) AS sum_duration')
-                                .joins(parent: { demand_transitions: { demand: :project } })
-                                .where(stages: { stage_level: 1 })
-                                .where(parent: { demand_transitions: { demands: { project_id: projects.map(&:id) } } })
-                         else
-                           demand_transitions.where('stage_level = 0')
-                         end
-
-    demand_transitions.group('stages.name, stages.order')
-                      .order('stages.order, stages.name')
-                      .map { |group_sum| [group_sum.name, group_sum.sum_duration] }
-  end
-
   private
 
   def build_grouped_hash(demands_grouped_in_stages, times)
