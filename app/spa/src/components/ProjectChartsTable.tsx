@@ -290,7 +290,7 @@ export const ProjectChartsTable = ({
                   {t("project_chart_table.flow_pressure")}
                 </Cell>
                 <Cell align="right">
-                  {project.flowPressure}%
+                  {project.flowPressure.toFixed(2)}
                 </Cell>
               </Row>
               <Row>
