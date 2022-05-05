@@ -88,7 +88,7 @@ class StagesController < AuthenticatedController
   private
 
   def parent_stages
-    @parent_stages = @company.stages.order(:name) - [@stage]
+    @parent_stages = @company.stages.coordination.order(:name) - [@stage]
   end
 
   def assign_project_stages

@@ -89,9 +89,9 @@ RSpec.describe StagesController, type: :controller do
     describe 'GET #new' do
       context 'valid parameters' do
         it 'instantiates a new Stage and renders the template' do
-          parent = Fabricate :stage, company: company, name: 'zzz'
-          other_parent = Fabricate :stage, company: company, name: 'aaa'
-          Fabricate :stage, name: 'ccc'
+          parent = Fabricate :stage, company: company, name: 'zzz', stage_level: :coordination
+          other_parent = Fabricate :stage, company: company, name: 'aaa', stage_level: :coordination
+          Fabricate :stage, name: 'ccc', stage_level: :team
 
           get :new, params: { company_id: company }
 
@@ -149,9 +149,9 @@ RSpec.describe StagesController, type: :controller do
       context 'passing invalid parameters' do
         context 'invalid attributes' do
           it 'does not create the company and re-render the template with the errors' do
-            parent_stage = Fabricate :stage, company: company, name: 'zzz'
-            other_parent = Fabricate :stage, company: company, name: 'aaa'
-            Fabricate :stage, name: 'ccc'
+            parent_stage = Fabricate :stage, company: company, name: 'zzz', stage_level: :coordination
+            other_parent = Fabricate :stage, company: company, name: 'aaa', stage_level: :coordination
+            Fabricate :stage, name: 'ccc', stage_level: :coordination
 
             post :create, params: { company_id: company, stage: { name: nil, integration_id: nil, stage_type: nil, stage_stream: nil, commitment_point: nil, end_point: nil, queue: nil } }
 
@@ -184,9 +184,9 @@ RSpec.describe StagesController, type: :controller do
 
       context 'valid parameters' do
         it 'assigns the instance variables and renders the template' do
-          parent = Fabricate :stage, company: company, name: 'zzz'
-          other_parent = Fabricate :stage, company: company, name: 'aaa'
-          Fabricate :stage, name: 'ccc'
+          parent = Fabricate :stage, company: company, name: 'zzz', stage_level: :coordination
+          other_parent = Fabricate :stage, company: company, name: 'aaa', stage_level: :coordination
+          Fabricate :stage, name: 'ccc', stage_level: :team
 
           get :edit, params: { company_id: company, id: stage }, xhr: true
 
@@ -223,9 +223,9 @@ RSpec.describe StagesController, type: :controller do
 
       context 'passing valid parameters' do
         it 'updates the demand and redirects to projects index' do
-          parent_stage = Fabricate :stage, company: company, name: 'zzz'
-          other_parent = Fabricate :stage, company: company, name: 'aaa'
-          Fabricate :stage, name: 'ccc'
+          parent_stage = Fabricate :stage, company: company, name: 'zzz', stage_level: :coordination
+          other_parent = Fabricate :stage, company: company, name: 'aaa', stage_level: :coordination
+          Fabricate :stage, name: 'ccc', stage_level: :team
 
           expect(StagesRepository.instance).to receive(:save_stage).once.and_call_original
 
