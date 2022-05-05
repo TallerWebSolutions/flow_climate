@@ -218,15 +218,18 @@ const Header = ({ company }: HeaderProps) => {
               </>
             )}
             {user.admin && (
-              <MenuItem
-                key="userMenu.adminDashboard"
-                component="a"
-                href="/users/admin_dashboard"
-              >
-                {t("userMenu.adminDashboard")}
-              </MenuItem>
+              <>
+                <MenuItem
+                  key="userMenu.adminDashboard"
+                  component="a"
+                  href="/users/admin_dashboard"
+                >
+                  {t("userMenu.adminDashboard")}
+                </MenuItem>
+                <Divider />
+              </>
             )}
-            <Divider />
+
             <MenuItem
               key="userMenu.logout"
               component="a"
