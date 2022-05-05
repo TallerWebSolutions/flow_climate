@@ -46,6 +46,13 @@ en:
     distance_in_words:
       x_seconds:
         other: "%{count} seconds"
+  date:
+    formats:
+      default: "%m/%d/%Y"
+      long: "%A, %d of %B of %Y"
+      short: "%d of %B"
+      month_year: "%B/%Y"
+      
   general:
     connector:
       and: "and"
