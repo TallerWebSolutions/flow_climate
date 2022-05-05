@@ -160,6 +160,12 @@ const PROJECT_CHART_QUERY = gql`
       leadtime
       numberOfBlocks
     }
+    hoursPerCoordinationStageChartData: project(id: $projectId) {
+      hoursPerStageChartData(stageLevel: "coordination") {
+        xAxis
+        yAxis
+      }
+    }
   }
   ${PROJECT_STANDARD_FRAGMENT}
 `
@@ -167,6 +173,7 @@ const PROJECT_CHART_QUERY = gql`
 type ProjectChartResult = {
   project: Project
   demands: Demand[]
+  hoursPerCoordinationStageChartData: Pick<Project, "hoursPerStageChartData">
 }
 
 type ProjectChartDTO = ProjectChartResult | undefined
@@ -218,6 +225,8 @@ const ProjectCharts = () => {
   const demandsFlowChartData = project?.demandsFlowChartData
   const leadTimeHistogramData = project?.leadTimeHistogramData
   const hoursPerStageChartData = project?.hoursPerStageChartData
+  const hoursPerCoordinationStageChartData =
+    data?.hoursPerCoordinationStageChartData.hoursPerStageChartData!
   const cumulativeFlowChartData = project?.cumulativeFlowChartData
   const demands = data?.demands!
 
@@ -576,9 +585,18 @@ const ProjectCharts = () => {
     }
   )
 
-  const demandsCountByTeamMember = project.projectMembers.map(member => ({
+  const projectHoursPerCoordinationStage = hoursPerCoordinationStageChartData
+    ? hoursPerCoordinationStageChartData.xAxis.map((xValue, index: number) => {
+        return {
+          index: index,
+          [xValue]: hoursPerStageChartData.yAxis[index],
+        }
+      })
+    : []
+
+  const demandsCountByTeamMember = project.projectMembers.map((member) => ({
     [t("project_charts.demandsCount")]: member.demandsCount,
-    name: member.memberName
+    name: member.memberName,
   }))
 
   return (
@@ -643,33 +661,33 @@ const ProjectCharts = () => {
           }}
         />
         <Grid item xs={6} sx={{ padding: 1 }}>
-            <Typography>{t("project_charts.bugs_chart")}</Typography>
+          <Typography>{t("project_charts.bugs_chart")}</Typography>
 
-            <BarChart
-              data={projectBugsChartData}
-              axisLeftLegend={t("project_charts.bugs_y_label")}
-              keys={[
-                t("project_charts.bugs_openned"),
-                t("project_charts.bugs_closed"),
-              ]}
-              indexBy="index"
-            />
+          <BarChart
+            data={projectBugsChartData}
+            axisLeftLegend={t("project_charts.bugs_y_label")}
+            keys={[
+              t("project_charts.bugs_openned"),
+              t("project_charts.bugs_closed"),
+            ]}
+            indexBy="index"
+          />
         </Grid>
         <Grid item xs={6} sx={{ padding: 1 }}>
-            <Typography>{t("project_charts.flow_data_chart")}</Typography>
+          <Typography>{t("project_charts.flow_data_chart")}</Typography>
 
-            <BarChart
-              data={projectFlowChartData}
-              keys={[
-                t("project_charts.flow_data_created"),
-                t("project_charts.flow_data_committed_to"),
-                t("project_charts.flow_data_pull_transactions"),
-                t("project_charts.flow_data_delivered"),
-              ]}
-              indexBy="index"
-              axisLeftLegend={t("project_charts.flow_data_y_label")}
-              axisBottomLegend={t("project_charts.flow_data_x_label")}
-            />
+          <BarChart
+            data={projectFlowChartData}
+            keys={[
+              t("project_charts.flow_data_created"),
+              t("project_charts.flow_data_committed_to"),
+              t("project_charts.flow_data_pull_transactions"),
+              t("project_charts.flow_data_delivered"),
+            ]}
+            indexBy="index"
+            axisLeftLegend={t("project_charts.flow_data_y_label")}
+            axisBottomLegend={t("project_charts.flow_data_x_label")}
+          />
         </Grid>
 
         <ChartLineBox
@@ -735,32 +753,32 @@ const ProjectCharts = () => {
         />
         <Grid item xs={6} sx={{ padding: 1 }}>
           <Box height={350}>
-              <Typography>
-                {t("project_charts.lead_time_control_chart")}
-              </Typography>
-              <ScatterChart
-                data={leadTimeControlChartData}
-                props={{
-                  markers: [
-                    leadTimeControlP65Marker,
-                    leadTimeControlP80Marker,
-                    leadTimeControlP95Marker,
-                  ],
-                  tooltip: (data: { node: ScatterNode }) => {
-                    const demandExternalID = data.node.data.label
+            <Typography>
+              {t("project_charts.lead_time_control_chart")}
+            </Typography>
+            <ScatterChart
+              data={leadTimeControlChartData}
+              props={{
+                markers: [
+                  leadTimeControlP65Marker,
+                  leadTimeControlP80Marker,
+                  leadTimeControlP95Marker,
+                ],
+                tooltip: (data: { node: ScatterNode }) => {
+                  const demandExternalID = data.node.data.label
 
-                    return (
-                      <ScatterChartTooltip
-                        xLabel={t(
-                          "project_charts.lead_time_control_tooltip_label"
-                        )}
-                        customXValue={demandExternalID}
-                        node={data.node}
-                      />
-                    )
-                  },
-                }}
-              />
+                  return (
+                    <ScatterChartTooltip
+                      xLabel={t(
+                        "project_charts.lead_time_control_tooltip_label"
+                      )}
+                      customXValue={demandExternalID}
+                      node={data.node}
+                    />
+                  )
+                },
+              }}
+            />
           </Box>
         </Grid>
 
@@ -773,8 +791,12 @@ const ProjectCharts = () => {
             data={projectLeadTimeHistogramData}
             keys={[t("project_charts.lead_time_histogram_chart_hits")]}
             indexBy={t("project_charts.lead_time_histogram_chart_x_label")}
-            axisLeftLegend={t("project_charts.lead_time_histogram_chart_y_label")}
-            axisBottomLegend={t("project_charts.lead_time_histogram_chart_x_label")}
+            axisLeftLegend={t(
+              "project_charts.lead_time_histogram_chart_y_label"
+            )}
+            axisBottomLegend={t(
+              "project_charts.lead_time_histogram_chart_x_label"
+            )}
           />
         </Grid>
 
@@ -939,21 +961,16 @@ const ProjectCharts = () => {
               "project_charts.consumed_hours_by_role_in_month_y_label"
             )}
             keys={[
-              t(
-                "project_charts.consumed_hours_by_role_in_month_design_effort"
-              ),
+              t("project_charts.consumed_hours_by_role_in_month_design_effort"),
               t(
                 "project_charts.consumed_hours_by_role_in_month_development_effort"
               ),
               t(
                 "project_charts.consumed_hours_by_role_in_month_management_effort"
               ),
-              t(
-                "project_charts.consumed_hours_by_role_in_month_total_effort"
-              ),
+              t("project_charts.consumed_hours_by_role_in_month_total_effort"),
             ]}
             indexBy="period"
-            
           />
         </Grid>
         <Grid item xs={6} sx={{ padding: 1 }}>
@@ -967,7 +984,23 @@ const ProjectCharts = () => {
           />
         </Grid>
         <Grid item xs={6} sx={{ padding: 1 }}>
-          <Typography>{t("project_charts.demandsCountByTeamMember")}</Typography>
+          <Typography>
+            {t("project_charts.hours_per_coordination_stage_chart")}
+          </Typography>
+
+          <BarChart
+            data={projectHoursPerCoordinationStage}
+            keys={hoursPerCoordinationStageChartData.xAxis}
+            indexBy="index"
+            axisLeftLegend={t(
+              "project_charts.hours_per_coordination_stage_y_label"
+            )}
+          />
+        </Grid>
+        <Grid item xs={6} sx={{ padding: 1 }}>
+          <Typography>
+            {t("project_charts.demandsCountByTeamMember")}
+          </Typography>
 
           <BarChart
             data={demandsCountByTeamMember}
