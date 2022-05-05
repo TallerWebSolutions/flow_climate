@@ -23,7 +23,7 @@ type TableProps = {
 }
 
 const Table = ({ title, headerCells, rows, footerCells }: TableProps) => (
-  <TableContainer component={Paper} sx={{ background: "white", my: 4 }}>
+  <TableContainer component={Paper} sx={{ background: "white" }}>
     <Typography
       color="primary"
       variant="h6"

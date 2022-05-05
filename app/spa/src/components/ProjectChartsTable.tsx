@@ -38,14 +38,24 @@ const mountDemandsSearchLink = ({
   return `/companies/${companySlug}/demands/demands_list_by_ids?demand_fitness=&demand_state=${state}&demand_type=&flow_object_id=${projectID}&object_type=Project`
 }
 
-const Row = (props: TableRowProps) => <TableRow sx={{
-  borderBottom: "1px solid",
-  borderBottomColor: "#ccc",
-}} {...props} />
+const Row = (props: TableRowProps) => (
+  <TableRow
+    sx={{
+      borderBottom: "1px solid",
+      borderBottomColor: "#ccc",
+    }}
+    {...props}
+  />
+)
 
-const Cell = (props: TableCellProps) => <TableCell sx={{
-  padding: 2
-}} {...props} />
+const Cell = (props: TableCellProps) => (
+  <TableCell
+    sx={{
+      padding: 2,
+    }}
+    {...props}
+  />
+)
 
 export const ProjectChartsTable = ({
   project,
@@ -111,15 +121,13 @@ export const ProjectChartsTable = ({
           <Box
             sx={{
               position: "relative",
-              height: readMore ? "570px" : "auto",
+              height: readMore ? "586px" : "auto",
               overflow: readMore ? "hidden" : "",
             }}
           >
             <MUITable>
               <Row>
-                <Cell>
-                  {t("project_chart_table.start")}
-                </Cell>
+                <Cell>{t("project_chart_table.start")}</Cell>
                 <Cell align="right">
                   {formatDate({
                     date: project.startDate,
@@ -141,9 +149,7 @@ export const ProjectChartsTable = ({
                     {t("project_chart_table.initial_scope")}
                   </Box>
                 </Cell>
-                <Cell align="right">
-                  {project.initialScope}
-                </Cell>
+                <Cell align="right">{project.initialScope}</Cell>
               </Row>
               <Row>
                 <Cell>
@@ -165,9 +171,7 @@ export const ProjectChartsTable = ({
                 </Cell>
               </Row>
               <Row>
-                <Cell>
-                  {t("project_chart_table.delivered_demands")}
-                </Cell>
+                <Cell>{t("project_chart_table.delivered_demands")}</Cell>
                 <Cell align="right">
                   <Link
                     href={mountDemandsSearchLink({
@@ -237,9 +241,7 @@ export const ProjectChartsTable = ({
                 </Cell>
               </Row>
               <Row>
-                <Cell>
-                  {t("project_chart_table.discarted_demands")}
-                </Cell>
+                <Cell>{t("project_chart_table.discarted_demands")}</Cell>
                 <Cell align="right">
                   <Link
                     href={mountDemandsSearchLink({
@@ -254,9 +256,7 @@ export const ProjectChartsTable = ({
                 </Cell>
               </Row>
               <Row>
-                <Cell>
-                  {t("project_chart_table.unscored_demands")}
-                </Cell>
+                <Cell>{t("project_chart_table.unscored_demands")}</Cell>
                 <Cell align="right">
                   <Link
                     href={mountDemandsSearchLink({
@@ -271,9 +271,7 @@ export const ProjectChartsTable = ({
                 </Cell>
               </Row>
               <Row>
-                <Cell>
-                  {t("project_chart_table.blocked_demands")}
-                </Cell>
+                <Cell>{t("project_chart_table.blocked_demands")}</Cell>
                 <Cell align="right">
                   <Link
                     href={`/companies/${companySlug}/demand_blocks/search?demand_blocks_ids=${project.demandBlocks
@@ -286,12 +284,8 @@ export const ProjectChartsTable = ({
                 </Cell>
               </Row>
               <Row>
-                <Cell>
-                  {t("project_chart_table.flow_pressure")}
-                </Cell>
-                <Cell align="right">
-                  {project.flowPressure.toFixed(2)}
-                </Cell>
+                <Cell>{t("project_chart_table.flow_pressure")}</Cell>
+                <Cell align="right">{project.flowPressure.toFixed(2)}</Cell>
               </Row>
               <Row>
                 <Cell>
