@@ -303,25 +303,26 @@ RSpec.describe Types::QueryType do
   describe '#project' do
     context 'with project' do
       it 'returns the project and its fields' do
-        company = Fabricate :company
-        team = Fabricate :team, company: company
-        customer = Fabricate :customer, company: company
-        product = Fabricate :product, company: company, customer: customer
-        project = Fabricate :project, company: company, customers: [customer], products: [product], team: team, status: :executing, start_date: Time.zone.parse('2022-04-23 10:51'), end_date: 1.day.from_now, max_work_in_progress: 2
-        Fabricate :demand, company: company, project: project, team: team
-        first_finished_demand = Fabricate :demand, project: project, effort_downstream: 200, effort_upstream: 10, end_date: Time.zone.parse('2022-04-15 12:30')
-        second_finished_demand = Fabricate :demand, project: project, demand_type: :bug, created_date: Time.zone.parse('2022-04-23 13:30'), commitment_date: Time.zone.parse('2022-04-24 10:30'), end_date: Time.zone.parse('2022-04-25 17:30')
-        project_consolidation = Fabricate :project_consolidation, project: project, monte_carlo_weeks_min: 9, monte_carlo_weeks_max: 85, monte_carlo_weeks_std_dev: 7, team_based_operational_risk: 0.5, consolidation_date: Time.zone.today
-        demand = Fabricate :demand, company: company, project: project, team: team
-        Fabricate :demand_block, demand: demand
+        travel_to Time.zone.local(2022, 5, 4, 10, 0, 0) do
+          company = Fabricate :company
+          team = Fabricate :team, company: company
+          customer = Fabricate :customer, company: company
+          product = Fabricate :product, company: company, customer: customer
+          project = Fabricate :project, company: company, customers: [customer], products: [product], team: team, status: :executing, start_date: Time.zone.parse('2022-04-23 10:51'), end_date: 1.day.from_now, max_work_in_progress: 2
+          Fabricate :demand, company: company, project: project, team: team
+          first_finished_demand = Fabricate :demand, project: project, effort_downstream: 200, effort_upstream: 10, end_date: Time.zone.parse('2022-04-15 12:30')
+          second_finished_demand = Fabricate :demand, project: project, demand_type: :bug, created_date: Time.zone.parse('2022-04-23 13:30'), commitment_date: Time.zone.parse('2022-04-24 10:30'), end_date: Time.zone.parse('2022-04-25 17:30')
+          project_consolidation = Fabricate :project_consolidation, project: project, monte_carlo_weeks_min: 9, monte_carlo_weeks_max: 85, monte_carlo_weeks_std_dev: 7, team_based_operational_risk: 0.5, consolidation_date: Time.zone.today
+          demand = Fabricate :demand, company: company, project: project, team: team
+          Fabricate :demand_block, demand: demand
 
-        team_member = Fabricate :team_member, company: company, name: 'foo'
-        membership = Fabricate :membership, team: team, team_member: team_member
-        Fabricate :item_assignment, demand: first_finished_demand, membership: membership
-        Fabricate :item_assignment, demand: second_finished_demand, membership: membership
+          team_member = Fabricate :team_member, company: company, name: 'foo'
+          membership = Fabricate :membership, team: team, team_member: team_member
+          Fabricate :item_assignment, demand: first_finished_demand, membership: membership
+          Fabricate :item_assignment, demand: second_finished_demand, membership: membership
 
-        query =
-          %(query {
+          query =
+            %(query {
         me {
           id
           fullName
@@ -432,108 +433,109 @@ RSpec.describe Types::QueryType do
         }
       })
 
-        user = Fabricate :user
+          user = Fabricate :user
 
-        context = {
-          current_user: user
-        }
+          context = {
+            current_user: user
+          }
 
-        result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
-        expect(result.dig('data', 'me')).to eq({
-                                                 'id' => user.id.to_s,
-                                                 'fullName' => user.full_name,
-                                                 'companies' => [],
-                                                 'admin' => false,
-                                                 'avatar' => {
-                                                   'imageSource' => user.avatar.url
-                                                 }
-                                               })
+          result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
+          expect(result.dig('data', 'me')).to eq({
+                                                   'id' => user.id.to_s,
+                                                   'fullName' => user.full_name,
+                                                   'companies' => [],
+                                                   'admin' => false,
+                                                   'avatar' => {
+                                                     'imageSource' => user.avatar.url
+                                                   }
+                                                 })
 
-        expect(result.dig('data', 'project')).to eq({
-                                                      'id' => project.id.to_s,
-                                                      'name' => project.name,
-                                                      'startDate' => project.start_date.to_s,
-                                                      'endDate' => project.end_date.to_s,
-                                                      'deadlinesChangeCount' => 0,
-                                                      'discoveredScope' => nil,
-                                                      'pastWeeks' => project.past_weeks.to_i,
-                                                      'currentWeeksByLittleLaw' => 0,
-                                                      'currentMonteCarloWeeksMin' => 9,
-                                                      'currentMonteCarloWeeksMax' => 85,
-                                                      'currentMonteCarloWeeksStdDev' => 7,
-                                                      'remainingWork' => 28,
-                                                      'currentTeamBasedRisk' => 0.5,
-                                                      'currentRiskToDeadline' => 0.0,
-                                                      'remainingDays' => project.remaining_days,
-                                                      'currentWeeklyHoursIdealBurnup' => project.current_weekly_hours_ideal_burnup,
-                                                      'running' => true,
-                                                      'company' => {
-                                                        'id' => company.id.to_s,
-                                                        'name' => company.name
-                                                      },
-                                                      'projectConsolidations' => [{
-                                                        'id' => project_consolidation.id.to_s,
-                                                        'interquartileRange' => 0.0,
-                                                        'leadTimeHistogramBinMax' => 0.0,
-                                                        'leadTimeHistogramBinMin' => 0.0,
-                                                        'leadTimeMaxMonth' => 0.0,
-                                                        'leadTimeMinMonth' => 0.0,
-                                                        'leadTimeP25' => project_consolidation.lead_time_p65,
-                                                        'leadTimeP75' => project_consolidation.lead_time_p75
-                                                      }],
-                                                      'demandsFinishedWithLeadtime' => [{ 'id' => second_finished_demand.id.to_s }],
-                                                      'discardedDemands' => [],
-                                                      'unscoredDemands' => project.demands.kept.unscored_demands.map do |unscored_demand|
-                                                        {
-                                                          'id' => unscored_demand.id.to_s
-                                                        }
-                                                      end,
-                                                      'demandBlocks' => demand.demand_blocks.map do |demand_block|
-                                                        {
-                                                          'id' => demand_block.id.to_s
-                                                        }
-                                                      end,
-                                                      'numberOfDemands' => project.demands.count,
-                                                      'leadTimeP65' => project.general_leadtime(65),
-                                                      'leadTimeP95' => project.general_leadtime(95),
-                                                      'numberOfDemandsDelivered' => project.demands.kept.finished_until_date(Time.zone.now).count,
-                                                      'numberOfDownstreamDemands' => 0,
-                                                      'hoursPerStageChartData' => {
-                                                        'xAxis' => [],
-                                                        'yAxis' => []
-                                                      },
-                                                      'projectConsolidationsWeekly' => [
-                                                        {
-                                                          'id' => project_consolidation.id.to_s
-                                                        }
-                                                      ],
-                                                      'projectConsolidationsLastMonth' => [
-                                                        {
-                                                          'id' => project_consolidation.id.to_s
-                                                        }
-                                                      ],
-                                                      'lastProjectConsolidationsWeekly' => nil,
-                                                      'demandsFlowChartData' => { 'committedChartData' => [0, 0, 0], 'creationChartData' => [1, 2, 0], 'pullTransactionRate' => [0, 0, 0], 'throughputChartData' => [0, 1, 0] },
-                                                      'cumulativeFlowChartData' => { 'xAxis' => %w[2022-04-24 2022-05-01 2022-05-08], 'yAxis' => [] },
-                                                      'leadTimeHistogramData' => {
-                                                        'keys' => [111_600.0],
-                                                        'values' => [1]
-                                                      },
-                                                      'projectMembers' => [{
-                                                        'demandsCount' => 2,
-                                                        'memberName' => 'foo'
-                                                      }]
-                                                    })
-        expect(result.dig('data', 'projectConsolidations')).to eq([{
-                                                                    'id' => project_consolidation.id.to_s,
-                                                                    'interquartileRange' => 0.0,
-                                                                    'leadTimeHistogramBinMax' => 0.0,
-                                                                    'leadTimeHistogramBinMin' => 0.0,
-                                                                    'leadTimeMaxMonth' => 0.0,
-                                                                    'leadTimeMinMonth' => 0.0,
-                                                                    'leadTimeP25' => 0.0,
-                                                                    'leadTimeP75' => 0.0
-                                                                  }])
+          expect(result.dig('data', 'project')).to eq({
+                                                        'id' => project.id.to_s,
+                                                        'name' => project.name,
+                                                        'startDate' => project.start_date.to_s,
+                                                        'endDate' => project.end_date.to_s,
+                                                        'deadlinesChangeCount' => 0,
+                                                        'discoveredScope' => nil,
+                                                        'pastWeeks' => project.past_weeks.to_i,
+                                                        'currentWeeksByLittleLaw' => 0,
+                                                        'currentMonteCarloWeeksMin' => 9,
+                                                        'currentMonteCarloWeeksMax' => 85,
+                                                        'currentMonteCarloWeeksStdDev' => 7,
+                                                        'remainingWork' => 28,
+                                                        'currentTeamBasedRisk' => 0.5,
+                                                        'currentRiskToDeadline' => 0.0,
+                                                        'remainingDays' => project.remaining_days,
+                                                        'currentWeeklyHoursIdealBurnup' => project.current_weekly_hours_ideal_burnup,
+                                                        'running' => true,
+                                                        'company' => {
+                                                          'id' => company.id.to_s,
+                                                          'name' => company.name
+                                                        },
+                                                        'projectConsolidations' => [{
+                                                          'id' => project_consolidation.id.to_s,
+                                                          'interquartileRange' => 0.0,
+                                                          'leadTimeHistogramBinMax' => 0.0,
+                                                          'leadTimeHistogramBinMin' => 0.0,
+                                                          'leadTimeMaxMonth' => 0.0,
+                                                          'leadTimeMinMonth' => 0.0,
+                                                          'leadTimeP25' => project_consolidation.lead_time_p65,
+                                                          'leadTimeP75' => project_consolidation.lead_time_p75
+                                                        }],
+                                                        'demandsFinishedWithLeadtime' => [{ 'id' => second_finished_demand.id.to_s }],
+                                                        'discardedDemands' => [],
+                                                        'unscoredDemands' => project.demands.kept.unscored_demands.map do |unscored_demand|
+                                                          {
+                                                            'id' => unscored_demand.id.to_s
+                                                          }
+                                                        end,
+                                                        'demandBlocks' => demand.demand_blocks.map do |demand_block|
+                                                          {
+                                                            'id' => demand_block.id.to_s
+                                                          }
+                                                        end,
+                                                        'numberOfDemands' => project.demands.count,
+                                                        'leadTimeP65' => project.general_leadtime(65),
+                                                        'leadTimeP95' => project.general_leadtime(95),
+                                                        'numberOfDemandsDelivered' => project.demands.kept.finished_until_date(Time.zone.now).count,
+                                                        'numberOfDownstreamDemands' => 0,
+                                                        'hoursPerStageChartData' => {
+                                                          'xAxis' => [],
+                                                          'yAxis' => []
+                                                        },
+                                                        'projectConsolidationsWeekly' => [
+                                                          {
+                                                            'id' => project_consolidation.id.to_s
+                                                          }
+                                                        ],
+                                                        'projectConsolidationsLastMonth' => [
+                                                          {
+                                                            'id' => project_consolidation.id.to_s
+                                                          }
+                                                        ],
+                                                        'lastProjectConsolidationsWeekly' => nil,
+                                                        'demandsFlowChartData' => { 'committedChartData' => [0, 0, 0], 'creationChartData' => [1, 2, 0], 'pullTransactionRate' => [0, 0, 0], 'throughputChartData' => [0, 1, 0] },
+                                                        'cumulativeFlowChartData' => { 'xAxis' => %w[2022-04-24 2022-05-01 2022-05-08], 'yAxis' => [] },
+                                                        'leadTimeHistogramData' => {
+                                                          'keys' => [111_600.0],
+                                                          'values' => [1]
+                                                        },
+                                                        'projectMembers' => [{
+                                                          'demandsCount' => 2,
+                                                          'memberName' => 'foo'
+                                                        }]
+                                                      })
+          expect(result.dig('data', 'projectConsolidations')).to eq([{
+                                                                      'id' => project_consolidation.id.to_s,
+                                                                      'interquartileRange' => 0.0,
+                                                                      'leadTimeHistogramBinMax' => 0.0,
+                                                                      'leadTimeHistogramBinMin' => 0.0,
+                                                                      'leadTimeMaxMonth' => 0.0,
+                                                                      'leadTimeMinMonth' => 0.0,
+                                                                      'leadTimeP25' => 0.0,
+                                                                      'leadTimeP75' => 0.0
+                                                                    }])
+        end
       end
     end
   end
