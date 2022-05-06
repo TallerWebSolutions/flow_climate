@@ -589,7 +589,7 @@ const ProjectCharts = () => {
     ? hoursPerCoordinationStageChartData.xAxis.map((xValue, index: number) => {
         return {
           index: index,
-          [xValue]: hoursPerStageChartData.yAxis[index],
+          [xValue]: hoursPerCoordinationStageChartData.yAxis[index],
         }
       })
     : []
