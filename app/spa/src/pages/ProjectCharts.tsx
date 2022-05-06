@@ -7,7 +7,7 @@ import {
   Typography,
 } from "@mui/material"
 import { BarDatum } from "@nivo/bar"
-import { Serie, SliceTooltipProps } from "@nivo/line"
+import { SliceTooltipProps } from "@nivo/line"
 import { useTranslation } from "react-i18next"
 import { useParams } from "react-router-dom"
 import { BarChart } from "../components/charts/BarChart"
@@ -264,30 +264,30 @@ const ProjectCharts = () => {
     }
   )
 
-  const projectCumulativeFlowChartDataYAxis = cumulativeFlowChartData?.yAxis
-  const projectCumulativeFlowChartData: Serie[] =
-    Array.isArray(projectCumulativeFlowChartDataYAxis) &&
-    projectCumulativeFlowChartDataYAxis.length > 0 &&
-    cumulativeFlowChartData
-      ? cumulativeFlowChartData?.xAxis.map((_, index) => {
-          const yAxis = cumulativeFlowChartData.yAxis
+  const projectStages = cumulativeFlowChartData?.yAxis.map(
+    (item, index) => item.name
+  )
 
-          if (yAxis[index]?.name || yAxis[index]?.data === undefined) {
-            return {
-              id: "",
-              data: [],
-            }
-          }
+  const projectCumulativeFlowChartData = projectStages?.map(
+    (stage, stageIndex) => {
+      const xAxis = cumulativeFlowChartData?.xAxis || []
 
+      return {
+        id: stage,
+        data: xAxis.map((x, index) => {
           return {
-            id: yAxis[index].name,
-            data: yAxis[index].data.map((cumulativeValue, index) => ({
-              x: cumulativeFlowChartData?.xAxis[index],
-              y: cumulativeValue,
-            })),
+            x,
+            y: cumulativeFlowChartData?.yAxis[stageIndex]?.data[index],
           }
-        })
-      : []
+        }),
+      }
+    }
+  )
+
+  // eslint-disable-next-line no-console
+  console.log({
+    projectCumulativeFlowChartData,
+  })
 
   const committedChartData = demandsFlowChartData.committedChartData
   const projectFlowChartData: BarDatum[] = committedChartData
@@ -729,28 +729,36 @@ const ProjectCharts = () => {
             ),
           }}
         />
-        <ChartLineBox
-          title={t("project_charts.cumulative_flow_chart", {
-            projectName: project.name,
-          })}
-          data={projectCumulativeFlowChartData}
-          axisLeftLegend={t("project_charts.cumulative_flow_y_label")}
-          props={{
-            enableArea: true,
-            enableSlices: "x",
-            sliceTooltip: ({ slice }: SliceTooltipProps) => (
-              <LineChartTooltip slice={slice} />
-            ),
-            margin: { left: 80, right: 20, top: 25, bottom: 65 },
-            axisBottom: {
-              tickSize: 5,
-              tickPadding: 5,
-              legendPosition: "middle",
-              legendOffset: 60,
-              tickRotation: -40,
-            },
-          }}
-        />
+        {projectCumulativeFlowChartData && (
+          <ChartLineBox
+            title={t("project_charts.cumulative_flow_chart", {
+              projectName: project.name,
+            })}
+            data={projectCumulativeFlowChartData}
+            axisLeftLegend={t("project_charts.cumulative_flow_y_label")}
+            props={{
+              yScale: {
+                type: "linear",
+                stacked: true,
+              },
+              areaOpacity: 1,
+              enableArea: true,
+              enableSlices: "x",
+              sliceTooltip: ({ slice }: SliceTooltipProps) => (
+                <LineChartTooltip slice={slice} />
+              ),
+              margin: { left: 80, right: 20, top: 25, bottom: 65 },
+              axisBottom: {
+                tickSize: 5,
+                tickPadding: 5,
+                legendPosition: "middle",
+                legendOffset: 60,
+                tickRotation: -40,
+              },
+            }}
+          />
+        )}
+
         <Grid item xs={6} sx={{ padding: 1 }}>
           <Box height={350}>
             <Typography>
