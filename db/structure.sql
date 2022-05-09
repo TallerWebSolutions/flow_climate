@@ -1612,6 +1612,39 @@ ALTER SEQUENCE public.products_projects_id_seq OWNED BY public.products_projects
 
 
 --
+-- Name: project_additional_hours; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.project_additional_hours (
+    id bigint NOT NULL,
+    project_id integer NOT NULL,
+    hours_type integer DEFAULT 0 NOT NULL,
+    hours integer DEFAULT 0 NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: project_additional_hours_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.project_additional_hours_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: project_additional_hours_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.project_additional_hours_id_seq OWNED BY public.project_additional_hours.id;
+
+
+--
 -- Name: project_broken_wip_logs; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3105,6 +3138,13 @@ ALTER TABLE ONLY public.products_projects ALTER COLUMN id SET DEFAULT nextval('p
 
 
 --
+-- Name: project_additional_hours id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.project_additional_hours ALTER COLUMN id SET DEFAULT nextval('public.project_additional_hours_id_seq'::regclass);
+
+
+--
 -- Name: project_broken_wip_logs id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3657,6 +3697,14 @@ ALTER TABLE ONLY public.products
 
 ALTER TABLE ONLY public.products_projects
     ADD CONSTRAINT products_projects_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: project_additional_hours project_additional_hours_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.project_additional_hours
+    ADD CONSTRAINT project_additional_hours_pkey PRIMARY KEY (id);
 
 
 --
@@ -4768,6 +4816,20 @@ CREATE INDEX index_products_projects_on_project_id ON public.products_projects U
 
 
 --
+-- Name: index_project_additional_hours_on_hours_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_project_additional_hours_on_hours_type ON public.project_additional_hours USING btree (hours_type);
+
+
+--
+-- Name: index_project_additional_hours_on_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_project_additional_hours_on_project_id ON public.project_additional_hours USING btree (project_id);
+
+
+--
 -- Name: index_project_broken_wip_logs_on_project_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5711,6 +5773,14 @@ ALTER TABLE ONLY public.azure_custom_fields
 
 
 --
+-- Name: project_additional_hours fk_rails_51a0d1b6fa; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.project_additional_hours
+    ADD CONSTRAINT fk_rails_51a0d1b6fa FOREIGN KEY (project_id) REFERENCES public.projects(id);
+
+
+--
 -- Name: slack_configurations fk_rails_52597683c1; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6482,6 +6552,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220401124201'),
 ('20220408194012'),
 ('20220503152313'),
-('20220503213916');
+('20220503213916'),
+('20220509115356');
 
 

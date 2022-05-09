@@ -25,6 +25,7 @@
 #  index_stages_on_integration_id  (integration_id)
 #  index_stages_on_name            (name)
 #  index_stages_on_parent_id       (parent_id)
+#  index_stages_on_stage_level     (stage_level)
 #
 # Foreign Keys
 #
