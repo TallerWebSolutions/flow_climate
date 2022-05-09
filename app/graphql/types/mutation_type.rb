@@ -8,6 +8,7 @@ module Types
     field :delete_team, mutation: Mutations::DeleteTeamMutation
     field :update_team, mutation: Mutations::UpdateTeamMutation
     field :create_team, mutation: Mutations::CreateTeamMutation
+    field :create_project_additional_hours, mutation: Mutations::CreateProjectAdditionalHoursMutation
     field :me, Types::UserType, null: false
 
     def me

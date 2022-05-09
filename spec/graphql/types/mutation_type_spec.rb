@@ -2,7 +2,7 @@
 
 RSpec.describe Types::MutationType do
   describe 'generate_replenishing_cache' do
-    describe '.resolve' do
+    describe '#resolve' do
       let(:team) { Fabricate :team }
       let(:mutation) do
         %(mutation {
@@ -20,7 +20,7 @@ RSpec.describe Types::MutationType do
       end
 
       context 'when redis server is not working' do
-        it 'fails to put the job in the queue' do
+        it 'fails' do
           allow(Consolidations::ReplenishingConsolidationJob).to(receive(:perform_later)).and_raise(Redis::CannotConnectError)
           result = FlowClimateSchema.execute(mutation).as_json
           expect(result['data']['generateReplenishingCache']['statusMessage']).to eq('FAIL')
@@ -30,7 +30,7 @@ RSpec.describe Types::MutationType do
   end
 
   describe 'generate_project_cache' do
-    describe '.resolve' do
+    describe '#resolve' do
       let(:project) { Fabricate :project }
       let(:mutation) do
         %(mutation {
@@ -41,14 +41,14 @@ RSpec.describe Types::MutationType do
       end
 
       context 'when the project exists' do
-        it 'succeeds to put the job in the queue' do
+        it 'succeeds' do
           result = FlowClimateSchema.execute(mutation).as_json
           expect(result['data']['generateProjectCache']['statusMessage']).to eq('SUCCESS')
         end
       end
 
       context 'when redis server is not working' do
-        it 'fails to put the job in the queue' do
+        it 'fails' do
           allow(Consolidations::ProjectConsolidationJob).to(receive(:perform_later)).and_raise(Redis::CannotConnectError)
           result = FlowClimateSchema.execute(mutation).as_json
           expect(result['data']['generateProjectCache']['statusMessage']).to eq('FAIL')
@@ -57,8 +57,8 @@ RSpec.describe Types::MutationType do
     end
   end
 
-  describe 'send auth token' do
-    describe '.resolve' do
+  describe 'send_auth_token' do
+    describe '#resolve' do
       let(:company) { Fabricate :company }
 
       context 'when context has current user' do
@@ -71,7 +71,7 @@ RSpec.describe Types::MutationType do
             })
         end
 
-        it 'succeeds to send the auth token to the user' do
+        it 'succeeds' do
           user = Fabricate :user
           context = {
             current_user: user
@@ -90,7 +90,7 @@ RSpec.describe Types::MutationType do
             })
         end
 
-        it 'fails to send the auth token to the user' do
+        it 'fails' do
           context = {
             current_user: nil
           }
@@ -103,7 +103,7 @@ RSpec.describe Types::MutationType do
   end
 
   describe 'delete_team' do
-    describe '.resolve' do
+    describe '#resolve' do
       let(:team) { Fabricate :team }
       let(:mutation) do
         %(mutation {
@@ -114,7 +114,7 @@ RSpec.describe Types::MutationType do
       end
 
       context 'when the team exists' do
-        it 'succeeds to delete the object' do
+        it 'succeeds' do
           result = FlowClimateSchema.execute(mutation).as_json
           expect(result['data']['deleteTeam']['statusMessage']).to eq('SUCCESS')
           expect(Team.all.count).to eq 0
@@ -122,7 +122,7 @@ RSpec.describe Types::MutationType do
       end
 
       context 'when the object is not valid' do
-        it 'fails to put the job in the queue' do
+        it 'fails' do
           allow_any_instance_of(Team).to(receive(:destroy)).and_return(false)
           result = FlowClimateSchema.execute(mutation).as_json
           expect(result['data']['deleteTeam']['statusMessage']).to eq('FAIL')
@@ -132,7 +132,7 @@ RSpec.describe Types::MutationType do
   end
 
   describe 'update_team' do
-    describe '.resolve' do
+    describe '#resolve' do
       let(:team) { Fabricate :team }
       let(:mutation) do
         %(mutation {
@@ -143,7 +143,7 @@ RSpec.describe Types::MutationType do
       end
 
       context 'when the team exists' do
-        it 'succeeds to delete the object' do
+        it 'succeeds' do
           result = FlowClimateSchema.execute(mutation).as_json
           expect(result['data']['updateTeam']['statusMessage']).to eq('SUCCESS')
           expect(team.reload.name).to eq 'foo'
@@ -152,7 +152,7 @@ RSpec.describe Types::MutationType do
       end
 
       context 'when the object is not valid' do
-        it 'fails to put the job in the queue' do
+        it 'fails' do
           allow_any_instance_of(Team).to(receive(:update)).and_return(false)
           result = FlowClimateSchema.execute(mutation).as_json
           expect(result['data']['updateTeam']['statusMessage']).to eq('FAIL')
@@ -166,7 +166,7 @@ RSpec.describe Types::MutationType do
     let(:user) { Fabricate :user, companies: [company], last_company_id: company.id }
     let(:context) { { current_user: user } }
 
-    describe '.resolve' do
+    describe '#resolve' do
       let(:team) { Fabricate :team }
       let(:mutation) do
         %(mutation {
@@ -177,7 +177,7 @@ RSpec.describe Types::MutationType do
       end
 
       context 'when the team exists' do
-        it 'succeeds to delete the object' do
+        it 'succeeds' do
           result = FlowClimateSchema.execute(mutation, variables: nil, context: context).as_json
           expect(result['data']['createTeam']['statusMessage']).to eq('SUCCESS')
           created_team = Team.last
@@ -187,10 +187,58 @@ RSpec.describe Types::MutationType do
       end
 
       context 'when the object is not valid' do
-        it 'fails to put the job in the queue' do
+        it 'fails' do
           allow_any_instance_of(Team).to(receive(:valid?)).and_return(false)
           result = FlowClimateSchema.execute(mutation, variables: nil, context: context).as_json
           expect(result['data']['createTeam']['statusMessage']).to eq('FAIL')
+        end
+      end
+
+      context 'when context does not have the current user' do
+        it 'fails' do
+          context = {
+            current_user: nil
+          }
+
+          result = FlowClimateSchema.execute(mutation, variables: nil, context: context).as_json
+          expect(result['data']['createTeam']['statusMessage']).to eq('FAIL')
+        end
+      end
+    end
+  end
+
+  describe 'create_project_additional_hours' do
+    let(:company) { Fabricate :company }
+    let(:user) { Fabricate :user, companies: [company], last_company_id: company.id }
+    let(:context) { { current_user: user } }
+
+    describe '#resolve' do
+      let(:project) { Fabricate :project, company: company }
+      let(:mutation) do
+        %(mutation {
+            createProjectAdditionalHours(projectId: #{project.id}, hoursType: 0, hours: 14.2, obs: "bla") {
+              statusMessage
+            }
+          })
+      end
+
+      context 'when the project exists' do
+        it 'succeeds' do
+          result = FlowClimateSchema.execute(mutation, variables: nil, context: context).as_json
+          expect(result['data']['createProjectAdditionalHours']['statusMessage']).to eq('SUCCESS')
+          created_hours = ProjectAdditionalHour.last
+          expect(created_hours.project).to eq project
+          expect(created_hours.hours_type).to eq 'meeting'
+          expect(created_hours.hours).to eq 14.2
+          expect(created_hours.obs).to eq 'bla'
+        end
+      end
+
+      context 'when the object is not valid' do
+        it 'fails to put the job in the queue' do
+          allow_any_instance_of(ProjectAdditionalHour).to(receive(:valid?)).and_return(false)
+          result = FlowClimateSchema.execute(mutation, variables: nil, context: context).as_json
+          expect(result['data']['createProjectAdditionalHours']['statusMessage']).to eq('FAIL')
         end
       end
 
@@ -201,7 +249,7 @@ RSpec.describe Types::MutationType do
           }
 
           result = FlowClimateSchema.execute(mutation, variables: nil, context: context).as_json
-          expect(result['data']['createTeam']['statusMessage']).to eq('FAIL')
+          expect(result['data']['createProjectAdditionalHours']['statusMessage']).to eq('FAIL')
         end
       end
     end

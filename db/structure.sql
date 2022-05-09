@@ -1619,7 +1619,8 @@ CREATE TABLE public.project_additional_hours (
     id bigint NOT NULL,
     project_id integer NOT NULL,
     hours_type integer DEFAULT 0 NOT NULL,
-    hours integer DEFAULT 0 NOT NULL,
+    hours double precision DEFAULT 0.0 NOT NULL,
+    obs character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );

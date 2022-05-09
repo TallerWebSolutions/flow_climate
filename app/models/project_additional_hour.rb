@@ -5,8 +5,9 @@
 # Table name: project_additional_hours
 #
 #  id         :bigint           not null, primary key
-#  hours      :integer          default(0), not null
-#  hours_type :integer          default(0), not null
+#  hours      :float            default(0.0), not null
+#  hours_type :integer          default("meeting"), not null
+#  obs        :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  project_id :integer          not null
@@ -21,6 +22,8 @@
 #  fk_rails_51a0d1b6fa  (project_id => projects.id)
 #
 class ProjectAdditionalHour < ApplicationRecord
+  enum hours_type: { meeting: 0 }
+
   belongs_to :project
 
   validates :hours_type, :hours, presence: true

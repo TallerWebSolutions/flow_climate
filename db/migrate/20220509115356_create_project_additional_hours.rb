@@ -5,7 +5,9 @@ class CreateProjectAdditionalHours < ActiveRecord::Migration[7.0]
     create_table :project_additional_hours do |t|
       t.integer :project_id, null: false, index: true
       t.integer :hours_type, null: false, default: 0, index: true
-      t.integer :hours, null: false, default: 0
+      t.float :hours, null: false, default: 0
+
+      t.string :obs
 
       t.timestamps
     end
