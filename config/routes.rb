@@ -251,6 +251,8 @@ Rails.application.routes.draw do
       resources :stage_project_configs, only: %i[index destroy]
       resources :project_risk_alerts, only: %i[index]
 
+      resources :project_additional_hours, only: :new
+
       scope :jira do
         resources :jira_project_configs, only: %i[new create destroy index], module: 'jira' do
           put :synchronize_jira, on: :member
