@@ -1,6 +1,7 @@
 import { gql, useMutation, useQuery } from "@apollo/client"
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined"
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined"
+import { Link as RouterLink } from "react-router-dom"
 import {
   Backdrop,
   Box,
@@ -164,7 +165,8 @@ const Teams = () => {
           </Table>
 
           <Button
-            href={`/companies/${companySlug}/teams/new`}
+            component={RouterLink}
+            to={`/companies/${companySlug}/teams/new`}
             variant="contained"
             sx={{ height: "35", textTransform: "uppercase", color: "primary" }}
           >
