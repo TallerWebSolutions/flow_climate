@@ -93,6 +93,10 @@ const CreateTeam = () => {
   const breadcrumbsLinks = [
     { name: companyName || "", url: companyUrl },
     {
+      name: t("teams_list"),
+      url: `${companyUrl}/teams`,
+    },
+    {
       name: t("create_team.new_team"),
     },
   ]
