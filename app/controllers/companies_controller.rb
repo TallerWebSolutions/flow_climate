@@ -115,11 +115,8 @@ class CompaniesController < AuthenticatedController
   end
 
   def assign_company_children
-    @teams = @company.teams.includes(:projects).order(:name)
     @products_list = @company.products.includes(:team).includes(:customer).order(name: :asc)
     @customers_list = @company.customers.order(name: :asc)
-    @team_members = @company.team_members.order(:name).includes(:teams).active
-    @team_resources = @company.team_resources.order(:resource_name)
   end
 
   def assign_company_settings

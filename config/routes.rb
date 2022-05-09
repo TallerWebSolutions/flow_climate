@@ -127,7 +127,7 @@ Rails.application.routes.draw do
       post :synchronize_azure, on: :collection
     end
 
-    resources :teams do
+    resources :teams, except: %i[create update destry] do
       resources :slack_configurations, except: :show do
         patch :toggle_active, on: :member
       end

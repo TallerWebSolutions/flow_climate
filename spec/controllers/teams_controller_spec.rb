@@ -20,12 +20,6 @@ RSpec.describe TeamsController, type: :controller do
       it { expect(response).to redirect_to new_user_session_path }
     end
 
-    describe 'POST #create' do
-      before { post :create, params: { company_id: 'bar' } }
-
-      it { expect(response).to redirect_to new_user_session_path }
-    end
-
     describe 'GET #team_projects_tab' do
       before { get :team_projects_tab, params: { company_id: 'bar', id: 'foo' } }
 
@@ -202,25 +196,6 @@ RSpec.describe TeamsController, type: :controller do
           before { get :new, params: { company_id: company } }
 
           it { expect(response).to have_http_status :not_found }
-        end
-      end
-    end
-
-    describe 'POST #create' do
-      context 'passing valid parameters' do
-        it 'creates the new team and redirects to its show' do
-          post :create, params: { company_id: company, team: { name: 'foo', max_work_in_progress: 12 } }
-          expect(Team.last.name).to eq 'foo'
-          expect(Team.last.reload.max_work_in_progress).to eq 12
-          expect(response).to redirect_to company_team_path(company, Team.last)
-        end
-      end
-
-      context 'passing invalid parameters' do
-        it 'does not create the team and re-render the template with the errors' do
-          post :create, params: { company_id: company, team: { name: '' } }
-          expect(response).to render_template :new
-          expect(assigns(:team).errors.full_messages).to eq ['Nome não pode ficar em branco']
         end
       end
     end

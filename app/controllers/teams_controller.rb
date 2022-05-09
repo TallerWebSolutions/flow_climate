@@ -4,7 +4,7 @@ class TeamsController < DemandsListController
   before_action :user_gold_check
 
   before_action :assign_company
-  before_action :assign_team, except: %i[new create index]
+  before_action :assign_team, except: %i[new index]
 
   def index
     prepend_view_path Rails.root.join('public')
@@ -30,13 +30,6 @@ class TeamsController < DemandsListController
   def edit
     prepend_view_path Rails.root.join('public')
     render 'spa-build/index'
-  end
-
-  def create
-    @team = Team.new(team_params.merge(company: @company))
-    return redirect_to company_team_path(@company, @team) if @team.save
-
-    render :new
   end
 
   def team_projects_tab
@@ -208,9 +201,5 @@ class TeamsController < DemandsListController
 
   def assign_team
     @team = @company.teams.find(params[:id])
-  end
-
-  def team_params
-    params.require(:team).permit(:name, :max_work_in_progress)
   end
 end

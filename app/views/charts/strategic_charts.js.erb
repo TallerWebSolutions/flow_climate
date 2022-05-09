@@ -1,4 +1,4 @@
-$("#strategic").html("<%= escape_javascript(render 'charts/strategic_charts_tab', model_name: @target_name, strategic_chart_data: @strategic_chart_data, target_name: @target_name, teams_ids: @teams.map(&:id), projects: @projects, start_date: @start_date, end_date: @end_date, projects_count: @projects.count).html_safe %>");
+$("#strategic").html("<%= escape_javascript(render 'charts/strategic_charts_tab', model_name: @target_name, strategic_chart_data: @strategic_chart_data, target_name: @target_name, projects: @projects, start_date: @start_date, end_date: @end_date, projects_count: @projects.count).html_safe %>");
 
 $('#strategic').show();
 $('#nav-item-strategic').addClass('active');
