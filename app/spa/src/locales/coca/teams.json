@@ -1,5 +1,6 @@
 {
   "teams": "Teams",
+  "company": "Company",
   "teams_list": "Teams List",
   "create_team_button": "Create Team",
   "edit_team_button": "Update Team",

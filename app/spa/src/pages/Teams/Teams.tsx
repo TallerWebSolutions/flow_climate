@@ -89,9 +89,11 @@ const Teams = () => {
   const company = data?.me.currentCompany
   const companySlug = company?.slug
   const teams = data?.teams
+  const companyUrl = `/companies/${companySlug}`
+  const companyName = company?.name || t("company")
 
   const breadcrumbsLinks = [
-    { name: capitalizeFirstLetter(companySlug!), url: companySlug! },
+    { name: companyName || "", url: companyUrl },
     {
       name: t("teams_list"),
     },

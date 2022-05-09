@@ -1,5 +1,6 @@
 {
   "teams": "Times",
+  "company": "Empresa",
   "teams_list": "Lista dos Times",
   "create_team_button": "Criar Time",
   "edit_team_button": "Atualizar Time",

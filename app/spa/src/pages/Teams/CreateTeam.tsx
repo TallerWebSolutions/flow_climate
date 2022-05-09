@@ -89,9 +89,9 @@ const CreateTeam = () => {
 
   const company = data?.me.currentCompany!
   const companyName = company.name
-  const companyUrl = company.slug
+  const companyUrl = `/companies/${company?.slug}`
   const breadcrumbsLinks = [
-    { name: capitalizeFirstLetter(companyName!), url: companyUrl! },
+    { name: companyName || "", url: companyUrl },
     {
       name: t("create_team.new_team"),
     },
