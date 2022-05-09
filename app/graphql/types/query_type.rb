@@ -52,6 +52,7 @@ module Types
       argument :limit, Int
       argument :finished, Boolean
       argument :discarded, Boolean, required: false
+      argument :sort_direction, Types::SortDirection, required: false
     end
 
     field :me, Types::UserType, null: false
@@ -80,11 +81,11 @@ module Types
                                       project_id: project_id, team_id: team_id, from_date: from_date, until_date: until_date)
     end
 
-    def demands(project_id:, finished: false, discarded: false, limit: 10)
-      return Demand.where(project_id: project_id).where.not(end_date: nil).limit(limit).order(:end_date) if finished
-      return Demand.where(project_id: project_id).where.not(discarded_at: nil).limit(limit).order(:end_date) if discarded
+    def demands(project_id:, finished: false, discarded: false, limit: 10, sort_direction: 'DESC')
+      return Demand.where(project_id: project_id).where.not(end_date: nil).limit(limit).order(end_date: sort_direction) if finished
+      return Demand.where(project_id: project_id).where.not(discarded_at: nil).limit(limit).order(end_date: sort_direction) if discarded
 
-      Demand.where(project_id: project_id).limit(limit).order(:end_date)
+      Demand.where(project_id: project_id).limit(limit).order(end_date: sort_direction)
     end
 
     def me

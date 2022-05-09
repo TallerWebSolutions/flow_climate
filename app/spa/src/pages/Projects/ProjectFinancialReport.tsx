@@ -13,6 +13,7 @@ const QUERY = gql`
       projectId: $projectId
       limit: 100
       finished: true
+      sortDirection: ASC
     ) {
       id
       externalId
@@ -28,6 +29,7 @@ const QUERY = gql`
       limit: 100
       discarded: true
       finished: false
+      sortDirection: ASC
     ) {
       id
       externalId

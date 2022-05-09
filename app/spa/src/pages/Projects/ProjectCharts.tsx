@@ -284,11 +284,6 @@ const ProjectCharts = () => {
     }
   )
 
-  // eslint-disable-next-line no-console
-  console.log({
-    projectCumulativeFlowChartData,
-  })
-
   const committedChartData = demandsFlowChartData.committedChartData
   const projectFlowChartData: BarDatum[] = committedChartData
     ? committedChartData?.map((_, index) => {
