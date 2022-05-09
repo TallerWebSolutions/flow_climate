@@ -244,15 +244,15 @@ GEM
       net-protocol
       timeout
     netrc (0.11.0)
-    newrelic_rpm (8.6.0)
+    newrelic_rpm (8.7.0)
     nio4r (2.5.8)
-    nokogiri (1.13.4-arm64-darwin)
+    nokogiri (1.13.6-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.13.4-x86_64-darwin)
+    nokogiri (1.13.6-x86_64-darwin)
       racc (~> 1.4)
-    nokogiri (1.13.4-x86_64-linux)
+    nokogiri (1.13.6-x86_64-linux)
       racc (~> 1.4)
-    oauth (0.5.8)
+    oauth (0.5.10)
     oj (3.13.11)
     orm_adapter (0.5.0)
     parallel (1.22.1)
@@ -360,12 +360,12 @@ GEM
     rspec-support (3.11.0)
     rspec_junit_formatter (0.5.1)
       rspec-core (>= 2, < 4, != 2.12.0)
-    rubocop (1.28.2)
+    rubocop (1.29.0)
       parallel (~> 1.10)
       parser (>= 3.1.0.0)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 1.8, < 3.0)
-      rexml
+      rexml (>= 3.2.5, < 4.0)
       rubocop-ast (>= 1.17.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 3.0)
@@ -389,7 +389,7 @@ GEM
       ffi (~> 1.12)
     ruby_parser (3.19.1)
       sexp_processor (~> 4.16)
-    rubycritic (4.6.1)
+    rubycritic (4.7.0)
       flay (~> 2.8)
       flog (~> 4.4)
       launchy (>= 2.0.0)
@@ -427,7 +427,7 @@ GEM
     ssrf_filter (1.0.7)
     stackprof (0.2.19)
     statsd-ruby (1.5.0)
-    strscan (3.0.1)
+    strscan (3.0.2)
     thor (1.2.1)
     thread_safe (0.3.6)
     timeout (0.2.0)
@@ -541,4 +541,4 @@ RUBY VERSION
    ruby 3.1.0p0
 
 BUNDLED WITH
-   2.3.4
+   2.3.8
