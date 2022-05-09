@@ -1,10 +1,10 @@
 import { useParams } from "react-router-dom"
 import { Container, Backdrop, CircularProgress, Link } from "@mui/material"
 import { gql, useQuery } from "@apollo/client"
-import { ProjectPage } from "../components/ProjectPage"
-import Table from "../components/Table"
-import { formatCurrency } from "../lib/currency"
-import { formatDate } from "../lib/date"
+import { ProjectPage } from "../../components/ProjectPage"
+import Table from "../../components/Table"
+import { formatCurrency } from "../../lib/currency"
+import { formatDate } from "../../lib/date"
 import { useTranslation } from "react-i18next"
 
 const QUERY = gql`

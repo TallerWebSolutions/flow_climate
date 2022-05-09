@@ -1,10 +1,10 @@
 import { BarDatum, BarLegendProps, ResponsiveBar } from "@nivo/bar"
 import { Box, IconButton } from "@mui/material"
 import { ReactElement, useRef } from "react"
-import DownloadIcon from '@mui/icons-material/Download';
+import DownloadIcon from "@mui/icons-material/Download"
 
 import { BarData } from "./tooltips/BarChartTooltip"
-import { exportComponentAsPNG } from "react-component-export-image";
+import { exportComponentAsPNG } from "react-component-export-image"
 
 type BarChartProps = {
   data: BarDatum[]
@@ -30,7 +30,10 @@ export const BarChart = ({
 
   return (
     <Box position="relative">
-      <IconButton onClick={() => exportComponentAsPNG(chartRef)} sx={{position: "absolute", top: "1rem", right: "1rem", zIndex: 1}}>
+      <IconButton
+        onClick={() => exportComponentAsPNG(chartRef)}
+        sx={{ position: "absolute", top: "1rem", right: "1rem", zIndex: 1 }}
+      >
         <DownloadIcon />
       </IconButton>
       <Box ref={chartRef} height={380}>

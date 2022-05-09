@@ -567,9 +567,7 @@ const TaskCharts = ({ filters }: TasksChartProps) => {
         <BarChart
           data={completionTimeHistogramData}
           keys={[t("charts.completion_time_histogram_completiontime")]}
-          indexBy={t(
-            "charts.completion_time_histogram_completiontime_x_label"
-          )}
+          indexBy={t("charts.completion_time_histogram_completiontime_x_label")}
           axisLeftLegend={t(
             "charts.completion_time_histogram_completiontime_y_label"
           )}

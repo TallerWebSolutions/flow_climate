@@ -2,13 +2,13 @@ import { gql, useQuery } from "@apollo/client"
 import { Backdrop, Box, CircularProgress, Typography } from "@mui/material"
 import { ReactElement } from "react"
 import { useParams } from "react-router-dom"
-import { LineChart } from "../components/charts/LineChart"
+import { LineChart } from "../../components/charts/LineChart"
 import {
   ProjectPage,
   PROJECT_STANDARD_FRAGMENT,
-} from "../components/ProjectPage"
-import { Project } from "../modules/project/project.types"
-import { ProjectConsolidation } from "../modules/project/projectConsolidation.types"
+} from "../../components/ProjectPage"
+import { Project } from "../../modules/project/project.types"
+import { ProjectConsolidation } from "../../modules/project/projectConsolidation.types"
 
 const ONE_DAY_IN_SECONDS = 60 * 60 * 24
 

@@ -4,7 +4,9 @@ import { I18nextProvider } from "react-i18next"
 import { MemoryRouter, Route, Routes } from "react-router-dom"
 import i18n from "../../lib/i18n"
 import { projectMock } from "../../lib/mocks"
-import StatusReportPage, { QUERY as STATUS_REPORT_QUERY } from "../StatusReport"
+import StatusReportPage, {
+  QUERY as STATUS_REPORT_QUERY,
+} from "../Projects/StatusReport"
 
 const mocks = [
   {

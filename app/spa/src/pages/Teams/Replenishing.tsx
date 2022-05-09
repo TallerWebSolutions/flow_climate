@@ -5,14 +5,14 @@ import CachedIcon from "@mui/icons-material/Cached"
 import { useParams } from "react-router-dom"
 import ReplenishingTeamInfo, {
   TeamReplenishment,
-} from "../components/ReplenishingTeamInfo"
-import ReplenishingProjectsInfo from "../components/ReplenishingProjectsInfo"
-import BasicPage from "../components/BasicPage"
-import { MessagesContext } from "../contexts/MessageContext"
-import { Team } from "../modules/team/team.types"
-import { Project } from "../modules/project/project.types"
-import { ReplenishingConsolidation } from "../modules/replenishing/replenishingConsolidation.types"
-import { formatDate } from "../lib/date"
+} from "../../components/ReplenishingTeamInfo"
+import ReplenishingProjectsInfo from "../../components/ReplenishingProjectsInfo"
+import BasicPage from "../../components/BasicPage"
+import { MessagesContext } from "../../contexts/MessageContext"
+import { Team } from "../../modules/team/team.types"
+import { Project } from "../../modules/project/project.types"
+import { ReplenishingConsolidation } from "../../modules/replenishing/replenishingConsolidation.types"
+import { formatDate } from "../../lib/date"
 
 export const QUERY = gql`
   query Replenishing($teamId: Int!) {

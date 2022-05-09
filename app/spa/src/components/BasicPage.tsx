@@ -39,7 +39,7 @@ const BasicPage = ({
           <Typography component="h1" variant="h4" mr={2}>
             {title}
           </Typography>
-          {actions}
+          {actions && actions}
         </Box>
         {children}
         <MessagesBox messages={messages} />

@@ -10,22 +10,22 @@ import { BarDatum } from "@nivo/bar"
 import { SliceTooltipProps } from "@nivo/line"
 import { useTranslation } from "react-i18next"
 import { useParams } from "react-router-dom"
-import { BarChart } from "../components/charts/BarChart"
-import { LineChart, LineGraphProps } from "../components/charts/LineChart"
-import { ScatterChart } from "../components/charts/ScatterChart"
-import LineChartTooltip from "../components/charts/tooltips/LineChartTooltip"
+import { BarChart } from "../../components/charts/BarChart"
+import { LineChart, LineGraphProps } from "../../components/charts/LineChart"
+import { ScatterChart } from "../../components/charts/ScatterChart"
+import LineChartTooltip from "../../components/charts/tooltips/LineChartTooltip"
 import ScatterChartTooltip, {
   ScatterNode,
-} from "../components/charts/tooltips/ScatterChartTooltip"
-import { ProjectChartsTable } from "../components/ProjectChartsTable"
+} from "../../components/charts/tooltips/ScatterChartTooltip"
+import { ProjectChartsTable } from "../../components/ProjectChartsTable"
 import {
   ProjectPage,
   PROJECT_STANDARD_FRAGMENT,
-} from "../components/ProjectPage"
-import { secondsToDays } from "../lib/date"
-import { Demand } from "../modules/demand/demand.types"
-import { Project } from "../modules/project/project.types"
-import { buildPercentileYAxisMarker } from "./Tasks/Charts"
+} from "../../components/ProjectPage"
+import { secondsToDays } from "../../lib/date"
+import { Demand } from "../../modules/demand/demand.types"
+import { Project } from "../../modules/project/project.types"
+import { buildPercentileYAxisMarker } from "../Tasks/Charts"
 
 const LIMIT_DEMANDS_PER_PAGE = 10
 

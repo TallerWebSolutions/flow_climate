@@ -4,10 +4,10 @@ import { useParams } from "react-router-dom"
 import {
   ProjectPage,
   PROJECT_STANDARD_FRAGMENT,
-} from "../components/ProjectPage"
-import TicketGroup from "../components/TicketGroup"
-import { secondsToReadbleDate } from "../lib/date"
-import { Project } from "../modules/project/project.types"
+} from "../../components/ProjectPage"
+import TicketGroup from "../../components/TicketGroup"
+import { secondsToReadbleDate } from "../../lib/date"
+import { Project } from "../../modules/project/project.types"
 
 export const LEAD_TIME_DASHBOARD_QUERY = gql`
   query ProjectLeadTimeDashboard($id: Int!) {

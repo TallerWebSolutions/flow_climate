@@ -14,7 +14,7 @@ import ReplenishingPage, {
   normalizeProjectInfo,
   normalizeTeamInfo,
   QUERY as REPLENISHING_QUERY,
-} from "../Replenishing"
+} from "../Teams/Replenishing"
 
 describe("pages/Replenishing", () => {
   describe("normalizers", () => {
