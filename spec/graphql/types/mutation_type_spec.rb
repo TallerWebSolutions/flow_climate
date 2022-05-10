@@ -216,7 +216,7 @@ RSpec.describe Types::MutationType do
       let(:project) { Fabricate :project, company: company }
       let(:mutation) do
         %(mutation {
-            createProjectAdditionalHours(projectId: #{project.id}, hoursType: 0, hours: 14.2, obs: "bla") {
+            createProjectAdditionalHours(projectId: #{project.id}, eventDate: "#{Time.zone.today.iso8601}",hoursType: 0, hours: 14.2, obs: "bla") {
               statusMessage
             }
           })
@@ -229,6 +229,7 @@ RSpec.describe Types::MutationType do
           created_hours = ProjectAdditionalHour.last
           expect(created_hours.project).to eq project
           expect(created_hours.hours_type).to eq 'meeting'
+          expect(created_hours.event_date).to eq Time.zone.today
           expect(created_hours.hours).to eq 14.2
           expect(created_hours.obs).to eq 'bla'
         end

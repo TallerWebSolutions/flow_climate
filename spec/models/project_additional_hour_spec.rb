@@ -11,6 +11,7 @@ RSpec.describe ProjectAdditionalHour, type: :model do
 
   context 'validations' do
     it { is_expected.to validate_presence_of :hours_type }
+    it { is_expected.to validate_presence_of :event_date }
     it { is_expected.to validate_presence_of :hours }
   end
 end

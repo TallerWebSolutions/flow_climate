@@ -1618,6 +1618,7 @@ ALTER SEQUENCE public.products_projects_id_seq OWNED BY public.products_projects
 CREATE TABLE public.project_additional_hours (
     id bigint NOT NULL,
     project_id integer NOT NULL,
+    event_date date NOT NULL,
     hours_type integer DEFAULT 0 NOT NULL,
     hours double precision DEFAULT 0.0 NOT NULL,
     obs character varying,
@@ -4814,6 +4815,13 @@ CREATE UNIQUE INDEX index_products_projects_on_product_id_and_project_id ON publ
 --
 
 CREATE INDEX index_products_projects_on_project_id ON public.products_projects USING btree (project_id);
+
+
+--
+-- Name: index_project_additional_hours_on_event_date; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_project_additional_hours_on_event_date ON public.project_additional_hours USING btree (event_date);
 
 
 --
