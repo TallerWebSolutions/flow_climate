@@ -1,5 +1,6 @@
 {
   "title": "Financial Report",
+  "registerAdditionalHours": "Register additional hours",
   "finishedDemands": {
     "title": "Finished Demands",
     "code": "Code",
@@ -22,5 +23,11 @@
   "footer": {
     "total": "Total: ",
     "demands": "Demands"
+  },
+  "form": {
+    "hours": "Hours",
+    "obs": "Observations",
+    "save": "Save",
+    "cancel": "Cancel"
   }
 }

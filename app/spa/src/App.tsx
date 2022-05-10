@@ -16,6 +16,7 @@ import Replenishing from "./pages/Teams/Replenishing"
 import RiskDrill from "./pages/Projects/RiskDrill"
 import Statistics from "./pages/Projects/Statistics"
 import StatusReport from "./pages/Projects/StatusReport"
+import CreateProjectAditionalHours from "./pages/Projects/CreateProjectAditionalHours"
 import TasksPage from "./pages/Tasks/Tasks"
 import CreateTeam from "./pages/Teams/CreateTeam"
 import EditTeam from "./pages/Teams/EditTeam"
@@ -74,6 +75,10 @@ const App = () => {
           <Route
             path="/companies/:companyNickName/projects/:projectId/financial_report"
             element={<ProjectFinancialReport />}
+          />
+          <Route
+            path="/companies/:companyNickName/projects/:projectId/project_additional_hours/new"
+            element={<CreateProjectAditionalHours />}
           />
           <Route path="/companies/:companyNickName/teams" element={<Teams />} />
           <Route

@@ -170,7 +170,6 @@ const Teams = () => {
             component={RouterLink}
             to={`/companies/${companySlug}/teams/new`}
             variant="contained"
-            sx={{ height: "35", textTransform: "uppercase", color: "primary" }}
           >
             {t("create_team_button")}
           </Button>

@@ -70,6 +70,14 @@ const theme = createTheme({
         },
       },
     },
+    MuiButton: {
+      variants: [
+        {
+          props: { variant: "contained" },
+          style: { height: "35", textTransform: "uppercase", color: "primary" },
+        },
+      ],
+    },
     MuiLink: {
       defaultProps: {
         variant: "body2",

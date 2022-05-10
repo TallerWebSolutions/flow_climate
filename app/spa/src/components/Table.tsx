@@ -23,13 +23,8 @@ type TableProps = {
 }
 
 const Table = ({ title, headerCells, rows, footerCells }: TableProps) => (
-  <TableContainer component={Paper} sx={{ background: "white" }}>
-    <Typography
-      color="primary"
-      variant="h6"
-      component="h6"
-      sx={{ padding: "16px " }}
-    >
+  <TableContainer component={Paper} sx={{ background: "white", marginY: 4 }}>
+    <Typography color="primary" variant="h6" component="h6" sx={{ padding: 2 }}>
       {title}
     </Typography>
     <MUITable>

@@ -1,5 +1,6 @@
 {
   "title": "Relatório Financeiro",
+  "registerAdditionalHours": "Registrar horas adicionais",
   "finishedDemands": {
     "title": "Demandas Entregues",
     "code": "Código",
@@ -22,5 +23,11 @@
   "footer": {
     "total": "Total: ",
     "demands": "Demandas"
+  },
+  "form": {
+    "hours": "Horas",
+    "obs": "Observações",
+    "save": "Salvar",
+    "cancel": "Cancelar"
   }
 }

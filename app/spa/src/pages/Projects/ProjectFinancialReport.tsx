@@ -1,5 +1,11 @@
-import { useParams } from "react-router-dom"
-import { Container, Backdrop, CircularProgress, Link } from "@mui/material"
+import { useParams, Link as RouterLink } from "react-router-dom"
+import {
+  Container,
+  Backdrop,
+  CircularProgress,
+  Link,
+  Button,
+} from "@mui/material"
 import { gql, useQuery } from "@apollo/client"
 import { ProjectPage } from "../../components/ProjectPage"
 import Table from "../../components/Table"
@@ -159,6 +165,17 @@ const ProjectFinancialReport = () => {
 
   return (
     <ProjectPage pageName={t("title")}>
+      <Container
+        sx={{ display: "flex", justifyContent: "flex-end", paddingY: 4 }}
+      >
+        <Button
+          component={RouterLink}
+          to={`/companies/${companyNickName}/projects/${projectId}/project_additional_hours/new`}
+          variant="contained"
+        >
+          {t("registerAdditionalHours")}
+        </Button>
+      </Container>
       <Container>
         <Table
           title={t("finishedDemands.title")}
