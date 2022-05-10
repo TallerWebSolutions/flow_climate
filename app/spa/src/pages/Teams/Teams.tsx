@@ -20,7 +20,6 @@ import { useContext } from "react"
 import { useTranslation } from "react-i18next"
 import BasicPage from "../../components/BasicPage"
 import { MessagesContext } from "../../contexts/MessageContext"
-import { capitalizeFirstLetter } from "../../lib/func"
 import { Team } from "../../modules/team/team.types"
 import User from "../../modules/user/user.types"
 
