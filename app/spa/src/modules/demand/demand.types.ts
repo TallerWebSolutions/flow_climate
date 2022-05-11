@@ -5,7 +5,7 @@ export type Demand = {
     id: string
     name: string
   }
-  customer: {
+  customer?: {
     id: string
     name: string
   }

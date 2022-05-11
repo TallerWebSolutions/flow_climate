@@ -228,7 +228,7 @@ const ProjectCharts = () => {
   const hoursPerCoordinationStageChartData =
     data?.hoursPerCoordinationStageChartData.hoursPerStageChartData!
   const cumulativeFlowChartData = project?.cumulativeFlowChartData
-  const demands = data?.demands!
+  const demands = data?.demands || []
 
   const operationalRiskChartData = [
     {
@@ -264,9 +264,7 @@ const ProjectCharts = () => {
     }
   )
 
-  const projectStages = cumulativeFlowChartData?.yAxis.map(
-    (item, index) => item.name
-  )
+  const projectStages = cumulativeFlowChartData?.yAxis.map((item) => item.name)
 
   const projectCumulativeFlowChartData = projectStages?.map(
     (stage, stageIndex) => {
