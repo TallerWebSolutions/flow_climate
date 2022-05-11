@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ProjectAdditionalHoursController < AuthenticatedController
   before_action :assign_company
 
