@@ -71,27 +71,36 @@ const CreateProjectAditionalHours = () => {
 
   return (
     <ProjectPage pageName={t("registerAdditionalHours")}>
-      <Typography component="h2">{t("registerAdditionalHours")}</Typography>
       <Box sx={{ maxWidth: "480px", marginX: "auto", paddingY: 4 }}>
+        <Typography component="h2" variant="h5" sx={{ marginBottom: 4 }}>
+          {t("registerAdditionalHours")}
+        </Typography>
         <form onSubmit={handleSubmit(handleCreateAdditionalHours)}>
           <FormGroup>
             <FormControl sx={{ marginBottom: 4 }}>
-              <InputLabel htmlFor="eventDate">
+              <InputLabel shrink htmlFor="eventDate">
                 {t("form.eventDate")} *
               </InputLabel>
-              <Input {...register("eventDate")} type="date" />
+              <Input
+                {...register("eventDate", { required: true })}
+                type="date"
+              />
             </FormControl>
             <FormControl sx={{ marginBottom: 4 }}>
               <InputLabel htmlFor="hours">{t("form.hours")} *</InputLabel>
               <Input
-                {...register("hours")}
+                {...register("hours", { required: true })}
                 type="number"
                 inputProps={{ step: "any" }}
               />
             </FormControl>
             <FormControl sx={{ marginBottom: 4 }}>
               <InputLabel htmlFor="obs">{t("form.obs")} *</InputLabel>
-              <Input {...register("obs")} multiline rows={6} />
+              <Input
+                {...register("obs", { required: true })}
+                multiline
+                rows={6}
+              />
             </FormControl>
           </FormGroup>
           <Box sx={{ display: "flex", justifyContent: "flex-start" }}>

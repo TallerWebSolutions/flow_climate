@@ -28,6 +28,7 @@
     "hours": "Hours",
     "obs": "Observations",
     "save": "Save",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "eventDate": "Event Date"
   }
 }
