@@ -68,9 +68,9 @@ export const ProjectChartsTable = ({
   const companySlug = project.company.slug
 
   const latestDeliveriesHeaderCells = [
+    t("project_chart_table.demand_id"),
     t("project_chart_table.client"),
     t("project_chart_table.product"),
-    t("project_chart_table.demand_id"),
     t("project_chart_table.delivery_date"),
     t("project_chart_table.leadtime"),
     t("project_chart_table.demand_blocks"),
@@ -79,6 +79,12 @@ export const ProjectChartsTable = ({
   const baseLink = `/companies/${project?.company?.slug}`
   const latestDeliveriesRows = demands.map((demand) => {
     return [
+      <Link
+        href={`${baseLink}/demands/${demand.externalId}`}
+        sx={{ color: "info.dark", textDecoration: "none" }}
+      >
+        {demand.externalId}
+      </Link>,
       <Link
         href={`${baseLink}/projects/${project.id}`}
         sx={{ color: "info.dark", textDecoration: "none" }}
@@ -90,12 +96,6 @@ export const ProjectChartsTable = ({
         sx={{ color: "info.dark", textDecoration: "none" }}
       >
         {demand.product.name}
-      </Link>,
-      <Link
-        href={`${baseLink}/demands/${demand.externalId}`}
-        sx={{ color: "info.dark", textDecoration: "none" }}
-      >
-        {demand.externalId}
       </Link>,
       formatDate({
         date: demand.endDate,
