@@ -1,3 +1,4 @@
+// @ts-ignore
 import React from "react"
 
 import { ComponentStory, ComponentMeta } from "@storybook/react"
@@ -44,4 +45,18 @@ export const Primary: ComponentStory<typeof BarChart> = () => (
 
 export const CustomLegends: ComponentStory<typeof BarChart> = () => (
   <BarChart {...props} legendAnchor="top-left" legendDirection="column" />
+)
+
+export const TooManyLegends: ComponentStory<typeof BarChart> = () => (
+  <BarChart
+    {...props}
+    keys={[
+      "Demands Count",
+      "Hours Count XPTO Bla",
+      "Months Count Sbbrubles",
+      "Products Count",
+      "Xpto Count",
+      "Truco Count",
+    ]}
+  />
 )
