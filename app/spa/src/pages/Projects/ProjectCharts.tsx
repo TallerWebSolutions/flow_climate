@@ -94,7 +94,6 @@ const PROJECT_CHART_QUERY = gql`
         projectThroughput
         projectThroughputHours
         projectThroughputHoursAdditional
-        projectThroughputHoursAdditionalInMonth
         bugsOpened
         bugsClosed
         projectThroughputHoursManagement
@@ -534,7 +533,7 @@ const ProjectCharts = () => {
         [t("project_charts.hours_consumed_downstream")]:
           projectThroughputHoursDownstream.toFixed(2),
         [t("project_charts.additional_hours_consumed")]:
-          projectThroughputHoursAdditional.toFixed(2),
+          projectThroughputHoursAdditional?.toFixed(2) || 0,
         [t("project_charts.hours_consumed_total_throughput")]:
           projectThroughputHours.toFixed(2),
       }
