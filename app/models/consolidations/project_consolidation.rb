@@ -46,6 +46,8 @@
 #  project_scope_hours                           :integer          default(0)
 #  project_throughput                            :integer          default(0)
 #  project_throughput_hours                      :decimal(, )      default(0.0)
+#  project_throughput_hours_additional           :float
+#  project_throughput_hours_additional_in_month  :float
 #  project_throughput_hours_design               :decimal(, )      default(0.0), not null
 #  project_throughput_hours_design_in_month      :decimal(, )      default(0.0), not null
 #  project_throughput_hours_development          :decimal(, )      default(0.0), not null

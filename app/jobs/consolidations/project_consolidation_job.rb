@@ -135,6 +135,8 @@ module Consolidations
                            tasks_based_deadline_p80: Stats::StatisticsService.instance.percentile(80, tasks_based_montecarlo_durations),
                            tasks_based_operational_risk: 1 - Stats::StatisticsService.instance.compute_odds_to_deadline(project.remaining_weeks(end_of_day.to_date), tasks_based_montecarlo_durations)
       )
+
+      update_additional_hours(project, consolidation, cache_date)
     end
 
     private
@@ -149,6 +151,15 @@ module Consolidations
 
       project_share_team_throughput_data = team_throughput_data.map { |throughput| throughput * project_share_in_team_flow }
       Stats::StatisticsService.instance.run_montecarlo(project.remaining_work(limit_date), project_share_team_throughput_data, 500)
+    end
+
+    def update_additional_hours(project, project_consolidation, cache_date)
+      additional_hours = project.project_additional_hours.sum(&:hours)
+      additional_hours_in_month = project.project_additional_hours.where('event_date BETWEEN :start_date AND :end_date', start_date: cache_date.beginning_of_month, end_date: cache_date.end_of_month).sum(&:hours)
+
+      project_consolidation.update(project_throughput_hours_additional: additional_hours, project_throughput_hours_additional_in_month: additional_hours_in_month)
+
+      project_consolidation
     end
   end
 end

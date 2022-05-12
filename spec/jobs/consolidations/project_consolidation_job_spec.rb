@@ -38,6 +38,10 @@ RSpec.describe Consolidations::ProjectConsolidationJob, type: :active_job do
         3.times { Fabricate :demand, project: first_project, team: team, created_date: base_date - 4.weeks, effort_downstream: 100, effort_upstream: 20 }
         3.times { Fabricate :demand, project: first_project, created_date: base_date - 4.weeks, end_date: nil, effort_downstream: 100, effort_upstream: 20, discarded_at: base_date - 4.weeks }
 
+        Fabricate :project_additional_hour, project: first_project, hours: 20, event_date: base_date
+        Fabricate :project_additional_hour, project: first_project, hours: 15, event_date: base_date.end_of_month
+        Fabricate :project_additional_hour, project: first_project, hours: 67, event_date: base_date - 2.months
+
         travel_to(base_date) { described_class.perform_now(first_project) }
         travel_to(base_date + 1.day) { described_class.perform_now(first_project) }
         travel_to(base_date) { described_class.perform_now(second_project) }
@@ -45,6 +49,8 @@ RSpec.describe Consolidations::ProjectConsolidationJob, type: :active_job do
         expect(Consolidations::ProjectConsolidation.count).to eq 3
         expect(first_project.reload.project_consolidations.order(:consolidation_date).last.operational_risk).to eq 1
         expect(first_project.reload.project_consolidations.order(:consolidation_date).last.team_based_operational_risk).to eq 1
+        expect(first_project.reload.project_consolidations.order(:consolidation_date).last.project_throughput_hours_additional).to eq 102
+        expect(first_project.reload.project_consolidations.order(:consolidation_date).last.project_throughput_hours_additional_in_month).to eq 35
         expect(second_project.reload.project_consolidations.order(:consolidation_date).last.operational_risk).to eq 0
         expect(second_project.reload.project_consolidations.order(:consolidation_date).last.team_based_operational_risk).to eq 0
       end

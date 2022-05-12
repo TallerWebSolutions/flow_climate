@@ -1783,7 +1783,9 @@ CREATE TABLE public.project_consolidations (
     project_throughput_hours_design_in_month numeric DEFAULT 0.0 NOT NULL,
     project_throughput_hours_management_in_month numeric DEFAULT 0.0 NOT NULL,
     tasks_based_operational_risk numeric DEFAULT 0.0,
-    tasks_based_deadline_p80 numeric DEFAULT 0.0
+    tasks_based_deadline_p80 numeric DEFAULT 0.0,
+    project_throughput_hours_additional double precision,
+    project_throughput_hours_additional_in_month double precision
 );
 
 
@@ -6562,6 +6564,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220408194012'),
 ('20220503152313'),
 ('20220503213916'),
-('20220509115356');
+('20220509115356'),
+('20220512123859');
 
 
