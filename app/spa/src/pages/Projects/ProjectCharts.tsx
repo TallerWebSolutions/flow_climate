@@ -228,7 +228,7 @@ const ProjectCharts = () => {
   const leadTimeHistogramData = project?.leadTimeHistogramData
   const hoursPerStageChartData = project?.hoursPerStageChartData
   const hoursPerCoordinationStageChartData =
-    data?.hoursPerCoordinationStageChartData.hoursPerStageChartData!
+    data?.hoursPerCoordinationStageChartData.hoursPerStageChartData
   const cumulativeFlowChartData = project?.cumulativeFlowChartData
   const demands = data?.demands || []
 
@@ -1014,7 +1014,7 @@ const ProjectCharts = () => {
 
           <BarChart
             data={projectHoursPerCoordinationStage}
-            keys={hoursPerCoordinationStageChartData.xAxis}
+            keys={hoursPerCoordinationStageChartData?.xAxis || []}
             indexBy="index"
             axisLeftLegend={t(
               "project_charts.hours_per_coordination_stage_y_label"
