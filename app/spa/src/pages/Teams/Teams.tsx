@@ -105,11 +105,7 @@ const Teams = () => {
 
   return (
     <>
-      <BasicPage
-        title={t("teams")}
-        company={company}
-        breadcrumbsLinks={breadcrumbsLinks}
-      >
+      <BasicPage title={t("teams")} breadcrumbsLinks={breadcrumbsLinks}>
         <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
           <Table sx={{ flex: "0 0 50%" }}>
             <TableHead>

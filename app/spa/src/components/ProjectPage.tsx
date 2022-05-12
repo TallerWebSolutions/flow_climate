@@ -170,7 +170,6 @@ export const ProjectPage = ({ pageName, children }: ProjectPageProps) => {
     <BasicPage
       title={projectName}
       breadcrumbsLinks={breadcrumbsLinks}
-      company={company}
       actions={<ActionMenu items={actions} />}
     >
       <>

@@ -173,11 +173,7 @@ const TasksPage = ({ initialTab = 1 }: TasksPageProps) => {
   }
 
   return (
-    <BasicPage
-      title={t("tasks")}
-      company={company}
-      breadcrumbsLinks={breadcrumbsLinks}
-    >
+    <BasicPage title={t("tasks")} breadcrumbsLinks={breadcrumbsLinks}>
       <Box>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <Box

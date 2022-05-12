@@ -140,11 +140,7 @@ const Replenishing = () => {
   ]
 
   return (
-    <BasicPage
-      title="Reabastecimento"
-      breadcrumbsLinks={breadcrumbsLinks}
-      company={company}
-    >
+    <BasicPage title="Reabastecimento" breadcrumbsLinks={breadcrumbsLinks}>
       {data?.team && (
         <Fragment>
           <Box

@@ -121,7 +121,7 @@ const EditTeam = () => {
   }
 
   return (
-    <BasicPage company={company} breadcrumbsLinks={breadcrumbsLinks}>
+    <BasicPage breadcrumbsLinks={breadcrumbsLinks}>
       <form onSubmit={handleSubmit(handleEditTeam)}>
         <FormGroup
           sx={{

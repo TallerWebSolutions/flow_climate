@@ -26,10 +26,6 @@ type HeaderUser = {
   admin: boolean
 }
 
-type HeaderProps = {
-  company?: Company
-}
-
 type Companies = Pick<Company, "id" | "name" | "slug">
 
 const SEND_API_TOKEN_MUTATION = gql`
@@ -48,11 +44,12 @@ const normalizeUser = (user?: User): HeaderUser => ({
   admin: user?.admin || false,
 })
 
-const Header = ({ company }: HeaderProps) => {
+const Header = () => {
   const { t } = useTranslation(["header"])
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const handleClose = () => setAnchorEl(null)
   const { me } = useContext(MeContext)
+  const company = me?.currentCompany
   const user = normalizeUser(me)
   const { pushMessage } = useContext(MessagesContext)
 
@@ -70,6 +67,7 @@ const Header = ({ company }: HeaderProps) => {
       href: `/companies/${companySlug}`,
     },
     { name: t("teams"), href: `/companies/${companySlug}/teams` },
+    { name: t("team_members"), href: `/companies/${companySlug}/team_members` },
     { name: t("customers"), href: `/companies/${companySlug}/customers` },
     { name: t("products"), href: `/companies/${companySlug}/products` },
     { name: t("initiatives"), href: `/companies/${companySlug}/initiatives` },

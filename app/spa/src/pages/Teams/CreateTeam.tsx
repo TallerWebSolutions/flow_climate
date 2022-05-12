@@ -87,7 +87,7 @@ const CreateTeam = () => {
   }
 
   return (
-    <BasicPage company={company} breadcrumbsLinks={breadcrumbsLinks}>
+    <BasicPage breadcrumbsLinks={breadcrumbsLinks}>
       <form onSubmit={handleSubmit(handleCreateNewTeam)}>
         <FormGroup
           sx={{
