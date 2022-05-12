@@ -1,13 +1,10 @@
-import { gql, useQuery } from "@apollo/client"
 import SearchIcon from "@mui/icons-material/Search"
 import AdapterDateFns from "@mui/lab/AdapterDateFns"
 import DatePicker from "@mui/lab/DatePicker"
 import LocalizationProvider from "@mui/lab/LocalizationProvider"
 import {
-  Backdrop,
   Box,
   Button,
-  CircularProgress,
   FormControl,
   InputBaseComponentProps,
   InputLabel,
@@ -18,43 +15,16 @@ import {
   Tabs,
   TextField,
 } from "@mui/material"
-import { ChangeEvent, useCallback, useState } from "react"
+import { ChangeEvent, useCallback, useState, useContext } from "react"
 import { useTranslation } from "react-i18next"
 import BasicPage from "../../components/BasicPage"
 import TabPanel from "../../components/TabPanel"
 import { toISOFormat } from "../../lib/date"
 import { Project } from "../../modules/project/project.types"
 import { Team } from "../../modules/team/team.types"
-import User from "../../modules/user/user.types"
 import TaskCharts from "./Charts"
 import TaskList from "./List"
-
-export const SELECT_FILTERS_QUERY = gql`
-  query TasksSelectFilters {
-    me {
-      currentCompany {
-        name
-        slug
-        initiatives {
-          id
-          name
-        }
-        projects {
-          id
-          name
-        }
-        teams {
-          id
-          name
-        }
-      }
-    }
-  }
-`
-
-type TaskFiltersDTO = {
-  me: User
-}
+import { MeContext } from "../../contexts/MeContext"
 
 export type TaskFilters = {
   page: number
@@ -140,8 +110,7 @@ const TasksPage = ({ initialTab = 1 }: TasksPageProps) => {
     limit: 10,
     status: "",
   })
-
-  const { data, loading } = useQuery<TaskFiltersDTO>(SELECT_FILTERS_QUERY)
+  const { me } = useContext(MeContext)
   const handleSearchByName = useCallback(
     (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
       setTaskSearchName(String(event.target.value)),
@@ -163,19 +132,12 @@ const TasksPage = ({ initialTab = 1 }: TasksPageProps) => {
     []
   )
 
-  if (loading)
-    return (
-      <Backdrop open>
-        <CircularProgress color="secondary" />
-      </Backdrop>
-    )
-
   const isChartTab = tab === 0
-  const company = data?.me.currentCompany!
-  const projects = company.projects
-  const initiatives = company.initiatives
-  const teams = company.teams
-  const companySlug = company.slug
+  const company = me?.currentCompany
+  const projects = company?.projects
+  const initiatives = company?.initiatives
+  const teams = company?.teams
+  const companySlug = company?.slug
   const taskTabs = [
     {
       label: t("tabs.charts"),

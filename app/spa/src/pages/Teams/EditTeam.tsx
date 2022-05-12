@@ -30,15 +30,6 @@ export const TEAM_QUERY = gql`
       name
       maxWorkInProgress
     }
-
-    me {
-      language
-      currentCompany {
-        id
-        name
-        slug
-      }
-    }
   }
 `
 

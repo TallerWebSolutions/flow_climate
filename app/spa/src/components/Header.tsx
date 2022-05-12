@@ -9,30 +9,14 @@ import {
   MenuItem,
 } from "@mui/material"
 import { useState } from "react"
-import { gql, useMutation, useQuery } from "@apollo/client"
+import { gql, useMutation } from "@apollo/client"
 
 import { Company } from "../modules/company/company.types"
 import { MessagesContext } from "../contexts/MessageContext"
+import { MeContext } from "../contexts/MeContext"
 import { capitalizeFirstLetter } from "../lib/func"
 import { useTranslation } from "react-i18next"
-
-const USER_QUERY = gql`
-  query UserQuery {
-    me {
-      id
-      fullName
-      companies {
-        id
-        name
-        slug
-      }
-      avatar {
-        imageSource
-      }
-      admin
-    }
-  }
-`
+import User from "../modules/user/user.types"
 
 type HeaderUser = {
   id: string
@@ -48,22 +32,6 @@ type HeaderProps = {
 
 type Companies = Pick<Company, "id" | "name" | "slug">
 
-type User = {
-  id: string
-  fullName: string
-  companies: Companies[]
-  avatar: {
-    imageSource: string
-  }
-  admin: boolean
-}
-
-type UserResult = {
-  me: User
-}
-
-type UserDTO = UserResult | undefined
-
 const SEND_API_TOKEN_MUTATION = gql`
   mutation SendAuthToken($companyId: Int!) {
     sendAuthToken(companyId: $companyId) {
@@ -72,20 +40,20 @@ const SEND_API_TOKEN_MUTATION = gql`
   }
 `
 
-const normalizeUser = (data: UserDTO): HeaderUser => ({
-  id: data?.me.id || "",
-  fullName: data?.me.fullName || "",
-  avatarSource: data?.me.avatar.imageSource || "",
-  companies: data?.me.companies || [],
-  admin: data?.me.admin || false,
+const normalizeUser = (user?: User): HeaderUser => ({
+  id: user?.id || "",
+  fullName: user?.fullName || "",
+  avatarSource: user?.avatar?.imageSource || "",
+  companies: user?.companies || [],
+  admin: user?.admin || false,
 })
 
 const Header = ({ company }: HeaderProps) => {
   const { t } = useTranslation(["header"])
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const handleClose = () => setAnchorEl(null)
-  const { data: userData } = useQuery<UserDTO>(USER_QUERY)
-  const user = normalizeUser(userData)
+  const { me } = useContext(MeContext)
+  const user = normalizeUser(me)
   const { pushMessage } = useContext(MessagesContext)
 
   const [sendAuthTokenMutation] = useMutation(SEND_API_TOKEN_MUTATION, {

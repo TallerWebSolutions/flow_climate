@@ -35,6 +35,16 @@ const ME_QUERY = gql`
         name
         slug
       }
+      fullName
+      avatar {
+        imageSource
+      }
+      admin
+      companies {
+        id
+        name
+        slug
+      }
     }
   }
 `

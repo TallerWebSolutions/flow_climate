@@ -29,14 +29,6 @@ export const TEAMS_QUERY = gql`
       id
       name
     }
-
-    me {
-      language
-      currentCompany {
-        name
-        slug
-      }
-    }
   }
 `
 

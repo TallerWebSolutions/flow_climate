@@ -71,13 +71,6 @@ export const TASKS_LIST_QUERY = gql`
         }
       }
     }
-
-    me {
-      currentCompany {
-        name
-        slug
-      }
-    }
   }
 `
 

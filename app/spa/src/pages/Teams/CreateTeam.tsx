@@ -1,8 +1,6 @@
-import { gql, useMutation, useQuery } from "@apollo/client"
+import { gql, useMutation } from "@apollo/client"
 import {
-  Backdrop,
   Button,
-  CircularProgress,
   FormControl,
   FormGroup,
   Input,
@@ -13,25 +11,8 @@ import { FieldValues, useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import BasicPage from "../../components/BasicPage"
 import { MessagesContext } from "../../contexts/MessageContext"
+import { MeContext } from "../../contexts/MeContext"
 import { redirectTo } from "../../lib/func"
-import User from "../../modules/user/user.types"
-
-type LoggedUserDTO = {
-  me: User
-}
-
-export const LOGGED_USER_QUERY = gql`
-  query LoggedUser {
-    me {
-      language
-      currentCompany {
-        id
-        name
-        slug
-      }
-    }
-  }
-`
 
 type CreateTeamDTO = {
   createTeam: {
@@ -58,7 +39,7 @@ const CREATE_TEAM_MUTATION = gql`
 const CreateTeam = () => {
   const { t } = useTranslation(["teams"])
   const { pushMessage } = useContext(MessagesContext)
-  const { data, loading } = useQuery<LoggedUserDTO>(LOGGED_USER_QUERY)
+  const { me } = useContext(MeContext)
   const [createTeam] = useMutation<CreateTeamDTO>(CREATE_TEAM_MUTATION, {
     update: (_, { data }) => {
       const newTeamID = data?.createTeam.id
@@ -80,15 +61,8 @@ const CreateTeam = () => {
 
   const { register, handleSubmit } = useForm()
 
-  if (loading)
-    return (
-      <Backdrop open>
-        <CircularProgress color="secondary" />
-      </Backdrop>
-    )
-
-  const company = data?.me.currentCompany!
-  const companyName = company.name
+  const company = me?.currentCompany
+  const companyName = company?.name
   const companyUrl = `/companies/${company?.slug}`
   const breadcrumbsLinks = [
     { name: companyName || "", url: companyUrl },

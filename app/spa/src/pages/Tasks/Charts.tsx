@@ -84,13 +84,6 @@ const TASKS_CHARTS_QUERY = gql`
         values
       }
     }
-
-    me {
-      currentCompany {
-        name
-        slug
-      }
-    }
   }
 `
 
