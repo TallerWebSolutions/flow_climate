@@ -89,13 +89,13 @@ RSpec.describe Types::QueryType do
           Fabricate :replenishing_consolidation, project: inactive_by_date_project, consolidation_date: 1.day.ago, team_throughput_data: [7, 10, 9], team_lead_time: 2.4, team_wip: 6
           Fabricate :replenishing_consolidation, project: inactive_by_status_project, consolidation_date: 1.day.ago, team_throughput_data: [7, 10, 9], team_lead_time: 2.4, team_wip: 6
 
-          Fabricate :project_consolidation, project: project, consolidation_date: 3.days.ago, project_throughput: 7
-          Fabricate :project_consolidation, project: project, consolidation_date: 2.days.ago, project_throughput: 10
-          Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago, project_throughput: 20
+          Fabricate :project_consolidation, project: project, consolidation_date: 3.days.ago, project_throughput: 7, project_throughput_hours_additional: 200, project_throughput_hours_additional_in_month: 240
+          Fabricate :project_consolidation, project: project, consolidation_date: 2.days.ago, project_throughput: 10, project_throughput_hours_additional: 18, project_throughput_hours_additional_in_month: 32
+          Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago, project_throughput: 20, project_throughput_hours_additional: 2, project_throughput_hours_additional_in_month: 9
 
-          Fabricate :project_consolidation, project: other_project, consolidation_date: 3.days.ago, project_throughput: 9
-          Fabricate :project_consolidation, project: other_project, consolidation_date: 2.days.ago, project_throughput: 13
-          Fabricate :project_consolidation, project: other_project, consolidation_date: 1.day.ago, project_throughput: 15
+          Fabricate :project_consolidation, project: other_project, consolidation_date: 3.days.ago, project_throughput: 9, project_throughput_hours_additional: 22, project_throughput_hours_additional_in_month: 430
+          Fabricate :project_consolidation, project: other_project, consolidation_date: 2.days.ago, project_throughput: 13, project_throughput_hours_additional: 17, project_throughput_hours_additional_in_month: 60
+          Fabricate :project_consolidation, project: other_project, consolidation_date: 1.day.ago, project_throughput: 15, project_throughput_hours_additional: 47, project_throughput_hours_additional_in_month: 79
 
           query =
             %(query {
@@ -312,7 +312,7 @@ RSpec.describe Types::QueryType do
           Fabricate :demand, company: company, project: project, team: team
           first_finished_demand = Fabricate :demand, project: project, effort_downstream: 200, effort_upstream: 10, end_date: Time.zone.parse('2022-04-15 12:30')
           second_finished_demand = Fabricate :demand, project: project, demand_type: :bug, created_date: Time.zone.parse('2022-04-23 13:30'), commitment_date: Time.zone.parse('2022-04-24 10:30'), end_date: Time.zone.parse('2022-04-25 17:30')
-          project_consolidation = Fabricate :project_consolidation, project: project, monte_carlo_weeks_min: 9, monte_carlo_weeks_max: 85, monte_carlo_weeks_std_dev: 7, team_based_operational_risk: 0.5, consolidation_date: Time.zone.today
+          project_consolidation = Fabricate :project_consolidation, project: project, monte_carlo_weeks_min: 9, monte_carlo_weeks_max: 85, monte_carlo_weeks_std_dev: 7, team_based_operational_risk: 0.5, consolidation_date: Time.zone.today, project_throughput_hours_additional: 17, project_throughput_hours_additional_in_month: 60
           demand = Fabricate :demand, company: company, project: project, team: team
           Fabricate :demand_block, demand: demand
 
@@ -356,6 +356,9 @@ RSpec.describe Types::QueryType do
             interquartileRange
             leadTimeP25
             leadTimeP75
+            leadTimeP75
+            projectThroughputHoursAdditional
+            projectThroughputHoursAdditionalInMonth
           }
           pastWeeks
           remainingWork
@@ -480,7 +483,9 @@ RSpec.describe Types::QueryType do
                                                           'leadTimeMaxMonth' => 0.0,
                                                           'leadTimeMinMonth' => 0.0,
                                                           'leadTimeP25' => project_consolidation.lead_time_p65,
-                                                          'leadTimeP75' => project_consolidation.lead_time_p75
+                                                          'leadTimeP75' => project_consolidation.lead_time_p75,
+                                                          'projectThroughputHoursAdditional' => 17,
+                                                          'projectThroughputHoursAdditionalInMonth' => 60
                                                         }],
                                                         'demandsFinishedWithLeadtime' => [{ 'id' => second_finished_demand.id.to_s }],
                                                         'discardedDemands' => [],

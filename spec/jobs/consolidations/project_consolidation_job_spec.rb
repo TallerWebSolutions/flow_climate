@@ -49,6 +49,8 @@ RSpec.describe Consolidations::ProjectConsolidationJob, type: :active_job do
         expect(Consolidations::ProjectConsolidation.count).to eq 3
         expect(first_project.reload.project_consolidations.order(:consolidation_date).last.operational_risk).to eq 1
         expect(first_project.reload.project_consolidations.order(:consolidation_date).last.team_based_operational_risk).to eq 1
+        expect(first_project.reload.project_consolidations.order(:consolidation_date).last.project_throughput_hours).to eq 102
+        expect(first_project.reload.project_consolidations.order(:consolidation_date).last.project_throughput_hours_in_month).to eq 102
         expect(first_project.reload.project_consolidations.order(:consolidation_date).last.project_throughput_hours_additional).to eq 102
         expect(first_project.reload.project_consolidations.order(:consolidation_date).last.project_throughput_hours_additional_in_month).to eq 35
         expect(second_project.reload.project_consolidations.order(:consolidation_date).last.operational_risk).to eq 0

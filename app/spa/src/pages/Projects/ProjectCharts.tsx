@@ -93,6 +93,8 @@ const PROJECT_CHART_QUERY = gql`
         hoursPerDemand
         projectThroughput
         projectThroughputHours
+        projectThroughputHoursAdditional
+        projectThroughputHoursAdditionalInMonth
         bugsOpened
         bugsClosed
         projectThroughputHoursManagement
@@ -216,7 +218,7 @@ const ProjectCharts = () => {
       </Backdrop>
     )
 
-  const project = data?.project!
+  const project = data?.project
   const projectConsolidationsWeekly = project?.projectConsolidationsWeekly || []
   const projectConsolidationsLastMonth = project?.projectConsolidationsLastMonth
   const demandsFinishedWithLeadtime = project?.demandsFinishedWithLeadtime
@@ -282,7 +284,7 @@ const ProjectCharts = () => {
     }
   )
 
-  const committedChartData = demandsFlowChartData.committedChartData
+  const committedChartData = demandsFlowChartData?.committedChartData
   const projectFlowChartData: BarDatum[] = committedChartData
     ? committedChartData?.map((_, index) => {
         const creationChartData = demandsFlowChartData.creationChartData
@@ -309,101 +311,116 @@ const ProjectCharts = () => {
       })
     : []
 
-  const projectLeadTimeHistogramData: BarDatum[] =
-    leadTimeHistogramData.keys.map((el, index) => {
-      const projectLeadTimeHistogramDataKeysInDays =
-        secondsToDays(el).toFixed(2)
-
-      return {
-        index,
-        [t("project_charts.lead_time_histogram_chart_x_label")]:
-          projectLeadTimeHistogramDataKeysInDays,
-        [t("project_charts.lead_time_histogram_chart_y_label")]:
-          leadTimeHistogramData.values[index],
-      }
-    })
-
-  const projectDemandsBurnupChartData = [
-    {
-      id: t("project_charts.demands_burn_up_label_scope"),
-      data: project.weeklyProjectScopeUntilEnd.map((scope, index) => ({
-        x: index,
-        y: scope,
-      })),
-    },
-    {
-      id: t("project_charts.demands_burn_up_label_ideal"),
-      data: project.currentWeeklyScopeIdealBurnup.map((idealScope, index) => ({
-        x: index,
-        y: idealScope,
-      })),
-    },
-    {
-      id: t("project_charts.demands_burn_up_label_delivered"),
-      data: projectConsolidationsWeekly.map(({ projectThroughput }, index) => ({
-        x: index,
-        y: projectThroughput,
-      })),
-    },
-  ]
-
-  const projectHoursBurnupChartData = [
-    {
-      id: t("project_charts.hours_burn_up_label_scope"),
-      data: project.weeklyProjectScopeHoursUntilEnd.map((scope, index) => ({
-        x: index,
-        y: scope,
-      })),
-    },
-    {
-      id: t("project_charts.hours_burn_up_label_ideal"),
-      data: project.currentWeeklyHoursIdealBurnup.map((idealScope, index) => ({
-        x: index,
-        y: idealScope,
-      })),
-    },
-    {
-      id: t("project_charts.hours_burn_up_label_delivered"),
-      data: projectConsolidationsWeekly.map(
-        ({ projectThroughputHours }, index) => ({
-          x: index,
-          y: projectThroughputHours.toFixed(2),
-        })
-      ),
-    },
-  ]
-
-  const leadTimeP80ChartData = [
-    {
-      id: project.name,
-      data: projectConsolidationsWeekly.map(({ leadTimeP80 }, index) => {
-        const leadTimep80InDays = secondsToDays(leadTimeP80)
+  const projectLeadTimeHistogramData: BarDatum[] = leadTimeHistogramData
+    ? leadTimeHistogramData.keys.map((el, index) => {
+        const projectLeadTimeHistogramDataKeysInDays =
+          secondsToDays(el).toFixed(2)
 
         return {
-          x: index,
-          y: leadTimep80InDays,
+          index,
+          [t("project_charts.lead_time_histogram_chart_x_label")]:
+            projectLeadTimeHistogramDataKeysInDays,
+          [t("project_charts.lead_time_histogram_chart_y_label")]:
+            leadTimeHistogramData.values[index],
         }
-      }),
-    },
-  ]
+      })
+    : []
 
-  const projectQualityChartData = [
-    {
-      id: project.name,
-      data: projectConsolidationsWeekly.map(
-        ({ consolidationDate, projectQuality }) => ({
-          x: consolidationDate,
-          y: 1 - projectQuality,
-        })
-      ),
-    },
-  ]
+  const projectDemandsBurnupChartData = project
+    ? [
+        {
+          id: t("project_charts.demands_burn_up_label_scope"),
+          data: project.weeklyProjectScopeUntilEnd.map((scope, index) => ({
+            x: index,
+            y: scope,
+          })),
+        },
+        {
+          id: t("project_charts.demands_burn_up_label_ideal"),
+          data: project.currentWeeklyScopeIdealBurnup.map(
+            (idealScope, index) => ({
+              x: index,
+              y: idealScope,
+            })
+          ),
+        },
+        {
+          id: t("project_charts.demands_burn_up_label_delivered"),
+          data: projectConsolidationsWeekly.map(
+            ({ projectThroughput }, index) => ({
+              x: index,
+              y: projectThroughput,
+            })
+          ),
+        },
+      ]
+    : []
+
+  const projectHoursBurnupChartData = project
+    ? [
+        {
+          id: t("project_charts.hours_burn_up_label_scope"),
+          data: project.weeklyProjectScopeHoursUntilEnd.map((scope, index) => ({
+            x: index,
+            y: scope,
+          })),
+        },
+        {
+          id: t("project_charts.hours_burn_up_label_ideal"),
+          data: project.currentWeeklyHoursIdealBurnup.map(
+            (idealScope, index) => ({
+              x: index,
+              y: idealScope,
+            })
+          ),
+        },
+        {
+          id: t("project_charts.hours_burn_up_label_delivered"),
+          data: projectConsolidationsWeekly.map(
+            ({ projectThroughputHours }, index) => ({
+              x: index,
+              y: projectThroughputHours.toFixed(2),
+            })
+          ),
+        },
+      ]
+    : []
+
+  const leadTimeP80ChartData = project
+    ? [
+        {
+          id: project.name,
+          data: projectConsolidationsWeekly.map(({ leadTimeP80 }, index) => {
+            const leadTimep80InDays = secondsToDays(leadTimeP80)
+
+            return {
+              x: index,
+              y: leadTimep80InDays,
+            }
+          }),
+        },
+      ]
+    : []
+
+  const projectQualityChartData = project
+    ? [
+        {
+          id: project.name,
+          data: projectConsolidationsWeekly.map(
+            ({ consolidationDate, projectQuality }) => ({
+              x: consolidationDate,
+              y: 1 - projectQuality,
+            })
+          ),
+        },
+      ]
+    : []
 
   const leadTimeControlChartData = [
     {
       id: t("project_charts.lead_time_control_label"),
-      data: demandsFinishedWithLeadtime.map(
-        ({ externalId, leadtime }, index) => {
+      data:
+        demandsFinishedWithLeadtime?.map(({ externalId, leadtime }, index) => {
           const leadTimeInDays = secondsToDays(leadtime)
 
           return {
@@ -411,8 +428,7 @@ const ProjectCharts = () => {
             y: leadTimeInDays,
             label: externalId,
           }
-        }
-      ),
+        }) || [],
     },
   ]
 
@@ -452,7 +468,7 @@ const ProjectCharts = () => {
 
   const projectQualityForCodingChartData = [
     {
-      id: project.name,
+      id: project?.name || "",
       data: projectConsolidationsWeekly.map(
         ({ consolidationDate, codeNeededBlocksCount }) => ({
           x: consolidationDate,
@@ -464,7 +480,7 @@ const ProjectCharts = () => {
 
   const projectQualityForCodingPerDemand = [
     {
-      id: project.name,
+      id: project?.name || "",
       data: projectConsolidationsWeekly.map(
         ({ consolidationDate, codeNeededBlocksPerDemand }) => ({
           x: consolidationDate,
@@ -476,7 +492,7 @@ const ProjectCharts = () => {
 
   const flowEfficiencyChartData = [
     {
-      id: project.name,
+      id: project?.name || "",
       data: projectConsolidationsWeekly.map(
         ({ consolidationDate, flowEfficiency }) => {
           const flowEfficiencyInPercentage = flowEfficiency / 100
@@ -491,7 +507,7 @@ const ProjectCharts = () => {
 
   const hoursPerDemandChartData = [
     {
-      id: project.name,
+      id: project?.name || "",
       data: projectConsolidationsWeekly.map(
         ({ consolidationDate, hoursPerDemand }) => {
           return {
@@ -507,6 +523,7 @@ const ProjectCharts = () => {
     ({
       consolidationDate,
       projectThroughputHours,
+      projectThroughputHoursAdditional,
       projectThroughputHoursUpstream,
       projectThroughputHoursDownstream,
     }) => {
@@ -516,6 +533,8 @@ const ProjectCharts = () => {
           projectThroughputHoursUpstream.toFixed(2),
         [t("project_charts.hours_consumed_downstream")]:
           projectThroughputHoursDownstream.toFixed(2),
+        [t("project_charts.additional_hours_consumed")]:
+          projectThroughputHoursAdditional.toFixed(2),
         [t("project_charts.hours_consumed_total_throughput")]:
           projectThroughputHours.toFixed(2),
       }
@@ -545,7 +564,7 @@ const ProjectCharts = () => {
   )
 
   const projectConsumedHoursByRoleInMonthChartData =
-    projectConsolidationsLastMonth.map(
+    projectConsolidationsLastMonth?.map(
       ({
         consolidationDate,
         projectThroughputHoursInMonth,
@@ -567,16 +586,16 @@ const ProjectCharts = () => {
             projectThroughputHoursInMonth.toFixed(2),
         }
       }
-    )
+    ) || []
 
-  const projectHoursPerStage = hoursPerStageChartData.xAxis.map(
-    (xValue, index: number) => {
-      return {
-        index: index,
-        [xValue]: hoursPerStageChartData.yAxis[index],
-      }
-    }
-  )
+  const projectHoursPerStage = hoursPerStageChartData
+    ? hoursPerStageChartData.xAxis.map((xValue, index: number) => {
+        return {
+          index: index,
+          [xValue]: hoursPerStageChartData.yAxis[index],
+        }
+      })
+    : []
 
   const projectHoursPerCoordinationStage = hoursPerCoordinationStageChartData
     ? hoursPerCoordinationStageChartData.xAxis.map((xValue, index: number) => {
@@ -587,10 +606,12 @@ const ProjectCharts = () => {
       })
     : []
 
-  const demandsCountByTeamMember = project.projectMembers.map((member) => ({
-    [t("project_charts.demandsCount")]: member.demandsCount,
-    name: member.memberName,
-  }))
+  const demandsCountByTeamMember = project
+    ? project.projectMembers.map((member) => ({
+        [t("project_charts.demandsCount")]: member.demandsCount,
+        name: member.memberName,
+      }))
+    : []
 
   return (
     <ProjectPage pageName={t("charts")}>
@@ -685,7 +706,7 @@ const ProjectCharts = () => {
 
         <ChartLineBox
           title={t("project_charts.demands_burn_up_chart", {
-            projectName: project.name,
+            projectName: project?.name || "",
           })}
           data={projectDemandsBurnupChartData}
           axisLeftLegend={t("project_charts.demands_burn_up_y_label")}
@@ -699,7 +720,7 @@ const ProjectCharts = () => {
 
         <ChartLineBox
           title={t("project_charts.hours_burn_up_chart", {
-            projectName: project.name,
+            projectName: project?.name || "no project",
           })}
           data={projectHoursBurnupChartData}
           axisLeftLegend={t("project_charts.hours_burn_up_y_label")}
@@ -725,7 +746,7 @@ const ProjectCharts = () => {
         {projectCumulativeFlowChartData && (
           <ChartLineBox
             title={t("project_charts.cumulative_flow_chart", {
-              projectName: project.name,
+              projectName: project?.name || "no project",
             })}
             data={projectCumulativeFlowChartData}
             axisLeftLegend={t("project_charts.cumulative_flow_y_label")}
@@ -928,6 +949,7 @@ const ProjectCharts = () => {
             keys={[
               t("project_charts.hours_consumed_upstream"),
               t("project_charts.hours_consumed_downstream"),
+              t("project_charts.additional_hours_consumed"),
               t("project_charts.hours_consumed_total_throughput"),
             ]}
             indexBy={t("project_charts.hours_consumed_x_label")}
@@ -935,6 +957,7 @@ const ProjectCharts = () => {
             axisBottomLegend={t("project_charts.hours_consumed_x_label")}
           />
         </Grid>
+
         <Grid item xs={6} sx={{ padding: 1 }}>
           <Typography>
             {t("project_charts.consumed_hours_by_role_chart")}
@@ -979,7 +1002,7 @@ const ProjectCharts = () => {
 
           <BarChart
             data={projectHoursPerStage}
-            keys={hoursPerStageChartData.xAxis}
+            keys={hoursPerStageChartData?.xAxis || []}
             indexBy="index"
             axisLeftLegend={t("project_charts.hours_per_stage_y_label")}
           />

@@ -158,6 +158,8 @@ module Consolidations
       additional_hours_in_month = project.project_additional_hours.where('event_date BETWEEN :start_date AND :end_date', start_date: cache_date.beginning_of_month, end_date: cache_date.end_of_month).sum(&:hours)
 
       project_consolidation.update(project_throughput_hours_additional: additional_hours, project_throughput_hours_additional_in_month: additional_hours_in_month)
+      project_consolidation.add_project_throughput_hours(additional_hours)
+      project_consolidation.add_project_throughput_hours_in_month(additional_hours)
 
       project_consolidation
     end

@@ -20,7 +20,7 @@ import { ReadMoreButton } from "./ReadMoreButton"
 import Table from "./Table"
 
 type ProjectChartsTableProps = {
-  project: Project
+  project?: Project
   demands: Demand[]
 }
 
@@ -63,6 +63,8 @@ export const ProjectChartsTable = ({
 }: ProjectChartsTableProps) => {
   const { t } = useTranslation(["projectChart"])
   const [readMore, setReadMore] = useState(true)
+
+  if (!project) return <div>Project not found</div>
 
   const projectID = project.id
   const companySlug = project.company.slug

@@ -95,6 +95,7 @@
     "hours_consumed_chart": "Hours Consummed",
     "hours_consumed_upstream": "Upstream",
     "hours_consumed_downstream": "Downstream",
+    "additional_hours_consumed": "Meetings",
     "hours_consumed_total_throughput": "Total Effort",
     "hours_consumed_y_label": "Hours",
     "hours_consumed_x_label": "Period",

@@ -201,4 +201,48 @@ RSpec.describe Consolidations::ProjectConsolidation, type: :model do
       end
     end
   end
+
+  describe '#add_project_throughput_hours' do
+    context 'with value defined' do
+      it 'adds the hours to the already existent data' do
+        project_consolidation = Fabricate :project_consolidation, project_throughput_hours: 10
+
+        project_consolidation.add_project_throughput_hours(15)
+
+        expect(project_consolidation.reload.project_throughput_hours).to eq 25
+      end
+    end
+
+    context 'with no value defined' do
+      it 'adds the hours to the already existent data' do
+        project_consolidation = Fabricate :project_consolidation, project_throughput_hours: nil
+
+        project_consolidation.add_project_throughput_hours(15)
+
+        expect(project_consolidation.reload.project_throughput_hours).to eq 15
+      end
+    end
+  end
+
+  describe '#add_project_throughput_hours_in_month' do
+    context 'with value defined' do
+      it 'adds the hours to the already existent data' do
+        project_consolidation = Fabricate :project_consolidation, project_throughput_hours_in_month: 10
+
+        project_consolidation.add_project_throughput_hours_in_month(15)
+
+        expect(project_consolidation.reload.project_throughput_hours_in_month).to eq 25
+      end
+    end
+
+    context 'with no value defined' do
+      it 'adds the hours to the already existent data' do
+        project_consolidation = Fabricate :project_consolidation, project_throughput_hours_in_month: nil
+
+        project_consolidation.add_project_throughput_hours_in_month(15)
+
+        expect(project_consolidation.reload.project_throughput_hours_in_month).to eq 15
+      end
+    end
+  end
 end

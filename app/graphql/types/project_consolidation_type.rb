@@ -20,6 +20,8 @@ module Types
     field :project_throughput_hours_management, Float, null: false
     field :project_throughput_hours_upstream, Float, null: false
     field :project_throughput_hours_downstream, Float, null: false
+    field :project_throughput_hours_additional, Float, null: false
+    field :project_throughput_hours_additional_in_month, Float, null: false
     field :flow_efficiency, Int, null: false
     field :lead_time_min, Int, null: true
     field :lead_time_max, Int, null: true

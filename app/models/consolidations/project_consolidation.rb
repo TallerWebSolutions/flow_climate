@@ -146,6 +146,16 @@ module Consolidations
       last_data_in_month? || consolidation_date == Time.zone.today
     end
 
+    def add_project_throughput_hours(added_hours)
+      old_project_hours = project_throughput_hours || 0
+      update(project_throughput_hours: old_project_hours + added_hours)
+    end
+
+    def add_project_throughput_hours_in_month(added_hours)
+      old_project_hours = project_throughput_hours_in_month || 0
+      update(project_throughput_hours_in_month: old_project_hours + added_hours)
+    end
+
     private
 
     def demands
