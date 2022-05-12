@@ -20,6 +20,7 @@ import { useContext } from "react"
 import { useTranslation } from "react-i18next"
 import BasicPage from "../../components/BasicPage"
 import { MessagesContext } from "../../contexts/MessageContext"
+import { MeContext } from "../../contexts/MeContext"
 import { Team } from "../../modules/team/team.types"
 import User from "../../modules/user/user.types"
 
@@ -69,6 +70,7 @@ const Teams = () => {
     refetchQueries: [{ query: TEAMS_QUERY }],
   })
   const deleteTeamModal = useConfirm()
+  const { me } = useContext(MeContext)
 
   if (loading)
     return (
@@ -77,7 +79,7 @@ const Teams = () => {
       </Backdrop>
     )
 
-  const company = data?.me.currentCompany
+  const company = me?.currentCompany
   const companySlug = company?.slug
   const teams = data?.teams
   const companyUrl = `/companies/${companySlug}`

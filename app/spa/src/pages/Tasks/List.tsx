@@ -12,8 +12,9 @@ import {
   TableRow,
   Typography,
 } from "@mui/material"
-import { ChangeEvent, useEffect, useState } from "react"
+import { ChangeEvent, useContext, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
+import { MeContext } from "../../contexts/MeContext"
 import { secondsToReadbleDate } from "../../lib/date"
 import { Company } from "../../modules/company/company.types"
 import { Task } from "../../modules/task/task.types"
@@ -110,11 +111,12 @@ const TaskList = ({ filters, setFilters }: TaskListProps) => {
   const { data, loading } = useQuery<TasksListDTO>(TASKS_LIST_QUERY, {
     variables: { ...filters },
   })
+  const { me } = useContext(MeContext)
 
   useEffect(() => {
     if (!loading) {
       setTasks(data?.tasksList.tasks ?? [])
-      setCompany(data?.me.currentCompany!)
+      setCompany(me?.currentCompany!)
 
       if (data?.tasksList.totalCount) {
         setTotalOfTasks(0)
@@ -122,7 +124,7 @@ const TaskList = ({ filters, setFilters }: TaskListProps) => {
 
       setTotalOfDeliveredTasks(Number(data?.tasksList.totalDeliveredCount))
     }
-  }, [data, loading])
+  }, [data, loading, me?.currentCompany])
 
   const taskListHeadCells = [
     "ID",

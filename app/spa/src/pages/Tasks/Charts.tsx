@@ -4,8 +4,10 @@ import { BarDatum } from "@nivo/bar"
 import { CartesianMarkerProps } from "@nivo/core"
 import { SliceTooltipProps } from "@nivo/line"
 import { ScatterPlotValue } from "@nivo/scatterplot"
-import { ReactElement, useEffect, useState } from "react"
+import { ReactElement, useContext, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
+
+import { MeContext } from "../../contexts/MeContext"
 import { BarChart } from "../../components/charts/BarChart"
 import { LineChart } from "../../components/charts/LineChart"
 import { ScatterChart } from "../../components/charts/ScatterChart"
@@ -222,6 +224,7 @@ const TaskCharts = ({ filters }: TasksChartProps) => {
     skip: totalOfFinishedTasks === 0,
     variables: { ...filters, limit: totalOfFinishedTasks },
   })
+  const { me } = useContext(MeContext)
 
   useEffect(() => {
     if (!loadingFinishedTasksData) {
@@ -233,7 +236,7 @@ const TaskCharts = ({ filters }: TasksChartProps) => {
 
   useEffect(() => {
     if (!loading) {
-      setCompany(data?.me.currentCompany!)
+      setCompany(me?.currentCompany!)
 
       setCompletionTimeData(
         mountTasksChartAxis({
@@ -322,8 +325,7 @@ const TaskCharts = ({ filters }: TasksChartProps) => {
               }
             })
           : []
-      // eslint-disable-next-line no-console
-      console.log({ mountedCompletionTimeHistogramChartData })
+
       setCompletionTimeHistogramData(mountedCompletionTimeHistogramChartData)
     }
   }, [data, loading, t])

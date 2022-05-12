@@ -14,6 +14,7 @@ import { useTranslation } from "react-i18next"
 import { useParams } from "react-router-dom"
 import BasicPage from "../../components/BasicPage"
 import { MessagesContext } from "../../contexts/MessageContext"
+import { MeContext } from "../../contexts/MeContext"
 import { capitalizeFirstLetter, redirectTo } from "../../lib/func"
 import { Team } from "../../modules/team/team.types"
 import User from "../../modules/user/user.types"
@@ -84,6 +85,7 @@ const EditTeam = () => {
   })
 
   const { register, handleSubmit } = useForm()
+  const { me } = useContext(MeContext)
 
   if (loading)
     return (
@@ -96,8 +98,8 @@ const EditTeam = () => {
   const teamID = data?.team.id
   const teamMaxWip = data?.team.maxWorkInProgress
   const teamName = team.name
-  const company = data?.me.currentCompany!
-  const companySlug = company.slug
+  const company = me?.currentCompany
+  const companySlug = company?.slug
   const breadcrumbsLinks = [
     { name: capitalizeFirstLetter(companySlug!), url: companySlug! },
     { name: teamName, url: `/companies/${companySlug}/teams/${teamID}` },
