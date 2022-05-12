@@ -738,4 +738,49 @@ RSpec.describe Types::QueryType do
       end
     end
   end
+
+  describe '#team_members' do
+    let(:company) { Fabricate :company }
+
+    it 'returns the members in the company' do
+      query =
+        %(
+        query {
+          teamMembers(companyId: #{company.id}) {
+    name
+    jiraAccountUserEmail
+    startDate
+    endDate
+    billable
+    teams {
+      name
+    }
+  }
+        }
+      )
+
+      user = Fabricate :user
+
+      context = {
+        current_user: user
+      }
+
+      team_member = Fabricate :team_member, company: company, name: 'zzz'
+      other_team_member = Fabricate :team_member, company: company, name: 'aaa'
+
+      team = Fabricate :team, company: company, name: 'xpto'
+      other_team = Fabricate :team, company: company, name: 'foo'
+
+      Fabricate :membership, team: team, team_member: team_member
+      Fabricate :membership, team: other_team, team_member: team_member
+      Fabricate :membership, team: team, team_member: other_team_member
+
+      Fabricate :team_member, name: 'aaa'
+
+      result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
+      expect(result.dig('data', 'teamMembers').map { |member| member['name'] }).to eq %w[aaa zzz]
+      expect(result.dig('data', 'teamMembers').first['teams'].map { |team_query| team_query['name'] }).to eq ['xpto']
+      expect(result.dig('data', 'teamMembers').second['teams'].map { |team_query| team_query['name'] }).to match_array %w[xpto foo]
+    end
+  end
 end

@@ -55,6 +55,10 @@ module Types
       argument :sort_direction, Types::SortDirection, required: false
     end
 
+    field :team_members, [Types::TeamMemberType], null: true, description: 'Team Members of a Company' do
+      argument :company_id, Int, required: true
+    end
+
     field :me, Types::UserType, null: false
 
     def teams
@@ -86,6 +90,11 @@ module Types
       return Demand.where(project_id: project_id).where.not(discarded_at: nil).limit(limit).order(end_date: sort_direction) if discarded
 
       Demand.where(project_id: project_id).limit(limit).order(end_date: sort_direction)
+    end
+
+    def team_members(company_id:)
+      company = Company.find(company_id)
+      company.team_members.order(:name)
     end
 
     def me

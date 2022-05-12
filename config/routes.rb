@@ -154,7 +154,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :team_members, except: :index do
+    resources :team_members do
       member do
         get :associate_user
         get :dissociate_user
