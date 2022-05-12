@@ -154,15 +154,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :team_members do
-      member do
-        get :associate_user
-        get :dissociate_user
-      end
-
-      get :search_team_members, on: :collection
-      get :pairings, on: :member
-    end
+    resources :team_members, only: :index
 
     resources :financial_informations, only: %i[new create edit update destroy]
 
