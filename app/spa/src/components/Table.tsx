@@ -16,17 +16,24 @@ type Cell = string | number | ReactElement
 type Row = Cell[]
 
 type TableProps = {
-  title: string
   headerCells: Cell[]
   rows: Row[]
+  title?: string
   footerCells?: Cell[]
 }
 
 const Table = ({ title, headerCells, rows, footerCells }: TableProps) => (
   <TableContainer component={Paper} sx={{ background: "white", marginY: 4 }}>
-    <Typography color="primary" variant="h6" component="h6" sx={{ padding: 2 }}>
-      {title}
-    </Typography>
+    {title && (
+      <Typography
+        color="primary"
+        variant="h6"
+        component="h6"
+        sx={{ padding: 2 }}
+      >
+        {title}
+      </Typography>
+    )}
     <MUITable>
       <TableHead>
         <TableRow>

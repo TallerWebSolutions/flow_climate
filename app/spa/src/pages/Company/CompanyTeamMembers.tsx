@@ -2,6 +2,7 @@ import { useContext } from "react"
 import { useTranslation } from "react-i18next"
 
 import BasicPage from "../../components/BasicPage"
+import Table from "../../components/Table"
 import { MeContext } from "../../contexts/MeContext"
 
 const CompanyTeamMembers = () => {
@@ -15,9 +16,20 @@ const CompanyTeamMembers = () => {
     },
   ]
 
+  const membersColumns = [
+    t("teamMembers.columns.name"),
+    t("teamMembers.columns.teams"),
+    t("teamMembers.columns.email"),
+    t("teamMembers.columns.start"),
+    t("teamMembers.columns.finish"),
+    t("teamMembers.columns.billable"),
+    t("teamMembers.columns.status"),
+  ]
+  const teamMembers = [[]]
+
   return (
     <BasicPage breadcrumbsLinks={breadcrumbsLinks}>
-      <h1>CompanyTeamMembers</h1>
+      <Table headerCells={membersColumns} rows={teamMembers} />
     </BasicPage>
   )
 }
