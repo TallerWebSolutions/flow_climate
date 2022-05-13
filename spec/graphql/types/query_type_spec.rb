@@ -855,4 +855,40 @@ RSpec.describe Types::QueryType do
                                                      })
     end
   end
+
+
+  describe '#project_additional_hours' do
+    let(:company) { Fabricate :company }
+    let(:project) { Fabricate :project, company: company }
+    let!(:project_additional_hour) { Fabricate :project_additional_hour, project: project, obs: 'foo' }
+
+    it 'returns the members in the company' do
+      query =
+        %(
+        query {
+          projectAdditionalHours(projectId: #{project.id}) {
+            eventDate
+            hoursType
+            hours
+            obs
+            project {
+              name
+            }
+          }
+        }
+      )
+
+      user = Fabricate :user
+
+      context = {
+        current_user: user
+      }
+
+      result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
+      expect(result.dig('data', 'projectAdditionalHours').map { |add_hour| add_hour['obs'] }).to eq ['foo']
+      expect(result.dig('data', 'projectAdditionalHours').map { |add_hour| add_hour['hours'] }).to eq [project_additional_hour.hours]
+      expect(result.dig('data', 'projectAdditionalHours').map { |add_hour| add_hour['hoursType'] }).to eq [0]
+      expect(result.dig('data', 'projectAdditionalHours').map { |add_hour| add_hour['eventDate'] }).to eq [project_additional_hour.event_date.iso8601]
+    end
+  end
 end

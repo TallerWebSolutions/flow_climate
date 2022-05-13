@@ -45,6 +45,10 @@ module Types
       argument :company_id, Int, required: true
     end
 
+    field :project_additional_hours, [Types::ProjectAdditionalHourType], null: true, description: 'A list of project additional hours' do
+      argument :project_id, Int, required: true
+    end
+
     field :me, Types::UserType, null: false
 
     def teams
@@ -85,6 +89,10 @@ module Types
     def team_members(company_id:)
       company = Company.find(company_id)
       company.team_members.order(:name)
+    end
+
+    def project_additional_hours(project_id:)
+      Project.find(project_id).project_additional_hours.order(:event_date)
     end
 
     def me
