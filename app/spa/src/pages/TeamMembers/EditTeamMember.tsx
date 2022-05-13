@@ -109,7 +109,7 @@ const EditTeamMember = () => {
       <form>
         <FormGroup>
           <FormControl sx={{ marginBottom: 4 }}>
-            <InputLabel htmlFor="name">{t("edit.form.name")}</InputLabel>
+            <InputLabel htmlFor="name">{t("columns.name")}</InputLabel>
             <Input
               {...register("name", { required: true })}
               defaultValue={teamMember.name}
@@ -117,7 +117,7 @@ const EditTeamMember = () => {
           </FormControl>
           <FormControl sx={{ marginBottom: 4 }}>
             <InputLabel htmlFor="startDate" shrink>
-              {t("edit.form.startDate")}
+              {t("columns.start")}
             </InputLabel>
             <Input
               {...register("startDate", { required: true })}
@@ -127,7 +127,7 @@ const EditTeamMember = () => {
           </FormControl>
           <FormControl sx={{ marginBottom: 4 }}>
             <InputLabel htmlFor="endDate" shrink>
-              {t("edit.form.endDate")}
+              {t("columns.finish")}
             </InputLabel>
             <Input
               {...register("endDate", { required: true })}
@@ -137,7 +137,7 @@ const EditTeamMember = () => {
           </FormControl>
           <FormControl sx={{ marginBottom: 4 }}>
             <InputLabel htmlFor="monthlyPayment">
-              {t("edit.form.monthlyPayment")}
+              {t("columns.monthlyPayment")}
             </InputLabel>
             <Input
               {...register("monthlyPayment", { required: true })}
@@ -148,7 +148,7 @@ const EditTeamMember = () => {
           </FormControl>
           <FormControl sx={{ marginBottom: 4 }}>
             <InputLabel htmlFor="hoursPerMonth">
-              {t("edit.form.hoursPerMonth")}
+              {t("columns.hoursPerMonth")}
             </InputLabel>
             <Input
               {...register("hoursPerMonth", { required: true })}
