@@ -1,24 +1,21 @@
 {
-  "list": {
-    "title": "Colaboradores",
-    "columns": {
-      "name": "Nome",
-      "teams": "Times",
-      "email": "Email",
-      "start": "Início",
-      "finish": "Fim",
-      "billable": "Faturável?",
-      "status": {
-        "title": "Status",
-        "active": "Ativo",
-        "inactive": "Inativo"
-      }
+  "columns": {
+    "name": "Nome",
+    "teams": "Times",
+    "email": "Email",
+    "start": "Início",
+    "finish": "Fim",
+    "billable": "Faturável?",
+    "status": {
+      "title": "Status",
+      "active": "Ativo",
+      "inactive": "Inativo"
     }
   },
+  "list": {
+    "title": "Colaboradores"
+  },
   "edit": {
-    "title": "Colaborador",
-    "form": {
-      "name": "Nome"
-    }
+    "title": "Colaborador"
   }
 }

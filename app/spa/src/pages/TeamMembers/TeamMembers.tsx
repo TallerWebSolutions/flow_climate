@@ -54,13 +54,13 @@ const TeamMembers = () => {
   ]
 
   const membersColumns = [
-    t("list.columns.name"),
-    t("list.columns.teams"),
-    t("list.columns.email"),
-    t("list.columns.start"),
-    t("list.columns.finish"),
-    t("list.columns.billable"),
-    t("list.columns.status.title"),
+    t("columns.name"),
+    t("columns.teams"),
+    t("columns.email"),
+    t("columns.start"),
+    t("columns.finish"),
+    t("columns.billable"),
+    t("columns.status.title"),
   ]
   const { data, loading } = useQuery<TeamMembersDTO>(TEAM_MEMBERS_QUERY, {
     variables: { companyId: Number(companyId) },
@@ -81,8 +81,8 @@ const TeamMembers = () => {
       teamMember.endDate,
       teamMember.billable ? <CheckIcon color="primary" /> : "",
       teamMember.endDate
-        ? t("list.columns.status.active")
-        : t("list.columns.status.inactive"),
+        ? t("columns.status.active")
+        : t("columns.status.inactive"),
       <Link to={`${companyUrl}/team_members/${teamMember.id}/edit`}>
         <EditOutlinedIcon color="primary" />
       </Link>,
