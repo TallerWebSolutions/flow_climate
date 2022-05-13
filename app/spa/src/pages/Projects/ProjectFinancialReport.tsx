@@ -44,6 +44,17 @@ const QUERY = gql`
       effortDownstream
       effortUpstream
     }
+
+    projectAdditionalHours(projectId: $projectId) {
+      id
+      eventDate
+      hours
+      obs
+      project {
+        id
+        name
+      }
+    }
   }
 `
 
@@ -58,17 +69,19 @@ type Demand = {
 }
 
 type AdditionalHours = {
-  id: string
-  type: number
-  description: string
+  eventDate: string
   hours: number
-  date: string
+  obs: string
+  project: {
+    id: string
+    name: string
+  }
 }
 
 type FinancialReportDemandsDTO = {
   finishedDemands: Demand[]
   discardedDemands: Demand[]
-  additionalHours: AdditionalHours[]
+  projectAdditionalHours: AdditionalHours[]
 }
 
 const sum = (a: number, b: number) => a + b
@@ -168,12 +181,12 @@ const ProjectFinancialReport = () => {
     ).toFixed(2),
   ]
 
-  const additionalHoursRows = data?.additionalHours.map((item) => [
-    item.type,
-    item.description,
-    item.hours,
-    item.date,
-  ])
+  const additionalHoursRows =
+    data?.projectAdditionalHours.map((item) => [
+      item.obs,
+      item.hours,
+      item.eventDate,
+    ]) || []
 
   return (
     <ProjectPage pageName={t("title")}>
@@ -219,12 +232,11 @@ const ProjectFinancialReport = () => {
         <Table
           title={t("additionalHours.title").toString()}
           headerCells={[
-            t("additionalHours.type").toString(),
             t("additionalHours.description").toString(),
             t("additionalHours.hours").toString(),
             t("additionalHours.date").toString(),
           ]}
-          rows={[]}
+          rows={additionalHoursRows}
         />
       </Container>
     </ProjectPage>
