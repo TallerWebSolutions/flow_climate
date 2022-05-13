@@ -41,7 +41,7 @@ const CreateProjectAditionalHours = () => {
   const { register, handleSubmit } = useForm()
   const navigate = useNavigate()
   const financialReportUrl = `/companies/${companySlug}/projects/${projectId}/financial_report`
-  const [createAdditionalHours, { loading, error }] = useMutation(
+  const [createAdditionalHours, { loading }] = useMutation(
     CREATE_ADITIONAL_HOURS_MUTATION,
     {
       update: () => navigate(financialReportUrl),
