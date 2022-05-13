@@ -1,6 +1,7 @@
 import { useContext } from "react"
 import { useTranslation } from "react-i18next"
-import CheckCircleIcon from "@mui/icons-material/CheckCircle"
+import CheckIcon from "@mui/icons-material/Check"
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined"
 
 import BasicPage from "../../components/BasicPage"
 import Table from "../../components/Table"
@@ -8,10 +9,12 @@ import { MeContext } from "../../contexts/MeContext"
 import { gql, useQuery } from "@apollo/client"
 import { Team } from "../../modules/team/team.types"
 import { Backdrop, CircularProgress } from "@mui/material"
+import { Link } from "react-router-dom"
 
 const TEAM_MEMBERS_QUERY = gql`
   query TeamMembers($companyId: Int!) {
     teamMembers(companyId: $companyId) {
+      id
       name
       jiraAccountUserEmail
       startDate
@@ -25,6 +28,7 @@ const TEAM_MEMBERS_QUERY = gql`
 `
 
 type TeamMember = {
+  id: string
   name: string
   jiraAccountUserEmail: string
   startDate: string
@@ -75,10 +79,13 @@ const TeamMembers = () => {
       teamMember.jiraAccountUserEmail,
       teamMember.startDate,
       teamMember.endDate,
-      teamMember.billable ? <CheckCircleIcon color="primary" /> : "",
+      teamMember.billable ? <CheckIcon color="primary" /> : "",
       teamMember.endDate
         ? t("teamMembers.columns.status.active")
         : t("teamMembers.columns.status.inactive"),
+      <Link to={`${companyUrl}/team_members/${teamMember.id}/edit`}>
+        <EditOutlinedIcon color="primary" />
+      </Link>,
     ]) || []
 
   return (
