@@ -183,10 +183,19 @@ const ProjectFinancialReport = () => {
 
   const additionalHoursRows =
     data?.projectAdditionalHours.map((item) => [
-      item.obs,
-      item.hours,
       item.eventDate,
+      item.hours,
+      item.obs,
     ]) || []
+
+  const totalAdditionalHours = data?.projectAdditionalHours
+    .map((item) => item.hours)
+    .reduce(sum)
+
+  const additionalHoursFooterCells = [
+    t("footer.total").toString(),
+    Number(totalAdditionalHours),
+  ]
 
   return (
     <ProjectPage pageName={t("title")}>
@@ -232,11 +241,12 @@ const ProjectFinancialReport = () => {
         <Table
           title={t("additionalHours.title").toString()}
           headerCells={[
-            t("additionalHours.columns.obs").toString(),
-            t("additionalHours.columns.hours").toString(),
             t("additionalHours.columns.eventDate").toString(),
+            t("additionalHours.columns.hours").toString(),
+            t("additionalHours.columns.obs").toString(),
           ]}
           rows={additionalHoursRows}
+          footerCells={additionalHoursFooterCells}
         />
       </Container>
     </ProjectPage>
