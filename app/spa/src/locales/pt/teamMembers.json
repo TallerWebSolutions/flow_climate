@@ -6,6 +6,8 @@
     "start": "Início",
     "finish": "Fim",
     "billable": "Faturável?",
+    "monthlyPayment": "Pagamento",
+    "hoursPerMonth": "Horas por Mês",
     "status": {
       "title": "Status",
       "active": "Ativo",

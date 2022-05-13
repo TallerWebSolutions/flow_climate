@@ -6,6 +6,8 @@
     "start": "Start",
     "finish": "Finish",
     "billable": "Billable",
+    "monthlyPayment": "Payment",
+    "hoursPerMonth": "Hours per Month",
     "status": {
       "title": "Status",
       "active": "Active",
