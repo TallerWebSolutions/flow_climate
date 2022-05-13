@@ -57,9 +57,18 @@ type Demand = {
   effortUpstream: number
 }
 
+type AdditionalHours = {
+  id: string
+  type: number
+  description: string
+  hours: number
+  date: string
+}
+
 type FinancialReportDemandsDTO = {
   finishedDemands: Demand[]
   discardedDemands: Demand[]
+  additionalHours: AdditionalHours[]
 }
 
 const sum = (a: number, b: number) => a + b
@@ -159,6 +168,13 @@ const ProjectFinancialReport = () => {
     ).toFixed(2),
   ]
 
+  const additionalHoursRows = data?.additionalHours.map((item) => [
+    item.type,
+    item.description,
+    item.hours,
+    item.date,
+  ])
+
   return (
     <ProjectPage pageName={t("title")}>
       <Container
@@ -188,7 +204,7 @@ const ProjectFinancialReport = () => {
           footerCells={finishedDemandsFooter}
         />
         <Table
-          title="Demandas Descartadas"
+          title={t("discardedDemands.title")}
           headerCells={[
             t("discardedDemands.code").toString(),
             t("discardedDemands.demandTitle").toString(),
@@ -199,6 +215,16 @@ const ProjectFinancialReport = () => {
           ]}
           rows={discardedDemandsRows}
           footerCells={discardedDemandsFooter}
+        />
+        <Table
+          title={t("additionalHours.title").toString()}
+          headerCells={[
+            t("additionalHours.type").toString(),
+            t("additionalHours.description").toString(),
+            t("additionalHours.hours").toString(),
+            t("additionalHours.date").toString(),
+          ]}
+          rows={[]}
         />
       </Container>
     </ProjectPage>
