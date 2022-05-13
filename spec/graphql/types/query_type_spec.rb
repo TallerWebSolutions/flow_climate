@@ -783,4 +783,76 @@ RSpec.describe Types::QueryType do
       expect(result.dig('data', 'teamMembers').second['teams'].map { |team_query| team_query['name'] }).to match_array %w[xpto foo]
     end
   end
+
+  describe '#team_member' do
+    it 'returns the team member and its fields' do
+      company = Fabricate :company
+      team = Fabricate :team, company: company
+      team_member = Fabricate :team_member, company: company
+      Fabricate :membership, team_member: team_member, team: team
+
+      query =
+        %(query {
+        me {
+          id
+          fullName
+          language
+          currentCompany {
+            name
+          }
+          avatar {
+            imageSource
+          }
+        }
+        teamMember(id: #{team_member.id}) {
+          id
+          name
+          startDate
+          endDate
+          jiraAccountUserEmail
+          jiraAccountId
+          billable
+          hoursPerMonth
+          monthlyPayment
+          teams {
+            name
+          }
+        }
+      })
+
+      user = Fabricate :user, companies: [company], last_company_id: company.id
+
+      context = {
+        current_user: user
+      }
+
+      result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
+      expect(result.dig('data', 'me')).to eq({
+                                               'id' => user.id.to_s,
+                                               'fullName' => user.full_name,
+                                               'language' => user.language,
+                                               'currentCompany' => {
+                                                 'name' => user.last_company&.name
+                                               },
+                                               'avatar' => {
+                                                 'imageSource' => user.avatar.url
+                                               }
+                                             })
+
+      expect(result.dig('data', 'teamMember')).to eq({
+                                                       'id' => team_member.id.to_s,
+                                                       'name' => team_member.name,
+                                                       'startDate' => team_member.start_date.iso8601,
+                                                       'endDate' => team_member.end_date.iso8601,
+                                                       'jiraAccountUserEmail' => team_member.jira_account_user_email,
+                                                       'jiraAccountId' => team_member.jira_account_id,
+                                                       'billable' => team_member.billable,
+                                                       'hoursPerMonth' => team_member.hours_per_month,
+                                                       'monthlyPayment' => team_member.monthly_payment.to_f,
+                                                       'teams' => [{
+                                                         'name' => team.name
+                                                       }]
+                                                     })
+    end
+  end
 end

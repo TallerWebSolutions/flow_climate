@@ -2,29 +2,21 @@
 
 module Types
   class QueryType < Types::BaseObject
-    field :teams,
-          [Types::TeamType],
-          null: true,
-          description: 'Set of teams'
+    field :teams, [Types::TeamType], null: true, description: 'Set of teams'
 
-    field :team,
-          Types::TeamType,
-          null: true,
-          description: 'A team with consolidations' do
+    field :team, Types::TeamType, null: true, description: 'A team with consolidations' do
       argument :id, Int
     end
 
-    field :project,
-          Types::ProjectType,
-          null: true,
-          description: 'A plain project' do
+    field :project, Types::ProjectType, null: true, description: 'A plain project' do
       argument :id, Int
     end
 
-    field :tasks_list,
-          Types::TasksListType,
-          null: true,
-          description: 'A list of tasks using the arguments as search parameters' do
+    field :team_member, Types::TeamMemberType, null: true, description: 'A plain team_member' do
+      argument :id, Int
+    end
+
+    field :tasks_list, Types::TasksListType, null: true, description: 'A list of tasks using the arguments as search parameters' do
       argument :page_number, Int, required: false
       argument :limit, Int, required: false
       argument :title, String, required: false
@@ -36,18 +28,12 @@ module Types
       argument :until_date, GraphQL::Types::ISO8601Date, required: false
     end
 
-    field :project_consolidations,
-          [Types::ProjectConsolidationType],
-          null: true,
-          description: 'Project consolidations' do
+    field :project_consolidations, [Types::ProjectConsolidationType], null: true, description: 'Project consolidations' do
       argument :project_id, Int
       argument :last_data_in_week, Boolean, required: false
     end
 
-    field :demands,
-          [Types::DemandType],
-          null: true,
-          description: 'Demands of a project' do
+    field :demands, [Types::DemandType], null: true, description: 'Demands of a project' do
       argument :project_id, Int, required: true
       argument :limit, Int
       argument :finished, Boolean
@@ -75,6 +61,10 @@ module Types
 
     def project(id:)
       Project.find(id)
+    end
+
+    def team_member(id:)
+      TeamMember.find(id)
     end
 
     def tasks_list(page_number: 1, limit: 25, title: nil, status: nil, initiative_id: nil, project_id: nil, team_id: nil, from_date: nil, until_date: nil)
