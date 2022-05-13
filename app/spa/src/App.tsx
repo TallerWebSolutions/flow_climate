@@ -22,7 +22,7 @@ import TasksPage from "./pages/Tasks/Tasks"
 import CreateTeam from "./pages/Teams/CreateTeam"
 import EditTeam from "./pages/Teams/EditTeam"
 import Teams from "./pages/Teams/Teams"
-import CompanyTeamMembers from "./pages/Company/CompanyTeamMembers"
+import TeamMembers from "./pages/TeamMembers/TeamMembers"
 import User from "./modules/user/user.types"
 
 const ME_QUERY = gql`
@@ -70,7 +70,7 @@ const App = () => {
           <Routes>
             <Route
               path="/companies/:companyNickName/team_members"
-              element={<CompanyTeamMembers />}
+              element={<TeamMembers />}
             />
             <Route
               path="/companies/:companyNickName/projects/:projectId"

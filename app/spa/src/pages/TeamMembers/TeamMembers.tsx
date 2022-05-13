@@ -5,7 +5,7 @@ import BasicPage from "../../components/BasicPage"
 import Table from "../../components/Table"
 import { MeContext } from "../../contexts/MeContext"
 
-const CompanyTeamMembers = () => {
+const TeamMembers = () => {
   const { t } = useTranslation(["company"])
   const { me } = useContext(MeContext)
   const companyUrl = `/companies/${me?.currentCompany?.slug}`
@@ -34,4 +34,4 @@ const CompanyTeamMembers = () => {
   )
 }
 
-export default CompanyTeamMembers
+export default TeamMembers
