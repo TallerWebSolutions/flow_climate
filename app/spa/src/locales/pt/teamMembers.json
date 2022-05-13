@@ -16,6 +16,10 @@
     "title": "Colaboradores"
   },
   "edit": {
-    "title": "Colaborador"
+    "title": "Colaborador",
+    "form": {
+      "save": "Salvar",
+      "cancel": "Cancelar"
+    }
   }
 }

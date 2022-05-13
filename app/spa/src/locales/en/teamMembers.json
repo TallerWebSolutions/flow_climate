@@ -16,6 +16,10 @@
     "title": "Employees"
   },
   "edit": {
-    "title": "Employee"
+    "title": "Employee",
+    "form": {
+      "save": "Save",
+      "cancel": "Cancel"
+    }
   }
 }
