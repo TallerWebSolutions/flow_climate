@@ -328,7 +328,7 @@ const TaskCharts = ({ filters }: TasksChartProps) => {
 
       setCompletionTimeHistogramData(mountedCompletionTimeHistogramChartData)
     }
-  }, [data, loading, t])
+  }, [data, loading, t, me?.currentCompany])
 
   const taskList = data?.tasksList
   const companySlug = String(company?.slug)
