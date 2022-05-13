@@ -8,6 +8,8 @@
     "billable": "Faturável?",
     "monthlyPayment": "Pagamento",
     "hoursPerMonth": "Horas por Mês",
+    "jiraAccountUserEmail": "Email",
+    "jiraAccountId": "ID da Conta do Jira",
     "status": {
       "title": "Status",
       "active": "Ativo",

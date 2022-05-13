@@ -8,6 +8,8 @@
     "billable": "Billable",
     "monthlyPayment": "Payment",
     "hoursPerMonth": "Hours per Month",
+    "jiraAccountUserEmail": "User Email",
+    "jiraAccountId": "Jira Account ID",
     "status": {
       "title": "Status",
       "active": "Active",

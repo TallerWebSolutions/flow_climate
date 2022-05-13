@@ -30,10 +30,6 @@ const FORM_VALUES_QUERY = gql`
       billable
       hoursPerMonth
       monthlyPayment
-      teams {
-        id
-        name
-      }
     }
   }
 `
@@ -43,12 +39,12 @@ const EDIT_TEAM_MEMBER_MUTATION = gql`
     $id: Int!
     $name: String!
     $startDate: ISO8601Date!
-    $endDate: ISO8601Date!
-    $jiraAccountUserEmail: String!
-    $jiraAccountId: String!
+    $endDate: ISO8601Date
+    $jiraAccountUserEmail: String
+    $jiraAccountId: String
     $billable: Boolean!
     $hoursPerMonth: Int!
-    $monthlyPayment: Float!
+    $monthlyPayment: Float
   ) {
     updateTeamMember(
       teamMemberId: $id
@@ -63,6 +59,14 @@ const EDIT_TEAM_MEMBER_MUTATION = gql`
     ) {
       updatedTeamMember {
         id
+        name
+        startDate
+        endDate
+        jiraAccountUserEmail
+        jiraAccountId
+        billable
+        hoursPerMonth
+        monthlyPayment
       }
     }
   }
@@ -105,20 +109,21 @@ const EditTeamMember = () => {
     },
   ]
 
-  const handleEditTeamMember = (data: FieldValues) =>
-    editTeamMember({
+  const handleEditTeamMember = (data: FieldValues) => {
+    return editTeamMember({
       variables: {
         id: Number(teamMemberId),
         name: data.name,
         startDate: data.startDate,
-        endDate: data.endDate,
+        endDate: data.endDate.length ? data.endDate : null,
         jiraAccountUserEmail: data.jiraAccountUserEmail,
         jiraAccountId: data.jiraAccountId,
         billable: data.billable,
-        hoursPerMonth: data.hoursPerMonth,
-        monthlyPayment: data.monthlyPayment,
+        hoursPerMonth: Number(data.hoursPerMonth),
+        monthlyPayment: Number(data.monthlyPayment),
       },
     })
+  }
 
   return (
     <BasicPage breadcrumbsLinks={breadcrumbsLinks} title={t("edit.title")}>
@@ -181,6 +186,24 @@ const EditTeamMember = () => {
               <Checkbox
                 {...register("billable")}
                 defaultChecked={teamMember.billable}
+              />
+            </FormControl>
+            <FormControl sx={{ marginBottom: 4 }}>
+              <InputLabel htmlFor="jiraAccountUserEmail">
+                {t("columns.jiraAccountUserEmail")}
+              </InputLabel>
+              <Input
+                {...register("jiraAccountUserEmail")}
+                defaultValue={teamMember.jiraAccountUserEmail}
+              />
+            </FormControl>
+            <FormControl sx={{ marginBottom: 4 }}>
+              <InputLabel htmlFor="jiraAccountId">
+                {t("columns.jiraAccountId")}
+              </InputLabel>
+              <Input
+                {...register("jiraAccountId")}
+                defaultValue={teamMember.jiraAccountId}
               />
             </FormControl>
             <Box sx={{ display: "flex", justifyContent: "flex-start" }}>
