@@ -47,7 +47,7 @@ const CreateProjectAditionalHours = () => {
       update: () => navigate(financialReportUrl),
     }
   )
-  const handleCreateAdditionalHours = (data: FieldValues) => {
+  const handleCreateAdditionalHours = (data: FieldValues) =>
     createAdditionalHours({
       variables: {
         projectId: Number(projectId),
@@ -56,12 +56,7 @@ const CreateProjectAditionalHours = () => {
         eventDate: data.eventDate,
       },
     })
-  }
 
-  if (error) {
-    // eslint-disable-next-line no-console
-    console.error(error)
-  }
   if (loading)
     return (
       <Backdrop open>
