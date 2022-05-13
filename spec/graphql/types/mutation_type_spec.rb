@@ -255,4 +255,54 @@ RSpec.describe Types::MutationType do
       end
     end
   end
+
+  describe 'update_team_member' do
+    let(:company) { Fabricate :company }
+    let(:user) { Fabricate :user, companies: [company], last_company_id: company.id }
+    let(:context) { { current_user: user } }
+
+    describe '#resolve' do
+      let(:team_member) { Fabricate :team_member, company: company, name: 'bar' }
+      let!(:base_date) { Time.zone.now }
+
+      let(:mutation) do
+        %(mutation {
+            updateTeamMember(teamMemberId: #{team_member.id}, name: "foo", startDate: "#{(base_date - 2.days).iso8601}", endDate: "#{base_date.iso8601}", jiraAccountUserEmail: "foo@bar.com", jiraAccountId: "12345", hoursPerMonth: 10, monthlyPayment: 200.32) {
+              updatedTeamMember {
+                id
+              }
+            }
+          })
+      end
+
+      context 'when the project exists' do
+        it 'succeeds' do
+          result = FlowClimateSchema.execute(mutation, variables: nil, context: context).as_json
+          expect(result['data']['updateTeamMember']['updatedTeamMember']['id']).to eq team_member.id.to_s
+          updated_member = team_member.reload
+          expect(updated_member.name).to eq 'foo'
+          expect(updated_member.start_date).to eq((base_date - 2.days).to_date)
+          expect(updated_member.end_date).to eq base_date.to_date
+          expect(updated_member.jira_account_user_email).to eq 'foo@bar.com'
+          expect(updated_member.jira_account_id).to eq '12345'
+          expect(updated_member.jira_account_id).to eq '12345'
+          expect(updated_member.hours_per_month).to eq 10
+          expect(updated_member.monthly_payment).to eq 200.32
+        end
+      end
+
+      context 'when context does not have the current user' do
+        it 'fails to update' do
+          context = {
+            current_user: nil
+          }
+
+          result = FlowClimateSchema.execute(mutation, variables: nil, context: context).as_json
+          expect(result['data']['updateTeamMember']['updatedTeamMember']['id']).to eq team_member.id.to_s
+          updated_member = team_member.reload
+          expect(updated_member.name).to eq 'bar'
+        end
+      end
+    end
+  end
 end
