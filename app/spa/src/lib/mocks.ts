@@ -305,11 +305,3 @@ const taskCompanyMock: Company = {
   projects: [projectMock],
   teams: [teamMock],
 }
-
-export const tasksSelectsMock = {
-  data: {
-    me: {
-      currentCompany: taskCompanyMock,
-    },
-  },
-}

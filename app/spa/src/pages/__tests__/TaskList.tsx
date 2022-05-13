@@ -10,9 +10,10 @@ import { act } from "react-dom/test-utils"
 import { I18nextProvider } from "react-i18next"
 import { MemoryRouter, Route, Routes } from "react-router-dom"
 import i18n from "../../lib/i18n"
-import { tasksMock, tasksSelectsMock } from "../../lib/mocks"
+import { tasksMock, meMock } from "../../lib/mocks"
 import { TASKS_LIST_QUERY } from "../Tasks/List"
-import TasksPage, { SELECT_FILTERS_QUERY } from "../Tasks/Tasks"
+import TasksPage from "../Tasks/Tasks"
+import { ME_QUERY } from "../../App"
 
 export type TaskFilters = {
   page: number
@@ -61,9 +62,9 @@ describe("pages/Task/List", () => {
         },
         {
           request: {
-            query: SELECT_FILTERS_QUERY,
+            query: ME_QUERY,
           },
-          result: { ...tasksSelectsMock },
+          result: { ...meMock },
         },
       ]
 
@@ -94,9 +95,9 @@ describe("pages/Task/List", () => {
       const mocks = [
         {
           request: {
-            query: SELECT_FILTERS_QUERY,
+            query: ME_QUERY,
           },
-          result: { ...tasksSelectsMock },
+          result: { ...meMock },
         },
         {
           request: {

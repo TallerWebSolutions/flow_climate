@@ -25,7 +25,7 @@ import Teams from "./pages/Teams/Teams"
 import TeamMembers from "./pages/TeamMembers/TeamMembers"
 import User from "./modules/user/user.types"
 
-const ME_QUERY = gql`
+export const ME_QUERY = gql`
   query Me {
     me {
       id
