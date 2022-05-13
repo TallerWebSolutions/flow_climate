@@ -92,8 +92,8 @@ pt-BR:
         one: Time
         other: Times
       team_member:
-        one: Membro do Time
-        other: Membros do Time
+        one: Colaborador
+        other: Colaboradores
       demand:
         one: Demanda
         other: Demandas

@@ -38,15 +38,23 @@ en:
         one: 1 error prohibited this %{model} from being saved
         other: "%{count} errors prohibited this %{model} from being saved"
   activerecord:
-    plan:
-      one: Plan
-      other: Plans
-    user_plan:
-      one: User Plan
-      other: User Plans
-    risk_review_action_item:
-      one: Risk Review Action Item
-      other: Risk Review Action Items
+    models:
+      plan:
+        one: Plan
+        other: Plans
+      user_plan:
+        one: User Plan
+        other: User Plans
+      risk_review_action_item:
+        one: Risk Review Action Item
+        other: Risk Review Action Items
+      team_member:
+        one: Employee
+        other: Employees
+      jira/jira_account: "Jira Accounts"
+      portfolio_unit:
+        one: "Portfolio Units"
+        other: "Portfolio Units"
     attributes:
       user:
         created_at: Joined At
@@ -235,11 +243,6 @@ en:
           already_answered: "Already answered question."
         score_matrix_answer:
           value_already_used: "Value already used."
-    models:
-      jira/jira_account: "Jira Accounts"
-      portfolio_unit:
-        one: "Portfolio Units"
-        other: "Portfolio Units"
   product:
     name:
       uniqueness: "Should have only one to the same customer."

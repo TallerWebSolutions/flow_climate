@@ -72,6 +72,9 @@ coca:
       project:
         one: "Project"
         other: "Projects"
+      team_member:
+        one: "Employee"
+        other: "Employees"
     attributes:
       user:
         created_at: Joined At
