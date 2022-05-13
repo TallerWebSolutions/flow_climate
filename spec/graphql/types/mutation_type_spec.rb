@@ -267,7 +267,7 @@ RSpec.describe Types::MutationType do
 
       let(:mutation) do
         %(mutation {
-            updateTeamMember(teamMemberId: #{team_member.id}, name: "foo", startDate: "#{(base_date - 2.days).iso8601}", endDate: "#{base_date.iso8601}", jiraAccountUserEmail: "foo@bar.com", jiraAccountId: "12345", hoursPerMonth: 10, monthlyPayment: 200.32) {
+            updateTeamMember(teamMemberId: #{team_member.id}, name: "foo", startDate: "#{(base_date - 2.days).iso8601}", endDate: "#{base_date.iso8601}", jiraAccountUserEmail: "foo@bar.com", jiraAccountId: "12345", hoursPerMonth: 10, monthlyPayment: 200.32, billable: true) {
               updatedTeamMember {
                 id
               }
@@ -288,6 +288,7 @@ RSpec.describe Types::MutationType do
           expect(updated_member.jira_account_id).to eq '12345'
           expect(updated_member.hours_per_month).to eq 10
           expect(updated_member.monthly_payment).to eq 200.32
+          expect(updated_member.billable).to be true
         end
       end
 
