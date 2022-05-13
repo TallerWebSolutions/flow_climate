@@ -1,9 +1,17 @@
-import { FormControl, FormGroup, Input, InputLabel } from "@mui/material"
+import {
+  FormControl,
+  FormGroup,
+  Input,
+  InputLabel,
+  Backdrop,
+  CircularProgress,
+  Box,
+  Button,
+} from "@mui/material"
 import { useContext } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
-import { useParams } from "react-router-dom"
-import { Backdrop, CircularProgress } from "@mui/material"
+import { useParams, Link } from "react-router-dom"
 import { gql, useQuery, useMutation } from "@apollo/client"
 
 import BasicPage from "../../components/BasicPage"
@@ -29,6 +37,36 @@ const FORM_VALUES_QUERY = gql`
   }
 `
 
+const EDIT_TEAM_MEMBER_MUTATION = gql`
+  mutation EditTeamMember(
+    $id: Int!
+    $name: String!
+    $startDate: Date!
+    $endDate: Date!
+    $jiraAccountUserEmail: String!
+    $jiraAccountId: String!
+    $billable: Boolean!
+    $hoursPerMonth: Float!
+    $monthlyPayment: Float!
+    $teams: [Int!]!
+  ) {
+    updateTeamMember(
+      teamMemberId: $id
+      name: $name
+      startDate: $startDate
+      endDate: $endDate
+      jiraAccountUserEmail: $jiraAccountUserEmail
+      jiraAccountId: $jiraAccountId
+      hoursPerMonth: $hoursPerMonth
+      monthlyPayment: $monthlyPayment
+    ) {
+      updatedTeamMember {
+        id
+      }
+    }
+  }
+`
+
 const EditTeamMember = () => {
   const { t } = useTranslation(["teamMembers"])
   const { teamMemberId } = useParams()
@@ -39,6 +77,9 @@ const EditTeamMember = () => {
       teamMemberId: Number(teamMemberId),
     },
   })
+  const [editTeamMember, { loading: mutationLoading }] = useMutation(
+    EDIT_TEAM_MEMBER_MUTATION
+  )
 
   if (loading)
     return (
@@ -51,11 +92,12 @@ const EditTeamMember = () => {
   if (!teamMember) return <strong>{t("teamMembers.notFound")}</strong>
 
   const companyUrl = `/companies/${me?.currentCompany?.slug}`
+  const teamMembersUrl = `${companyUrl}/team_members`
   const breadcrumbsLinks = [
     { name: me?.currentCompany?.name || "", url: companyUrl },
     {
       name: t("list.title"),
-      url: `${companyUrl}/team_members`,
+      url: teamMembersUrl,
     },
     {
       name: t("edit.title"),
@@ -115,6 +157,14 @@ const EditTeamMember = () => {
               defaultValue={teamMember.hoursPerMonth}
             />
           </FormControl>
+          <Box sx={{ display: "flex", justifyContent: "flex-start" }}>
+            <Button type="submit" variant="contained" sx={{ marginRight: 2 }}>
+              {t("edit.form.save")}
+            </Button>
+            <Button variant="outlined" component={Link} to={teamMembersUrl}>
+              {t("edit.form.cancel")}
+            </Button>
+          </Box>
         </FormGroup>
       </form>
     </BasicPage>
