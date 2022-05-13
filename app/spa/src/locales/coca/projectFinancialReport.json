@@ -30,5 +30,13 @@
     "save": "Save",
     "cancel": "Cancel",
     "eventDate": "Event Date"
+  },
+  "additionalHours": {
+    "title": "Additional Hours",
+    "columns": {
+      "eventDate": "Date",
+      "hours": "Hours",
+      "obs": "Obs"
+    }
   }
 }

@@ -232,9 +232,9 @@ const ProjectFinancialReport = () => {
         <Table
           title={t("additionalHours.title").toString()}
           headerCells={[
-            t("additionalHours.description").toString(),
-            t("additionalHours.hours").toString(),
-            t("additionalHours.date").toString(),
+            t("additionalHours.columns.obs").toString(),
+            t("additionalHours.columns.hours").toString(),
+            t("additionalHours.columns.eventDate").toString(),
           ]}
           rows={additionalHoursRows}
         />

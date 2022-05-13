@@ -29,5 +29,14 @@
     "obs": "Observações",
     "save": "Salvar",
     "eventDate": "Data do evento"
+  },
+
+  "additionalHours": {
+    "title": "Horas Adicionais",
+    "columns": {
+      "eventDate": "Data",
+      "hours": "Horas",
+      "obs": "Obs"
+    }
   }
 }
