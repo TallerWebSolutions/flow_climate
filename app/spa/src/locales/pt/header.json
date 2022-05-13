@@ -1,13 +1,14 @@
 {
   "teams": "Times",
-  "customers": "Clients",
+  "team_members": "Colaboradores",
+  "customers": "Clientes",
   "products": "Produtos",
   "initiatives": "Iniciativas",
   "projects": "Projetos",
   "demands": "Demandas",
   "tasks": "Tarefas",
-  "demand_blocks": "Bloqueios de Demanda",
-  "flow_events": "Flow Events",
+  "demand_blocks": "Bloqueios",
+  "flow_events": "Eventos",
   "token_success_message": "Token enviado com sucesso! Em poucos minutos estará disponível em seu e-mail.",
   "userMenu": {
     "myAccount": "Minha Conta",

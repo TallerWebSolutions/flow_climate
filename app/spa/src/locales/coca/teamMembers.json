@@ -1,0 +1,18 @@
+{
+  "teamMembers": {
+    "title": "Employees",
+    "columns": {
+      "name": "Name",
+      "teams": "Teams",
+      "email": "Email",
+      "start": "Start",
+      "finish": "Finish",
+      "billable": "Billable",
+      "status": {
+        "title": "Status",
+        "active": "Active",
+        "inactive": "Inactive"
+      }
+    }
+  }
+}

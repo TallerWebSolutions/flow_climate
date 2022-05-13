@@ -70,6 +70,15 @@ const theme = createTheme({
         },
       },
     },
+    MuiTableHead: {
+      styleOverrides: {
+        root: {
+          th: {
+            fontWeight: "bold",
+          },
+        },
+      },
+    },
     MuiButton: {
       variants: [
         {

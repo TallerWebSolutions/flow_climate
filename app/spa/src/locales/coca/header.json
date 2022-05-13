@@ -1,12 +1,13 @@
 {
   "teams": "Teams",
+  "teams_members": "Employees",
   "customers": "Customer",
   "products": "Products",
   "initiatives": "Initiatives",
   "projects": "Projects",
   "demands": "Activities",
   "tasks": "Deliverables",
-  "demand_blocks": "Acitivity Blocks",
+  "demand_blocks": "Blocks",
   "flow_events": "Flow Events",
   "token_success_message": "Token sent successfully! In few minutes will be available in your email.",
   "userMenu": {

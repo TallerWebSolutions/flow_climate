@@ -747,15 +747,15 @@ RSpec.describe Types::QueryType do
         %(
         query {
           teamMembers(companyId: #{company.id}) {
-    name
-    jiraAccountUserEmail
-    startDate
-    endDate
-    billable
-    teams {
-      name
-    }
-  }
+            name
+            jiraAccountUserEmail
+            startDate
+            endDate
+            billable
+            teams {
+              name
+            }
+          }
         }
       )
 

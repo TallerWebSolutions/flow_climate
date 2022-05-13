@@ -1,0 +1,18 @@
+{
+  "teamMembers": {
+    "title": "Colaboradores",
+    "columns": {
+      "name": "Nome",
+      "teams": "Times",
+      "email": "Email",
+      "start": "Início",
+      "finish": "Fim",
+      "billable": "Faturável?",
+      "status": {
+        "title": "Status",
+        "active": "Ativo",
+        "inactive": "Inativo"
+      }
+    }
+  }
+}
