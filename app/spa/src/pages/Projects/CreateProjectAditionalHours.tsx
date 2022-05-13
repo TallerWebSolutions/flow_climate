@@ -37,10 +37,10 @@ const CREATE_ADITIONAL_HOURS_MUTATION = gql`
 
 const CreateProjectAditionalHours = () => {
   const { t } = useTranslation("projectFinancialReport")
-  const { projectId, companyNickName } = useParams()
+  const { projectId, companySlug } = useParams()
   const { register, handleSubmit } = useForm()
   const navigate = useNavigate()
-  const financialReportUrl = `/companies/${companyNickName}/projects/${projectId}/financial_report`
+  const financialReportUrl = `/companies/${companySlug}/projects/${projectId}/financial_report`
   const [createAdditionalHours, { loading, error }] = useMutation(
     CREATE_ADITIONAL_HOURS_MUTATION,
     {

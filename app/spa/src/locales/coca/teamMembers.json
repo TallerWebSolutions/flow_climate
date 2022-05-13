@@ -1,5 +1,5 @@
 {
-  "teamMembers": {
+  "list": {
     "title": "Employees",
     "columns": {
       "name": "Name",
@@ -13,6 +13,12 @@
         "active": "Active",
         "inactive": "Inactive"
       }
+    }
+  },
+  "edit": {
+    "title": "Employee",
+    "form": {
+      "name": "Name"
     }
   }
 }

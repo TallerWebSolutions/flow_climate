@@ -94,7 +94,7 @@ type ReplenishingCacheResult = {
 type ReplenishingCacheDTO = ReplenishingCacheResult | undefined
 
 const Replenishing = () => {
-  const { teamId, companyNickName = "" } = useParams()
+  const { teamId, companySlug = "" } = useParams()
   const { data, loading, error } = useQuery<ReplenishingDTO>(QUERY, {
     variables: { teamId: Number(teamId) },
   })
@@ -171,7 +171,7 @@ const Replenishing = () => {
           <ReplenishingTeamInfo team={normalizeTeamInfo(data)} />
           <ReplenishingProjectsInfo
             projects={normalizeProjectInfo(data)}
-            companySlug={companyNickName}
+            companySlug={companySlug}
           />
         </Fragment>
       )}

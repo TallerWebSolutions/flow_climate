@@ -49,18 +49,18 @@ const TeamMembers = () => {
   const breadcrumbsLinks = [
     { name: me?.currentCompany?.name || "", url: companyUrl },
     {
-      name: t("teamMembers.title"),
+      name: t("list.title"),
     },
   ]
 
   const membersColumns = [
-    t("teamMembers.columns.name"),
-    t("teamMembers.columns.teams"),
-    t("teamMembers.columns.email"),
-    t("teamMembers.columns.start"),
-    t("teamMembers.columns.finish"),
-    t("teamMembers.columns.billable"),
-    t("teamMembers.columns.status.title"),
+    t("list.columns.name"),
+    t("list.columns.teams"),
+    t("list.columns.email"),
+    t("list.columns.start"),
+    t("list.columns.finish"),
+    t("list.columns.billable"),
+    t("list.columns.status.title"),
   ]
   const { data, loading } = useQuery<TeamMembersDTO>(TEAM_MEMBERS_QUERY, {
     variables: { companyId: Number(companyId) },
@@ -81,8 +81,8 @@ const TeamMembers = () => {
       teamMember.endDate,
       teamMember.billable ? <CheckIcon color="primary" /> : "",
       teamMember.endDate
-        ? t("teamMembers.columns.status.active")
-        : t("teamMembers.columns.status.inactive"),
+        ? t("list.columns.status.active")
+        : t("list.columns.status.inactive"),
       <Link to={`${companyUrl}/team_members/${teamMember.id}/edit`}>
         <EditOutlinedIcon color="primary" />
       </Link>,

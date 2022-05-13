@@ -23,6 +23,7 @@ import CreateTeam from "./pages/Teams/CreateTeam"
 import EditTeam from "./pages/Teams/EditTeam"
 import Teams from "./pages/Teams/Teams"
 import TeamMembers from "./pages/TeamMembers/TeamMembers"
+import EditTeamMember from "./pages/TeamMembers/EditTeamMember"
 import User from "./modules/user/user.types"
 
 export const ME_QUERY = gql`
@@ -69,59 +70,60 @@ const App = () => {
         <BrowserRouter>
           <Routes>
             <Route
-              path="/companies/:companyNickName/team_members"
+              path="/companies/:companySlug/team_members"
               element={<TeamMembers />}
             />
             <Route
-              path="/companies/:companyNickName/projects/:projectId"
+              path="/companies/:companySlug/team_members/:teamMemberId/edit"
+              element={<EditTeamMember />}
+            />
+            <Route
+              path="/companies/:companySlug/projects/:projectId"
               element={<ProjectCharts />}
             />
             <Route
-              path="/companies/:companyNickName/projects/:projectId/status_report_dashboard"
+              path="/companies/:companySlug/projects/:projectId/status_report_dashboard"
               element={<StatusReport />}
             />
             <Route
-              path="/companies/:companyNickName/projects/:projectId/risk_drill_down"
+              path="/companies/:companySlug/projects/:projectId/risk_drill_down"
               element={<RiskDrill />}
             />
             <Route
-              path="/companies/:companyNickName/projects/:projectId/lead_time_dashboard"
+              path="/companies/:companySlug/projects/:projectId/lead_time_dashboard"
               element={<LeadTimeDashboard />}
             />
             <Route
-              path="/companies/:companyNickName/projects/:projectId/statistics_tab"
+              path="/companies/:companySlug/projects/:projectId/statistics_tab"
               element={<Statistics />}
             />
             <Route
-              path="/companies/:companyNickName/projects/:projectId/financial_report"
+              path="/companies/:companySlug/projects/:projectId/financial_report"
               element={<ProjectFinancialReport />}
             />
             <Route
-              path="/companies/:companyNickName/projects/:projectId/project_additional_hours/new"
+              path="/companies/:companySlug/projects/:projectId/project_additional_hours/new"
               element={<CreateProjectAditionalHours />}
             />
+            <Route path="/companies/:companySlug/teams" element={<Teams />} />
             <Route
-              path="/companies/:companyNickName/teams"
-              element={<Teams />}
-            />
-            <Route
-              path="/companies/:companyNickName/teams/new"
+              path="/companies/:companySlug/teams/new"
               element={<CreateTeam />}
             />
             <Route
-              path="/companies/:companyNickName/teams/:teamId/edit"
+              path="/companies/:companySlug/teams/:teamId/edit"
               element={<EditTeam />}
             />
             <Route
-              path="/companies/:companyNickName/teams/:teamId/replenishing_consolidations"
+              path="/companies/:companySlug/teams/:teamId/replenishing_consolidations"
               element={<Replenishing />}
             />
             <Route
-              path="/companies/:companyNickName/tasks"
+              path="/companies/:companySlug/tasks"
               element={<TasksPage />}
             />
             <Route
-              path="/companies/:companyNickName/tasks/charts"
+              path="/companies/:companySlug/tasks/charts"
               element={<TasksPage initialTab={0} />}
             />
           </Routes>

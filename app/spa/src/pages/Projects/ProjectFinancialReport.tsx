@@ -67,7 +67,7 @@ const sum = (a: number, b: number) => a + b
 const ProjectFinancialReport = () => {
   const { t, i18n } = useTranslation(["projectFinancialReport"])
   const dateFormat = i18n.language === "pt-BR" ? "dd/MM/yy" : "MM/dd/yy"
-  const { projectId, companyNickName } = useParams()
+  const { projectId, companySlug } = useParams()
   const { data, loading } = useQuery<FinancialReportDemandsDTO>(QUERY, {
     variables: {
       projectId: Number(projectId),
@@ -83,9 +83,7 @@ const ProjectFinancialReport = () => {
 
   const finishedDemandsRows = data?.finishedDemands
     ? data.finishedDemands.map((demand) => [
-        <Link
-          href={`/companies/${companyNickName}/demands/${demand.externalId}`}
-        >
+        <Link href={`/companies/${companySlug}/demands/${demand.externalId}`}>
           {demand.externalId}
         </Link>,
         demand.demandTitle,
@@ -125,9 +123,7 @@ const ProjectFinancialReport = () => {
 
   const discardedDemandsRows = data?.discardedDemands
     ? data.discardedDemands.map((demand) => [
-        <Link
-          href={`/companies/${companyNickName}/demands/${demand.externalId}`}
-        >
+        <Link href={`/companies/${companySlug}/demands/${demand.externalId}`}>
           {demand.externalId}
         </Link>,
         demand.demandTitle,
@@ -170,7 +166,7 @@ const ProjectFinancialReport = () => {
       >
         <Button
           component={RouterLink}
-          to={`/companies/${companyNickName}/projects/${projectId}/project_additional_hours/new`}
+          to={`/companies/${companySlug}/projects/${projectId}/project_additional_hours/new`}
           variant="contained"
         >
           {t("registerAdditionalHours")}
