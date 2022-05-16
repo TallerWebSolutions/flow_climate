@@ -5,7 +5,8 @@ class InitiativesController < AuthenticatedController
   before_action :assign_initiative, except: %i[index new create]
 
   def index
-    @initiatives = @company.initiatives.order(start_date: :desc)
+    prepend_view_path Rails.root.join('public')
+    render 'spa-build/index'
   end
 
   def show

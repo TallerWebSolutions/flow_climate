@@ -1,0 +1,14 @@
+{
+  "initiatives": "Initiatives",
+  "create_initiatives_button": "New Initiative",
+  "initiatives_list_table": {
+    "name": "Name",
+    "start_date": "Start date",
+    "end_date": "End date",
+    "operational_risk": "Operational risk",
+    "projects": "Projects",
+    "demands": "Activitys",
+    "tasks": "Deliverables",
+    "deliveries": "Deliveries"
+  }
+}

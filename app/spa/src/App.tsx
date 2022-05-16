@@ -25,6 +25,7 @@ import Teams from "./pages/Teams/Teams"
 import TeamMembers from "./pages/TeamMembers/TeamMembers"
 import EditTeamMember from "./pages/TeamMembers/EditTeamMember"
 import User from "./modules/user/user.types"
+import InitiativesList from "./pages/Initiatives/InitiativesList"
 
 export const ME_QUERY = gql`
   query Me {
@@ -125,6 +126,11 @@ const App = () => {
             <Route
               path="/companies/:companySlug/tasks/charts"
               element={<TasksPage initialTab={0} />}
+            />
+
+            <Route
+              path="/companies/:companySlug/initiatives"
+              element={<InitiativesList />}
             />
           </Routes>
         </BrowserRouter>
