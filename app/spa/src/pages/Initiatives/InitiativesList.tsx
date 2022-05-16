@@ -72,7 +72,7 @@ const InitiativesList = () => {
       initiative.name,
       initiative.startDate,
       initiative.endDate,
-      initiative.currentTasksOperationalRisk,
+      `${(initiative.currentTasksOperationalRisk * 100).toFixed(2)}%`,
       initiative.projectsCount,
       initiative.demandsCount,
       initiative.tasksCount,
