@@ -265,18 +265,19 @@ const ProjectCharts = () => {
     }
   )
 
-  const projectStages = cumulativeFlowChartData?.yAxis.map((item) => item.name)
-
+  const cfdXaxis = cumulativeFlowChartData?.xAxis || []
+  const cfdYaxis = cumulativeFlowChartData?.yAxis || []
+  const projectStages = cfdYaxis.map((item) => item.name)
   const projectCumulativeFlowChartData = projectStages?.map(
     (stage, stageIndex) => {
-      const xAxis = cumulativeFlowChartData?.xAxis || []
-
       return {
         id: stage,
-        data: xAxis.map((x, index) => {
+        data: cfdXaxis.map((x, index) => {
+          const currentStageY = cfdYaxis[stageIndex]?.data[index] || 0
+          const previousStageY = cfdYaxis[stageIndex - 1]?.data[index] || 0
           return {
             x,
-            y: cumulativeFlowChartData?.yAxis[stageIndex]?.data[index],
+            y: Math.abs(currentStageY - previousStageY),
           }
         }),
       }
