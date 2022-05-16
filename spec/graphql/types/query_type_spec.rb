@@ -580,6 +580,66 @@ RSpec.describe Types::QueryType do
     end
   end
 
+  describe '#initiatives' do
+    let(:company) { Fabricate :company }
+
+    let(:query) do
+      %(query {
+        initiatives(companyId: #{company.id}) {
+          id
+          name
+          startDate
+          endDate
+          currentTasksOperationalRisk
+          projectsCount
+          demandsCount
+          tasksCount
+          tasksFinishedCount
+          remainingBacklogTasksPercentage
+        }
+      })
+    end
+
+    context 'when list initiatives' do
+      it 'returns initiatives' do
+        user = Fabricate :user
+
+        context = {
+          current_user: user
+        }
+
+        initiative = Fabricate :initiative, company: company, start_date: 16.days.ago
+        other_initiative = Fabricate :initiative, company: company, start_date: 12.days.ago
+
+        result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
+        expect(result.dig('data', 'initiatives')).to eq([{
+                                                          'id' => other_initiative.id.to_s,
+                                                          'name' => other_initiative.name,
+                                                          'startDate' => other_initiative.start_date.to_date.to_s,
+                                                          'endDate' => other_initiative.end_date.to_date.to_s,
+                                                          'currentTasksOperationalRisk' => other_initiative.current_tasks_operational_risk,
+                                                          'projectsCount' => other_initiative.projects.count,
+                                                          'demandsCount' => other_initiative.demands.count,
+                                                          'tasksCount' => other_initiative.tasks.count,
+                                                          'tasksFinishedCount' => other_initiative.tasks.finished.count,
+                                                          'remainingBacklogTasksPercentage' => other_initiative.remaining_backlog_tasks_percentage
+                                                        },
+                                                         {
+                                                           'id' => initiative.id.to_s,
+                                                           'name' => initiative.name,
+                                                           'startDate' => initiative.start_date.to_date.to_s,
+                                                           'endDate' => initiative.end_date.to_date.to_s,
+                                                           'currentTasksOperationalRisk' => initiative.current_tasks_operational_risk,
+                                                           'projectsCount' => initiative.projects.count,
+                                                           'demandsCount' => initiative.demands.count,
+                                                           'tasksCount' => initiative.tasks.count,
+                                                           'tasksFinishedCount' => initiative.tasks.finished.count,
+                                                           'remainingBacklogTasksPercentage' => initiative.remaining_backlog_tasks_percentage
+                                                         }])
+      end
+    end
+  end
+
   describe '#tasks' do
     let(:company) { Fabricate :company }
     let(:team) { Fabricate :team, company: company }

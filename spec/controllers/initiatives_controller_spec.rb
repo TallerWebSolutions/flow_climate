@@ -41,18 +41,9 @@ RSpec.describe InitiativesController, type: :controller do
 
     describe 'GET #index' do
       context 'with valid params' do
-        context 'with data' do
-          it 'assigns the instance variables and renders the template' do
-            initiative = Fabricate :initiative, company: company, name: 'foo', start_date: 3.days.ago, end_date: 1.day.from_now
-            other_initiative = Fabricate :initiative, company: company, name: 'bar', start_date: 2.days.ago, end_date: 2.days.from_now
-            Fabricate :initiative
+        before { get :index, params: { company_id: company.id } }
 
-            get :index, params: { company_id: company }
-
-            expect(assigns(:initiatives)).to eq [other_initiative, initiative]
-            expect(response).to render_template 'initiatives/index'
-          end
-        end
+        it { expect(response).to render_template 'spa-build/index' }
       end
 
       context 'with invalid params' do
