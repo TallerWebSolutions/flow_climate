@@ -94,15 +94,18 @@ const EditTeam = () => {
       </Backdrop>
     )
 
-  const team = data?.team!
+  const team = data?.team
   const teamID = data?.team.id
   const teamMaxWip = data?.team.maxWorkInProgress
-  const teamName = team.name
+  const teamName = team?.name
   const company = me?.currentCompany
   const companySlug = company?.slug
   const breadcrumbsLinks = [
-    { name: capitalizeFirstLetter(companySlug!), url: companySlug! },
-    { name: teamName, url: `/companies/${companySlug}/teams/${teamID}` },
+    {
+      name: company?.name || "",
+      url: `/companies/${companySlug}`,
+    },
+    { name: teamName || "", url: `/companies/${companySlug}/teams/${teamID}` },
     {
       name: t("edit_team.edit_team"),
     },
