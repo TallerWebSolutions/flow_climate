@@ -1,13 +1,45 @@
-import { Button } from "@mui/material"
+import { gql, useQuery } from "@apollo/client"
 import { useContext } from "react"
 import { useTranslation } from "react-i18next"
-import BasicPage from "../../components/BasicPage"
-import Table from "../../components/Table"
 import { MeContext } from "../../contexts/MeContext"
+import BasicPage from "../../components/BasicPage"
+import { Backdrop, Button, CircularProgress } from "@mui/material"
+import Table from "../../components/Table"
+import { Initiative } from "../../modules/initiative/initiative.types"
+
+type InitiativeListDTO = {
+  initiatives: Initiative[]
+}
+
+const INITIATIVES_LIST_QUERT = gql`
+  query initiativesList($companyId: Int!) {
+    initiatives(companyId: $companyId) {
+      id
+      name
+      startDate
+      endDate
+      currentTasksOperationalRisk
+      projectsCount
+      demandsCount
+      tasksCount
+      tasksFinishedCount
+      remainingBacklogTasksPercentage
+    }
+  }
+`
 
 const InitiativesList = () => {
   const { t } = useTranslation(["initiatives"])
   const { me } = useContext(MeContext)
+  const companyId = me?.currentCompany?.id
+  const { data, loading } = useQuery<InitiativeListDTO>(
+    INITIATIVES_LIST_QUERT,
+    {
+      variables: {
+        companyId: Number(companyId),
+      },
+    }
+  )
   const companyUrl = `/companies/${me?.currentCompany?.slug}`
   const createInitiativeUrl = `${companyUrl}/initiatives/new`
 
@@ -28,6 +60,25 @@ const InitiativesList = () => {
     t("initiatives_list_table.deliveries"),
   ]
 
+  if (loading)
+    return (
+      <Backdrop open>
+        <CircularProgress color="secondary" />
+      </Backdrop>
+    )
+
+  const initiativesList =
+    data?.initiatives.map((initiative) => [
+      initiative.name,
+      initiative.startDate,
+      initiative.endDate,
+      initiative.currentTasksOperationalRisk,
+      initiative.projectsCount,
+      initiative.demandsCount,
+      initiative.tasksCount,
+      initiative.tasksFinishedCount,
+    ]) || []
+
   return (
     <BasicPage title={t("initiatives")} breadcrumbsLinks={breadcrumbsLinks}>
       <Button
@@ -37,7 +88,7 @@ const InitiativesList = () => {
       >
         {t("create_initiatives_button")}
       </Button>
-      <Table headerCells={initiativesListHeaderCells} rows={[]} />
+      <Table headerCells={initiativesListHeaderCells} rows={initiativesList} />
     </BasicPage>
   )
 }

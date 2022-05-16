@@ -51,6 +51,10 @@ module Types
 
     field :me, Types::UserType, null: false
 
+    field :initiatives, [Types::InitiativeType] do
+      argument :company_id, Int, required: true
+    end  
+
     def teams
       me.last_company.teams.preload(:company) if me.last_company.present?
     end
@@ -97,6 +101,11 @@ module Types
 
     def me
       context[:current_user]
+    end
+
+    def initiatives(company_id:)
+      company = Company.find(company_id)
+      company.initiatives.order(:name)
     end
   end
 end
