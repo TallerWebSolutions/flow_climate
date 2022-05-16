@@ -53,7 +53,7 @@ module Types
 
     field :initiatives, [Types::InitiativeType] do
       argument :company_id, Int, required: true
-    end  
+    end
 
     def teams
       me.last_company.teams.preload(:company) if me.last_company.present?
@@ -105,7 +105,7 @@ module Types
 
     def initiatives(company_id:)
       company = Company.find(company_id)
-      company.initiatives.order(:name)
+      company.initiatives.order(start_date: :desc)
     end
   end
 end
