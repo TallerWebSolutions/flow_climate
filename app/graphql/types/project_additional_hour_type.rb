@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types
   class ProjectAdditionalHourType < Types::BaseObject
     field :id, ID, null: false

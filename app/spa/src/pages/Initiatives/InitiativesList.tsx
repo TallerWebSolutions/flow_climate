@@ -3,9 +3,10 @@ import { useContext } from "react"
 import { useTranslation } from "react-i18next"
 import { MeContext } from "../../contexts/MeContext"
 import BasicPage from "../../components/BasicPage"
-import { Backdrop, Button, CircularProgress } from "@mui/material"
+import { Backdrop, Button, CircularProgress, Link } from "@mui/material"
 import Table from "../../components/Table"
 import { Initiative } from "../../modules/initiative/initiative.types"
+import { formatDate } from "../../lib/date"
 
 type InitiativeListDTO = {
   initiatives: Initiative[]
@@ -69,9 +70,11 @@ const InitiativesList = () => {
 
   const initiativesList =
     data?.initiatives.map((initiative) => [
-      initiative.name,
-      initiative.startDate,
-      initiative.endDate,
+      <Link href={`${companyUrl}/initiatives/${initiative.id}`}>
+        {initiative.name}
+      </Link>,
+      formatDate({ date: initiative.startDate }),
+      formatDate({ date: initiative.endDate }),
       `${(initiative.currentTasksOperationalRisk * 100).toFixed(2)}%`,
       initiative.projectsCount,
       initiative.demandsCount,

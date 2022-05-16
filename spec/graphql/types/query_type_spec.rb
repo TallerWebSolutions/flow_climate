@@ -856,7 +856,6 @@ RSpec.describe Types::QueryType do
     end
   end
 
-
   describe '#project_additional_hours' do
     let(:company) { Fabricate :company }
     let(:project) { Fabricate :project, company: company }
