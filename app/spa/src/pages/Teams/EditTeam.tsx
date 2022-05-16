@@ -15,7 +15,7 @@ import { useParams } from "react-router-dom"
 import BasicPage from "../../components/BasicPage"
 import { MessagesContext } from "../../contexts/MessageContext"
 import { MeContext } from "../../contexts/MeContext"
-import { capitalizeFirstLetter, redirectTo } from "../../lib/func"
+import { redirectTo } from "../../lib/func"
 import { Team } from "../../modules/team/team.types"
 import User from "../../modules/user/user.types"
 
