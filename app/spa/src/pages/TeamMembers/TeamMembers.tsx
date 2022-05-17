@@ -62,9 +62,11 @@ const TeamMembers = () => {
     t("columns.billable"),
     t("columns.status.title"),
   ]
+
   const { data, loading } = useQuery<TeamMembersDTO>(TEAM_MEMBERS_QUERY, {
     variables: { companyId: Number(companyId) },
   })
+
   if (loading)
     return (
       <Backdrop open>

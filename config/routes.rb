@@ -154,7 +154,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :team_members, only: %i[index edit]
+    resources :team_members, only: %i[index edit show]
 
     resources :financial_informations, only: %i[new create edit update destroy]
 

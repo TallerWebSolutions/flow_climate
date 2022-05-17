@@ -12,4 +12,9 @@ class TeamMembersController < AuthenticatedController
     prepend_view_path Rails.root.join('public')
     render 'spa-build/index'
   end
+
+  def show
+    prepend_view_path Rails.root.join('public')
+    render 'spa-build/index'
+  end
 end

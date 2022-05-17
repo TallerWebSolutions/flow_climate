@@ -6,7 +6,7 @@ module Types
     field :name, String, null: false
     field :jira_account_id, String, null: true
     field :jira_account_user_email, String, null: true
-    field :start_date, GraphQL::Types::ISO8601Date, null: false
+    field :start_date, GraphQL::Types::ISO8601Date, null: true
     field :end_date, GraphQL::Types::ISO8601Date, null: true
     field :billable, Boolean, null: false
     field :hours_per_month, Int, null: false
