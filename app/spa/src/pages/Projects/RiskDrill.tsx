@@ -1,5 +1,4 @@
 import { gql, useQuery } from "@apollo/client"
-import { Backdrop, CircularProgress } from "@mui/material"
 import { useParams } from "react-router-dom"
 import {
   ProjectPage,
@@ -53,13 +52,6 @@ export const RiskDrill = () => {
       },
     }
   )
-
-  if (loading)
-    return (
-      <Backdrop open>
-        <CircularProgress color="secondary" />
-      </Backdrop>
-    )
 
   const flowLastFewWeeks = [
     {
@@ -149,7 +141,7 @@ export const RiskDrill = () => {
   ]
 
   return (
-    <ProjectPage pageName={"Risk Drill"}>
+    <ProjectPage pageName={"Risk Drill"} loading={loading}>
       <TicketGroup
         title="Fluxo das últimas 10 semanas"
         data={flowLastFewWeeks}

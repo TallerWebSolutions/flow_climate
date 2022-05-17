@@ -1,5 +1,12 @@
 import { ReactElement, useContext } from "react"
-import { Container, Typography, Box, Link } from "@mui/material"
+import {
+  Container,
+  Typography,
+  Box,
+  Link,
+  Backdrop,
+  CircularProgress,
+} from "@mui/material"
 import Header from "./Header"
 import MessagesBox from "./MessagesBox"
 import Breadcrumbs, { BreadcrumbsLink } from "./Breadcrumbs"
@@ -10,6 +17,7 @@ export type BasicPageProps = {
   title?: string
   children?: ReactElement | ReactElement[]
   actions?: ReactElement | ReactElement[]
+  loading?: boolean
 }
 
 const BasicPage = ({
@@ -17,8 +25,16 @@ const BasicPage = ({
   title,
   children,
   actions,
+  loading,
 }: BasicPageProps) => {
   const { messages } = useContext(MessagesContext)
+
+  if (loading)
+    return (
+      <Backdrop open>
+        <CircularProgress color="secondary" />
+      </Backdrop>
+    )
 
   return (
     <>

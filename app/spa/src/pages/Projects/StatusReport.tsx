@@ -1,5 +1,5 @@
 import { gql, useQuery } from "@apollo/client"
-import { Backdrop, CircularProgress, Box, Typography } from "@mui/material"
+import { Box, Typography } from "@mui/material"
 import { useParams } from "react-router-dom"
 import { ResponsiveBar } from "@nivo/bar"
 import { ResponsivePie } from "@nivo/pie"
@@ -52,13 +52,6 @@ const StatusReport = () => {
       id: Number(projectId),
     },
   })
-
-  if (loading)
-    return (
-      <Backdrop open>
-        <CircularProgress color="secondary" />
-      </Backdrop>
-    )
 
   const leadtime = data?.project.leadTimeP80
   const cost = Number(data?.project.currentCost)
@@ -132,7 +125,7 @@ const StatusReport = () => {
   ]
 
   return (
-    <ProjectPage pageName={"Status Report"}>
+    <ProjectPage pageName={"Status Report"} loading={loading}>
       <TicketGroup title="Números atuais" data={currentNumbersData} />
       <TicketGroup title="Mudanças no prazo" data={deadlineChangesData} />
       <TicketGroup title="Fluxo" data={flowData} />

@@ -3,8 +3,6 @@ import {
   FormGroup,
   Input,
   InputLabel,
-  Backdrop,
-  CircularProgress,
   Box,
   Button,
   Checkbox,
@@ -86,13 +84,6 @@ const EditTeamMember = () => {
     EDIT_TEAM_MEMBER_MUTATION
   )
 
-  if (loading || mutationLoading)
-    return (
-      <Backdrop open>
-        <CircularProgress color="secondary" />
-      </Backdrop>
-    )
-
   const teamMember = data?.teamMember
   if (!teamMember) return <strong>{t("teamMembers.notFound")}</strong>
 
@@ -126,7 +117,11 @@ const EditTeamMember = () => {
   }
 
   return (
-    <BasicPage breadcrumbsLinks={breadcrumbsLinks} title={t("edit.title")}>
+    <BasicPage
+      breadcrumbsLinks={breadcrumbsLinks}
+      title={t("edit.title")}
+      loading={loading || mutationLoading}
+    >
       <Box sx={{ maxWidth: "480px", marginX: "auto", paddingY: 4 }}>
         <form onSubmit={handleSubmit(handleEditTeamMember)}>
           <FormGroup>

@@ -3,10 +3,8 @@ import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined"
 import { Link as RouterLink } from "react-router-dom"
 import {
-  Backdrop,
   Box,
   Button,
-  CircularProgress,
   Link,
   Table,
   TableBody,
@@ -72,13 +70,6 @@ const Teams = () => {
   const deleteTeamModal = useConfirm()
   const { me } = useContext(MeContext)
 
-  if (loading)
-    return (
-      <Backdrop open>
-        <CircularProgress color="secondary" />
-      </Backdrop>
-    )
-
   const company = me?.currentCompany
   const companySlug = company?.slug
   const teams = data?.teams
@@ -104,67 +95,69 @@ const Teams = () => {
   }
 
   return (
-    <>
-      <BasicPage title={t("teams")} breadcrumbsLinks={breadcrumbsLinks}>
-        <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
-          <Table sx={{ flex: "0 0 50%" }}>
-            <TableHead>
-              <TableRow>
-                <TableCell>
-                  <Typography color="text.primary" sx={{ fontSize: "1.25rem" }}>
-                    {t("teams")}
-                  </Typography>
-                </TableCell>
-              </TableRow>
-            </TableHead>
+    <BasicPage
+      title={t("teams")}
+      breadcrumbsLinks={breadcrumbsLinks}
+      loading={loading}
+    >
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
+        <Table sx={{ flex: "0 0 50%" }}>
+          <TableHead>
+            <TableRow>
+              <TableCell>
+                <Typography color="text.primary" sx={{ fontSize: "1.25rem" }}>
+                  {t("teams")}
+                </Typography>
+              </TableCell>
+            </TableRow>
+          </TableHead>
 
-            <TableBody data-testid="teams-list">
-              {teams?.map(({ name, id }, index) => {
-                const teamLinkBase = `/companies/${companySlug}/teams/${id}`
+          <TableBody data-testid="teams-list">
+            {teams?.map(({ name, id }, index) => {
+              const teamLinkBase = `/companies/${companySlug}/teams/${id}`
 
-                return (
-                  <TableRow
-                    key={`${name}-${index}`}
-                    sx={{ display: "flex", justifyContent: "space-between" }}
-                  >
-                    <TableCell>
-                      <Link
-                        href={teamLinkBase}
-                        sx={{ textDecorationColor: "info.dark" }}
-                      >
-                        <Typography color="info.dark">{name}</Typography>
-                      </Link>
-                    </TableCell>
-                    <TableCell
-                      size={"small"}
-                      sx={{ display: "inline-flex", whiteSpace: "nowrap" }}
+              return (
+                <TableRow
+                  key={`${name}-${index}`}
+                  sx={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <TableCell>
+                    <Link
+                      href={teamLinkBase}
+                      sx={{ textDecorationColor: "info.dark" }}
                     >
-                      <Box mr={1}>
-                        <Link href={`${teamLinkBase}/edit`}>
-                          <EditOutlinedIcon color={"primary"} />
-                        </Link>
-                      </Box>
+                      <Typography color="info.dark">{name}</Typography>
+                    </Link>
+                  </TableCell>
+                  <TableCell
+                    size={"small"}
+                    sx={{ display: "inline-flex", whiteSpace: "nowrap" }}
+                  >
+                    <Box mr={1}>
+                      <Link href={`${teamLinkBase}/edit`}>
+                        <EditOutlinedIcon color={"primary"} />
+                      </Link>
+                    </Box>
 
-                      <Button onClick={() => handleOnDeleteTeam(id)}>
-                        <DeleteOutlineOutlinedIcon color={"primary"} />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                )
-              })}
-            </TableBody>
-          </Table>
+                    <Button onClick={() => handleOnDeleteTeam(id)}>
+                      <DeleteOutlineOutlinedIcon color={"primary"} />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              )
+            })}
+          </TableBody>
+        </Table>
 
-          <Button
-            component={RouterLink}
-            to={`/companies/${companySlug}/teams/new`}
-            variant="contained"
-          >
-            {t("create_team_button")}
-          </Button>
-        </Box>
-      </BasicPage>
-    </>
+        <Button
+          component={RouterLink}
+          to={`/companies/${companySlug}/teams/new`}
+          variant="contained"
+        >
+          {t("create_team_button")}
+        </Button>
+      </Box>
+    </BasicPage>
   )
 }
 

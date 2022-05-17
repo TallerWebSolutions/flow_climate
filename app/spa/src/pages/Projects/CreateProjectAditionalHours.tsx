@@ -7,8 +7,6 @@ import {
   Box,
   Button,
   Typography,
-  Backdrop,
-  CircularProgress,
 } from "@mui/material"
 import { FieldValues, useForm } from "react-hook-form"
 import { gql, useMutation } from "@apollo/client"
@@ -57,15 +55,8 @@ const CreateProjectAditionalHours = () => {
       },
     })
 
-  if (loading)
-    return (
-      <Backdrop open>
-        <CircularProgress color="secondary" />
-      </Backdrop>
-    )
-
   return (
-    <ProjectPage pageName={t("registerAdditionalHours")}>
+    <ProjectPage pageName={t("registerAdditionalHours")} loading={loading}>
       <Box sx={{ maxWidth: "480px", marginX: "auto", paddingY: 4 }}>
         <Typography component="h2" variant="h5" sx={{ marginBottom: 4 }}>
           {t("registerAdditionalHours")}

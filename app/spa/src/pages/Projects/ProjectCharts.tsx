@@ -1,11 +1,5 @@
 import { gql, useQuery } from "@apollo/client"
-import {
-  Backdrop,
-  Box,
-  CircularProgress,
-  Grid,
-  Typography,
-} from "@mui/material"
+import { Box, Grid, Typography } from "@mui/material"
 import { BarDatum } from "@nivo/bar"
 import { SliceTooltipProps } from "@nivo/line"
 import { useTranslation } from "react-i18next"
@@ -209,13 +203,6 @@ const ProjectCharts = () => {
       limit: LIMIT_DEMANDS_PER_PAGE,
     },
   })
-
-  if (loading)
-    return (
-      <Backdrop open>
-        <CircularProgress color="secondary" />
-      </Backdrop>
-    )
 
   const project = data?.project
   const projectConsolidationsWeekly = project?.projectConsolidationsWeekly || []
@@ -614,7 +601,7 @@ const ProjectCharts = () => {
     : []
 
   return (
-    <ProjectPage pageName={t("charts")}>
+    <ProjectPage pageName={t("charts")} loading={loading}>
       <ProjectChartsTable project={project} demands={demands} />
 
       <Grid container spacing={2} rowSpacing={8} sx={{ marginTop: 4 }}>

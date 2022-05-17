@@ -1,5 +1,5 @@
 import { gql, useQuery } from "@apollo/client"
-import { Backdrop, Box, CircularProgress, Typography } from "@mui/material"
+import { Box, Typography } from "@mui/material"
 import { ReactElement } from "react"
 import { useParams } from "react-router-dom"
 import { LineChart } from "../../components/charts/LineChart"
@@ -214,15 +214,8 @@ const Statistics = () => {
     },
   ]
 
-  if (loading)
-    return (
-      <Backdrop open>
-        <CircularProgress color="secondary" />
-      </Backdrop>
-    )
-
   return (
-    <ProjectPage pageName={"Statistics"}>
+    <ProjectPage pageName={"Statistics"} loading={loading}>
       <Box sx={{ display: "flex", flexWrap: "wrap" }}>
         <GraphBox title={"Variação da Amplitude do Lead Time no Tempo"}>
           <LineChart

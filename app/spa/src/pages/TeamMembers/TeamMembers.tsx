@@ -2,7 +2,7 @@ import { useContext } from "react"
 import { useTranslation } from "react-i18next"
 import CheckIcon from "@mui/icons-material/Check"
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined"
-import { Backdrop, CircularProgress, Link } from "@mui/material"
+import { Link } from "@mui/material"
 import { Link as RouterLink } from "react-router-dom"
 
 import BasicPage from "../../components/BasicPage"
@@ -68,13 +68,6 @@ const TeamMembers = () => {
     variables: { companyId: Number(companyId) },
   })
 
-  if (loading)
-    return (
-      <Backdrop open>
-        <CircularProgress color="secondary" />
-      </Backdrop>
-    )
-
   const teamMembers =
     data?.teamMembers.map((teamMember) => [
       <Link
@@ -97,7 +90,7 @@ const TeamMembers = () => {
     ]) || []
 
   return (
-    <BasicPage breadcrumbsLinks={breadcrumbsLinks}>
+    <BasicPage breadcrumbsLinks={breadcrumbsLinks} loading={loading}>
       <Table headerCells={membersColumns} rows={teamMembers} />
     </BasicPage>
   )

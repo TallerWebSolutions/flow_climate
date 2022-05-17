@@ -1,8 +1,6 @@
 import { gql, useMutation, useQuery } from "@apollo/client"
 import {
-  Backdrop,
   Button,
-  CircularProgress,
   FormControl,
   FormGroup,
   Input,
@@ -87,13 +85,6 @@ const EditTeam = () => {
   const { register, handleSubmit } = useForm()
   const { me } = useContext(MeContext)
 
-  if (loading)
-    return (
-      <Backdrop open>
-        <CircularProgress color="secondary" />
-      </Backdrop>
-    )
-
   const team = data?.team
   const teamID = data?.team.id
   const teamMaxWip = data?.team.maxWorkInProgress
@@ -124,7 +115,7 @@ const EditTeam = () => {
   }
 
   return (
-    <BasicPage breadcrumbsLinks={breadcrumbsLinks}>
+    <BasicPage breadcrumbsLinks={breadcrumbsLinks} loading={loading}>
       <form onSubmit={handleSubmit(handleEditTeam)}>
         <FormGroup
           sx={{

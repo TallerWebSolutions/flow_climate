@@ -1,5 +1,5 @@
 import { gql, useMutation } from "@apollo/client"
-import { Backdrop, Box, CircularProgress } from "@mui/material"
+import { Box } from "@mui/material"
 import { ReactElement, useContext } from "react"
 import { useTranslation } from "react-i18next"
 import { useLocation, useParams } from "react-router-dom"
@@ -25,6 +25,7 @@ export const PROJECT_STANDARD_FRAGMENT = gql`
 type ProjectPageProps = {
   pageName: string
   children: ReactElement | ReactElement[]
+  loading?: boolean
 }
 
 const assignCardTypeByRisk = (risk: number) => {
@@ -53,7 +54,11 @@ type ProjectCacheResult = {
 
 type ProjectCacheDTO = ProjectCacheResult | undefined
 
-export const ProjectPage = ({ pageName, children }: ProjectPageProps) => {
+export const ProjectPage = ({
+  pageName,
+  children,
+  loading,
+}: ProjectPageProps) => {
   const { pathname } = useLocation()
   const { t } = useTranslation(["generalProjectPage"])
   const { pushMessage } = useContext(MessagesContext)
@@ -69,14 +74,9 @@ export const ProjectPage = ({ pageName, children }: ProjectPageProps) => {
   )
   const params = useParams()
   const projectId = params.projectId
-  const { projectInfo, loading } = useProjectInfo(Number(projectId))
-
-  if (loading)
-    return (
-      <Backdrop open>
-        <CircularProgress color="secondary" />
-      </Backdrop>
-    )
+  const { projectInfo, loading: queryLoading } = useProjectInfo(
+    Number(projectId)
+  )
 
   if (!projectInfo) return <strong>No project found</strong>
 
@@ -171,6 +171,7 @@ export const ProjectPage = ({ pageName, children }: ProjectPageProps) => {
       title={projectName}
       breadcrumbsLinks={breadcrumbsLinks}
       actions={<ActionMenu items={actions} />}
+      loading={loading || queryLoading}
     >
       <>
         {projectIsRunning && (

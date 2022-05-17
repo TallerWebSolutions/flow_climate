@@ -1,5 +1,5 @@
 import { Fragment, useContext } from "react"
-import { Backdrop, CircularProgress, Box, Typography } from "@mui/material"
+import { Box, Typography } from "@mui/material"
 import { gql, useQuery, useMutation } from "@apollo/client"
 import CachedIcon from "@mui/icons-material/Cached"
 import { useParams } from "react-router-dom"
@@ -116,13 +116,6 @@ const Replenishing = () => {
     console.error(error)
   }
 
-  if (loading)
-    return (
-      <Backdrop open>
-        <CircularProgress color="secondary" />
-      </Backdrop>
-    )
-
   const company = data?.team.company
   const companyName = company?.name
   const companyUrl = `/companies/${company?.slug}`
@@ -140,7 +133,11 @@ const Replenishing = () => {
   ]
 
   return (
-    <BasicPage title="Reabastecimento" breadcrumbsLinks={breadcrumbsLinks}>
+    <BasicPage
+      title="Reabastecimento"
+      breadcrumbsLinks={breadcrumbsLinks}
+      loading={loading}
+    >
       {data?.team && (
         <Fragment>
           <Box

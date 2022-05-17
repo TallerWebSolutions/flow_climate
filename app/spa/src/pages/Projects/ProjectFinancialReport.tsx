@@ -1,11 +1,5 @@
 import { useParams, Link as RouterLink } from "react-router-dom"
-import {
-  Container,
-  Backdrop,
-  CircularProgress,
-  Link,
-  Button,
-} from "@mui/material"
+import { Container, Link, Button } from "@mui/material"
 import { gql, useQuery } from "@apollo/client"
 import { ProjectPage } from "../../components/ProjectPage"
 import Table from "../../components/Table"
@@ -95,13 +89,6 @@ const ProjectFinancialReport = () => {
       projectId: Number(projectId),
     },
   })
-
-  if (loading)
-    return (
-      <Backdrop open>
-        <CircularProgress color="secondary" />
-      </Backdrop>
-    )
 
   const finishedDemandsRows = data?.finishedDemands
     ? data.finishedDemands.map((demand) => [
@@ -198,7 +185,7 @@ const ProjectFinancialReport = () => {
   ]
 
   return (
-    <ProjectPage pageName={t("title")}>
+    <ProjectPage pageName={t("title")} loading={loading}>
       <Container
         sx={{ display: "flex", justifyContent: "flex-end", paddingY: 4 }}
       >

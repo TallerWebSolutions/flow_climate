@@ -3,7 +3,7 @@ import { useContext } from "react"
 import { useTranslation } from "react-i18next"
 import { MeContext } from "../../contexts/MeContext"
 import BasicPage from "../../components/BasicPage"
-import { Backdrop, Button, CircularProgress, Link } from "@mui/material"
+import { Button, Link } from "@mui/material"
 import Table from "../../components/Table"
 import { Initiative } from "../../modules/initiative/initiative.types"
 import { formatDate } from "../../lib/date"
@@ -61,13 +61,6 @@ const InitiativesList = () => {
     t("initiatives_list_table.deliveries"),
   ]
 
-  if (loading)
-    return (
-      <Backdrop open>
-        <CircularProgress color="secondary" />
-      </Backdrop>
-    )
-
   const initiativesList =
     data?.initiatives.map((initiative) => [
       <Link href={`${companyUrl}/initiatives/${initiative.id}`}>
@@ -83,7 +76,11 @@ const InitiativesList = () => {
     ]) || []
 
   return (
-    <BasicPage title={t("initiatives")} breadcrumbsLinks={breadcrumbsLinks}>
+    <BasicPage
+      title={t("initiatives")}
+      breadcrumbsLinks={breadcrumbsLinks}
+      loading={loading}
+    >
       <Button
         variant="contained"
         href={createInitiativeUrl}

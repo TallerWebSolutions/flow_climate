@@ -1,5 +1,4 @@
 import { gql, useQuery } from "@apollo/client"
-import { Backdrop, CircularProgress } from "@mui/material"
 import { useParams } from "react-router-dom"
 import {
   ProjectPage,
@@ -55,13 +54,6 @@ const LeadTimeDashboard = () => {
       },
     }
   )
-
-  if (loading)
-    return (
-      <Backdrop open>
-        <CircularProgress color="secondary" />
-      </Backdrop>
-    )
 
   const lastProjectConsolidation = data?.project.projectConsolidations.pop()
 
@@ -136,7 +128,7 @@ const LeadTimeDashboard = () => {
   ]
 
   return (
-    <ProjectPage pageName={"Lead Time Dashboard"}>
+    <ProjectPage pageName={"Lead Time Dashboard"} loading={loading}>
       <TicketGroup title="Leadtime" data={currentLeadTime} />
       <TicketGroup
         title="Leadtime por tipo - 80%"
