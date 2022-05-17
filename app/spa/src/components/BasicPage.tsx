@@ -6,16 +6,16 @@ import Breadcrumbs, { BreadcrumbsLink } from "./Breadcrumbs"
 import { MessagesContext } from "../contexts/MessageContext"
 
 export type BasicPageProps = {
-  title?: string
   breadcrumbsLinks: BreadcrumbsLink[]
+  title?: string
   children?: ReactElement | ReactElement[]
   actions?: ReactElement | ReactElement[]
 }
 
 const BasicPage = ({
-  children,
-  title,
   breadcrumbsLinks,
+  title,
+  children,
   actions,
 }: BasicPageProps) => {
   const { messages } = useContext(MessagesContext)

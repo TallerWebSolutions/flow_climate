@@ -2,14 +2,14 @@ import { useContext } from "react"
 import { useTranslation } from "react-i18next"
 import CheckIcon from "@mui/icons-material/Check"
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined"
+import { Backdrop, CircularProgress, Link } from "@mui/material"
+import { Link as RouterLink } from "react-router-dom"
 
 import BasicPage from "../../components/BasicPage"
 import Table from "../../components/Table"
 import { MeContext } from "../../contexts/MeContext"
 import { gql, useQuery } from "@apollo/client"
 import { Team } from "../../modules/team/team.types"
-import { Backdrop, CircularProgress } from "@mui/material"
-import { Link } from "react-router-dom"
 
 const TEAM_MEMBERS_QUERY = gql`
   query TeamMembers($companyId: Int!) {
@@ -44,7 +44,8 @@ type TeamMembersDTO = {
 const TeamMembers = () => {
   const { t } = useTranslation(["teamMembers"])
   const { me } = useContext(MeContext)
-  const companyUrl = `/companies/${me?.currentCompany?.slug}`
+  const companySlug = me?.currentCompany?.slug
+  const companyUrl = `/companies/${companySlug}`
   const companyId = me?.currentCompany?.id
   const breadcrumbsLinks = [
     { name: me?.currentCompany?.name || "", url: companyUrl },
@@ -76,18 +77,23 @@ const TeamMembers = () => {
 
   const teamMembers =
     data?.teamMembers.map((teamMember) => [
-      teamMember.name,
+      <Link
+        component={RouterLink}
+        to={`/companies/${companySlug}/team_members/${teamMember.id}`}
+      >
+        {teamMember.name}
+      </Link>,
       teamMember.teams.map((team) => team.name).join(", "),
       teamMember.jiraAccountUserEmail,
       teamMember.startDate,
       teamMember.endDate,
       teamMember.billable ? <CheckIcon color="primary" /> : "",
       teamMember.endDate
-        ? t("columns.status.inactive")
-        : t("columns.status.active"),
-      <Link to={`${companyUrl}/team_members/${teamMember.id}/edit`}>
+        ? t("columns.status.active")
+        : t("columns.status.inactive"),
+      <RouterLink to={`${companyUrl}/team_members/${teamMember.id}/edit`}>
         <EditOutlinedIcon color="primary" />
-      </Link>,
+      </RouterLink>,
     ]) || []
 
   return (

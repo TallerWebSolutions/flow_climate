@@ -24,6 +24,7 @@ import CreateTeam from "./pages/Teams/CreateTeam"
 import EditTeam from "./pages/Teams/EditTeam"
 import Teams from "./pages/Teams/Teams"
 import TeamMembers from "./pages/TeamMembers/TeamMembers"
+import TeamMemberDashboard from "./pages/TeamMembers/TeamMemberDashboard"
 import EditTeamMember from "./pages/TeamMembers/EditTeamMember"
 import User from "./modules/user/user.types"
 import InitiativesList from "./pages/Initiatives/InitiativesList"
@@ -82,6 +83,10 @@ const App = () => {
             <Route
               path="/companies/:companySlug/team_members"
               element={<TeamMembers />}
+            />
+            <Route
+              path="/companies/:companySlug/team_members/:teamMemberId"
+              element={<TeamMemberDashboard />}
             />
             <Route
               path="/companies/:companySlug/team_members/:teamMemberId/edit"
