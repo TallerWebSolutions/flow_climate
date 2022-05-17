@@ -16,9 +16,9 @@ type Cell = string | number | ReactElement
 type Row = Cell[]
 
 type TableProps = {
-  headerCells: Cell[]
   rows: Row[]
   title?: string
+  headerCells?: Cell[]
   footerCells?: Cell[]
 }
 
@@ -35,18 +35,20 @@ const Table = ({ title, headerCells, rows, footerCells }: TableProps) => (
       </Typography>
     )}
     <MUITable>
-      <TableHead>
-        <TableRow>
-          {headerCells.map((cell, index) => (
-            <TableCell
-              key={`${cell}--${index}`}
-              sx={{ padding: 2, minWidth: "90px" }}
-            >
-              {cell}
-            </TableCell>
-          ))}
-        </TableRow>
-      </TableHead>
+      {headerCells && (
+        <TableHead>
+          <TableRow>
+            {headerCells.map((cell, index) => (
+              <TableCell
+                key={`${cell}--${index}`}
+                sx={{ padding: 2, minWidth: "90px" }}
+              >
+                {cell}
+              </TableCell>
+            ))}
+          </TableRow>
+        </TableHead>
+      )}
       <TableBody>
         {rows.map((row, index) => (
           <TableRow

@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom"
 
 import { MeContext } from "../../contexts/MeContext"
 import BasicPage from "../../components/BasicPage"
+import Table from "../../components/Table"
 
 const TEAM_MEMBER_QUERY = gql`
   query TeamMember($id: Int!) {
@@ -26,7 +27,7 @@ const TeamMemberDashboard = () => {
   })
   const companySlug = me?.currentCompany?.slug
   const companyUrl = `/companies/${companySlug}`
-  const teamMemberName = ""
+  const teamMemberName = data?.teamMember?.name
   const breadcrumbsLinks = [
     { name: me?.currentCompany?.name || "", url: companyUrl },
     {
@@ -37,12 +38,16 @@ const TeamMemberDashboard = () => {
       name: teamMemberName,
     },
   ]
+  const teamMemberInfoRows = [[t("dashboard.name"), teamMemberName]]
+
   return (
     <BasicPage
       breadcrumbsLinks={breadcrumbsLinks}
       title={teamMemberName}
       loading={loading}
-    />
+    >
+      <Table rows={teamMemberInfoRows} />
+    </BasicPage>
   )
 }
 
