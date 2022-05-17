@@ -18,6 +18,8 @@ module Types
       argument :type, Types::Enums::DemandTypesType, required: false
     end
 
+    field :shortest_lead_time, Types::DemandType, null: true
+
     def demands(status: 'ALL', type: 'ALL')
       demands = if status == 'FINISHED'
                   object.demands.finished_until_date(Time.zone.now).order(:end_date)
@@ -28,6 +30,10 @@ module Types
       demands = demands.bug.order(:created_date) if type == 'BUG'
 
       demands
+    end
+
+    def shortest_lead_time
+      object.demands.finished_with_leadtime.order(:leadtime).first
     end
   end
 end
