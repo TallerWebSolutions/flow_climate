@@ -25,5 +25,8 @@
       "save": "Salvar",
       "cancel": "Cancelar"
     }
+  },
+  "dashboard": {
+    "name": "Nome"
   }
 }

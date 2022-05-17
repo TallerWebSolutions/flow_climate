@@ -106,7 +106,7 @@ class Demand < ApplicationRecord
   scope :opened_before_date, ->(date) { where('demands.created_date <= :analysed_date AND (demands.discarded_at IS NULL OR demands.discarded_at > :analysed_date)', analysed_date: date.end_of_day) }
   scope :finished_in_downstream, -> { where('commitment_date IS NOT NULL AND end_date IS NOT NULL') }
   scope :finished_in_upstream, -> { where('commitment_date IS NULL AND end_date IS NOT NULL') }
-  scope :finished_with_leadtime, -> { where('demands.end_date IS NOT NULL AND demands.leadtime IS NOT NULL') }
+  scope :finished_with_leadtime, -> { where('demands.end_date IS NOT NULL AND demands.leadtime IS NOT NULL AND demands.leadtime > 0') }
   scope :finished_until_date, ->(limit_date) { where('(demands.end_date <= :limit_date)', limit_date: limit_date) }
   scope :finished_after_date, ->(limit_date) { where('(demands.end_date >= :limit_date)', limit_date: limit_date) }
   scope :not_started, ->(limit_date) { joins(demand_transitions: :stage).where('stages.order = 0 and (demand_transitions.last_time_out IS NULL OR demand_transitions.last_time_out > :limit_date)', limit_date: limit_date).uniq }

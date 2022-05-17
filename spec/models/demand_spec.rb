@@ -75,9 +75,11 @@ RSpec.describe Demand, type: :model do
     let(:project) { Fabricate :project, company: company, team: team }
 
     describe '.finished_with_leadtime' do
+      let!(:base_date) { Time.zone.now }
       let!(:first_demand) { Fabricate :demand, project: project, commitment_date: 1.day.ago, end_date: Time.zone.now, leadtime: 2 }
       let!(:second_demand) { Fabricate :demand, project: project, commitment_date: 2.days.ago, end_date: Time.zone.now, leadtime: 3 }
       let!(:third_demand) { Fabricate :demand, project: project, commitment_date: nil, end_date: Time.zone.now }
+      let!(:fourth_demand) { Fabricate :demand, project: project, commitment_date: base_date, end_date: base_date }
 
       it { expect(described_class.finished_with_leadtime).to match_array [first_demand, second_demand] }
     end

@@ -9,7 +9,7 @@ import BasicPage from "../../components/BasicPage"
 import Table from "../../components/Table"
 import { MeContext } from "../../contexts/MeContext"
 import { gql, useQuery } from "@apollo/client"
-import { Team } from "../../modules/team/team.types"
+import { TeamMember } from "../../modules/teamMember/teamMember.types"
 
 const TEAM_MEMBERS_QUERY = gql`
   query TeamMembers($companyId: Int!) {
@@ -26,16 +26,6 @@ const TEAM_MEMBERS_QUERY = gql`
     }
   }
 `
-
-type TeamMember = {
-  id: string
-  name: string
-  jiraAccountUserEmail: string
-  startDate: string
-  endDate: string
-  billable: boolean
-  teams: Team[]
-}
 
 type TeamMembersDTO = {
   teamMembers: TeamMember[]
