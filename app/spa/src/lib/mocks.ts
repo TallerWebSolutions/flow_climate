@@ -12,6 +12,13 @@ export const companyMock: Company = {
     {
       id: "1",
       name: "Project X",
+      team: {
+        id: 0,
+        name: "Team X",
+      },
+      status: "waiting",
+      qtyHours: 0,
+      consumedHours: 0,
       remainingWeeks: 10,
       remainingBacklog: 20,
       flowPressure: 12,
@@ -115,6 +122,13 @@ export const companyMock: Company = {
 export const projectMock: Project = {
   id: "1",
   name: "Project X",
+  team: {
+    id: 1,
+    name: "Team X",
+  },
+  status: "waiting",
+  qtyHours: 0,
+  consumedHours: 0,
   remainingWeeks: 10,
   remainingBacklog: 20,
   flowPressure: 12,

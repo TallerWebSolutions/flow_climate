@@ -580,6 +580,75 @@ RSpec.describe Types::QueryType do
     end
   end
 
+  describe '#projects' do
+    let(:company) { Fabricate :company }
+
+    let(:query) do
+      %(query {
+        projects(companyId: #{company.id}) {
+          id
+          name
+          team {
+            id
+            name
+          }
+          status
+          numberOfDemands
+          remainingDays
+          numberOfDemandsDelivered
+          qtyHours
+          consumedHours
+          currentRiskToDeadline
+        }
+      })
+    end
+
+    context 'when project list' do
+      it 'returns projects' do
+        user = Fabricate :user
+
+        context = {
+          current_user: user
+        }
+
+        project = Fabricate :project, company: company, start_date: 16.days.ago
+        other_project = Fabricate :project, company: company, start_date: 12.days.ago
+
+        result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
+        expect(result.dig('data', 'projects')).to eq([{
+                                                       'id' => project.id.to_s,
+                                                       'name' => project.name,
+                                                       'team' => {
+                                                         'id' => project.team.id.to_s,
+                                                         'name' => project.team.name
+                                                       },
+                                                       'status' => project.status,
+                                                       'numberOfDemands' => project.demands.kept.count,
+                                                       'remainingDays' => project.remaining_days,
+                                                       'numberOfDemandsDelivered' => project.demands.kept.finished_until_date(Time.zone.now).count,
+                                                       'qtyHours' => project.qty_hours,
+                                                       'consumedHours' => project.consumed_hours,
+                                                       'currentRiskToDeadline' => project.current_risk_to_deadline
+                                                     },
+                                                      {
+                                                        'id' => other_project.id.to_s,
+                                                        'name' => other_project.name,
+                                                        'team' => {
+                                                          'id' => other_project.team.id.to_s,
+                                                          'name' => other_project.team.name
+                                                        },
+                                                        'status' => other_project.status,
+                                                        'numberOfDemands' => other_project.demands.kept.count,
+                                                        'remainingDays' => other_project.remaining_days,
+                                                        'numberOfDemandsDelivered' => other_project.demands.kept.finished_until_date(Time.zone.now).count,
+                                                        'qtyHours' => other_project.qty_hours,
+                                                        'consumedHours' => other_project.consumed_hours,
+                                                        'currentRiskToDeadline' => other_project.current_risk_to_deadline
+                                                      }])
+      end
+    end
+  end
+
   describe '#initiatives' do
     let(:company) { Fabricate :company }
 

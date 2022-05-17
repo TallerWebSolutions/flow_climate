@@ -7,6 +7,13 @@ import { ProjectConsolidation } from "./projectConsolidation.types"
 export type Project = {
   id: string
   name: string
+  team: {
+    id: number
+    name: string
+  }
+  status: string
+  qtyHours: number
+  consumedHours: number
   remainingWeeks: number
   remainingBacklog: number
   backlogCountFor: number

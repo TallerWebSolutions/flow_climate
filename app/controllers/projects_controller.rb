@@ -10,10 +10,8 @@ class ProjectsController < AuthenticatedController
   end
 
   def index
-    assign_projects
-    @unpaged_projects = @projects.except(:limit, :offset)
-
-    @projects_summary = ProjectsSummaryData.new(@unpaged_projects)
+    prepend_view_path Rails.root.join('public')
+    render 'spa-build/index'
   end
 
   def new
@@ -190,10 +188,6 @@ class ProjectsController < AuthenticatedController
 
   def tasks
     @tasks ||= Task.where(id: @project.tasks.kept.map(&:id)).order(:created_date)
-  end
-
-  def assign_projects
-    @projects = @company.projects.distinct.includes(:team).order(end_date: :desc).order(end_date: :desc).page(page_param)
   end
 
   def demands

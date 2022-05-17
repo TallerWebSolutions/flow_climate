@@ -1,0 +1,18 @@
+{
+  "projects": "Projects",
+  "projects_table": {
+    "name": "Projeto",
+    "team": "Time",
+    "status": "Status",
+    "demands": "Demandas",
+    "remaing_days": "Dias restantes",
+    "delivered": "Entregas",
+    "qty_hours": "Quantidade de horas",
+    "risk": "Risco",
+    "row_demands": "demandas",
+    "row_days": "dias",
+    "row_delivered": "entregas",
+    "row_total": "totais",
+    "row_consumed": "consumidas"
+  }
+}

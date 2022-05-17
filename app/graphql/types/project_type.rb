@@ -79,6 +79,10 @@ module Types
     field :hours_per_stage_chart_data, Types::Charts::HoursPerStageChartType, null: true do
       argument :stage_level, String, required: false
     end
+    field :status, String, null: false
+    field :team, Types::TeamType, null: false
+    field :qty_hours, Float, null: false
+    field :consumed_hours, Float, null: false
 
     field :cumulative_flow_chart_data, Types::Charts::CumulativeFlowChartType, null: true
     field :demands_flow_chart_data, Types::Charts::DemandsFlowChartDataType, null: true

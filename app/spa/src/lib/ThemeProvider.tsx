@@ -28,6 +28,7 @@ const theme = createTheme({
     },
     grey: {
       "200": "#CCCCCC",
+      "600": "#666666",
     },
     background: {
       paper: "#F5F5FF",

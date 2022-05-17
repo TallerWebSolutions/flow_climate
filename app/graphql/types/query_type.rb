@@ -55,6 +55,10 @@ module Types
       argument :company_id, Int, required: true
     end
 
+    field :projects, [Types::ProjectType], null: false do
+      argument :company_id, Int, required: true
+    end
+
     def teams
       me.last_company.teams.preload(:company) if me.last_company.present?
     end
@@ -106,6 +110,11 @@ module Types
     def initiatives(company_id:)
       company = Company.find(company_id)
       company.initiatives.order(start_date: :desc)
+    end
+
+    def projects(company_id:)
+      company = Company.find(company_id)
+      company.projects.order(end_date: :desc)
     end
   end
 end
