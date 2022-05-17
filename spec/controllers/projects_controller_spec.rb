@@ -191,28 +191,9 @@ RSpec.describe ProjectsController, type: :controller do
 
     describe 'GET #index' do
       context 'with projects' do
-        let(:customer) { Fabricate :customer, company: company }
-        let(:product) { Fabricate :product, company: company, customer: customer, name: 'zzz' }
-
-        let!(:project) { Fabricate :project, company: company, customers: [customer], products: [product], end_date: 2.days.from_now }
-        let!(:other_project) { Fabricate :project, company: company, customers: [customer], project_type: :consulting, end_date: 5.days.from_now }
-        let!(:other_company_project) { Fabricate :project, end_date: 2.days.from_now }
-
         before { get :index, params: { company_id: company } }
 
-        it 'assigns the instances variables and renders the template' do
-          expect(response).to render_template :index
-          expect(assigns(:projects)).to eq [other_project, project]
-          expect(assigns(:unpaged_projects)).to eq [other_project, project]
-          expect(assigns(:projects_summary)).to be_a ProjectsSummaryData
-          expect(assigns(:projects_summary).projects).to eq [other_project, project]
-        end
-      end
-
-      context 'with no projects' do
-        before { get :index, params: { company_id: company, status_filter: :waiting } }
-
-        it { expect(assigns(:projects_summary).projects).to eq [] }
+        it { expect(response).to render_template 'spa-build/index' }
       end
     end
 
