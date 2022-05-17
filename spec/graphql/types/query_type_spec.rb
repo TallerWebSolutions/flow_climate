@@ -617,19 +617,19 @@ RSpec.describe Types::QueryType do
 
         result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
         expect(result.dig('data', 'projects')).to eq([{
-                                                       'id' => first_project.id.to_s,
-                                                       'name' => first_project.name,
+                                                       'id' => project.id.to_s,
+                                                       'name' => project.name,
                                                        'team' => {
-                                                         'id' => first_project.team.id.to_s,
-                                                         'name' => first_project.team.name
+                                                         'id' => project.team.id.to_s,
+                                                         'name' => project.team.name
                                                        },
-                                                       'status' => first_project.status,
-                                                       'numberOfDemands' => first_project.demands.kept.count,
-                                                       'remainingDays' => first_project.remaining_days,
-                                                       'numberOfDemandsDelivered' => first_project.demands.kept.finished_until_date(Time.zone.now).count,
-                                                       'qtyHours' => first_project.qty_hours,
-                                                       'consumedHours' => first_project.consumed_hours,
-                                                       'currentRiskToDeadline' => first_project.current_risk_to_deadline
+                                                       'status' => project.status,
+                                                       'numberOfDemands' => project.demands.kept.count,
+                                                       'remainingDays' => project.remaining_days,
+                                                       'numberOfDemandsDelivered' => project.demands.kept.finished_until_date(Time.zone.now).count,
+                                                       'qtyHours' => project.qty_hours,
+                                                       'consumedHours' => project.consumed_hours,
+                                                       'currentRiskToDeadline' => project.current_risk_to_deadline
                                                      },
                                                       {
                                                         'id' => second_project.id.to_s,
@@ -683,17 +683,17 @@ RSpec.describe Types::QueryType do
 
         result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
         expect(result.dig('data', 'initiatives')).to eq([{
-                                                           'id' => other_initiative.id.to_s,
-                                                           'name' => other_initiative.name,
-                                                           'startDate' => other_initiative.start_date.to_date.to_s,
-                                                           'endDate' => other_initiative.end_date.to_date.to_s,
-                                                           'currentTasksOperationalRisk' => other_initiative.current_tasks_operational_risk,
-                                                           'projectsCount' => other_initiative.projects.count,
-                                                           'demandsCount' => other_initiative.demands.count,
-                                                           'tasksCount' => other_initiative.tasks.count,
-                                                           'tasksFinishedCount' => other_initiative.tasks.finished.count,
-                                                           'remainingBacklogTasksPercentage' => other_initiative.remaining_backlog_tasks_percentage
-                                                         },
+                                                          'id' => other_initiative.id.to_s,
+                                                          'name' => other_initiative.name,
+                                                          'startDate' => other_initiative.start_date.to_date.to_s,
+                                                          'endDate' => other_initiative.end_date.to_date.to_s,
+                                                          'currentTasksOperationalRisk' => other_initiative.current_tasks_operational_risk,
+                                                          'projectsCount' => other_initiative.projects.count,
+                                                          'demandsCount' => other_initiative.demands.count,
+                                                          'tasksCount' => other_initiative.tasks.count,
+                                                          'tasksFinishedCount' => other_initiative.tasks.finished.count,
+                                                          'remainingBacklogTasksPercentage' => other_initiative.remaining_backlog_tasks_percentage
+                                                        },
                                                          {
                                                            'id' => initiative.id.to_s,
                                                            'name' => initiative.name,
@@ -778,28 +778,28 @@ RSpec.describe Types::QueryType do
 
         result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
         expect(result.dig('data', 'tasksList')).to eq(
-                                                     {
-                                                       'deliveredLeadTimeP65' => 0,
-                                                       'deliveredLeadTimeP80' => 0,
-                                                       'deliveredLeadTimeP95' => 0,
-                                                       'inProgressLeadTimeP65' => 0,
-                                                       'inProgressLeadTimeP80' => 0,
-                                                       'inProgressLeadTimeP95' => 0,
-                                                       'lastPage' => false,
-                                                       'tasks' => [],
-                                                       'totalCount' => 0,
-                                                       'totalDeliveredCount' => 0,
-                                                       'totalPages' => 0,
-                                                       'tasksCharts' => {
-                                                         'xAxis' => [],
-                                                         'creationArray' => [],
-                                                         'throughputArray' => [],
-                                                         'completionPercentilesOnTimeArray' => [],
-                                                         'accumulatedCompletionPercentilesOnTimeArray' => []
-                                                       },
-                                                       'completiontimeHistogramChartData' => { 'keys' => [], 'values' => [] }
-                                                     }
-                                                   )
+          {
+            'deliveredLeadTimeP65' => 0,
+            'deliveredLeadTimeP80' => 0,
+            'deliveredLeadTimeP95' => 0,
+            'inProgressLeadTimeP65' => 0,
+            'inProgressLeadTimeP80' => 0,
+            'inProgressLeadTimeP95' => 0,
+            'lastPage' => false,
+            'tasks' => [],
+            'totalCount' => 0,
+            'totalDeliveredCount' => 0,
+            'totalPages' => 0,
+            'tasksCharts' => {
+              'xAxis' => [],
+              'creationArray' => [],
+              'throughputArray' => [],
+              'completionPercentilesOnTimeArray' => [],
+              'accumulatedCompletionPercentilesOnTimeArray' => []
+            },
+            'completiontimeHistogramChartData' => { 'keys' => [], 'values' => [] }
+          }
+        )
       end
     end
 
@@ -917,13 +917,14 @@ RSpec.describe Types::QueryType do
   describe '#team_member' do
     it 'returns the team member and its fields' do
       company = Fabricate :company
+      project = Fabricate :project
       team = Fabricate :team, company: company
       team_member = Fabricate :team_member, company: company
       membership = Fabricate :membership, team_member: team_member, team: team
-      demand_finished = Fabricate :demand, team: team, created_date: 2.days.ago, commitment_date: 10.hours.ago, end_date: 1.hour.ago, demand_type: :feature
-      other_demand_finished = Fabricate :demand, team: team, created_date: 3.days.ago, commitment_date: 6.hours.ago, end_date: 2.hours.ago, demand_type: :bug
-      bug = Fabricate :demand, team: team, created_date: 2.days.ago, end_date: nil, demand_type: :bug
-      other_bug = Fabricate :demand, team: team, created_date: 1.day.ago, end_date: nil, demand_type: :bug
+      demand_finished = Fabricate :demand, team: team, project: project, created_date: 2.days.ago, commitment_date: 10.hours.ago, end_date: 1.hour.ago, demand_type: :feature
+      other_demand_finished = Fabricate :demand, team: team, project: project, created_date: 3.days.ago, commitment_date: 6.hours.ago, end_date: 2.hours.ago, demand_type: :bug
+      bug = Fabricate :demand, team: team, project: project, created_date: 2.days.ago, end_date: nil, demand_type: :bug
+      other_bug = Fabricate :demand, team: team, project: project, created_date: 1.day.ago, end_date: nil, demand_type: :bug
 
       Fabricate :item_assignment, membership: membership, demand: demand_finished
       Fabricate :item_assignment, membership: membership, demand: other_demand_finished
@@ -956,6 +957,9 @@ RSpec.describe Types::QueryType do
           teams {
             name
           }
+          projects {
+            id
+          }
           demandsFinished: demands(status: FINISHED) {
             id
           }
@@ -965,7 +969,14 @@ RSpec.describe Types::QueryType do
           bugsFinished: demands(status: FINISHED, type: BUG) {
             id
           }
-          shortestLeadTime {
+          demandShortestLeadTime {
+            id
+          }
+          demandLargestLeadTime {
+            id
+          }
+          demandLeadTimeP80
+          firstDelivery {
             id
           }
         }
@@ -1003,6 +1014,9 @@ RSpec.describe Types::QueryType do
                                                        'teams' => [{
                                                          'name' => team.name
                                                        }],
+                                                       'projects' => [{
+                                                         'id' => project.id.to_s
+                                                       }],
                                                        'demandsFinished' => [
                                                          {
                                                            'id' => other_demand_finished.id.to_s
@@ -1027,7 +1041,16 @@ RSpec.describe Types::QueryType do
                                                            'id' => other_demand_finished.id.to_s
                                                          }
                                                        ],
-                                                       'shortestLeadTime' =>
+                                                       'demandShortestLeadTime' =>
+                                                         {
+                                                           'id' => other_demand_finished.id.to_s
+                                                         },
+                                                       'demandLargestLeadTime' =>
+                                                         {
+                                                           'id' => demand_finished.id.to_s
+                                                         },
+                                                       'demandLeadTimeP80' => Stats::StatisticsService.instance.percentile(80, team_member.demands.finished_with_leadtime.map(&:leadtime)),
+                                                       'firstDelivery' =>
                                                          {
                                                            'id' => other_demand_finished.id.to_s
                                                          }

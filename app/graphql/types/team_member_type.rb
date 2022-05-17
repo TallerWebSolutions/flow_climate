@@ -18,7 +18,14 @@ module Types
       argument :type, Types::Enums::DemandTypesType, required: false
     end
 
-    field :shortest_lead_time, Types::DemandType, null: true
+    field :projects, [Types::ProjectType]
+
+    field :demand_shortest_lead_time, Types::DemandType, null: true
+    field :demand_largest_lead_time, Types::DemandType, null: true
+    field :first_demand_delivery, Types::DemandType, null: true
+
+    field :demand_lead_time_p80, Float, null: true
+    field :first_delivery, Types::DemandType, null: false
 
     def demands(status: 'ALL', type: 'ALL')
       demands = if status == 'FINISHED'
@@ -32,8 +39,16 @@ module Types
       demands
     end
 
-    def shortest_lead_time
+    def demand_shortest_lead_time
       object.demands.finished_with_leadtime.order(:leadtime).first
+    end
+
+    def demand_largest_lead_time
+      object.demands.finished_with_leadtime.order(:leadtime).last
+    end
+
+    def demand_lead_time_p80
+      Stats::StatisticsService.instance.percentile(80, object.demands.finished_with_leadtime.map(&:leadtime))
     end
   end
 end
