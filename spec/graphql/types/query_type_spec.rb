@@ -611,8 +611,8 @@ RSpec.describe Types::QueryType do
           current_user: user
         }
 
-        project = Fabricate :project, company: company, start_date: 16.days.ago
-        other_project = Fabricate :project, company: company, start_date: 12.days.ago
+        project = Fabricate :project, company: company, end_date: 5.days.ago
+        other_project = Fabricate :project, company: company, end_date: 6.days.ago
 
         result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
         expect(result.dig('data', 'projects')).to eq([{
