@@ -969,6 +969,9 @@ RSpec.describe Types::QueryType do
           bugsFinished: demands(status: FINISHED, type: BUG) {
             id
           }
+          lastDeliveries: demands(status: FINISHED, limit: 1) {
+            id
+          }
           demandShortestLeadTime {
             id
           }
@@ -1037,6 +1040,11 @@ RSpec.describe Types::QueryType do
                                                          }
                                                        ],
                                                        'bugsFinished' => [
+                                                         {
+                                                           'id' => other_demand_finished.id.to_s
+                                                         }
+                                                       ],
+                                                       'lastDeliveries' => [
                                                          {
                                                            'id' => other_demand_finished.id.to_s
                                                          }

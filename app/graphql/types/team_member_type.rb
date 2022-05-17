@@ -16,6 +16,7 @@ module Types
     field :demands, [Types::DemandType] do
       argument :status, Types::Enums::DemandStatusesType, required: false
       argument :type, Types::Enums::DemandTypesType, required: false
+      argument :limit, Int, required: false
     end
 
     field :projects, [Types::ProjectType]
@@ -27,7 +28,7 @@ module Types
     field :demand_lead_time_p80, Float, null: true
     field :first_delivery, Types::DemandType, null: false
 
-    def demands(status: 'ALL', type: 'ALL')
+    def demands(status: 'ALL', type: 'ALL', limit: nil)
       demands = if status == 'FINISHED'
                   object.demands.finished_until_date(Time.zone.now).order(:end_date)
                 else
@@ -36,7 +37,9 @@ module Types
 
       demands = demands.bug.order(:created_date) if type == 'BUG'
 
-      demands
+      return demands if limit.blank?
+
+      demands.limit(limit)
     end
 
     def demand_shortest_lead_time
