@@ -13,6 +13,12 @@ RSpec.describe TeamMembersController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'GET #show' do
+      before { get :show, params: { company_id: 'xpto', id: 'bar' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -33,6 +39,14 @@ RSpec.describe TeamMembersController, type: :controller do
     describe 'GET #edit' do
       it 'renders the SPA template' do
         get :edit, params: { company_id: company, id: 'foo' }
+
+        expect(response).to render_template 'spa-build/index'
+      end
+    end
+
+    describe 'GET #show' do
+      it 'renders the SPA template' do
+        get :show, params: { company_id: company, id: 'foo' }
 
         expect(response).to render_template 'spa-build/index'
       end

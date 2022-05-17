@@ -931,6 +931,9 @@ RSpec.describe Types::QueryType do
       Fabricate :item_assignment, membership: membership, demand: bug
       Fabricate :item_assignment, membership: membership, demand: other_bug
 
+      demand_block = Fabricate :demand_block, blocker: team_member, block_time: 1.day.ago
+      other_demand_block = Fabricate :demand_block, blocker: team_member, block_time: 2.days.ago
+
       query =
         %(query {
         me {
@@ -980,6 +983,9 @@ RSpec.describe Types::QueryType do
           }
           demandLeadTimeP80
           firstDelivery {
+            id
+          }
+          demandBlocks {
             id
           }
         }
@@ -1061,7 +1067,15 @@ RSpec.describe Types::QueryType do
                                                        'firstDelivery' =>
                                                          {
                                                            'id' => other_demand_finished.id.to_s
+                                                         },
+                                                       'demandBlocks' => [
+                                                         {
+                                                           'id' => other_demand_block.id.to_s
+                                                         },
+                                                         {
+                                                           'id' => demand_block.id.to_s
                                                          }
+                                                       ]
                                                      })
     end
   end
