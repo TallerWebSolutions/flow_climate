@@ -7,6 +7,7 @@ import { MeContext } from "../../contexts/MeContext"
 import BasicPage from "../../components/BasicPage"
 import Table from "../../components/Table"
 import { TeamMember } from "../../modules/teamMember/teamMember.types"
+import { secondsToDays } from "../../lib/date"
 
 const TEAM_MEMBER_QUERY = gql`
   query TeamMember($id: Int!) {
@@ -26,6 +27,12 @@ const TEAM_MEMBER_QUERY = gql`
       demandLargestLeadTime {
         id
         leadtime
+      }
+      demandLeadTimeP80
+      startDate
+      endDate
+      projects {
+        id
       }
     }
   }
@@ -57,18 +64,30 @@ const TeamMemberDashboard = () => {
       name: teamMemberName,
     },
   ]
+  const demandShortestLeadTime =
+    data?.teamMember?.demandShortestLeadTime?.leadtime || 0
+  const demandLargestLeadTime =
+    data?.teamMember?.demandLargestLeadTime?.leadtime || 0
+  const demandLeadTimeP80 = data?.teamMember?.demandLeadTimeP80 || 0
   const teamMemberInfoRows = [
     [t("dashboard.name"), teamMemberName],
     [t("dashboard.delivered"), data?.teamMember?.deliveredDemands?.length || 0],
     [t("dashboard.bugs"), data?.teamMember?.bugs?.length || 0],
     [
       t("dashboard.leadTimeMin"),
-      data?.teamMember?.demandShortestLeadTime?.leadtime || 0,
+      `${secondsToDays(demandShortestLeadTime)} ${t("dashboard.days")}`,
     ],
     [
       t("dashboard.leadTimeMax"),
-      data?.teamMember?.demandLargestLeadTime?.leadtime || 0,
+      `${secondsToDays(demandLargestLeadTime)} ${t("dashboard.days")}`,
     ],
+    [
+      t("dashboard.leadTimeP80"),
+      `${secondsToDays(demandLeadTimeP80)} ${t("dashboard.days")}`,
+    ],
+    [t("dashboard.startDate"), data?.teamMember?.startDate || ""],
+    [t("dashboard.endDate"), data?.teamMember?.endDate || ""],
+    [t("dashboard.projects"), data?.teamMember?.projects?.length || 0],
   ]
 
   return (
