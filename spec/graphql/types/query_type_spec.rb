@@ -919,7 +919,16 @@ RSpec.describe Types::QueryType do
       company = Fabricate :company
       team = Fabricate :team, company: company
       team_member = Fabricate :team_member, company: company
-      Fabricate :membership, team_member: team_member, team: team
+      membership = Fabricate :membership, team_member: team_member, team: team
+      demand_finished = Fabricate :demand, team: team, end_date: 1.hour.ago, demand_type: :feature
+      other_demand_finished = Fabricate :demand, team: team, created_date: 3.days.ago, end_date: 2.hours.ago, demand_type: :bug
+      bug = Fabricate :demand, team: team, created_date: 2.days.ago, end_date: nil, demand_type: :bug
+      other_bug = Fabricate :demand, team: team, created_date: 1.day.ago, end_date: nil, demand_type: :bug
+
+      Fabricate :item_assignment, membership: membership, demand: demand_finished
+      Fabricate :item_assignment, membership: membership, demand: other_demand_finished
+      Fabricate :item_assignment, membership: membership, demand: bug
+      Fabricate :item_assignment, membership: membership, demand: other_bug
 
       query =
         %(query {
@@ -946,6 +955,15 @@ RSpec.describe Types::QueryType do
           monthlyPayment
           teams {
             name
+          }
+          demandsFinished: demands(status: FINISHED) {
+            id
+          }
+          bugs: demands(type: BUG) {
+            id
+          }
+          bugsFinished: demands(status: FINISHED, type: BUG) {
+            id
           }
         }
       })
@@ -981,7 +999,31 @@ RSpec.describe Types::QueryType do
                                                        'monthlyPayment' => team_member.monthly_payment.to_f,
                                                        'teams' => [{
                                                          'name' => team.name
-                                                       }]
+                                                       }],
+                                                       'demandsFinished' => [
+                                                         {
+                                                           'id' => other_demand_finished.id.to_s
+                                                         },
+                                                         {
+                                                           'id' => demand_finished.id.to_s
+                                                         }
+                                                       ],
+                                                       'bugs' => [
+                                                         {
+                                                           'id' => other_demand_finished.id.to_s
+                                                         },
+                                                         {
+                                                           'id' => bug.id.to_s
+                                                         },
+                                                         {
+                                                           'id' => other_bug.id.to_s
+                                                         }
+                                                       ],
+                                                       'bugsFinished' => [
+                                                         {
+                                                           'id' => other_demand_finished.id.to_s
+                                                         }
+                                                       ]
                                                      })
     end
   end

@@ -12,5 +12,22 @@ module Types
     field :hours_per_month, Int, null: false
     field :monthly_payment, Float, null: true
     field :teams, [Types::TeamType], null: true
+
+    field :demands, [Types::DemandType] do
+      argument :status, Types::Enums::DemandStatusesType, required: false
+      argument :type, Types::Enums::DemandTypesType, required: false
+    end
+
+    def demands(status: 'ALL', type: 'ALL')
+      demands = if status == 'FINISHED'
+                  object.demands.finished_until_date(Time.zone.now).order(:end_date)
+                else
+                  object.demands.order(:created_date)
+                end
+
+      demands = demands.bug.order(:created_date) if type == 'BUG'
+
+      demands
+    end
   end
 end
