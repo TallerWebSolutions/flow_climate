@@ -1028,10 +1028,10 @@ RSpec.describe Types::QueryType do
                                                        }],
                                                        'demandsFinished' => [
                                                          {
-                                                           'id' => other_demand_finished.id.to_s
+                                                           'id' => demand_finished.id.to_s
                                                          },
                                                          {
-                                                           'id' => demand_finished.id.to_s
+                                                           'id' => other_demand_finished.id.to_s
                                                          }
                                                        ],
                                                        'bugs' => [
@@ -1052,7 +1052,7 @@ RSpec.describe Types::QueryType do
                                                        ],
                                                        'lastDeliveries' => [
                                                          {
-                                                           'id' => other_demand_finished.id.to_s
+                                                           'id' => demand_finished.id.to_s
                                                          }
                                                        ],
                                                        'demandShortestLeadTime' =>

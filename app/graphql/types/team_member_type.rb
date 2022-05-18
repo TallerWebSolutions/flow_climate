@@ -32,7 +32,7 @@ module Types
 
     def demands(status: 'ALL', type: 'ALL', limit: nil)
       demands = if status == 'FINISHED'
-                  object.demands.finished_until_date(Time.zone.now).order(:end_date)
+                  object.demands.finished_until_date(Time.zone.now).order(end_date: :desc)
                 else
                   object.demands.order(:created_date)
                 end

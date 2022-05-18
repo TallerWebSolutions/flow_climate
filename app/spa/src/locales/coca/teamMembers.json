@@ -36,6 +36,13 @@
     "startDate": "Start Date",
     "endDate": "End Date",
     "projects": "Projects",
-    "leadTimeP80": "Lead time p80"
+    "leadTimeP80": "Lead time p80",
+    "latestDeliveries": {
+      "project": "Project",
+      "product": "Product",
+      "externalId": "External ID",
+      "endDate": "Delivery Date",
+      "leadTime": "Lead Time"
+    }
   }
 }
