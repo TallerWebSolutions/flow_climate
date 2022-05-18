@@ -2,6 +2,7 @@ import { useContext } from "react"
 import { useTranslation } from "react-i18next"
 import { gql, useQuery } from "@apollo/client"
 import { useParams } from "react-router-dom"
+import { Grid } from "@mui/material"
 
 import { MeContext } from "../../contexts/MeContext"
 import BasicPage from "../../components/BasicPage"
@@ -127,8 +128,17 @@ const TeamMemberDashboard = () => {
       title={teamMemberName}
       loading={loading}
     >
-      <Table rows={teamMemberInfoRows} />
-      <Table headerCells={latestDeliveriesHeader} rows={latestDeliveriesRows} />
+      <Grid container spacing={2}>
+        <Grid item xs={6}>
+          <Table rows={teamMemberInfoRows} />
+        </Grid>
+        <Grid item xs={6}>
+          <Table
+            headerCells={latestDeliveriesHeader}
+            rows={latestDeliveriesRows}
+          />
+        </Grid>
+      </Grid>
     </BasicPage>
   )
 }
