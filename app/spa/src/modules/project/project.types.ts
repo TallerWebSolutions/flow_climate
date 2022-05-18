@@ -109,3 +109,8 @@ export type Project = {
     values: number[]
   }
 }
+
+export type ProjectsList = {
+  totalCount: number
+  projects: Project[]
+}

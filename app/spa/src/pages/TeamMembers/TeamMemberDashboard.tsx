@@ -33,13 +33,16 @@ const TEAM_MEMBER_QUERY = gql`
       demandLeadTimeP80
       startDate
       endDate
-      projects(orderField: "end_date", limit: 10, sortDirection: DESC) {
-        id
-        name
-        startDate
-        endDate
-        currentRiskToDeadline
-        leadTimeP80
+      projects(orderField: "end_date", sortDirection: DESC) {
+        totalCount
+        projects {
+          id
+          name
+          startDate
+          endDate
+          currentRiskToDeadline
+          leadTimeP80
+        }
       }
       teams {
         id
@@ -127,7 +130,7 @@ const TeamMemberDashboard = () => {
       t("dashboard.endDate"),
       <DateLocale date={data?.teamMember?.endDate || ""} />,
     ],
-    [t("dashboard.projects"), data?.teamMember?.projects?.length || 0],
+    [t("dashboard.projects"), data?.teamMember?.projects?.totalCount || 0],
   ]
 
   const latestDeliveriesHeader = [
@@ -154,7 +157,7 @@ const TeamMemberDashboard = () => {
       </Link>,
       demand.externalId || "",
       <DateLocale time date={demand.endDate} />,
-      secondsToDays(demand.leadtime) || "",
+      `${secondsToDays(demand.leadtime)} ${t("dashboard.days")}`,
     ]) || []
 
   const teamsRows =
@@ -188,7 +191,7 @@ const TeamMemberDashboard = () => {
     t("dashboard.latestProjects.leadTime"),
   ]
   const latestProjectsRows =
-    data?.teamMember?.projects?.map((project) => [
+    data?.teamMember?.projects?.projects?.map((project) => [
       <Link
         component={RouterLink}
         to={`/companies/${companySlug}/projects/${project.id}`}
@@ -199,7 +202,7 @@ const TeamMemberDashboard = () => {
       <DateLocale date={project.endDate} />,
       `${(project.currentRiskToDeadline * 100).toFixed(2)}%`,
       "",
-      secondsToDays(project.leadTimeP80) || "",
+      `${secondsToDays(project.leadTimeP80)} ${t("dashboard.days")}`,
     ]) || []
 
   return (

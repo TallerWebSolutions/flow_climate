@@ -1,5 +1,5 @@
 import { Demand, DemandBlock } from "../demand/demand.types"
-import { Project } from "../project/project.types"
+import { ProjectsList } from "../project/project.types"
 import { Team } from "../team/team.types"
 
 export type TeamMember = {
@@ -16,6 +16,6 @@ export type TeamMember = {
   demandLargestLeadTime?: Demand
   latestDeliveries?: Demand[]
   demandLeadTimeP80?: number
-  projects?: Project[]
+  projects?: ProjectsList
   demandBlocks?: DemandBlock[]
 }
