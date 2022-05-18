@@ -88,6 +88,7 @@ module Types
     field :demands_flow_chart_data, Types::Charts::DemandsFlowChartDataType, null: true
     field :lead_time_histogram_data, Types::Charts::LeadTimeHistogramDataType, null: true
     field :project_members, [Types::ProjectMemberType], null: true
+    field :quality, Float, null: true
 
     delegate :remaining_backlog, to: :object
     delegate :remaining_weeks, to: :object

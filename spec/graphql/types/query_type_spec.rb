@@ -343,6 +343,7 @@ RSpec.describe Types::QueryType do
           endDate
           deadlinesChangeCount
           discoveredScope
+          quality
           company {
             id
             name
@@ -460,6 +461,7 @@ RSpec.describe Types::QueryType do
                                                         'endDate' => project.end_date.to_s,
                                                         'deadlinesChangeCount' => 0,
                                                         'discoveredScope' => nil,
+                                                        'quality' => project.quality,
                                                         'pastWeeks' => project.past_weeks.to_i,
                                                         'currentWeeksByLittleLaw' => 0,
                                                         'currentMonteCarloWeeksMin' => 9,
