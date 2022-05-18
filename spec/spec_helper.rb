@@ -65,10 +65,11 @@ RSpec.configure do |config|
 
   config.before do
     DatabaseCleaner.strategy = :transaction
-  end
-
-  config.before do
     DatabaseCleaner.start
+
+    # rubocop:disable Rails/I18nLocaleAssignment
+    I18n.locale = 'pt-BR'
+    # rubocop:enable Rails/I18nLocaleAssignment
   end
 
   config.after do

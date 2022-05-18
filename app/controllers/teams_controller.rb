@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class TeamsController < DemandsListController
-  before_action :user_gold_check
-
   before_action :assign_company
   before_action :assign_team, except: %i[new index]
 

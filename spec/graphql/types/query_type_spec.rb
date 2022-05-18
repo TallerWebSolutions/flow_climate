@@ -963,11 +963,21 @@ RSpec.describe Types::QueryType do
           teams {
             name
           }
-          projectsEndDateAsc: projects(orderField: "end_date", sortDirection: ASC, limit: 1) {
-            id
+          projectsEndDateAsc: projects(orderField: "end_date", sortDirection: ASC, perPage: 1) {
+            totalCount
+            lastPage
+            totalPages
+            projects {
+              id
+            }
           }
-          projectsEndDateDesc: projects(orderField: "end_date", sortDirection: DESC, limit: 1) {
-            id
+          projectsEndDateDesc: projects(orderField: "end_date", sortDirection: DESC, perPage: 1) {
+            totalCount
+            lastPage
+            totalPages
+            projects {
+              id
+            }
           }
           demandsFinished: demands(status: FINISHED) {
             id
@@ -1040,12 +1050,23 @@ RSpec.describe Types::QueryType do
                                                          'teams' => [{
                                                            'name' => team.name
                                                          }],
-                                                         'projectsEndDateAsc' => [{
-                                                           'id' => project.id.to_s
-                                                         }],
-                                                         'projectsEndDateDesc' => [{
-                                                           'id' => other_project.id.to_s
-                                                         }],
+                                                         'projectsEndDateAsc' => {
+                                                           'lastPage' => false,
+                                                           'totalCount' => 2,
+                                                           'totalPages' => 2,
+                                                           'projects' =>
+                                                             [{
+                                                               'id' => project.id.to_s
+                                                             }]
+                                                         },
+                                                         'projectsEndDateDesc' => {
+                                                           'lastPage' => false,
+                                                           'totalCount' => 2,
+                                                           'totalPages' => 2,
+                                                           'projects' => [{
+                                                             'id' => other_project.id.to_s
+                                                           }]
+                                                         },
                                                          'demandsFinished' => [
                                                            {
                                                              'id' => demand_finished.id.to_s
