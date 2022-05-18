@@ -27,6 +27,14 @@
     }
   },
   "dashboard": {
-    "name": "Nome"
+    "name": "Nome",
+    "delivered": "Entregas",
+    "bugs": "Defeitos",
+    "leadTimeMin": "Min Lead Time",
+    "days": "Dias",
+    "leadTimeMax": "Max Lead Time",
+    "startDate": "Início",
+    "endDate": "Fim",
+    "projects": "Projetos"
   }
 }

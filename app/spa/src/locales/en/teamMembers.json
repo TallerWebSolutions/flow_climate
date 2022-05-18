@@ -27,6 +27,14 @@
     }
   },
   "dashboard": {
-    "name": "Name"
+    "name": "Name",
+    "delivered": "Delivered",
+    "bugs": "Bugs",
+    "leadTimeMin": "Min Lead Time",
+    "days": "Days",
+    "leadTimeMax": "Max Lead Time",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "projects": "Projects"
   }
 }
