@@ -7,6 +7,7 @@ import { MeContext } from "../../contexts/MeContext"
 import BasicPage from "../../components/BasicPage"
 import { TeamMember } from "../../modules/teamMember/teamMember.types"
 import TeamMemberDashboardTables from "../../components/TeamMemberDashboardTables"
+import TeamMemberDashboardCharts from "../../components/TeamMemberDashboardCharts"
 
 const TEAM_MEMBER_QUERY = gql`
   query TeamMember($id: Int!) {
@@ -107,7 +108,12 @@ const TeamMemberDashboard = () => {
       title={teamMemberName}
       loading={loading}
     >
-      {teamMember && <TeamMemberDashboardTables teamMember={teamMember} />}
+      {teamMember && (
+        <>
+          <TeamMemberDashboardTables teamMember={teamMember} />
+          <TeamMemberDashboardCharts teamMember={teamMember} />
+        </>
+      )}
     </BasicPage>
   )
 }
