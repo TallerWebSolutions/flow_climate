@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ProjectsList < BaseGraphqlObject
+class ProjectsList < BaseAggregatorObject
   attr_reader :projects
 
   def initialize(projects, total_count, last_page, total_pages)

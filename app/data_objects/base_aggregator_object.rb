@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class BaseGraphqlObject
+class BaseAggregatorObject
   attr_reader :total_count, :last_page, :total_pages
 
   def initialize(total_count, last_page, total_pages)

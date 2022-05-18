@@ -1018,6 +1018,10 @@ RSpec.describe Types::QueryType do
             leadTimeP80
             leadTimeP95
           }
+          leadTimeHistogramChartData {
+            keys
+            values
+          }
         }
       })
 
@@ -1133,6 +1137,10 @@ RSpec.describe Types::QueryType do
                                                            'leadTimeP65' => lead_time_p65,
                                                            'leadTimeP80' => lead_time_p80,
                                                            'leadTimeP95' => lead_time_p95
+                                                         },
+                                                         'leadTimeHistogramChartData' => {
+                                                           'keys' => [23_400.0],
+                                                           'values' => [2]
                                                          }
                                                        })
       end

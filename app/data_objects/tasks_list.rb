@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class TasksList < BaseGraphqlObject
+class TasksList < BaseAggregatorObject
   attr_reader :total_delivered_count, :tasks
 
   def initialize(total_count, total_delivered_count, last_page, total_pages, tasks)

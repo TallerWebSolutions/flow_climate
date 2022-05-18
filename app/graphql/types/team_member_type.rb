@@ -41,6 +41,7 @@ module Types
     end
 
     field :lead_time_control_chart_data, Types::Charts::LeadTimeControlChartDataType, null: true
+    field :lead_time_histogram_chart_data, Types::Charts::LeadTimeHistogramDataType, null: true
 
     def demands(status: 'ALL', type: 'ALL', limit: nil)
       demands = if status == 'FINISHED'
@@ -96,6 +97,11 @@ module Types
 
     def lead_time_control_chart_data
       LeadTimeControlChartData.new(object.demands.finished_until_date(Time.zone.now))
+    end
+
+    def lead_time_histogram_chart_data
+      demands_finished = object.demands.finished_with_leadtime
+      Stats::StatisticsService.instance.leadtime_histogram_hash(demands_finished.map(&:leadtime).map { |leadtime| leadtime.round(3) })
     end
   end
 end
