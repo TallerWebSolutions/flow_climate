@@ -7,6 +7,7 @@ import { ProjectConsolidation } from "./projectConsolidation.types"
 export type Project = {
   id: string
   name: string
+  quality?: number
   team: {
     id: number
     name: string
@@ -69,7 +70,7 @@ export type Project = {
   projectConsolidationsWeekly: ProjectConsolidation[]
   projectConsolidationsLastMonth: ProjectConsolidation[]
   lastProjectConsolidationsWeekly?: ProjectConsolidation
-  currentRiskToDeadline: number
+  currentRiskToDeadline?: number
   remainingDays: number
   currentTeamBasedRisk: number
   running: boolean

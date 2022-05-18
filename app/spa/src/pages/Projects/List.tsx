@@ -165,7 +165,7 @@ const ProjectsList = ({ filters, setFilters }: ProjectsListProps) => {
           </Typography>
         </Box>
       </Box>,
-      `${(project.currentRiskToDeadline * 100).toFixed(2)}%`,
+      `${(project.currentRiskToDeadline || 0 * 100).toFixed(2)}%`,
     ]) || []
 
   return <Table headerCells={projectsListHeaderCells} rows={projectList} />
