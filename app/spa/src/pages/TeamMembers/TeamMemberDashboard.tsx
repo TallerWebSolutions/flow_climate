@@ -34,6 +34,20 @@ const TEAM_MEMBER_QUERY = gql`
       projects {
         id
       }
+      latestDeliveries: demands(status: FINISHED, limit: 8) {
+        id
+        project {
+          id
+          name
+        }
+        product {
+          id
+          name
+        }
+        externalId
+        endDate
+        leadtime
+      }
     }
   }
 `
@@ -90,6 +104,23 @@ const TeamMemberDashboard = () => {
     [t("dashboard.projects"), data?.teamMember?.projects?.length || 0],
   ]
 
+  const latestDeliveriesHeader = [
+    t("dashboard.latestDeliveries.project"),
+    t("dashboard.latestDeliveries.product"),
+    t("dashboard.latestDeliveries.externalId"),
+    t("dashboard.latestDeliveries.endDate"),
+    t("dashboard.latestDeliveries.leadTime"),
+  ]
+
+  const latestDeliveriesRows =
+    data?.teamMember?.latestDeliveries?.map((demand) => [
+      demand.project?.name || "",
+      demand.product?.name || "",
+      demand.externalId || "",
+      demand.endDate || "",
+      secondsToDays(demand.leadtime) || "",
+    ]) || []
+
   return (
     <BasicPage
       breadcrumbsLinks={breadcrumbsLinks}
@@ -97,6 +128,7 @@ const TeamMemberDashboard = () => {
       loading={loading}
     >
       <Table rows={teamMemberInfoRows} />
+      <Table headerCells={latestDeliveriesHeader} rows={latestDeliveriesRows} />
     </BasicPage>
   )
 }

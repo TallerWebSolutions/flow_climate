@@ -14,6 +14,7 @@ export type TeamMember = {
   bugs?: Demand[]
   demandShortestLeadTime?: Demand
   demandLargestLeadTime?: Demand
+  latestDeliveries?: Demand[]
   demandLeadTimeP80?: number
-  projects: Project[]
+  projects?: Project[]
 }

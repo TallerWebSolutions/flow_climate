@@ -1,3 +1,5 @@
+import { Project } from "../project/project.types"
+
 export type Demand = {
   id: string
   endDate: string
@@ -12,4 +14,5 @@ export type Demand = {
   externalId: string
   leadtime: number
   numberOfBlocks: number
+  project?: Project
 }
