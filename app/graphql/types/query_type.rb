@@ -38,7 +38,7 @@ module Types
       argument :limit, Int
       argument :finished, Boolean
       argument :discarded, Boolean, required: false
-      argument :sort_direction, Types::SortDirection, required: false
+      argument :sort_direction, Types::Enums::SortDirection, required: false
     end
 
     field :team_members, [Types::TeamMemberType], null: true, description: 'Team Members of a Company' do

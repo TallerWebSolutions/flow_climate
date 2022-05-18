@@ -918,12 +918,14 @@ RSpec.describe Types::QueryType do
     it 'returns the team member and its fields' do
       travel_to(Time.zone.local(2022, 5, 18, 10, 0, 0)) do
         company = Fabricate :company
-        project = Fabricate :project
+        project = Fabricate :project, end_date: 1.day.from_now
+        other_project = Fabricate :project, end_date: 2.days.from_now
+
         team = Fabricate :team, company: company
         team_member = Fabricate :team_member, company: company
         membership = Fabricate :membership, team_member: team_member, team: team
         demand_finished = Fabricate :demand, team: team, project: project, created_date: 2.days.ago, commitment_date: 10.hours.ago, end_date: 1.hour.ago, demand_type: :feature
-        other_demand_finished = Fabricate :demand, team: team, project: project, created_date: 3.days.ago, commitment_date: 6.hours.ago, end_date: 2.hours.ago, demand_type: :bug
+        other_demand_finished = Fabricate :demand, team: team, project: other_project, created_date: 3.days.ago, commitment_date: 6.hours.ago, end_date: 2.hours.ago, demand_type: :bug
         bug = Fabricate :demand, team: team, project: project, created_date: 2.days.ago, end_date: nil, demand_type: :bug
         other_bug = Fabricate :demand, team: team, project: project, created_date: 1.day.ago, end_date: nil, demand_type: :bug
 
@@ -961,7 +963,10 @@ RSpec.describe Types::QueryType do
           teams {
             name
           }
-          projects {
+          projectsEndDateAsc: projects(orderField: "end_date", sortDirection: ASC, limit: 1) {
+            id
+          }
+          projectsEndDateDesc: projects(orderField: "end_date", sortDirection: DESC, limit: 1) {
             id
           }
           demandsFinished: demands(status: FINISHED) {
@@ -1035,8 +1040,11 @@ RSpec.describe Types::QueryType do
                                                          'teams' => [{
                                                            'name' => team.name
                                                          }],
-                                                         'projects' => [{
+                                                         'projectsEndDateAsc' => [{
                                                            'id' => project.id.to_s
+                                                         }],
+                                                         'projectsEndDateDesc' => [{
+                                                           'id' => other_project.id.to_s
                                                          }],
                                                          'demandsFinished' => [
                                                            {

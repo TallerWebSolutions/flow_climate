@@ -19,7 +19,11 @@ module Types
       argument :limit, Int, required: false
     end
 
-    field :projects, [Types::ProjectType]
+    field :projects, [Types::ProjectType], null: true do
+      argument :order_field, String, required: true
+      argument :sort_direction, Types::Enums::SortDirection, required: false
+      argument :limit, Int, required: true
+    end
 
     field :demand_shortest_lead_time, Types::DemandType, null: true
     field :demand_largest_lead_time, Types::DemandType, null: true
@@ -44,6 +48,16 @@ module Types
       return demands if limit.blank?
 
       demands.limit(limit)
+    end
+
+    def projects(order_field:, sort_direction: 'ASC', limit: 10)
+      projects = if sort_direction == 'DESC'
+                   object.projects.order("#{order_field} DESC")
+                 else
+                   object.projects.order(order_field)
+                 end
+
+      projects.limit(limit)
     end
 
     def demand_shortest_lead_time
