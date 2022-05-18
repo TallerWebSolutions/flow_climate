@@ -35,6 +35,7 @@
     "leadTimeMax": "Max Lead Time",
     "startDate": "Start Date",
     "endDate": "End Date",
-    "projects": "Projects"
+    "projects": "Projects",
+    "leadTimeP80": "Lead time p80"
   }
 }
