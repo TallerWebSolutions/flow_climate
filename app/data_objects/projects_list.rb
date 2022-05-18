@@ -1,12 +1,10 @@
 # frozen_string_literal: true
 
-class ProjectsList
-  attr_reader :total_count, :last_page, :total_pages, :projects
+class ProjectsList < BaseGraphqlObject
+  attr_reader :projects
 
   def initialize(projects, total_count, last_page, total_pages)
+    super(total_count, last_page, total_pages)
     @projects = projects
-    @total_count = total_count
-    @last_page = last_page
-    @total_pages = total_pages
   end
 end

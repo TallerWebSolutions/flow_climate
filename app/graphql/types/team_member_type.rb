@@ -33,7 +33,12 @@ module Types
     field :demand_lead_time_p80, Float, null: true
     field :first_delivery, Types::DemandType, null: true
 
-    field :demand_blocks, [Types::DemandBlockType], null: true
+    field :demand_blocks_list, Types::DemandBlocksListType, null: true do
+      argument :order_field, String, required: true
+      argument :sort_direction, Types::Enums::SortDirection, required: false
+      argument :per_page, Int, required: false
+      argument :page_number, Int, required: false
+    end
 
     field :lead_time_control_chart_data, Types::Charts::LeadTimeControlChartDataType, null: true
 
@@ -60,6 +65,17 @@ module Types
 
       projects_page = projects.page(page_number).per(per_page)
       ProjectsList.new(projects_page, projects.count, projects_page.last_page?, projects_page.total_pages)
+    end
+
+    def demand_blocks_list(order_field:, sort_direction: 'ASC', per_page: 10, page_number: 1)
+      demand_blocks = if sort_direction == 'DESC'
+                        object.demand_blocks.order("#{order_field} DESC")
+                      else
+                        object.demand_blocks.order(order_field)
+                      end
+
+      demand_blocks_page = demand_blocks.page(page_number).per(per_page)
+      DemandBlocksList.new(demand_blocks_page, demand_blocks.count, demand_blocks_page.last_page?, demand_blocks_page.total_pages)
     end
 
     def demand_shortest_lead_time

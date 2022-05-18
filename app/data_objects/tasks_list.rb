@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
-class TasksList
-  attr_reader :total_count, :total_delivered_count, :last_page, :total_pages, :tasks
+class TasksList < BaseGraphqlObject
+  attr_reader :total_delivered_count, :tasks
 
   def initialize(total_count, total_delivered_count, last_page, total_pages, tasks)
-    @total_count = total_count
+    super(total_count, total_pages, last_page)
     @total_delivered_count = total_delivered_count
-    @last_page = last_page
-    @total_pages = total_pages
     @tasks = tasks
   end
 

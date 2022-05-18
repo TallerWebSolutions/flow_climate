@@ -937,7 +937,7 @@ RSpec.describe Types::QueryType do
         Fabricate :item_assignment, membership: membership, demand: other_bug
 
         demand_block = Fabricate :demand_block, blocker: team_member, block_time: 1.day.ago
-        other_demand_block = Fabricate :demand_block, blocker: team_member, block_time: 2.days.ago
+        Fabricate :demand_block, blocker: team_member, block_time: 2.days.ago
 
         query =
           %(query {
@@ -1003,8 +1003,13 @@ RSpec.describe Types::QueryType do
           firstDelivery {
             id
           }
-          demandBlocks {
-            id
+          demandBlocksList(orderField: "block_time", sortDirection: DESC, perPage: 1) {
+            totalPages
+            lastPage
+            totalCount
+            demandBlocks {
+              id
+            }
           }
           leadTimeControlChartData {
             xAxis
@@ -1111,14 +1116,17 @@ RSpec.describe Types::QueryType do
                                                            {
                                                              'id' => other_demand_finished.id.to_s
                                                            },
-                                                         'demandBlocks' => [
-                                                           {
-                                                             'id' => other_demand_block.id.to_s
-                                                           },
-                                                           {
-                                                             'id' => demand_block.id.to_s
-                                                           }
-                                                         ],
+                                                         'demandBlocksList' => {
+                                                           'totalPages' => 2,
+                                                           'lastPage' => false,
+                                                           'totalCount' => 2,
+                                                           'demandBlocks' => [
+                                                             {
+                                                               'id' => demand_block.id.to_s
+                                                             }
+                                                           ]
+
+                                                         },
                                                          'leadTimeControlChartData' => {
                                                            'xAxis' => [other_demand_finished.external_id, demand_finished.external_id],
                                                            'yAxis' => [other_demand_finished.leadtime.to_f, demand_finished.leadtime.to_f],
