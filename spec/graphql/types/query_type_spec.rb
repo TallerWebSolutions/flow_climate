@@ -963,7 +963,7 @@ RSpec.describe Types::QueryType do
           teams {
             name
           }
-          projectsEndDateAsc: projects(orderField: "end_date", sortDirection: ASC, perPage: 1) {
+          projectsEndDateAsc: projectsList(orderField: "end_date", sortDirection: ASC, perPage: 1) {
             totalCount
             lastPage
             totalPages
@@ -971,7 +971,7 @@ RSpec.describe Types::QueryType do
               id
             }
           }
-          projectsEndDateDesc: projects(orderField: "end_date", sortDirection: DESC, perPage: 1) {
+          projectsEndDateDesc: projectsList(orderField: "end_date", sortDirection: DESC, perPage: 1) {
             totalCount
             lastPage
             totalPages
