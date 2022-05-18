@@ -11,7 +11,7 @@ export default {
 } as ComponentMeta<typeof DateLocale>
 
 const simpleDate = "2022-07-31"
-const dateWithTime = "2022-04-06T11:39:39-03:00"
+const dateWithTime = "2018-08-07T16:02:11-03:00"
 
 export const EN: ComponentStory<typeof DateLocale> = () => {
   useEffect(() => {

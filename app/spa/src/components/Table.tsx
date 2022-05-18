@@ -39,10 +39,7 @@ const Table = ({ title, headerCells, rows, footerCells }: TableProps) => (
         <TableHead>
           <TableRow>
             {headerCells.map((cell, index) => (
-              <TableCell
-                key={`${cell}--${index}`}
-                sx={{ padding: 2, minWidth: "90px" }}
-              >
+              <TableCell key={`${cell}--${index}`} sx={{ padding: 2 }}>
                 {cell}
               </TableCell>
             ))}

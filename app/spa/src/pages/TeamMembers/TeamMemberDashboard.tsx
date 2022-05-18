@@ -9,6 +9,7 @@ import BasicPage from "../../components/BasicPage"
 import Table from "../../components/Table"
 import { TeamMember } from "../../modules/teamMember/teamMember.types"
 import { secondsToDays } from "../../lib/date"
+import DateLocale from "../../components/ui/DateLocale"
 
 const TEAM_MEMBER_QUERY = gql`
   query TeamMember($id: Int!) {
@@ -32,7 +33,7 @@ const TEAM_MEMBER_QUERY = gql`
       demandLeadTimeP80
       startDate
       endDate
-      projects {
+      projects(orderField: "end_date", limit: 10, sortDirection: DESC) {
         id
         name
         startDate
@@ -53,7 +54,7 @@ const TEAM_MEMBER_QUERY = gql`
         blockTime
         unblockTime
       }
-      latestDeliveries: demands(status: FINISHED, limit: 8) {
+      latestDeliveries: demands(status: FINISHED, limit: 10) {
         id
         project {
           id
@@ -118,8 +119,14 @@ const TeamMemberDashboard = () => {
       t("dashboard.leadTimeP80"),
       `${secondsToDays(demandLeadTimeP80)} ${t("dashboard.days")}`,
     ],
-    [t("dashboard.startDate"), data?.teamMember?.startDate || ""],
-    [t("dashboard.endDate"), data?.teamMember?.endDate || ""],
+    [
+      t("dashboard.startDate"),
+      <DateLocale date={data?.teamMember?.startDate || ""} />,
+    ],
+    [
+      t("dashboard.endDate"),
+      <DateLocale date={data?.teamMember?.endDate || ""} />,
+    ],
     [t("dashboard.projects"), data?.teamMember?.projects?.length || 0],
   ]
 
@@ -146,7 +153,7 @@ const TeamMemberDashboard = () => {
         {demand.product?.name}
       </Link>,
       demand.externalId || "",
-      demand.endDate || "",
+      <DateLocale time date={demand.endDate} />,
       secondsToDays(demand.leadtime) || "",
     ]) || []
 
@@ -168,8 +175,8 @@ const TeamMemberDashboard = () => {
   const demandBlocksRows =
     data?.teamMember?.demandBlocks?.map((block) => [
       block.demand?.demandTitle || "",
-      block.blockTime || "",
-      block.unblockTime || "",
+      <DateLocale time date={block.blockTime} />,
+      <DateLocale time date={block.unblockTime} />,
     ]) || []
 
   const latestProjectsHeader = [
@@ -188,8 +195,8 @@ const TeamMemberDashboard = () => {
       >
         {project.name}
       </Link>,
-      project.startDate || "",
-      project.endDate || "",
+      <DateLocale date={project.startDate} />,
+      <DateLocale date={project.endDate} />,
       `${(project.currentRiskToDeadline * 100).toFixed(2)}%`,
       "",
       secondsToDays(project.leadTimeP80) || "",

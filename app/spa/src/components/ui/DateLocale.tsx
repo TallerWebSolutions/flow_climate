@@ -5,16 +5,26 @@ import { formatDate } from "../../lib/date"
 
 type DateLocaleProps = {
   date: string
-  time: boolean
+  time?: boolean
 }
 
 const DateLocale = ({ date, time }: DateLocaleProps) => {
   const { i18n } = useTranslation()
   const isPtBr = i18n.language === "pt"
   const dateFormat = isPtBr ? "dd/MM/yyyy" : "MM/dd/yyyy"
-  const format = time ? `${dateFormat} H:mm aa` : dateFormat
+  const format = time ? `${dateFormat} HH:mm` : dateFormat
 
-  return <Typography>{formatDate({ date, format })}</Typography>
+  return (
+    <Typography
+      component="span"
+      variant="body2"
+      sx={{
+        minWidth: time ? "115px" : "10px",
+      }}
+    >
+      {formatDate({ date, format })}
+    </Typography>
+  )
 }
 
 export default DateLocale

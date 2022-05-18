@@ -45,7 +45,11 @@ type FormatDateProps = {
   format?: string
 }
 
-export const formatDate = ({ date, format = "MM/dd/yy" }: FormatDateProps) => {
+export const formatDate = ({
+  date,
+  format = "MM/dd/yy",
+}: FormatDateProps): string => {
+  if (!date.length) return ""
   return dateFnsFormat(parseISO(date), format)
 }
 
