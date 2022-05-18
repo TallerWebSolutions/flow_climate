@@ -1,3 +1,4 @@
+import { Company } from "../company/company.types"
 import { Project } from "../project/project.types"
 
 export type Demand = {
@@ -16,6 +17,7 @@ export type Demand = {
   leadtime: number
   numberOfBlocks: number
   project?: Project
+  company?: Company
 }
 
 export type DemandBlock = {

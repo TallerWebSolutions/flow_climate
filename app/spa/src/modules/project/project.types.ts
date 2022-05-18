@@ -48,7 +48,7 @@ export type Project = {
   startDate: string
   endDate: string
   aging: number
-  company: Company
+  company?: Company
   firstDeadline: string
   daysDifferenceBetweenFirstAndLastDeadlines: number
   deadlinesChangeCount: number

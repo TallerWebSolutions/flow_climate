@@ -4,7 +4,7 @@ import { ReplenishingConsolidation } from "../replenishing/replenishingConsolida
 export type Team = {
   id: string
   name: string
-  company: Company
+  company?: Company
   increasedLeadtime80: boolean
   throughputData: number[]
   averageThroughput: number

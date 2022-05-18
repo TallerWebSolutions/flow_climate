@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next"
 import { MeContext } from "../../contexts/MeContext"
 import BasicPage from "../../components/BasicPage"
 import { Button, Link } from "@mui/material"
-import Table from "../../components/Table"
+import Table from "../../components/ui/Table"
 import { Initiative } from "../../modules/initiative/initiative.types"
 import { formatDate } from "../../lib/date"
 

@@ -17,7 +17,7 @@ import { formatDate, secondsToDays, secondsToReadbleDate } from "../lib/date"
 import { Demand } from "../modules/demand/demand.types"
 import { Project } from "../modules/project/project.types"
 import { ReadMoreButton } from "./ReadMoreButton"
-import Table from "./Table"
+import Table from "./ui/Table"
 
 type ProjectChartsTableProps = {
   project?: Project
@@ -67,7 +67,7 @@ export const ProjectChartsTable = ({
   if (!project) return <div>Project not found</div>
 
   const projectID = project.id
-  const companySlug = project.company.slug
+  const companySlug = project.company?.slug || ""
 
   const latestDeliveriesHeaderCells = [
     t("project_chart_table.demand_id"),
