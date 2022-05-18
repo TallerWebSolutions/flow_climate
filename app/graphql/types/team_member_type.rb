@@ -30,6 +30,8 @@ module Types
 
     field :demand_blocks, [Types::DemandBlockType], null: true
 
+    field :lead_time_control_chart_data, Types::Charts::LeadTimeControlChartDataType, null: true
+
     def demands(status: 'ALL', type: 'ALL', limit: nil)
       demands = if status == 'FINISHED'
                   object.demands.finished_until_date(Time.zone.now).order(end_date: :desc)
@@ -58,6 +60,10 @@ module Types
 
     def demand_blocks
       object.demand_blocks.order(:block_time)
+    end
+
+    def lead_time_control_chart_data
+      LeadTimeControlChartData.new(object.demands.finished_until_date(Time.zone.now))
     end
   end
 end

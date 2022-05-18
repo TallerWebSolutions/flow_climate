@@ -916,26 +916,27 @@ RSpec.describe Types::QueryType do
 
   describe '#team_member' do
     it 'returns the team member and its fields' do
-      company = Fabricate :company
-      project = Fabricate :project
-      team = Fabricate :team, company: company
-      team_member = Fabricate :team_member, company: company
-      membership = Fabricate :membership, team_member: team_member, team: team
-      demand_finished = Fabricate :demand, team: team, project: project, created_date: 2.days.ago, commitment_date: 10.hours.ago, end_date: 1.hour.ago, demand_type: :feature
-      other_demand_finished = Fabricate :demand, team: team, project: project, created_date: 3.days.ago, commitment_date: 6.hours.ago, end_date: 2.hours.ago, demand_type: :bug
-      bug = Fabricate :demand, team: team, project: project, created_date: 2.days.ago, end_date: nil, demand_type: :bug
-      other_bug = Fabricate :demand, team: team, project: project, created_date: 1.day.ago, end_date: nil, demand_type: :bug
+      travel_to(Time.zone.local(2022, 5, 18, 10, 0, 0)) do
+        company = Fabricate :company
+        project = Fabricate :project
+        team = Fabricate :team, company: company
+        team_member = Fabricate :team_member, company: company
+        membership = Fabricate :membership, team_member: team_member, team: team
+        demand_finished = Fabricate :demand, team: team, project: project, created_date: 2.days.ago, commitment_date: 10.hours.ago, end_date: 1.hour.ago, demand_type: :feature
+        other_demand_finished = Fabricate :demand, team: team, project: project, created_date: 3.days.ago, commitment_date: 6.hours.ago, end_date: 2.hours.ago, demand_type: :bug
+        bug = Fabricate :demand, team: team, project: project, created_date: 2.days.ago, end_date: nil, demand_type: :bug
+        other_bug = Fabricate :demand, team: team, project: project, created_date: 1.day.ago, end_date: nil, demand_type: :bug
 
-      Fabricate :item_assignment, membership: membership, demand: demand_finished
-      Fabricate :item_assignment, membership: membership, demand: other_demand_finished
-      Fabricate :item_assignment, membership: membership, demand: bug
-      Fabricate :item_assignment, membership: membership, demand: other_bug
+        Fabricate :item_assignment, membership: membership, demand: demand_finished
+        Fabricate :item_assignment, membership: membership, demand: other_demand_finished
+        Fabricate :item_assignment, membership: membership, demand: bug
+        Fabricate :item_assignment, membership: membership, demand: other_bug
 
-      demand_block = Fabricate :demand_block, blocker: team_member, block_time: 1.day.ago
-      other_demand_block = Fabricate :demand_block, blocker: team_member, block_time: 2.days.ago
+        demand_block = Fabricate :demand_block, blocker: team_member, block_time: 1.day.ago
+        other_demand_block = Fabricate :demand_block, blocker: team_member, block_time: 2.days.ago
 
-      query =
-        %(query {
+        query =
+          %(query {
         me {
           id
           fullName
@@ -988,95 +989,114 @@ RSpec.describe Types::QueryType do
           demandBlocks {
             id
           }
+          leadTimeControlChartData {
+            xAxis
+            yAxis
+            leadTimeP65
+            leadTimeP80
+            leadTimeP95
+          }
         }
       })
 
-      user = Fabricate :user, companies: [company], last_company_id: company.id
+        user = Fabricate :user, companies: [company], last_company_id: company.id
 
-      context = {
-        current_user: user
-      }
+        context = {
+          current_user: user
+        }
 
-      result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
-      expect(result.dig('data', 'me')).to eq({
-                                               'id' => user.id.to_s,
-                                               'fullName' => user.full_name,
-                                               'language' => user.language,
-                                               'currentCompany' => {
-                                                 'name' => user.last_company&.name
-                                               },
-                                               'avatar' => {
-                                                 'imageSource' => user.avatar.url
-                                               }
-                                             })
+        lead_time_p65 = Stats::StatisticsService.instance.percentile(65, team_member.demands.finished_with_leadtime.order(:end_date).map(&:leadtime).map(&:to_f))
+        lead_time_p80 = Stats::StatisticsService.instance.percentile(80, team_member.demands.finished_with_leadtime.order(:end_date).map(&:leadtime).map(&:to_f))
+        lead_time_p95 = Stats::StatisticsService.instance.percentile(95, team_member.demands.finished_with_leadtime.order(:end_date).map(&:leadtime).map(&:to_f))
 
-      expect(result.dig('data', 'teamMember')).to eq({
-                                                       'id' => team_member.id.to_s,
-                                                       'name' => team_member.name,
-                                                       'startDate' => team_member.start_date.iso8601,
-                                                       'endDate' => team_member.end_date.iso8601,
-                                                       'jiraAccountUserEmail' => team_member.jira_account_user_email,
-                                                       'jiraAccountId' => team_member.jira_account_id,
-                                                       'billable' => team_member.billable,
-                                                       'hoursPerMonth' => team_member.hours_per_month,
-                                                       'monthlyPayment' => team_member.monthly_payment.to_f,
-                                                       'teams' => [{
-                                                         'name' => team.name
-                                                       }],
-                                                       'projects' => [{
-                                                         'id' => project.id.to_s
-                                                       }],
-                                                       'demandsFinished' => [
-                                                         {
-                                                           'id' => demand_finished.id.to_s
-                                                         },
-                                                         {
-                                                           'id' => other_demand_finished.id.to_s
+        result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
+        expect(result.dig('data', 'me')).to eq({
+                                                 'id' => user.id.to_s,
+                                                 'fullName' => user.full_name,
+                                                 'language' => user.language,
+                                                 'currentCompany' => {
+                                                   'name' => user.last_company&.name
+                                                 },
+                                                 'avatar' => {
+                                                   'imageSource' => user.avatar.url
+                                                 }
+                                               })
+
+        expect(result.dig('data', 'teamMember')).to eq({
+                                                         'id' => team_member.id.to_s,
+                                                         'name' => team_member.name,
+                                                         'startDate' => team_member.start_date.iso8601,
+                                                         'endDate' => team_member.end_date.iso8601,
+                                                         'jiraAccountUserEmail' => team_member.jira_account_user_email,
+                                                         'jiraAccountId' => team_member.jira_account_id,
+                                                         'billable' => team_member.billable,
+                                                         'hoursPerMonth' => team_member.hours_per_month,
+                                                         'monthlyPayment' => team_member.monthly_payment.to_f,
+                                                         'teams' => [{
+                                                           'name' => team.name
+                                                         }],
+                                                         'projects' => [{
+                                                           'id' => project.id.to_s
+                                                         }],
+                                                         'demandsFinished' => [
+                                                           {
+                                                             'id' => demand_finished.id.to_s
+                                                           },
+                                                           {
+                                                             'id' => other_demand_finished.id.to_s
+                                                           }
+                                                         ],
+                                                         'bugs' => [
+                                                           {
+                                                             'id' => other_demand_finished.id.to_s
+                                                           },
+                                                           {
+                                                             'id' => bug.id.to_s
+                                                           },
+                                                           {
+                                                             'id' => other_bug.id.to_s
+                                                           }
+                                                         ],
+                                                         'bugsFinished' => [
+                                                           {
+                                                             'id' => other_demand_finished.id.to_s
+                                                           }
+                                                         ],
+                                                         'lastDeliveries' => [
+                                                           {
+                                                             'id' => demand_finished.id.to_s
+                                                           }
+                                                         ],
+                                                         'demandShortestLeadTime' =>
+                                                           {
+                                                             'id' => other_demand_finished.id.to_s
+                                                           },
+                                                         'demandLargestLeadTime' =>
+                                                           {
+                                                             'id' => demand_finished.id.to_s
+                                                           },
+                                                         'demandLeadTimeP80' => Stats::StatisticsService.instance.percentile(80, team_member.demands.finished_with_leadtime.map(&:leadtime)),
+                                                         'firstDelivery' =>
+                                                           {
+                                                             'id' => other_demand_finished.id.to_s
+                                                           },
+                                                         'demandBlocks' => [
+                                                           {
+                                                             'id' => other_demand_block.id.to_s
+                                                           },
+                                                           {
+                                                             'id' => demand_block.id.to_s
+                                                           }
+                                                         ],
+                                                         'leadTimeControlChartData' => {
+                                                           'xAxis' => [other_demand_finished.external_id, demand_finished.external_id],
+                                                           'yAxis' => [other_demand_finished.leadtime.to_f, demand_finished.leadtime.to_f],
+                                                           'leadTimeP65' => lead_time_p65,
+                                                           'leadTimeP80' => lead_time_p80,
+                                                           'leadTimeP95' => lead_time_p95
                                                          }
-                                                       ],
-                                                       'bugs' => [
-                                                         {
-                                                           'id' => other_demand_finished.id.to_s
-                                                         },
-                                                         {
-                                                           'id' => bug.id.to_s
-                                                         },
-                                                         {
-                                                           'id' => other_bug.id.to_s
-                                                         }
-                                                       ],
-                                                       'bugsFinished' => [
-                                                         {
-                                                           'id' => other_demand_finished.id.to_s
-                                                         }
-                                                       ],
-                                                       'lastDeliveries' => [
-                                                         {
-                                                           'id' => demand_finished.id.to_s
-                                                         }
-                                                       ],
-                                                       'demandShortestLeadTime' =>
-                                                         {
-                                                           'id' => other_demand_finished.id.to_s
-                                                         },
-                                                       'demandLargestLeadTime' =>
-                                                         {
-                                                           'id' => demand_finished.id.to_s
-                                                         },
-                                                       'demandLeadTimeP80' => Stats::StatisticsService.instance.percentile(80, team_member.demands.finished_with_leadtime.map(&:leadtime)),
-                                                       'firstDelivery' =>
-                                                         {
-                                                           'id' => other_demand_finished.id.to_s
-                                                         },
-                                                       'demandBlocks' => [
-                                                         {
-                                                           'id' => other_demand_block.id.to_s
-                                                         },
-                                                         {
-                                                           'id' => demand_block.id.to_s
-                                                         }
-                                                       ]
-                                                     })
+                                                       })
+      end
     end
   end
 
