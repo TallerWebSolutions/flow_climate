@@ -10,7 +10,11 @@
       <%= render 'demands/demands_short_table', company: company, demands: demands.kept.finished_until_date(Time.zone.now).order(end_date: :desc).first(5) %>
     </div>
   <% end %>
+<%
+=begin%>
 
+<%
+=end%>
   <% if member_teams.present? %>
     <div class="col-xs-2">
       <%= render 'team_members/teams_summary', member_teams: member_teams %>

@@ -1,8 +1,8 @@
 import { useContext } from "react"
 import { useTranslation } from "react-i18next"
 import { gql, useQuery } from "@apollo/client"
-import { useParams } from "react-router-dom"
-import { Grid } from "@mui/material"
+import { useParams, Link as RouterLink } from "react-router-dom"
+import { Grid, Link } from "@mui/material"
 
 import { MeContext } from "../../contexts/MeContext"
 import BasicPage from "../../components/BasicPage"
@@ -34,6 +34,24 @@ const TEAM_MEMBER_QUERY = gql`
       endDate
       projects {
         id
+        name
+        startDate
+        endDate
+        currentRiskToDeadline
+        leadTimeP80
+      }
+      teams {
+        id
+        name
+      }
+      demandBlocks {
+        id
+        demand {
+          id
+          demandTitle
+        }
+        blockTime
+        unblockTime
       }
       latestDeliveries: demands(status: FINISHED, limit: 8) {
         id
@@ -115,11 +133,66 @@ const TeamMemberDashboard = () => {
 
   const latestDeliveriesRows =
     data?.teamMember?.latestDeliveries?.map((demand) => [
-      demand.project?.name || "",
-      demand.product?.name || "",
+      <Link
+        component={RouterLink}
+        to={`/companies/${companySlug}/projects/${demand.project?.id}`}
+      >
+        {demand.project?.name}
+      </Link>,
+      <Link
+        component={RouterLink}
+        to={`/companies/${companySlug}/products/${demand.product?.id}`}
+      >
+        {demand.product?.name}
+      </Link>,
       demand.externalId || "",
       demand.endDate || "",
       secondsToDays(demand.leadtime) || "",
+    ]) || []
+
+  const teamsRows =
+    data?.teamMember?.teams?.map((team) => [
+      <Link
+        to={`/companies/${companySlug}/teams/${team.id}`}
+        component={RouterLink}
+      >
+        {team.name}
+      </Link>,
+    ]) || []
+
+  const demandBlocksHeader = [
+    t("dashboard.demandBlocks.demandName"),
+    t("dashboard.demandBlocks.blockTime"),
+    t("dashboard.demandBlocks.unblockTime"),
+  ]
+  const demandBlocksRows =
+    data?.teamMember?.demandBlocks?.map((block) => [
+      block.demand?.demandTitle || "",
+      block.blockTime || "",
+      block.unblockTime || "",
+    ]) || []
+
+  const latestProjectsHeader = [
+    t("dashboard.latestProjects.name"),
+    t("dashboard.latestProjects.startDate"),
+    t("dashboard.latestProjects.endDate"),
+    t("dashboard.latestProjects.risk"),
+    t("dashboard.latestProjects.quality"),
+    t("dashboard.latestProjects.leadTime"),
+  ]
+  const latestProjectsRows =
+    data?.teamMember?.projects?.map((project) => [
+      <Link
+        component={RouterLink}
+        to={`/companies/${companySlug}/projects/${project.id}`}
+      >
+        {project.name}
+      </Link>,
+      project.startDate || "",
+      project.endDate || "",
+      `${(project.currentRiskToDeadline * 100).toFixed(2)}%`,
+      "",
+      secondsToDays(project.leadTimeP80) || "",
     ]) || []
 
   return (
@@ -128,14 +201,35 @@ const TeamMemberDashboard = () => {
       title={teamMemberName}
       loading={loading}
     >
-      <Grid container spacing={4}>
-        <Grid item xs={4}>
-          <Table rows={teamMemberInfoRows} />
-        </Grid>
-        <Grid item xs={8}>
+      <Grid container columnSpacing={4}>
+        <Grid item xs={3}>
           <Table
+            title={t("dashboard.memberInfoTitle")}
+            rows={teamMemberInfoRows}
+          />
+        </Grid>
+        <Grid item xs={3}>
+          <Table title={t("dashboard.teams.title")} rows={teamsRows} />
+        </Grid>
+        <Grid item xs={6}>
+          <Table
+            title={t("dashboard.demandBlocks.title")}
+            headerCells={demandBlocksHeader}
+            rows={demandBlocksRows}
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <Table
+            title={t("dashboard.latestDeliveries.title")}
             headerCells={latestDeliveriesHeader}
             rows={latestDeliveriesRows}
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <Table
+            title={t("dashboard.latestProjects.title")}
+            headerCells={latestProjectsHeader}
+            rows={latestProjectsRows}
           />
         </Grid>
       </Grid>

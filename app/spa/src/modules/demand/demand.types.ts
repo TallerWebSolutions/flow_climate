@@ -2,6 +2,7 @@ import { Project } from "../project/project.types"
 
 export type Demand = {
   id: string
+  demandTitle?: string
   endDate: string
   product: {
     id: string
@@ -15,4 +16,11 @@ export type Demand = {
   leadtime: number
   numberOfBlocks: number
   project?: Project
+}
+
+export type DemandBlock = {
+  id: string
+  demand: Demand
+  blockTime: string
+  unblockTime: string
 }
