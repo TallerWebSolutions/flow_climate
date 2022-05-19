@@ -13,6 +13,19 @@
     "row_days": "days",
     "row_delivered": "delivered",
     "row_total": "totals",
-    "row_consumed": "consumed"
+    "row_consumed": "consumed",
+    "filter": {
+      "search": "Name",
+      "search_helper": "Search by project name",
+      "initial_date": "Initial Date",
+      "end_date": "End Date",
+      "status": "Status",
+      "status_waiting": "Waiting",
+      "status_executing": "Executing",
+      "status_maintenance": "Maintenance",
+      "status_finished": "Finished",
+      "status_cancelled": "Cancelled",
+      "status_negotiating": "Negotiating"
+    }
   }
 }

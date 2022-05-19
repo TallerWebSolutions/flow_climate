@@ -55,8 +55,12 @@ module Types
       argument :company_id, Int, required: true
     end
 
-    field :projects, [Types::ProjectType], null: false do
+    field :projects, [Types::ProjectType], null: false, description: 'A list of projects using the arguments as search parameters' do
       argument :company_id, Int, required: true
+      argument :name, String, required: false
+      argument :status, String, required: false
+      argument :start_date, GraphQL::Types::ISO8601Date, required: false
+      argument :end_date, GraphQL::Types::ISO8601Date, required: false
     end
 
     def teams
@@ -112,9 +116,9 @@ module Types
       company.initiatives.order(start_date: :desc)
     end
 
-    def projects(company_id:)
-      company = Company.find(company_id)
-      company.projects.order(end_date: :desc)
+    def projects(company_id:, name: nil, status: nil, start_date: nil, end_date: nil)
+      return TasksList.new(0, "", "", 0, 0) if me.last_company.blank?
+      ProjectsRepository.instance.search(company_id, project_name: name, project_status: status, start_date: start_date, end_date: end_date)
     end
   end
 end

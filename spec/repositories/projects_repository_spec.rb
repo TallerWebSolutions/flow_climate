@@ -6,6 +6,29 @@ RSpec.describe ProjectsRepository, type: :repository do
 
   before { travel_to Time.zone.local(2018, 4, 13, 10, 0, 0) }
 
+  describe '#search' do
+    context 'with data' do
+      it 'searches by arguments' do
+        team = Fabricate :team, company: company
+
+        first_project = Fabricate :project, company: company, team: team, name: 'Foo Bar', status: 'waiting', start_date: 3.days.ago, end_date: 2.days.ago
+        secound_project = Fabricate :project, company: company, team: team, name: 'Bar Foo', status: 'executing', start_date: 1.day.ago, end_date: 7.days.ago
+        third_project = Fabricate :project, company: company, team: team, name: 'Xpto', status: 'finished', start_date: 5.days.ago, end_date: 4.days.ago
+        fourth_project = Fabricate :project, company: company, team: team, name: 'Bar', status: 'waiting', start_date: 6.days.ago, end_date: 2.days.ago
+
+        project_search = described_class.instance.search(company.id)
+
+        expect(project_search.count).to eq 4
+        expect((described_class.instance.search(company.id, project_status: 'waiting'))).to match_array [first_project, fourth_project]
+        expect((described_class.instance.search(company.id, project_status: 'finished'))).to match_array [third_project]
+        expect((described_class.instance.search(company.id, project_name: 'Foo Bar'))).to match_array [first_project]
+        expect((described_class.instance.search(company.id, start_date: 1.day.ago, end_date: 4.days.ago))).to match_array [secound_project]
+        expect((described_class.instance.search(company.id, end_date: 7.days.ago))).to match_array [secound_project]
+        expect((described_class.instance.search(company.id, project_name: 'Bar Foo', project_status: 'executing', start_date: 1.day.ago))).to match_array [secound_project]
+      end
+    end
+  end
+
   describe '#add_query_to_projects_in_status' do
     let(:other_customer) { Fabricate :customer }
     let(:team) { Fabricate :team, company: company }

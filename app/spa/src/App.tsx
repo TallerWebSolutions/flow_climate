@@ -26,7 +26,7 @@ import TeamMembers from "./pages/TeamMembers/TeamMembers"
 import EditTeamMember from "./pages/TeamMembers/EditTeamMember"
 import User from "./modules/user/user.types"
 import InitiativesList from "./pages/Initiatives/InitiativesList"
-import ProjectList from "./pages/Projects/ProjectList"
+import ProjectList from "./pages/Projects/Projects"
 
 export const ME_QUERY = gql`
   query Me {

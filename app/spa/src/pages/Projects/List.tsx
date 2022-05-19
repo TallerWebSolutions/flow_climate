@@ -1,25 +1,37 @@
 import { gql, useQuery } from "@apollo/client"
-import { useContext } from "react"
+import { useTranslation } from "react-i18next"
+import { useContext, useEffect, useState } from "react"
 import { MeContext } from "../../contexts/MeContext"
+import { Project } from "../../modules/project/project.types"
+import { ProjectsFilters } from "./Projects"
 import {
   Backdrop,
-  Button,
   CircularProgress,
-  Link,
   Box,
   LinearProgress,
   styled,
   linearProgressClasses,
+  Link,
   Typography,
 } from "@mui/material"
-import BasicPage from "../../components/BasicPage"
-import { Project } from "../../modules/project/project.types"
+import { Company } from "../../modules/company/company.types"
 import Table from "../../components/Table"
-import { useTranslation } from "react-i18next"
 
 const PROJECT_LIST_QUERY = gql`
-  query projectList($companyId: Int!) {
-    projects(companyId: $companyId) {
+  query projectList(
+    $companyId: Int!
+    $name: String
+    $status: String
+    $startDate: ISO8601Date
+    $endDate: ISO8601Date
+  ) {
+    projects(
+      companyId: $companyId
+      name: $name
+      status: $status
+      startDate: $startDate
+      endDate: $endDate
+    ) {
       id
       name
       team {
@@ -33,43 +45,43 @@ const PROJECT_LIST_QUERY = gql`
       qtyHours
       consumedHours
       currentRiskToDeadline
+      startDate
+      endDate
     }
   }
 `
 
 type ProjectListDTO = {
-  projects: Pick<
-    Project,
-    | "id"
-    | "name"
-    | "team"
-    | "status"
-    | "numberOfDemands"
-    | "remainingDays"
-    | "numberOfDemandsDelivered"
-    | "qtyHours"
-    | "consumedHours"
-    | "currentRiskToDeadline"
-  >[]
+  projects: Project[]
 }
 
-const ProjectList = () => {
+type ProjectsListProps = {
+  filters: ProjectsFilters
+  setFilters: React.Dispatch<React.SetStateAction<ProjectsFilters>>
+}
+
+const ProjectsList = ({ filters, setFilters }: ProjectsListProps) => {
   const { t } = useTranslation(["projects"])
+  const [company, setCompany] = useState<Company | null>(null)
+  const [projects, setProjects] = useState<Project[]>([])
+
   const { me } = useContext(MeContext)
-  const companyId = me?.currentCompany?.id
+  const companyId = Number(company?.id)
+  const companyUrl = `/companies/${company?.slug}`
+
   const { data, loading } = useQuery<ProjectListDTO>(PROJECT_LIST_QUERY, {
     variables: {
-      companyId: Number(companyId),
+      companyId,
+      ...filters,
     },
   })
-  const companyUrl = `/companies/${me?.currentCompany?.slug}`
-  const createNewProjectUrl = `${companyUrl}/projects/new`
 
-  const breadcrumbsLinks = [
-    { name: "Home", url: "/" },
-    { name: me?.currentCompany?.name || "", url: companyUrl },
-    { name: t("projects") },
-  ]
+  useEffect(() => {
+    if (!loading) {
+      setProjects(data?.projects ?? [])
+      setCompany(me?.currentCompany!)
+    }
+  }, [data, loading, me?.currentCompany])
 
   if (loading)
     return (
@@ -77,17 +89,6 @@ const ProjectList = () => {
         <CircularProgress color="secondary" />
       </Backdrop>
     )
-
-  const projectsListHeaderCells = [
-    t("projects_table.name"),
-    t("projects_table.team"),
-    t("projects_table.status"),
-    t("projects_table.demands"),
-    t("projects_table.remaing_days"),
-    t("projects_table.delivered"),
-    t("projects_table.qty_hours"),
-    t("projects_table.risk"),
-  ]
 
   const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
     height: 10,
@@ -111,8 +112,19 @@ const ProjectList = () => {
     return result > 100 ? 100 : result
   }
 
+  const projectsListHeaderCells = [
+    t("projects_table.name"),
+    t("projects_table.team"),
+    t("projects_table.status"),
+    t("projects_table.demands"),
+    t("projects_table.remaing_days"),
+    t("projects_table.delivered"),
+    t("projects_table.qty_hours"),
+    t("projects_table.risk"),
+  ]
+
   const projectList =
-    data?.projects.map((project) => [
+    projects.map((project) => [
       <Link href={`${companyUrl}/projects/${project.id}`}>{project.name}</Link>,
       <Link href={`${companyUrl}/teams/${project.team?.id}`}>
         {project.team?.name}
@@ -156,19 +168,7 @@ const ProjectList = () => {
       `${(project.currentRiskToDeadline * 100).toFixed(2)}%`,
     ]) || []
 
-  return (
-    <BasicPage title={t("projects")} breadcrumbsLinks={breadcrumbsLinks}>
-      <Button
-        variant="contained"
-        href={createNewProjectUrl}
-        sx={{ float: "right", marginBottom: "2rem" }}
-      >
-        New Project
-      </Button>
-
-      <Table headerCells={projectsListHeaderCells} rows={projectList} />
-    </BasicPage>
-  )
+  return <Table headerCells={projectsListHeaderCells} rows={projectList} />
 }
 
-export default ProjectList
+export default ProjectsList
