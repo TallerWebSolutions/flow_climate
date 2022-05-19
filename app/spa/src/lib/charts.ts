@@ -9,10 +9,11 @@ export const keyValueToHistogramData = (data: KeyValueData): BarDatum[] =>
   })
 
 export const axisDataToScatter = (
-  data: ChartAxisData
+  data: ChartAxisData,
+  pointLegend: string
 ): ScatterPlotRawSerie<ScatterPlotDatum>[] => [
   {
-    id: "truco",
+    id: pointLegend,
     data: data.yAxis.map((y, index) => ({
       x: index,
       y,

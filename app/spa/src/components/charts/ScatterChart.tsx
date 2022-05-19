@@ -42,7 +42,9 @@ export const ScatterChart = ({
   ...props
 }: ScatterChartProps) => {
   const theme = useTheme()
-  const chartData = Array.isArray(data) ? data : axisDataToScatter(data)
+  const chartData = Array.isArray(data)
+    ? data
+    : axisDataToScatter(data, "Demands")
   const chartRef = useRef<HTMLInputElement>(null)
   const chartMarkers: NivoMarker[] =
     markers?.map(({ value, legend }) => ({

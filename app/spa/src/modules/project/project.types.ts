@@ -12,6 +12,9 @@ export type KeyValueData = {
 export type ChartAxisData = {
   xAxis: string[]
   yAxis: number[]
+  leadTimeP65?: number
+  leadTimeP80?: number
+  leadTimeP95?: number
 }
 
 export type Project = {
