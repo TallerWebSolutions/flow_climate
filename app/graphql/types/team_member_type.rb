@@ -42,6 +42,7 @@ module Types
 
     field :lead_time_control_chart_data, Types::Charts::LeadTimeControlChartDataType, null: true
     field :lead_time_histogram_chart_data, Types::Charts::LeadTimeHistogramDataType, null: true
+    field :member_effort_data, Types::Charts::MemberEffortDataType, null: true
 
     def demands(status: 'ALL', type: 'ALL', limit: nil)
       demands = if status == 'FINISHED'
@@ -91,10 +92,6 @@ module Types
       Stats::StatisticsService.instance.percentile(80, object.demands.finished_with_leadtime.map(&:leadtime))
     end
 
-    def demand_blocks
-      object.demand_blocks.order(:block_time)
-    end
-
     def lead_time_control_chart_data
       LeadTimeControlChartData.new(object.demands.finished_until_date(Time.zone.now))
     end
@@ -102,6 +99,18 @@ module Types
     def lead_time_histogram_chart_data
       demands_finished = object.demands.finished_with_leadtime
       Stats::StatisticsService.instance.leadtime_histogram_hash(demands_finished.map(&:leadtime).map { |leadtime| leadtime.round(3) })
+    end
+
+    def member_effort_data
+      operations_dashboards = Dashboards::OperationsDashboard
+                              .where(
+                                team_member: object,
+                                last_data_in_month: true
+                              )
+                              .where('operations_dashboards.dashboard_date > :limit_date', limit_date: 6.months.ago.beginning_of_day)
+                              .order(:dashboard_date)
+
+      { x_axis: operations_dashboards.map(&:dashboard_date).map(&:iso8601), y_axis: operations_dashboards.map { |dashboard| dashboard.member_effort.to_f } }
     end
   end
 end

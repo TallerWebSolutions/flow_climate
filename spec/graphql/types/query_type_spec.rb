@@ -939,6 +939,10 @@ RSpec.describe Types::QueryType do
         demand_block = Fabricate :demand_block, blocker: team_member, block_time: 1.day.ago
         Fabricate :demand_block, blocker: team_member, block_time: 2.days.ago
 
+        Dashboards::OperationsDashboard.create(team_member: team_member, dashboard_date: 2.months.ago, last_data_in_month: true, member_effort: 67.8)
+        Dashboards::OperationsDashboard.create(team_member: team_member, dashboard_date: 1.month.ago, last_data_in_month: true, member_effort: 12.3)
+        Dashboards::OperationsDashboard.create(team_member: team_member, dashboard_date: Time.zone.today, last_data_in_month: true, member_effort: 100)
+
         query =
           %(query {
         me {
@@ -1021,6 +1025,10 @@ RSpec.describe Types::QueryType do
           leadTimeHistogramChartData {
             keys
             values
+          }
+          memberEffortData {
+            xAxis
+            yAxis
           }
         }
       })
@@ -1141,6 +1149,10 @@ RSpec.describe Types::QueryType do
                                                          'leadTimeHistogramChartData' => {
                                                            'keys' => [23_400.0],
                                                            'values' => [2]
+                                                         },
+                                                         'memberEffortData' => {
+                                                           'xAxis' => %w[2022-03-18 2022-04-18 2022-05-18],
+                                                           'yAxis' => [67.8, 12.3, 100.0]
                                                          }
                                                        })
       end

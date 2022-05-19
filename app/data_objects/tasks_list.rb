@@ -4,7 +4,7 @@ class TasksList < BaseAggregatorObject
   attr_reader :total_delivered_count, :tasks
 
   def initialize(total_count, total_delivered_count, last_page, total_pages, tasks)
-    super(total_count, total_pages, last_page)
+    super(total_count, last_page, total_pages)
     @total_delivered_count = total_delivered_count
     @tasks = tasks
   end
