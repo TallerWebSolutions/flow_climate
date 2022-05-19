@@ -43,6 +43,9 @@ module Types
     field :lead_time_control_chart_data, Types::Charts::LeadTimeControlChartDataType, null: true
     field :lead_time_histogram_chart_data, Types::Charts::LeadTimeHistogramDataType, null: true
     field :member_effort_data, Types::Charts::MemberEffortDataType, null: true
+    field :member_throughput_data, [Int], null: true do
+      argument :number_of_weeks, Int, required: false
+    end
 
     def demands(status: 'ALL', type: 'ALL', limit: nil)
       demands = if status == 'FINISHED'
@@ -111,6 +114,10 @@ module Types
                               .order(:dashboard_date)
 
       { x_axis: operations_dashboards.map(&:dashboard_date).map(&:iso8601), y_axis: operations_dashboards.map { |dashboard| dashboard.member_effort.to_f } }
+    end
+
+    def member_throughput_data(number_of_weeks: 52)
+      DemandService.instance.build_throughput_per_period_array(object.demands.finished_until_date(Time.zone.now), number_of_weeks.week.ago.beginning_of_week, Time.zone.now)
     end
   end
 end

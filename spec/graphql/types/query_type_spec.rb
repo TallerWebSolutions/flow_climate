@@ -619,19 +619,19 @@ RSpec.describe Types::QueryType do
 
         result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
         expect(result.dig('data', 'projects')).to eq([{
-                                                       'id' => project.id.to_s,
-                                                       'name' => project.name,
+                                                       'id' => first_project.id.to_s,
+                                                       'name' => first_project.name,
                                                        'team' => {
-                                                         'id' => project.team.id.to_s,
-                                                         'name' => project.team.name
+                                                         'id' => first_project.team.id.to_s,
+                                                         'name' => first_project.team.name
                                                        },
-                                                       'status' => project.status,
-                                                       'numberOfDemands' => project.demands.kept.count,
-                                                       'remainingDays' => project.remaining_days,
-                                                       'numberOfDemandsDelivered' => project.demands.kept.finished_until_date(Time.zone.now).count,
-                                                       'qtyHours' => project.qty_hours,
-                                                       'consumedHours' => project.consumed_hours,
-                                                       'currentRiskToDeadline' => project.current_risk_to_deadline
+                                                       'status' => first_project.status,
+                                                       'numberOfDemands' => first_project.demands.kept.count,
+                                                       'remainingDays' => first_project.remaining_days,
+                                                       'numberOfDemandsDelivered' => first_project.demands.kept.finished_until_date(Time.zone.now).count,
+                                                       'qtyHours' => first_project.qty_hours,
+                                                       'consumedHours' => first_project.consumed_hours,
+                                                       'currentRiskToDeadline' => first_project.current_risk_to_deadline
                                                      },
                                                       {
                                                         'id' => second_project.id.to_s,
@@ -1030,6 +1030,7 @@ RSpec.describe Types::QueryType do
             xAxis
             yAxis
           }
+          memberThroughputData(numberOfWeeks: 3)
         }
       })
 
@@ -1153,7 +1154,8 @@ RSpec.describe Types::QueryType do
                                                          'memberEffortData' => {
                                                            'xAxis' => %w[2022-03-18 2022-04-18 2022-05-18],
                                                            'yAxis' => [67.8, 12.3, 100.0]
-                                                         }
+                                                         },
+                                                         'memberThroughputData' => [0, 0, 0, 2]
                                                        })
       end
     end

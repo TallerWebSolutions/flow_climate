@@ -26,7 +26,7 @@ class ReplenishingData
 
   def build_summary_infos
     if @running_projects.present? && @team_demands.present?
-      build_throughput_per_period_array(@team_demands, @start_date, @end_date)
+      @throughput_per_period_array = DemandService.instance.build_throughput_per_period_array(@team_demands, @start_date, @end_date)
       build_basic_summary_infos
       @summary_infos[:average_throughput] = @summary_infos[:four_last_throughputs].sum / @summary_infos[:four_last_throughputs].count
     else
@@ -46,7 +46,7 @@ class ReplenishingData
     @project_data_to_replenish = []
     @running_projects.each do |project|
       project_info_hash = build_project_hash(project)
-      build_throughput_per_period_array(project.demands, project.start_date.beginning_of_week, 1.week.ago.end_of_week)
+      @throughput_per_period_array = DemandService.instance.build_throughput_per_period_array(project.demands, project.start_date.beginning_of_week, 1.week.ago.end_of_week)
 
       project_info_hash = project_info_hash.merge(build_stats_info(project))
       project_info_hash = project_info_hash.merge(build_qty_items_info(project))
@@ -95,26 +95,6 @@ class ReplenishingData
     stats_hash[:team_monte_carlo_weeks_std_dev] = project_consolidation&.team_based_monte_carlo_weeks_std_dev || 0
     stats_hash[:team_monte_carlo_weeks_min] = project_consolidation&.team_based_monte_carlo_weeks_min || 0
     stats_hash[:team_monte_carlo_weeks_max] = project_consolidation&.team_based_monte_carlo_weeks_max || 0
-  end
-
-  def build_throughput_per_period_array(demands, start_date, end_date)
-    dates_array = TimeService.instance.weeks_between_of(start_date, end_date)
-    demands_throughputs = Demand.where(id: demands.kept.order(:end_date).map(&:id))
-                                .group('EXTRACT(week FROM demands.end_date)::INTEGER')
-                                .group('EXTRACT(isoyear FROM demands.end_date)::INTEGER')
-                                .count
-
-    @throughput_per_period_array = []
-    dates_array.each do |analysed_date|
-      week = analysed_date.cweek
-      year = analysed_date.cwyear
-
-      @throughput_per_period_array << if demands_throughputs[[week, year]].present?
-                                        demands_throughputs[[week, year]]
-                                      else
-                                        0
-                                      end
-    end
   end
 
   def build_qty_items_info(project)

@@ -63,7 +63,34 @@ class DemandService
     Stats::StatisticsService.instance.percentile(80, demands.map(&:leadtime))
   end
 
+  def build_throughput_per_period_array(demands, start_date, end_date)
+    dates_array = TimeService.instance.weeks_between_of(start_date, end_date)
+    demands_throughputs = Demand.where(id: demands.kept.order(:end_date).map(&:id))
+                                .group('EXTRACT(week FROM demands.end_date)::INTEGER')
+                                .group('EXTRACT(isoyear FROM demands.end_date)::INTEGER')
+                                .count
+
+    process_dates(dates_array, demands_throughputs)
+  end
+
   private
+
+  def process_dates(dates_array, demands_throughputs)
+    throughput_per_period_array = []
+
+    dates_array.each do |analysed_date|
+      week = analysed_date.cweek
+      year = analysed_date.cwyear
+
+      throughput_per_period_array << if demands_throughputs[[week, year]].present?
+                                       demands_throughputs[[week, year]]
+                                     else
+                                       0
+                                     end
+    end
+
+    throughput_per_period_array
+  end
 
   def max_date(demands_finished)
     [demands_finished.filter_map(&:end_date).max, Time.zone.now.end_of_day].compact.max
