@@ -75,3 +75,31 @@ const histogramData = {
 export const Histogram: ComponentStory<typeof BarChart> = () => (
   <BarChart indexBy="key" data={histogramData} keys={["value"]} padding={0} />
 )
+
+const groupedData = [
+  {
+    key: "16/06",
+    projectOne: 10,
+    projectTwo: 19,
+  },
+  {
+    key: "16/07",
+    projectOne: 9,
+    projectTwo: 22,
+  },
+]
+export const StackedColumns: ComponentStory<typeof BarChart> = () => (
+  <BarChart
+    indexBy="key"
+    data={groupedData}
+    keys={["projectOne", "projectTwo"]}
+  />
+)
+export const GroupedColumns: ComponentStory<typeof BarChart> = () => (
+  <BarChart
+    indexBy="key"
+    data={groupedData}
+    keys={["projectOne", "projectTwo"]}
+    groupMode="grouped"
+  />
+)

@@ -18,6 +18,7 @@ type BarChartProps = {
   legendAnchor?: BarLegendProps["anchor"]
   legendDirection?: BarLegendProps["direction"]
   padding?: number
+  groupMode?: "stacked" | "grouped"
 }
 
 export const BarChart = ({
@@ -29,6 +30,7 @@ export const BarChart = ({
   legendAnchor = "top",
   legendDirection = "row",
   padding,
+  groupMode = "stacked",
 }: BarChartProps) => {
   const chartRef = useRef<HTMLInputElement>(null)
   const chartData = Array.isArray(data) ? data : keyValueToHistogramData(data)
@@ -47,6 +49,7 @@ export const BarChart = ({
           indexBy={indexBy}
           keys={keys}
           margin={{ top: 50, right: 130, bottom: 80, left: 60 }}
+          groupMode={groupMode}
           padding={Number.isNaN(padding) ? 0.3 : padding}
           colors={{ scheme: "category10" }}
           borderColor={{
