@@ -25,4 +25,5 @@ export type TeamMember = {
   leadTimeHistogramChartData?: KeyValueData
   leadTimeControlChartData?: ChartAxisData
   memberEffortData?: ChartAxisData
+  memberThroughputData?: number[]
 }

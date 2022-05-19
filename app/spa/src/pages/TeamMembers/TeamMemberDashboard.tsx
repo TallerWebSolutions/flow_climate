@@ -46,6 +46,7 @@ const TEAM_MEMBER_QUERY = gql`
         yAxis
       }
       demandLeadTimeP80
+      memberThroughputData(numberOfWeeks: 24)
       projectsList(orderField: "end_date", sortDirection: DESC) {
         totalCount
         projects {

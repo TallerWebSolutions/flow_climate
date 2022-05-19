@@ -45,6 +45,13 @@ const TeamMemberDashboardCharts = ({
     yAxis: teamMember.memberEffortData?.yAxis.map(secondsToDays) || [],
   }
 
+  const memberThroughputData = teamMember.memberThroughputData?.map(
+    (th, index) => ({
+      key: th,
+      value: index,
+    })
+  )
+
   return (
     <Grid container spacing={2}>
       {leadTimeHistogramChartData && (
@@ -74,6 +81,16 @@ const TeamMemberDashboardCharts = ({
           <Typography component="h3">{t("charts.memberEffort")}</Typography>
           <BarChart
             data={axisDataToKeyValue(memberEffortData)}
+            keys={["value"]}
+            indexBy="key"
+          />
+        </Grid>
+      )}
+      {memberThroughputData && (
+        <Grid item xs={6}>
+          <Typography component="h3">{t("charts.throughput")}</Typography>
+          <BarChart
+            data={memberThroughputData}
             keys={["value"]}
             indexBy="key"
           />
