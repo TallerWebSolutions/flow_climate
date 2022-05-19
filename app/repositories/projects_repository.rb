@@ -20,8 +20,8 @@ class ProjectsRepository
 
   def search(company_id, search_fields = {})
     projects = Company.find(company_id).projects
+    projects = search_by_name(projects, search_fields[:project_name])
     search_projects(projects,
-                    search_fields[:project_name],
                     search_fields[:project_status],
                     search_fields[:start_date],
                     search_fields[:end_date])
@@ -29,11 +29,24 @@ class ProjectsRepository
 
   private
 
-  def search_projects(projects, project_name, project_status, start_date, end_date)
-    projects = projects.where('name ILIKE :name', name: "%#{project_name.tr(' ', '%')}%") if project_name.present?
+  def search_projects(projects, project_status, start_date, end_date)
     projects = projects.where(status: project_status) if project_status.present?
     projects = projects.where('start_date >= :start_date', start_date: start_date) if start_date.present?
     projects = projects.where('end_date <= :end_date', end_date: end_date) if end_date.present?
     projects.order(end_date: :desc)
+  end
+
+  def search_by_name(projects, project_name)
+    return projects if project_name.blank?
+
+    projects_result_ids = []
+
+    names_array = project_name.split(',')
+
+    return projects if names_array.blank?
+
+    names_array.each { |name| projects_result_ids << projects.where('name ILIKE :project_name', project_name: "%#{name}%").map(&:id) }
+
+    Project.where(id: projects_result_ids.flatten)
   end
 end

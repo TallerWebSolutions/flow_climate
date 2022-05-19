@@ -547,7 +547,7 @@ RSpec.describe Types::QueryType do
 
   describe '#demands' do
     context 'with blocks' do
-      it 't' do
+      it 'returns the demands' do
         company = Fabricate :company
         team = Fabricate :team, company: company
         customer = Fabricate :customer, company: company
@@ -585,7 +585,7 @@ RSpec.describe Types::QueryType do
 
     let(:query) do
       %(query {
-        projects(companyId: #{company.id}) {
+        projects(companyId: #{company.id}, name: "foo,xpto") {
           id
           name
           team {
@@ -611,39 +611,40 @@ RSpec.describe Types::QueryType do
           current_user: user
         }
 
-        project = Fabricate :project, company: company, end_date: 5.days.ago
-        other_project = Fabricate :project, company: company, end_date: 6.days.ago
+        first_project = Fabricate :project, company: company, end_date: 5.days.ago, name: 'foo'
+        second_project = Fabricate :project, company: company, end_date: 6.days.ago, name: 'xpto'
+        Fabricate :project, company: company, end_date: 6.days.ago, name: 'bar'
 
         result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
         expect(result.dig('data', 'projects')).to eq([{
-                                                       'id' => project.id.to_s,
-                                                       'name' => project.name,
+                                                       'id' => first_project.id.to_s,
+                                                       'name' => first_project.name,
                                                        'team' => {
-                                                         'id' => project.team.id.to_s,
-                                                         'name' => project.team.name
+                                                         'id' => first_project.team.id.to_s,
+                                                         'name' => first_project.team.name
                                                        },
-                                                       'status' => project.status,
-                                                       'numberOfDemands' => project.demands.kept.count,
-                                                       'remainingDays' => project.remaining_days,
-                                                       'numberOfDemandsDelivered' => project.demands.kept.finished_until_date(Time.zone.now).count,
-                                                       'qtyHours' => project.qty_hours,
-                                                       'consumedHours' => project.consumed_hours,
-                                                       'currentRiskToDeadline' => project.current_risk_to_deadline
+                                                       'status' => first_project.status,
+                                                       'numberOfDemands' => first_project.demands.kept.count,
+                                                       'remainingDays' => first_project.remaining_days,
+                                                       'numberOfDemandsDelivered' => first_project.demands.kept.finished_until_date(Time.zone.now).count,
+                                                       'qtyHours' => first_project.qty_hours,
+                                                       'consumedHours' => first_project.consumed_hours,
+                                                       'currentRiskToDeadline' => first_project.current_risk_to_deadline
                                                      },
                                                       {
-                                                        'id' => other_project.id.to_s,
-                                                        'name' => other_project.name,
+                                                        'id' => second_project.id.to_s,
+                                                        'name' => second_project.name,
                                                         'team' => {
-                                                          'id' => other_project.team.id.to_s,
-                                                          'name' => other_project.team.name
+                                                          'id' => second_project.team.id.to_s,
+                                                          'name' => second_project.team.name
                                                         },
-                                                        'status' => other_project.status,
-                                                        'numberOfDemands' => other_project.demands.kept.count,
-                                                        'remainingDays' => other_project.remaining_days,
-                                                        'numberOfDemandsDelivered' => other_project.demands.kept.finished_until_date(Time.zone.now).count,
-                                                        'qtyHours' => other_project.qty_hours,
-                                                        'consumedHours' => other_project.consumed_hours,
-                                                        'currentRiskToDeadline' => other_project.current_risk_to_deadline
+                                                        'status' => second_project.status,
+                                                        'numberOfDemands' => second_project.demands.kept.count,
+                                                        'remainingDays' => second_project.remaining_days,
+                                                        'numberOfDemandsDelivered' => second_project.demands.kept.finished_until_date(Time.zone.now).count,
+                                                        'qtyHours' => second_project.qty_hours,
+                                                        'consumedHours' => second_project.consumed_hours,
+                                                        'currentRiskToDeadline' => second_project.current_risk_to_deadline
                                                       }])
       end
     end
