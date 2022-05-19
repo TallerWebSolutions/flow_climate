@@ -59,5 +59,14 @@ Have the ultimate management tools in your hands!
 - Run console: `rails c`
 - Run server: `rails s`
 
-** Local debugging for Visual Studio Code
+\*\* Local debugging for Visual Studio Code
 [See this article](https://rahul-arora.medium.com/debugging-ruby-on-rails-server-in-vs-code-819b45113e78)
+
+## Storybook
+
+Always check storybook before creating new components for the spa.
+
+```
+cd app/spa
+npm run storybook
+```

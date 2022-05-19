@@ -32,6 +32,10 @@ const TEAM_MEMBER_QUERY = gql`
         keys
         values
       }
+      leadTimeControlChartData {
+        xAxis
+        yAxis
+      }
       demandLeadTimeP80
       startDate
       endDate
