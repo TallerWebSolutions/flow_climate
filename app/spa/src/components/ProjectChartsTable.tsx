@@ -1,3 +1,4 @@
+import { useState } from "react"
 import {
   Box,
   Grid,
@@ -11,24 +12,87 @@ import {
   TableRowProps,
   Typography,
 } from "@mui/material"
-import { useState } from "react"
+import { gql, useQuery } from "@apollo/client"
 import { useTranslation } from "react-i18next"
+import { useParams } from "react-router-dom"
+import { Backdrop, CircularProgress } from "@mui/material"
 import { formatDate, secondsToDays, secondsToReadbleDate } from "../lib/date"
 import { Demand } from "../modules/demand/demand.types"
 import { Project } from "../modules/project/project.types"
 import { ReadMoreButton } from "./ReadMoreButton"
-import Table from "./ui/Table"
+import Table from "./Table"
+import { PROJECT_STANDARD_FRAGMENT } from "./ProjectPage"
 
-type ProjectChartsTableProps = {
-  project?: Project
-  demands: Demand[]
-}
+const LIMIT_DEMANDS_PER_PAGE = 10
+
+const PROJECT_CHART_QUERY = gql`
+  query ProjectCharts($projectId: Int!, $limit: Int!) {
+    project(id: $projectId) {
+      ...ProjectStandardFragment
+      startDate
+      endDate
+      initialScope
+      numberOfDemands
+      numberOfDemandsDelivered
+      remainingBacklog
+      projectMembers {
+        demandsCount
+        memberName
+      }
+      upstreamDemands {
+        id
+      }
+      numberOfDownstreamDemands
+      discardedDemands {
+        id
+      }
+      unscoredDemands {
+        id
+      }
+      demandBlocks {
+        id
+      }
+      flowPressure
+      averageSpeed
+      averageQueueTime
+      averageTouchTime
+      leadTimeP65
+      leadTimeP80
+      leadTimeP95
+    }
+
+    demands(projectId: $projectId, limit: $limit, finished: true) {
+      id
+      endDate
+      product {
+        id
+        name
+      }
+      customer {
+        id
+        name
+      }
+      externalId
+      leadtime
+      numberOfBlocks
+    }
+  }
+  ${PROJECT_STANDARD_FRAGMENT}
+`
 
 type MountSearchLinkProps = {
   companySlug: string
   state: string
   projectID: string
 }
+
+type ProjectChartResult = {
+  project: Project
+  demands: Demand[]
+  hoursPerCoordinationStageChartData: Pick<Project, "hoursPerStageChartData">
+}
+
+type ProjectChartDTO = ProjectChartResult | undefined
 
 const mountDemandsSearchLink = ({
   state,
@@ -57,25 +121,39 @@ const Cell = (props: TableCellProps) => (
   />
 )
 
-export const ProjectChartsTable = ({
-  project,
-  demands,
-}: ProjectChartsTableProps) => {
-  const { t } = useTranslation(["projectChart"])
+export const ProjectChartsTable = () => {
+  const { t } = useTranslation(["project"])
   const [readMore, setReadMore] = useState(true)
+  const { projectId } = useParams()
+  const { data, loading } = useQuery<ProjectChartDTO>(PROJECT_CHART_QUERY, {
+    variables: {
+      projectId: Number(projectId),
+      limit: LIMIT_DEMANDS_PER_PAGE,
+    },
+  })
+
+  if (loading)
+    return (
+      <Backdrop open>
+        <CircularProgress color="secondary" />
+      </Backdrop>
+    )
+
+  const project = data?.project
+  const demands = data?.demands || []
 
   if (!project) return <div>Project not found</div>
 
   const projectID = project.id
-  const companySlug = project.company?.slug || ""
+  const companySlug = project.company.slug
 
   const latestDeliveriesHeaderCells = [
-    t("project_chart_table.demand_id"),
-    t("project_chart_table.client"),
-    t("project_chart_table.product"),
-    t("project_chart_table.delivery_date"),
-    t("project_chart_table.leadtime"),
-    t("project_chart_table.demand_blocks"),
+    t("charts_tab.project_chart_table.demand_id"),
+    t("charts_tab.project_chart_table.client"),
+    t("charts_tab.project_chart_table.product"),
+    t("charts_tab.project_chart_table.delivery_date"),
+    t("charts_tab.project_chart_table.leadtime"),
+    t("charts_tab.project_chart_table.demand_blocks"),
   ]
 
   const baseLink = `/companies/${project?.company?.slug}`
@@ -118,7 +196,7 @@ export const ProjectChartsTable = ({
             component="h6"
             sx={{ padding: "16px " }}
           >
-            {t("project_chart_table.general_info")}
+            {t("charts_tab.project_chart_table.general_info")}
           </Typography>
           <Box
             sx={{
@@ -129,7 +207,7 @@ export const ProjectChartsTable = ({
           >
             <MUITable>
               <Row>
-                <Cell>{t("project_chart_table.start")}</Cell>
+                <Cell>{t("charts_tab.project_chart_table.start")}</Cell>
                 <Cell align="right">
                   {formatDate({
                     date: project.startDate,
@@ -139,7 +217,9 @@ export const ProjectChartsTable = ({
               </Row>
               <Row>
                 <Cell>
-                  <Box component="span">{t("project_chart_table.end")}</Box>
+                  <Box component="span">
+                    {t("charts_tab.project_chart_table.end")}
+                  </Box>
                 </Cell>
                 <Cell align="right">
                   {formatDate({ date: project.endDate, format: "dd/MM/yyyy" })}
@@ -148,7 +228,7 @@ export const ProjectChartsTable = ({
               <Row>
                 <Cell>
                   <Box component="span">
-                    {t("project_chart_table.initial_scope")}
+                    {t("charts_tab.project_chart_table.initial_scope")}
                   </Box>
                 </Cell>
                 <Cell align="right">{project.initialScope}</Cell>
@@ -156,7 +236,7 @@ export const ProjectChartsTable = ({
               <Row>
                 <Cell>
                   <Box component="span">
-                    {t("project_chart_table.created_demands")}
+                    {t("charts_tab.project_chart_table.created_demands")}
                   </Box>
                 </Cell>
                 <Cell align="right">
@@ -173,7 +253,9 @@ export const ProjectChartsTable = ({
                 </Cell>
               </Row>
               <Row>
-                <Cell>{t("project_chart_table.delivered_demands")}</Cell>
+                <Cell>
+                  {t("charts_tab.project_chart_table.delivered_demands")}
+                </Cell>
                 <Cell align="right">
                   <Link
                     href={mountDemandsSearchLink({
@@ -189,7 +271,9 @@ export const ProjectChartsTable = ({
               </Row>
               <Row>
                 <Cell>
-                  <Box component="span">{t("project_chart_table.backlog")}</Box>
+                  <Box component="span">
+                    {t("charts_tab.project_chart_table.backlog")}
+                  </Box>
                 </Cell>
                 <Cell align="right">
                   <Link
@@ -207,7 +291,7 @@ export const ProjectChartsTable = ({
               <Row>
                 <Cell>
                   <Box component="span">
-                    {t("project_chart_table.upstream_demands")}
+                    {t("charts_tab.project_chart_table.upstream_demands")}
                   </Box>
                 </Cell>
                 <Cell align="right">
@@ -226,7 +310,7 @@ export const ProjectChartsTable = ({
               <Row>
                 <Cell>
                   <Box component="span">
-                    {t("project_chart_table.downstream_demands")}
+                    {t("charts_tab.project_chart_table.downstream_demands")}
                   </Box>
                 </Cell>
                 <Cell align="right">
@@ -243,7 +327,9 @@ export const ProjectChartsTable = ({
                 </Cell>
               </Row>
               <Row>
-                <Cell>{t("project_chart_table.discarted_demands")}</Cell>
+                <Cell>
+                  {t("charts_tab.project_chart_table.discarted_demands")}
+                </Cell>
                 <Cell align="right">
                   <Link
                     href={mountDemandsSearchLink({
@@ -258,7 +344,9 @@ export const ProjectChartsTable = ({
                 </Cell>
               </Row>
               <Row>
-                <Cell>{t("project_chart_table.unscored_demands")}</Cell>
+                <Cell>
+                  {t("charts_tab.project_chart_table.unscored_demands")}
+                </Cell>
                 <Cell align="right">
                   <Link
                     href={mountDemandsSearchLink({
@@ -273,7 +361,9 @@ export const ProjectChartsTable = ({
                 </Cell>
               </Row>
               <Row>
-                <Cell>{t("project_chart_table.blocked_demands")}</Cell>
+                <Cell>
+                  {t("charts_tab.project_chart_table.blocked_demands")}
+                </Cell>
                 <Cell align="right">
                   <Link
                     href={`/companies/${companySlug}/demand_blocks/search?demand_blocks_ids=${project.demandBlocks
@@ -286,47 +376,47 @@ export const ProjectChartsTable = ({
                 </Cell>
               </Row>
               <Row>
-                <Cell>{t("project_chart_table.flow_pressure")}</Cell>
+                <Cell>{t("charts_tab.project_chart_table.flow_pressure")}</Cell>
                 <Cell align="right">{project.flowPressure.toFixed(2)}</Cell>
               </Row>
               <Row>
                 <Cell>
-                  {t("project_chart_table.average_speed", {
+                  {t("charts_tab.project_chart_table.average_speed", {
                     numberOfDemandsPerDay: project.averageSpeed.toFixed(2),
                   })}
                 </Cell>
               </Row>
               <Row>
                 <Cell>
-                  {t("project_chart_table.average_queue_time", {
+                  {t("charts_tab.project_chart_table.average_queue_time", {
                     time: secondsToDays(project.averageQueueTime).toFixed(2),
                   })}
                 </Cell>
               </Row>
               <Row>
                 <Cell>
-                  {t("project_chart_table.average_work_time", {
+                  {t("charts_tab.project_chart_table.average_work_time", {
                     time: secondsToDays(project.averageTouchTime).toFixed(2),
                   })}
                 </Cell>
               </Row>
               <Row>
                 <Cell>
-                  {t("project_chart_table.lead_time_p95", {
+                  {t("charts_tab.project_chart_table.lead_time_p95", {
                     days: secondsToDays(project.leadTimeP95).toFixed(2),
                   })}
                 </Cell>
               </Row>
               <Row>
                 <Cell>
-                  {t("project_chart_table.lead_time_p80", {
+                  {t("charts_tab.project_chart_table.lead_time_p80", {
                     days: secondsToDays(project.leadTimeP80).toFixed(2),
                   })}
                 </Cell>
               </Row>
               <Row>
                 <Cell>
-                  {t("project_chart_table.lead_time_p65", {
+                  {t("charts_tab.project_chart_table.lead_time_p65", {
                     days: secondsToDays(project.leadTimeP65).toFixed(2),
                   })}
                 </Cell>
@@ -343,7 +433,7 @@ export const ProjectChartsTable = ({
 
       <Grid item xs={8} sx={{ padding: "16px " }}>
         <Table
-          title={t("project_chart_table.latest_deliveries")}
+          title={t("charts_tab.project_chart_table.latest_deliveries")}
           headerCells={latestDeliveriesHeaderCells}
           rows={latestDeliveriesRows}
         />
