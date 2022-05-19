@@ -26,3 +26,7 @@ export type DemandBlock = {
   blockTime: string
   unblockTime: string
 }
+
+export type DemandBlocksList = {
+  demandBlocks: DemandBlock[]
+}

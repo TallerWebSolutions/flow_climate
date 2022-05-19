@@ -4,6 +4,11 @@ import { Demand } from "../demand/demand.types"
 import { Product } from "../product/product.types"
 import { ProjectConsolidation } from "./projectConsolidation.types"
 
+export type KeyValueData = {
+  keys: number[]
+  values: number[]
+}
+
 export type Project = {
   id: string
   name: string
@@ -105,10 +110,7 @@ export type Project = {
       data: number[]
     }[]
   }
-  leadTimeHistogramData: {
-    keys: number[]
-    values: number[]
-  }
+  leadTimeHistogramData: KeyValueData
 }
 
 export type ProjectsList = {

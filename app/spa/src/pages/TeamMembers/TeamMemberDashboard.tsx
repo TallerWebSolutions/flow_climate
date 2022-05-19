@@ -28,6 +28,10 @@ const TEAM_MEMBER_QUERY = gql`
         id
         leadtime
       }
+      leadTimeHistogramChartData {
+        keys
+        values
+      }
       demandLeadTimeP80
       startDate
       endDate
@@ -46,14 +50,20 @@ const TEAM_MEMBER_QUERY = gql`
         id
         name
       }
-      demandBlocks {
-        id
-        demand {
+      demandBlocksList(
+        orderField: "block_time"
+        sortDirection: DESC
+        perPage: 6
+      ) {
+        demandBlocks {
           id
-          demandTitle
+          demand {
+            id
+            demandTitle
+          }
+          blockTime
+          unblockTime
         }
-        blockTime
-        unblockTime
       }
       latestDeliveries: demands(status: FINISHED, limit: 10) {
         id

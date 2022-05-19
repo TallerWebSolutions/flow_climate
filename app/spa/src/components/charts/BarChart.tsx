@@ -2,12 +2,14 @@ import { BarDatum, BarLegendProps, ResponsiveBar } from "@nivo/bar"
 import { Box, IconButton } from "@mui/material"
 import { ReactElement, useRef } from "react"
 import DownloadIcon from "@mui/icons-material/Download"
-
-import { BarData } from "./tooltips/BarChartTooltip"
 import { exportComponentAsPNG } from "react-component-export-image"
 
+import { BarData } from "./tooltips/BarChartTooltip"
+import { KeyValueData } from "../../modules/project/project.types"
+import { keyValueToHistogramData } from "../../lib/charts"
+
 type BarChartProps = {
-  data: BarDatum[]
+  data: BarDatum[] | KeyValueData
   keys: string[]
   indexBy: string
   axisLeftLegend?: string
@@ -15,6 +17,7 @@ type BarChartProps = {
   tooltip?: (data: BarData) => ReactElement
   legendAnchor?: BarLegendProps["anchor"]
   legendDirection?: BarLegendProps["direction"]
+  padding?: number
 }
 
 export const BarChart = ({
@@ -25,8 +28,10 @@ export const BarChart = ({
   keys,
   legendAnchor = "top",
   legendDirection = "row",
+  padding,
 }: BarChartProps) => {
   const chartRef = useRef<HTMLInputElement>(null)
+  const chartData = Array.isArray(data) ? data : keyValueToHistogramData(data)
 
   return (
     <Box position="relative">
@@ -38,11 +43,11 @@ export const BarChart = ({
       </IconButton>
       <Box ref={chartRef} height={380}>
         <ResponsiveBar
-          data={data}
+          data={chartData}
           indexBy={indexBy}
           keys={keys}
           margin={{ top: 50, right: 130, bottom: 80, left: 60 }}
-          padding={0.3}
+          padding={Number.isNaN(padding) ? 0.3 : padding}
           colors={{ scheme: "category10" }}
           borderColor={{
             from: "color",

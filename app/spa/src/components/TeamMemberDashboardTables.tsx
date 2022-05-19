@@ -86,7 +86,7 @@ const TeamMemberDashboardTables = ({
     t("dashboard.demandBlocks.unblockTime"),
   ]
   const demandBlocksRows =
-    teamMember.demandBlocks?.map((block) => [
+    teamMember.demandBlocksList?.demandBlocks?.map((block) => [
       block.demand?.demandTitle || "",
       <DateLocale time date={block.blockTime} />,
       <DateLocale time date={block.unblockTime} />,

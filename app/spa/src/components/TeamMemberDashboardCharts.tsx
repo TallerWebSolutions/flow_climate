@@ -1,7 +1,7 @@
-import { BarChart } from "@material-ui/icons"
 import { Grid } from "@mui/material"
 
 import { TeamMember } from "../modules/teamMember/teamMember.types"
+import { BarChart } from "./charts/BarChart"
 
 type TeamMemberDashboardChartsProps = {
   teamMember: TeamMember
@@ -10,11 +10,19 @@ type TeamMemberDashboardChartsProps = {
 const TeamMemberDashboardCharts = ({
   teamMember,
 }: TeamMemberDashboardChartsProps) => {
+  const leadTimeHistogramChartData = teamMember.leadTimeHistogramChartData
   return (
     <Grid container spacing={2}>
-      <Grid item xs={6}>
-        <BarChart />
-      </Grid>
+      {leadTimeHistogramChartData && (
+        <Grid item xs={6}>
+          <BarChart
+            indexBy="key"
+            data={leadTimeHistogramChartData}
+            keys={["value"]}
+            padding={0}
+          />
+        </Grid>
+      )}
     </Grid>
   )
 }
