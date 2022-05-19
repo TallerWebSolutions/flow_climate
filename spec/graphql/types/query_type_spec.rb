@@ -937,7 +937,7 @@ RSpec.describe Types::QueryType do
         Fabricate :item_assignment, membership: membership, demand: other_bug
 
         demand_block = Fabricate :demand_block, blocker: team_member, block_time: 1.day.ago
-        Fabricate :demand_block, blocker: team_member, block_time: 2.days.ago
+        other_demand_block = Fabricate :demand_block, blocker: team_member, block_time: 2.days.ago
 
         Dashboards::OperationsDashboard.create(team_member: team_member, dashboard_date: 2.months.ago, last_data_in_month: true, member_effort: 67.8)
         Dashboards::OperationsDashboard.create(team_member: team_member, dashboard_date: 1.month.ago, last_data_in_month: true, member_effort: 12.3)
@@ -1007,7 +1007,15 @@ RSpec.describe Types::QueryType do
           firstDelivery {
             id
           }
-          demandBlocksList(orderField: "block_time", sortDirection: DESC, perPage: 1) {
+          demandBlocksListDesc: demandBlocksList(orderField: "block_time", sortDirection: DESC, perPage: 1) {
+            totalPages
+            lastPage
+            totalCount
+            demandBlocks {
+              id
+            }
+          }
+          demandBlocksListAsc: demandBlocksList(orderField: "block_time", sortDirection: ASC, perPage: 1) {
             totalPages
             lastPage
             totalCount
@@ -1129,13 +1137,24 @@ RSpec.describe Types::QueryType do
                                                            {
                                                              'id' => other_demand_finished.id.to_s
                                                            },
-                                                         'demandBlocksList' => {
+                                                         'demandBlocksListDesc' => {
                                                            'totalPages' => 2,
                                                            'lastPage' => false,
                                                            'totalCount' => 2,
                                                            'demandBlocks' => [
                                                              {
                                                                'id' => demand_block.id.to_s
+                                                             }
+                                                           ]
+
+                                                         },
+                                                         'demandBlocksListAsc' => {
+                                                           'totalPages' => 2,
+                                                           'lastPage' => false,
+                                                           'totalCount' => 2,
+                                                           'demandBlocks' => [
+                                                             {
+                                                               'id' => other_demand_block.id.to_s
                                                              }
                                                            ]
 
