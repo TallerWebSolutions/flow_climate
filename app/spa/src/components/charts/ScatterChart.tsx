@@ -5,28 +5,52 @@ import {
   ScatterPlotMouseHandler,
   ScatterPlotRawSerie,
 } from "@nivo/scatterplot"
-import { Box, IconButton } from "@mui/material"
+import { Box, IconButton, useTheme } from "@mui/material"
 import { exportComponentAsPNG } from "react-component-export-image"
 import DownloadIcon from "@mui/icons-material/Download"
 
 import { axisDataToScatter } from "../../lib/charts"
 import { ChartAxisData } from "../../modules/project/project.types"
 
+type Marker = {
+  value: number
+  legend: string
+}
+
+type NivoMarker = {
+  axis: "y" | "x"
+  value: number
+  legend: string
+  lineStyle: {
+    stroke: string
+    strokeWidth: number
+  }
+}
+
 type ScatterChartProps = {
   axisLeftLegend?: string
   data: ScatterPlotRawSerie<ScatterPlotDatum>[] | ChartAxisData
-  props?: object
   onClick?: ScatterPlotMouseHandler<ScatterPlotDatum>
+  markers?: Marker[]
 }
 
 export const ScatterChart = ({
   axisLeftLegend,
   data,
-  props,
   onClick,
+  markers,
+  ...props
 }: ScatterChartProps) => {
+  const theme = useTheme()
   const chartData = Array.isArray(data) ? data : axisDataToScatter(data)
   const chartRef = useRef<HTMLInputElement>(null)
+  const chartMarkers: NivoMarker[] =
+    markers?.map(({ value, legend }) => ({
+      axis: "y",
+      value,
+      legend,
+      lineStyle: { stroke: theme.palette.success.dark, strokeWidth: 2 },
+    })) || []
 
   return (
     <Box position="relative">
@@ -89,6 +113,7 @@ export const ScatterChart = ({
               ],
             },
           ]}
+          markers={chartMarkers}
           {...props}
         />
       </Box>

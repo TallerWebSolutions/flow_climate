@@ -767,26 +767,22 @@ const ProjectCharts = () => {
             </Typography>
             <ScatterChart
               data={leadTimeControlChartData}
-              props={{
-                markers: [
-                  leadTimeControlP65Marker,
-                  leadTimeControlP80Marker,
-                  leadTimeControlP95Marker,
-                ],
-                tooltip: (data: { node: ScatterNode }) => {
-                  const demandExternalID = data.node.data.label
+              // markers={[
+              //   leadTimeControlP65Marker,
+              //   leadTimeControlP80Marker,
+              //   leadTimeControlP95Marker,
+              // ]}
+              // tooltip={(data: { node: ScatterNode }) => {
+              //   const demandExternalID = data.node.data.label
 
-                  return (
-                    <ScatterChartTooltip
-                      xLabel={t(
-                        "project_charts.lead_time_control_tooltip_label"
-                      )}
-                      customXValue={demandExternalID}
-                      node={data.node}
-                    />
-                  )
-                },
-              }}
+              //   return (
+              //     <ScatterChartTooltip
+              //       xLabel={t("project_charts.lead_time_control_tooltip_label")}
+              //       customXValue={demandExternalID}
+              //       node={data.node}
+              //     />
+              //   )
+              // }}
             />
           </Box>
         </Grid>

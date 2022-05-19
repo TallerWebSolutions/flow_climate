@@ -36,3 +36,12 @@ const props = { data }
 export const Primary: ComponentStory<typeof ScatterChart> = () => (
   <ScatterChart {...props} />
 )
+
+const markers = [
+  { value: data.yAxis[10], legend: "test" },
+  { value: data.yAxis[6], legend: "another test" },
+]
+
+export const WithMarkers: ComponentStory<typeof ScatterChart> = () => (
+  <ScatterChart {...props} markers={markers} />
+)

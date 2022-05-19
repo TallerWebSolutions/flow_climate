@@ -429,21 +429,19 @@ const TaskCharts = ({ filters }: TasksChartProps) => {
         <ScatterChart
           axisLeftLegend={t("charts.days")}
           data={completionTimeChartData}
-          props={{
-            markers: [
-              deliveredLeadTimeP65Marker,
-              deliveredLeadTimeP80Marker,
-              deliveredLeadTimeP95Marker,
-            ],
-            tooltip: (data: { node: ScatterNode }) => {
-              return (
-                <ScatterChartTooltip
-                  xLabel={t("charts.control_completion_time_tooltip_x_legend")}
-                  node={data.node}
-                />
-              )
-            },
-          }}
+          // markers={[
+          //   deliveredLeadTimeP65Marker,
+          //   deliveredLeadTimeP80Marker,
+          //   deliveredLeadTimeP95Marker,
+          // ]}
+          // tooltip={(data: { node: ScatterNode }) => {
+          //   return (
+          //     <ScatterChartTooltip
+          //       xLabel={t("charts.control_completion_time_tooltip_x_legend")}
+          //       node={data.node}
+          //     />
+          //   )
+          // }}
           onClick={({ xValue }) => {
             const taskExternalID = Number(xValue)
             const taskID = getTaskIDByExternalID(taskExternalID)
@@ -456,29 +454,25 @@ const TaskCharts = ({ filters }: TasksChartProps) => {
         <ScatterChart
           axisLeftLegend={t("charts.days")}
           data={partialCompletionTimeChartData}
-          props={{
-            markers: [
-              deliveredLeadTimeP65Marker,
-              deliveredLeadTimeP80Marker,
-              deliveredLeadTimeP95Marker,
-            ],
-            xScale: {
-              type: "linear",
-              min: "auto",
-              max: "auto",
-              reverse: true,
-            },
-            tooltip: (data: { node: ScatterNode }) => {
-              return (
-                <ScatterChartTooltip
-                  xLabel={t(
-                    "charts.current_partial_completion_tooltip_x_legend"
-                  )}
-                  node={data.node}
-                />
-              )
-            },
-          }}
+          // markers={[
+          //   deliveredLeadTimeP65Marker,
+          //   deliveredLeadTimeP80Marker,
+          //   deliveredLeadTimeP95Marker,
+          // ]}
+          // xScale={{
+          //   type: "linear",
+          //   min: "auto",
+          //   max: "auto",
+          //   reverse: true,
+          // }}
+          // tooltip={(data: { node: ScatterNode }) => {
+          //   return (
+          //     <ScatterChartTooltip
+          //       xLabel={t("charts.current_partial_completion_tooltip_x_legend")}
+          //       node={data.node}
+          //     />
+          //   )
+          // }}
           onClick={({ xValue }) => {
             const taskExternalID = Number(xValue)
             const taskID = getTaskIDByExternalID(taskExternalID)
