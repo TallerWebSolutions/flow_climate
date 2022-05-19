@@ -52,6 +52,8 @@ const TeamMemberDashboardCharts = ({
     })
   )
 
+  const averagePullIntervalData = teamMember.averagePullIntervalData
+
   return (
     <Grid container spacing={2}>
       {leadTimeHistogramChartData && (
@@ -91,6 +93,18 @@ const TeamMemberDashboardCharts = ({
           <Typography component="h3">{t("charts.throughput")}</Typography>
           <BarChart
             data={memberThroughputData}
+            keys={["value"]}
+            indexBy="key"
+          />
+        </Grid>
+      )}
+      {averagePullIntervalData && (
+        <Grid item xs={6}>
+          <Typography component="h3">
+            {t("charts.averagePullInterval")}
+          </Typography>
+          <BarChart
+            data={axisDataToKeyValue(averagePullIntervalData)}
             keys={["value"]}
             indexBy="key"
           />

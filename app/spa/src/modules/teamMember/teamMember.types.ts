@@ -26,4 +26,5 @@ export type TeamMember = {
   leadTimeControlChartData?: ChartAxisData
   memberEffortData?: ChartAxisData
   memberThroughputData?: number[]
+  averagePullIntervalData?: ChartAxisData
 }
