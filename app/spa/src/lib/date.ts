@@ -50,7 +50,7 @@ export const formatDate = ({ date, format = "MM/dd/yy" }: FormatDateProps) => {
 }
 
 export const toISOFormat = (date: string): string => {
-  return parseISO(date).toISOString()
+  return new Date(date).toISOString()
 }
 
 export const secondsToDays = (seconds: number): number => {
