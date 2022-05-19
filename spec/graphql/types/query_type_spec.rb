@@ -585,7 +585,7 @@ RSpec.describe Types::QueryType do
 
     let(:query) do
       %(query {
-        projects(companyId: #{company.id}, name: "foo,xpto") {
+        projects(companyId: #{company.id}, name: "foo,xpto", status: "waiting") {
           id
           name
           team {
@@ -611,9 +611,9 @@ RSpec.describe Types::QueryType do
           current_user: user
         }
 
-        first_project = Fabricate :project, company: company, end_date: 5.days.ago, name: 'foo'
-        second_project = Fabricate :project, company: company, end_date: 6.days.ago, name: 'xpto'
-        Fabricate :project, company: company, end_date: 6.days.ago, name: 'bar'
+        first_project = Fabricate :project, company: company, end_date: 5.days.ago, name: 'foo', status: 'waiting', start_date: 10.days.ago
+        second_project = Fabricate :project, company: company, end_date: 6.days.ago, name: 'xpto', status: 'waiting', start_date: 15.days.ago
+        Fabricate :project, company: company, end_date: 5.days.ago, name: 'bar', status: 'executing', start_date: 10.days.ago
 
         result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
         expect(result.dig('data', 'projects')).to eq([{
