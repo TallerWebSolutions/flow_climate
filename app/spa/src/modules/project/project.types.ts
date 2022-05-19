@@ -9,6 +9,11 @@ export type KeyValueData = {
   values: number[]
 }
 
+export type ChartAxisData = {
+  xAxis: string[]
+  yAxis: number[]
+}
+
 export type Project = {
   id: string
   name: string
@@ -93,10 +98,7 @@ export type Project = {
     demandsCount: number
     memberName: string
   }[]
-  hoursPerStageChartData: {
-    xAxis: string[]
-    yAxis: number[]
-  }
+  hoursPerStageChartData: ChartAxisData
   demandsFlowChartData: {
     creationChartData?: number[]
     committedChartData?: number[]
