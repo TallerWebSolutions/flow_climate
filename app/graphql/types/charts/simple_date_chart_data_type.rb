@@ -2,7 +2,7 @@
 
 module Types
   module Charts
-    class MemberEffortDataType < Types::BaseObject
+    class SimpleDateChartDataType < Types::BaseObject
       field :x_axis, [GraphQL::Types::ISO8601Date], null: true
       field :y_axis, [Float], null: true
 

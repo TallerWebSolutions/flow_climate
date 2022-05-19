@@ -920,8 +920,8 @@ RSpec.describe Types::QueryType do
     it 'returns the team member and its fields' do
       travel_to(Time.zone.local(2022, 5, 18, 10, 0, 0)) do
         company = Fabricate :company
-        project = Fabricate :project, end_date: 1.day.from_now
-        other_project = Fabricate :project, end_date: 2.days.from_now
+        project = Fabricate :project, start_date: 2.weeks.ago, end_date: 1.day.from_now
+        other_project = Fabricate :project, start_date: 2.weeks.ago, end_date: 2.days.from_now
 
         team = Fabricate :team, company: company
         team_member = Fabricate :team_member, company: company
@@ -931,7 +931,7 @@ RSpec.describe Types::QueryType do
         bug = Fabricate :demand, team: team, project: project, created_date: 2.days.ago, end_date: nil, demand_type: :bug
         other_bug = Fabricate :demand, team: team, project: project, created_date: 1.day.ago, end_date: nil, demand_type: :bug
 
-        Fabricate :item_assignment, membership: membership, demand: demand_finished
+        first_assignmen = Fabricate :item_assignment, membership: membership, demand: demand_finished
         Fabricate :item_assignment, membership: membership, demand: other_demand_finished
         Fabricate :item_assignment, membership: membership, demand: bug
         Fabricate :item_assignment, membership: membership, demand: other_bug
@@ -942,6 +942,8 @@ RSpec.describe Types::QueryType do
         Dashboards::OperationsDashboard.create(team_member: team_member, dashboard_date: 2.months.ago, last_data_in_month: true, member_effort: 67.8, pull_interval: 200)
         Dashboards::OperationsDashboard.create(team_member: team_member, dashboard_date: 1.month.ago, last_data_in_month: true, member_effort: 12.3, pull_interval: 10)
         Dashboards::OperationsDashboard.create(team_member: team_member, dashboard_date: Time.zone.today, last_data_in_month: true, member_effort: 100, pull_interval: 89)
+
+        Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignmen, start_time_to_computation: 2.days.ago, effort_value: 100
 
         query =
           %(query {
@@ -1041,6 +1043,11 @@ RSpec.describe Types::QueryType do
           averagePullIntervalData {
             xAxis
             yAxis
+          }
+          projectHoursData {
+            xAxis
+            yAxisProjectsNames
+            yAxisHours
           }
           memberThroughputData(numberOfWeeks: 3)
         }
@@ -1181,6 +1188,12 @@ RSpec.describe Types::QueryType do
                                                          'averagePullIntervalData' => {
                                                            'xAxis' => %w[2022-03-18 2022-04-18 2022-05-18],
                                                            'yAxis' => [200, 10, 89]
+                                                         },
+                                                         'projectHoursData' => {
+                                                           'xAxis' => ['2022-05-31'],
+                                                           'yAxisHours' => [100],
+                                                           'yAxisProjectsNames' => [project.name]
+
                                                          },
                                                          'memberThroughputData' => [0, 0, 0, 2]
                                                        })

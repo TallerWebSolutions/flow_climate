@@ -42,8 +42,9 @@ module Types
 
     field :lead_time_control_chart_data, Types::Charts::LeadTimeControlChartDataType, null: true
     field :lead_time_histogram_chart_data, Types::Charts::LeadTimeHistogramDataType, null: true
-    field :member_effort_data, Types::Charts::MemberEffortDataType, null: true
-    field :average_pull_interval_data, Types::Charts::AveragePullIntervalDataType, null: true
+    field :member_effort_data, Types::Charts::SimpleDateChartDataType, null: true
+    field :average_pull_interval_data, Types::Charts::SimpleDateChartDataType, null: true
+    field :project_hours_data, Types::Charts::ProjectHoursChartDataType, null: true
     field :member_throughput_data, [Int], null: true do
       argument :number_of_weeks, Int, required: false
     end
@@ -115,6 +116,11 @@ module Types
 
     def member_throughput_data(number_of_weeks: 52)
       DemandService.instance.build_throughput_per_period_array(object.demands.finished_until_date(Time.zone.now), number_of_weeks.week.ago.beginning_of_week, Time.zone.now)
+    end
+
+    def project_hours_data
+      team_chart_adapter = Highchart::TeamMemberAdapter.new(object)
+      { x_axis: team_chart_adapter.x_axis_hours_per_project, y_axis_projects_names: team_chart_adapter.y_axis_hours_per_project.pluck(:name), y_axis_hours: team_chart_adapter.y_axis_hours_per_project.pluck(:data).flatten }
     end
 
     private
