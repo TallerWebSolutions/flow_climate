@@ -117,7 +117,6 @@ module Types
     end
 
     def projects(company_id:, name: nil, status: nil, start_date: nil, end_date: nil)
-      return TasksList.new(0, "", "", 0, 0) if me.last_company.blank?
       ProjectsRepository.instance.search(company_id, project_name: name, project_status: status, start_date: start_date, end_date: end_date)
     end
   end
