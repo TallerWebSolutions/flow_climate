@@ -15,7 +15,7 @@ import {
   Typography,
 } from "@mui/material"
 import { Company } from "../../modules/company/company.types"
-import Table from "../../components/Table"
+import Table from "../../components/ui/Table"
 
 const PROJECT_LIST_QUERY = gql`
   query projectList(
