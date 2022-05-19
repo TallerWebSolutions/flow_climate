@@ -13,19 +13,19 @@
     "row_days": "dias",
     "row_delivered": "entregas",
     "row_total": "totais",
-    "row_consumed": "consumidas",
-    "filter": {
-      "search": "Nome",
-      "search_helper": "Pesquise por nome de projeto",
-      "initial_date": "Data inicial",
-      "end_date": "Data final",
-      "status": "Status",
-      "status_waiting": "Aguardando",
-      "status_executing": "Executando",
-      "status_maintenance": "Manutenção",
-      "status_finished": "Finalizado",
-      "status_cancelled": "Cancelado",
-      "status_negotiating": "Negociando"
-    }
+    "row_consumed": "consumidas"
+  },
+  "filter": {
+    "search": "Nome",
+    "search_helper": "Pesquise por nome de projeto",
+    "initial_date": "Data inicial",
+    "end_date": "Data final",
+    "status": "Status",
+    "status_waiting": "Aguardando",
+    "status_executing": "Executando",
+    "status_maintenance": "Manutenção",
+    "status_finished": "Finalizado",
+    "status_cancelled": "Cancelado",
+    "status_negotiating": "Negociando"
   }
 }
