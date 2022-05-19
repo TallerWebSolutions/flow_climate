@@ -939,9 +939,9 @@ RSpec.describe Types::QueryType do
         demand_block = Fabricate :demand_block, blocker: team_member, block_time: 1.day.ago
         other_demand_block = Fabricate :demand_block, blocker: team_member, block_time: 2.days.ago
 
-        Dashboards::OperationsDashboard.create(team_member: team_member, dashboard_date: 2.months.ago, last_data_in_month: true, member_effort: 67.8)
-        Dashboards::OperationsDashboard.create(team_member: team_member, dashboard_date: 1.month.ago, last_data_in_month: true, member_effort: 12.3)
-        Dashboards::OperationsDashboard.create(team_member: team_member, dashboard_date: Time.zone.today, last_data_in_month: true, member_effort: 100)
+        Dashboards::OperationsDashboard.create(team_member: team_member, dashboard_date: 2.months.ago, last_data_in_month: true, member_effort: 67.8, pull_interval: 200)
+        Dashboards::OperationsDashboard.create(team_member: team_member, dashboard_date: 1.month.ago, last_data_in_month: true, member_effort: 12.3, pull_interval: 10)
+        Dashboards::OperationsDashboard.create(team_member: team_member, dashboard_date: Time.zone.today, last_data_in_month: true, member_effort: 100, pull_interval: 89)
 
         query =
           %(query {
@@ -1035,6 +1035,10 @@ RSpec.describe Types::QueryType do
             values
           }
           memberEffortData {
+            xAxis
+            yAxis
+          }
+          averagePullIntervalData {
             xAxis
             yAxis
           }
@@ -1173,6 +1177,10 @@ RSpec.describe Types::QueryType do
                                                          'memberEffortData' => {
                                                            'xAxis' => %w[2022-03-18 2022-04-18 2022-05-18],
                                                            'yAxis' => [67.8, 12.3, 100.0]
+                                                         },
+                                                         'averagePullIntervalData' => {
+                                                           'xAxis' => %w[2022-03-18 2022-04-18 2022-05-18],
+                                                           'yAxis' => [200, 10, 89]
                                                          },
                                                          'memberThroughputData' => [0, 0, 0, 2]
                                                        })

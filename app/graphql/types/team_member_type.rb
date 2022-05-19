@@ -43,6 +43,7 @@ module Types
     field :lead_time_control_chart_data, Types::Charts::LeadTimeControlChartDataType, null: true
     field :lead_time_histogram_chart_data, Types::Charts::LeadTimeHistogramDataType, null: true
     field :member_effort_data, Types::Charts::MemberEffortDataType, null: true
+    field :average_pull_interval_data, Types::Charts::AveragePullIntervalDataType, null: true
     field :member_throughput_data, [Int], null: true do
       argument :number_of_weeks, Int, required: false
     end
@@ -105,19 +106,27 @@ module Types
     end
 
     def member_effort_data
-      operations_dashboards = Dashboards::OperationsDashboard
-                              .where(
-                                team_member: object,
-                                last_data_in_month: true
-                              )
-                              .where('operations_dashboards.dashboard_date > :limit_date', limit_date: 6.months.ago.beginning_of_day)
-                              .order(:dashboard_date)
-
       { x_axis: operations_dashboards.map(&:dashboard_date).map(&:iso8601), y_axis: operations_dashboards.map { |dashboard| dashboard.member_effort.to_f } }
+    end
+
+    def average_pull_interval_data
+      { x_axis: operations_dashboards.map(&:dashboard_date).map(&:iso8601), y_axis: operations_dashboards.map(&:pull_interval) }
     end
 
     def member_throughput_data(number_of_weeks: 52)
       DemandService.instance.build_throughput_per_period_array(object.demands.finished_until_date(Time.zone.now), number_of_weeks.week.ago.beginning_of_week, Time.zone.now)
+    end
+
+    private
+
+    def operations_dashboards
+      @operations_dashboards ||= Dashboards::OperationsDashboard
+                                 .where(
+                                   team_member: object,
+                                   last_data_in_month: true
+                                 )
+                                 .where('operations_dashboards.dashboard_date > :limit_date', limit_date: 6.months.ago.beginning_of_day)
+                                 .order(:dashboard_date)
     end
   end
 end

@@ -80,6 +80,7 @@ Metrics/ClassLength:
     - 'app/services/slack/slack_notification_service.rb'
     - 'app/services/stats/statistics_service.rb'
     - 'app/graphql/types/project_type.rb'
+    - 'app/graphql/types/team_member_type.rb'
     - 'app/adapters/**/*'
     - 'app/readers/**/*'
 
