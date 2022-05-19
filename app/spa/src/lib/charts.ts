@@ -20,3 +20,8 @@ export const axisDataToScatter = (
     })),
   },
 ]
+
+export const axisDataToKeyValue = (data: ChartAxisData): KeyValueData => ({
+  keys: data.xAxis,
+  values: data.yAxis,
+})

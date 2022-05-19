@@ -1,7 +1,8 @@
 import { Grid, Typography } from "@mui/material"
 import { useTranslation } from "react-i18next"
-import { secondsToDays } from "../lib/date"
 
+import { secondsToDays } from "../lib/date"
+import { axisDataToKeyValue } from "../lib/charts"
 import { TeamMember } from "../modules/teamMember/teamMember.types"
 import { BarChart } from "./charts/BarChart"
 import { ScatterChart } from "./charts/ScatterChart"
@@ -38,6 +39,11 @@ const TeamMemberDashboardCharts = ({
       legend: t("charts.ltP95"),
     },
   ]
+  const memberEffortData = {
+    ...teamMember.memberEffortData,
+    xAxis: teamMember.memberEffortData?.xAxis || [],
+    yAxis: teamMember.memberEffortData?.yAxis.map(secondsToDays) || [],
+  }
 
   return (
     <Grid container spacing={2}>
@@ -60,6 +66,16 @@ const TeamMemberDashboardCharts = ({
           <ScatterChart
             data={leadTimeControlChartData}
             markers={leadTimeControlChartMarkers}
+          />
+        </Grid>
+      )}
+      {memberEffortData && (
+        <Grid item xs={6}>
+          <Typography component="h3">{t("charts.memberEffort")}</Typography>
+          <BarChart
+            data={axisDataToKeyValue(memberEffortData)}
+            keys={["value"]}
+            indexBy="key"
           />
         </Grid>
       )}

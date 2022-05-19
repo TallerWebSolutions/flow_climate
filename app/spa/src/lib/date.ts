@@ -57,6 +57,6 @@ export const toISOFormat = (date: string): string => {
   return new Date(date).toISOString()
 }
 
-export const secondsToDays = (seconds: number): number => {
-  return Number((seconds / ONE_DAY_IN_SECONDS).toFixed(2))
+export const secondsToDays = (seconds: number | string): number => {
+  return Number((Number(seconds) / ONE_DAY_IN_SECONDS).toFixed(2))
 }

@@ -5,8 +5,8 @@ import { Product } from "../product/product.types"
 import { ProjectConsolidation } from "./projectConsolidation.types"
 
 export type KeyValueData = {
-  keys: number[]
-  values: number[]
+  keys: (number | string)[]
+  values: (number | string)[]
 }
 
 export type ChartAxisData = {

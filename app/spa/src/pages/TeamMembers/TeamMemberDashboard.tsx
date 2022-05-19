@@ -14,6 +14,8 @@ const TEAM_MEMBER_QUERY = gql`
     teamMember(id: $id) {
       id
       name
+      startDate
+      endDate
       deliveredDemands: demands(status: FINISHED) {
         id
       }
@@ -39,9 +41,11 @@ const TEAM_MEMBER_QUERY = gql`
         leadTimeP80
         leadTimeP95
       }
+      memberEffortData {
+        xAxis
+        yAxis
+      }
       demandLeadTimeP80
-      startDate
-      endDate
       projectsList(orderField: "end_date", sortDirection: DESC) {
         totalCount
         projects {

@@ -24,4 +24,5 @@ export type TeamMember = {
   demandBlocksList?: DemandBlocksList
   leadTimeHistogramChartData?: KeyValueData
   leadTimeControlChartData?: ChartAxisData
+  memberEffortData?: ChartAxisData
 }
