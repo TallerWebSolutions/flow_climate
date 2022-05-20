@@ -20,6 +20,7 @@ import Statistics from "./pages/Projects/Statistics"
 import StatusReport from "./pages/Projects/StatusReport"
 import CreateProjectAditionalHours from "./pages/Projects/CreateProjectAditionalHours"
 import TasksPage from "./pages/Tasks/Tasks"
+import TasksCharts from "./pages/Tasks/TasksCharts"
 import CreateTeam from "./pages/Teams/CreateTeam"
 import EditTeam from "./pages/Teams/EditTeam"
 import Teams from "./pages/Teams/Teams"
@@ -143,14 +144,12 @@ const App = () => {
             />
             <Route
               path="/companies/:companySlug/tasks/charts"
-              element={<TasksPage initialTab={0} />}
+              element={<TasksCharts />}
             />
-
             <Route
               path="/companies/:companySlug/initiatives"
               element={<InitiativesList />}
             />
-
             <Route
               path="/companies/:companySlug/projects"
               element={<ProjectList />}

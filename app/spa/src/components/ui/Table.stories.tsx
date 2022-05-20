@@ -2,7 +2,7 @@ import React from "react"
 
 import { ComponentStory, ComponentMeta } from "@storybook/react"
 
-import Table from "./Table"
+import Table from "./ui/Table"
 
 export default {
   title: "Table",

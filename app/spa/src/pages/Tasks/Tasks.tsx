@@ -18,11 +18,9 @@ import {
 import { ChangeEvent, useCallback, useState, useContext } from "react"
 import { useTranslation } from "react-i18next"
 import BasicPage from "../../components/BasicPage"
-import TabPanel from "../../components/TabPanel"
 import { toISOFormat } from "../../lib/date"
 import { Project } from "../../modules/project/project.types"
 import { Team } from "../../modules/team/team.types"
-import TaskCharts from "./Charts"
 import TaskList from "./List"
 import { MeContext } from "../../contexts/MeContext"
 
@@ -277,14 +275,7 @@ const TasksPage = ({ initialTab = 1 }: TasksPageProps) => {
             })}
           </Tabs>
         </Box>
-
-        <TabPanel value={tab} index={0}>
-          <TaskCharts filters={taskFilters} />
-        </TabPanel>
-
-        <TabPanel value={tab} index={1}>
-          <TaskList filters={taskFilters} setFilters={setTaskFilters} />
-        </TabPanel>
+        <TaskList filters={taskFilters} setFilters={setTaskFilters} />
       </Box>
     </BasicPage>
   )

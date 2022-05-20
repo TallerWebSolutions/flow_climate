@@ -75,13 +75,24 @@ export const TASKS_LIST_QUERY = gql`
   }
 `
 
+export type TasksCharts = {
+  accumulatedCompletionPercentilesOnTimeArray: number[]
+  completionPercentilesOnTimeArray: number[]
+  creationArray: number[]
+  throughputArray: number[]
+  xAxis: string[]
+}
+
+export type TasksList = {
+  totalCount: number
+  totalDeliveredCount: number
+  totalPages: number
+  tasksCharts?: TasksCharts
+  tasks: Task[]
+}
+
 type TasksListDTO = {
-  tasksList: {
-    totalCount: number
-    totalDeliveredCount: number
-    totalPages: number
-    tasks: Task[]
-  }
+  tasksList: TasksList
   me: User
 }
 
