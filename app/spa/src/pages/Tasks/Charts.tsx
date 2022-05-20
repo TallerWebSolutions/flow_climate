@@ -16,9 +16,6 @@ import BarChartTooltip, {
   BarData,
 } from "../../components/charts/tooltips/BarChartTooltip"
 import LineChartTooltip from "../../components/charts/tooltips/LineChartTooltip"
-import ScatterChartTooltip, {
-  ScatterNode,
-} from "../../components/charts/tooltips/ScatterChartTooltip"
 import { secondsToDays } from "../../lib/date"
 import { openWindow } from "../../lib/func"
 import { Company } from "../../modules/company/company.types"
@@ -130,9 +127,6 @@ type CompletionTimeConfidenceChart = {
   accumulatedCompletionTime: ChartData[]
 }
 
-const voidTask = {} as Task
-type TaskKey = keyof typeof voidTask
-
 const ChartBox = ({
   children,
   title,
@@ -157,27 +151,6 @@ const ChartBox = ({
       {children}
     </Box>
   )
-}
-
-const mountTasksChartAxis = ({
-  tasks,
-  fieldID,
-  fieldData,
-}: {
-  tasks?: Task[]
-  fieldID: TaskKey
-  fieldData: TaskKey
-}): ChartData[] => {
-  return tasks
-    ? tasks.map((task) => {
-        const daysToCompleteTask = secondsToDays(Number(task[fieldData]))
-
-        return {
-          x: task[fieldID],
-          y: daysToCompleteTask,
-        }
-      })
-    : []
 }
 
 export const buildPercentileYAxisMarker = ({
@@ -329,40 +302,6 @@ const TaskCharts = ({ filters }: TasksChartProps) => {
     )
   }
 
-  const deliveredLeadTimeP65 = secondsToDays(
-    Number(taskList?.deliveredLeadTimeP65)
-  )
-  const deliveredLeadTimeP80 = secondsToDays(
-    Number(taskList?.deliveredLeadTimeP80)
-  )
-  const deliveredLeadTimeP95 = secondsToDays(
-    Number(taskList?.deliveredLeadTimeP95)
-  )
-
-  const deliveredLeadTimeP65Marker = buildPercentileYAxisMarker({
-    color: "#f80304",
-    completionTime: deliveredLeadTimeP65,
-    legend: t("charts.control_completion_time_p65_marker", {
-      days: deliveredLeadTimeP65,
-    }),
-  })
-
-  const deliveredLeadTimeP80Marker = buildPercentileYAxisMarker({
-    color: "#daa521",
-    completionTime: deliveredLeadTimeP80,
-    legend: t("charts.control_completion_time_p80_marker", {
-      days: deliveredLeadTimeP80,
-    }),
-  })
-
-  const deliveredLeadTimeP95Marker = buildPercentileYAxisMarker({
-    color: "#1e8b16",
-    completionTime: deliveredLeadTimeP95,
-    legend: t("charts.control_completion_time_p95_marker", {
-      days: deliveredLeadTimeP95,
-    }),
-  })
-
   const completionTimeChartData = taskList?.completiontimeHistogramChartData
 
   // eslint-disable-next-line no-console
@@ -421,24 +360,6 @@ const TaskCharts = ({ filters }: TasksChartProps) => {
           <ScatterChart
             // axisLeftLegend={t("charts.days")}
             data={keyValueToAxisData(completionTimeChartData)}
-            // markers={[
-            //   deliveredLeadTimeP65Marker,
-            //   deliveredLeadTimeP80Marker,
-            //   deliveredLeadTimeP95Marker,
-            // ]}
-            // tooltip={(data: { node: ScatterNode }) => {
-            //   return (
-            //     <ScatterChartTooltip
-            //       xLabel={t("charts.control_completion_time_tooltip_x_legend")}
-            //       node={data.node}
-            //     />
-            //   )
-            // }}
-            // onClick={({ xValue }) => {
-            //   const taskExternalID = Number(xValue)
-            //   const taskID = getTaskIDByExternalID(taskExternalID)
-            //   openWindow(`/companies/${companySlug}/tasks/${taskID?.id}`)
-            // }}
           />
         </ChartBox>
       )}
@@ -447,25 +368,6 @@ const TaskCharts = ({ filters }: TasksChartProps) => {
         <ScatterChart
           axisLeftLegend={t("charts.days")}
           data={partialCompletionTimeChartData}
-          // markers={[
-          //   deliveredLeadTimeP65Marker,
-          //   deliveredLeadTimeP80Marker,
-          //   deliveredLeadTimeP95Marker,
-          // ]}
-          // xScale={{
-          //   type: "linear",
-          //   min: "auto",
-          //   max: "auto",
-          //   reverse: true,
-          // }}
-          // tooltip={(data: { node: ScatterNode }) => {
-          //   return (
-          //     <ScatterChartTooltip
-          //       xLabel={t("charts.current_partial_completion_tooltip_x_legend")}
-          //       node={data.node}
-          //     />
-          //   )
-          // }}
           onClick={({ xValue }) => {
             const taskExternalID = Number(xValue)
             const taskID = getTaskIDByExternalID(taskExternalID)
