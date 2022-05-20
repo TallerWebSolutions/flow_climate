@@ -6,6 +6,7 @@ import { axisDataToKeyValue } from "../lib/charts"
 import { TeamMember } from "../modules/teamMember/teamMember.types"
 import { BarChart } from "./charts/BarChart"
 import { ScatterChart } from "./charts/ScatterChart"
+import { BarDatum } from "@nivo/bar"
 
 type TeamMemberDashboardChartsProps = {
   teamMember: TeamMember
@@ -44,15 +45,26 @@ const TeamMemberDashboardCharts = ({
     xAxis: teamMember.memberEffortData?.xAxis || [],
     yAxis: teamMember.memberEffortData?.yAxis.map(secondsToDays) || [],
   }
-
   const memberThroughputData = teamMember.memberThroughputData?.map(
     (th, index) => ({
       key: th,
       value: index,
     })
   )
-
   const averagePullIntervalData = teamMember.averagePullIntervalData
+  const projectHoursData = teamMember.projectHoursData
+  const projectHoursKeys = projectHoursData?.xAxis || []
+  const projectHoursNames = projectHoursData?.yAxisProjectsNames || []
+  const projectHoursGroups: BarDatum[] =
+    projectHoursKeys?.map((key, indexKeys, { length: lengthKeys }) => {
+      const group: BarDatum = { key }
+      projectHoursNames.forEach((name, indexNames) => {
+        group[name] =
+          projectHoursData?.yAxisHours[indexKeys * lengthKeys + indexNames] ||
+          ""
+      })
+      return group
+    }) || []
 
   return (
     <Grid container spacing={2}>
@@ -107,6 +119,17 @@ const TeamMemberDashboardCharts = ({
             data={axisDataToKeyValue(averagePullIntervalData)}
             keys={["value"]}
             indexBy="key"
+          />
+        </Grid>
+      )}
+      {projectHoursData && (
+        <Grid item xs={12}>
+          <Typography component="h3">{t("charts.hoursPerProject")}</Typography>
+          <BarChart
+            data={projectHoursGroups}
+            keys={projectHoursNames}
+            indexBy="key"
+            groupMode="grouped"
           />
         </Grid>
       )}

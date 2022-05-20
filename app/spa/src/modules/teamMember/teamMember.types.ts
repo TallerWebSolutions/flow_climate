@@ -27,4 +27,9 @@ export type TeamMember = {
   memberEffortData?: ChartAxisData
   memberThroughputData?: number[]
   averagePullIntervalData?: ChartAxisData
+  projectHoursData?: {
+    xAxis: string[]
+    yAxisHours: number[]
+    yAxisProjectsNames: string[]
+  }
 }

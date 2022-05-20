@@ -51,6 +51,11 @@ const TEAM_MEMBER_QUERY = gql`
         xAxis
         yAxis
       }
+      projectHoursData {
+        xAxis
+        yAxisHours
+        yAxisProjectsNames
+      }
       projectsList(orderField: "end_date", sortDirection: DESC) {
         totalCount
         projects {
