@@ -1126,7 +1126,7 @@ RSpec.describe ProjectsController, type: :controller do
 
       context 'passing valid parameters' do
         context 'with no search parameters' do
-          it 'retrieves all the projects to the company' do
+          it 'renders spa page' do
             get :statistics_tab, params: { company_id: company, id: project }
 
             expect(response).to render_template 'spa-build/index'
@@ -1174,69 +1174,12 @@ RSpec.describe ProjectsController, type: :controller do
     end
 
     describe 'GET #tasks_tab' do
-      let(:project) { Fabricate :project, company: company, customers: [customer] }
+      let!(:project) { Fabricate :project, company: company }
 
-      context 'valid parameters' do
-        context 'with data' do
-          it 'assigns the instance variables and renders the template' do
-            travel_to Time.zone.local(2022, 1, 28, 10, 0, 0) do
-              demand = Fabricate :demand, project: project
-              task = Fabricate :task, demand: demand, created_date: 2.days.ago, end_date: Time.zone.now
-              other_task = Fabricate :task, demand: demand, created_date: 3.days.ago, end_date: Time.zone.now
+      it 'renders spa' do
+        get :statistics_tab, params: { company_id: company, id: project }
 
-              consolidation = Fabricate :project_consolidation, project: project, consolidation_date: 2.days.ago, last_data_in_week: true
-              other_consolidation = Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago, last_data_in_week: true
-
-              Fabricate :project_consolidation, project: project, consolidation_date: Time.zone.today, last_data_in_week: false
-              Fabricate :project_consolidation, consolidation_date: 1.day.ago, last_data_in_week: true
-
-              get :tasks_tab, params: { company_id: company, id: project }, xhr: true
-
-              expect(response).to render_template 'projects/dashboards/tasks_dashboard'
-              expect(assigns(:project_consolidations).map(&:consolidation_date)).to eq [consolidation.consolidation_date, other_consolidation.consolidation_date]
-              expect(assigns(:burnup_adapter).work_items).to eq [other_task, task]
-              expect(assigns(:task_completion_control_chart_data).items_ids).to eq [other_task.external_id, task.external_id]
-              expect(assigns(:task_completion_control_chart_data).completion_times).to eq [other_task.seconds_to_complete, task.seconds_to_complete]
-              expect(assigns(:company)).to eq company
-              expect(assigns(:project)).to eq project
-            end
-          end
-        end
-
-        context 'with no data' do
-          it 'assigns the instance variables and renders the empty template' do
-            get :tasks_tab, params: { company_id: company, id: project }, xhr: true
-
-            expect(response).to render_template 'projects/dashboards/tasks_dashboard'
-            expect(response).to render_template 'layouts/_no_data'
-            expect(assigns(:company)).to eq company
-            expect(assigns(:project)).to eq project
-          end
-        end
-      end
-
-      context 'invalid' do
-        context 'project' do
-          before { get :tasks_tab, params: { company_id: company, id: 'foo' }, xhr: true }
-
-          it { expect(response).to have_http_status :not_found }
-        end
-
-        context 'company' do
-          context 'non-existent' do
-            before { get :tasks_tab, params: { company_id: 'foo', id: project }, xhr: true }
-
-            it { expect(response).to have_http_status :not_found }
-          end
-
-          context 'not-permitted' do
-            let(:company) { Fabricate :company, users: [] }
-
-            before { get :tasks_tab, params: { company_id: company, id: project }, xhr: true }
-
-            it { expect(response).to have_http_status :not_found }
-          end
-        end
+        expect(response).to render_template 'spa-build/index'
       end
     end
   end

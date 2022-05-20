@@ -171,17 +171,8 @@ class ProjectsController < AuthenticatedController
   end
 
   def tasks_tab
-    start_date = @project.start_date
-    end_date = @project.end_date
-
-    @tasks_charts_adapter = ViewCharts::TasksCharts.new(tasks.map(&:id), start_date, end_date, 'WEEKLY')
-    @burnup_adapter = Highchart::BurnupAdapter.new(tasks, start_date, end_date)
-    @project_consolidations = Consolidations::ProjectConsolidation.for_project(@project).weekly_data.order(:consolidation_date)
-
-    finished_tasks = tasks.finished
-    @task_completion_control_chart_data = ScatterData.new(finished_tasks.map(&:seconds_to_complete), finished_tasks.map(&:external_id))
-
-    respond_to { |format| format.js { render 'projects/dashboards/tasks_dashboard' } }
+    prepend_view_path Rails.root.join('public')
+    render 'spa-build/index'
   end
 
   private
