@@ -66,6 +66,11 @@
     }
   },
   "charts": {
+    "leadTimeHistogram": "Lead Time Histogram",
+    "leadTimeControl": "Lead Time Control",
+    "ltP65": "Lead Time P65",
+    "ltP80": "Lead Time P80",
+    "ltP95": "Lead Time P95",
     "memberEffort": "Member Effort",
     "throughput": "Throughput",
     "averagePullInterval": "Average Pull Interval",
