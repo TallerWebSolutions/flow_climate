@@ -4,7 +4,7 @@ import { BarDatum } from "@nivo/bar"
 import { CartesianMarkerProps } from "@nivo/core"
 import { SliceTooltipProps } from "@nivo/line"
 import { ScatterPlotValue } from "@nivo/scatterplot"
-import { ReactElement, useContext, useEffect, useState } from "react"
+import { ReactElement, useContext, useState } from "react"
 import { useTranslation } from "react-i18next"
 
 import { keyValueToAxisData } from "../../lib/charts"
@@ -17,13 +17,13 @@ import BarChartTooltip, {
 } from "../../components/charts/tooltips/BarChartTooltip"
 import { secondsToDays } from "../../lib/date"
 import { openWindow } from "../../lib/func"
-import { Company } from "../../modules/company/company.types"
 import { Task } from "../../modules/task/task.types"
 import User from "../../modules/user/user.types"
 import { KeyValueData } from "../../modules/project/project.types"
 import TasksPage from "../../components/TasksPage"
 import { ChartAxisData } from "../../modules/project/project.types"
 import { TasksCharts } from "../../pages/Tasks/List"
+import LineChartTooltip from "../../components/charts/tooltips/LineChartTooltip"
 
 const TASKS_CHARTS_QUERY = gql`
   query TasksCharts(
@@ -104,17 +104,6 @@ type TasksChartsDTO = {
   }
 }
 
-type ChartData = {
-  id?: number
-  x: number | string | any
-  y: number | string
-}
-
-type CompletionTimeConfidenceChart = {
-  p80CompletionTime: ChartData[]
-  accumulatedCompletionTime: ChartData[]
-}
-
 const ChartBox = ({
   children,
   title,
@@ -151,114 +140,33 @@ export const buildPercentileYAxisMarker = ({
   }
 }
 
+export type TaskFilters = {
+  page: number
+  limit?: number
+  status?: string
+  title?: string
+  teamId?: string
+  projectId?: string
+  initiativeId?: string
+  fromDate?: string | null
+  untilDate?: string | null
+}
+
 const TaskCharts = () => {
   const { t } = useTranslation(["tasks"])
-  const [
-    completionTimeConfidenceEvolution,
-    setCompletionTimeConfidenceEvolution,
-  ] = useState<CompletionTimeConfidenceChart>()
-  const [company, setCompany] = useState<Company | null>(null)
-  const { data, loading } = useQuery<TasksChartsDTO>(TASKS_CHARTS_QUERY)
+  const [taskFilters, setTaskFilters] = useState<TaskFilters>({
+    page: 0,
+    status: "",
+  })
+  const { data, loading } = useQuery<TasksChartsDTO>(TASKS_CHARTS_QUERY, {
+    variables: {
+      ...taskFilters,
+    },
+  })
   const { me } = useContext(MeContext)
 
-  // useEffect(() => {
-  //   if (!loadingFinishedTasksData) {
-  //     setTotalOfFinishedTasks(
-  //       Number(totalFinishedTasksData?.tasksList.totalCount)
-  //     )
-  //   }
-  // }, [loadingFinishedTasksData, totalFinishedTasksData])
-
-  // useEffect(() => {
-  //   if (!loading) {
-  //     setCompany(me?.currentCompany!)
-
-  //     const tasksNotDelivered = data?.tasksList.tasks.filter(
-  //       ({ delivered }) => !delivered
-  //     )
-  //     const mountedPartialCompletionChartData = tasksNotDelivered
-  //       ? tasksNotDelivered?.map((task) => {
-  //           const currentCompletionTime = secondsToDays(
-  //             Number(task.partialCompletionTime)
-  //           )
-
-  //           return {
-  //             x: task.externalId,
-  //             y: currentCompletionTime,
-  //           }
-  //         })
-  //       : []
-
-  //     setPartialCompletionTimeData(mountedPartialCompletionChartData)
-
-  //     const tasksChartsData = data?.tasksList.tasksCharts
-  //     const mountedFlowChartData = tasksChartsData
-  //       ? tasksChartsData.xAxis.map((xAxis, index) => {
-  //           return {
-  //             period: xAxis,
-  //             [t("charts.flow_data_created_legend")]:
-  //               tasksChartsData.creationArray[index],
-  //             [t("charts.flow_data_delivered_legend")]:
-  //               tasksChartsData.throughputArray[index],
-  //           }
-  //         })
-  //       : []
-
-  //     setFlowChartData(mountedFlowChartData)
-
-  //     const mountedCompletionTimeConfidenceData = tasksChartsData
-  //       ? tasksChartsData.xAxis.map((xAxis, index) => {
-  //           return {
-  //             x: xAxis,
-  //             y: secondsToDays(
-  //               tasksChartsData.completionPercentilesOnTimeArray[index]
-  //             ),
-  //           }
-  //         })
-  //       : []
-
-  //     const mountedAccumulatedCompletionTime = tasksChartsData
-  //       ? tasksChartsData.xAxis.map((xAxis, index) => {
-  //           return {
-  //             x: xAxis,
-  //             y: secondsToDays(
-  //               tasksChartsData.accumulatedCompletionPercentilesOnTimeArray[
-  //                 index
-  //               ]
-  //             ),
-  //           }
-  //         })
-  //       : []
-
-  //     setCompletionTimeConfidenceEvolution({
-  //       accumulatedCompletionTime: mountedAccumulatedCompletionTime,
-  //       p80CompletionTime: mountedCompletionTimeConfidenceData,
-  //     })
-
-  //     const completionTimeHistogramData =
-  //       data?.tasksList.completiontimeHistogramChartData
-  //     const mountedCompletionTimeHistogramChartData: BarDatum[] =
-  //       completionTimeHistogramData
-  //         ? completionTimeHistogramData?.keys.map((completionTime, index) => {
-  //             const taskCompletiomHistogramKeysInDays =
-  //               secondsToDays(completionTime).toFixed(2)
-
-  //             return {
-  //               index,
-  //               [t("charts.completion_time_histogram_completiontime")]:
-  //                 taskCompletiomHistogramKeysInDays,
-  //               [t("charts.completion_time_histogram_completiontime_x_label")]:
-  //                 completionTimeHistogramData.values[index],
-  //             }
-  //           })
-  //         : []
-
-  //     setCompletionTimeHistogramData(mountedCompletionTimeHistogramChartData)
-  //   }
-  // }, [data, loading, t, me?.currentCompany])
-
   const taskList = data?.tasksList
-  const companySlug = String(company?.slug)
+  const companySlug = String(me?.currentCompany?.slug)
 
   const getTaskIDByExternalID = (findedExternalId: number) => {
     return taskList?.tasks.find(
@@ -306,42 +214,69 @@ const TaskCharts = () => {
       unfinishedTasks?.map((task) => task.partialCompletionTime || 0) || [],
   }
 
+  const flowChartGroupNames: (keyof TasksCharts)[] = [
+    "creationArray",
+    "throughputArray",
+  ]
   const flowChartData: BarDatum[] =
-    taskList?.tasksCharts.xAxis.map(
-      (key, indexAxis, { length: lengthAxis }) => {
-        const group: BarDatum = { key }
-        const groupNames: (keyof TasksCharts)[] = [
-          "creationArray",
-          "throughputArray",
-        ]
-        groupNames.forEach((name) => {
-          const value = Number(taskList.tasksCharts[name][indexAxis]) || ""
-          group[name] = value
-        })
-        return group
-      }
-    ) || []
+    taskList?.tasksCharts.xAxis.map((key, indexAxis) => {
+      const group: BarDatum = { key }
+      flowChartGroupNames.forEach((name) => {
+        const value = Number(taskList.tasksCharts[name][indexAxis]) || ""
+        group[name] = value
+      })
+      return group
+    }) || []
 
-  // eslint-disable-next-line no-console
-  console.log(unfinishedTasks, partialCompletionTimeChartData)
-
+  const tasksChartsData = data?.tasksList.tasksCharts
   const completionTimeEvolutionChartData = [
     {
       id: t("charts.completion_time_confidence_p80_legend"),
-      data: completionTimeConfidenceEvolution
-        ? completionTimeConfidenceEvolution.p80CompletionTime
-        : [],
+      data:
+        tasksChartsData?.xAxis.map((xAxis, index) => {
+          return {
+            x: xAxis,
+            y: secondsToDays(
+              tasksChartsData?.completionPercentilesOnTimeArray[index]
+            ),
+          }
+        }) || [],
     },
     {
       id: t("charts.completion_time_confidence_p80_acumulated_legend"),
-      data: completionTimeConfidenceEvolution
-        ? completionTimeConfidenceEvolution.accumulatedCompletionTime
-        : [],
+      data:
+        tasksChartsData?.xAxis.map((xAxis, index) => {
+          return {
+            x: xAxis,
+            y: secondsToDays(
+              tasksChartsData?.accumulatedCompletionPercentilesOnTimeArray[
+                index
+              ]
+            ),
+          }
+        }) || [],
     },
+  ]
+  const shouldRenderCompletionTimeEvolutionChart =
+    completionTimeEvolutionChartData.some((data) => data.data.length)
+
+  const completionTimeHistogramData =
+    data?.tasksList.completiontimeHistogramChartData
+
+  const company = me?.currentCompany
+  const breadcrumbsLinks = [
+    { name: String(company?.name) || "", url: String(company?.slug) },
+    { name: t("tasks_chart") },
   ]
 
   return (
-    <TasksPage breadcrumbsLinks={[]} loading={loading}>
+    <TasksPage
+      filters={taskFilters}
+      setFilters={setTaskFilters}
+      breadcrumbsLinks={breadcrumbsLinks}
+      loading={loading}
+      charts
+    >
       <Box
         sx={{
           display: "grid",
@@ -392,12 +327,10 @@ const TaskCharts = () => {
           <BarChart
             axisLeftLegend={t("charts.demands")}
             data={flowChartData}
-            keys={[
-              t("charts.flow_data_created_legend"),
-              t("charts.flow_data_delivered_legend"),
-            ]}
+            keys={flowChartGroupNames}
             axisBottomLegend={t("charts.flow_data_period_legend")}
-            indexBy="period"
+            indexBy="key"
+            groupMode="grouped"
             tooltip={(data: BarData) => {
               return (
                 <BarChartTooltip
@@ -408,75 +341,78 @@ const TaskCharts = () => {
             }}
           />
         </ChartBox>
-        {/*
 
-        <ChartBox title={t("charts.completion_time_evolution_title")}>
-          <LineChart
-            axisLeftLegend={t("charts.days")}
-            data={completionTimeEvolutionChartData}
-            props={{
-              margin: { top: 50, right: 60, bottom: 65, left: 60 },
-              axisBottom: {
-                legend: t("charts.completion_time_evolution_weeks_legend"),
-                legendOffset: 60,
-                tickRotation: -37,
-                legendPosition: "middle",
-              },
-              enableSlices: "x",
-              sliceTooltip: ({ slice }: SliceTooltipProps) => (
-                <LineChartTooltip
-                  slice={slice}
-                  xLabel={t(
-                    "charts.completion_time_evolution_tooltip_x_legend"
-                  )}
-                />
-              ),
-              legends: [
-                {
-                  anchor: "top",
-                  direction: "row",
-                  toggleSerie: true,
-                  justify: false,
-                  translateX: 0,
-                  translateY: -25,
-                  itemsSpacing: 0,
-                  itemDirection: "left-to-right",
-                  itemWidth: 200,
-                  itemHeight: 20,
-                  itemOpacity: 0.75,
-                  symbolSize: 12,
-                  symbolShape: "circle",
-                  symbolBorderColor: "rgba(0, 0, 0, .5)",
-                  effects: [
-                    {
-                      on: "hover",
-                      style: {
-                        itemBackground: "rgba(0, 0, 0, .03)",
-                        itemOpacity: 1,
-                      },
-                    },
-                  ],
+        {shouldRenderCompletionTimeEvolutionChart && (
+          <ChartBox title={t("charts.completion_time_evolution_title")}>
+            <LineChart
+              axisLeftLegend={t("charts.days")}
+              data={completionTimeEvolutionChartData}
+              props={{
+                margin: { top: 50, right: 60, bottom: 65, left: 60 },
+                axisBottom: {
+                  legend: t("charts.completion_time_evolution_weeks_legend"),
+                  legendOffset: 60,
+                  tickRotation: -37,
+                  legendPosition: "middle",
                 },
-              ],
-            }}
-          />
-        </ChartBox>
+                enableSlices: "x",
+                sliceTooltip: ({ slice }: SliceTooltipProps) => (
+                  <LineChartTooltip
+                    slice={slice}
+                    xLabel={t(
+                      "charts.completion_time_evolution_tooltip_x_legend"
+                    )}
+                  />
+                ),
+                legends: [
+                  {
+                    anchor: "top",
+                    direction: "row",
+                    toggleSerie: true,
+                    justify: false,
+                    translateX: 0,
+                    translateY: -25,
+                    itemsSpacing: 0,
+                    itemDirection: "left-to-right",
+                    itemWidth: 200,
+                    itemHeight: 20,
+                    itemOpacity: 0.75,
+                    symbolSize: 12,
+                    symbolShape: "circle",
+                    symbolBorderColor: "rgba(0, 0, 0, .5)",
+                    effects: [
+                      {
+                        on: "hover",
+                        style: {
+                          itemBackground: "rgba(0, 0, 0, .03)",
+                          itemOpacity: 1,
+                        },
+                      },
+                    ],
+                  },
+                ],
+              }}
+            />
+          </ChartBox>
+        )}
 
-        <ChartBox title={t("charts.completion_time_histogram_chart")}>
-          <BarChart
-            data={completionTimeHistogramData}
-            keys={[t("charts.completion_time_histogram_completiontime")]}
-            indexBy={t(
-              "charts.completion_time_histogram_completiontime_x_label"
-            )}
-            axisLeftLegend={t(
-              "charts.completion_time_histogram_completiontime_y_label"
-            )}
-            axisBottomLegend={t(
-              "charts.completion_time_histogram_completiontime_x_label"
-            )}
-          />
-        </ChartBox> */}
+        {completionTimeHistogramData && (
+          <ChartBox title={t("charts.completion_time_histogram_chart")}>
+            <BarChart
+              data={completionTimeHistogramData}
+              keys={[t("charts.completion_time_histogram_completiontime")]}
+              indexBy={t(
+                "charts.completion_time_histogram_completiontime_x_label"
+              )}
+              axisLeftLegend={t(
+                "charts.completion_time_histogram_completiontime_y_label"
+              )}
+              axisBottomLegend={t(
+                "charts.completion_time_histogram_completiontime_x_label"
+              )}
+            />
+          </ChartBox>
+        )}
       </Box>
     </TasksPage>
   )
