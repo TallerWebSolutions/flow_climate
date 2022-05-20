@@ -26,6 +26,7 @@ type ProjectPageProps = {
   pageName: string
   children: ReactElement | ReactElement[]
   loading?: boolean
+  dashboard?: boolean
 }
 
 const assignCardTypeByRisk = (risk: number) => {
@@ -58,6 +59,7 @@ export const ProjectPage = ({
   pageName,
   children,
   loading,
+  dashboard = false,
 }: ProjectPageProps) => {
   const { pathname } = useLocation()
   const { t } = useTranslation(["generalProjectPage"])
@@ -165,6 +167,16 @@ export const ProjectPage = ({
       href: `/companies/${companySlug}/projects/${projectId}/project_risk_configs`,
     },
   ]
+  const taskTabs = [
+    {
+      label: t("tabs.demands"),
+      to: `/companies/${companySlug}/projects/${projectId}`,
+    },
+    {
+      label: t("tabs.tasks"),
+      to: `/companies/${companySlug}/projects/${projectId}/tasks_tab`,
+    },
+  ]
 
   return (
     <BasicPage
@@ -174,6 +186,19 @@ export const ProjectPage = ({
       loading={loading || queryLoading}
     >
       <>
+        {dashboard && (
+          <Box
+            sx={{
+              mt: 2,
+              mb: 6,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Tabs tabs={taskTabs} currentPath="" />
+          </Box>
+        )}
         {projectIsRunning && (
           <Box sx={{ display: "flex", my: 2 }}>
             <Card

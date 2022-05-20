@@ -11,35 +11,10 @@ import DemandsCharts from "./DemandsCharts"
 
 const Project = () => {
   const { t } = useTranslation(["project"])
-  const { me } = useContext(MeContext)
-  const { projectId } = useParams()
-
-  const taskTabs = [
-    {
-      label: t("tabs.demands"),
-      to: `/companies/${me?.currentCompany?.slug}/projects/${projectId}`,
-    },
-    {
-      label: t("tabs.tasks"),
-      to: `/companies/${me?.currentCompany?.slug}/projects/${projectId}/tasks_tab`,
-    },
-  ]
 
   return (
-    <ProjectPage pageName={t("charts")}>
+    <ProjectPage pageName={t("charts")} dashboard>
       <ProjectChartsTable />
-
-      <Box
-        sx={{
-          mt: 2,
-          mb: 6,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Tabs tabs={taskTabs} currentPath="" />
-      </Box>
       <DemandsCharts />
     </ProjectPage>
   )

@@ -15,6 +15,8 @@ const PROJECT_TASKS_CHARTS_QUERY = gql`
     tasksList(projectId: $projectId) {
       tasksCharts {
         xAxis
+        creationArray
+        throughputArray
       }
     }
   }
@@ -42,7 +44,7 @@ const ProjectTasksCharts = () => {
     }) || []
 
   return (
-    <ProjectPage pageName="" loading={loading}>
+    <ProjectPage pageName="" loading={loading} dashboard>
       <BarChart
         axisLeftLegend={t("charts.demands")}
         data={flowChartData}
