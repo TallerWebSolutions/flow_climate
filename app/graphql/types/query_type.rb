@@ -83,7 +83,7 @@ module Types
       TeamMember.find(id)
     end
 
-    def tasks_list(page_number: 1, limit: 25, title: nil, status: nil, initiative_id: nil, project_id: nil, team_id: nil, from_date: nil, until_date: nil)
+    def tasks_list(page_number: 1, limit: 0, title: nil, status: nil, initiative_id: nil, project_id: nil, team_id: nil, from_date: nil, until_date: nil)
       return TasksList.new(0, 0, false, 0, []) if me.last_company.blank?
 
       TasksRepository.instance.search(me.last_company_id, page_number, limit,
