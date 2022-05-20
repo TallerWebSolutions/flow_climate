@@ -95,11 +95,11 @@ const App = () => {
             />
             <Route
               path="/companies/:companySlug/projects/:projectId"
-              element={<Project initialTab={0} />}
+              element={<Project />}
             />
             <Route
               path="/companies/:companySlug/projects/:projectId/tasks/charts"
-              element={<Project initialTab={1} />}
+              element={<Project />}
             />
             <Route
               path="/companies/:companySlug/projects/:projectId/status_report_dashboard"

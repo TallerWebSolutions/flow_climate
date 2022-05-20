@@ -82,7 +82,7 @@ const TASKS_CHARTS_QUERY = gql`
   }
 `
 
-type TasksChartsDTO = {
+export type TasksChartsDTO = {
   me: User
   tasksList: {
     totalCount: number
