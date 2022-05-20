@@ -32,7 +32,8 @@ RSpec.describe TasksRepository, type: :repository do
         expect(tasks_search.total_delivered_count).to eq 3
         expect(tasks_search.last_page).to be false
         expect(tasks_search.total_pages).to eq 2
-        expect(described_class.instance.search(company.id, 1, 5).tasks).to match_array [first_task, second_task, third_task, fourth_task]
+        expect(described_class.instance.search(company.id, 1, 3).tasks).to match_array [second_task, third_task, fourth_task]
+        expect(described_class.instance.search(company.id, 1).tasks).to match_array [first_task, second_task, third_task, fourth_task]
         expect(described_class.instance.search(company.id, 1, 5, title: 'bar').tasks).to match_array [first_task, second_task]
         expect(described_class.instance.search(company.id, 1, 5, project_id: second_project.id).tasks).to eq [third_task]
         expect(described_class.instance.search(company.id, 1, 5, initiative_id: initiative.id).tasks).to match_array [first_task, second_task, third_task]

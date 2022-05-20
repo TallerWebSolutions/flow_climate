@@ -3,11 +3,13 @@
 class TasksRepository
   include Singleton
 
-  def search(company_id, page_number, limit, search_fields = {})
+  def search(company_id, page_number, limit = 0, search_fields = {})
     tasks = search_tasks(company_id, search_fields[:initiative_id], search_fields[:project_id], search_fields[:team_id],
                          search_fields[:status], search_fields[:title], search_fields[:from_date], search_fields[:until_date])
 
-    tasks_page = tasks.order(created_date: :desc).page(page_number).per(limit)
+    query_limit = limit.zero? ? tasks.count : limit
+
+    tasks_page = tasks.order(created_date: :desc).page(page_number).per(query_limit)
     TasksList.new(tasks.count,
                   tasks.finished.count,
                   tasks_page.last_page?,
