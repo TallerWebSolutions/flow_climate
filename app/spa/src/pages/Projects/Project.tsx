@@ -21,7 +21,7 @@ const Project = () => {
     },
     {
       label: t("tabs.tasks"),
-      to: `/companies/${me?.currentCompany?.slug}/projects/${projectId}/tasks`,
+      to: `/companies/${me?.currentCompany?.slug}/projects/${projectId}/tasks_tab`,
     },
   ]
 

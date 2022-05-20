@@ -30,6 +30,7 @@ import EditTeamMember from "./pages/TeamMembers/EditTeamMember"
 import User from "./modules/user/user.types"
 import InitiativesList from "./pages/Initiatives/InitiativesList"
 import ProjectList from "./pages/Projects/Projects"
+import ProjectTasksCharts from "./pages/Projects/ProjectTasksCharts"
 
 export const ME_QUERY = gql`
   query Me {
@@ -98,8 +99,8 @@ const App = () => {
               element={<Project />}
             />
             <Route
-              path="/companies/:companySlug/projects/:projectId/tasks/charts"
-              element={<Project />}
+              path="/companies/:companySlug/projects/:projectId/tasks_tab"
+              element={<ProjectTasksCharts />}
             />
             <Route
               path="/companies/:companySlug/projects/:projectId/status_report_dashboard"
