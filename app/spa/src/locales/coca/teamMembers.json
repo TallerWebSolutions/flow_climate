@@ -64,5 +64,11 @@
       "quality": "Quality",
       "leadTime": "Lead Time"
     }
+  },
+  "charts": {
+    "memberEffort": "Member Effort",
+    "throughput": "Throughput",
+    "averagePullInterval": "Average Pull Interval",
+    "hoursPerProject": "Hours per Project"
   }
 }

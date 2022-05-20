@@ -28,6 +28,7 @@
   },
   "dashboard": {
     "name": "Name",
+    "memberInfoTitle": "User Info",
     "delivered": "Delivered",
     "bugs": "Bugs",
     "leadTimeMin": "Min Lead Time",
@@ -38,11 +39,36 @@
     "projects": "Projects",
     "leadTimeP80": "Lead time p80",
     "latestDeliveries": {
+      "title": "Latest Deliveries",
       "project": "Project",
       "product": "Product",
       "externalId": "External ID",
       "endDate": "Delivery Date",
       "leadTime": "Lead Time"
+    },
+    "teams": {
+      "title": "Teams"
+    },
+    "demandBlocks": {
+      "title": "Latest Demand Blocks",
+      "demandName": "Demand Name",
+      "blockTime": "Block Time",
+      "unblockTime": "Unblock Time"
+    },
+    "latestProjects": {
+      "title": "Latest Projects",
+      "name": "Name",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "risk": "Risk",
+      "quality": "Quality",
+      "leadTime": "Lead Time"
     }
+  },
+  "charts": {
+    "memberEffort": "Member Effort",
+    "throughput": "Throughput",
+    "averagePullInterval": "Average Pull Interval",
+    "hoursPerProject": "Hours per Project"
   }
 }

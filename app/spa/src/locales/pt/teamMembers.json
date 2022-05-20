@@ -28,6 +28,7 @@
   },
   "dashboard": {
     "name": "Nome",
+    "memberInfoTitle": "Informação de Usuário",
     "delivered": "Entregas",
     "bugs": "Defeitos",
     "leadTimeMin": "Min Lead Time",
@@ -43,6 +44,30 @@
       "externalId": "ID Externo",
       "endDate": "Dt Entrega",
       "leadTime": "Lead Time"
+    },
+    "teams": {
+      "title": "Times"
+    },
+    "demandBlocks": {
+      "title": "Latest Demand Blocks",
+      "demandName": "Nome da Demanda",
+      "blockTime": "Horas de Bloqueio",
+      "unblockTime": "Horas de Desbloqueio"
+    },
+    "latestProjects": {
+      "title": "Últimos Projetos",
+      "name": "Nome",
+      "startDate": "Data de Início",
+      "endDate": "Data de Fim",
+      "risk": "Risco",
+      "quality": "Qualidade",
+      "leadTime": "Lead Time"
     }
+  },
+  "charts": {
+    "memberEffort": "Esforço do Membro",
+    "throughput": "Taxa de Transferência",
+    "averagePullInterval": "Intervalo Médio de Extração",
+    "hoursPerProject": "Horas por Projeto"
   }
 }
