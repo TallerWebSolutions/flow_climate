@@ -26,18 +26,21 @@ const TeamMemberDashboardCharts = ({
     xAxis: teamMember.leadTimeControlChartData?.xAxis || [],
     yAxis: teamMember.leadTimeControlChartData?.yAxis.map(secondsToDays) || [],
   }
+  const leadTimeP65 = secondsToDays(leadTimeControlChartData?.leadTimeP65 || 0)
+  const leadTimeP80 = secondsToDays(leadTimeControlChartData?.leadTimeP80 || 0)
+  const leadTimeP95 = secondsToDays(leadTimeControlChartData?.leadTimeP95 || 0)
   const leadTimeControlChartMarkers = [
     {
-      value: secondsToDays(leadTimeControlChartData?.leadTimeP65 || 0),
-      legend: t("charts.ltP65"),
+      value: leadTimeP65,
+      legend: t("charts.ltP65", { leadtime: leadTimeP65 }),
     },
     {
       value: secondsToDays(leadTimeControlChartData?.leadTimeP80 || 0),
-      legend: t("charts.ltP80"),
+      legend: t("charts.ltP80", { leadtime: leadTimeP80 }),
     },
     {
       value: secondsToDays(leadTimeControlChartData?.leadTimeP95 || 0),
-      legend: t("charts.ltP95"),
+      legend: t("charts.ltP95", { leadtime: leadTimeP95 }),
     },
   ]
   const memberEffortData = {

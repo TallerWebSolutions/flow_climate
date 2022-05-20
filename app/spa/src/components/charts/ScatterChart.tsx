@@ -41,6 +41,8 @@ export const ScatterChart = ({
   markers,
   ...props
 }: ScatterChartProps) => {
+  // eslint-disable-next-line no-console
+  console.log({ data })
   const theme = useTheme()
   const chartData = Array.isArray(data)
     ? data

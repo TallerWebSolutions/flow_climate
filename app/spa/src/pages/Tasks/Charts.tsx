@@ -7,6 +7,7 @@ import { ScatterPlotValue } from "@nivo/scatterplot"
 import { ReactElement, useContext, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 
+import { keyValueToAxisData } from "../../lib/charts"
 import { MeContext } from "../../contexts/MeContext"
 import { BarChart } from "../../components/charts/BarChart"
 import { LineChart } from "../../components/charts/LineChart"
@@ -24,6 +25,7 @@ import { Company } from "../../modules/company/company.types"
 import { Task } from "../../modules/task/task.types"
 import User from "../../modules/user/user.types"
 import { TaskFilters } from "./Tasks"
+import { KeyValueData } from "../../modules/project/project.types"
 
 const GET_TOTAL_FINISHED_TASKS = gql`
   query GetTotalOfFinishedTasks {
@@ -107,10 +109,7 @@ type TasksChartsDTO = {
     inProgressLeadTimeP65: number
     inProgressLeadTimeP80: number
     inProgressLeadTimeP95: number
-    completiontimeHistogramChartData: {
-      keys: number[]
-      values: number[]
-    }
+    completiontimeHistogramChartData: KeyValueData
   }
 }
 
@@ -205,7 +204,6 @@ type TasksChartProps = {
 
 const TaskCharts = ({ filters }: TasksChartProps) => {
   const { t } = useTranslation(["tasks"])
-  const [completionTimeData, setCompletionTimeData] = useState<ChartData[]>([])
   const [partialCompletionTimeData, setPartialCompletionTimeData] = useState<
     ChartData[]
   >([])
@@ -237,14 +235,6 @@ const TaskCharts = ({ filters }: TasksChartProps) => {
   useEffect(() => {
     if (!loading) {
       setCompany(me?.currentCompany!)
-
-      setCompletionTimeData(
-        mountTasksChartAxis({
-          tasks: data?.tasksList.tasks,
-          fieldID: "externalId",
-          fieldData: "secondsToComplete",
-        })
-      )
 
       const tasksNotDelivered = data?.tasksList.tasks.filter(
         ({ delivered }) => !delivered
@@ -373,12 +363,13 @@ const TaskCharts = ({ filters }: TasksChartProps) => {
     }),
   })
 
-  const completionTimeChartData = [
-    {
-      id: t("charts.completion_time_legend"),
-      data: completionTimeData,
-    },
-  ]
+  const completionTimeChartData = taskList?.completiontimeHistogramChartData
+
+  // eslint-disable-next-line no-console
+  console.log({
+    completionTimeChartData:
+      completionTimeChartData && keyValueToAxisData(completionTimeChartData),
+  })
 
   const partialCompletionTimeChartData = [
     {
@@ -425,30 +416,32 @@ const TaskCharts = ({ filters }: TasksChartProps) => {
         mb: 6,
       }}
     >
-      <ChartBox title={t("charts.control_completion_time_title")}>
-        <ScatterChart
-          axisLeftLegend={t("charts.days")}
-          data={completionTimeChartData}
-          // markers={[
-          //   deliveredLeadTimeP65Marker,
-          //   deliveredLeadTimeP80Marker,
-          //   deliveredLeadTimeP95Marker,
-          // ]}
-          // tooltip={(data: { node: ScatterNode }) => {
-          //   return (
-          //     <ScatterChartTooltip
-          //       xLabel={t("charts.control_completion_time_tooltip_x_legend")}
-          //       node={data.node}
-          //     />
-          //   )
-          // }}
-          onClick={({ xValue }) => {
-            const taskExternalID = Number(xValue)
-            const taskID = getTaskIDByExternalID(taskExternalID)
-            openWindow(`/companies/${companySlug}/tasks/${taskID?.id}`)
-          }}
-        />
-      </ChartBox>
+      {completionTimeChartData && (
+        <ChartBox title={t("charts.control_completion_time_title")}>
+          <ScatterChart
+            // axisLeftLegend={t("charts.days")}
+            data={keyValueToAxisData(completionTimeChartData)}
+            // markers={[
+            //   deliveredLeadTimeP65Marker,
+            //   deliveredLeadTimeP80Marker,
+            //   deliveredLeadTimeP95Marker,
+            // ]}
+            // tooltip={(data: { node: ScatterNode }) => {
+            //   return (
+            //     <ScatterChartTooltip
+            //       xLabel={t("charts.control_completion_time_tooltip_x_legend")}
+            //       node={data.node}
+            //     />
+            //   )
+            // }}
+            // onClick={({ xValue }) => {
+            //   const taskExternalID = Number(xValue)
+            //   const taskID = getTaskIDByExternalID(taskExternalID)
+            //   openWindow(`/companies/${companySlug}/tasks/${taskID?.id}`)
+            // }}
+          />
+        </ChartBox>
+      )}
 
       <ChartBox title={t("charts.current_partial_completion_title")}>
         <ScatterChart

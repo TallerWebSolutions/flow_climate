@@ -25,3 +25,8 @@ export const axisDataToKeyValue = (data: ChartAxisData): KeyValueData => ({
   keys: data.xAxis,
   values: data.yAxis,
 })
+
+export const keyValueToAxisData = (data: KeyValueData): ChartAxisData => ({
+  yAxis: data.keys,
+  xAxis: data.values.map(String),
+})

@@ -65,6 +65,10 @@ const TEAM_MEMBER_QUERY = gql`
           endDate
           currentRiskToDeadline
           leadTimeP80
+          company {
+            id
+            slug
+          }
         }
       }
       teams {
