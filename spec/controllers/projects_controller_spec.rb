@@ -125,7 +125,7 @@ RSpec.describe ProjectsController, type: :controller do
     end
   end
 
-  context 'authenticated as gold' do
+  context 'authenticated' do
     let(:plan) { Fabricate :plan, plan_type: :gold }
     let(:user) { Fabricate :user, first_name: 'zzz' }
     let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true, paid: true, finish_at: 1.week.from_now }
@@ -1177,7 +1177,7 @@ RSpec.describe ProjectsController, type: :controller do
       let!(:project) { Fabricate :project, company: company }
 
       it 'renders spa' do
-        get :statistics_tab, params: { company_id: company, id: project }
+        get :tasks_tab, params: { company_id: company, id: project }
 
         expect(response).to render_template 'spa-build/index'
       end

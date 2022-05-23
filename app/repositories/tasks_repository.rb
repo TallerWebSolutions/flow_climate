@@ -7,7 +7,6 @@ class TasksRepository
     tasks = search_tasks(company_id, search_fields[:initiative_id], search_fields[:project_id], search_fields[:team_id],
                          search_fields[:status], search_fields[:title], search_fields[:from_date], search_fields[:until_date])
 
-
     return TasksList.new(tasks.count, tasks.finished.count, true, 1, tasks) if tasks.blank?
 
     process_filled_tasks(limit, page_number, tasks)

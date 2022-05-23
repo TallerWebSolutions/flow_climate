@@ -177,10 +177,6 @@ class ProjectsController < AuthenticatedController
 
   private
 
-  def tasks
-    @tasks ||= Task.where(id: @project.tasks.kept.map(&:id)).order(:created_date)
-  end
-
   def demands
     @demands ||= @project.demands
   end
