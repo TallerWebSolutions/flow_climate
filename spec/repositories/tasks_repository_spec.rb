@@ -53,5 +53,11 @@ RSpec.describe TasksRepository, type: :repository do
         expect(described_class.instance.search(company.id, 1, 5).tasks).to eq []
       end
     end
+
+    context 'invalid limit' do
+      it 'returns an empty set' do
+        expect(described_class.instance.search(company.id, 5, 0).tasks).to eq []
+      end
+    end
   end
 end

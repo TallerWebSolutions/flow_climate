@@ -7,6 +7,15 @@ class TasksRepository
     tasks = search_tasks(company_id, search_fields[:initiative_id], search_fields[:project_id], search_fields[:team_id],
                          search_fields[:status], search_fields[:title], search_fields[:from_date], search_fields[:until_date])
 
+
+    return TasksList.new(tasks.count, tasks.finished.count, true, 1, tasks) if tasks.blank?
+
+    process_filled_tasks(limit, page_number, tasks)
+  end
+
+  private
+
+  def process_filled_tasks(limit, page_number, tasks)
     query_limit = limit.zero? ? tasks.count : limit
 
     tasks_page = tasks.order(created_date: :desc).page(page_number).per(query_limit)
@@ -16,8 +25,6 @@ class TasksRepository
                   tasks_page.total_pages,
                   tasks_page)
   end
-
-  private
 
   def search_tasks(company_id, initiative_id, project_id, team_id, status, title, from_date, until_date)
     tasks = Company.find(company_id).tasks.not_discarded_until(Time.zone.now)
