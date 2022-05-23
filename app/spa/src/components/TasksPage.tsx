@@ -13,7 +13,15 @@ import {
   SelectChangeEvent,
   InputBaseComponentProps,
 } from "@mui/material"
-import { ChangeEvent, useCallback, useContext, useState } from "react"
+import {
+  ChangeEvent,
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useCallback,
+  useContext,
+  useState,
+} from "react"
 import { useTranslation } from "react-i18next"
 
 import { toISOFormat } from "../lib/date"
@@ -22,11 +30,12 @@ import { Tabs } from "./Tabs"
 import BasicPage, { BasicPageProps } from "./BasicPage"
 import { Project } from "../modules/project/project.types"
 import { Team } from "../modules/team/team.types"
+import { TaskFilters } from "../pages/Tasks/Tasks"
 
 type TaskPageProps = {
-  children: any
-  setFilters: any
-  filters: any
+  children: ReactNode | ReactNode[]
+  setFilters: Dispatch<SetStateAction<TaskFilters>>
+  filters: TaskFilters
   charts?: boolean
 } & BasicPageProps
 
@@ -42,7 +51,7 @@ type SelectFilterProps = {
   id: string
   label: string
   defaultValue: string
-  value: any
+  value: string
   inputProps?: InputBaseComponentProps
   items: BasicSelectItem[]
   onChange?: (event: SelectChangeEvent<any>, child: React.ReactNode) => void
@@ -76,18 +85,6 @@ const SelectFilter = ({
       </Select>
     </FormControl>
   )
-}
-
-export type TaskFilters = {
-  page: number
-  limit: number
-  status?: string
-  title?: string
-  teamId?: string
-  projectId?: string
-  initiativeId?: string
-  fromDate?: string | null
-  untilDate?: string | null
 }
 
 const TasksPage = ({
@@ -227,7 +224,7 @@ const TasksPage = ({
             id="filter-initiative"
             defaultValue=""
             items={initiatives || []}
-            value={filters.initiativeId}
+            value={filters.initiativeId || ""}
             onChange={(event) => handleSelectFilters(event, "initiativeId")}
           />
           <SelectFilter
@@ -238,7 +235,7 @@ const TasksPage = ({
             inputProps={{
               "data-testid": "select-project",
             }}
-            value={filters.projectId}
+            value={filters.projectId || ""}
             onChange={(event) => handleSelectFilters(event, "projectId")}
           />
           <SelectFilter
@@ -246,7 +243,7 @@ const TasksPage = ({
             id="filter-team"
             defaultValue=""
             items={teams || []}
-            value={filters.teamId}
+            value={filters.teamId || ""}
             onChange={(event) => handleSelectFilters(event, "teamId")}
           />
           <Button

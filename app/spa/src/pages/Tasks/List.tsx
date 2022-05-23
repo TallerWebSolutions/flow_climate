@@ -78,8 +78,8 @@ export const TASKS_LIST_QUERY = gql`
 export type TasksCharts = {
   accumulatedCompletionPercentilesOnTimeArray: number[]
   completionPercentilesOnTimeArray: number[]
-  creationArray: number[]
-  throughputArray: number[]
+  creation: number[]
+  throughput: number[]
   xAxis: string[]
 }
 
@@ -258,7 +258,7 @@ const TaskList = ({ filters, setFilters }: TaskListProps) => {
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
         count={totalOfTasks}
-        rowsPerPage={filters.limit}
+        rowsPerPage={filters.limit || 10}
         page={filters.page}
         onPageChange={(_, page) => handlePage(page)}
         onRowsPerPageChange={(event) => handleRowsPerPage(event)}

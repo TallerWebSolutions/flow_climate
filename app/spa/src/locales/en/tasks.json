@@ -56,6 +56,8 @@
     "completion_time_histogram_chart": "Completion Time Histogram",
     "completion_time_histogram_completiontime": "Completion Time",
     "completion_time_histogram_completiontime_y_label": "Dias",
-    "completion_time_histogram_completiontime_x_label": "Amount"
+    "completion_time_histogram_completiontime_x_label": "Amount",
+    "creation": "Creation",
+    "throughput": "Throughput"
   }
 }

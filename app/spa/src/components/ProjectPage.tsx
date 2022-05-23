@@ -186,19 +186,6 @@ export const ProjectPage = ({
       loading={loading || queryLoading}
     >
       <>
-        {dashboard && (
-          <Box
-            sx={{
-              mt: 2,
-              mb: 6,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Tabs tabs={taskTabs} currentPath="" />
-          </Box>
-        )}
         {projectIsRunning && (
           <Box sx={{ display: "flex", my: 2 }}>
             <Card
@@ -230,6 +217,19 @@ export const ProjectPage = ({
             }}
           >
             <Tabs tabs={projectTabs} currentPath={pathname} />
+          </Box>
+        )}
+        {dashboard && (
+          <Box
+            sx={{
+              mt: 2,
+              mb: 6,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Tabs tabs={taskTabs} currentPath="" />
           </Box>
         )}
         {children}

@@ -192,8 +192,6 @@ const DemandsCharts = () => {
     )
 
   const project = data?.project
-  // eslint-disable-next-line no-console
-  console.log(project)
   const projectConsolidationsWeekly = project?.projectConsolidationsWeekly || []
   const projectConsolidationsLastMonth = project?.projectConsolidationsLastMonth
   const demandsFinishedWithLeadtime = project?.demandsFinishedWithLeadtime

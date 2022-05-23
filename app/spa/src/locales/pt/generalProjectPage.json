@@ -24,5 +24,9 @@
     "jira_settings": "Configurações do Jira",
     "projects_stages": "Etapas do Projeto",
     "risk_settings": "Configurações de Risco"
+  },
+  "tabs": {
+    "demands": "Demandas",
+    "tasks": "Tarefas"
   }
 }

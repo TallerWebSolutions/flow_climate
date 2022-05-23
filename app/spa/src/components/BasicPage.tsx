@@ -1,4 +1,4 @@
-import { ReactElement, useContext } from "react"
+import { ReactElement, ReactNode, useContext } from "react"
 import {
   Container,
   Typography,
@@ -15,7 +15,7 @@ import { MessagesContext } from "../contexts/MessageContext"
 export type BasicPageProps = {
   breadcrumbsLinks: BreadcrumbsLink[]
   title?: string
-  children?: ReactElement | ReactElement[]
+  children?: ReactNode | ReactNode[]
   actions?: ReactElement | ReactElement[]
   loading?: boolean
 }

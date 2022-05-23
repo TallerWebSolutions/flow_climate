@@ -60,8 +60,8 @@ const TASKS_CHARTS_QUERY = gql`
 
       tasksCharts {
         xAxis
-        creationArray
-        throughputArray
+        creation: creationArray
+        throughput: throughputArray
         completionPercentilesOnTimeArray
         accumulatedCompletionPercentilesOnTimeArray
       }
@@ -89,8 +89,8 @@ export type TasksChartsDTO = {
     tasks: Task[]
     tasksCharts: {
       xAxis: string[]
-      creationArray: number[]
-      throughputArray: number[]
+      creation: number[]
+      throughput: number[]
       completionPercentilesOnTimeArray: number[]
       accumulatedCompletionPercentilesOnTimeArray: number[]
     }
@@ -214,10 +214,7 @@ const TaskCharts = () => {
       unfinishedTasks?.map((task) => task.partialCompletionTime || 0) || [],
   }
 
-  const flowChartGroupNames: (keyof TasksCharts)[] = [
-    "creationArray",
-    "throughputArray",
-  ]
+  const flowChartGroupNames: (keyof TasksCharts)[] = ["creation", "throughput"]
   const flowChartData: BarDatum[] =
     taskList?.tasksCharts.xAxis.map((key, indexAxis) => {
       const group: BarDatum = { key }

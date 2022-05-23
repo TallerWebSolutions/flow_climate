@@ -7,7 +7,7 @@ import TasksPage from "../../components/TasksPage"
 
 export type TaskFilters = {
   page: number
-  limit: number
+  limit?: number
   status?: string
   title?: string
   teamId?: string
