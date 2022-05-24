@@ -9,6 +9,7 @@ import BarChartTooltip, {
   BarData,
 } from "../../components/charts/tooltips/BarChartTooltip"
 import { Grid, Typography } from "@mui/material"
+import { useParams } from "react-router-dom"
 
 const PROJECT_TASKS_CHARTS_QUERY = gql`
   query ProjectTasksCharts($projectId: ID) {
@@ -24,9 +25,14 @@ const PROJECT_TASKS_CHARTS_QUERY = gql`
 
 const ProjectTasksCharts = () => {
   const { t } = useTranslation(["tasks"])
+  const { projectId } = useParams()
   const { data, loading } = useQuery<TasksChartsDTO>(
     PROJECT_TASKS_CHARTS_QUERY,
-    {}
+    {
+      variables: {
+        projectId: projectId,
+      },
+    }
   )
   const taskList = data?.tasksList
   const flowChartGroupNames: (keyof TasksCharts)[] = ["creation", "throughput"]
