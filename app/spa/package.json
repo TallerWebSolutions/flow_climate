@@ -71,7 +71,12 @@
     ],
     "rules": {
       "no-console": "error",
-      "max-len": ["error", { "code": 120 }]
+      "max-len": [
+        "error",
+        {
+          "code": 120
+        }
+      ]
     },
     "overrides": [
       {
