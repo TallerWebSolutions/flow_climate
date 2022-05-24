@@ -70,3 +70,12 @@ Always check storybook before creating new components for the spa.
 cd app/spa
 npm run storybook
 ```
+
+## Troubleshoot
+
+fe_sendauth: no password supplied
+
+When syncing production database this error may occur. Check the following:
+- /var/lib/pgsql/data/pg_hba.conf (may be another path in your OS) is set to use md5 in local and  127.0.0.1/32 
+- You have a postgres user with the same name as your OS user and all privileges.
+- You have a password file in your home directory. https://www.postgresql.org/docs/current/libpq-pgpass.html
