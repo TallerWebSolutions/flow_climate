@@ -322,7 +322,7 @@ const TaskCharts = () => {
 
         <ChartBox title={t("charts.flow_data_title")}>
           <BarChart
-            axisLeftLegend={t("charts.demands")}
+            axisLeftLegend={t("charts.tasks")}
             data={flowChartData}
             keys={flowChartGroupNames}
             axisBottomLegend={t("charts.flow_data_period_legend")}

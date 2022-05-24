@@ -52,6 +52,7 @@
     "current_partial_completion_tooltip_x_legend": "External ID",
     "days": "Days",
     "demands": "Activity",
+    "tasks": "Deliverable",
     "completion_time_histogram_chart": "Completion Time Histogram",
     "completion_time_histogram_completiontime": "Completion Time",
     "completion_time_histogram_completiontime_y_label": "Days",
