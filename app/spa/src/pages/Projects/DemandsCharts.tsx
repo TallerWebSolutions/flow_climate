@@ -765,6 +765,7 @@ const DemandsCharts = () => {
           axisBottomLegend={t(
             "project_charts.lead_time_histogram_chart_x_label"
           )}
+          padding={0}
         />
       </Grid>
 

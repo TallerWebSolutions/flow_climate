@@ -51,6 +51,7 @@
     "current_partial_completion_title": "Current Partial Times to Deliverables in Progress",
     "current_partial_completion_tooltip_x_legend": "External ID",
     "days": "Days",
+    "hits": "Hits",
     "demands": "Activity",
     "tasks": "Deliverable",
     "completion_time_histogram_chart": "Completion Time Histogram",

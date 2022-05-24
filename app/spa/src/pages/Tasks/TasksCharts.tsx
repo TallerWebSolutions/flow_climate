@@ -186,13 +186,19 @@ const TaskCharts = () => {
     }),
   }
 
-  const completionTimeChartData = taskList?.completiontimeHistogramChartData
+  const completionTimeChartData = {
+    keys:
+      taskList?.completiontimeHistogramChartData.keys.map(secondsToDays) || [],
+    values: taskList?.completiontimeHistogramChartData.values || [],
+  }
 
   const unfinishedTasks = taskList?.tasks.filter((task) => !task.delivered)
   const partialCompletionTimeChartData: ChartAxisData = {
     xAxis: unfinishedTasks?.map((task) => task.externalId || "") || [],
     yAxis:
-      unfinishedTasks?.map((task) => task.partialCompletionTime || 0) || [],
+      unfinishedTasks?.map(
+        (task) => secondsToDays(task.partialCompletionTime) || 0
+      ) || [],
   }
 
   const { flowChartGroupNames, flowChartData } =
@@ -230,8 +236,14 @@ const TaskCharts = () => {
   const shouldRenderCompletionTimeEvolutionChart =
     completionTimeEvolutionChartData.some((data) => data.data.length)
 
-  const completionTimeHistogramData =
-    data?.tasksList.completiontimeHistogramChartData
+  const tasksList = data?.tasksList
+  const completionTimeHistogramData = {
+    ...tasksList?.completiontimeHistogramChartData,
+    values: tasksList?.completiontimeHistogramChartData?.values || [],
+    keys:
+      tasksList?.completiontimeHistogramChartData?.keys.map(secondsToDays) ||
+      [],
+  }
 
   const company = me?.currentCompany
   const breadcrumbsLinks = [
@@ -370,16 +382,11 @@ const TaskCharts = () => {
           <ChartBox title={t("charts.completion_time_histogram_chart")}>
             <BarChart
               data={completionTimeHistogramData}
-              keys={[t("charts.completion_time_histogram_completiontime")]}
-              indexBy={t(
-                "charts.completion_time_histogram_completiontime_x_label"
-              )}
-              axisLeftLegend={t(
-                "charts.completion_time_histogram_completiontime_y_label"
-              )}
-              axisBottomLegend={t(
-                "charts.completion_time_histogram_completiontime_x_label"
-              )}
+              keys={["value"]}
+              indexBy="key"
+              axisLeftLegend={t("charts.histogramHits")}
+              axisBottomLegend={t("charts.days")}
+              padding={0}
             />
           </ChartBox>
         )}

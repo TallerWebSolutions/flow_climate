@@ -70,7 +70,8 @@
       "__tests__"
     ],
     "rules": {
-      "no-console": "error"
+      "no-console": "error",
+      "max-len": ["error", { "code": 120 }]
     },
     "overrides": [
       {

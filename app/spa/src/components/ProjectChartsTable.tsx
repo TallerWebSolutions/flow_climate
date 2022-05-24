@@ -99,7 +99,8 @@ const mountDemandsSearchLink = ({
   projectID,
   companySlug,
 }: MountSearchLinkProps) => {
-  return `/companies/${companySlug}/demands/demands_list_by_ids?demand_fitness=&demand_state=${state}&demand_type=&flow_object_id=${projectID}&object_type=Project`
+  // eslint-disable-next-line max-len
+  return `/companies/${companySlug}/demands/demands_list_by_ids?demand_state=${state}&flow_object_id=${projectID}&object_type=Project`
 }
 
 const Row = (props: TableRowProps) => (
