@@ -76,7 +76,8 @@
         {
           "code": 120
         }
-      ]
+      ],
+      "complexity": ["error", 26]
     },
     "overrides": [
       {
