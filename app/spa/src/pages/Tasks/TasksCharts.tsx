@@ -1,6 +1,5 @@
 import { gql, useQuery } from "@apollo/client"
 import { Box, Typography } from "@mui/material"
-import { BarDatum } from "@nivo/bar"
 import { CartesianMarkerProps } from "@nivo/core"
 import { SliceTooltipProps } from "@nivo/line"
 import { ScatterPlotValue } from "@nivo/scatterplot"
@@ -17,12 +16,11 @@ import BarChartTooltip, {
 } from "../../components/charts/tooltips/BarChartTooltip"
 import { secondsToDays } from "../../lib/date"
 import { openWindow } from "../../lib/func"
-import { Task } from "../../modules/task/task.types"
+import { TasksList } from "../../modules/task/task.types"
+import { normalizeTasksFlowChart } from "../../modules/task/normalize"
 import User from "../../modules/user/user.types"
-import { KeyValueData } from "../../modules/project/project.types"
 import TasksPage from "../../components/TasksPage"
 import { ChartAxisData } from "../../modules/project/project.types"
-import { TasksCharts } from "../../pages/Tasks/List"
 import LineChartTooltip from "../../components/charts/tooltips/LineChartTooltip"
 
 const TASKS_CHARTS_QUERY = gql`
@@ -84,24 +82,7 @@ const TASKS_CHARTS_QUERY = gql`
 
 export type TasksChartsDTO = {
   me: User
-  tasksList: {
-    totalCount: number
-    tasks: Task[]
-    tasksCharts: {
-      xAxis: string[]
-      creation: number[]
-      throughput: number[]
-      completionPercentilesOnTimeArray: number[]
-      accumulatedCompletionPercentilesOnTimeArray: number[]
-    }
-    deliveredLeadTimeP65: number
-    deliveredLeadTimeP80: number
-    deliveredLeadTimeP95: number
-    inProgressLeadTimeP65: number
-    inProgressLeadTimeP80: number
-    inProgressLeadTimeP95: number
-    completiontimeHistogramChartData: KeyValueData
-  }
+  tasksList: TasksList
 }
 
 const ChartBox = ({
@@ -214,16 +195,8 @@ const TaskCharts = () => {
       unfinishedTasks?.map((task) => task.partialCompletionTime || 0) || [],
   }
 
-  const flowChartGroupNames: (keyof TasksCharts)[] = ["creation", "throughput"]
-  const flowChartData: BarDatum[] =
-    taskList?.tasksCharts.xAxis.map((key, indexAxis) => {
-      const group: BarDatum = { key }
-      flowChartGroupNames.forEach((name) => {
-        const value = Number(taskList.tasksCharts[name][indexAxis]) || ""
-        group[name] = value
-      })
-      return group
-    }) || []
+  const { flowChartGroupNames, flowChartData } =
+    normalizeTasksFlowChart(taskList)
 
   const tasksChartsData = data?.tasksList.tasksCharts
   const completionTimeEvolutionChartData = [

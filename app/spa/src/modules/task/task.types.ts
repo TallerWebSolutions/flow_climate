@@ -1,5 +1,5 @@
 import { Initiative } from "../initiative/initiative.types"
-import { Project } from "../project/project.types"
+import { Project, KeyValueData } from "../project/project.types"
 import { Team } from "../team/team.types"
 
 type Demand = {
@@ -19,4 +19,23 @@ export type Task = {
   project: Project
   initiative: Initiative | null
   demand: Demand
+}
+
+export type TasksList = {
+  totalCount: number
+  tasks: Task[]
+  tasksCharts: {
+    xAxis: string[]
+    creation: number[]
+    throughput: number[]
+    completionPercentilesOnTimeArray: number[]
+    accumulatedCompletionPercentilesOnTimeArray: number[]
+  }
+  deliveredLeadTimeP65: number
+  deliveredLeadTimeP80: number
+  deliveredLeadTimeP95: number
+  inProgressLeadTimeP65: number
+  inProgressLeadTimeP80: number
+  inProgressLeadTimeP95: number
+  completiontimeHistogramChartData: KeyValueData
 }

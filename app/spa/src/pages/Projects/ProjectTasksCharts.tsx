@@ -1,9 +1,8 @@
-import { BarDatum } from "@nivo/bar"
 import { useQuery, gql } from "@apollo/client"
 import { useTranslation } from "react-i18next"
 import { ProjectPage } from "../../components/ProjectPage"
 import { BarChart } from "../../components/charts/BarChart"
-import { TasksCharts } from "../Tasks/List"
+import { normalizeTasksFlowChart } from "../../modules/task/normalize"
 import { TasksChartsDTO } from "../Tasks/TasksCharts"
 import BarChartTooltip, {
   BarData,
@@ -35,16 +34,8 @@ const ProjectTasksCharts = () => {
     }
   )
   const taskList = data?.tasksList
-  const flowChartGroupNames: (keyof TasksCharts)[] = ["creation", "throughput"]
-  const flowChartData: BarDatum[] =
-    taskList?.tasksCharts.xAxis.map((key, indexAxis) => {
-      const group: BarDatum = { key }
-      flowChartGroupNames.forEach((name) => {
-        const value = Number(taskList.tasksCharts[name][indexAxis]) || ""
-        group[name] = value
-      })
-      return group
-    }) || []
+  const { flowChartGroupNames, flowChartData } =
+    normalizeTasksFlowChart(taskList)
 
   return (
     <ProjectPage pageName="" loading={loading} dashboard>
