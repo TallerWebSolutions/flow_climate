@@ -13,11 +13,18 @@ export const LineChart = ({ data, axisLeftLegend, props }: LineGraphProps) => {
       <ResponsiveLine
         data={data}
         colors={{ scheme: "category10" }}
-        margin={{ left: 80, right: 20, top: 25, bottom: 40 }}
+        margin={{ left: 80, right: 20, top: 25, bottom: 80 }}
         axisLeft={{
           legend: axisLeftLegend,
           legendOffset: -50,
           legendPosition: "middle",
+        }}
+        axisBottom={{
+          tickSize: 5,
+          tickPadding: 5,
+          tickRotation: -40,
+          legendPosition: "middle",
+          legendOffset: 40,
         }}
         useMesh={true}
         legends={[

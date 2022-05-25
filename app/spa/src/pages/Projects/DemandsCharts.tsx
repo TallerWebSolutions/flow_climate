@@ -11,6 +11,7 @@ import { SliceTooltipProps } from "@nivo/line"
 import { useTranslation } from "react-i18next"
 import { useParams } from "react-router-dom"
 import { BarChart } from "../../components/charts/BarChart"
+import ChartLineBox from "../../components/charts/ChartLineBox"
 import { LineChart, LineGraphProps } from "../../components/charts/LineChart"
 import { ScatterChart } from "../../components/charts/ScatterChart"
 import LineChartTooltip from "../../components/charts/tooltips/LineChartTooltip"
@@ -152,27 +153,6 @@ type ProjectChartResult = {
 }
 
 type ProjectChartDTO = ProjectChartResult | undefined
-
-type ChartLineboxProps = {
-  title: string
-} & LineGraphProps
-
-const ChartLineBox = ({
-  title,
-  data,
-  axisLeftLegend,
-  props,
-}: ChartLineboxProps) => {
-  return (
-    <Grid item xs={6} sx={{ padding: 1 }}>
-      <Box sx={{ height: "350px" }}>
-        <Typography>{title}</Typography>
-
-        <LineChart data={data} axisLeftLegend={axisLeftLegend} props={props} />
-      </Box>
-    </Grid>
-  )
-}
 
 const DemandsCharts = () => {
   const { t } = useTranslation(["projectChart"])

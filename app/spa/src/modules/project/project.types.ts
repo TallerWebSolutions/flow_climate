@@ -116,6 +116,15 @@ export type Project = {
     }[]
   }
   leadTimeHistogramData: KeyValueData
+  currentWeeklyTasksScopeIdealBurnup: number[]
+  tasksBurnup: TasksBurnup
+}
+
+export type TasksBurnup = {
+  projectTasksIdeal: number[]
+  projectTasksScope: number[]
+  projectTasksThroughtput: number[]
+  xAxis: number[]
 }
 
 export type ProjectsList = {

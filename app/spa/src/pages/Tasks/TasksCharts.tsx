@@ -16,9 +16,10 @@ import BarChartTooltip, {
 } from "../../components/charts/tooltips/BarChartTooltip"
 import { secondsToDays } from "../../lib/date"
 import { openWindow } from "../../lib/func"
-import { TasksList } from "../../modules/task/task.types"
+import { Task } from "../../modules/task/task.types"
 import { normalizeTasksFlowChart } from "../../modules/task/normalize"
 import User from "../../modules/user/user.types"
+import { KeyValueData, Project } from "../../modules/project/project.types"
 import TasksPage from "../../components/TasksPage"
 import { ChartAxisData } from "../../modules/project/project.types"
 import LineChartTooltip from "../../components/charts/tooltips/LineChartTooltip"
@@ -82,7 +83,25 @@ const TASKS_CHARTS_QUERY = gql`
 
 export type TasksChartsDTO = {
   me: User
-  tasksList: TasksList
+  tasksList: {
+    totalCount: number
+    tasks: Task[]
+    tasksCharts: {
+      xAxis: string[]
+      creation: number[]
+      throughput: number[]
+      completionPercentilesOnTimeArray: number[]
+      accumulatedCompletionPercentilesOnTimeArray: number[]
+    }
+    deliveredLeadTimeP65: number
+    deliveredLeadTimeP80: number
+    deliveredLeadTimeP95: number
+    inProgressLeadTimeP65: number
+    inProgressLeadTimeP80: number
+    inProgressLeadTimeP95: number
+    completiontimeHistogramChartData: KeyValueData
+  }
+  project: Project
 }
 
 const ChartBox = ({
