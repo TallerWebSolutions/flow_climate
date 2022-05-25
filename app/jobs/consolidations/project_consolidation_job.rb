@@ -63,8 +63,6 @@ module Consolidations
 
       tasks_based_montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(tasks_not_finished.count, tasks_throughputs.values.last(12), 500)
 
-      consolidation = Consolidations::ProjectConsolidation.where(project: project, consolidation_date: cache_date).first_or_create
-
       if project.remaining_work(end_of_day).positive?
         operational_risk = 1 - Stats::StatisticsService.instance.compute_odds_to_deadline(project.remaining_weeks(end_of_day.to_date), project_based_montecarlo_durations)
         team_operational_risk = 1 - Stats::StatisticsService.instance.compute_odds_to_deadline(project.remaining_weeks(end_of_day.to_date), team_based_montecarlo_durations)
@@ -72,6 +70,8 @@ module Consolidations
         operational_risk = 0
         team_operational_risk = 0
       end
+
+      consolidation = Consolidations::ProjectConsolidation.where(project: project, consolidation_date: cache_date).first_or_create
 
       consolidation.update(last_data_in_week: (cache_date.to_date) == (cache_date.to_date.end_of_week),
                            last_data_in_month: (cache_date.to_date) == (cache_date.to_date.end_of_month),
@@ -133,7 +133,8 @@ module Consolidations
                            project_throughput_hours_design_in_month: demand_efforts.designer_efforts.sum(&:effort_value),
                            project_throughput_hours_management_in_month: demand_efforts.manager_efforts.sum(&:effort_value),
                            tasks_based_deadline_p80: Stats::StatisticsService.instance.percentile(80, tasks_based_montecarlo_durations),
-                           tasks_based_operational_risk: 1 - Stats::StatisticsService.instance.compute_odds_to_deadline(project.remaining_weeks(end_of_day.to_date), tasks_based_montecarlo_durations)
+                           tasks_based_operational_risk: 1 - Stats::StatisticsService.instance.compute_odds_to_deadline(project.remaining_weeks(end_of_day.to_date), tasks_based_montecarlo_durations),
+                          
       )
 
       update_additional_hours(project, consolidation, cache_date)
