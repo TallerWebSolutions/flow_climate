@@ -56,6 +56,11 @@
     "completion_time_histogram_chart": "Completion Time Histograma",
     "completion_time_histogram_completiontime": "Completion Time",
     "completion_time_histogram_completiontime_y_label": "Dias",
-    "completion_time_histogram_completiontime_x_label": "Quantidade"
+    "completion_time_histogram_completiontime_x_label": "Quantidade",
+    "flow_chart_data": "Dados do Fluxo",
+    "burnup_chart_data": "Burn up",
+    "scope": "Escopo",
+    "ideal": "Ideal",
+    "delivered": "Entregue"
   }
 }
