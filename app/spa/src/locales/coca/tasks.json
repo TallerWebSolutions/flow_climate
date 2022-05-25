@@ -56,6 +56,12 @@
     "completion_time_histogram_chart": "Completion Time Histogram",
     "completion_time_histogram_completiontime": "Completion Time",
     "completion_time_histogram_completiontime_y_label": "Days",
-    "completion_time_histogram_completiontime_x_label": "Amount"
+    "completion_time_histogram_completiontime_x_label": "Amount",
+    "flow_chart_data": "Flow Chart Data",
+    "burnup_chart_data": "Burnup Chart",
+    "activities": "Activities",
+    "scope": "Scope",
+    "ideal": "Ideal",
+    "delivered": "Delivered"
   }
 }

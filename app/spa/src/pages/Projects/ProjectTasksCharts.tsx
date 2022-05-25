@@ -63,21 +63,21 @@ const ProjectTasksCharts = () => {
   const projectTasksBurnupChartData = project
     ? [
         {
-          id: "Scope",
+          id: t("charts.scope"),
           data: project.projectTasksScope.map((scope, index) => ({
             x: project.xAxis[index],
             y: scope,
           })),
         },
         {
-          id: "Ideal",
+          id: t("charts.ideal"),
           data: project.projectTasksIdeal.map((idealScope, index) => ({
             x: project.xAxis[index],
             y: idealScope.toFixed(2),
           })),
         },
         {
-          id: "Delivered",
+          id: t("charts.delivered"),
           data: project.projectTasksThroughtput.map((throughtput, index) => ({
             x: project.xAxis[index],
             y: throughtput,
@@ -90,7 +90,7 @@ const ProjectTasksCharts = () => {
     <ProjectPage pageName="" loading={loading} dashboard>
       <Grid container spacing={2} rowSpacing={8} sx={{ marginTop: 4 }}>
         <Grid item xs={6} sx={{ padding: 1 }}>
-          <Typography>Flow Chart Data</Typography>
+          <Typography>{t("charts.flow_chart_data")}</Typography>
           <BarChart
             axisLeftLegend={t("charts.tasks")}
             data={flowChartData}
@@ -110,9 +110,9 @@ const ProjectTasksCharts = () => {
         </Grid>
 
         <ChartLineBox
-          title="Burnup Chart"
+          title={t("charts.burnup_chart_data")}
           data={projectTasksBurnupChartData}
-          axisLeftLegend="Activities"
+          axisLeftLegend={t("charts.demands")}
           props={{
             enableSlices: "x",
             sliceTooltip: ({ slice }: SliceTooltipProps) => (
