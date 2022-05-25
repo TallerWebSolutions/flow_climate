@@ -44,4 +44,5 @@ export type ProjectConsolidation = {
   projectThroughputHoursUpstream: number
   projectThroughputHoursDownstream: number
   projectThroughputHoursAdditional?: number
+  projectTasksThroughput: number
 }

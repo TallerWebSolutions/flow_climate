@@ -19,7 +19,7 @@ import { secondsToDays } from "../../lib/date"
 import { openWindow } from "../../lib/func"
 import { Task } from "../../modules/task/task.types"
 import User from "../../modules/user/user.types"
-import { KeyValueData } from "../../modules/project/project.types"
+import { KeyValueData, Project } from "../../modules/project/project.types"
 import TasksPage from "../../components/TasksPage"
 import { ChartAxisData } from "../../modules/project/project.types"
 import { TasksCharts } from "../../pages/Tasks/List"
@@ -102,6 +102,7 @@ export type TasksChartsDTO = {
     inProgressLeadTimeP95: number
     completiontimeHistogramChartData: KeyValueData
   }
+  project: Project
 }
 
 const ChartBox = ({

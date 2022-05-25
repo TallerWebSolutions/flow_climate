@@ -114,6 +114,13 @@ export const companyMock: Company = {
         keys: [],
         values: [],
       },
+      currentWeeklyTasksScopeIdealBurnup: [],
+      tasksBurnup: {
+        projectTasksIdeal: [],
+        projectTasksScope: [],
+        projectTasksThroughtput: [],
+        xAxis: [],
+      },
     },
   ],
   teams: [],
@@ -216,6 +223,13 @@ export const projectMock: Project = {
   leadTimeHistogramData: {
     keys: [],
     values: [],
+  },
+  currentWeeklyTasksScopeIdealBurnup: [],
+  tasksBurnup: {
+    projectTasksIdeal: [],
+    projectTasksScope: [],
+    projectTasksThroughtput: [],
+    xAxis: [],
   },
 }
 
