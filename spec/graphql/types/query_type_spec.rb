@@ -310,8 +310,16 @@ RSpec.describe Types::QueryType do
           product = Fabricate :product, company: company, customer: customer
           project = Fabricate :project, company: company, customers: [customer], products: [product], team: team, status: :executing, start_date: Time.zone.parse('2022-04-23 10:51'), end_date: 1.day.from_now, max_work_in_progress: 2
           Fabricate :demand, company: company, project: project, team: team
-          first_finished_demand = Fabricate :demand, project: project, effort_downstream: 200, effort_upstream: 10, end_date: Time.zone.parse('2022-04-15 12:30')
-          second_finished_demand = Fabricate :demand, project: project, demand_type: :bug, created_date: Time.zone.parse('2022-04-23 13:30'), commitment_date: Time.zone.parse('2022-04-24 10:30'), end_date: Time.zone.parse('2022-04-25 17:30')
+          first_task = Fabricate :task, created_date: 3.weeks.ago, end_date: 2.weeks.ago
+          second_task = Fabricate :task, created_date: 3.weeks.ago, end_date: 1.week.ago
+          third_task = Fabricate :task, created_date: 2.weeks.ago, end_date: Time.zone.now
+          fourth_task = Fabricate :task, created_date: 3.weeks.ago, end_date: nil
+          fifth_task = Fabricate :task, created_date: 1.week.ago, end_date: Time.zone.now
+          sixth_task = Fabricate :task, created_date: 1.week.ago, end_date: nil
+          seventh_task = Fabricate :task, created_date: 1.week.ago, end_date: Time.zone.now
+    
+          first_finished_demand = Fabricate :demand, project: project, tasks: [first_task, second_task, third_task], effort_downstream: 200, effort_upstream: 10, end_date: Time.zone.parse('2022-04-15 12:30')
+          second_finished_demand = Fabricate :demand, project: project, tasks: [fourth_task, fifth_task, seventh_task],  demand_type: :bug, created_date: Time.zone.parse('2022-04-23 13:30'), commitment_date: Time.zone.parse('2022-04-24 10:30'), end_date: Time.zone.parse('2022-04-25 17:30')
           project_consolidation = Fabricate :project_consolidation, project: project, monte_carlo_weeks_min: 9, monte_carlo_weeks_max: 85, monte_carlo_weeks_std_dev: 7, team_based_operational_risk: 0.5, consolidation_date: Time.zone.today, project_throughput_hours_additional: 17, project_throughput_hours_additional_in_month: 60
           demand = Fabricate :demand, company: company, project: project, team: team
           Fabricate :demand_block, demand: demand
@@ -423,6 +431,12 @@ RSpec.describe Types::QueryType do
             demandsCount
             memberName
           }
+          tasksBurnup {
+            xAxis
+            projectTasksIdeal
+            projectTasksScope
+            projectTasksThroughtput
+          }
         }
 
         projectConsolidations(projectId: #{project.id}) {
@@ -530,8 +544,15 @@ RSpec.describe Types::QueryType do
                                                         'projectMembers' => [{
                                                           'demandsCount' => 2,
                                                           'memberName' => 'foo'
-                                                        }]
+                                                        }],
+                                                        'tasksBurnup' => {
+                                                          'xAxis' => TimeService.instance.weeks_between_of(project.start_date, project.end_date).map(&:iso8601),
+                                                          'projectTasksIdeal' => [2.0, 4.0, 6.0],
+                                                          'projectTasksScope' => [4, 6, 6],
+                                                          'projectTasksThroughtput' => [1, 2, 5]
+                                                        }
                                                       })
+
           expect(result.dig('data', 'projectConsolidations')).to eq([{
                                                                       'id' => project_consolidation.id.to_s,
                                                                       'interquartileRange' => 0.0,

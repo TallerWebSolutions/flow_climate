@@ -15,7 +15,7 @@ module Types
     field :current_weekly_hours_ideal_burnup, [Float], null: false
     field :weekly_project_scope_hours_until_end, [Int], null: false
     field :weekly_project_scope_until_end, [Int], null: false
-    field :current_weekly_scope_ideal_burnup, [Int], null: false
+    field :current_weekly_scope_ideal_burnup, [Float], null: false
     field :backlog_count_for, Int, null: true
     field :remaining_backlog, Int, null: false
     field :flow_pressure, Float, null: false
@@ -89,6 +89,7 @@ module Types
     field :lead_time_histogram_data, Types::Charts::LeadTimeHistogramDataType, null: true
     field :project_members, [Types::ProjectMemberType], null: true
     field :quality, Float, null: true
+    field :tasks_burnup, Types::Charts::BurnupType, null: true
 
     delegate :remaining_backlog, to: :object
     delegate :remaining_weeks, to: :object
@@ -208,7 +209,6 @@ module Types
 
     def project_consolidations_weekly
       weekly_project_consolidations = object.project_consolidations.weekly_data.order(:consolidation_date)
-
       Consolidations::ProjectConsolidation.where(id: weekly_project_consolidations.map(&:id) + [last_consolidation&.id]).order(:consolidation_date)
     end
 
@@ -255,6 +255,12 @@ module Types
       end
 
       project_members_list
+    end
+
+    def tasks_burnup
+      burnup_adapter = Highchart::BurnupAdapter.new(Task.where(id: object.tasks.map(&:id)), object.start_date, object.end_date)
+
+      { x_axis: burnup_adapter.x_axis, project_tasks_ideal: burnup_adapter.ideal_burn, project_tasks_scope: burnup_adapter.scope, project_tasks_throughtput: burnup_adapter.current_burn }
     end
 
     private
