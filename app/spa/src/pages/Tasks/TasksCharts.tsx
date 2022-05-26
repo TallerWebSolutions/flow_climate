@@ -23,6 +23,7 @@ import { KeyValueData, Project } from "../../modules/project/project.types"
 import TasksPage from "../../components/TasksPage"
 import { ChartAxisData } from "../../modules/project/project.types"
 import LineChartTooltip from "../../components/charts/tooltips/LineChartTooltip"
+import { ChartBox } from "../../components/charts/ChartBox"
 
 const TASKS_CHARTS_QUERY = gql`
   query TasksCharts(
@@ -104,23 +105,7 @@ export type TasksChartsDTO = {
   project: Project
 }
 
-const ChartBox = ({
-  children,
-  title,
-}: {
-  children: ReactElement | ReactElement[]
-  title: string
-}) => {
-  return (
-    <Box>
-      <Typography component="h3" variant="h6">
-        {title}
-      </Typography>
 
-      {children}
-    </Box>
-  )
-}
 
 export const buildPercentileYAxisMarker = ({
   completionTime,

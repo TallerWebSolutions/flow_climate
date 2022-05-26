@@ -6,13 +6,18 @@ import { TasksChartsDTO } from "../Tasks/TasksCharts"
 import BarChartTooltip, {
   BarData,
 } from "../../components/charts/tooltips/BarChartTooltip"
-import { Grid, Typography } from "@mui/material"
+import { Box, Grid, Typography } from "@mui/material"
 import { useParams } from "react-router-dom"
 import ChartLineBox from "../../components/charts/ChartLineBox"
 import { SliceTooltipProps } from "@nivo/line"
 import LineChartTooltip from "../../components/charts/tooltips/LineChartTooltip"
 import { TasksCharts } from "../Tasks/List"
 import { BarDatum } from "@nivo/bar"
+import { secondsToDays } from "../../lib/date"
+import { keyValueToAxisData } from "../../lib/charts"
+import { ScatterChart } from "../../components/charts/ScatterChart"
+import { ChartBox } from "../../components/charts/ChartBox"
+
 
 const PROJECT_TASKS_CHARTS_QUERY = gql`
   query ProjectDemandsCharts($TasksProjectId: ID, $ID: Int!) {
@@ -21,6 +26,13 @@ const PROJECT_TASKS_CHARTS_QUERY = gql`
         xAxis
         creation: creationArray
         throughput: throughputArray
+      }
+      deliveredLeadTimeP65
+      deliveredLeadTimeP80
+      deliveredLeadTimeP95
+      completiontimeHistogramChartData {
+        keys
+        values
       }
     }
     project(id: $ID) {
@@ -105,6 +117,50 @@ const ProjectTasksCharts = () => {
       ),
     },
   ]
+
+  const deliveredLeadTimeP65 = secondsToDays(
+    Number(taskList?.deliveredLeadTimeP65)
+  )
+  const deliveredLeadTimeP80 = secondsToDays(
+    Number(taskList?.deliveredLeadTimeP80)
+  )
+  const deliveredLeadTimeP95 = secondsToDays(
+    Number(taskList?.deliveredLeadTimeP95)
+  )
+
+  const deliveredLeadTimeP65Marker = {
+    value: deliveredLeadTimeP65,
+    legend: t("charts.control_completion_time_p65_marker", {
+      days: deliveredLeadTimeP65,
+    }),
+  }
+
+  const deliveredLeadTimeP80Marker = {
+    value: deliveredLeadTimeP80,
+    legend: t("charts.control_completion_time_p80_marker", {
+      days: deliveredLeadTimeP80,
+    }),
+  }
+
+  const deliveredLeadTimeP95Marker = {
+    value: deliveredLeadTimeP95,
+    legend: t("charts.control_completion_time_p95_marker", {
+      days: deliveredLeadTimeP95,
+    }),
+  }
+
+  const completionTimeChartData = {
+    keys:
+      taskList?.completiontimeHistogramChartData.keys.map(secondsToDays) || [],
+    values: taskList?.completiontimeHistogramChartData.values || [],
+  }
+
+  const getTaskIDByExternalID = (findedExternalId: number) => {
+    return taskList?.tasks.find(
+      ({ externalId }) => Number(externalId) === findedExternalId
+    )
+  }
+
   return (
     <ProjectPage pageName="" loading={loading} dashboard>
       <Grid container spacing={2} rowSpacing={8} sx={{ marginTop: 4 }}>
@@ -167,6 +223,22 @@ const ProjectTasksCharts = () => {
             ),
           }}
         />
+          <Grid item xs={6} sx={{ padding: 1 }}>
+         {completionTimeChartData && (
+          <ChartBox title={t("charts.control_completion_time_title")}>
+            <ScatterChart
+              axisLeftLegend={t("charts.days")}
+              data={keyValueToAxisData(completionTimeChartData)}
+              markers={[
+                deliveredLeadTimeP65Marker,
+                deliveredLeadTimeP80Marker,
+                deliveredLeadTimeP95Marker,
+              ]}
+              
+            />
+          </ChartBox>
+        )}
+        </Grid>
       </Grid>
     </ProjectPage>
   )
