@@ -51,6 +51,7 @@ module Types
     field :lead_time_p75, Float, null: false
     field :operational_risk, Float, null: false
     field :tasks_based_operational_risk, Float, null: false
+    field :tasks_based_operational_risk_p80, Float, null: true
     field :code_needed_blocks_count, Int, null: true
     field :code_needed_blocks_per_demand, Float, null: true
     field :bugs_opened, Int, null: false

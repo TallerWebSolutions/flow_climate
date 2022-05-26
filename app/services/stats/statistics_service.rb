@@ -10,7 +10,7 @@ module Stats
       processed_population = population.compact
       return 0 if processed_population.empty?
       return processed_population.first.to_f if processed_population.size == 1
-
+    
       processed_population.sort!
       return processed_population.last.to_f if desired_percentile == 100
 

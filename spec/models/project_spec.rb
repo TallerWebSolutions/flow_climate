@@ -1300,6 +1300,23 @@ RSpec.describe Project, type: :model do
     end
   end
 
+  describe '#tasks_based_current_risk_to_deadline_p80' do
+    context 'with project consolidations' do
+      let(:project) { Fabricate :project, end_date: 2.weeks.from_now }
+      let!(:project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago, tasks_based_operational_risk_p80: 10 }
+      let!(:other_project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 2.days.ago, tasks_based_operational_risk_p80: 2 }
+
+      it { expect(project.tasks_based_current_risk_to_deadline_p80).to eq 10 }
+    end
+
+    context 'without project consolidations' do
+      let(:project) { Fabricate :project }
+
+      it { expect(project.tasks_based_current_risk_to_deadline_p80).to eq 1 }
+    end
+  end
+  
+
   describe '#consolidations_last_update' do
     context 'with project consolidations' do
       let(:project) { Fabricate :project }

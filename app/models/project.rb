@@ -390,6 +390,12 @@ class Project < ApplicationRecord
     last_project_consolidation.tasks_based_operational_risk
   end
 
+  def tasks_based_current_risk_to_deadline_p80
+    return 1 if last_project_consolidation.blank?
+
+    last_project_consolidation.tasks_based_operational_risk_p80
+  end
+  
   def consolidations_last_update
     last_project_consolidation&.updated_at
   end

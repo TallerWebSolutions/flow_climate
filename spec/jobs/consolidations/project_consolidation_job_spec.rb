@@ -26,8 +26,14 @@ RSpec.describe Consolidations::ProjectConsolidationJob, type: :active_job do
 
         first_project = Fabricate :project, customers: [customer], team: team, start_date: base_date - 3.weeks, end_date: base_date.end_of_week, initial_scope: 0, max_work_in_progress: 2
         second_project = Fabricate :project, customers: [customer], team: team, start_date: base_date - 3.weeks, end_date: base_date - 1.week, initial_scope: 0, max_work_in_progress: 3
-
-        Fabricate :demand, project: first_project, team: team, created_date: base_date - 74.days, commitment_date: base_date - 15.days, end_date: base_date - 1.week, effort_downstream: 200, effort_upstream: 10
+        first_task = Fabricate :task, created_date: base_date - 3.days, end_date: base_date - 2.days
+        second_task =Fabricate :task, created_date: base_date - 3.days, end_date: base_date - 1.days
+        third_task = Fabricate :task, created_date: base_date - 5.days, end_date: base_date - 1.days
+        fourth_task  =Fabricate :task, created_date: base_date - 10.days, end_date: base_date - 5.days
+        fifth_task  =Fabricate :task, created_date: base_date - 10.days, end_date: base_date - 3.days
+        
+        Fabricate :task, created_date: 2.days.ago, end_date: 1.day.ago
+        Fabricate :demand, tasks: [first_task, second_task, third_task, fourth_task, fifth_task], project: first_project, team: team, created_date: base_date - 74.days, commitment_date: base_date - 15.days, end_date: base_date - 1.week, effort_downstream: 200, effort_upstream: 10
         Fabricate :demand, project: first_project, team: team, created_date: base_date - 65.days, commitment_date: base_date - 14.days, end_date: base_date - 1.week, effort_downstream: 400, effort_upstream: 130
         Fabricate :demand, project: first_project, team: team, commitment_date: base_date - 10.days, end_date: base_date - 1.week, effort_downstream: 100, effort_upstream: 20
 
