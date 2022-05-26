@@ -31,25 +31,8 @@ const PROJECT_TASKS_CHARTS_QUERY = gql`
         xAxis
       }
       projectConsolidationsWeekly {
-        leadTimeP80
-        projectQuality
         consolidationDate
-        operationalRisk
         tasksBasedOperationalRisk
-        codeNeededBlocksCount
-        codeNeededBlocksPerDemand
-        flowEfficiency
-        hoursPerDemand
-        projectThroughput
-        projectThroughputHours
-        projectThroughputHoursAdditional
-        bugsOpened
-        bugsClosed
-        projectThroughputHoursManagement
-        projectThroughputHoursDevelopment
-        projectThroughputHoursDesign
-        projectThroughputHoursUpstream
-        projectThroughputHoursDownstream
       }
     }
   }
