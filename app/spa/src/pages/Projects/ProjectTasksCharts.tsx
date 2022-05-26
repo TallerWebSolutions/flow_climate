@@ -182,7 +182,7 @@ const ProjectTasksCharts = () => {
         <ChartLineBox
           title={t("charts.burnup_chart_data")}
           data={projectTasksBurnupChartData}
-          axisLeftLegend={t("charts.demands")}
+          axisLeftLegend={t("charts.tasks")}
           props={{
             enableSlices: "x",
             sliceTooltip: ({ slice }: SliceTooltipProps) => (
