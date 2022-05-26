@@ -1,9 +1,9 @@
 import { gql, useQuery } from "@apollo/client"
-import { Box, Typography } from "@mui/material"
+import { Box } from "@mui/material"
 import { CartesianMarkerProps } from "@nivo/core"
 import { SliceTooltipProps } from "@nivo/line"
 import { ScatterPlotValue } from "@nivo/scatterplot"
-import { ReactElement, useContext, useState } from "react"
+import { useContext, useState } from "react"
 import { useTranslation } from "react-i18next"
 
 import { keyValueToAxisData } from "../../lib/charts"

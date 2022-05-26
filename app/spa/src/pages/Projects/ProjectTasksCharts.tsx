@@ -6,7 +6,7 @@ import { TasksChartsDTO } from "../Tasks/TasksCharts"
 import BarChartTooltip, {
   BarData,
 } from "../../components/charts/tooltips/BarChartTooltip"
-import { Box, Grid, Typography } from "@mui/material"
+import { Grid, Typography } from "@mui/material"
 import { useParams } from "react-router-dom"
 import ChartLineBox from "../../components/charts/ChartLineBox"
 import { SliceTooltipProps } from "@nivo/line"
@@ -155,12 +155,7 @@ const ProjectTasksCharts = () => {
     values: taskList?.completiontimeHistogramChartData.values || [],
   }
 
-  const getTaskIDByExternalID = (findedExternalId: number) => {
-    return taskList?.tasks.find(
-      ({ externalId }) => Number(externalId) === findedExternalId
-    )
-  }
-
+  
   return (
     <ProjectPage pageName="" loading={loading} dashboard>
       <Grid container spacing={2} rowSpacing={8} sx={{ marginTop: 4 }}>
