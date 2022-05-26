@@ -63,7 +63,7 @@
     "activities": "Activities",
     "scope": "Scope",
     "ideal": "Ideal",
-    "delivered": "Delivered",
+    "delivered": "Current",
     "operational_math_risk_evolution_chart": "Operational Math Risk Evolution",
     "operational_math_risk_evolution_tooltip_label": "Period",
     "operational_math_risk_evolution_y_label": "Risk"
