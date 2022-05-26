@@ -30,6 +30,27 @@ const PROJECT_TASKS_CHARTS_QUERY = gql`
         projectTasksThroughtput
         xAxis
       }
+      projectConsolidationsWeekly {
+        leadTimeP80
+        projectQuality
+        consolidationDate
+        operationalRisk
+        tasksBasedOperationalRisk
+        codeNeededBlocksCount
+        codeNeededBlocksPerDemand
+        flowEfficiency
+        hoursPerDemand
+        projectThroughput
+        projectThroughputHours
+        projectThroughputHoursAdditional
+        bugsOpened
+        bugsClosed
+        projectThroughputHoursManagement
+        projectThroughputHoursDevelopment
+        projectThroughputHoursDesign
+        projectThroughputHoursUpstream
+        projectThroughputHoursDownstream
+      }
     }
   }
 `
@@ -48,7 +69,8 @@ const ProjectTasksCharts = () => {
   )
 
   const taskList = data?.tasksList
-  const project = data?.project.tasksBurnup
+  const project = data?.project
+  const tasksBurnup = project?.tasksBurnup
   const flowChartGroupNames: (keyof TasksCharts)[] = ["creation", "throughput"]
   const flowChartData: BarDatum[] =
     taskList?.tasksCharts.xAxis.map((key, indexAxis) => {
@@ -60,32 +82,46 @@ const ProjectTasksCharts = () => {
       return group
     }) || []
 
-  const projectTasksBurnupChartData = project
+  const projectTasksBurnupChartData = tasksBurnup
     ? [
         {
           id: t("charts.scope"),
-          data: project.projectTasksScope.map((scope, index) => ({
-            x: project.xAxis[index],
+          data: tasksBurnup.projectTasksScope.map((scope, index) => ({
+            x: tasksBurnup.xAxis[index],
             y: scope,
           })),
         },
         {
           id: t("charts.ideal"),
-          data: project.projectTasksIdeal.map((idealScope, index) => ({
-            x: project.xAxis[index],
+          data: tasksBurnup.projectTasksIdeal.map((idealScope, index) => ({
+            x: tasksBurnup.xAxis[index],
             y: idealScope.toFixed(2),
           })),
         },
         {
           id: t("charts.delivered"),
-          data: project.projectTasksThroughtput.map((throughtput, index) => ({
-            x: project.xAxis[index],
-            y: throughtput,
-          })),
+          data: tasksBurnup.projectTasksThroughtput.map(
+            (throughtput, index) => ({
+              x: tasksBurnup.xAxis[index],
+              y: throughtput,
+            })
+          ),
         },
       ]
     : []
+  const projectConsolidationsWeekly = project?.projectConsolidationsWeekly || []
 
+  const operationalRiskChartData = [
+    {
+      id: "Operational Math Risk Evolution",
+      data: projectConsolidationsWeekly.map(
+        ({ consolidationDate, tasksBasedOperationalRisk }) => ({
+          x: consolidationDate,
+          y: tasksBasedOperationalRisk,
+        })
+      ),
+    },
+  ]
   return (
     <ProjectPage pageName="" loading={loading} dashboard>
       <Grid container spacing={2} rowSpacing={8} sx={{ marginTop: 4 }}>
@@ -117,6 +153,34 @@ const ProjectTasksCharts = () => {
             enableSlices: "x",
             sliceTooltip: ({ slice }: SliceTooltipProps) => (
               <LineChartTooltip slice={slice} />
+            ),
+          }}
+        />
+
+        <ChartLineBox
+          title={t("charts.operational_math_risk_evolution_chart")}
+          data={operationalRiskChartData}
+          axisLeftLegend={`${t(
+            "charts.operational_math_risk_evolution_y_label"
+          )} (%)`}
+          props={{
+            margin: { left: 80, right: 20, top: 25, bottom: 65 },
+            axisBottom: {
+              tickSize: 5,
+              tickPadding: 5,
+              legendPosition: "middle",
+              legendOffset: 60,
+              tickRotation: -40,
+            },
+            yFormat: "=.2%",
+            enableSlices: "x",
+            sliceTooltip: ({ slice }: SliceTooltipProps) => (
+              <LineChartTooltip
+                slice={slice}
+                xLabel={t(
+                  "charts.operational_math_risk_evolution_tooltip_label"
+                )}
+              />
             ),
           }}
         />

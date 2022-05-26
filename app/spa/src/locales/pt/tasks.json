@@ -61,6 +61,9 @@
     "burnup_chart_data": "Burn up",
     "scope": "Escopo",
     "ideal": "Ideal",
-    "delivered": "Entregue"
+    "delivered": "Entregue",
+    "operational_math_risk_evolution_chart": "Evolução do Risco Matemático de Operação",
+    "operational_math_risk_evolution_tooltip_label": "Período",
+    "operational_math_risk_evolution_y_label": "Risco"
   }
 }
