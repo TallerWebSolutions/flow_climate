@@ -80,11 +80,11 @@ export const ProjectPage = ({
     Number(projectId)
   )
 
-  if (!projectInfo) return <strong>No project found</strong>
+  if (!projectInfo && !queryLoading) return <strong>No project found</strong>
 
-  const projectIsRunning = projectInfo.running
-  const projectName = projectInfo.name || ""
-  const company = projectInfo.company
+  const projectIsRunning = projectInfo?.running
+  const projectName = projectInfo?.name || ""
+  const company = projectInfo?.company
   const companyName = company?.name || ""
   const companySlug = company?.slug
   const breadcrumbsLinks = [
@@ -128,12 +128,12 @@ export const ProjectPage = ({
     },
   ]
 
-  const currentOperationalRisk = projectInfo.currentRiskToDeadline
+  const currentOperationalRisk = projectInfo?.currentRiskToDeadline || 0
   const currentRiskToDeadlinePercentage = (
     currentOperationalRisk * 100
   ).toFixed(2)
-  const remainingDays = projectInfo.remainingDays
-  const currentTeamRisk = projectInfo.currentTeamBasedRisk
+  const remainingDays = projectInfo?.remainingDays
+  const currentTeamRisk = projectInfo?.currentTeamBasedRisk || 0
   const currentTeamRiskPercentage = (currentTeamRisk * 100).toFixed(2)
   const cardTypeTeamRisk = assignCardTypeByRisk(currentTeamRisk)
   const cardTypeOperationalRisk = assignCardTypeByRisk(currentOperationalRisk)

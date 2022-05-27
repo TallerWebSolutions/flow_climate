@@ -647,6 +647,7 @@ const DemandsCharts = () => {
           indexBy="index"
           axisLeftLegend={t("project_charts.flow_data_y_label")}
           axisBottomLegend={t("project_charts.flow_data_x_label")}
+          groupMode="grouped"
         />
       </Grid>
 
@@ -879,6 +880,7 @@ const DemandsCharts = () => {
           indexBy={t("project_charts.hours_consumed_x_label")}
           axisLeftLegend={t("project_charts.hours_consumed_y_label")}
           axisBottomLegend={t("project_charts.hours_consumed_x_label")}
+          groupMode="grouped"
         />
       </Grid>
 
@@ -897,6 +899,7 @@ const DemandsCharts = () => {
           ]}
           indexBy="period"
           axisLeftLegend={t("project_charts.consumed_hours_by_role_y_label")}
+          groupMode="grouped"
         />
       </Grid>
       <Grid item xs={6} sx={{ padding: 1 }}>
@@ -919,6 +922,7 @@ const DemandsCharts = () => {
             t("project_charts.consumed_hours_by_role_in_month_total_effort"),
           ]}
           indexBy="period"
+          groupMode="grouped"
         />
       </Grid>
       <Grid item xs={6} sx={{ padding: 1 }}>
