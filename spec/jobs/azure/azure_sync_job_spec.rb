@@ -30,12 +30,12 @@ RSpec.describe Azure::AzureSyncJob do
 
       described_class.perform_now(azure_account, 'bla', 'foo@bar.com')
 
-      expect(demand.reload.discarded_at).not_to be_nil
-      expect(task.reload.discarded_at).not_to be_nil
+      expect(Demand.find_by(id: demand.id)).to be_nil
+      expect(Task.find_by(id: task.id)).to be_nil
       expect(other_demand.reload.discarded_at).to be_nil
       expect(other_task.reload.discarded_at).to be_nil
       expect(not_deleted_task_in_valid_demand.reload.discarded_at).to be_nil
-      expect(deleted_task_in_valid_demand.reload.discarded_at).not_to be_nil
+      expect(Task.find_by(id: deleted_task_in_valid_demand.id)).to be_nil
     end
   end
 end
