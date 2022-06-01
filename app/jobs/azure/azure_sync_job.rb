@@ -36,8 +36,8 @@ module Azure
     private
 
     def remove_deleted_items(company, azure_work_items_ids)
-      company.demands.where.not(external_id: azure_work_items_ids).map(&:discard)
-      company.tasks.where.not(external_id: azure_work_items_ids).map(&:discard)
+      company.tasks.where.not(external_id: azure_work_items_ids).map(&:destroy)
+      company.demands.where.not(external_id: azure_work_items_ids).map(&:destroy)
     end
   end
 end

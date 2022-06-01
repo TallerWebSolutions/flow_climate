@@ -17,3 +17,7 @@
 .visible {
     display: block;
 }
+
+.user-avatar {
+    border-radius: 50%;
+}
