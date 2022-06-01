@@ -64,8 +64,8 @@ module DemandsAggregator
   private
 
   def compute_demand_lead_time_position(demands, demand)
-    worse_lead_times_count = demands.where('leadtime > :lead_time_limit', lead_time_limit: demand.leadtime).count
+    worse_lead_times_count = demands.where('leadtime > :lead_time_limit', lead_time_limit: demand.leadtime).kept.count
 
-    worse_lead_times_count.to_f / demands.count
+    worse_lead_times_count.to_f / demands.kept.finished_with_leadtime.count
   end
 end
