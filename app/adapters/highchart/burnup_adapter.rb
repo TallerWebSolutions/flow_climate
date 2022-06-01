@@ -20,12 +20,12 @@ module Highchart
     private
 
     def build_burnup_data
-      ideal_burn_per_week = @work_items.count / @x_axis.count.to_f
+      ideal_burn_per_week = @work_items.kept.count / @x_axis.count.to_f
 
       @x_axis.each_with_index do |date, index|
-        @scope << @work_items.where('created_date <= :limit_date', limit_date: date).count
+        @scope << @work_items.where('created_date <= :limit_date AND (discarded_at IS NULL OR discarded_at > :limit_date)', limit_date: date).count
         @ideal_burn << (ideal_burn_per_week * (index + 1))
-        @current_burn << @work_items.where('end_date <= :limit_date', limit_date: date).count if date <= Time.zone.now.end_of_week
+        @current_burn << @work_items.where('end_date <= :limit_date AND (discarded_at IS NULL OR discarded_at > :limit_date)', limit_date: date).count if date <= Time.zone.now.end_of_week
       end
     end
   end
