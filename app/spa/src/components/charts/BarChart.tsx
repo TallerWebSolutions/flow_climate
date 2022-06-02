@@ -43,12 +43,12 @@ export const BarChart = ({
       >
         <DownloadIcon />
       </IconButton>
-      <Box ref={chartRef} height={380}>
+      <Box ref={chartRef} height={420}>
         <ResponsiveBar
           data={chartData}
           indexBy={indexBy}
           keys={keys}
-          margin={{ top: 50, right: 130, bottom: 80, left: 60 }}
+          margin={{ top: 50, right: 50, bottom: 80, left: 60 }}
           groupMode={groupMode}
           padding={Number.isNaN(padding) ? 0.3 : padding}
           colors={{ scheme: "category10" }}
@@ -61,7 +61,7 @@ export const BarChart = ({
             tickPadding: 5,
             tickRotation: -40,
             legendPosition: "middle",
-            legendOffset: 40,
+            legendOffset: 65,
             legend: axisBottomLegend,
           }}
           axisLeft={{
