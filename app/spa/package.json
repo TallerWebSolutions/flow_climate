@@ -56,8 +56,7 @@
     "build-storybook": "build-storybook -s public"
   },
   "engines": {
-    "npm": ">=7.0.0",
-    "node": ">=16.0.0"
+    "node": "16.13.2"
   },
   "lint-staged": {
     "*.@(ts|tsx)": [
