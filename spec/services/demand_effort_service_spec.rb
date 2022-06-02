@@ -4,6 +4,7 @@ RSpec.describe DemandEffortService, type: :service do
   describe '#build_efforts_to_demand' do
     let(:company) { Fabricate :company }
     let(:project) { Fabricate :project, company: company }
+    let(:other_project) { Fabricate :project, company: company }
     let(:team) { Fabricate :team, company: company }
     let(:demand) { Fabricate :demand, team: team, project: project }
     let(:stage) { Fabricate :stage, company: company, stage_stream: :upstream }
@@ -149,8 +150,12 @@ RSpec.describe DemandEffortService, type: :service do
     context 'with drop offs and a full day of effort' do
       it 'builds the correct effort data' do
         Fabricate :stage_project_config, stage: stage, project: project, compute_effort: true, stage_percentage: 100, management_percentage: 20, pairing_percentage: 50
+        Fabricate :stage_project_config, stage: stage, project: other_project, compute_effort: true, stage_percentage: 100, management_percentage: 20, pairing_percentage: 50
+
+        other_project_demand = Fabricate :demand, team: team, project: other_project
 
         Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: Time.zone.parse('2021-05-24 10:51'), last_time_out: Time.zone.parse('2021-05-28 12:51')
+        Fabricate :demand_transition, demand: other_project_demand, stage: stage, last_time_in: Time.zone.parse('2021-05-24 10:51'), last_time_out: Time.zone.parse('2021-05-28 12:51')
 
         team_member = Fabricate :team_member, company: company, jira_account_user_email: 'foo', jira_account_id: 'bar', name: 'team_member'
         other_team_member = Fabricate :team_member, company: company, name: 'other_team_member'
@@ -164,15 +169,21 @@ RSpec.describe DemandEffortService, type: :service do
         Fabricate :item_assignment, membership: membership, demand: demand, start_time: Time.zone.parse('2021-05-24 14:55'), finish_time: Time.zone.parse('2021-05-24 15:55')
         Fabricate :item_assignment, membership: membership, demand: demand, start_time: Time.zone.parse('2021-05-24 15:56'), finish_time: Time.zone.parse('2021-05-24 16:56')
         Fabricate :item_assignment, membership: membership, demand: demand, start_time: Time.zone.parse('2021-05-24 16:57'), finish_time: Time.zone.parse('2021-05-25 10:57')
+        Fabricate :item_assignment, membership: membership, demand: other_project_demand, start_time: Time.zone.parse('2021-05-24 14:52'), finish_time: Time.zone.parse('2021-05-24 16:30')
+        Fabricate :item_assignment, membership: membership, demand: other_project_demand, start_time: Time.zone.parse('2021-05-24 16:52'), finish_time: Time.zone.parse('2021-05-24 18:30')
 
         Fabricate :item_assignment, membership: other_membership, demand: demand, start_time: Time.zone.parse('2021-05-24 00:00'), finish_time: Time.zone.parse('2021-05-24 16:35')
         Fabricate :item_assignment, membership: other_membership, demand: demand, start_time: Time.zone.parse('2021-05-24 17:55'), finish_time: Time.zone.parse('2021-05-24 23:59')
 
         allow(Time.zone).to(receive(:now)).and_return(Time.zone.local(2021, 5, 25, 10, 58, 0))
         described_class.instance.build_efforts_to_demand(demand)
+        described_class.instance.build_efforts_to_demand(other_project_demand)
 
-        expect(DemandEffort.all.count).to eq 10
-        expect(DemandEffort.all.sum(&:effort_value).to_f).to eq 20.08
+        expect(demand.demand_efforts.all.map(&:effort_value).map(&:to_f)).to eq [6.88, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 4.8, 2.4, 0.0]
+        expect(demand.demand_efforts.sum(&:effort_value).to_f).to eq 17.68
+
+        expect(other_project_demand.demand_efforts.all.map(&:effort_value).map(&:to_f)).to eq [1.96, 1.96]
+        expect(other_project_demand.demand_efforts.sum(&:effort_value).to_f).to eq 3.92
       end
     end
 
@@ -211,10 +222,10 @@ RSpec.describe DemandEffortService, type: :service do
         described_class.instance.build_efforts_to_demand(demand)
 
         expect(DemandEffort.all.count).to eq 5
-        expect(DemandEffort.all.sum(&:effort_value)).to be_within(0.1).of(27.5)
-        expect(DemandEffort.all.sum(&:effort_with_blocks)).to be_within(0.1).of(27.5)
+        expect(DemandEffort.all.sum(&:effort_value)).to be_within(0.1).of(26.39)
+        expect(DemandEffort.all.sum(&:effort_with_blocks)).to be_within(0.1).of(26.39)
         expect(DemandEffort.all.sum(&:total_blocked)).to eq 0
-        expect(demand.reload.effort_development).to be_within(0.1).of(27.5)
+        expect(demand.reload.effort_development).to be_within(0.1).of(26.39)
         expect(demand.reload.effort_design).to eq 0
         expect(demand.reload.effort_management).to eq 0
       end

@@ -291,7 +291,7 @@ RSpec.describe Flow::ContractsFlowInformation do
 
           contract_flow = described_class.new(contract)
 
-          expect(contract_flow.build_hours_blocked_per_delivery_info).to eq([{ name: I18n.t('customer.charts.hours_blocked_per_delivery.title'), data: [0, 0, 4, 4] }])
+          expect(contract_flow.build_hours_blocked_per_delivery_info).to eq([{ name: I18n.t('customer.charts.hours_blocked_per_delivery.title'), data: [0, 0, 3.5, 3.5] }])
         end
       end
     end

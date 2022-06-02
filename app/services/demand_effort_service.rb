@@ -62,7 +62,12 @@ class DemandEffortService
 
     hours_in_assignment = (end_date - effort_start_date) / 1.hour
 
-    previous_efforts_to_day = demand.demand_efforts.joins(item_assignment: :membership).where(item_assignment: { membership: assignment.membership }).for_day(day_to_effort)
+    previous_efforts_to_day = demand
+                              .demand_efforts
+                              .joins(item_assignment: :membership)
+                              .where(item_assignment: { membership: assignment.membership })
+                              .for_day(day_to_effort)
+
     previous_efforts_to_day -= [demand_effort]
 
     previous_efforts_value_to_day = previous_efforts_to_day.sum(&:effort_value)

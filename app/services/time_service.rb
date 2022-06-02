@@ -73,13 +73,14 @@ class TimeService
 
   def compute_working_hours(start_time, end_time)
     initial_time = start_time
-    total_hours = 0
+    working_total_hours = 0
     while initial_time < end_time
-      total_hours += 1 unless initial_time.saturday? || initial_time.sunday? || out_of_work_time?(initial_time)
+      working_total_hours += 1 unless initial_time.saturday? || initial_time.sunday? || out_of_work_time?(initial_time)
       initial_time += 1.hour
     end
-    return total_hours if total_hours <= 6
+    return working_total_hours if working_total_hours <= 6
 
+    total_hours = ((end_time - start_time).to_i / 1.hour) - (weekends(start_time.to_date, end_time.to_date) * 24)
     working_hours_greather_than_a_day(total_hours)
   end
 
@@ -96,6 +97,10 @@ class TimeService
   end
 
   def out_of_work_time?(initial_time)
-    initial_time.hour >= 21 || initial_time.hour <= 7
+    initial_time.hour >= 20 || initial_time.hour <= 8
+  end
+
+  def weekends(start_date, end_date)
+    (start_date..end_date).count { |day| (day.saturday? || day.sunday?) }
   end
 end
