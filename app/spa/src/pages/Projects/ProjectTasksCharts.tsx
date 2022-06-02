@@ -18,7 +18,6 @@ import { keyValueToAxisData } from "../../lib/charts"
 import { ScatterChart } from "../../components/charts/ScatterChart"
 import { ChartBox } from "../../components/charts/ChartBox"
 
-
 const PROJECT_TASKS_CHARTS_QUERY = gql`
   query ProjectDemandsCharts($TasksProjectId: ID, $ID: Int!) {
     tasksList(projectId: $TasksProjectId) {
@@ -155,7 +154,6 @@ const ProjectTasksCharts = () => {
     values: taskList?.completiontimeHistogramChartData.values || [],
   }
 
-  
   return (
     <ProjectPage pageName="" loading={loading} dashboard>
       <Grid container spacing={2} rowSpacing={8} sx={{ marginTop: 4 }}>
@@ -218,21 +216,20 @@ const ProjectTasksCharts = () => {
             ),
           }}
         />
-          <Grid item xs={6} sx={{ padding: 1 }}>
-         {completionTimeChartData && (
-          <ChartBox title={t("charts.control_completion_time_title")}>
-            <ScatterChart
-              axisLeftLegend={t("charts.days")}
-              data={keyValueToAxisData(completionTimeChartData)}
-              markers={[
-                deliveredLeadTimeP65Marker,
-                deliveredLeadTimeP80Marker,
-                deliveredLeadTimeP95Marker,
-              ]}
-              
-            />
-          </ChartBox>
-        )}
+        <Grid item xs={6} sx={{ padding: 1 }}>
+          {completionTimeChartData && (
+            <ChartBox title={t("charts.control_completion_time_title")}>
+              <ScatterChart
+                axisLeftLegend={t("charts.days")}
+                data={keyValueToAxisData(completionTimeChartData)}
+                markers={[
+                  deliveredLeadTimeP65Marker,
+                  deliveredLeadTimeP80Marker,
+                  deliveredLeadTimeP95Marker,
+                ]}
+              />
+            </ChartBox>
+          )}
         </Grid>
       </Grid>
     </ProjectPage>

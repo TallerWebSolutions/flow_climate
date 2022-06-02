@@ -105,8 +105,6 @@ export type TasksChartsDTO = {
   project: Project
 }
 
-
-
 export const buildPercentileYAxisMarker = ({
   completionTime,
   color,
