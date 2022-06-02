@@ -42,6 +42,10 @@ export const ME_QUERY = gql`
         id
         name
         slug
+        initiatives {
+          id
+          name
+        }
       }
       fullName
       avatar {
