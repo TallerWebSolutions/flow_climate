@@ -102,17 +102,15 @@ module Slack
     def notify_demand_state_changed(stage, demand, demand_transition)
       return if demand_transition.transition_notified?
 
-      slack_configuration = SlackConfiguration.find_by(team: demand.team, info_type: :demand_state_changed, active: true)
+      slack_configurations = SlackConfiguration.where(team: demand.team, info_type: :demand_state_changed, active: true)
 
-      unless slack_configuration.present? && stage.present? && slack_configuration.notify_stage?(stage)
+      unless slack_configurations.present? && stage.present?
         demand_transition.update(transition_notified: true)
 
         return
       end
 
       team_member = demand_transition.team_member
-
-      slack_notifier = Slack::Notifier.new(slack_configuration.room_webhook)
 
       change_state_notify = "*#{demand.external_id} - #{demand.demand_title}*\n:information_source: _#{team_member&.name || 'anônimo'}_ moveu para _#{stage.name}_ em #{I18n.l(demand_transition.last_time_in, format: :short)}"
 
@@ -137,7 +135,12 @@ module Slack
         change_state_notify += "> Mesmo tipo: *#{number_to_percentage(team.lead_time_position_percentage_same_type(demand) * 100, precision: 1)}* | Mesma Classe de Serviço: *#{number_to_percentage(team.lead_time_position_percentage_same_cos(demand) * 100, precision: 1)}*\n"
       end
 
-      slack_notifier.ping(change_state_notify)
+      slack_configurations.each do |config|
+        next unless config.notify_stage?(stage)
+
+        slack_notifier = Slack::Notifier.new(config.room_webhook)
+        slack_notifier.ping(change_state_notify)
+      end
 
       demand_transition.update(transition_notified: true)
     end
@@ -145,16 +148,14 @@ module Slack
     def notify_item_assigned(item_assignment, demand_url)
       return if item_assignment.valid? == false
 
-      slack_configuration = SlackConfiguration.find_by(team: item_assignment.demand.team, info_type: 'item_assigned', active: true)
+      slack_configurations = SlackConfiguration.where(team: item_assignment.demand.team, info_type: 'item_assigned', active: true)
 
-      if slack_configuration.blank?
+      if slack_configurations.blank?
         ItemAssignment.transaction { item_assignment.update(assignment_notified: true) }
         return
       end
 
       return if item_assignment.assignment_notified?
-
-      slack_notifier = Slack::Notifier.new(slack_configuration.room_webhook)
 
       demand_title = "*<#{demand_url}|#{item_assignment.demand.external_id} - #{item_assignment.demand.demand_title}>*"
       assign_message = "#{item_assignment.team_member_name} puxou a demanda em _#{item_assignment.assigned_at&.name || 'sem etapa'}_ às #{I18n.l(item_assignment.start_time, format: :short)}"
@@ -165,15 +166,18 @@ module Slack
       info_block = { type: 'section', text: { type: 'mrkdwn', text: ">#{demand_title}\n>#{assign_message}\n>#{message_previous_pull}\n>#{message_ongoing}\n>#{message_idle}" } }
       divider_block = { type: 'divider' }
 
-      slack_notifier.post(blocks: [info_block, divider_block])
+      slack_configurations.each do |config|
+        slack_notifier = Slack::Notifier.new(config.room_webhook)
+        slack_notifier.post(blocks: [info_block, divider_block])
+      end
 
       ItemAssignment.transaction { item_assignment.update(assignment_notified: true) }
     end
 
     def notify_item_blocked(demand_block, demand_url, edit_block_url, block_state = 'blocked')
-      slack_configuration = SlackConfiguration.find_by(team: demand_block.demand.team, info_type: 'demand_blocked', active: true)
+      slack_configurations = SlackConfiguration.where(team: demand_block.demand.team, info_type: 'demand_blocked', active: true)
 
-      if slack_configuration.blank?
+      if slack_configurations.blank?
         Notifications::DemandBlockNotification.where(demand_block: demand_block, block_state: block_state).first_or_create
         return
       end
@@ -182,14 +186,16 @@ module Slack
 
       return if already_notified.present?
 
-      slack_notifier = Slack::Notifier.new(slack_configuration.room_webhook)
       block_type = { type: 'section', text: { type: 'mrkdwn', text: "*Tipo:* <#{edit_block_url}|#{I18n.t("activerecord.attributes.demand_block.enums.block_type.#{demand_block.block_type}")}> #{demand_block.blocker.user&.slack_user_for_company(demand_block.demand.company)} #{I18n.t('slack_configurations.notifications.block_change_type_text')}" } }
       divider_block = { type: 'divider' }
 
-      if block_state == 'blocked'
-        notify_blocked(block_type, demand_block, demand_url, divider_block, slack_notifier)
-      else
-        notify_unblocked(block_type, demand_block, demand_url, divider_block, slack_notifier)
+      slack_configurations.each do |config|
+        slack_notifier = Slack::Notifier.new(config.room_webhook)
+        if block_state == 'blocked'
+          notify_blocked(block_type, demand_block, demand_url, divider_block, slack_notifier)
+        else
+          notify_unblocked(block_type, demand_block, demand_url, divider_block, slack_notifier)
+        end
       end
 
       Notifications::DemandBlockNotification.create(demand_block: demand_block, block_state: block_state)

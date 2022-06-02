@@ -5023,13 +5023,6 @@ CREATE INDEX index_slack_configurations_on_info_type ON public.slack_configurati
 
 
 --
--- Name: index_slack_configurations_on_info_type_and_team_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_slack_configurations_on_info_type_and_team_id ON public.slack_configurations USING btree (info_type, team_id);
-
-
---
 -- Name: index_slack_configurations_on_team_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5384,6 +5377,13 @@ CREATE UNIQUE INDEX operations_dashboard_cache_unique ON public.operations_dashb
 --
 
 CREATE UNIQUE INDEX operations_dashboard_pairings_cache_unique ON public.operations_dashboard_pairings USING btree (operations_dashboard_id, pair_id);
+
+
+--
+-- Name: slack_configuration_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX slack_configuration_unique ON public.slack_configurations USING btree (info_type, team_id, room_webhook);
 
 
 --
@@ -6565,6 +6565,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220503152313'),
 ('20220503213916'),
 ('20220509115356'),
-('20220512123859');
+('20220512123859'),
+('20220602123818');
 
 

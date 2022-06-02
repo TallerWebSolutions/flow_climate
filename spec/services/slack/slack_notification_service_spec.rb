@@ -14,6 +14,7 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
   let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
 
   let!(:first_slack_config) { Fabricate :slack_configuration, team: team, info_type: :current_week_throughput, room_webhook: 'http://foo.com' }
+  let!(:second_slack_config) { Fabricate :slack_configuration, team: team, info_type: :current_week_throughput, room_webhook: 'http://bla.com' }
   let!(:first_slack_notifier) { Slack::Notifier.new(first_slack_config.room_webhook) }
 
   context 'with data' do
@@ -220,13 +221,21 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
         demand = Fabricate :demand, team: team
         team_member = Fabricate :team_member
         demand_transition = Fabricate :demand_transition, demand: demand, stage: stage, team_member: team_member
-        Fabricate :slack_configuration, team: team, info_type: :demand_state_changed, stages_to_notify_transition: [stage.id]
+        first_config = Fabricate :slack_configuration, team: team, info_type: :demand_state_changed, stages_to_notify_transition: [stage.id]
+        second_config = Fabricate :slack_configuration, team: team, info_type: :demand_state_changed, stages_to_notify_transition: [stage.id]
 
         expect_any_instance_of(Project).to receive(:lead_time_position_percentage_same_type).once.and_return(0.1)
         expect_any_instance_of(Project).to receive(:lead_time_position_percentage_same_cos).once.and_return(0.3)
         expect_any_instance_of(Project).to receive(:lead_time_position_percentage).once.and_return(0.15)
 
-        expect_any_instance_of(Slack::Notifier).to receive(:ping).with(/moneybag/)
+        first_notifier = instance_double(Slack::Notifier, ping: 'bla')
+        second_notifier = instance_double(Slack::Notifier, ping: 'ble')
+
+        allow(Slack::Notifier).to(receive(:new).with(first_config.room_webhook)).and_return(first_notifier)
+        allow(Slack::Notifier).to(receive(:new).with(second_config.room_webhook)).and_return(second_notifier)
+
+        expect(first_notifier).to receive(:ping).once
+        expect(second_notifier).to receive(:ping).once
 
         described_class.instance.notify_demand_state_changed(stage, demand, demand_transition)
       end

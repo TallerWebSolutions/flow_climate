@@ -19,14 +19,21 @@ RSpec.describe SlackConfiguration, type: :model do
       context 'uniqueness' do
         context 'name to product' do
           let(:team) { Fabricate :team }
-          let!(:slack_configuration) { Fabricate :slack_configuration, team: team, info_type: 0 }
+          let!(:slack_configuration) { Fabricate :slack_configuration, team: team, info_type: 0, room_webhook: 'http://foo.com' }
 
           context 'same type in same team' do
             let(:other_slack_configuration) { Fabricate.build :slack_configuration, team: team, info_type: 0 }
 
+            it 'accepts the model' do
+              expect(other_slack_configuration.valid?).to be true
+            end
+          end
+
+          context 'same type in same team and same room' do
             it 'does not accept the model' do
-              expect(other_slack_configuration.valid?).to be false
-              expect(other_slack_configuration.errors[:info_type]).to eq [I18n.t('slack_configuration.info_type.uniqueness')]
+              Fabricate :slack_configuration, team: team, info_type: 0, room_webhook: 'http://bar.com'
+              dup_config = Fabricate.build :slack_configuration, team: team, info_type: 0, room_webhook: 'http://foo.com'
+              expect(dup_config.valid?).to be false
             end
           end
 

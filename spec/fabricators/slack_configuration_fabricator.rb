@@ -3,6 +3,6 @@
 Fabricator(:slack_configuration) do
   team
   notification_hour 10
-  room_webhook 'http://foo.com.br'
+  room_webhook { Faker::Internet.url }
   info_type { 0 }
 end

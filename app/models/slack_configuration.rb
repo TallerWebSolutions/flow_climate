@@ -18,8 +18,8 @@
 #
 # Indexes
 #
-#  index_slack_configurations_on_info_type_and_team_id  (info_type,team_id) UNIQUE
-#  index_slack_configurations_on_team_id                (team_id)
+#  index_slack_configurations_on_team_id  (team_id)
+#  slack_configuration_unique             (info_type,team_id,room_webhook)
 #
 # Foreign Keys
 #
@@ -33,7 +33,7 @@ class SlackConfiguration < ApplicationRecord
   belongs_to :team
 
   validates :room_webhook, :weekday_to_notify, presence: true
-  validates :info_type, uniqueness: { scope: :team, message: I18n.t('slack_configuration.info_type.uniqueness') }
+  validates :info_type, uniqueness: { scope: %i[team room_webhook], message: I18n.t('slack_configuration.info_type.uniqueness') }
 
   validate :valid_room_uri?
 
