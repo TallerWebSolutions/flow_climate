@@ -5,6 +5,7 @@ RSpec.describe Team, type: :model do
     it { is_expected.to belong_to :company }
     it { is_expected.to have_many(:projects) }
     it { is_expected.to have_many(:demands).dependent(:restrict_with_error) }
+    it { is_expected.to have_many(:tasks).through(:demands) }
     it { is_expected.to have_many(:memberships).dependent(:destroy) }
     it { is_expected.to have_many(:flow_events).dependent(:destroy) }
     it { is_expected.to have_many(:team_members).through(:memberships) }

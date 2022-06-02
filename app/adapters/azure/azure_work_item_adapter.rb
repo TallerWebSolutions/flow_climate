@@ -68,6 +68,8 @@ module Azure
       task = Task.where(demand: demand, external_id: work_item_response['id']).first_or_initialize
       task.update(title: work_item_response['fields']['System.Title'], created_date: work_item_response['fields']['System.CreatedDate'],
                   end_date: work_item_response['fields']['Microsoft.VSTS.Common.ClosedDate'], discarded_at: nil)
+
+      team.tasks.where(external_id: work_item_response['id']).where.not(id: task.id).map(&:destroy)
     end
 
     def feature_parent(product, project_custom_field, team, azure_project, work_item_response)
