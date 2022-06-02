@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'date'
 class TimeService
   include Singleton
 
@@ -7,6 +8,7 @@ class TimeService
     return 0 if start_date.blank? || end_date.blank? || (end_date - start_date) <= 1.minute
 
     compute_working_hours(start_date, end_date)
+    # puts "total_hours #{total_hours}"
   end
 
   def days_between_of(start_date, end_date)
@@ -71,7 +73,7 @@ class TimeService
     array_of_dates
   end
 
-  def compute_working_hours(start_time, end_time)
+  def count_day_hours(start_time, end_time)
     initial_time = start_time
     total_hours = 0
     while initial_time < end_time
@@ -80,22 +82,29 @@ class TimeService
     end
     return total_hours if total_hours <= 6
 
-    working_hours_greather_than_a_day(total_hours)
+    6
   end
 
-  def working_hours_greather_than_a_day(total_hours)
-    qtd_days = total_hours.to_f / 24.0
-    return 6 if qtd_days <= 1
+  def compute_working_hours(start_time, end_time)
+    end_first_day = start_time.end_of_day
+    start_last_day = end_time.beginning_of_day
+    full_days = business_days_between(start_time.end_of_day + 1.second, end_time.beginning_of_day - 1.second)
 
-    qtd_completed_days = qtd_days.to_i
-    qtd_hours = qtd_days % qtd_completed_days
-    hours_to_compute = (24 * qtd_hours).round
-    hours_to_compute = 6 if hours_to_compute > 6
+    (full_days * 6) + count_day_hours(start_time, end_first_day) + count_day_hours(start_last_day, end_time) if full_days.positive?
+    count_day_hours(start_time, end_time)
+  end
 
-    (qtd_completed_days * 6) + hours_to_compute
+  def business_days_between(date1, date2)
+    business_days = 0
+    date = date2
+    while date > date1
+      business_days += 1 unless date.saturday? or date.sunday?
+      date -= 1.day
+    end
+    business_days
   end
 
   def out_of_work_time?(initial_time)
-    initial_time.hour >= 21 || initial_time.hour <= 7
+    initial_time.hour >= 20 || initial_time.hour <= 7
   end
 end

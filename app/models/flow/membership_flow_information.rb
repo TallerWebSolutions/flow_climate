@@ -35,7 +35,7 @@ module Flow
       assignment.stages_during_assignment.each do |stage|
         efforts_in_assignment << sum_efforts_in_demand_transitions(assignment, stage)
       end
-
+      puts "Effort for assignment #{assignment.id} is #{efforts_in_assignment}"
       efforts_in_assignment.flatten.sum
     end
 
