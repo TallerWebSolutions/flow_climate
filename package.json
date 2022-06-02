@@ -10,5 +10,8 @@
     "prepare": "husky install",
     "heroku-prebuild": "cd app/spa && npm install && npm run build",
     "start": "cd app/spa && npm start"
+  },
+  "engines": {
+    "node": "16.13.2"
   }
 }
