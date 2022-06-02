@@ -582,7 +582,7 @@ RSpec.describe Types::QueryType do
         query =
           %(
         query {
-          demands(projectId: #{project.id}, limit: 1, finished: false) {
+          demands(searchOptions: { projectId: #{project.id}, limit: 1, demandStatus: NOT_STARTED }) {
             numberOfBlocks
           }
         }
@@ -1008,16 +1008,16 @@ RSpec.describe Types::QueryType do
               id
             }
           }
-          demandsFinished: demands(status: FINISHED) {
+          demandsFinished: demands(status: DELIVERED_DEMANDS) {
             id
           }
           bugs: demands(type: BUG) {
             id
           }
-          bugsFinished: demands(status: FINISHED, type: BUG) {
+          bugsFinished: demands(status: DELIVERED_DEMANDS, type: BUG) {
             id
           }
-          lastDeliveries: demands(status: FINISHED, limit: 1) {
+          lastDeliveries: demands(status: DELIVERED_DEMANDS, limit: 1) {
             id
           }
           demandShortestLeadTime {

@@ -33,12 +33,8 @@ module Types
       argument :last_data_in_week, Boolean, required: false
     end
 
-    field :demands, [Types::DemandType], null: true, description: 'Demands of a project' do
-      argument :project_id, Int, required: true
-      argument :limit, Int
-      argument :finished, Boolean
-      argument :discarded, Boolean, required: false
-      argument :sort_direction, Types::Enums::SortDirection, required: false
+    field :demands, [Types::DemandType], null: true, description: 'Query for demands' do
+      argument :search_options, Types::DemandsQueryAttributes, required: true
     end
 
     field :team_members, [Types::TeamMemberType], null: true, description: 'Team Members of a Company' do
@@ -91,11 +87,26 @@ module Types
                                       project_id: project_id, team_id: team_id, from_date: from_date, until_date: until_date)
     end
 
-    def demands(project_id:, finished: false, discarded: false, limit: 10, sort_direction: 'DESC')
-      return Demand.where(project_id: project_id).where.not(end_date: nil).limit(limit).order(end_date: sort_direction) if finished
-      return Demand.where(project_id: project_id).where.not(discarded_at: nil).limit(limit).order(end_date: sort_direction) if discarded
+    def demands(search_options:)
+      demands = if search_options.project_id.blank?
+                  current_user.last_company.demands
+                else
+                  Project.find(search_options.project_id).demands
+                end
 
-      Demand.where(project_id: project_id).limit(limit).order(end_date: sort_direction)
+      demands = DemandService.instance.search_engine(
+        demands,
+        search_options.start_date,
+        search_options.end_date,
+        search_options.search_text,
+        search_options.demand_status,
+        search_options.demand_type,
+        search_options.demand_class_of_service,
+        search_options.demand_tags,
+        search_options.team_id
+      )
+
+      demands.limit(search_options.limit).order(end_date: search_options.sort_direction || 'ASC')
     end
 
     def team_members(company_id:)
