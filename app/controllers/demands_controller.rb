@@ -55,12 +55,8 @@ class DemandsController < DemandsListController
   end
 
   def index
-    @demands = @company.demands.order('end_date DESC, commitment_date DESC, created_date DESC')
-    @paged_demands = @demands.page(page_param)
-    @demands_ids = @demands.map(&:id)
-
-    assign_dates_to_query
-    assign_consolidations
+    prepend_view_path Rails.root.join('public')
+    render 'spa-build/index'
   end
 
   def synchronize_jira

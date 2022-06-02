@@ -20,6 +20,7 @@ import Statistics from "./pages/Projects/Statistics"
 import StatusReport from "./pages/Projects/StatusReport"
 import CreateProjectAditionalHours from "./pages/Projects/CreateProjectAditionalHours"
 import TasksPage from "./pages/Tasks/Tasks"
+import DemandsPage from "./pages/Demands/Demands"
 import TasksCharts from "./pages/Tasks/TasksCharts"
 import CreateTeam from "./pages/Teams/CreateTeam"
 import EditTeam from "./pages/Teams/EditTeam"
@@ -154,6 +155,10 @@ const App = () => {
             <Route
               path="/companies/:companySlug/projects"
               element={<ProjectList />}
+            />
+            <Route
+              path="/companies/:companySlug/demands"
+              element={<DemandsPage />}
             />
           </Routes>
         </BrowserRouter>
