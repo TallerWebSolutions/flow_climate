@@ -36,6 +36,8 @@ const Demands = () => {
   const tableFooter = [] as any
   const demandsCount = 20
   const initiatives = me?.currentCompany?.initiatives
+  const projects = me?.currentCompany?.projects
+  const teams = me?.currentCompany?.teams
 
   return (
     <BasicPage title={t("list.title")} breadcrumbsLinks={[]} loading={loading}>
@@ -58,19 +60,65 @@ const Demands = () => {
               </InputLabel>
               <Input type="date" {...register("endDate")} />
             </FormElement>
+            <FormElement>
+              <InputLabel htmlFor="status" sx={{ backgroundColor: "white" }}>
+                {t("list.form.status")}
+              </InputLabel>
+              <Select native {...register("status")}>
+                <option>'ALL_DEMANDS', 'All Activities'</option>
+                <option>'NOT_COMMITTED', 'Not Committed'</option>
+                <option>'WORK_IN_PROGRESS', 'Work in Progress'</option>
+                <option>'DELIVERED_DEMANDS', 'Delivered'</option>
+                <option>'NOT_STARTED', 'Not Started'</option>
+                <option>'DISCARDED_DEMANDS', 'Discarded'</option>
+                <option>'NOT_DISCARDED_DEMANDS', 'Not Discarded'</option>
+              </Select>
+            </FormElement>
             {initiatives && (
               <FormElement>
                 <InputLabel
-                  htmlFor="initiatives"
+                  htmlFor="initiative"
                   sx={{ backgroundColor: "white" }}
                 >
-                  {t("list.form.initiatives")}
+                  {t("list.form.initiative")}
                 </InputLabel>
-                <Select native {...register("initiatives")}>
+                <Select native {...register("initiative")}>
                   {initiatives.map((initiative, index) => (
                     <option key={`${initiative.id}--${index}`}>
                       {initiative.name}
                     </option>
+                  ))}
+                </Select>
+              </FormElement>
+            )}
+            {projects && (
+              <FormElement>
+                <InputLabel
+                  htmlFor="project"
+                  sx={{ backgroundColor: "white", padding: 1 }}
+                >
+                  {t("list.form.project")}
+                </InputLabel>
+                <Select native {...register("project")}>
+                  {projects.map((project, index) => (
+                    <option key={`${project.id}--${index}`}>
+                      {project.name}
+                    </option>
+                  ))}
+                </Select>
+              </FormElement>
+            )}
+            {teams && (
+              <FormElement>
+                <InputLabel
+                  htmlFor="team"
+                  sx={{ backgroundColor: "white", padding: 1 }}
+                >
+                  {t("list.form.team")}
+                </InputLabel>
+                <Select native {...register("team")}>
+                  {teams.map((team, index) => (
+                    <option key={`${team.id}--${index}`}>{team.name}</option>
                   ))}
                 </Select>
               </FormElement>

@@ -46,6 +46,14 @@ export const ME_QUERY = gql`
           id
           name
         }
+        projects {
+          id
+          name
+        }
+        teams {
+          id
+          name
+        }
       }
       fullName
       avatar {
