@@ -12,12 +12,12 @@ import { useTranslation } from "react-i18next"
 import { FieldValues, useForm } from "react-hook-form"
 import { gql, useQuery } from "@apollo/client"
 import { ReactNode, useContext, useState } from "react"
+import { useLocation } from "react-router-dom"
 
 import BasicPage from "../../components/BasicPage"
 import Table from "../../components/ui/Table"
 import { MeContext } from "../../contexts/MeContext"
 import { DemandsList } from "../../modules/demand/demand.types"
-import { formatRFC3339, parseISO } from "date-fns"
 import { formatDate } from "../../lib/date"
 
 const DEMANDS_QUERY = gql`
@@ -64,7 +64,7 @@ const DEMANDS_QUERY = gql`
 `
 
 const FormElement = ({ children }: { children: ReactNode }) => (
-  <Grid item xs={4}>
+  <Grid item xs={3}>
     <FormControl sx={{ width: "100%" }}>{children}</FormControl>
   </Grid>
 )
@@ -115,6 +115,10 @@ const Demands = () => {
   const projects = me?.currentCompany?.projects
   const teams = me?.currentCompany?.teams
   const breadcrumbsLinks = [{ name: "To" }, { name: "be" }, { name: "done" }]
+
+  const { search } = useLocation()
+  // eslint-disable-next-line
+  console.log({ search })
 
   return (
     <BasicPage
@@ -208,7 +212,7 @@ const Demands = () => {
                 </Select>
               </FormElement>
             )}
-            {projects && (
+            {!!projects?.length && (
               <FormElement>
                 <InputLabel
                   htmlFor="project"
@@ -227,7 +231,7 @@ const Demands = () => {
                 </Select>
               </FormElement>
             )}
-            {teams && (
+            {!!teams?.length && (
               <FormElement>
                 <InputLabel
                   htmlFor="team"
