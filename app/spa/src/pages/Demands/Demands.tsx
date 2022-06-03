@@ -19,13 +19,32 @@ import { MeContext } from "../../contexts/MeContext"
 import { DemandsList } from "../../modules/demand/demand.types"
 
 const DEMANDS_QUERY = gql`
-  query DemandsSearch($pageNumber: Int, $perPage: Int) {
+  query DemandsSearch(
+    $orderField: String!
+    $pageNumber: Int
+    $perPage: Int
+    $project: Int
+    $startDate: ISO8601Date
+    $endDate: ISO8601Date
+    $demandStatus: DemandStatuses
+    $initiative: Int
+    $team: Int
+    $searchText: String
+    $sortDirection: SortDirection
+  ) {
     demandsList(
       searchOptions: {
         pageNumber: $pageNumber
         perPage: $perPage
-        sortDirection: DESC
-        orderField: "end_date"
+        projectId: $project
+        startDate: $startDate
+        endDate: $endDate
+        demandStatus: $demandStatus
+        iniciativeId: $initiative
+        teamId: $team
+        searchText: $searchText
+        orderField: $orderField
+        sortDirection: $sortDirection
       }
     ) {
       demands {
@@ -53,10 +72,18 @@ type DemandsSearchDTO = {
 }
 
 const Demands = () => {
-  const [pageNumber, setPageNumber] = useState(0)
+  const [pageNumber, setPageNumber] = useState(1)
   const perPage = 10
+  const sortDirection = "DESC"
+  const orderField = "end_date"
+  const [filters, setFilters] = useState<FieldValues>({
+    perPage,
+    sortDirection,
+    orderField,
+    pageNumber,
+  })
   const { data, loading } = useQuery<DemandsSearchDTO>(DEMANDS_QUERY, {
-    variables: { pageNumber, perPage },
+    variables: filters,
   })
   const demandsCount = data?.demandsList.totalCount || 0
   const { me } = useContext(MeContext)
@@ -77,14 +104,22 @@ const Demands = () => {
       demand.endDate || "",
       demand.leadtime || 0,
     ]) || []
-  const tableFooter = ["1-7 de 36"]
   const initiatives = me?.currentCompany?.initiatives
   const projects = me?.currentCompany?.projects
   const teams = me?.currentCompany?.teams
+  const breadcrumbsLinks = [{ name: "To" }, { name: "be" }, { name: "done" }]
 
   return (
-    <BasicPage title={t("list.title")} breadcrumbsLinks={[]} loading={loading}>
-      <form>
+    <BasicPage
+      title={t("list.title")}
+      breadcrumbsLinks={breadcrumbsLinks}
+      loading={loading}
+    >
+      <form
+        onSubmit={handleSubmit((formFilters) =>
+          setFilters({ ...filters, ...formFilters })
+        )}
+      >
         <FormGroup>
           <Grid container spacing={5}>
             <FormElement>
@@ -104,17 +139,34 @@ const Demands = () => {
               <Input type="date" {...register("endDate")} />
             </FormElement>
             <FormElement>
-              <InputLabel htmlFor="status" sx={{ backgroundColor: "white" }}>
+              <InputLabel
+                htmlFor="status"
+                sx={{ backgroundColor: "white" }}
+                shrink
+              >
                 {t("list.form.status")}
               </InputLabel>
               <Select native {...register("status")}>
-                <option>'ALL_DEMANDS', 'All Activities'</option>
-                <option>'NOT_COMMITTED', 'Not Committed'</option>
-                <option>'WORK_IN_PROGRESS', 'Work in Progress'</option>
-                <option>'DELIVERED_DEMANDS', 'Delivered'</option>
-                <option>'NOT_STARTED', 'Not Started'</option>
-                <option>'DISCARDED_DEMANDS', 'Discarded'</option>
-                <option>'NOT_DISCARDED_DEMANDS', 'Not Discarded'</option>
+                <option value="">{t("list.form.status.placeholder")}</option>
+                <option value="ALL_DEMANDS">{t("list.form.status.all")}</option>
+                <option value="NOT_COMMITTED">
+                  {t("list.form.status.notCommitted")}
+                </option>
+                <option value="WORK_IN_PROGRESS">
+                  {t("list.form.status.wip")}
+                </option>
+                <option value="DELIVERED_DEMANDS">
+                  {t("list.form.status.delivered")}
+                </option>
+                <option value="NOT_STARTED">
+                  {t("list.form.status.notStarted")}
+                </option>
+                <option value="DISCARDED_DEMANDS">
+                  {t("list.form.status.discarded")}
+                </option>
+                <option value="NOT_DISCARDED_DEMANDS">
+                  {t("list.form.status.notDiscarded")}
+                </option>
               </Select>
             </FormElement>
             {initiatives && (
@@ -122,12 +174,19 @@ const Demands = () => {
                 <InputLabel
                   htmlFor="initiative"
                   sx={{ backgroundColor: "white" }}
+                  shrink
                 >
                   {t("list.form.initiative")}
                 </InputLabel>
                 <Select native {...register("initiative")}>
+                  <option value="">
+                    {t("list.form.initiative.placeholder")}
+                  </option>
                   {initiatives.map((initiative, index) => (
-                    <option key={`${initiative.id}--${index}`}>
+                    <option
+                      value={initiative.id}
+                      key={`${initiative.id}--${index}`}
+                    >
                       {initiative.name}
                     </option>
                   ))}
@@ -139,12 +198,14 @@ const Demands = () => {
                 <InputLabel
                   htmlFor="project"
                   sx={{ backgroundColor: "white", padding: 1 }}
+                  shrink
                 >
                   {t("list.form.project")}
                 </InputLabel>
                 <Select native {...register("project")}>
+                  <option value="">{t("list.form.project.placeholder")}</option>
                   {projects.map((project, index) => (
-                    <option key={`${project.id}--${index}`}>
+                    <option value={project.id} key={`${project.id}--${index}`}>
                       {project.name}
                     </option>
                   ))}
@@ -156,21 +217,22 @@ const Demands = () => {
                 <InputLabel
                   htmlFor="team"
                   sx={{ backgroundColor: "white", padding: 1 }}
+                  shrink
                 >
                   {t("list.form.team")}
                 </InputLabel>
                 <Select native {...register("team")}>
+                  <option disabled>{t("list.form.team.placeholder")}</option>
                   {teams.map((team, index) => (
-                    <option key={`${team.id}--${index}`}>{team.name}</option>
+                    <option value={team.id} key={`${team.id}--${index}`}>
+                      {team.name}
+                    </option>
                   ))}
                 </Select>
               </FormElement>
             )}
             <FormElement>
-              <Button
-                sx={{ alignSelf: "flex-start" }}
-                onClick={() => alert("To be done")}
-              >
+              <Button sx={{ alignSelf: "flex-start" }} type="submit">
                 <SearchIcon fontSize="large" color="primary" />
               </Button>
             </FormElement>
@@ -180,7 +242,6 @@ const Demands = () => {
       <Table
         title={t("list.table.title", { demandsCount })}
         headerCells={tableHeader}
-        footerCells={tableFooter}
         rows={tableRows}
         pagination={{
           count: demandsCount,
