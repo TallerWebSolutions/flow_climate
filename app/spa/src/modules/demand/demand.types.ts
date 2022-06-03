@@ -5,6 +5,7 @@ export type Demand = {
   id: string
   demandTitle?: string
   endDate: string
+  createdDate: string
   product: {
     id: string
     name: string

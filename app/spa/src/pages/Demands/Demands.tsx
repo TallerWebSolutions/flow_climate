@@ -16,8 +16,19 @@ import { ReactNode, useContext } from "react"
 import BasicPage from "../../components/BasicPage"
 import Table from "../../components/ui/Table"
 import { MeContext } from "../../contexts/MeContext"
+import { Demand } from "../../modules/demand/demand.types"
 
-// const DEMANDS_QUERY = gql``
+const DEMANDS_QUERY = gql`
+  query DemandsSearch {
+    demands(searchOptions: { limit: 10, sortDirection: DESC }) {
+      id
+      externalId
+      demandTitle
+      createdDate
+      endDate
+    }
+  }
+`
 
 const FormElement = ({ children }: { children: ReactNode }) => (
   <Grid item xs={4}>
@@ -25,15 +36,31 @@ const FormElement = ({ children }: { children: ReactNode }) => (
   </Grid>
 )
 
+type DemandsSearchDTO = {
+  demands: Demand[]
+}
+
 const Demands = () => {
-  // const { data, loading } = useQuery(DEMANDS_QUERY)
-  const loading = false
+  const { data, loading } = useQuery<DemandsSearchDTO>(DEMANDS_QUERY)
   const { me } = useContext(MeContext)
   const { t } = useTranslation("demands")
   const { register, handleSubmit } = useForm()
-  const tableHeader = [] as any
-  const tableRows = [] as any
-  const tableFooter = [] as any
+  const tableHeader = [
+    t("table.header.id"),
+    t("table.header.title"),
+    t("table.header.createdDate"),
+    t("table.header.deliveryDate"),
+    t("table.header.timeToFinish"),
+  ]
+  const tableRows =
+    data?.demands.map((demand) => [
+      demand.externalId || "",
+      demand.demandTitle || "",
+      demand.createdDate || "",
+      demand.endDate || "",
+      demand.leadtime || 0,
+    ]) || []
+  const tableFooter = ["1-7 de 36"]
   const demandsCount = 20
   const initiatives = me?.currentCompany?.initiatives
   const projects = me?.currentCompany?.projects

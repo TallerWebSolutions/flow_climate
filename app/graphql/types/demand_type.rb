@@ -7,8 +7,9 @@ module Types
     field :company, Types::CompanyType, null: false
     field :team, Types::TeamType, null: false
     field :project, Types::ProjectType, null: false
-    field :demand_title, String, null: false
+    field :demand_title, String, null: true
     field :leadtime, Float, null: true
+    field :created_date, GraphQL::Types::ISO8601DateTime, null: true
     field :end_date, GraphQL::Types::ISO8601DateTime, null: true
     field :cost_to_project, Float, null: true
     field :effort_downstream, Float, null: true
