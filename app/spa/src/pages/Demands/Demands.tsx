@@ -17,18 +17,20 @@ import BasicPage from "../../components/BasicPage"
 import Table from "../../components/ui/Table"
 import { MeContext } from "../../contexts/MeContext"
 import { DemandsList } from "../../modules/demand/demand.types"
+import { formatRFC3339, parseISO } from "date-fns"
+import { formatDate } from "../../lib/date"
 
 const DEMANDS_QUERY = gql`
   query DemandsSearch(
     $orderField: String!
     $pageNumber: Int
     $perPage: Int
-    $project: Int
+    $project: ID
     $startDate: ISO8601Date
     $endDate: ISO8601Date
     $demandStatus: DemandStatuses
-    $initiative: Int
-    $team: Int
+    $initiative: ID
+    $team: ID
     $searchText: String
     $sortDirection: SortDirection
   ) {
@@ -72,7 +74,7 @@ type DemandsSearchDTO = {
 }
 
 const Demands = () => {
-  const [pageNumber, setPageNumber] = useState(1)
+  const [pageNumber, setPageNumber] = useState(0)
   const perPage = 10
   const sortDirection = "DESC"
   const orderField = "end_date"
@@ -81,6 +83,11 @@ const Demands = () => {
     sortDirection,
     orderField,
     pageNumber,
+    startDate: "1900-01-01",
+    endDate: formatDate({
+      date: new Date().toISOString(),
+      format: "yyyy-MM-dd",
+    }),
   })
   const { data, loading } = useQuery<DemandsSearchDTO>(DEMANDS_QUERY, {
     variables: filters,
@@ -130,13 +137,21 @@ const Demands = () => {
               <InputLabel htmlFor="startDate" shrink>
                 {t("list.form.startDate")}
               </InputLabel>
-              <Input type="date" {...register("startDate")} />
+              <Input
+                type="date"
+                defaultValue={filters.startDate}
+                {...register("startDate")}
+              />
             </FormElement>
             <FormElement>
               <InputLabel htmlFor="endDate" shrink>
                 {t("list.form.endDate")}
               </InputLabel>
-              <Input type="date" {...register("endDate")} />
+              <Input
+                type="date"
+                defaultValue={filters.endDate}
+                {...register("endDate")}
+              />
             </FormElement>
             <FormElement>
               <InputLabel
@@ -169,7 +184,7 @@ const Demands = () => {
                 </option>
               </Select>
             </FormElement>
-            {initiatives && (
+            {!!initiatives?.length && (
               <FormElement>
                 <InputLabel
                   htmlFor="initiative"
@@ -222,7 +237,7 @@ const Demands = () => {
                   {t("list.form.team")}
                 </InputLabel>
                 <Select native {...register("team")}>
-                  <option disabled>{t("list.form.team.placeholder")}</option>
+                  <option value="">{t("list.form.team.placeholder")}</option>
                   {teams.map((team, index) => (
                     <option value={team.id} key={`${team.id}--${index}`}>
                       {team.name}
