@@ -12,7 +12,6 @@ import { useTranslation } from "react-i18next"
 import { FieldValues, useForm } from "react-hook-form"
 import { gql, useQuery } from "@apollo/client"
 import { ReactNode, useContext, useState } from "react"
-import { useLocation } from "react-router-dom"
 
 import BasicPage from "../../components/BasicPage"
 import Table from "../../components/ui/Table"
