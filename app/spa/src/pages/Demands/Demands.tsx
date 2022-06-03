@@ -116,7 +116,15 @@ const Demands = () => {
   const initiatives = me?.currentCompany?.initiatives
   const projects = me?.currentCompany?.projects
   const teams = me?.currentCompany?.teams
-  const breadcrumbsLinks = [{ name: "To" }, { name: "be" }, { name: "done" }]
+  const breadcrumbsLinks = [
+    {
+      name: me?.currentCompany?.name || "",
+      url: `/companies/${me?.currentCompany?.slug}`,
+    },
+    {
+      name: t("list.title"),
+    },
+  ]
 
   return (
     <BasicPage
