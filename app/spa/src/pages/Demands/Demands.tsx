@@ -23,6 +23,7 @@ import { formatDate } from "../../lib/date"
 const DEMANDS_QUERY = gql`
   query DemandsSearch(
     $orderField: String!
+    $searchText: String
     $pageNumber: Int
     $perPage: Int
     $project: ID
@@ -31,7 +32,6 @@ const DEMANDS_QUERY = gql`
     $demandStatus: DemandStatuses
     $initiative: ID
     $team: ID
-    $searchText: String
     $sortDirection: SortDirection
   ) {
     demandsList(
@@ -78,7 +78,9 @@ const Demands = () => {
   const perPage = 10
   const sortDirection = "DESC"
   const orderField = "end_date"
+  const searchText = ""
   const [filters, setFilters] = useState<FieldValues>({
+    searchText,
     perPage,
     sortDirection,
     orderField,
@@ -116,10 +118,6 @@ const Demands = () => {
   const teams = me?.currentCompany?.teams
   const breadcrumbsLinks = [{ name: "To" }, { name: "be" }, { name: "done" }]
 
-  const { search } = useLocation()
-  // eslint-disable-next-line
-  console.log({ search })
-
   return (
     <BasicPage
       title={t("list.title")}
@@ -134,8 +132,10 @@ const Demands = () => {
         <FormGroup>
           <Grid container spacing={5}>
             <FormElement>
-              <InputLabel htmlFor="search">{t("list.form.search")}</InputLabel>
-              <Input {...register("search")} />
+              <InputLabel htmlFor="searchText">
+                {t("list.form.search")}
+              </InputLabel>
+              <Input {...register("searchText")} />
             </FormElement>
             <FormElement>
               <InputLabel htmlFor="startDate" shrink>
