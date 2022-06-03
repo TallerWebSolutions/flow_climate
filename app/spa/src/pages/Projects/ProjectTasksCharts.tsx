@@ -56,7 +56,7 @@ const ProjectTasksCharts = () => {
     PROJECT_TASKS_CHARTS_QUERY,
     {
       variables: {
-        TasksProjectId: Number(projectId),
+        TasksProjectId: projectId,
         ID: Number(projectId),
       },
     }

@@ -16,7 +16,7 @@ import { ProjectPage } from "../../components/ProjectPage"
 
 const CREATE_ADITIONAL_HOURS_MUTATION = gql`
   mutation CreateAdditionalHours(
-    $projectId: Int!
+    $projectId: ID!
     $hours: Float!
     $obs: String!
     $eventDate: ISO8601Date!
@@ -48,7 +48,7 @@ const CreateProjectAditionalHours = () => {
   const handleCreateAdditionalHours = (data: FieldValues) =>
     createAdditionalHours({
       variables: {
-        projectId: Number(projectId),
+        projectId,
         hours: Number(data.hours),
         obs: data.obs,
         eventDate: data.eventDate,

@@ -21,7 +21,7 @@ import { Project } from "../../modules/project/project.types"
 const LIMIT_DEMANDS_PER_PAGE = 10
 
 const PROJECT_CHART_QUERY = gql`
-  query ProjectDemandsCharts($projectId: Int!) {
+  query ProjectDemandsCharts($projectId: ID!) {
     project(id: $projectId) {
       ...ProjectStandardFragment
       currentRiskToDeadline
@@ -158,7 +158,7 @@ const DemandsCharts = () => {
   const { projectId } = useParams()
   const { data, loading } = useQuery<ProjectChartDTO>(PROJECT_CHART_QUERY, {
     variables: {
-      projectId: Number(projectId),
+      projectId,
       limit: LIMIT_DEMANDS_PER_PAGE,
     },
   })

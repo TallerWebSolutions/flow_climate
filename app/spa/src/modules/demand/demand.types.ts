@@ -4,7 +4,7 @@ import { Project } from "../project/project.types"
 export type Demand = {
   id: string
   demandTitle?: string
-  endDate: string
+  endDate?: string
   createdDate: string
   product: {
     id: string

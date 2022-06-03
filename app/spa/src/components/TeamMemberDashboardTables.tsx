@@ -66,7 +66,7 @@ const TeamMemberDashboardTables = ({
         {demand.product?.name}
       </Link>,
       demand.externalId || "",
-      <DateLocale time date={demand.endDate} />,
+      <DateLocale time date={demand.endDate || ""} />,
       `${secondsToDays(demand.leadtime)} ${t("dashboard.days")}`,
     ]) || []
 

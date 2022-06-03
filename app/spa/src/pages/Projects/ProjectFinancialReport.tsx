@@ -8,7 +8,7 @@ import { formatDate } from "../../lib/date"
 import { useTranslation } from "react-i18next"
 
 const QUERY = gql`
-  query FinancialReportDemands($projectId: Int!) {
+  query FinancialReportDemands($projectId: ID!) {
     finishedDemands: demands(
       projectId: $projectId
       limit: 100
@@ -86,7 +86,7 @@ const ProjectFinancialReport = () => {
   const { projectId, companySlug } = useParams()
   const { data, loading } = useQuery<FinancialReportDemandsDTO>(QUERY, {
     variables: {
-      projectId: Number(projectId),
+      projectId,
     },
   })
 

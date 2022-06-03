@@ -2,7 +2,7 @@
 
 module Mutations
   class GenerateProjectCacheMutation < Mutations::BaseMutation
-    argument :project_id, String, required: true
+    argument :project_id, ID, required: true
 
     field :status_message, Types::BackgroundQueueResponses, null: false
 

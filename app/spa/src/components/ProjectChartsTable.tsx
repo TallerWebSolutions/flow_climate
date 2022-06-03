@@ -17,7 +17,7 @@ import { useTranslation } from "react-i18next"
 import { useParams } from "react-router-dom"
 import { Backdrop, CircularProgress } from "@mui/material"
 import { formatDate, secondsToDays, secondsToReadbleDate } from "../lib/date"
-import { Demand } from "../modules/demand/demand.types"
+import { DemandsList } from "../modules/demand/demand.types"
 import { Project } from "../modules/project/project.types"
 import { ReadMoreButton } from "./ReadMoreButton"
 import Table from "./ui/Table"
@@ -26,7 +26,7 @@ import { PROJECT_STANDARD_FRAGMENT } from "./ProjectPage"
 const LIMIT_DEMANDS_PER_PAGE = 10
 
 const PROJECT_CHART_QUERY = gql`
-  query ProjectCharts($projectId: Int!, $limit: Int!) {
+  query ProjectCharts($projectId: ID!, $limit: Int!) {
     project(id: $projectId) {
       ...ProjectStandardFragment
       startDate
@@ -61,20 +61,30 @@ const PROJECT_CHART_QUERY = gql`
       leadTimeP95
     }
 
-    demands(projectId: $projectId, limit: $limit, finished: true) {
-      id
-      endDate
-      product {
-        id
-        name
+    demandsList(
+      searchOptions: {
+        projectId: $projectId
+        perPage: $limit
+        demandStatus: DELIVERED_DEMANDS
+        orderField: "endDate"
+        sortDirection: DESC
       }
-      customer {
+    ) {
+      demands {
         id
-        name
+        endDate
+        product {
+          id
+          name
+        }
+        customer {
+          id
+          name
+        }
+        externalId
+        leadtime
+        numberOfBlocks
       }
-      externalId
-      leadtime
-      numberOfBlocks
     }
   }
   ${PROJECT_STANDARD_FRAGMENT}
@@ -88,7 +98,7 @@ type MountSearchLinkProps = {
 
 type ProjectChartResult = {
   project: Project
-  demands: Demand[]
+  demandsList: DemandsList
   hoursPerCoordinationStageChartData: Pick<Project, "hoursPerStageChartData">
 }
 
@@ -128,7 +138,7 @@ export const ProjectChartsTable = () => {
   const { projectId } = useParams()
   const { data, loading } = useQuery<ProjectChartDTO>(PROJECT_CHART_QUERY, {
     variables: {
-      projectId: Number(projectId),
+      projectId,
       limit: LIMIT_DEMANDS_PER_PAGE,
     },
   })
@@ -141,7 +151,7 @@ export const ProjectChartsTable = () => {
     )
 
   const project = data?.project
-  const demands = data?.demands || []
+  const demands = data?.demandsList.demands || []
 
   if (!project) return <div>Project not found</div>
 
@@ -178,10 +188,12 @@ export const ProjectChartsTable = () => {
       >
         {demand.product.name}
       </Link>,
-      formatDate({
-        date: demand.endDate,
-        format: "dd/MM/yyyy' 'HH:mm:ss",
-      }),
+      demand.endDate
+        ? formatDate({
+            date: demand.endDate,
+            format: "dd/MM/yyyy' 'HH:mm:ss",
+          })
+        : "",
       secondsToReadbleDate(demand.leadtime),
       demand.numberOfBlocks,
     ]

@@ -75,10 +75,8 @@ export const ProjectPage = ({
     }
   )
   const params = useParams()
-  const projectId = params.projectId
-  const { projectInfo, loading: queryLoading } = useProjectInfo(
-    Number(projectId)
-  )
+  const projectId = params.projectId || ""
+  const { projectInfo, loading: queryLoading } = useProjectInfo(projectId)
 
   if (!projectInfo && !queryLoading) return <strong>No project found</strong>
 

@@ -2,7 +2,7 @@
 
 module Mutations
   class CreateProjectAdditionalHoursMutation < Mutations::BaseMutation
-    argument :project_id, Int, required: true
+    argument :project_id, ID, required: true
     argument :event_date, GraphQL::Types::ISO8601Date, required: true
     argument :hours_type, Int, required: true
     argument :hours, Float, required: true

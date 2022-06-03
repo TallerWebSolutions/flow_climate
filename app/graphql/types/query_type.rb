@@ -9,7 +9,7 @@ module Types
     end
 
     field :project, Types::ProjectType, null: true, description: 'A plain project' do
-      argument :id, Int
+      argument :id, ID
     end
 
     field :team_member, Types::TeamMemberType, null: true, description: 'A plain team_member' do
@@ -29,7 +29,7 @@ module Types
     end
 
     field :project_consolidations, [Types::ProjectConsolidationType], null: true, description: 'Project consolidations' do
-      argument :project_id, Int
+      argument :project_id, ID
       argument :last_data_in_week, Boolean, required: false
     end
 
@@ -42,7 +42,7 @@ module Types
     end
 
     field :project_additional_hours, [Types::ProjectAdditionalHourType], null: true, description: 'A list of project additional hours' do
-      argument :project_id, Int, required: true
+      argument :project_id, ID, required: true
     end
 
     field :me, Types::UserType, null: false
