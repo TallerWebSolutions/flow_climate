@@ -1,0 +1,35 @@
+{
+  "table": {
+    "header": {
+      "id": "ID",
+      "title": "Title",
+      "createdDate": "Creation date",
+      "deliveryDate": "Delivery date",
+      "timeToFinish": "Time to finish"
+    }
+  },
+  "list": {
+    "title": "Activities",
+    "form": {
+      "common": {
+        "placeholder": "Select..."
+      },
+      "search": "Search",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "status": {
+        "title": "Status",
+        "all": "All",
+        "notCommitted": "Not committed",
+        "wip": "In progress",
+        "delivered": "Delivered",
+        "notStarted": "Not started",
+        "discarded": "Discarded",
+        "notDiscarded": "Not discarded"
+      },
+      "initiative": "Initiative",
+      "project": "Project",
+      "team": "Team"
+    }
+  }
+}

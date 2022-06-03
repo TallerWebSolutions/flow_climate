@@ -163,10 +163,10 @@ const Demands = () => {
                 sx={{ backgroundColor: "white" }}
                 shrink
               >
-                {t("list.form.status")}
+                {t("list.form.status.title")}
               </InputLabel>
               <Select native {...register("status")}>
-                <option value="">{t("list.form.status.placeholder")}</option>
+                <option value="">{t("list.form.common.placeholder")}</option>
                 <option value="ALL_DEMANDS">{t("list.form.status.all")}</option>
                 <option value="NOT_COMMITTED">
                   {t("list.form.status.notCommitted")}
@@ -198,9 +198,7 @@ const Demands = () => {
                   {t("list.form.initiative")}
                 </InputLabel>
                 <Select native {...register("initiative")}>
-                  <option value="">
-                    {t("list.form.initiative.placeholder")}
-                  </option>
+                  <option value="">{t("list.form.common.placeholder")}</option>
                   {initiatives.map((initiative, index) => (
                     <option
                       value={initiative.id}
@@ -222,7 +220,7 @@ const Demands = () => {
                   {t("list.form.project")}
                 </InputLabel>
                 <Select native {...register("project")}>
-                  <option value="">{t("list.form.project.placeholder")}</option>
+                  <option value="">{t("list.form.common.placeholder")}</option>
                   {projects.map((project, index) => (
                     <option value={project.id} key={`${project.id}--${index}`}>
                       {project.name}
@@ -241,7 +239,7 @@ const Demands = () => {
                   {t("list.form.team")}
                 </InputLabel>
                 <Select native {...register("team")}>
-                  <option value="">{t("list.form.team.placeholder")}</option>
+                  <option value="">{t("list.form.common.placeholder")}</option>
                   {teams.map((team, index) => (
                     <option value={team.id} key={`${team.id}--${index}`}>
                       {team.name}
@@ -259,7 +257,7 @@ const Demands = () => {
         </FormGroup>
       </form>
       <Table
-        title={t("list.table.title", { demandsCount })}
+        title={t("list.title", { demandsCount })}
         headerCells={tableHeader}
         rows={tableRows}
         pagination={{

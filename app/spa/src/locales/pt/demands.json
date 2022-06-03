@@ -1,1 +1,35 @@
-{}
+{
+  "table": {
+    "header": {
+      "id": "ID",
+      "title": "Título",
+      "createdDate": "Data de criação",
+      "deliveryDate": "Data de entrega",
+      "timeToFinish": "Tempo para concluir"
+    }
+  },
+  "list": {
+    "title": "Demandas",
+    "form": {
+      "common": {
+        "placeholder": "Selecione..."
+      },
+      "search": "Buscar",
+      "startDate": "Data inicial",
+      "endDate": "Data final",
+      "status": {
+        "title": "Status",
+        "all": "Todos",
+        "notCommitted": "Não comprometida",
+        "wip": "Em progresso",
+        "delivered": "Entregues",
+        "notStarted": "Não iniciadas",
+        "discarded": "Descartadas",
+        "notDiscarded": "Não descartadas"
+      },
+      "initiative": "Iniciativa",
+      "project": "Projeto",
+      "team": "Time"
+    }
+  }
+}
