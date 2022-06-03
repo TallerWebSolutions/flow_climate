@@ -578,14 +578,14 @@ RSpec.describe Types::QueryType do
 
     context 'with project id' do
       it 'returns the demands' do
-        demand = Fabricate :demand, company: company, project: project, team: team
+        demand = Fabricate :demand, company: company, project: project, team: team, end_date: 1.day.ago
         Fabricate :demand_block, demand: demand
         Fabricate :demand, company: company, project: other_project, team: team
 
         query =
           %(
         query {
-          demandsList(searchOptions: { projectId: #{project.id}, perPage: 1, demandStatus: NOT_STARTED, orderField: "end_date" }) {
+          demandsList(searchOptions: { projectId: #{project.id}, perPage: 1, demandStatus: DELIVERED_DEMANDS, orderField: "end_date" }) {
             demands {
               numberOfBlocks
             }
@@ -613,7 +613,7 @@ RSpec.describe Types::QueryType do
         query =
           %(
         query {
-          demandsList(searchOptions: { perPage: 2, demandStatus: NOT_STARTED, orderField: "end_date" }) {
+          demandsList(searchOptions: { perPage: 2, demandStatus: DELIVERED_DEMANDS, orderField: "end_date" }) {
             totalCount
             demands {
               id

@@ -271,13 +271,13 @@ RSpec.describe DemandsRepository, type: :repository do
 
         expect(described_class.instance.demand_state_query(Demand.all, '')).to eq Demand.all
         expect(described_class.instance.demand_state_query(Demand.none, '')).to eq []
-        expect(described_class.instance.demand_state_query(Demand.all, 'wip')).to match_array [second_demand, sixth_demand]
-        expect(described_class.instance.demand_state_query(Demand.all, 'delivered')).to match_array [third_demand, fourth_demand, seventh_demand, eigth_demand, ninth_demand]
-        expect(described_class.instance.demand_state_query(Demand.all, 'not_committed')).to match_array [first_demand, fifth_demand]
-        expect(described_class.instance.demand_state_query(Demand.all, %w[not_committed wip])).to match_array [first_demand, fifth_demand, second_demand, sixth_demand]
-        expect(described_class.instance.demand_state_query(Demand.all, ['discarded'])).to eq [ninth_demand]
-        expect(described_class.instance.demand_state_query(Demand.all, %w[discarded delivered])).to eq [ninth_demand]
-        expect(described_class.instance.demand_state_query(Demand.all, %w[not_discarded delivered])).to match_array [third_demand, fourth_demand, seventh_demand, eigth_demand]
+        expect(described_class.instance.demand_state_query(Demand.all, 'WORK_IN_PROGRESS')).to match_array [second_demand, sixth_demand]
+        expect(described_class.instance.demand_state_query(Demand.all, 'DELIVERED_DEMANDS')).to match_array [third_demand, fourth_demand, seventh_demand, eigth_demand, ninth_demand]
+        expect(described_class.instance.demand_state_query(Demand.all, 'NOT_COMMITTED')).to match_array [first_demand, fifth_demand]
+        expect(described_class.instance.demand_state_query(Demand.all, %w[NOT_COMMITTED WORK_IN_PROGRESS])).to match_array [first_demand, fifth_demand, second_demand, sixth_demand]
+        expect(described_class.instance.demand_state_query(Demand.all, ['DISCARDED_DEMANDS'])).to eq [ninth_demand]
+        expect(described_class.instance.demand_state_query(Demand.all, %w[DISCARDED_DEMANDS DELIVERED_DEMANDS])).to eq [ninth_demand]
+        expect(described_class.instance.demand_state_query(Demand.all, %w[NOT_DISCARDED_DEMANDS DELIVERED_DEMANDS])).to match_array [third_demand, fourth_demand, seventh_demand, eigth_demand]
       end
     end
   end

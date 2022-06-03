@@ -30,6 +30,9 @@
       "initiative": "Iniciativa",
       "project": "Projeto",
       "team": "Time"
+    },
+    "table": {
+      "title": "{{count}} Demandas"
     }
   }
 }

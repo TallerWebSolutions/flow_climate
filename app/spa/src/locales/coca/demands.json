@@ -30,6 +30,9 @@
       "initiative": "Initiative",
       "project": "Project",
       "team": "Team"
+    },
+    "table": {
+      "title": "{{count}} Activities"
     }
   }
 }

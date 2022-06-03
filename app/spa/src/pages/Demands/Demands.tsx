@@ -264,7 +264,7 @@ const Demands = () => {
         </FormGroup>
       </form>
       <Table
-        title={t("list.title", { demandsCount })}
+        title={t("list.table.title", { count: demandsCount })}
         headerCells={tableHeader}
         rows={tableRows}
         pagination={{
