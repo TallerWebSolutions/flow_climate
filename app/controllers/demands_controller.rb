@@ -5,7 +5,7 @@ class DemandsController < DemandsListController
 
   before_action :assign_company
   before_action :assign_demand, only: %i[edit update show synchronize_jira synchronize_azure destroy destroy_physically score_research]
-  before_action :assign_project, except: %i[demands_csv search_demands show destroy destroy_physically score_research index demands_list_by_ids demands_charts synchronize_jira synchronize_azure]
+  before_action :assign_project, except: %i[demands_csv show destroy destroy_physically score_research index demands_list_by_ids demands_charts synchronize_jira synchronize_azure]
 
   def new
     @demand = Demand.new(project: @project)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types
   class DemandsListType < Types::BaseObject
     field :total_count, Int, null: false

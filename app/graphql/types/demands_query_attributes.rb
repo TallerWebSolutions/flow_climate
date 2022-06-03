@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types
   class DemandsQueryAttributes < Types::BaseInputObject
     description 'Attributes to query demands'

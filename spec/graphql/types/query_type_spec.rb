@@ -568,16 +568,19 @@ RSpec.describe Types::QueryType do
     end
   end
 
-  describe '#demands' do
-    context 'with blocks' do
+  describe '#demands_list' do
+    let(:company) { Fabricate :company }
+    let(:team) { Fabricate :team, company: company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:product) { Fabricate :product, company: company, customer: customer }
+    let(:project) { Fabricate :project, company: company, customers: [customer], products: [product], team: team, status: :executing, start_date: 10.days.ago, end_date: 5.days.from_now, max_work_in_progress: 4 }
+    let(:other_project) { Fabricate :project, company: company, customers: [customer], products: [product], team: team, status: :executing, start_date: 10.days.ago, end_date: 5.days.from_now, max_work_in_progress: 4 }
+
+    context 'with project id' do
       it 'returns the demands' do
-        company = Fabricate :company
-        team = Fabricate :team, company: company
-        customer = Fabricate :customer, company: company
-        product = Fabricate :product, company: company, customer: customer
-        project = Fabricate :project, company: company, customers: [customer], products: [product], team: team, status: :executing, start_date: 10.days.ago, end_date: 5.days.from_now, max_work_in_progress: 4
         demand = Fabricate :demand, company: company, project: project, team: team
         Fabricate :demand_block, demand: demand
+        Fabricate :demand, company: company, project: other_project, team: team
 
         query =
           %(
@@ -599,6 +602,35 @@ RSpec.describe Types::QueryType do
         result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
 
         expect(result.dig('data', 'demandsList')).to eq({ 'demands' => [{ 'numberOfBlocks' => 1 }] })
+      end
+    end
+
+    context 'with no project id' do
+      it 'returns the demands in the company' do
+        demand = Fabricate :demand, company: company, project: project, team: team, end_date: 2.days.ago
+        other_demand = Fabricate :demand, company: company, project: other_project, team: team, end_date: 1.day.ago
+
+        query =
+          %(
+        query {
+          demandsList(searchOptions: { perPage: 2, demandStatus: NOT_STARTED, orderField: "end_date" }) {
+            totalCount
+            demands {
+              id
+            }
+          }
+        }
+      )
+
+        user = Fabricate :user, last_company_id: company.id
+
+        context = {
+          current_user: user
+        }
+
+        result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
+
+        expect(result.dig('data', 'demandsList')).to match_array({ 'totalCount' => 2, 'demands' => [{ 'id' => other_demand.id.to_s }, 'id' => demand.id.to_s] })
       end
     end
   end
