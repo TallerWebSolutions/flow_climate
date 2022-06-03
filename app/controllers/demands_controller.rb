@@ -24,7 +24,7 @@ class DemandsController < DemandsListController
     build_demands_list
     assign_consolidations
 
-    respond_to { |format| format.js { render 'demands/search_demands' } }
+    redirect_to company_demands_path
   end
 
   def edit
@@ -84,19 +84,6 @@ class DemandsController < DemandsListController
       demands_in_csv.each { |demand| csv << demand.csv_array }
     end
     respond_to { |format| format.csv { send_data demands_csv, filename: "demands-#{Time.zone.now}.csv" } }
-  end
-
-  def search_demands
-    assign_dates_to_query
-
-    @demands = query_demands
-    @demands = @demands.order(params[:order_by] => order_direction) if params[:order_by].present?
-
-    @paged_demands = @demands.page(page_param)
-
-    assign_consolidations
-
-    render 'demands/index'
   end
 
   def destroy_physically
@@ -203,12 +190,6 @@ class DemandsController < DemandsListController
 
   def object_type
     @object_type ||= params[:object_type] || 'Company'
-  end
-
-  def order_direction
-    return 'asc' if params[:order_direction].blank?
-
-    params[:order_direction]
   end
 
   def build_demands_objects
