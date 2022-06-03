@@ -11,21 +11,33 @@ import SearchIcon from "@mui/icons-material/Search"
 import { useTranslation } from "react-i18next"
 import { FieldValues, useForm } from "react-hook-form"
 import { gql, useQuery } from "@apollo/client"
-import { ReactNode, useContext } from "react"
+import { ReactNode, useContext, useState } from "react"
 
 import BasicPage from "../../components/BasicPage"
 import Table from "../../components/ui/Table"
 import { MeContext } from "../../contexts/MeContext"
-import { Demand } from "../../modules/demand/demand.types"
+import { DemandsList } from "../../modules/demand/demand.types"
 
 const DEMANDS_QUERY = gql`
-  query DemandsSearch {
-    demands(searchOptions: { limit: 10, sortDirection: DESC }) {
-      id
-      externalId
-      demandTitle
-      createdDate
-      endDate
+  query DemandsSearch($pageNumber: Int, $perPage: Int) {
+    demandsList(
+      searchOptions: {
+        pageNumber: $pageNumber
+        perPage: $perPage
+        sortDirection: DESC
+        orderField: "end_date"
+      }
+    ) {
+      demands {
+        id
+        externalId
+        demandTitle
+        createdDate
+        endDate
+      }
+      lastPage
+      totalCount
+      totalPages
     }
   }
 `
@@ -37,11 +49,16 @@ const FormElement = ({ children }: { children: ReactNode }) => (
 )
 
 type DemandsSearchDTO = {
-  demands: Demand[]
+  demandsList: DemandsList
 }
 
 const Demands = () => {
-  const { data, loading } = useQuery<DemandsSearchDTO>(DEMANDS_QUERY)
+  const [pageNumber, setPageNumber] = useState(0)
+  const perPage = 10
+  const { data, loading } = useQuery<DemandsSearchDTO>(DEMANDS_QUERY, {
+    variables: { pageNumber, perPage },
+  })
+  const demandsCount = data?.demandsList.totalCount || 0
   const { me } = useContext(MeContext)
   const { t } = useTranslation("demands")
   const { register, handleSubmit } = useForm()
@@ -53,7 +70,7 @@ const Demands = () => {
     t("table.header.timeToFinish"),
   ]
   const tableRows =
-    data?.demands.map((demand) => [
+    data?.demandsList.demands.map((demand) => [
       demand.externalId || "",
       demand.demandTitle || "",
       demand.createdDate || "",
@@ -61,7 +78,6 @@ const Demands = () => {
       demand.leadtime || 0,
     ]) || []
   const tableFooter = ["1-7 de 36"]
-  const demandsCount = 20
   const initiatives = me?.currentCompany?.initiatives
   const projects = me?.currentCompany?.projects
   const teams = me?.currentCompany?.teams
@@ -166,6 +182,12 @@ const Demands = () => {
         headerCells={tableHeader}
         footerCells={tableFooter}
         rows={tableRows}
+        pagination={{
+          count: demandsCount,
+          rowsPerPage: perPage,
+          page: pageNumber,
+          onPageChange: (_, newPage: number) => setPageNumber(newPage),
+        }}
       />
     </BasicPage>
   )

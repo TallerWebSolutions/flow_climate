@@ -21,6 +21,13 @@ export type Demand = {
   company?: Company
 }
 
+export type DemandsList = {
+  demands: Demand[]
+  lastPage: boolean
+  totalCount: number
+  totalPages: number
+}
+
 export type DemandBlock = {
   id: string
   demand: Demand
