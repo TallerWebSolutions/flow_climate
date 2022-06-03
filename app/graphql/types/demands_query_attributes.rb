@@ -3,8 +3,11 @@ module Types
     description 'Attributes to query demands'
 
     argument :project_id, Int, required: false
-    argument :limit, Int
+
+    argument :order_field, String, required: true
     argument :sort_direction, Types::Enums::SortDirection, required: false
+    argument :per_page, Int, required: false
+    argument :page_number, Int, required: false
 
     argument :start_date, GraphQL::Types::ISO8601Date, required: false
     argument :end_date, GraphQL::Types::ISO8601Date, required: false

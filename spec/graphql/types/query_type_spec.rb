@@ -582,8 +582,10 @@ RSpec.describe Types::QueryType do
         query =
           %(
         query {
-          demands(searchOptions: { projectId: #{project.id}, limit: 1, demandStatus: NOT_STARTED }) {
-            numberOfBlocks
+          demandsList(searchOptions: { projectId: #{project.id}, perPage: 1, demandStatus: NOT_STARTED, orderField: "end_date" }) {
+            demands {
+              numberOfBlocks
+            }
           }
         }
       )
@@ -596,9 +598,7 @@ RSpec.describe Types::QueryType do
 
         result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
 
-        expect(result.dig('data', 'demands')).to eq([{
-                                                      'numberOfBlocks' => 1
-                                                    }])
+        expect(result.dig('data', 'demandsList')).to eq({ 'demands' => [{ 'numberOfBlocks' => 1 }] })
       end
     end
   end

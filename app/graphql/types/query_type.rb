@@ -33,7 +33,7 @@ module Types
       argument :last_data_in_week, Boolean, required: false
     end
 
-    field :demands, [Types::DemandType], null: true, description: 'Query for demands' do
+    field :demandsList, Types::DemandsListType, null: true, description: 'Query for demands' do
       argument :search_options, Types::DemandsQueryAttributes, required: true
     end
 
@@ -87,7 +87,7 @@ module Types
                                       project_id: project_id, team_id: team_id, from_date: from_date, until_date: until_date)
     end
 
-    def demands(search_options:)
+    def demandsList(search_options:)
       demands = if search_options.project_id.blank?
                   current_user.last_company.demands
                 else
@@ -106,7 +106,10 @@ module Types
         search_options.team_id
       )
 
-      demands.limit(search_options.limit).order(end_date: search_options.sort_direction || 'ASC')
+      demands = demands.order(end_date: search_options.sort_direction || 'ASC')
+      demands_paged = demands.page(search_options.page_number).per(search_options.per_page)
+
+      { 'total_count' => demands.count, 'last_page' => demands_paged.last_page?, 'total_pages' => demands_paged.total_pages, 'demands' => demands_paged }
     end
 
     def team_members(company_id:)
