@@ -77,21 +77,21 @@ class DemandsRepository
   # rubocop:disable Metrics/PerceivedComplexity
   # rubocop:disable Metrics/AbcSize
   def demand_state_query(demands, demand_state)
-    return demands if demand_state.blank? || demand_state.include?('all_demands')
+    return demands if demand_state.blank? || demand_state.include?('ALL_DEMANDS')
 
-    filtered_demands = if demand_state.include?('discarded')
+    filtered_demands = if demand_state.include?('DISCARDED_DEMANDS')
                          demands.discarded
-                       elsif demand_state.include?('not_discarded')
+                       elsif demand_state.include?('NOT_DISCARDED_DEMANDS')
                          demands.kept
                        else
                          demands
                        end
 
     filtered_demands_ids = []
-    filtered_demands_ids << filtered_demands.not_started(Time.zone.now).map(&:id) if demand_state.include?('not_started')
-    filtered_demands_ids << filtered_demands.not_committed(Time.zone.now).map(&:id) if demand_state.include?('not_committed')
-    filtered_demands_ids << filtered_demands.in_wip(Time.zone.now).map(&:id) if demand_state.include?('wip')
-    filtered_demands_ids << filtered_demands.finished_until_date(Time.zone.now).map(&:id) if demand_state.include?('delivered')
+    filtered_demands_ids << filtered_demands.not_started(Time.zone.now).map(&:id) if demand_state.include?('NOT_STARTED')
+    filtered_demands_ids << filtered_demands.not_committed(Time.zone.now).map(&:id) if demand_state.include?('NOT_COMMITTED')
+    filtered_demands_ids << filtered_demands.in_wip(Time.zone.now).map(&:id) if demand_state.include?('WORK_IN_PROGRESS')
+    filtered_demands_ids << filtered_demands.finished_until_date(Time.zone.now).map(&:id) if demand_state.include?('DELIVERED_DEMANDS')
 
     return filtered_demands if filtered_demands_ids.blank?
 
