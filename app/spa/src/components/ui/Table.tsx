@@ -20,7 +20,7 @@ type Row = Cell[]
 
 type TableProps = {
   rows: Row[]
-  title?: string
+  title?: string | ReactElement
   headerCells?: Cell[]
   footerCells?: Cell[]
   pagination?: TablePaginationProps
@@ -40,7 +40,7 @@ const Table = ({
           color="primary"
           variant="h6"
           component="h6"
-          sx={{ padding: 2 }}
+          sx={{ padding: 2, display: "flex", justifyContent: "space-between" }}
         >
           {title}
         </Typography>

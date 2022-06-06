@@ -150,6 +150,20 @@ const Demands = () => {
     },
   ]
 
+  const TableTitle = () => (
+    <>
+      {t("list.table.title", { count: demandsCount })}{" "}
+      <Button
+        variant="contained"
+        sx={{ a: { color: "white", textDecoration: "none" } }}
+      >
+        <CSVLink data={csvRows} headers={tableHeader}>
+          {t("list.form.downloadCsv")}
+        </CSVLink>
+      </Button>
+    </>
+  )
+
   return (
     <BasicPage
       title={t("list.title")}
@@ -288,16 +302,8 @@ const Demands = () => {
           </Grid>
         </FormGroup>
       </form>
-      <Button
-        variant="contained"
-        sx={{ a: { color: "white", textDecoration: "none" } }}
-      >
-        <CSVLink data={csvRows} headers={tableHeader}>
-          {t("list.form.downloadCsv")}
-        </CSVLink>
-      </Button>
       <Table
-        title={t("list.table.title", { count: demandsCount })}
+        title={<TableTitle />}
         headerCells={tableHeader}
         rows={tableRows}
         pagination={{
