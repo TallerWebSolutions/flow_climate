@@ -40,7 +40,7 @@ const assignCardTypeByRisk = (risk: number) => {
 }
 
 const GENERATE_PROJECT_MUTATION = gql`
-  mutation GenerateProjectCache($projectId: String!) {
+  mutation GenerateProjectCache($projectId: ID!) {
     generateProjectCache(projectId: $projectId) {
       statusMessage
     }
