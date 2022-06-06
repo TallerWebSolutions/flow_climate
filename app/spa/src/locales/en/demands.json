@@ -29,7 +29,8 @@
       },
       "initiative": "Initiative",
       "project": "Project",
-      "team": "Team"
+      "team": "Team",
+      "downloadCsv": "Download CSV"
     },
     "table": {
       "title": "{{count}} Demands"
