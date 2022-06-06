@@ -12,6 +12,7 @@ import { useTranslation } from "react-i18next"
 import { useParams } from "react-router-dom"
 import { BarChart } from "../../components/charts/BarChart"
 import ChartLineBox from "../../components/charts/ChartLineBox"
+import { normalizeCfdData } from "../../components/charts/LineChart"
 import { ScatterChart } from "../../components/charts/ScatterChart"
 import LineChartTooltip from "../../components/charts/tooltips/LineChartTooltip"
 import { PROJECT_STANDARD_FRAGMENT } from "../../components/ProjectPage"
@@ -218,7 +219,7 @@ const DemandsCharts = () => {
   )
 
   const cfdXaxis = cumulativeFlowChartData?.xAxis || []
-  const cfdYaxis = cumulativeFlowChartData?.yAxis || []
+  const cfdYaxis = cumulativeFlowChartData?.yAxis.reverse() || []
   const projectStages = cfdYaxis.map((item) => item.name)
   const projectCumulativeFlowChartData = projectStages?.map(
     (stage, stageIndex) => {
@@ -229,7 +230,7 @@ const DemandsCharts = () => {
           const previousStageY = cfdYaxis[stageIndex - 1]?.data[index] || 0
           return {
             x,
-            y: Math.abs(currentStageY - previousStageY),
+            y: currentStageY,
           }
         }),
       }
@@ -695,7 +696,7 @@ const DemandsCharts = () => {
           title={t("project_charts.cumulative_flow_chart", {
             projectName: project?.name || "no project",
           })}
-          data={projectCumulativeFlowChartData}
+          data={normalizeCfdData(projectCumulativeFlowChartData)}
           axisLeftLegend={t("project_charts.cumulative_flow_y_label")}
           props={{
             yScale: {
