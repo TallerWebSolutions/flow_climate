@@ -17,7 +17,7 @@ import { CSVLink } from "react-csv"
 import BasicPage from "../../components/BasicPage"
 import Table from "../../components/ui/Table"
 import { MeContext } from "../../contexts/MeContext"
-import { DemandsList } from "../../modules/demand/demand.types"
+import { Demand, DemandsList } from "../../modules/demand/demand.types"
 import { formatDate } from "../../lib/date"
 
 const DEMANDS_QUERY = gql`
@@ -34,7 +34,7 @@ const DEMANDS_QUERY = gql`
     $team: ID
     $sortDirection: SortDirection
   ) {
-    demandsList(
+    demandsTableData: demandsList(
       searchOptions: {
         pageNumber: $pageNumber
         perPage: $perPage
@@ -49,17 +49,36 @@ const DEMANDS_QUERY = gql`
         sortDirection: $sortDirection
       }
     ) {
-      demands {
-        id
-        externalId
-        demandTitle
-        createdDate
-        endDate
-      }
-      lastPage
-      totalCount
-      totalPages
+      ...demandsList
     }
+    demandsCsvData: demandsList(
+      searchOptions: {
+        projectId: $project
+        startDate: $startDate
+        endDate: $endDate
+        demandStatus: $demandStatus
+        iniciativeId: $initiative
+        teamId: $team
+        searchText: $searchText
+        orderField: $orderField
+        sortDirection: $sortDirection
+      }
+    ) {
+      ...demandsList
+    }
+  }
+
+  fragment demandsList on DemandsList {
+    demands {
+      id
+      externalId
+      demandTitle
+      createdDate
+      endDate
+    }
+    lastPage
+    totalCount
+    totalPages
   }
 `
 
@@ -70,7 +89,8 @@ const FormElement = ({ children }: { children: ReactNode }) => (
 )
 
 type DemandsSearchDTO = {
-  demandsList: DemandsList
+  demandsTableData: DemandsList
+  demandsCsvData: DemandsList
 }
 
 const Demands = () => {
@@ -94,7 +114,7 @@ const Demands = () => {
   const { data, loading } = useQuery<DemandsSearchDTO>(DEMANDS_QUERY, {
     variables: filters,
   })
-  const demandsCount = data?.demandsList.totalCount || 0
+  const demandsCount = data?.demandsTableData.totalCount || 0
   const { me } = useContext(MeContext)
   const { t } = useTranslation("demands")
   const { register, handleSubmit } = useForm()
@@ -105,14 +125,18 @@ const Demands = () => {
     t("table.header.deliveryDate"),
     t("table.header.timeToFinish"),
   ]
-  const tableRows =
-    data?.demandsList.demands.map((demand) => [
-      demand.externalId || "",
-      demand.demandTitle || "",
-      demand.createdDate || "",
-      demand.endDate || "",
-      demand.leadtime || 0,
-    ]) || []
+  const normalizeTableRow = (demand: Demand) => [
+    demand.externalId || "",
+    demand.demandTitle || "",
+    demand.createdDate || "",
+    demand.endDate || "",
+    demand.leadtime || 0,
+  ]
+
+  const tableRows = data?.demandsTableData.demands.map(normalizeTableRow) || []
+
+  const csvRows = data?.demandsCsvData.demands.map(normalizeTableRow) || []
+
   const initiatives = me?.currentCompany?.initiatives
   const projects = me?.currentCompany?.projects
   const teams = me?.currentCompany?.teams
@@ -167,13 +191,13 @@ const Demands = () => {
             </FormElement>
             <FormElement>
               <InputLabel
-                htmlFor="status"
+                htmlFor="demandStatus"
                 sx={{ backgroundColor: "white" }}
                 shrink
               >
                 {t("list.form.status.title")}
               </InputLabel>
-              <Select native {...register("status")}>
+              <Select native {...register("demandStatus")}>
                 <option value="">{t("list.form.common.placeholder")}</option>
                 <option value="ALL_DEMANDS">{t("list.form.status.all")}</option>
                 <option value="NOT_COMMITTED">
@@ -268,7 +292,7 @@ const Demands = () => {
         variant="contained"
         sx={{ a: { color: "white", textDecoration: "none" } }}
       >
-        <CSVLink data={tableRows} headers={tableHeader}>
+        <CSVLink data={csvRows} headers={tableHeader}>
           {t("list.form.downloadCsv")}
         </CSVLink>
       </Button>

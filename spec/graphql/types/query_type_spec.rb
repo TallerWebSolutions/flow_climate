@@ -633,6 +633,35 @@ RSpec.describe Types::QueryType do
         expect(result.dig('data', 'demandsList')).to match_array({ 'totalCount' => 2, 'demands' => [{ 'id' => other_demand.id.to_s }, 'id' => demand.id.to_s] })
       end
     end
+
+    context 'with no pagination' do
+      it 'returns the demands in the company with no pagination' do
+        demand = Fabricate :demand, company: company, project: project, team: team, end_date: 2.days.ago
+        other_demand = Fabricate :demand, company: company, project: other_project, team: team, end_date: 1.day.ago
+
+        query =
+          %(
+        query {
+          demandsList(searchOptions: { demandStatus: DELIVERED_DEMANDS, orderField: "end_date" }) {
+            totalCount
+            demands {
+              id
+            }
+          }
+        }
+      )
+
+        user = Fabricate :user, last_company_id: company.id
+
+        context = {
+          current_user: user
+        }
+
+        result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
+
+        expect(result.dig('data', 'demandsList')).to match_array({ 'totalCount' => 2, 'demands' => [{ 'id' => other_demand.id.to_s }, 'id' => demand.id.to_s] })
+      end
+    end
   end
 
   describe '#projects' do

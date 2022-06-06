@@ -90,10 +90,14 @@ module Types
     def demands_list(search_options:)
       demands = base_demands(search_options)
 
-      demands = demands.order(end_date: search_options.sort_direction || 'DESC')
-      demands_paged = demands.page(search_options.page_number).per(search_options.per_page)
+      demands = demands.order(end_date: search_options.sort_direction || 'DESC', created_date: search_options.sort_direction || 'DESC')
 
-      { 'total_count' => demands.count, 'last_page' => demands_paged.last_page?, 'total_pages' => demands_paged.total_pages, 'demands' => demands_paged }
+      if search_options.per_page.present? && search_options.page_number.present?
+        demands_paged = demands.page(search_options.page_number).per(search_options.per_page)
+        { 'total_count' => demands.count, 'last_page' => demands_paged.last_page?, 'total_pages' => demands_paged.total_pages, 'demands' => demands_paged }
+      else
+        { 'total_count' => demands.count, 'last_page' => true, 'total_pages' => 1, 'demands' => demands }
+      end
     end
 
     def team_members(company_id:)
