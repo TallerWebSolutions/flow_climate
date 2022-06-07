@@ -23,7 +23,6 @@ import { KeyValueData, Project } from "../../modules/project/project.types"
 import TasksPage from "../../components/TasksPage"
 import { ChartAxisData } from "../../modules/project/project.types"
 import LineChartTooltip from "../../components/charts/tooltips/LineChartTooltip"
-import { ChartBox } from "../../components/charts/ChartBox"
 
 const TASKS_CHARTS_QUERY = gql`
   query TasksCharts(
@@ -272,28 +271,10 @@ const TaskCharts = () => {
         }}
       >
         {completionTimeChartData && (
-          <ChartBox title={t("charts.control_completion_time_title")}>
-            <ScatterChart
-              axisLeftLegend={t("charts.days")}
-              data={keyValueToAxisData(completionTimeChartData)}
-              markers={[
-                deliveredLeadTimeP65Marker,
-                deliveredLeadTimeP80Marker,
-                deliveredLeadTimeP95Marker,
-              ]}
-              onClick={({ xValue }) => {
-                const taskExternalID = Number(xValue)
-                const taskID = getTaskIDByExternalID(taskExternalID)
-                openWindow(`/companies/${companySlug}/tasks/${taskID?.id}`)
-              }}
-            />
-          </ChartBox>
-        )}
-
-        <ChartBox title={t("charts.current_partial_completion_title")}>
           <ScatterChart
+            title={t("charts.control_completion_time_title")}
             axisLeftLegend={t("charts.days")}
-            data={partialCompletionTimeChartData}
+            data={keyValueToAxisData(completionTimeChartData)}
             markers={[
               deliveredLeadTimeP65Marker,
               deliveredLeadTimeP80Marker,
@@ -305,92 +286,105 @@ const TaskCharts = () => {
               openWindow(`/companies/${companySlug}/tasks/${taskID?.id}`)
             }}
           />
-        </ChartBox>
+        )}
 
-        <ChartBox title={t("charts.flow_data_title")}>
-          <BarChart
-            axisLeftLegend={t("charts.tasks")}
-            data={flowChartData}
-            keys={flowChartGroupNames}
-            axisBottomLegend={t("charts.flow_data_period_legend")}
-            indexBy="key"
-            groupMode="grouped"
-            tooltip={(data: BarData) => {
-              return (
-                <BarChartTooltip
-                  xLabel={t("charts.flow_data_tooltip_x_legend")}
-                  data={data}
-                />
-              )
-            }}
-          />
-        </ChartBox>
+        <ScatterChart
+          title={t("charts.current_partial_completion_title")}
+          axisLeftLegend={t("charts.days")}
+          data={partialCompletionTimeChartData}
+          markers={[
+            deliveredLeadTimeP65Marker,
+            deliveredLeadTimeP80Marker,
+            deliveredLeadTimeP95Marker,
+          ]}
+          onClick={({ xValue }) => {
+            const taskExternalID = Number(xValue)
+            const taskID = getTaskIDByExternalID(taskExternalID)
+            openWindow(`/companies/${companySlug}/tasks/${taskID?.id}`)
+          }}
+        />
+
+        <BarChart
+          title={t("charts.flow_data_title")}
+          axisLeftLegend={t("charts.tasks")}
+          data={flowChartData}
+          keys={flowChartGroupNames}
+          axisBottomLegend={t("charts.flow_data_period_legend")}
+          indexBy="key"
+          groupMode="grouped"
+          tooltip={(data: BarData) => {
+            return (
+              <BarChartTooltip
+                xLabel={t("charts.flow_data_tooltip_x_legend")}
+                data={data}
+              />
+            )
+          }}
+        />
 
         {shouldRenderCompletionTimeEvolutionChart && (
-          <ChartBox title={t("charts.completion_time_evolution_title")}>
-            <LineChart
-              axisLeftLegend={t("charts.days")}
-              data={completionTimeEvolutionChartData}
-              props={{
-                margin: { top: 50, right: 60, bottom: 65, left: 60 },
-                axisBottom: {
-                  legend: t("charts.completion_time_evolution_weeks_legend"),
-                  legendOffset: 60,
-                  tickRotation: -37,
-                  legendPosition: "middle",
-                },
-                enableSlices: "x",
-                sliceTooltip: ({ slice }: SliceTooltipProps) => (
-                  <LineChartTooltip
-                    slice={slice}
-                    xLabel={t(
-                      "charts.completion_time_evolution_tooltip_x_legend"
-                    )}
-                  />
-                ),
-                legends: [
-                  {
-                    anchor: "top",
-                    direction: "row",
-                    toggleSerie: true,
-                    justify: false,
-                    translateX: 0,
-                    translateY: -25,
-                    itemsSpacing: 0,
-                    itemDirection: "left-to-right",
-                    itemWidth: 200,
-                    itemHeight: 20,
-                    itemOpacity: 0.75,
-                    symbolSize: 12,
-                    symbolShape: "circle",
-                    symbolBorderColor: "rgba(0, 0, 0, .5)",
-                    effects: [
-                      {
-                        on: "hover",
-                        style: {
-                          itemBackground: "rgba(0, 0, 0, .03)",
-                          itemOpacity: 1,
-                        },
+          <LineChart
+            title={t("charts.completion_time_evolution_title")}
+            axisLeftLegend={t("charts.days")}
+            data={completionTimeEvolutionChartData}
+            props={{
+              margin: { top: 50, right: 60, bottom: 65, left: 60 },
+              axisBottom: {
+                legend: t("charts.completion_time_evolution_weeks_legend"),
+                legendOffset: 60,
+                tickRotation: -37,
+                legendPosition: "middle",
+              },
+              enableSlices: "x",
+              sliceTooltip: ({ slice }: SliceTooltipProps) => (
+                <LineChartTooltip
+                  slice={slice}
+                  xLabel={t(
+                    "charts.completion_time_evolution_tooltip_x_legend"
+                  )}
+                />
+              ),
+              legends: [
+                {
+                  anchor: "top",
+                  direction: "row",
+                  toggleSerie: true,
+                  justify: false,
+                  translateX: 0,
+                  translateY: -25,
+                  itemsSpacing: 0,
+                  itemDirection: "left-to-right",
+                  itemWidth: 200,
+                  itemHeight: 20,
+                  itemOpacity: 0.75,
+                  symbolSize: 12,
+                  symbolShape: "circle",
+                  symbolBorderColor: "rgba(0, 0, 0, .5)",
+                  effects: [
+                    {
+                      on: "hover",
+                      style: {
+                        itemBackground: "rgba(0, 0, 0, .03)",
+                        itemOpacity: 1,
                       },
-                    ],
-                  },
-                ],
-              }}
-            />
-          </ChartBox>
+                    },
+                  ],
+                },
+              ],
+            }}
+          />
         )}
 
         {completionTimeHistogramData && (
-          <ChartBox title={t("charts.completion_time_histogram_chart")}>
-            <BarChart
-              data={completionTimeHistogramData}
-              keys={["value"]}
-              indexBy="key"
-              axisLeftLegend={t("charts.histogramHits")}
-              axisBottomLegend={t("charts.days")}
-              padding={0}
-            />
-          </ChartBox>
+          <BarChart
+            title={t("charts.completion_time_histogram_chart")}
+            data={completionTimeHistogramData}
+            keys={["value"]}
+            indexBy="key"
+            axisLeftLegend={t("charts.histogramHits")}
+            axisBottomLegend={t("charts.days")}
+            padding={0}
+          />
         )}
       </Box>
     </TasksPage>

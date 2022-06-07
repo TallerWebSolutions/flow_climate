@@ -8,7 +8,7 @@ import BarChartTooltip, {
 } from "../../components/charts/tooltips/BarChartTooltip"
 import { Grid, Typography } from "@mui/material"
 import { useParams } from "react-router-dom"
-import ChartLineBox from "../../components/charts/ChartLineBox"
+import { LineChart } from "../../components/charts/LineChart"
 import { SliceTooltipProps } from "@nivo/line"
 import LineChartTooltip from "../../components/charts/tooltips/LineChartTooltip"
 import { TasksCharts } from "../Tasks/List"
@@ -16,7 +16,6 @@ import { BarDatum } from "@nivo/bar"
 import { secondsToDays } from "../../lib/date"
 import { keyValueToAxisData } from "../../lib/charts"
 import { ScatterChart } from "../../components/charts/ScatterChart"
-import { ChartBox } from "../../components/charts/ChartBox"
 
 const PROJECT_TASKS_CHARTS_QUERY = gql`
   query ProjectDemandsCharts($TasksProjectId: ID, $ID: Int!) {
@@ -177,7 +176,7 @@ const ProjectTasksCharts = () => {
           />
         </Grid>
 
-        <ChartLineBox
+        <LineChart
           title={t("charts.burnup_chart_data")}
           data={projectTasksBurnupChartData}
           axisLeftLegend={t("charts.tasks")}
@@ -189,7 +188,7 @@ const ProjectTasksCharts = () => {
           }}
         />
 
-        <ChartLineBox
+        <LineChart
           title={t("charts.operational_math_risk_evolution_chart")}
           data={operationalRiskChartData}
           axisLeftLegend={`${t(
@@ -218,17 +217,16 @@ const ProjectTasksCharts = () => {
         />
         <Grid item xs={6} sx={{ padding: 1 }}>
           {completionTimeChartData && (
-            <ChartBox title={t("charts.control_completion_time_title")}>
-              <ScatterChart
-                axisLeftLegend={t("charts.days")}
-                data={keyValueToAxisData(completionTimeChartData)}
-                markers={[
-                  deliveredLeadTimeP65Marker,
-                  deliveredLeadTimeP80Marker,
-                  deliveredLeadTimeP95Marker,
-                ]}
-              />
-            </ChartBox>
+            <ScatterChart
+              title={t("charts.control_completion_time_title")}
+              axisLeftLegend={t("charts.days")}
+              data={keyValueToAxisData(completionTimeChartData)}
+              markers={[
+                deliveredLeadTimeP65Marker,
+                deliveredLeadTimeP80Marker,
+                deliveredLeadTimeP95Marker,
+              ]}
+            />
           )}
         </Grid>
       </Grid>

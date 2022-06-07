@@ -11,7 +11,7 @@ import { SliceTooltipProps } from "@nivo/line"
 import { useTranslation } from "react-i18next"
 import { useParams } from "react-router-dom"
 import { BarChart } from "../../components/charts/BarChart"
-import ChartLineBox from "../../components/charts/ChartLineBox"
+import { LineChart } from "../../components/charts/LineChart"
 import { normalizeCfdData } from "../../components/charts/LineChart"
 import { ScatterChart } from "../../components/charts/ScatterChart"
 import LineChartTooltip from "../../components/charts/tooltips/LineChartTooltip"
@@ -565,7 +565,7 @@ const DemandsCharts = () => {
 
   return (
     <Grid container spacing={2} rowSpacing={8} sx={{ marginTop: 4 }}>
-      <ChartLineBox
+      <LineChart
         title={t("project_charts.operational_math_risk_evolution_chart")}
         data={operationalRiskChartData}
         axisLeftLegend={`${t(
@@ -592,7 +592,7 @@ const DemandsCharts = () => {
           ),
         }}
       />
-      <ChartLineBox
+      <LineChart
         title={t(
           "project_charts.operational_math_risk_evolution_team_data_chart"
         )}
@@ -652,7 +652,7 @@ const DemandsCharts = () => {
         />
       </Grid>
 
-      <ChartLineBox
+      <LineChart
         title={t("project_charts.demands_burn_up_chart", {
           projectName: project?.name || "",
         })}
@@ -666,7 +666,7 @@ const DemandsCharts = () => {
         }}
       />
 
-      <ChartLineBox
+      <LineChart
         title={t("project_charts.hours_burn_up_chart", {
           projectName: project?.name || "no project",
         })}
@@ -680,7 +680,7 @@ const DemandsCharts = () => {
           ),
         }}
       />
-      <ChartLineBox
+      <LineChart
         title={t("project_charts.lead_time_p80_chart")}
         data={leadTimeP80ChartData}
         axisLeftLegend={t("project_charts.lead_time_p80_y_label")}
@@ -692,7 +692,7 @@ const DemandsCharts = () => {
         }}
       />
       {projectCumulativeFlowChartData && (
-        <ChartLineBox
+        <LineChart
           title={t("project_charts.cumulative_flow_chart", {
             projectName: project?.name || "no project",
           })}
@@ -750,7 +750,7 @@ const DemandsCharts = () => {
         />
       </Grid>
 
-      <ChartLineBox
+      <LineChart
         title={t("project_charts.quality_bugs_chart")}
         data={projectQualityChartData}
         axisLeftLegend={t("project_charts.quality_bugs_y_label")}
@@ -773,7 +773,7 @@ const DemandsCharts = () => {
           ),
         }}
       />
-      <ChartLineBox
+      <LineChart
         title={t("project_charts.quality_bugs_for_coding_chart")}
         data={projectQualityForCodingChartData}
         axisLeftLegend={t("project_charts.quality_bugs_for_coding_y_label")}
@@ -795,7 +795,7 @@ const DemandsCharts = () => {
           ),
         }}
       />
-      <ChartLineBox
+      <LineChart
         title={t("project_charts.quality_bugs_for_coding_per_demand_chart")}
         data={projectQualityForCodingPerDemand}
         axisLeftLegend={t(
@@ -822,7 +822,7 @@ const DemandsCharts = () => {
           ),
         }}
       />
-      <ChartLineBox
+      <LineChart
         title={t("project_charts.flow_efficiency_chart")}
         data={flowEfficiencyChartData}
         axisLeftLegend={"%"}
@@ -845,7 +845,7 @@ const DemandsCharts = () => {
           ),
         }}
       />
-      <ChartLineBox
+      <LineChart
         title={t("project_charts.hours_per_demand_chart")}
         data={hoursPerDemandChartData}
         axisLeftLegend={t("project_charts.hours_per_demand_y_label")}

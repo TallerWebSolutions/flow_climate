@@ -3,13 +3,13 @@ import React from "react"
 
 import { ComponentStory, ComponentMeta } from "@storybook/react"
 
-import ChartLineBox from "./ChartLineBox"
+import { LineChart } from "./LineChart"
 import { normalizeCfdData } from "./LineChart"
 
 export default {
-  title: "Charts/ChartLineBox",
-  component: ChartLineBox,
-} as ComponentMeta<typeof ChartLineBox>
+  title: "Charts/LineChart",
+  component: LineChart,
+} as ComponentMeta<typeof LineChart>
 
 const data = [
   {
@@ -65,8 +65,8 @@ const data = [
   },
 ]
 
-export const CFD: ComponentStory<typeof ChartLineBox> = () => (
-  <ChartLineBox
+export const CFD: ComponentStory<typeof LineChart> = () => (
+  <LineChart
     title="Cumulative flow data"
     data={normalizeCfdData(data)}
     axisLeftLegend="Demands"
