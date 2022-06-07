@@ -6,7 +6,7 @@ import { TasksChartsDTO } from "../Tasks/TasksCharts"
 import BarChartTooltip, {
   BarData,
 } from "../../components/charts/tooltips/BarChartTooltip"
-import { Grid, Typography } from "@mui/material"
+import { Grid } from "@mui/material"
 import { useParams } from "react-router-dom"
 import { LineChart } from "../../components/charts/LineChart"
 import { SliceTooltipProps } from "@nivo/line"

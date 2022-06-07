@@ -1,11 +1,5 @@
 import { gql, useQuery } from "@apollo/client"
-import {
-  Backdrop,
-  Box,
-  CircularProgress,
-  Grid,
-  Typography,
-} from "@mui/material"
+import { Backdrop, CircularProgress, Grid } from "@mui/material"
 import { BarDatum } from "@nivo/bar"
 import { SliceTooltipProps } from "@nivo/line"
 import { useTranslation } from "react-i18next"
