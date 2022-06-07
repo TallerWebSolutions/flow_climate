@@ -30,7 +30,6 @@ type NivoMarker = {
 type ScatterChartProps = {
   axisLeftLegend?: string
   data: ScatterPlotRawSerie<ScatterPlotDatum>[] | ChartAxisData
-  title?: string
   onClick?: ScatterPlotMouseHandler<ScatterPlotDatum>
   markers?: Marker[]
 }

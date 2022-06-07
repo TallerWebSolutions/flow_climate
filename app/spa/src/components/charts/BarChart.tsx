@@ -12,7 +12,6 @@ type BarChartProps = {
   data: BarDatum[] | KeyValueData
   keys: string[]
   indexBy: string
-  title?: string
   axisLeftLegend?: string
   axisBottomLegend?: string
   tooltip?: (data: BarData) => ReactElement

@@ -10,6 +10,8 @@ import { BarDatum } from "@nivo/bar"
 import { SliceTooltipProps } from "@nivo/line"
 import { useTranslation } from "react-i18next"
 import { useParams } from "react-router-dom"
+
+import { ChartBox } from "../../components/charts/ChartBox"
 import { BarChart } from "../../components/charts/BarChart"
 import { LineChart } from "../../components/charts/LineChart"
 import { normalizeCfdData } from "../../components/charts/LineChart"
@@ -565,65 +567,69 @@ const DemandsCharts = () => {
 
   return (
     <Grid container spacing={2} rowSpacing={8} sx={{ marginTop: 4 }}>
-      <LineChart
+      <ChartBox
         title={t("project_charts.operational_math_risk_evolution_chart")}
-        data={operationalRiskChartData}
-        axisLeftLegend={`${t(
-          "project_charts.operational_math_risk_evolution_y_label"
-        )} (%)`}
-        props={{
-          margin: { left: 80, right: 20, top: 25, bottom: 65 },
-          axisBottom: {
-            tickSize: 5,
-            tickPadding: 5,
-            legendPosition: "middle",
-            legendOffset: 60,
-            tickRotation: -40,
-          },
-          yFormat: "=.2%",
-          enableSlices: "x",
-          sliceTooltip: ({ slice }: SliceTooltipProps) => (
-            <LineChartTooltip
-              slice={slice}
-              xLabel={t(
-                "project_charts.operational_math_risk_evolution_tooltip_label"
-              )}
-            />
-          ),
-        }}
-      />
-      <LineChart
+      >
+        <LineChart
+          data={operationalRiskChartData}
+          axisLeftLegend={`${t(
+            "project_charts.operational_math_risk_evolution_y_label"
+          )} (%)`}
+          props={{
+            margin: { left: 80, right: 20, top: 25, bottom: 65 },
+            axisBottom: {
+              tickSize: 5,
+              tickPadding: 5,
+              legendPosition: "middle",
+              legendOffset: 60,
+              tickRotation: -40,
+            },
+            yFormat: "=.2%",
+            enableSlices: "x",
+            sliceTooltip: ({ slice }: SliceTooltipProps) => (
+              <LineChartTooltip
+                slice={slice}
+                xLabel={t(
+                  "project_charts.operational_math_risk_evolution_tooltip_label"
+                )}
+              />
+            ),
+          }}
+        />
+      </ChartBox>
+      <ChartBox
         title={t(
           "project_charts.operational_math_risk_evolution_team_data_chart"
         )}
-        data={operationalTeamRiskChartData}
-        axisLeftLegend={`${t(
-          "project_charts.operational_math_risk_evolution_team_data_y_label"
-        )} (%)`}
-        props={{
-          margin: { left: 80, right: 20, top: 25, bottom: 65 },
-          axisBottom: {
-            tickSize: 5,
-            tickPadding: 5,
-            legendPosition: "middle",
-            legendOffset: 60,
-            tickRotation: -40,
-          },
-          yFormat: "=.2%",
-          enableSlices: "x",
-          sliceTooltip: ({ slice }: SliceTooltipProps) => (
-            <LineChartTooltip
-              slice={slice}
-              xLabel={t(
-                "project_charts.operational_math_risk_evolution_team_data_tooltip_label"
-              )}
-            />
-          ),
-        }}
-      />
-      <Grid item xs={6} sx={{ padding: 1 }}>
-        <Typography>{t("project_charts.bugs_chart")}</Typography>
-
+      >
+        <LineChart
+          data={operationalTeamRiskChartData}
+          axisLeftLegend={`${t(
+            "project_charts.operational_math_risk_evolution_team_data_y_label"
+          )} (%)`}
+          props={{
+            margin: { left: 80, right: 20, top: 25, bottom: 65 },
+            axisBottom: {
+              tickSize: 5,
+              tickPadding: 5,
+              legendPosition: "middle",
+              legendOffset: 60,
+              tickRotation: -40,
+            },
+            yFormat: "=.2%",
+            enableSlices: "x",
+            sliceTooltip: ({ slice }: SliceTooltipProps) => (
+              <LineChartTooltip
+                slice={slice}
+                xLabel={t(
+                  "project_charts.operational_math_risk_evolution_team_data_tooltip_label"
+                )}
+              />
+            ),
+          }}
+        />
+      </ChartBox>
+      <ChartBox title={t("project_charts.bugs_chart")}>
         <BarChart
           data={projectBugsChartData}
           axisLeftLegend={t("project_charts.bugs_y_label")}
@@ -633,10 +639,8 @@ const DemandsCharts = () => {
           ]}
           indexBy="index"
         />
-      </Grid>
-      <Grid item xs={6} sx={{ padding: 1 }}>
-        <Typography>{t("project_charts.flow_data_chart")}</Typography>
-
+      </ChartBox>
+      <ChartBox title={t("project_charts.flow_data_chart")}>
         <BarChart
           data={projectFlowChartData}
           keys={[
@@ -650,75 +654,83 @@ const DemandsCharts = () => {
           axisBottomLegend={t("project_charts.flow_data_x_label")}
           groupMode="grouped"
         />
-      </Grid>
-
-      <LineChart
+      </ChartBox>
+      <ChartBox
         title={t("project_charts.demands_burn_up_chart", {
           projectName: project?.name || "",
         })}
-        data={projectDemandsBurnupChartData}
-        axisLeftLegend={t("project_charts.demands_burn_up_y_label")}
-        props={{
-          enableSlices: "x",
-          sliceTooltip: ({ slice }: SliceTooltipProps) => (
-            <LineChartTooltip slice={slice} />
-          ),
-        }}
-      />
-
-      <LineChart
-        title={t("project_charts.hours_burn_up_chart", {
-          projectName: project?.name || "no project",
-        })}
-        data={projectHoursBurnupChartData}
-        axisLeftLegend={t("project_charts.hours_burn_up_y_label")}
-        props={{
-          yFormat: "=.2f",
-          enableSlices: "x",
-          sliceTooltip: ({ slice }: SliceTooltipProps) => (
-            <LineChartTooltip slice={slice} />
-          ),
-        }}
-      />
-      <LineChart
-        title={t("project_charts.lead_time_p80_chart")}
-        data={leadTimeP80ChartData}
-        axisLeftLegend={t("project_charts.lead_time_p80_y_label")}
-        props={{
-          enableSlices: "x",
-          sliceTooltip: ({ slice }: SliceTooltipProps) => (
-            <LineChartTooltip slice={slice} />
-          ),
-        }}
-      />
-      {projectCumulativeFlowChartData && (
+      >
         <LineChart
-          title={t("project_charts.cumulative_flow_chart", {
-            projectName: project?.name || "no project",
-          })}
-          data={normalizeCfdData(projectCumulativeFlowChartData)}
-          axisLeftLegend={t("project_charts.cumulative_flow_y_label")}
+          data={projectDemandsBurnupChartData}
+          axisLeftLegend={t("project_charts.demands_burn_up_y_label")}
           props={{
-            yScale: {
-              type: "linear",
-              stacked: true,
-            },
-            areaOpacity: 1,
-            enableArea: true,
             enableSlices: "x",
             sliceTooltip: ({ slice }: SliceTooltipProps) => (
               <LineChartTooltip slice={slice} />
             ),
-            margin: { left: 80, right: 20, top: 25, bottom: 65 },
-            axisBottom: {
-              tickSize: 5,
-              tickPadding: 5,
-              legendPosition: "middle",
-              legendOffset: 60,
-              tickRotation: -40,
-            },
           }}
         />
+      </ChartBox>
+      <ChartBox
+        title={t("project_charts.hours_burn_up_chart", {
+          projectName: project?.name || "no project",
+        })}
+      >
+        <LineChart
+          data={projectHoursBurnupChartData}
+          axisLeftLegend={t("project_charts.hours_burn_up_y_label")}
+          props={{
+            yFormat: "=.2f",
+            enableSlices: "x",
+            sliceTooltip: ({ slice }: SliceTooltipProps) => (
+              <LineChartTooltip slice={slice} />
+            ),
+          }}
+        />
+      </ChartBox>
+      <ChartBox title={t("project_charts.lead_time_p80_chart")}>
+        <LineChart
+          data={leadTimeP80ChartData}
+          axisLeftLegend={t("project_charts.lead_time_p80_y_label")}
+          props={{
+            enableSlices: "x",
+            sliceTooltip: ({ slice }: SliceTooltipProps) => (
+              <LineChartTooltip slice={slice} />
+            ),
+          }}
+        />
+      </ChartBox>
+      {projectCumulativeFlowChartData && (
+        <ChartBox
+          title={t("project_charts.cumulative_flow_chart", {
+            projectName: project?.name || "no project",
+          })}
+        >
+          <LineChart
+            data={normalizeCfdData(projectCumulativeFlowChartData)}
+            axisLeftLegend={t("project_charts.cumulative_flow_y_label")}
+            props={{
+              yScale: {
+                type: "linear",
+                stacked: true,
+              },
+              areaOpacity: 1,
+              enableArea: true,
+              enableSlices: "x",
+              sliceTooltip: ({ slice }: SliceTooltipProps) => (
+                <LineChartTooltip slice={slice} />
+              ),
+              margin: { left: 80, right: 20, top: 25, bottom: 65 },
+              axisBottom: {
+                tickSize: 5,
+                tickPadding: 5,
+                legendPosition: "middle",
+                legendOffset: 60,
+                tickRotation: -40,
+              },
+            }}
+          />
+        </ChartBox>
       )}
 
       <Grid item xs={6} sx={{ padding: 1 }}>
@@ -735,9 +747,7 @@ const DemandsCharts = () => {
         </Box>
       </Grid>
 
-      <Grid item xs={6} sx={{ padding: 1 }}>
-        <Typography>{t("project_charts.lead_time_histogram_chart")}</Typography>
-
+      <ChartBox title={t("project_charts.lead_time_histogram_chart")}>
         <BarChart
           data={projectLeadTimeHistogramData}
           keys={[t("project_charts.lead_time_histogram_chart_hits")]}
@@ -748,128 +758,135 @@ const DemandsCharts = () => {
           )}
           padding={0}
         />
-      </Grid>
+      </ChartBox>
 
-      <LineChart
-        title={t("project_charts.quality_bugs_chart")}
-        data={projectQualityChartData}
-        axisLeftLegend={t("project_charts.quality_bugs_y_label")}
-        props={{
-          margin: { left: 80, right: 20, top: 25, bottom: 65 },
-          axisBottom: {
-            tickSize: 5,
-            tickPadding: 5,
-            legendPosition: "middle",
-            legendOffset: 60,
-            tickRotation: -40,
-          },
-          yFormat: "=.2%",
-          enableSlices: "x",
-          sliceTooltip: ({ slice }: SliceTooltipProps) => (
-            <LineChartTooltip
-              slice={slice}
-              xLabel={t("project_charts.quality_bugs_tooltip_label")}
-            />
-          ),
-        }}
-      />
-      <LineChart
-        title={t("project_charts.quality_bugs_for_coding_chart")}
-        data={projectQualityForCodingChartData}
-        axisLeftLegend={t("project_charts.quality_bugs_for_coding_y_label")}
-        props={{
-          margin: { left: 80, right: 20, top: 25, bottom: 65 },
-          axisBottom: {
-            tickSize: 5,
-            tickPadding: 5,
-            legendPosition: "middle",
-            legendOffset: 60,
-            tickRotation: -40,
-          },
-          enableSlices: "x",
-          sliceTooltip: ({ slice }: SliceTooltipProps) => (
-            <LineChartTooltip
-              slice={slice}
-              xLabel={t("project_charts.quality_bugs_for_coding_tooltip_label")}
-            />
-          ),
-        }}
-      />
-      <LineChart
+      <ChartBox title={t("project_charts.quality_bugs_chart")}>
+        <LineChart
+          data={projectQualityChartData}
+          axisLeftLegend={t("project_charts.quality_bugs_y_label")}
+          props={{
+            margin: { left: 80, right: 20, top: 25, bottom: 65 },
+            axisBottom: {
+              tickSize: 5,
+              tickPadding: 5,
+              legendPosition: "middle",
+              legendOffset: 60,
+              tickRotation: -40,
+            },
+            yFormat: "=.2%",
+            enableSlices: "x",
+            sliceTooltip: ({ slice }: SliceTooltipProps) => (
+              <LineChartTooltip
+                slice={slice}
+                xLabel={t("project_charts.quality_bugs_tooltip_label")}
+              />
+            ),
+          }}
+        />
+      </ChartBox>
+      <ChartBox title={t("project_charts.quality_bugs_for_coding_chart")}>
+        <LineChart
+          data={projectQualityForCodingChartData}
+          axisLeftLegend={t("project_charts.quality_bugs_for_coding_y_label")}
+          props={{
+            margin: { left: 80, right: 20, top: 25, bottom: 65 },
+            axisBottom: {
+              tickSize: 5,
+              tickPadding: 5,
+              legendPosition: "middle",
+              legendOffset: 60,
+              tickRotation: -40,
+            },
+            enableSlices: "x",
+            sliceTooltip: ({ slice }: SliceTooltipProps) => (
+              <LineChartTooltip
+                slice={slice}
+                xLabel={t(
+                  "project_charts.quality_bugs_for_coding_tooltip_label"
+                )}
+              />
+            ),
+          }}
+        />
+      </ChartBox>
+      <ChartBox
         title={t("project_charts.quality_bugs_for_coding_per_demand_chart")}
-        data={projectQualityForCodingPerDemand}
-        axisLeftLegend={t(
-          "project_charts.quality_bugs_for_coding_per_demand_y_label"
-        )}
-        props={{
-          margin: { left: 80, right: 20, top: 25, bottom: 65 },
-          axisBottom: {
-            tickSize: 5,
-            tickPadding: 5,
-            legendPosition: "middle",
-            legendOffset: 60,
-            tickRotation: -40,
-          },
-          enableSlices: "x",
-          yFormat: "=.2f",
-          sliceTooltip: ({ slice }: SliceTooltipProps) => (
-            <LineChartTooltip
-              slice={slice}
-              xLabel={t(
-                "project_charts.quality_bugs_for_coding_per_demand_tooltip_label"
-              )}
-            />
-          ),
-        }}
-      />
-      <LineChart
-        title={t("project_charts.flow_efficiency_chart")}
-        data={flowEfficiencyChartData}
-        axisLeftLegend={"%"}
-        props={{
-          margin: { left: 80, right: 20, top: 25, bottom: 65 },
-          axisBottom: {
-            tickSize: 5,
-            tickPadding: 5,
-            legendPosition: "middle",
-            legendOffset: 60,
-            tickRotation: -40,
-          },
-          yFormat: "=.2%",
-          enableSlices: "x",
-          sliceTooltip: ({ slice }: SliceTooltipProps) => (
-            <LineChartTooltip
-              slice={slice}
-              xLabel={t("project_charts.flow_efficiency_tooltip_label")}
-            />
-          ),
-        }}
-      />
-      <LineChart
-        title={t("project_charts.hours_per_demand_chart")}
-        data={hoursPerDemandChartData}
-        axisLeftLegend={t("project_charts.hours_per_demand_y_label")}
-        props={{
-          margin: { left: 80, right: 20, top: 25, bottom: 65 },
-          axisBottom: {
-            tickSize: 5,
-            tickPadding: 5,
-            legendPosition: "middle",
-            legendOffset: 60,
-            tickRotation: -40,
-          },
-          enableSlices: "x",
-          sliceTooltip: ({ slice }: SliceTooltipProps) => (
-            <LineChartTooltip
-              slice={slice}
-              xLabel={t("project_charts.hours_per_demand_tooltip_label")}
-            />
-          ),
-        }}
-      />
-      <Grid item xs={6} sx={{ padding: 1 }}>
-        <Typography>{t("project_charts.hours_consumed_chart")}</Typography>
-
+      >
+        <LineChart
+          data={projectQualityForCodingPerDemand}
+          axisLeftLegend={t(
+            "project_charts.quality_bugs_for_coding_per_demand_y_label"
+          )}
+          props={{
+            margin: { left: 80, right: 20, top: 25, bottom: 65 },
+            axisBottom: {
+              tickSize: 5,
+              tickPadding: 5,
+              legendPosition: "middle",
+              legendOffset: 60,
+              tickRotation: -40,
+            },
+            enableSlices: "x",
+            yFormat: "=.2f",
+            sliceTooltip: ({ slice }: SliceTooltipProps) => (
+              <LineChartTooltip
+                slice={slice}
+                xLabel={t(
+                  "project_charts.quality_bugs_for_coding_per_demand_tooltip_label"
+                )}
+              />
+            ),
+          }}
+        />
+      </ChartBox>
+      <ChartBox title={t("project_charts.flow_efficiency_chart")}>
+        <LineChart
+          data={flowEfficiencyChartData}
+          axisLeftLegend={"%"}
+          props={{
+            margin: { left: 80, right: 20, top: 25, bottom: 65 },
+            axisBottom: {
+              tickSize: 5,
+              tickPadding: 5,
+              legendPosition: "middle",
+              legendOffset: 60,
+              tickRotation: -40,
+            },
+            yFormat: "=.2%",
+            enableSlices: "x",
+            sliceTooltip: ({ slice }: SliceTooltipProps) => (
+              <LineChartTooltip
+                slice={slice}
+                xLabel={t("project_charts.flow_efficiency_tooltip_label")}
+              />
+            ),
+          }}
+        />
+      </ChartBox>
+      <ChartBox title={t("project_charts.hours_per_demand_chart")}>
+        <LineChart
+          data={hoursPerDemandChartData}
+          axisLeftLegend={t("project_charts.hours_per_demand_y_label")}
+          props={{
+            margin: { left: 80, right: 20, top: 25, bottom: 65 },
+            axisBottom: {
+              tickSize: 5,
+              tickPadding: 5,
+              legendPosition: "middle",
+              legendOffset: 60,
+              tickRotation: -40,
+            },
+            enableSlices: "x",
+            sliceTooltip: ({ slice }: SliceTooltipProps) => (
+              <LineChartTooltip
+                slice={slice}
+                xLabel={t("project_charts.hours_per_demand_tooltip_label")}
+              />
+            ),
+          }}
+        />
+      </ChartBox>
+      <ChartBox title={t("project_charts.hours_consumed_chart")}>
         <BarChart
           data={projectHoursConsummed}
           keys={[
@@ -883,6 +900,9 @@ const DemandsCharts = () => {
           axisBottomLegend={t("project_charts.hours_consumed_x_label")}
           groupMode="grouped"
         />
+      </ChartBox>
+      <Grid item xs={6} sx={{ padding: 1 }}>
+        <Typography></Typography>
       </Grid>
 
       <Grid item xs={6} sx={{ padding: 1 }}>

@@ -16,6 +16,7 @@ import { BarDatum } from "@nivo/bar"
 import { secondsToDays } from "../../lib/date"
 import { keyValueToAxisData } from "../../lib/charts"
 import { ScatterChart } from "../../components/charts/ScatterChart"
+import { ChartBox } from "../../components/charts/ChartBox"
 
 const PROJECT_TASKS_CHARTS_QUERY = gql`
   query ProjectDemandsCharts($TasksProjectId: ID, $ID: Int!) {
@@ -176,57 +177,60 @@ const ProjectTasksCharts = () => {
           />
         </Grid>
 
-        <LineChart
-          title={t("charts.burnup_chart_data")}
-          data={projectTasksBurnupChartData}
-          axisLeftLegend={t("charts.tasks")}
-          props={{
-            enableSlices: "x",
-            sliceTooltip: ({ slice }: SliceTooltipProps) => (
-              <LineChartTooltip slice={slice} />
-            ),
-          }}
-        />
+        <ChartBox title={t("charts.burnup_chart_data")}>
+          <LineChart
+            data={projectTasksBurnupChartData}
+            axisLeftLegend={t("charts.tasks")}
+            props={{
+              enableSlices: "x",
+              sliceTooltip: ({ slice }: SliceTooltipProps) => (
+                <LineChartTooltip slice={slice} />
+              ),
+            }}
+          />
+        </ChartBox>
 
-        <LineChart
-          title={t("charts.operational_math_risk_evolution_chart")}
-          data={operationalRiskChartData}
-          axisLeftLegend={`${t(
-            "charts.operational_math_risk_evolution_y_label"
-          )} (%)`}
-          props={{
-            margin: { left: 80, right: 20, top: 25, bottom: 65 },
-            axisBottom: {
-              tickSize: 5,
-              tickPadding: 5,
-              legendPosition: "middle",
-              legendOffset: 60,
-              tickRotation: -40,
-            },
-            yFormat: "=.2%",
-            enableSlices: "x",
-            sliceTooltip: ({ slice }: SliceTooltipProps) => (
-              <LineChartTooltip
-                slice={slice}
-                xLabel={t(
-                  "charts.operational_math_risk_evolution_tooltip_label"
-                )}
-              />
-            ),
-          }}
-        />
+        <ChartBox title={t("charts.operational_math_risk_evolution_chart")}>
+          <LineChart
+            data={operationalRiskChartData}
+            axisLeftLegend={`${t(
+              "charts.operational_math_risk_evolution_y_label"
+            )} (%)`}
+            props={{
+              margin: { left: 80, right: 20, top: 25, bottom: 65 },
+              axisBottom: {
+                tickSize: 5,
+                tickPadding: 5,
+                legendPosition: "middle",
+                legendOffset: 60,
+                tickRotation: -40,
+              },
+              yFormat: "=.2%",
+              enableSlices: "x",
+              sliceTooltip: ({ slice }: SliceTooltipProps) => (
+                <LineChartTooltip
+                  slice={slice}
+                  xLabel={t(
+                    "charts.operational_math_risk_evolution_tooltip_label"
+                  )}
+                />
+              ),
+            }}
+          />
+        </ChartBox>
         <Grid item xs={6} sx={{ padding: 1 }}>
           {completionTimeChartData && (
-            <ScatterChart
-              title={t("charts.control_completion_time_title")}
-              axisLeftLegend={t("charts.days")}
-              data={keyValueToAxisData(completionTimeChartData)}
-              markers={[
-                deliveredLeadTimeP65Marker,
-                deliveredLeadTimeP80Marker,
-                deliveredLeadTimeP95Marker,
-              ]}
-            />
+            <ChartBox title={t("charts.control_completion_time_title")}>
+              <ScatterChart
+                axisLeftLegend={t("charts.days")}
+                data={keyValueToAxisData(completionTimeChartData)}
+                markers={[
+                  deliveredLeadTimeP65Marker,
+                  deliveredLeadTimeP80Marker,
+                  deliveredLeadTimeP95Marker,
+                ]}
+              />
+            </ChartBox>
           )}
         </Grid>
       </Grid>

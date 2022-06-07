@@ -1,6 +1,6 @@
 import { useRef } from "react"
 import { ResponsiveLine, Serie } from "@nivo/line"
-import { Box, IconButton } from "@mui/material"
+import { Box, IconButton, Typography } from "@mui/material"
 import DownloadIcon from "@mui/icons-material/Download"
 import { exportComponentAsPNG } from "react-component-export-image"
 
@@ -22,7 +22,6 @@ export const normalizeCfdData = (data: Serie[]): Serie[] =>
 export type LineGraphProps = {
   data: Serie[]
   axisLeftLegend: string
-  title?: string
   props?: object
 }
 
