@@ -32,6 +32,7 @@ import User from "./modules/user/user.types"
 import InitiativesList from "./pages/Initiatives/InitiativesList"
 import ProjectList from "./pages/Projects/Projects"
 import ProjectTasksCharts from "./pages/Projects/ProjectTasksCharts"
+import DemandsCharts from "./pages/Demands/DemandsCharts"
 
 export const ME_QUERY = gql`
   query Me {
@@ -171,6 +172,10 @@ const App = () => {
             <Route
               path="/companies/:companySlug/demands"
               element={<DemandsPage />}
+            />
+            <Route
+              path="/companies/:companySlug/demands/demands_charts"
+              element={<DemandsCharts />}
             />
           </Routes>
         </BrowserRouter>

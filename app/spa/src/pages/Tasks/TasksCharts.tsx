@@ -1,8 +1,6 @@
 import { gql, useQuery } from "@apollo/client"
 import { Box } from "@mui/material"
-import { CartesianMarkerProps } from "@nivo/core"
 import { SliceTooltipProps } from "@nivo/line"
-import { ScatterPlotValue } from "@nivo/scatterplot"
 import { useContext, useState } from "react"
 import { useTranslation } from "react-i18next"
 
@@ -103,24 +101,6 @@ export type TasksChartsDTO = {
     completiontimeHistogramChartData: KeyValueData
   }
   project: Project
-}
-
-export const buildPercentileYAxisMarker = ({
-  completionTime,
-  color,
-  legend,
-}: {
-  completionTime: number | string
-  legend: string
-  color: string
-}): CartesianMarkerProps<ScatterPlotValue> => {
-  return {
-    axis: "y",
-    value: completionTime,
-    lineStyle: { stroke: color, strokeWidth: 1 },
-    legend: legend,
-    legendOrientation: "horizontal",
-  }
 }
 
 export type TaskFilters = {

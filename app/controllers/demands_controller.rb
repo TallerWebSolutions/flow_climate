@@ -115,13 +115,8 @@ class DemandsController < DemandsListController
   end
 
   def demands_charts
-    @demands = query_demands.finished_with_leadtime.order(:end_date)
-    min_date_demands = @demands.map(&:end_date).min || Time.zone.now
-    max_date_demands = @demands.map(&:end_date).max || Time.zone.now
-
-    start_date = [min_date_demands, (max_date_demands - 6.months)].max
-
-    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@demands, start_date, Time.zone.today.end_of_week, 'week')
+    prepend_view_path Rails.root.join('public')
+    render 'spa-build/index'
   end
 
   private

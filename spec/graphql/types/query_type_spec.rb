@@ -603,30 +603,60 @@ RSpec.describe Types::QueryType do
 
     context 'with no project id' do
       it 'returns the demands in the company' do
-        demand = Fabricate :demand, company: company, project: project, team: team, end_date: 2.days.ago
-        other_demand = Fabricate :demand, company: company, project: other_project, team: team, end_date: 1.day.ago
+        travel_to Time.zone.local(2022, 6, 7, 10, 0, 0) do
+          Fabricate :demand, company: company, project: project, team: team, end_date: 2.days.ago
+          Fabricate :demand, company: company, project: other_project, team: team, end_date: 1.day.ago
 
-        query =
-          %(
+          Fabricate :demand, company: company, project: project, team: team, created_date: 3.days.ago, commitment_date: 3.days.ago, end_date: 2.days.ago
+          Fabricate :demand, company: company, project: project, team: team, created_date: 4.days.ago, commitment_date: 4.days.ago, end_date: 3.days.ago
+          Fabricate :demand, company: company, project: project, team: team, created_date: 5.days.ago, commitment_date: 5.days.ago, end_date: 4.days.ago
+          Fabricate :demand, company: company, project: project, team: team, created_date: 2.days.ago, commitment_date: 2.days.ago, end_date: 1.day.ago
+          Fabricate :demand, company: company, project: project, team: team, created_date: 7.days.ago, commitment_date: 7.days.ago, end_date: 5.days.ago
+
+          demands_external_ids = Demand.finished_with_leadtime.order(end_date: :asc).map(&:external_id)
+          demands_lead_times = Demand.finished_with_leadtime.order(end_date: :asc).map(&:leadtime).map(&:to_f)
+          demands_ids = Demand.all.order(:created_date).map(&:id)
+
+          lead_time_p65 = Stats::StatisticsService.instance.percentile(65, demands_lead_times)
+          lead_time_p80 = Stats::StatisticsService.instance.percentile(80, demands_lead_times)
+          lead_time_p95 = Stats::StatisticsService.instance.percentile(95, demands_lead_times)
+
+          query =
+            %(
         query {
-          demandsList(searchOptions: { perPage: 2, demandStatus: DELIVERED_DEMANDS, orderField: "end_date" }) {
+          demandsList(searchOptions: { perPage: 20, demandStatus: DELIVERED_DEMANDS, orderField: "end_date" }) {
             totalCount
             demands {
               id
+            }
+            controlChart {
+              leadTimeP65
+              leadTimeP80
+              leadTimeP95
+
+              leadTimes
+              xAxis
             }
           }
         }
       )
 
-        user = Fabricate :user, last_company_id: company.id
+          user = Fabricate :user, last_company_id: company.id
 
-        context = {
-          current_user: user
-        }
+          context = {
+            current_user: user
+          }
 
-        result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
+          result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
 
-        expect(result.dig('data', 'demandsList')).to match_array({ 'totalCount' => 2, 'demands' => [{ 'id' => other_demand.id.to_s }, 'id' => demand.id.to_s] })
+          expect(result.dig('data', 'demandsList', 'totalCount')).to eq 7
+          expect(result.dig('data', 'demandsList', 'demands')).to match_array(demands_ids.map { |id| { 'id' => id.to_s } })
+          expect(result.dig('data', 'demandsList', 'controlChart', 'leadTimeP65')).to be_within(0.1).of lead_time_p65
+          expect(result.dig('data', 'demandsList', 'controlChart', 'leadTimeP80')).to be_within(0.1).of lead_time_p80
+          expect(result.dig('data', 'demandsList', 'controlChart', 'leadTimeP95')).to be_within(0.1).of lead_time_p95
+          expect(result.dig('data', 'demandsList', 'controlChart', 'xAxis')).to eq demands_external_ids
+          expect(result.dig('data', 'demandsList', 'controlChart', 'leadTimes')).to eq demands_lead_times
+        end
       end
     end
 

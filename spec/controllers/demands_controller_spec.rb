@@ -979,46 +979,13 @@ RSpec.describe DemandsController, type: :controller do
     end
 
     describe 'GET #demands_charts' do
-      let(:customer) { Fabricate :customer, company: company }
-      let(:other_customer) { Fabricate :customer, company: company }
-
-      let(:team) { Fabricate :team, company: company }
-      let(:other_team) { Fabricate :team, company: company }
-
-      let(:product) { Fabricate :product, company: company, customer: customer, name: 'zzz' }
-      let(:other_product) { Fabricate :product, company: company, customer: other_customer, name: 'aaa' }
-
-      let!(:first_project) { Fabricate :project, name: 'qqq', customers: [customer], products: [product], status: :executing, start_date: Time.zone.local(2018, 12, 24, 10, 0, 0), end_date: Time.zone.local(2019, 2, 3, 10, 0, 0) }
-      let!(:second_project) { Fabricate :project, customers: [other_customer], products: [other_product], status: :executing, start_date: Time.zone.local(2019, 1, 9, 10, 0, 0), end_date: Time.zone.local(2019, 3, 15, 10, 0, 0) }
-
       context 'with valid parameters' do
-        context 'with data' do
-          it 'runs the query and sort it' do
-            travel_to Time.zone.local(2020, 12, 18, 10, 0, 0) do
-              first_demand = Fabricate :demand, company: company, product: product, project: first_project, demand_title: 'first_demand', demand_type: :feature, class_of_service: :intangible, created_date: Time.zone.local(2019, 1, 19, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 20, 10, 0, 0), end_date: Time.zone.local(2019, 1, 23, 12, 0, 0), effort_downstream: 0, effort_upstream: 10, demand_tags: %w[aaa ccc]
-              second_demand = Fabricate :demand, company: company, product: product, project: first_project, demand_title: 'second_demand', demand_type: :chore, class_of_service: :standard, created_date: Time.zone.local(2019, 1, 14, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 19, 10, 0, 0), end_date: Time.zone.local(2019, 1, 24, 10, 0, 0), effort_downstream: 0, effort_upstream: 0, demand_tags: %w[xpto]
-              third_demand = Fabricate :demand, company: company, product: product, project: second_project, demand_title: 'third_demand', demand_type: :performance_improvement, class_of_service: :expedite, created_date: Time.zone.local(2019, 1, 22, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 22, 10, 0, 0), end_date: Time.zone.local(2019, 1, 23, 10, 0, 0), effort_downstream: 0, effort_upstream: 0
-              fourth_demand = Fabricate :demand, company: company, product: product, project: second_project, demand_title: 'fourth_demand', demand_type: :wireframe, class_of_service: :fixed_date, created_date: Time.zone.local(2019, 1, 21, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 23, 10, 0, 0), end_date: Time.zone.local(2019, 1, 24, 9, 0, 0), effort_downstream: 0, effort_upstream: 0
+        context 'passing a valid ID' do
+          it 'renders the SPA template' do
+            get :demands_charts, params: { company_id: company }
 
-              Fabricate :demand, company: company, product: product, project: second_project, demand_type: :ui, class_of_service: :fixed_date, created_date: Time.zone.local(2018, 12, 24, 11, 0, 0), commitment_date: nil, end_date: nil, effort_downstream: 0, effort_upstream: 0
-              Fabricate :demand, company: company, product: product, project: second_project, demand_type: :feature, class_of_service: :standard, created_date: Time.zone.local(2019, 1, 23, 12, 0, 0), commitment_date: Time.zone.local(2019, 1, 24, 10, 0, 0), end_date: nil, effort_downstream: 0, effort_upstream: 0
-              Fabricate :demand, company: company, product: product, project: first_project, demand_type: :feature, class_of_service: :standard, created_date: Time.zone.local(2019, 1, 22, 10, 0, 0), commitment_date: nil, end_date: nil, effort_downstream: 20, effort_upstream: 0, demand_tags: %w[aaa ccc sbbrubles]
-              Fabricate :demand, company: company, product: product, project: first_project, demand_type: :bug, class_of_service: :expedite, created_date: Time.zone.local(2019, 1, 23, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 24, 10, 0, 0), end_date: nil, effort_downstream: 0, effort_upstream: 0, demand_tags: %w[sbbrubles xpto]
-
-              get :demands_charts, params: { company_id: company, session_demands_key: 'bar', demands_ids: Demand.all.map(&:id).join(',') }
-
-              expect(response).to render_template 'demands/demands_charts'
-              expect(assigns(:demands).map(&:demand_title)).to eq [third_demand.demand_title, first_demand.demand_title, fourth_demand.demand_title, second_demand.demand_title]
-            end
-          end
-        end
-
-        context 'with no data' do
-          it 'returns an empty array' do
-            get :demands_charts, params: { company_id: company, session_demands_key: 'bar', demands_ids: '' }
-
-            expect(response).to render_template 'demands/demands_charts'
-            expect(assigns(:demands).map(&:id)).to eq []
+            expect(response).to render_template 'spa-build/index'
+            expect(assigns(:company)).to eq company
           end
         end
       end
