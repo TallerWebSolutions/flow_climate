@@ -229,7 +229,10 @@ module Types
     def cumulative_flow_chart_data
       start_date = object.start_date
       end_date = [object.end_date, Time.zone.today].min
-      Highchart::StatusReportChartsAdapter.new(object.demands, start_date, end_date, 'week')
+      {
+        x_axis: Highchart::StatusReportChartsAdapter.new(object.demands, start_date, end_date, 'week').x_axis,
+        y_axis: Highchart::StatusReportChartsAdapter.new(object.demands, start_date, end_date, 'week').cumulative_flow_diagram_downstream
+      }
     end
 
     def demands_flow_chart_data

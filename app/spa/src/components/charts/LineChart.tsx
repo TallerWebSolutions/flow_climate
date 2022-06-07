@@ -1,10 +1,8 @@
 import { ResponsiveLine, Serie } from "@nivo/line"
 import { Box } from "@mui/material"
 
-export const normalizeCfdData = (data: Serie[]): Serie[] => {
-  // eslint-disable-next-line
-  console.log({ data })
-  const result = data.map((step, stepIndex) => ({
+export const normalizeCfdData = (data: Serie[]): Serie[] =>
+  data.map((step, stepIndex) => ({
     ...step,
     data: step.data.map((dot, index) => {
       const previousY: number =
@@ -17,9 +15,6 @@ export const normalizeCfdData = (data: Serie[]): Serie[] => {
       }
     }),
   }))
-
-  return result
-}
 
 export type LineGraphProps = {
   data: Serie[]
