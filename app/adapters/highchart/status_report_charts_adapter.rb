@@ -51,7 +51,7 @@ module Highchart
 
     private
 
-    # TODO: remove duplication with WorkItemWorkflowInformation
+    # TODO: remove duplication with WorkItemFlowInformation
     def build_cfd_hash(demands_ids, stages, bottom_limit_date)
       demands_stages_count = {}
 

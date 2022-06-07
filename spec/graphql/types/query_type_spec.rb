@@ -457,6 +457,10 @@ RSpec.describe Types::QueryType do
             current_user: user
           }
 
+          cfd_doubled = [['Bla', [1, 2, 3]], ['Xpto', [3, 2, 1]]]
+
+          allow_any_instance_of(Flow::WorkItemFlowInformation).to(receive(:demands_stages_count_hash)).and_return(cfd_doubled)
+
           result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
           expect(result.dig('data', 'me')).to eq({
                                                    'id' => user.id.to_s,
@@ -524,19 +528,11 @@ RSpec.describe Types::QueryType do
                                                           'xAxis' => [],
                                                           'yAxis' => []
                                                         },
-                                                        'projectConsolidationsWeekly' => [
-                                                          {
-                                                            'id' => project_consolidation.id.to_s
-                                                          }
-                                                        ],
-                                                        'projectConsolidationsLastMonth' => [
-                                                          {
-                                                            'id' => project_consolidation.id.to_s
-                                                          }
-                                                        ],
+                                                        'projectConsolidationsWeekly' => [{ 'id' => project_consolidation.id.to_s }],
+                                                        'projectConsolidationsLastMonth' => [{ 'id' => project_consolidation.id.to_s }],
                                                         'lastProjectConsolidationsWeekly' => nil,
                                                         'demandsFlowChartData' => { 'committedChartData' => [0, 0, 0], 'creationChartData' => [1, 2, 0], 'pullTransactionRate' => [0, 0, 0], 'throughputChartData' => [0, 1, 0] },
-                                                        'cumulativeFlowChartData' => { 'xAxis' => %w[2022-04-24 2022-05-01 2022-05-08], 'yAxis' => [] },
+                                                        'cumulativeFlowChartData' => { 'xAxis' => %w[2022-04-24 2022-05-01 2022-05-08], 'yAxis' => [{ 'data' => [1, 2, 3], 'name' => 'Bla' }, { 'data' => [3, 2, 1], 'name' => 'Xpto' }] },
                                                         'leadTimeHistogramData' => {
                                                           'keys' => [111_600.0],
                                                           'values' => [1]

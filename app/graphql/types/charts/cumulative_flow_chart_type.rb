@@ -6,8 +6,12 @@ module Types
       field :x_axis, [GraphQL::Types::ISO8601Date], null: true
       field :y_axis, [Types::Charts::CumulativeFlowYAxisType], null: true
 
+      def x_axis
+        object[:x_axis]
+      end
+
       def y_axis
-        object.cumulative_flow_diagram_downstream
+        object[:y_axis]
       end
     end
   end

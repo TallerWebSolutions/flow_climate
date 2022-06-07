@@ -229,10 +229,10 @@ module Types
     def cumulative_flow_chart_data
       start_date = object.start_date
       end_date = [object.end_date, Time.zone.today].min
-      {
-        x_axis: Highchart::StatusReportChartsAdapter.new(object.demands, start_date, end_date, 'week').x_axis,
-        y_axis: Highchart::StatusReportChartsAdapter.new(object.demands, start_date, end_date, 'week').cumulative_flow_diagram_downstream
-      }
+      array_of_dates = TimeService.instance.weeks_between_of(start_date, end_date)
+      work_item_flow_information = build_work_item_flow_information(array_of_dates)
+
+      { x_axis: array_of_dates, y_axis: work_item_flow_information.demands_stages_count_hash }
     end
 
     def demands_flow_chart_data
@@ -267,6 +267,12 @@ module Types
     end
 
     private
+
+    def build_work_item_flow_information(array_of_dates)
+      work_item_flow_information = Flow::WorkItemFlowInformation.new(object.demands, object.initial_scope, array_of_dates.length, array_of_dates.last, 'week')
+      array_of_dates.each { |analysed_date| work_item_flow_information.build_cfd_hash(array_of_dates.first.beginning_of_week, analysed_date) }
+      work_item_flow_information
+    end
 
     def last_consolidation
       @last_consolidation ||= object.project_consolidations.order(:consolidation_date).last
