@@ -23,7 +23,7 @@ import { KeyValueData, Project } from "../../modules/project/project.types"
 import TasksPage from "../../components/TasksPage"
 import { ChartAxisData } from "../../modules/project/project.types"
 import LineChartTooltip from "../../components/charts/tooltips/LineChartTooltip"
-import { ChartBox } from "../../components/charts/ChartBox"
+import { ChartGridItem } from "../../components/charts/ChartGridItem"
 
 const TASKS_CHARTS_QUERY = gql`
   query TasksCharts(
@@ -272,7 +272,7 @@ const TaskCharts = () => {
         }}
       >
         {completionTimeChartData && (
-          <ChartBox title={t("charts.control_completion_time_title")}>
+          <ChartGridItem title={t("charts.control_completion_time_title")}>
             <ScatterChart
               axisLeftLegend={t("charts.days")}
               data={keyValueToAxisData(completionTimeChartData)}
@@ -287,10 +287,10 @@ const TaskCharts = () => {
                 openWindow(`/companies/${companySlug}/tasks/${taskID?.id}`)
               }}
             />
-          </ChartBox>
+          </ChartGridItem>
         )}
 
-        <ChartBox title={t("charts.current_partial_completion_title")}>
+        <ChartGridItem title={t("charts.current_partial_completion_title")}>
           <ScatterChart
             axisLeftLegend={t("charts.days")}
             data={partialCompletionTimeChartData}
@@ -305,9 +305,9 @@ const TaskCharts = () => {
               openWindow(`/companies/${companySlug}/tasks/${taskID?.id}`)
             }}
           />
-        </ChartBox>
+        </ChartGridItem>
 
-        <ChartBox title={t("charts.flow_data_title")}>
+        <ChartGridItem title={t("charts.flow_data_title")}>
           <BarChart
             axisLeftLegend={t("charts.tasks")}
             data={flowChartData}
@@ -324,10 +324,10 @@ const TaskCharts = () => {
               )
             }}
           />
-        </ChartBox>
+        </ChartGridItem>
 
         {shouldRenderCompletionTimeEvolutionChart && (
-          <ChartBox title={t("charts.completion_time_evolution_title")}>
+          <ChartGridItem title={t("charts.completion_time_evolution_title")}>
             <LineChart
               axisLeftLegend={t("charts.days")}
               data={completionTimeEvolutionChartData}
@@ -377,11 +377,11 @@ const TaskCharts = () => {
                 ],
               }}
             />
-          </ChartBox>
+          </ChartGridItem>
         )}
 
         {completionTimeHistogramData && (
-          <ChartBox title={t("charts.completion_time_histogram_chart")}>
+          <ChartGridItem title={t("charts.completion_time_histogram_chart")}>
             <BarChart
               data={completionTimeHistogramData}
               keys={["value"]}
@@ -390,7 +390,7 @@ const TaskCharts = () => {
               axisBottomLegend={t("charts.days")}
               padding={0}
             />
-          </ChartBox>
+          </ChartGridItem>
         )}
       </Box>
     </TasksPage>

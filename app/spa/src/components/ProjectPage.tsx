@@ -227,7 +227,7 @@ export const ProjectPage = ({
               justifyContent: "center",
             }}
           >
-            <Tabs tabs={taskTabs} currentPath="" />
+            <Tabs tabs={taskTabs} currentPath={pathname} />
           </Box>
         )}
         {children}

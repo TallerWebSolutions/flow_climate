@@ -1,7 +1,7 @@
-import { Box, Typography } from "@mui/material"
+import { Grid, Typography } from "@mui/material"
 import { ReactElement } from "react"
 
-export const ChartBox = ({
+export const ChartGridItem = ({
   children,
   title,
 }: {
@@ -9,12 +9,12 @@ export const ChartBox = ({
   title: string
 }) => {
   return (
-    <Box>
+    <Grid item p={1} xs={6}>
       <Typography component="h3" variant="h6">
         {title}
       </Typography>
 
       {children}
-    </Box>
+    </Grid>
   )
 }

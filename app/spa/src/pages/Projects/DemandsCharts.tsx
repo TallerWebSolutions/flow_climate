@@ -11,7 +11,7 @@ import { SliceTooltipProps } from "@nivo/line"
 import { useTranslation } from "react-i18next"
 import { useParams } from "react-router-dom"
 
-import { ChartBox } from "../../components/charts/ChartBox"
+import { ChartGridItem } from "../../components/charts/ChartGridItem"
 import { BarChart } from "../../components/charts/BarChart"
 import { LineChart } from "../../components/charts/LineChart"
 import { normalizeCfdData } from "../../components/charts/LineChart"
@@ -229,7 +229,6 @@ const DemandsCharts = () => {
         id: stage,
         data: cfdXaxis.map((x, index) => {
           const currentStageY = cfdYaxis[stageIndex]?.data[index] || 0
-          const previousStageY = cfdYaxis[stageIndex - 1]?.data[index] || 0
           return {
             x,
             y: currentStageY,
@@ -567,7 +566,7 @@ const DemandsCharts = () => {
 
   return (
     <Grid container spacing={2} rowSpacing={8} sx={{ marginTop: 4 }}>
-      <ChartBox
+      <ChartGridItem
         title={t("project_charts.operational_math_risk_evolution_chart")}
       >
         <LineChart
@@ -596,8 +595,8 @@ const DemandsCharts = () => {
             ),
           }}
         />
-      </ChartBox>
-      <ChartBox
+      </ChartGridItem>
+      <ChartGridItem
         title={t(
           "project_charts.operational_math_risk_evolution_team_data_chart"
         )}
@@ -628,8 +627,8 @@ const DemandsCharts = () => {
             ),
           }}
         />
-      </ChartBox>
-      <ChartBox title={t("project_charts.bugs_chart")}>
+      </ChartGridItem>
+      <ChartGridItem title={t("project_charts.bugs_chart")}>
         <BarChart
           data={projectBugsChartData}
           axisLeftLegend={t("project_charts.bugs_y_label")}
@@ -639,8 +638,8 @@ const DemandsCharts = () => {
           ]}
           indexBy="index"
         />
-      </ChartBox>
-      <ChartBox title={t("project_charts.flow_data_chart")}>
+      </ChartGridItem>
+      <ChartGridItem title={t("project_charts.flow_data_chart")}>
         <BarChart
           data={projectFlowChartData}
           keys={[
@@ -654,8 +653,8 @@ const DemandsCharts = () => {
           axisBottomLegend={t("project_charts.flow_data_x_label")}
           groupMode="grouped"
         />
-      </ChartBox>
-      <ChartBox
+      </ChartGridItem>
+      <ChartGridItem
         title={t("project_charts.demands_burn_up_chart", {
           projectName: project?.name || "",
         })}
@@ -670,8 +669,8 @@ const DemandsCharts = () => {
             ),
           }}
         />
-      </ChartBox>
-      <ChartBox
+      </ChartGridItem>
+      <ChartGridItem
         title={t("project_charts.hours_burn_up_chart", {
           projectName: project?.name || "no project",
         })}
@@ -687,8 +686,8 @@ const DemandsCharts = () => {
             ),
           }}
         />
-      </ChartBox>
-      <ChartBox title={t("project_charts.lead_time_p80_chart")}>
+      </ChartGridItem>
+      <ChartGridItem title={t("project_charts.lead_time_p80_chart")}>
         <LineChart
           data={leadTimeP80ChartData}
           axisLeftLegend={t("project_charts.lead_time_p80_y_label")}
@@ -699,9 +698,9 @@ const DemandsCharts = () => {
             ),
           }}
         />
-      </ChartBox>
+      </ChartGridItem>
       {projectCumulativeFlowChartData && (
-        <ChartBox
+        <ChartGridItem
           title={t("project_charts.cumulative_flow_chart", {
             projectName: project?.name || "no project",
           })}
@@ -730,24 +729,19 @@ const DemandsCharts = () => {
               },
             }}
           />
-        </ChartBox>
+        </ChartGridItem>
       )}
-
-      <Grid item xs={6} sx={{ padding: 1 }}>
-        <Box height={350}>
-          <Typography>{t("project_charts.lead_time_control_chart")}</Typography>
-          <ScatterChart
-            data={leadTimeControlChartData}
-            markers={[
-              leadTimeControlP65Marker,
-              leadTimeControlP80Marker,
-              leadTimeControlP95Marker,
-            ]}
-          />
-        </Box>
-      </Grid>
-
-      <ChartBox title={t("project_charts.lead_time_histogram_chart")}>
+      <ChartGridItem title={t("project_charts.lead_time_control_chart")}>
+        <ScatterChart
+          data={leadTimeControlChartData}
+          markers={[
+            leadTimeControlP65Marker,
+            leadTimeControlP80Marker,
+            leadTimeControlP95Marker,
+          ]}
+        />
+      </ChartGridItem>
+      <ChartGridItem title={t("project_charts.lead_time_histogram_chart")}>
         <BarChart
           data={projectLeadTimeHistogramData}
           keys={[t("project_charts.lead_time_histogram_chart_hits")]}
@@ -758,9 +752,9 @@ const DemandsCharts = () => {
           )}
           padding={0}
         />
-      </ChartBox>
+      </ChartGridItem>
 
-      <ChartBox title={t("project_charts.quality_bugs_chart")}>
+      <ChartGridItem title={t("project_charts.quality_bugs_chart")}>
         <LineChart
           data={projectQualityChartData}
           axisLeftLegend={t("project_charts.quality_bugs_y_label")}
@@ -783,8 +777,8 @@ const DemandsCharts = () => {
             ),
           }}
         />
-      </ChartBox>
-      <ChartBox title={t("project_charts.quality_bugs_for_coding_chart")}>
+      </ChartGridItem>
+      <ChartGridItem title={t("project_charts.quality_bugs_for_coding_chart")}>
         <LineChart
           data={projectQualityForCodingChartData}
           axisLeftLegend={t("project_charts.quality_bugs_for_coding_y_label")}
@@ -808,8 +802,8 @@ const DemandsCharts = () => {
             ),
           }}
         />
-      </ChartBox>
-      <ChartBox
+      </ChartGridItem>
+      <ChartGridItem
         title={t("project_charts.quality_bugs_for_coding_per_demand_chart")}
       >
         <LineChart
@@ -838,8 +832,8 @@ const DemandsCharts = () => {
             ),
           }}
         />
-      </ChartBox>
-      <ChartBox title={t("project_charts.flow_efficiency_chart")}>
+      </ChartGridItem>
+      <ChartGridItem title={t("project_charts.flow_efficiency_chart")}>
         <LineChart
           data={flowEfficiencyChartData}
           axisLeftLegend={"%"}
@@ -862,8 +856,8 @@ const DemandsCharts = () => {
             ),
           }}
         />
-      </ChartBox>
-      <ChartBox title={t("project_charts.hours_per_demand_chart")}>
+      </ChartGridItem>
+      <ChartGridItem title={t("project_charts.hours_per_demand_chart")}>
         <LineChart
           data={hoursPerDemandChartData}
           axisLeftLegend={t("project_charts.hours_per_demand_y_label")}
@@ -885,8 +879,8 @@ const DemandsCharts = () => {
             ),
           }}
         />
-      </ChartBox>
-      <ChartBox title={t("project_charts.hours_consumed_chart")}>
+      </ChartGridItem>
+      <ChartGridItem title={t("project_charts.hours_consumed_chart")}>
         <BarChart
           data={projectHoursConsummed}
           keys={[
@@ -900,16 +894,8 @@ const DemandsCharts = () => {
           axisBottomLegend={t("project_charts.hours_consumed_x_label")}
           groupMode="grouped"
         />
-      </ChartBox>
-      <Grid item xs={6} sx={{ padding: 1 }}>
-        <Typography></Typography>
-      </Grid>
-
-      <Grid item xs={6} sx={{ padding: 1 }}>
-        <Typography>
-          {t("project_charts.consumed_hours_by_role_chart")}
-        </Typography>
-
+      </ChartGridItem>
+      <ChartGridItem title={t("project_charts.consumed_hours_by_role_chart")}>
         <BarChart
           data={projectConsumedHoursByRoleChartData}
           keys={[
@@ -922,11 +908,10 @@ const DemandsCharts = () => {
           axisLeftLegend={t("project_charts.consumed_hours_by_role_y_label")}
           groupMode="grouped"
         />
-      </Grid>
-      <Grid item xs={6} sx={{ padding: 1 }}>
-        <Typography>
-          {t("project_charts.consumed_hours_by_role_in_month_chart")}
-        </Typography>
+      </ChartGridItem>
+      <ChartGridItem
+        title={t("project_charts.consumed_hours_by_role_in_month_chart")}
+      >
         <BarChart
           data={projectConsumedHoursByRoleInMonthChartData}
           axisLeftLegend={t(
@@ -945,22 +930,18 @@ const DemandsCharts = () => {
           indexBy="period"
           groupMode="grouped"
         />
-      </Grid>
-      <Grid item xs={6} sx={{ padding: 1 }}>
-        <Typography>{t("project_charts.hours_per_stage_chart")}</Typography>
-
+      </ChartGridItem>
+      <ChartGridItem title={t("project_charts.hours_per_stage_chart")}>
         <BarChart
           data={projectHoursPerStage}
           keys={hoursPerStageChartData?.xAxis.map(String) || []}
           indexBy="index"
           axisLeftLegend={t("project_charts.hours_per_stage_y_label")}
         />
-      </Grid>
-      <Grid item xs={6} sx={{ padding: 1 }}>
-        <Typography>
-          {t("project_charts.hours_per_coordination_stage_chart")}
-        </Typography>
-
+      </ChartGridItem>
+      <ChartGridItem
+        title={t("project_charts.hours_per_coordination_stage_chart")}
+      >
         <BarChart
           data={projectHoursPerCoordinationStage}
           keys={hoursPerCoordinationStageChartData?.xAxis.map(String) || []}
@@ -969,16 +950,14 @@ const DemandsCharts = () => {
             "project_charts.hours_per_coordination_stage_y_label"
           )}
         />
-      </Grid>
-      <Grid item xs={6} sx={{ padding: 1 }}>
-        <Typography>{t("project_charts.demandsCountByTeamMember")}</Typography>
-
+      </ChartGridItem>
+      <ChartGridItem title={t("project_charts.demandsCountByTeamMember")}>
         <BarChart
           data={demandsCountByTeamMember}
           indexBy="name"
           keys={[t("project_charts.demandsCount")]}
         />
-      </Grid>
+      </ChartGridItem>
     </Grid>
   )
 }

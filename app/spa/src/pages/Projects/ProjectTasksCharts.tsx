@@ -16,7 +16,7 @@ import { BarDatum } from "@nivo/bar"
 import { secondsToDays } from "../../lib/date"
 import { keyValueToAxisData } from "../../lib/charts"
 import { ScatterChart } from "../../components/charts/ScatterChart"
-import { ChartBox } from "../../components/charts/ChartBox"
+import { ChartGridItem } from "../../components/charts/ChartGridItem"
 
 const PROJECT_TASKS_CHARTS_QUERY = gql`
   query ProjectDemandsCharts($TasksProjectId: ID, $ID: Int!) {
@@ -155,12 +155,11 @@ const ProjectTasksCharts = () => {
   }
 
   return (
-    <ProjectPage pageName="" loading={loading} dashboard>
+    <ProjectPage pageName={t("tasks")} loading={loading} dashboard>
       <Grid container spacing={2} rowSpacing={8} sx={{ marginTop: 4 }}>
-        <Grid item xs={6} sx={{ padding: 1 }}>
-          <Typography>{t("charts.flow_chart_data")}</Typography>
+        <ChartGridItem title={t("charts.flow_chart_data")}>
           <BarChart
-            axisLeftLegend={t("charts.tasks")}
+            axisLeftLegend={t("tasks")}
             data={flowChartData}
             keys={flowChartGroupNames}
             axisBottomLegend={t("charts.flow_data_period_legend")}
@@ -175,9 +174,8 @@ const ProjectTasksCharts = () => {
               )
             }}
           />
-        </Grid>
-
-        <ChartBox title={t("charts.burnup_chart_data")}>
+        </ChartGridItem>
+        <ChartGridItem title={t("charts.burnup_chart_data")}>
           <LineChart
             data={projectTasksBurnupChartData}
             axisLeftLegend={t("charts.tasks")}
@@ -188,9 +186,10 @@ const ProjectTasksCharts = () => {
               ),
             }}
           />
-        </ChartBox>
-
-        <ChartBox title={t("charts.operational_math_risk_evolution_chart")}>
+        </ChartGridItem>
+        <ChartGridItem
+          title={t("charts.operational_math_risk_evolution_chart")}
+        >
           <LineChart
             data={operationalRiskChartData}
             axisLeftLegend={`${t(
@@ -217,22 +216,20 @@ const ProjectTasksCharts = () => {
               ),
             }}
           />
-        </ChartBox>
-        <Grid item xs={6} sx={{ padding: 1 }}>
-          {completionTimeChartData && (
-            <ChartBox title={t("charts.control_completion_time_title")}>
-              <ScatterChart
-                axisLeftLegend={t("charts.days")}
-                data={keyValueToAxisData(completionTimeChartData)}
-                markers={[
-                  deliveredLeadTimeP65Marker,
-                  deliveredLeadTimeP80Marker,
-                  deliveredLeadTimeP95Marker,
-                ]}
-              />
-            </ChartBox>
-          )}
-        </Grid>
+        </ChartGridItem>
+        {completionTimeChartData && (
+          <ChartGridItem title={t("charts.control_completion_time_title")}>
+            <ScatterChart
+              axisLeftLegend={t("charts.days")}
+              data={keyValueToAxisData(completionTimeChartData)}
+              markers={[
+                deliveredLeadTimeP65Marker,
+                deliveredLeadTimeP80Marker,
+                deliveredLeadTimeP95Marker,
+              ]}
+            />
+          </ChartGridItem>
+        )}
       </Grid>
     </ProjectPage>
   )
