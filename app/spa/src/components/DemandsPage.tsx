@@ -31,8 +31,6 @@ export type DemandsSearchDTO = {
 
 type DemandPageProps = {
   children: ReactNode | ReactNode[]
-  pageNumber: number
-  perPage: number
   filters: FieldValues
   setFilters: Dispatch<SetStateAction<FieldValues>>
 } & BasicPageProps

@@ -52,8 +52,6 @@ const DEMANDS_CHART_QUERY = gql`
 
 const DemandsCharts = () => {
   const { me } = useContext(MeContext)
-  const perPage = 10
-  const [pageNumber] = useState(0)
   const { t } = useTranslation(["demands"])
   const sortDirection = "DESC"
   const orderField = "end_date"
@@ -134,8 +132,6 @@ const DemandsCharts = () => {
     <DemandsPage
       breadcrumbsLinks={breadcrumbsLinks}
       loading={loading}
-      perPage={perPage}
-      pageNumber={pageNumber}
       filters={filters}
       setFilters={setFilters}
     >

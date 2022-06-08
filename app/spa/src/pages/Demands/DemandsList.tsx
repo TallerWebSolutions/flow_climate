@@ -1,13 +1,15 @@
-import DemandsPage, { DemandsSearchDTO } from "../../components/DemandsPage"
-import Table from "../../components/ui/Table"
 import { useContext, useState } from "react"
-import { gql, useQuery } from "@apollo/client"
-import { Demand } from "../../modules/demand/demand.types"
-import { Button } from "@mui/material"
-import { CSVLink } from "react-csv"
 import { useTranslation } from "react-i18next"
-import { MeContext } from "../../contexts/MeContext"
+import { gql, useQuery } from "@apollo/client"
+import { Link as RouterLink } from "react-router-dom"
+import { Button, Link } from "@mui/material"
+import { CSVLink } from "react-csv"
 import { FieldValues } from "react-hook-form"
+
+import { Demand } from "../../modules/demand/demand.types"
+import Table from "../../components/ui/Table"
+import DemandsPage, { DemandsSearchDTO } from "../../components/DemandsPage"
+import { MeContext } from "../../contexts/MeContext"
 import { formatDate } from "../../lib/date"
 
 const DEMANDS_QUERY = gql`
@@ -75,18 +77,14 @@ const DEMANDS_QUERY = gql`
 const DemandsList = () => {
   const { t } = useTranslation("demands")
   const { me } = useContext(MeContext)
+  const companySlug = me?.currentCompany?.slug
 
-  const perPage = 10
-  const [pageNumber, setPageNumber] = useState(0)
-  const sortDirection = "DESC"
-  const orderField = "end_date"
-  const searchText = ""
   const [filters, setFilters] = useState<FieldValues>({
-    searchText,
-    perPage,
-    sortDirection,
-    orderField,
-    pageNumber,
+    searchText: "",
+    perPage: 10,
+    sortDirection: "DESC",
+    orderField: "end_date",
+    pageNumber: 0,
     startDate: "1900-01-01",
     endDate: formatDate({
       date: new Date().toISOString(),
@@ -109,7 +107,9 @@ const DemandsList = () => {
   ]
 
   const normalizeTableRow = (demand: Demand) => [
-    demand.externalId || "",
+    <Link href={`/companies/${companySlug}/demands/${demand.externalId}`}>
+      {demand.externalId}
+    </Link>,
     demand.demandTitle || "",
     demand.createdDate || "",
     demand.endDate || "",
@@ -146,8 +146,6 @@ const DemandsList = () => {
     <DemandsPage
       breadcrumbsLinks={breadcrumbsLinks}
       loading={loading}
-      perPage={perPage}
-      pageNumber={pageNumber}
       filters={filters}
       setFilters={setFilters}
     >
@@ -157,9 +155,10 @@ const DemandsList = () => {
         rows={tableRows}
         pagination={{
           count: demandsCount,
-          rowsPerPage: perPage,
-          page: pageNumber,
-          onPageChange: (_, newPage: number) => setPageNumber(newPage),
+          rowsPerPage: filters.perPage,
+          page: filters.pageNumber,
+          onPageChange: (_, newPage: number) =>
+            setFilters((filters) => ({ ...filters, pageNumber: newPage + 1 })),
         }}
       />
     </DemandsPage>
