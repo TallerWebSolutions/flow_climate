@@ -38,9 +38,12 @@
   },
 
   "demandsCharts": {
-    "leadTimeControlMarkerP95": "Lead time p95",
-    "leadTimeControlMarkerP80": "Lead time p80",
-    "leadTimeControlMarkerP65": "Lead time p65",
+    "leadTimeControlMarkerP95": "Lead time p95 ({{days}} days)",
+    "leadTimeControlMarkerP80": "Lead time p80 ({{days}} days)",
+    "leadTimeControlMarkerP65": "Lead time p65 ({{days}} days)",
     "leadTimeControlChart": "Control chart do lead time"
+  },
+  "charts": {
+    "title": "Gráficos"
   }
 }

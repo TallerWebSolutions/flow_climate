@@ -58,11 +58,11 @@ const DemandsPage = ({
 
   const demandsTabs = [
     {
-      label: t("tabs.list"),
+      label: t("list.title"),
       to: `/companies/${companySlug}/demands/`,
     },
     {
-      label: t("tabs.charts"),
+      label: t("charts.title"),
       to: `/companies/${companySlug}/demands/demands_charts`,
     },
   ]
@@ -75,6 +75,8 @@ const DemandsPage = ({
     >
       <Box
         sx={{
+          mt: 2,
+          mb: 6,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -125,7 +127,6 @@ const DemandsPage = ({
                 {t("list.form.status.title")}
               </InputLabel>
               <Select native {...register("demandStatus")}>
-                <option value="">{t("list.form.common.placeholder")}</option>
                 <option value="ALL_DEMANDS">{t("list.form.status.all")}</option>
                 <option value="NOT_COMMITTED">
                   {t("list.form.status.notCommitted")}

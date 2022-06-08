@@ -210,11 +210,6 @@ class DemandsController < DemandsListController
     @paged_demands = @demands.page(page_param) if @demands.present?
   end
 
-  def query_demands
-    build_demands_list
-    DemandService.instance.search_engine(@demands, params[:demands_start_date], params[:demands_end_date], params[:search_text], params[:demand_state], params[:demand_type], params[:class_of_service], params[:demand_tags]&.split(' '), params[:team_id])
-  end
-
   def demand_params
     params.require(:demand).permit(:team_id, :product_id, :customer_id, :external_id, :demand_type, :downstream, :manual_effort, :class_of_service, :effort_upstream, :effort_downstream, :created_date, :commitment_date, :end_date, :demand_score, :external_url, :object_type, :flow_object_id, :demand_state, :demand_fitness)
   end

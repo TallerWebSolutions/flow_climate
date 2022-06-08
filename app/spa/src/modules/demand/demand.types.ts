@@ -1,5 +1,6 @@
 import { Company } from "../company/company.types"
 import { Project } from "../project/project.types"
+import ControlChart from "../charts/controlChart.types"
 
 export type Demand = {
   id: string
@@ -26,6 +27,7 @@ export type DemandsList = {
   lastPage: boolean
   totalCount: number
   totalPages: number
+  controlChart: ControlChart
 }
 
 export type DemandBlock = {

@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next"
 import { useContext, useState } from "react"
 import { MeContext } from "../../contexts/MeContext"
 import { FieldValues } from "react-hook-form"
-import DemandsPage from "../../components/DemandsPage"
+import DemandsPage, { DemandsSearchDTO } from "../../components/DemandsPage"
 
 const DEMANDS_CHART_QUERY = gql`
   query DemandsSearch(
@@ -50,15 +50,6 @@ const DEMANDS_CHART_QUERY = gql`
   }
 `
 
-type DemandsChartsDTO = {
-  leadTimeP65: number
-  leadTimeP80: number
-  leadTimeP95: number
-
-  xAxis: string[]
-  demandsLeadTime: number[]
-}
-
 const DemandsCharts = () => {
   const { me } = useContext(MeContext)
   const perPage = 10
@@ -88,17 +79,20 @@ const DemandsCharts = () => {
     },
   ]
 
-  const { data, loading } = useQuery<DemandsChartsDTO>(DEMANDS_CHART_QUERY, {
+  const { data, loading } = useQuery<DemandsSearchDTO>(DEMANDS_CHART_QUERY, {
     variables: filters,
   })
 
-  const xAxis = data?.xAxis || []
-  const demandsLeadTime = data?.demandsLeadTime || []
-  const leadTimeP95InDays = secondsToDays(Number(data?.leadTimeP95))
+  const controlChart = data?.demandsTableData.controlChart
 
-  const leadTimeP80InDays = secondsToDays(Number(data?.leadTimeP80))
-
-  const leadTimeP65InDays = secondsToDays(Number(data?.leadTimeP65))
+  const xAxis = controlChart?.xAxis || []
+  const demandsLeadTime =
+    controlChart?.leadTimes.map((leadTime) =>
+      secondsToDays(Number(leadTime))
+    ) || []
+  const leadTimeP95InDays = secondsToDays(Number(controlChart?.leadTimeP95))
+  const leadTimeP80InDays = secondsToDays(Number(controlChart?.leadTimeP80))
+  const leadTimeP65InDays = secondsToDays(Number(controlChart?.leadTimeP65))
 
   const chartData = {
     xAxis: xAxis,
@@ -111,21 +105,21 @@ const DemandsCharts = () => {
   const leadTimeControlP95Marker = {
     value: leadTimeP95InDays,
     legend: t("demandsCharts.leadTimeControlMarkerP95", {
-      leadTime: leadTimeP95InDays,
+      days: leadTimeP95InDays,
     }),
   }
 
   const leadTimeControlP80Marker = {
     value: leadTimeP80InDays,
     legend: t("demandsCharts.leadTimeControlMarkerP80", {
-      leadTime: leadTimeP80InDays,
+      days: leadTimeP80InDays,
     }),
   }
 
   const leadTimeControlP65Marker = {
     value: leadTimeP65InDays,
     legend: t("demandsCharts.leadTimeControlMarkerP65", {
-      leadTime: leadTimeP65InDays,
+      days: leadTimeP65InDays,
     }),
   }
 
