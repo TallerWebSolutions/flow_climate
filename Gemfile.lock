@@ -519,7 +519,7 @@ DEPENDENCIES
   rubocop-rspec
   rubycritic
   shoulda-matchers
-  sidekiq
+  sidekiq (~> 6.4)
   sidekiq-limit_fetch
   simplecov
   slack-notifier
