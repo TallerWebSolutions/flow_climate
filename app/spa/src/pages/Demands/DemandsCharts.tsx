@@ -53,7 +53,7 @@ const DEMANDS_CHART_QUERY = gql`
 const DemandsCharts = () => {
   const { me } = useContext(MeContext)
   const perPage = 10
-  const [pageNumber, setPageNumber] = useState(0)
+  const [pageNumber] = useState(0)
   const { t } = useTranslation(["demands"])
   const sortDirection = "DESC"
   const orderField = "end_date"
