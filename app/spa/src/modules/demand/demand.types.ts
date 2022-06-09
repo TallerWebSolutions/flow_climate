@@ -20,6 +20,9 @@ export type Demand = {
   numberOfBlocks: number
   project?: Project
   company?: Company
+  costToProject?: number
+  effortUpstream?: number
+  effortDownstream?: number
 }
 
 export type DemandsList = {

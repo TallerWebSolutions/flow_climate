@@ -10,6 +10,8 @@ import Table from "../../components/ui/Table"
 import DemandsPage, { DemandsSearchDTO } from "../../components/DemandsPage"
 import { MeContext } from "../../contexts/MeContext"
 import { useSearchParams } from "react-router-dom"
+import { formatDate, secondsToReadbleDate } from "../../lib/date"
+import DateLocale from "../../components/ui/DateLocale"
 
 const DEMANDS_QUERY = gql`
   query DemandsSearch(
@@ -66,6 +68,7 @@ const DEMANDS_QUERY = gql`
       demandTitle
       createdDate
       endDate
+      leadtime
     }
     lastPage
     totalCount
@@ -89,12 +92,14 @@ const DemandsList = () => {
     orderField: "end_date",
     startDate: searchParams.get("startDate"),
     endDate: searchParams.get("endDate"),
+    pageNumber: searchParams.get("pageNumber"),
+    perPage: 10,
   })
 
   const { data, loading } = useQuery<DemandsSearchDTO>(DEMANDS_QUERY, {
     variables: Object.keys(filters)
       .filter((key) => {
-        return filters[key]?.length > 0
+        return String(filters[key]).length > 0
       })
       .reduce<Record<string, string>>((acc, el) => {
         return { ...acc, [el]: filters[el] }
@@ -116,9 +121,9 @@ const DemandsList = () => {
       {demand.externalId}
     </Link>,
     demand.demandTitle || "",
-    demand.createdDate || "",
-    demand.endDate || "",
-    demand.leadtime || 0,
+    demand.createdDate ? <DateLocale time date={demand.createdDate} /> : "",
+    demand.endDate ? <DateLocale time date={demand.endDate} /> : "",
+    secondsToReadbleDate(demand.leadtime),
   ]
 
   const tableHeader = [
@@ -152,7 +157,6 @@ const DemandsList = () => {
       breadcrumbsLinks={breadcrumbsLinks}
       loading={loading}
       filters={filters}
-      setFilters={setFilters}
     >
       <Table
         title={<TableTitle />}

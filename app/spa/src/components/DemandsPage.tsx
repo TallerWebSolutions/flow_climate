@@ -32,7 +32,7 @@ export type DemandsSearchDTO = {
 type DemandPageProps = {
   children: ReactNode | ReactNode[]
   filters: FieldValues
-  setFilters: Dispatch<SetStateAction<FieldValues>>
+  setFilters?: Dispatch<SetStateAction<FieldValues>>
 } & BasicPageProps
 
 const DemandsPage = ({
@@ -40,8 +40,9 @@ const DemandsPage = ({
   loading,
   breadcrumbsLinks,
   filters,
-  setFilters,
 }: DemandPageProps) => {
+  // eslint-disable-next-line
+  console.log({ filters })
   const { t } = useTranslation("demands")
   const { me } = useContext(MeContext)
   const company = me?.currentCompany

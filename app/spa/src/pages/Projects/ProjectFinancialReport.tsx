@@ -6,37 +6,47 @@ import Table from "../../components/ui/Table"
 import { formatCurrency } from "../../lib/currency"
 import { formatDate } from "../../lib/date"
 import { useTranslation } from "react-i18next"
+import { DemandsList } from "../../modules/demand/demand.types"
 
 const QUERY = gql`
   query FinancialReportDemands($projectId: ID!) {
-    finishedDemands: demands(
-      projectId: $projectId
-      limit: 100
-      finished: true
-      sortDirection: ASC
+    finishedDemands: demandsList(
+      searchOptions: {
+        projectId: $projectId
+        perPage: 100
+        demandStatus: DELIVERED_DEMANDS
+        sortDirection: ASC
+        orderField: "end_date"
+      }
     ) {
-      id
-      externalId
-      demandTitle
-      endDate
-      costToProject
-      effortDownstream
-      effortUpstream
+      demands {
+        id
+        externalId
+        demandTitle
+        endDate
+        costToProject
+        effortDownstream
+        effortUpstream
+      }
     }
 
-    discardedDemands: demands(
-      projectId: $projectId
-      limit: 100
-      discarded: true
-      finished: false
-      sortDirection: ASC
+    discardedDemands: demandsList(
+      searchOptions: {
+        projectId: $projectId
+        perPage: 100
+        demandStatus: DISCARDED_DEMANDS
+        sortDirection: ASC
+        orderField: "created_date"
+      }
     ) {
-      id
-      externalId
-      demandTitle
-      costToProject
-      effortDownstream
-      effortUpstream
+      demands {
+        id
+        externalId
+        demandTitle
+        costToProject
+        effortDownstream
+        effortUpstream
+      }
     }
 
     projectAdditionalHours(projectId: $projectId) {
@@ -73,8 +83,8 @@ type AdditionalHours = {
 }
 
 type FinancialReportDemandsDTO = {
-  finishedDemands: Demand[]
-  discardedDemands: Demand[]
+  finishedDemands: DemandsList
+  discardedDemands: DemandsList
   projectAdditionalHours: AdditionalHours[]
 }
 
@@ -91,32 +101,34 @@ const ProjectFinancialReport = () => {
   })
 
   const finishedDemandsRows = data?.finishedDemands
-    ? data.finishedDemands.map((demand) => [
+    ? data.finishedDemands.demands.map((demand) => [
         <Link href={`/companies/${companySlug}/demands/${demand.externalId}`}>
           {demand.externalId}
         </Link>,
-        demand.demandTitle,
+        String(demand.demandTitle),
         demand.endDate
           ? formatDate({ date: demand.endDate, format: dateFormat })
           : "",
-        formatCurrency(demand.costToProject),
-        Number(demand.effortUpstream).toFixed(2),
-        Number(demand.effortDownstream).toFixed(2),
-        Number(demand.effortUpstream + demand.effortDownstream).toFixed(2),
+        formatCurrency(demand.costToProject || 0),
+        Number(demand.effortUpstream || 0).toFixed(2),
+        Number(demand.effortDownstream || 0).toFixed(2),
+        Number(
+          (demand.effortUpstream || 0) + (demand.effortDownstream || 0)
+        ).toFixed(2),
       ])
     : []
 
   const totalFinishedDemandsCost =
-    data?.finishedDemands
-      .map((demand) => demand.costToProject)
+    data?.finishedDemands.demands
+      .map((demand) => demand.costToProject || 0)
       .reduce(sum, 0) || 0
   const totalFinishedDemandsUpstreamEffort =
-    data?.finishedDemands
-      .map((demand) => demand.effortUpstream)
+    data?.finishedDemands.demands
+      .map((demand) => demand.effortUpstream || 0)
       .reduce(sum, 0) || 0
   const totalFinishedDemandsDownstreamEffort =
-    data?.finishedDemands
-      .map((demand) => demand.effortDownstream)
+    data?.finishedDemands.demands
+      .map((demand) => demand.effortDownstream || 0)
       .reduce(sum, 0) || 0
   const finishedDemandsFooter = [
     t("footer.total"),
@@ -130,30 +142,32 @@ const ProjectFinancialReport = () => {
     ).toFixed(2),
   ]
 
-  const discardedDemandsRows = data?.discardedDemands
-    ? data.discardedDemands.map((demand) => [
+  const discardedDemandsRows = data?.discardedDemands?.demands
+    ? data.discardedDemands.demands.map((demand) => [
         <Link href={`/companies/${companySlug}/demands/${demand.externalId}`}>
           {demand.externalId}
         </Link>,
-        demand.demandTitle,
-        formatCurrency(demand.costToProject),
+        String(demand.demandTitle),
+        formatCurrency(demand.costToProject || 0),
         Number(demand.effortUpstream).toFixed(2),
         Number(demand.effortDownstream).toFixed(2),
-        Number(demand.effortUpstream + demand.effortDownstream).toFixed(2),
+        Number(
+          (demand.effortUpstream || 0) + (demand.effortDownstream || 0)
+        ).toFixed(2),
       ])
     : []
 
   const totalDiscardedDemandsCost =
-    data?.discardedDemands
-      .map((demand) => demand.costToProject)
+    data?.discardedDemands.demands
+      .map((demand) => demand.costToProject || 0)
       .reduce(sum, 0) || 0
   const totalDiscardedDemandsUpstreamEffort =
-    data?.discardedDemands
-      .map((demand) => demand.effortUpstream)
+    data?.discardedDemands.demands
+      .map((demand) => demand.effortUpstream || 0)
       .reduce(sum, 0) || 0
   const totalDiscardedDemandsDownstreamEffort =
-    data?.discardedDemands
-      .map((demand) => demand.effortDownstream)
+    data?.discardedDemands.demands
+      .map((demand) => demand.effortDownstream || 0)
       .reduce(sum, 0) || 0
 
   const discardedDemandsFooter = [
@@ -177,7 +191,7 @@ const ProjectFinancialReport = () => {
 
   const totalAdditionalHours = data?.projectAdditionalHours
     .map((item) => item.hours)
-    .reduce(sum)
+    .reduce(sum, 0)
 
   const additionalHoursFooterCells = [
     t("footer.total").toString(),
