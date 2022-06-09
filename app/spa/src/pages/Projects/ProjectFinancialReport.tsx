@@ -62,16 +62,6 @@ const QUERY = gql`
   }
 `
 
-type Demand = {
-  id: string
-  externalId: string
-  demandTitle: string
-  endDate?: string
-  costToProject: number
-  effortDownstream: number
-  effortUpstream: number
-}
-
 type AdditionalHours = {
   eventDate: string
   hours: number

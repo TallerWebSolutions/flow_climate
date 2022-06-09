@@ -10,7 +10,7 @@ import Table from "../../components/ui/Table"
 import DemandsPage, { DemandsSearchDTO } from "../../components/DemandsPage"
 import { MeContext } from "../../contexts/MeContext"
 import { useSearchParams } from "react-router-dom"
-import { formatDate, secondsToReadbleDate } from "../../lib/date"
+import { secondsToReadbleDate } from "../../lib/date"
 import DateLocale from "../../components/ui/DateLocale"
 
 const DEMANDS_QUERY = gql`

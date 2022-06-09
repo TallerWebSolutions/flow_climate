@@ -1,4 +1,4 @@
-import { formatDate, secondsToDays } from "../../lib/date"
+import { secondsToDays } from "../../lib/date"
 import { gql, useQuery } from "@apollo/client"
 import { Backdrop, CircularProgress, Grid } from "@mui/material"
 import { ChartGridItem } from "../../components/charts/ChartGridItem"

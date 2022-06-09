@@ -41,14 +41,12 @@ const DemandsPage = ({
   breadcrumbsLinks,
   filters,
 }: DemandPageProps) => {
-  // eslint-disable-next-line
-  console.log({ filters })
   const { t } = useTranslation("demands")
   const { me } = useContext(MeContext)
   const company = me?.currentCompany
   const companySlug = company?.slug
 
-  const { register, handleSubmit } = useForm()
+  const { register } = useForm()
 
   const initiatives = me?.currentCompany?.initiatives
   const projects = me?.currentCompany?.projects
