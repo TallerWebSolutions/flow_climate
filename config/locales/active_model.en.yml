@@ -51,10 +51,22 @@ en:
       team_member:
         one: Employee
         other: Employees
-      jira/jira_account: "Jira Accounts"
+      jira/jira_account: Jira Accounts
       portfolio_unit:
-        one: "Portfolio Units"
-        other: "Portfolio Units"
+        one: Portfolio Units
+        other: Portfolio Units
+      demand:
+        one: Demand
+        other: Demands
+      demand_block:
+        one: Demand Block
+        other: Demands Blocks
+      team:
+        one: Team
+        other: Teams
+      demand_comment:
+        one: Demand Comment
+        other: Demands Comments
     attributes:
       user:
         created_at: Joined At
