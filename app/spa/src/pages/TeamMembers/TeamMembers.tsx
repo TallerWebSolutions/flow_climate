@@ -72,8 +72,8 @@ const TeamMembers = () => {
       teamMember.endDate,
       teamMember.billable ? <CheckIcon color="primary" /> : "",
       teamMember.endDate
-        ? t("columns.status.active")
-        : t("columns.status.inactive"),
+        ? t("columns.status.inactive")
+        : t("columns.status.active"),
       <RouterLink to={`${companyUrl}/team_members/${teamMember.id}/edit`}>
         <EditOutlinedIcon color="primary" />
       </RouterLink>,
