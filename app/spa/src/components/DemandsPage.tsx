@@ -57,13 +57,13 @@ const DemandsPage = ({
   const demandsTabs = [
     {
       label: t("list.title"),
-      to: `/companies/${companySlug}/demands/?${new URLSearchParams(
+      to: `/companies/${companySlug}/demands?${new URLSearchParams(
         filters
       ).toString()}`,
     },
     {
       label: t("charts.title"),
-      to: `/companies/${companySlug}/demands/demands_charts/?${new URLSearchParams(
+      to: `/companies/${companySlug}/demands/demands_charts?${new URLSearchParams(
         filters
       ).toString()}`,
     },
@@ -84,7 +84,10 @@ const DemandsPage = ({
           justifyContent: "center",
         }}
       >
-        <Tabs tabs={demandsTabs} currentPath={pathname} />
+        <Tabs
+          tabs={demandsTabs}
+          currentPath={`${pathname}?${new URLSearchParams(filters).toString()}`}
+        />
       </Box>
 
       <form>
