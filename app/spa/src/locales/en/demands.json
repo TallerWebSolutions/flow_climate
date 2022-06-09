@@ -34,14 +34,13 @@
     },
     "table": {
       "title": "{{count}} Demands"
-    },
-
-    "demandsCharts": {
-      "leadTimeControlMarkerP95": "Lead time p95 ({{days}} days)",
-      "leadTimeControlMarkerP80": "Lead time p80 ({{days}} days)",
-      "leadTimeControlMarkerP65": "Lead time p65 ({{days}} days)",
-      "leadTimeControlChart": "Lead time control chart"
     }
+  },
+  "demandsCharts": {
+    "leadTimeControlMarkerP95": "Lead time p95 ({{days}} days)",
+    "leadTimeControlMarkerP80": "Lead time p80 ({{days}} days)",
+    "leadTimeControlMarkerP65": "Lead time p65 ({{days}} days)",
+    "leadTimeControlChart": "Lead time control chart"
   },
   "charts": {
     "title": "Charts"

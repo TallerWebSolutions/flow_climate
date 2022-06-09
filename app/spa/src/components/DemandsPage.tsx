@@ -57,11 +57,15 @@ const DemandsPage = ({
   const demandsTabs = [
     {
       label: t("list.title"),
-      to: `/companies/${companySlug}/demands/`,
+      to: `/companies/${companySlug}/demands/?${new URLSearchParams(
+        filters
+      ).toString()}`,
     },
     {
       label: t("charts.title"),
-      to: `/companies/${companySlug}/demands/demands_charts`,
+      to: `/companies/${companySlug}/demands/demands_charts/?${new URLSearchParams(
+        filters
+      ).toString()}`,
     },
   ]
 
@@ -83,18 +87,17 @@ const DemandsPage = ({
         <Tabs tabs={demandsTabs} currentPath={pathname} />
       </Box>
 
-      <form
-        onSubmit={handleSubmit((formFilters) =>
-          setFilters({ ...filters, ...formFilters })
-        )}
-      >
+      <form>
         <FormGroup>
           <Grid container spacing={5}>
             <FormElement>
               <InputLabel htmlFor="searchText">
                 {t("list.form.search")}
               </InputLabel>
-              <Input {...register("searchText")} />
+              <Input
+                {...register("searchText")}
+                defaultValue={filters.searchText}
+              />
             </FormElement>
             <FormElement>
               <InputLabel htmlFor="startDate" shrink>
@@ -124,7 +127,12 @@ const DemandsPage = ({
               >
                 {t("list.form.status.title")}
               </InputLabel>
-              <Select native {...register("demandStatus")}>
+              <Select
+                native
+                {...register("demandStatus")}
+                defaultValue={filters.demandStatus}
+              >
+                <option value="">{t("list.form.common.placeholder")}</option>
                 <option value="ALL_DEMANDS">{t("list.form.status.all")}</option>
                 <option value="NOT_COMMITTED">
                   {t("list.form.status.notCommitted")}
@@ -155,7 +163,11 @@ const DemandsPage = ({
                 >
                   {t("list.form.initiative")}
                 </InputLabel>
-                <Select native {...register("initiative")}>
+                <Select
+                  native
+                  {...register("initiative")}
+                  defaultValue={filters.initiative}
+                >
                   <option value="">{t("list.form.common.placeholder")}</option>
                   {initiatives.map((initiative, index) => (
                     <option
@@ -177,7 +189,11 @@ const DemandsPage = ({
                 >
                   {t("list.form.project")}
                 </InputLabel>
-                <Select native {...register("project")}>
+                <Select
+                  native
+                  {...register("project")}
+                  defaultValue={filters.project}
+                >
                   <option value="">{t("list.form.common.placeholder")}</option>
                   {projects.map((project, index) => (
                     <option value={project.id} key={`${project.id}--${index}`}>
@@ -196,7 +212,11 @@ const DemandsPage = ({
                 >
                   {t("list.form.team")}
                 </InputLabel>
-                <Select native {...register("team")}>
+                <Select
+                  native
+                  {...register("team")}
+                  defaultValue={filters.team}
+                >
                   <option value="">{t("list.form.common.placeholder")}</option>
                   {teams.map((team, index) => (
                     <option value={team.id} key={`${team.id}--${index}`}>

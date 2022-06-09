@@ -9,7 +9,7 @@ import { Demand } from "../../modules/demand/demand.types"
 import Table from "../../components/ui/Table"
 import DemandsPage, { DemandsSearchDTO } from "../../components/DemandsPage"
 import { MeContext } from "../../contexts/MeContext"
-import { formatDate } from "../../lib/date"
+import { useSearchParams } from "react-router-dom"
 
 const DEMANDS_QUERY = gql`
   query DemandsSearch(
@@ -77,22 +77,28 @@ const DemandsList = () => {
   const { t } = useTranslation("demands")
   const { me } = useContext(MeContext)
   const companySlug = me?.currentCompany?.slug
+  const [searchParams] = useSearchParams()
 
   const [filters, setFilters] = useState<FieldValues>({
-    searchText: "",
-    perPage: 10,
+    initiative: searchParams.get("initiative"),
+    team: searchParams.get("team"),
+    project: searchParams.get("project"),
+    searchText: searchParams.get("searchText"),
+    demandStatus: searchParams.get("demandStatus"),
     sortDirection: "DESC",
     orderField: "end_date",
-    pageNumber: 0,
-    startDate: "1900-01-01",
-    endDate: formatDate({
-      date: new Date().toISOString(),
-      format: "yyyy-MM-dd",
-    }),
+    startDate: searchParams.get("startDate"),
+    endDate: searchParams.get("endDate"),
   })
 
   const { data, loading } = useQuery<DemandsSearchDTO>(DEMANDS_QUERY, {
-    variables: filters,
+    variables: Object.keys(filters)
+      .filter((key) => {
+        return filters[key]?.length > 0
+      })
+      .reduce<Record<string, string>>((acc, el) => {
+        return { ...acc, [el]: filters[el] }
+      }, {}),
   })
 
   const breadcrumbsLinks = [

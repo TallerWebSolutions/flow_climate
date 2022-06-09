@@ -8,6 +8,7 @@ import { useContext, useState } from "react"
 import { MeContext } from "../../contexts/MeContext"
 import { FieldValues } from "react-hook-form"
 import DemandsPage, { DemandsSearchDTO } from "../../components/DemandsPage"
+import { useSearchParams } from "react-router-dom"
 
 const DEMANDS_CHART_QUERY = gql`
   query DemandsSearch(
@@ -53,18 +54,18 @@ const DEMANDS_CHART_QUERY = gql`
 const DemandsCharts = () => {
   const { me } = useContext(MeContext)
   const { t } = useTranslation(["demands"])
-  const sortDirection = "DESC"
-  const orderField = "end_date"
-  const searchText = ""
+  const [searchParams] = useSearchParams()
+
   const [filters, setFilters] = useState<FieldValues>({
-    searchText,
-    sortDirection,
-    orderField,
-    startDate: "1900-01-01",
-    endDate: formatDate({
-      date: new Date().toISOString(),
-      format: "yyyy-MM-dd",
-    }),
+    initiative: searchParams.get("initiative"),
+    team: searchParams.get("team"),
+    project: searchParams.get("project"),
+    searchText: searchParams.get("searchText"),
+    demandStatus: searchParams.get("demandStatus"),
+    sortDirection: "DESC",
+    orderField: "end_date",
+    startDate: searchParams.get("startDate"),
+    endDate: searchParams.get("endDate"),
   })
 
   const breadcrumbsLinks = [
@@ -78,7 +79,13 @@ const DemandsCharts = () => {
   ]
 
   const { data, loading } = useQuery<DemandsSearchDTO>(DEMANDS_CHART_QUERY, {
-    variables: filters,
+    variables: Object.keys(filters)
+      .filter((key) => {
+        return filters[key]?.length > 0
+      })
+      .reduce<Record<string, string>>((acc, el) => {
+        return { ...acc, [el]: filters[el] }
+      }, {}),
   })
 
   const controlChart = data?.demandsTableData.controlChart
