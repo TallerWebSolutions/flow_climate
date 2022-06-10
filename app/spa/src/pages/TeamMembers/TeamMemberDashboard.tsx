@@ -16,10 +16,10 @@ const TEAM_MEMBER_QUERY = gql`
       name
       startDate
       endDate
-      deliveredDemands: demands(status: FINISHED) {
+      deliveredDemands: demands(status: DELIVERED_DEMANDS) {
         id
       }
-      bugs: demands(status: FINISHED, type: BUG) {
+      bugs: demands(status: DELIVERED_DEMANDS, type: BUG) {
         id
       }
       demandShortestLeadTime {
@@ -90,7 +90,7 @@ const TEAM_MEMBER_QUERY = gql`
           unblockTime
         }
       }
-      latestDeliveries: demands(status: FINISHED, limit: 10) {
+      latestDeliveries: demands(status: DELIVERED_DEMANDS, limit: 10) {
         id
         project {
           id
