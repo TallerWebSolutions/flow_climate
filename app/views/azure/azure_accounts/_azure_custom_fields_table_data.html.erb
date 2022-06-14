@@ -1,0 +1,19 @@
+<thead>
+<tr>
+  <th><%= Azure::AzureCustomField.human_attribute_name :id %></th>
+  <th><%= Azure::AzureCustomField.human_attribute_name :custom_field_name %></th>
+  <th><%= Azure::AzureCustomField.human_attribute_name :custom_field_type %></th>
+</tr>
+</thead>
+
+<tbody>
+<div >
+  <% @account_custom_fields.each do |custom_field| %>
+    <tr>
+      <td><%= custom_field.id %></td>
+      <td><%= custom_field.custom_field_name %></td>
+      <td><%= I18n.t("activerecord.attributes.azure/azure_custom_field.enums.custom_field_type.#{custom_field.custom_field_type}") %></td>
+    </tr>
+  <% end %>
+</div>
+</tbody>

@@ -19,6 +19,12 @@ RSpec.describe Azure::AzureAccountsController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'GET #show' do
+      before { get :show, params: { company_id: 'foo', id: 'bar' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -143,6 +149,35 @@ RSpec.describe Azure::AzureAccountsController, type: :controller do
           let(:company) { Fabricate :company, users: [] }
 
           before { put :update, params: { company_id: company, id: azure_account, azure_azure_account: { azure_organization: 'foo', username: 'bar', azure_work_item_query: 'query' } } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'GET #show' do
+      let(:azure_account) { Fabricate :azure_account, company: company }
+
+      context 'with valid parameters' do
+        it 'assigns the instance variable and renders the template' do
+          get :show, params: { company_id: company, id: azure_account }
+
+          expect(assigns(:azure_account)).to eq azure_account
+          expect(response).to render_template :show
+        end
+      end
+
+      context 'company' do
+        context 'non-existent' do
+          before { get :show, params: { company_id: 'foo', id: azure_account } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'not-permitted' do
+          let(:no_user_company) { Fabricate :company, users: [] }
+
+          before { get :show, params: { company_id: no_user_company, id: azure_account } }
 
           it { expect(response).to have_http_status :not_found }
         end

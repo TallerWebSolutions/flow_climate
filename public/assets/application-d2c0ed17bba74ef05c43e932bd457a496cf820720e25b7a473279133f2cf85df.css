@@ -377,6 +377,10 @@ ul.breadcrumb li a:hover {
     padding-top: 8px;
     position: absolute;
 }
+
+.azure-list-actions {
+    width: 70px;
+}
 .tab {
     overflow: hidden;
     /*border: 1px solid #ccc;*/
@@ -763,8 +767,18 @@ ul.breadcrumb li a:hover {
 
 .bottom-button {
     position: absolute;
+    bottom: 0;
+}
+.bottom-right-button {
+    position: absolute;
     right: 0;
     bottom: 0;
+}
+
+.row-equal {
+    display: flex;
+    display: -webkit-flex;
+    flex-wrap: wrap;
 }
 /* Add a black background color to the top navigation */
 .topnav {
@@ -812,4 +826,8 @@ ul.breadcrumb li a:hover {
 
 .visible {
     display: block;
+}
+
+.user-avatar {
+    border-radius: 50%;
 }

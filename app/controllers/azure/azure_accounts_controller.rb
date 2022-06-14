@@ -27,6 +27,12 @@ module Azure
       end
     end
 
+    def show
+      @azure_account = @company.azure_account
+      @account_custom_fields = @azure_account.azure_custom_fields
+      @new_azure_custom_field = Azure::AzureCustomField.new(azure_account: @azure_account)
+    end
+
     private
 
     def azure_account_params

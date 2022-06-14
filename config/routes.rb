@@ -123,8 +123,10 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :azure_accounts, only: %i[edit update], module: 'azure' do
+    resources :azure_accounts, only: %i[edit update show], module: 'azure' do
       post :synchronize_azure, on: :collection
+
+      resources :azure_custom_fields, only: :create
     end
 
     resources :teams, except: %i[create update destry] do

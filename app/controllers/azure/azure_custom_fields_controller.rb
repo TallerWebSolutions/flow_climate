@@ -1,0 +1,21 @@
+# frozen_string_literal: true
+
+module Azure
+  class AzureCustomFieldsController < AuthenticatedController
+    before_action :assign_company
+
+    def create
+      @azure_account = @company.azure_account
+      @new_azure_custom_field = Azure::AzureCustomField.create(azure_custom_field_params.merge(azure_account: @azure_account))
+      @account_custom_fields = @azure_account.azure_custom_fields
+
+      respond_to { |format| format.js { render 'azure/azure_accounts/create' } }
+    end
+
+    private
+
+    def azure_custom_field_params
+      params.require(:azure_azure_custom_field).permit(:custom_field_type, :custom_field_name)
+    end
+  end
+end

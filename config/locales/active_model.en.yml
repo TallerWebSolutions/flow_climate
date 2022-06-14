@@ -67,6 +67,10 @@ en:
       demand_comment:
         one: Demand Comment
         other: Demands Comments
+      azure/azure_custom_field:
+        zero: Azure Custom Field
+        one: Azure Custom Field
+        other: Azure Custom Fields
     attributes:
       user:
         created_at: Joined At
@@ -238,6 +242,13 @@ en:
             service_provider_dimension: "Service Provider Dimension"
       contract:
         hours_per_demand: Hours per Demand (HpD)
+      azure/azure_custom_field:
+        custom_field_name: Field Machine Name
+        custom_field_type: Field Type
+        enums:
+          custom_field_type:
+            project_name: Project Name
+            team_name: Team Name
     errors:
       messages:
         record_invalid: 'Validation failed: %{errors}'

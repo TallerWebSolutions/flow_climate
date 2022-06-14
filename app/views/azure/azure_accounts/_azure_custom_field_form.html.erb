@@ -1,0 +1,15 @@
+<%= form_with model: new_azure_custom_field, url: company_azure_account_azure_custom_fields_path(company, azure_account), class: 'form', id: 'azure_custom_field_form', local: false do |f| %>
+  <div class="form-group col-xs-6">
+    <%= f.label :custom_field_type, class: 'control-label' %>
+    <%= f.select :custom_field_type, Azure::AzureCustomField.custom_field_types.map { |key, _value| [I18n.t("activerecord.attributes.azure/azure_custom_field.enums.custom_field_type.#{key}"), key] }, {}, class: 'form-control' %>
+  </div>
+  <div class="form-group col-xs-6">
+    <%= f.label :custom_field_name, class: 'control-label' %>
+    <%= f.text_field :custom_field_name, class: 'form-control' %>
+    <span class="help-block"><%= new_azure_custom_field.errors[:custom_field_name].join(', ') %></span>
+  </div>
+
+  <div class="form-group col-xs-6">
+    <%= f.submit I18n.t('general.buttons.save'), class: 'btn btn-primary' %>
+  </div>
+<% end %>

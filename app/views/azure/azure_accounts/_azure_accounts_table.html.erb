@@ -1,25 +1,27 @@
 <% if azure_account.present? %>
   <table class="table">
     <thead>
-    <th><%= Azure::AzureAccount.human_attribute_name :azure_organization %></th>
-    <th><%= Azure::AzureAccount.human_attribute_name :username %></th>
-    <th><%= Azure::AzureAccount.human_attribute_name :azure_work_item_query %></th>
-    <th></th>
+    <tr>
+      <th><%= Azure::AzureAccount.human_attribute_name :azure_organization %></th>
+      <th><%= Azure::AzureAccount.human_attribute_name :username %></th>
+      <th><%= Azure::AzureAccount.human_attribute_name :azure_work_item_query %></th>
+      <th></th>
+    </tr>
     </thead>
     <tbody>
-      <tr>
-        <td><%= azure_account.azure_organization %></td>
-        <td><%= azure_account.username %></td>
-        <td><%= azure_account.azure_work_item_query %></td>
-        <td class="azure-list-actions">
-          <%= link_to synchronize_azure_company_azure_accounts_path(company), method: :post do %>
-            <i class="fas fa-sync-alt" aria-hidden="true" title="<%= I18n.t('azure_accounts.update.title') %>"></i>
-          <% end %>
-          <%= link_to edit_company_azure_account_path(company, azure_account) do %>
-            <i class="fas fa-edit"></i>
-          <% end %>
-        </td>
-      </tr>
+    <tr>
+      <td><%= link_to azure_account.azure_organization, company_azure_account_path(company, azure_account) %></td>
+      <td><%= azure_account.username %></td>
+      <td><%= azure_account.azure_work_item_query %></td>
+      <td class="azure-list-actions">
+        <%= link_to synchronize_azure_company_azure_accounts_path(company), method: :post do %>
+          <i class="fas fa-sync-alt" aria-hidden="true" title="<%= I18n.t('azure_accounts.update.title') %>"></i>
+        <% end %>
+        <%= link_to edit_company_azure_account_path(company, azure_account) do %>
+          <i class="fas fa-edit"></i>
+        <% end %>
+      </td>
+    </tr>
     </tbody>
   </table>
 <% else %>

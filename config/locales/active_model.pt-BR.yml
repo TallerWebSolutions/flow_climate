@@ -208,6 +208,10 @@ pt-BR:
       initiative:
         one: Iniciativa
         other: Iniciativas
+      azure/azure_custom_field:
+        zero: Campo Customizado
+        one: Campo Customizado
+        other: Campos Customizados
     attributes:
       user:
         first_name: Nome
@@ -745,6 +749,13 @@ pt-BR:
         tasks: "Tarefas"
         start_date: "Dt Início"
         end_date: "Dt Fim"
+      azure/azure_custom_field:
+        custom_field_name: Nome de Máquina do Campo
+        custom_field_type: Tipo do Campo
+        enums:
+          custom_field_type:
+            project_name: Nome do Projeto
+            team_name: Nome do Time
   product:
     name:
       uniqueness: "Não deve repetir nome de produto para o mesmo cliente."

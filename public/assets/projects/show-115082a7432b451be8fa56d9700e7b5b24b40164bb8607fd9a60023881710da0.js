@@ -1,3 +1,0 @@
-$("#general-loader").hide();
-
-bindBlockFormModalAction();
