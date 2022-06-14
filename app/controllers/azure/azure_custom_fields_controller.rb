@@ -9,7 +9,9 @@ module Azure
       @new_azure_custom_field = Azure::AzureCustomField.create(azure_custom_field_params.merge(azure_account: @azure_account))
       @account_custom_fields = @azure_account.azure_custom_fields
 
-      respond_to { |format| format.js { render 'azure/azure_accounts/create' } }
+      @new_azure_custom_field = Azure::AzureCustomField.new if @new_azure_custom_field.valid?
+
+      respond_to { |format| format.js { render 'azure/azure_custom_fields/create' } }
     end
 
     private

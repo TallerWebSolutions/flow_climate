@@ -22,9 +22,12 @@ RSpec.describe Azure::AzureCustomFieldsController, type: :controller do
         it 'creates the new azure custom field' do
           post :create, params: { company_id: company, azure_account_id: azure_account, azure_azure_custom_field: { custom_field_type: :team_name, custom_field_name: 'xpto' } }, xhr: true
 
-          expect(response).to render_template 'azure/azure_accounts/create'
-          expect(assigns(:new_azure_custom_field).custom_field_name).to eq 'xpto'
-          expect(assigns(:new_azure_custom_field).custom_field_type).to eq 'team_name'
+          created_custom = Azure::AzureCustomField.last
+
+          expect(created_custom.custom_field_name).to eq 'xpto'
+          expect(created_custom.custom_field_type).to eq 'team_name'
+          expect(assigns(:new_azure_custom_field)).to be_a_new Azure::AzureCustomField
+          expect(response).to render_template 'azure/azure_custom_fields/create'
         end
       end
 

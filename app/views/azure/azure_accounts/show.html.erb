@@ -33,11 +33,11 @@
 <div class="row">
   <div class="col-xs-6">
     <table class="table" id="azure-custom-fields-table">
-      <%= render 'azure/azure_accounts/azure_custom_fields_table_data', account_custom_fields: @account_custom_fields %>
+      <%= render 'azure/azure_custom_fields/azure_custom_fields_table_data', account_custom_fields: @account_custom_fields %>
     </table>
   </div>
 
   <div class="col-xs-6" id="azure-custom-field-form-div">
-    <%= render 'azure/azure_accounts/azure_custom_field_form', new_azure_custom_field: @new_azure_custom_field, company: @company, azure_account: @azure_account %>
+    <%= render 'azure/azure_custom_fields/form', new_azure_custom_field: @new_azure_custom_field, company: @company, azure_account: @azure_account %>
   </div>
 </div>
