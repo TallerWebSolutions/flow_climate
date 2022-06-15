@@ -1,8 +1,5 @@
-import { useRef } from "react"
 import { ResponsiveLine, Serie } from "@nivo/line"
-import { Box, IconButton } from "@mui/material"
-import DownloadIcon from "@mui/icons-material/Download"
-import { exportComponentAsPNG } from "react-component-export-image"
+import { Box } from "@mui/material"
 
 export const normalizeCfdData = (data: Serie[]): Serie[] =>
   data.map((step, stepIndex) => ({
@@ -26,64 +23,54 @@ export type LineGraphProps = {
 }
 
 export const LineChart = ({ data, axisLeftLegend, props }: LineGraphProps) => {
-  const chartRef = useRef<HTMLInputElement>(null)
-
   return (
-    <Box position="relative">
-      <IconButton
-        onClick={() => exportComponentAsPNG(chartRef)}
-        sx={{ position: "absolute", top: "1rem", right: "1rem", zIndex: 1 }}
-      >
-        <DownloadIcon />
-      </IconButton>
-      <Box ref={chartRef} height={420}>
-        <ResponsiveLine
-          data={data}
-          colors={{ scheme: "category10" }}
-          margin={{ left: 80, right: 20, top: 25, bottom: 80 }}
-          axisLeft={{
-            legend: axisLeftLegend,
-            legendOffset: -50,
-            legendPosition: "middle",
-          }}
-          axisBottom={{
-            tickSize: 5,
-            tickPadding: 5,
-            tickRotation: -40,
-            legendPosition: "middle",
-            legendOffset: 40,
-          }}
-          useMesh={true}
-          legends={[
-            {
-              toggleSerie: true,
-              anchor: "top",
-              direction: "row",
-              justify: false,
-              translateX: 0,
-              translateY: -25,
-              itemsSpacing: 0,
-              itemDirection: "left-to-right",
-              itemWidth: 125,
-              itemHeight: 20,
-              itemOpacity: 0.75,
-              symbolSize: 12,
-              symbolShape: "circle",
-              symbolBorderColor: "rgba(0, 0, 0, .5)",
-              effects: [
-                {
-                  on: "hover",
-                  style: {
-                    itemBackground: "rgba(0, 0, 0, .03)",
-                    itemOpacity: 1,
-                  },
+    <Box height={420}>
+      <ResponsiveLine
+        data={data}
+        colors={{ scheme: "category10" }}
+        margin={{ left: 80, right: 20, top: 25, bottom: 80 }}
+        axisLeft={{
+          legend: axisLeftLegend,
+          legendOffset: -50,
+          legendPosition: "middle",
+        }}
+        axisBottom={{
+          tickSize: 5,
+          tickPadding: 5,
+          tickRotation: -40,
+          legendPosition: "middle",
+          legendOffset: 40,
+        }}
+        useMesh={true}
+        legends={[
+          {
+            toggleSerie: true,
+            anchor: "top",
+            direction: "row",
+            justify: false,
+            translateX: 0,
+            translateY: -25,
+            itemsSpacing: 0,
+            itemDirection: "left-to-right",
+            itemWidth: 125,
+            itemHeight: 20,
+            itemOpacity: 0.75,
+            symbolSize: 12,
+            symbolShape: "circle",
+            symbolBorderColor: "rgba(0, 0, 0, .5)",
+            effects: [
+              {
+                on: "hover",
+                style: {
+                  itemBackground: "rgba(0, 0, 0, .03)",
+                  itemOpacity: 1,
                 },
-              ],
-            },
-          ]}
-          {...props}
-        />
-      </Box>
+              },
+            ],
+          },
+        ]}
+        {...props}
+      />
     </Box>
   )
 }

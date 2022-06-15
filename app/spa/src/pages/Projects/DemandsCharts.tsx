@@ -357,7 +357,7 @@ const DemandsCharts = () => {
           data: projectConsolidationsWeekly.map(
             ({ consolidationDate, projectQuality }) => ({
               x: consolidationDate,
-              y: 1 - projectQuality,
+              y: (1 - projectQuality) * 100,
             })
           ),
         },
@@ -443,7 +443,7 @@ const DemandsCharts = () => {
           const flowEfficiencyInPercentage = flowEfficiency / 100
           return {
             x: consolidationDate,
-            y: flowEfficiencyInPercentage,
+            y: flowEfficiencyInPercentage * 100,
           }
         }
       ),
@@ -751,7 +751,7 @@ const DemandsCharts = () => {
       <ChartGridItem title={t("project_charts.quality_bugs_chart")}>
         <LineChart
           data={projectQualityChartData}
-          axisLeftLegend={t("project_charts.quality_bugs_y_label")}
+          axisLeftLegend="%"
           props={{
             margin: { left: 80, right: 20, top: 25, bottom: 65 },
             axisBottom: {
