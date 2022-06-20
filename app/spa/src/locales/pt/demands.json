@@ -5,7 +5,8 @@
       "title": "Título",
       "createdDate": "Data de criação",
       "deliveryDate": "Data de entrega",
-      "timeToFinish": "Tempo para concluir"
+      "timeToFinish": "Tempo para concluir",
+      "actions": "Ações"
     }
   },
   "list": {
