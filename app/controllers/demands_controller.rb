@@ -57,7 +57,7 @@ class DemandsController < DemandsListController
 
   def synchronize_jira
     jira_account = @company.jira_accounts.first
-    demand_url = company_project_demand_url(@demand.project.company, @demand.project, @demand)
+    demand_url = company_demand_url(@demand.project.company, @demand)
     Jira::ProcessJiraIssueJob.perform_later(jira_account, @demand.project, @demand.external_id, current_user.email, current_user.full_name, demand_url)
     flash[:notice] = I18n.t('general.enqueued')
     redirect_to company_demand_path(@company, @demand)
@@ -65,7 +65,7 @@ class DemandsController < DemandsListController
 
   def synchronize_azure
     azure_account = @company.azure_account
-    demand_url = company_project_demand_url(@demand.project.company, @demand.project, @demand)
+    demand_url = company_demand_url(@demand.project.company, @demand)
     Azure::AzureItemSyncJob.perform_later(@demand.id, azure_account, current_user.email, current_user.full_name, demand_url)
     flash[:notice] = I18n.t('general.enqueued')
     redirect_to company_demand_path(@company, @demand)

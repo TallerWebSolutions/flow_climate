@@ -271,7 +271,6 @@ RSpec.describe DemandsController, type: :controller do
 
         it 'assigns the instance variables and renders the template' do
           expect(assigns(:company)).to eq company
-          expect(assigns(:project)).to eq project
           expect(assigns(:demand)).to eq demand
           expect(response).to render_template 'demands/edit'
         end
@@ -281,7 +280,7 @@ RSpec.describe DemandsController, type: :controller do
         context 'project' do
           before { get :edit, params: { company_id: company, project_id: 'foo', id: demand, demands_ids: Demand.all.map(&:id) }, xhr: true }
 
-          it { expect(response).to have_http_status :not_found }
+          it { expect(response).to have_http_status :success }
         end
 
         context 'demand' do
@@ -342,17 +341,11 @@ RSpec.describe DemandsController, type: :controller do
       end
 
       context 'passing invalid' do
-        context 'project' do
-          before { put :update, params: { company_id: company, project_id: 'foo', id: demand, demands_ids: Demand.all.map(&:id) }, xhr: true }
-
-          it { expect(response).to have_http_status :not_found }
-        end
-
         context 'demand parameters' do
           it 'does not update the demand and re-render the template with the errors' do
             put :update, params: { company_id: company, project_id: project, id: demand, demands_ids: Demand.all.map(&:id), demand: { external_id: '', demand_type: '', effort: nil, created_date: nil, commitment_date: nil, end_date: nil } }, xhr: true
 
-            expect(response).to render_template 'demands/update'
+            expect(response).to render_template 'layouts/_error'
             expect(assigns(:demand).errors.full_messages).to match_array ['Data de Criação não pode ficar em branco', 'Id da Demanda não pode ficar em branco', 'Tipo da Demanda não pode ficar em branco']
             expect(flash[:notice]).to be_nil
             expect(flash[:error]).to eq 'Falhou | Data de Criação não pode ficar em branco | Id da Demanda não pode ficar em branco | Tipo da Demanda não pode ficar em branco'
