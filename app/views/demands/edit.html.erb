@@ -1,0 +1,7 @@
+<div class="container">
+  <h1><%= I18n.t('demands.edit.title') %></h1>
+  <%= form_for @demand, url: company_demand_url(@company, @demand), method: :put, class: 'form' do |f| %>
+    <%= render 'demands/form', company: @company, demand: @demand, form: f %>
+  <% end %>
+</div>
+    

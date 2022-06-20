@@ -11,7 +11,7 @@
         <% end %>
       <% end %>
 
-      <%= link_to '#', class: 'edit-demand-button show-main-info-buttons', onclick: "editDemand(#{company.id}, #{demand.project_id}, #{demand.id})", title: I18n.t('general.buttons.edit') do %>
+      <%= link_to edit_company_demand_path(company, demand), title: I18n.t('general.buttons.edit') do %>
         <i class="fas fa-edit"></i>
       <% end %>
     </div>

@@ -4,6 +4,7 @@ import { gql, useQuery } from "@apollo/client"
 import { Button, Link } from "@mui/material"
 import { CSVLink } from "react-csv"
 import { FieldValues } from "react-hook-form"
+import EditIcon from "@mui/icons-material/Edit"
 
 import { Demand } from "../../modules/demand/demand.types"
 import Table from "../../components/ui/Table"
@@ -124,6 +125,9 @@ const DemandsList = () => {
     demand.createdDate ? <DateLocale time date={demand.createdDate} /> : "",
     demand.endDate ? <DateLocale time date={demand.endDate} /> : "",
     secondsToReadbleDate(demand.leadtime),
+    <Link href={`/companies/${companySlug}/demands/${demand.externalId}/edit`}>
+      <EditIcon />
+    </Link>,
   ]
 
   const tableHeader = [
@@ -132,6 +136,7 @@ const DemandsList = () => {
     t("table.header.createdDate"),
     t("table.header.deliveryDate"),
     t("table.header.timeToFinish"),
+    t("table.header.actions"),
   ]
 
   const demandsCount = data?.demandsTableData.totalCount || 0

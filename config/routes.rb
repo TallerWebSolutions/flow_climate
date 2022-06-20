@@ -226,7 +226,7 @@ Rails.application.routes.draw do
         get :running_projects_charts
       end
 
-      resources :demands, except: %i[show destroy index] do
+      resources :demands, except: %i[show destroy index edit update] do
         resources :demand_blocks, only: %i[edit update] do
           member do
             patch :activate
@@ -271,7 +271,7 @@ Rails.application.routes.draw do
       resources :stage_project_configs, only: %i[edit update]
     end
 
-    resources :demands, only: %i[show destroy index] do
+    resources :demands, only: %i[show destroy index edit update] do
       member do
         delete :destroy_physically
         get :score_research

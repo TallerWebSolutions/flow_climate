@@ -5,7 +5,7 @@ class DemandsController < DemandsListController
 
   before_action :assign_company
   before_action :assign_demand, only: %i[edit update show synchronize_jira synchronize_azure destroy destroy_physically score_research]
-  before_action :assign_project, except: %i[demands_csv show destroy destroy_physically score_research index demands_list_by_ids demands_charts synchronize_jira synchronize_azure]
+  before_action :assign_project, except: %i[demands_csv show destroy edit update destroy_physically score_research index demands_list_by_ids demands_charts synchronize_jira synchronize_azure]
 
   def new
     @demand = Demand.new(project: @project)
@@ -27,11 +27,7 @@ class DemandsController < DemandsListController
     redirect_to company_demands_path
   end
 
-  def edit
-    build_demands_list
-
-    respond_to { |format| format.js { render 'demands/edit' } }
-  end
+  def edit; end
 
   def update
     @demand.update(demand_params)
@@ -40,7 +36,7 @@ class DemandsController < DemandsListController
 
     if @demand.valid?
       flash[:notice] = I18n.t('general.updated.success')
-      respond_to { |format| format.js { render 'demands/update' } }
+      redirect_to company_demand_path(@company, @demand)
     else
       flash[:error] = "#{I18n.t('general.updated.error')} | #{@demand.errors.full_messages.join(' | ')}"
     end
@@ -190,7 +186,6 @@ class DemandsController < DemandsListController
   def build_demands_objects
     @demands_ids = @paged_demands.map(&:id)
     @demands = @paged_demands.except(:limit, :offset)
-    @unscored_demands = @project.demands.kept.unscored_demands.order(external_id: :asc)
   end
 
   def compute_flow_efficiency
