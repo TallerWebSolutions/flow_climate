@@ -319,7 +319,7 @@ RSpec.describe DemandsController, type: :controller do
       let!(:demand) { Fabricate :demand, company: company, product: product, project: project, created_date: created_date }
 
       context 'passing valid parameters' do
-        it 'updates the demand and redirects to projects index' do
+        it 'updates the demand and redirects to demand' do
           put :update, params: { company_id: company, project_id: project, id: demand, demands_ids: Demand.all.map(&:id), demand: { product_id: product, customer_id: customer, team_id: team, external_id: 'xpto', demand_type: 'bug', manual_effort: true, class_of_service: 'expedite', effort_upstream: 5, effort_downstream: 2, created_date: created_date, commitment_date: created_date, end_date: end_date, demand_score: 10.5 } }, xhr: true
           updated_demand = Demand.last
           expect(updated_demand.customer).to eq customer
@@ -336,7 +336,7 @@ RSpec.describe DemandsController, type: :controller do
           expect(updated_demand.created_date).to eq created_date
           expect(updated_demand.commitment_date).to eq created_date
           expect(updated_demand.end_date).to eq end_date
-          expect(response).to render_template 'demands/update'
+          expect(response).to redirect_to company_demand_path(demand.company, demand)
         end
       end
 
