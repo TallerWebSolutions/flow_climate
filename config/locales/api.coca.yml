@@ -1,7 +1,7 @@
 coca:
   teams:
     average_demand_cost:
-      message: "Average Activity Cost"
+      message: "Average Deliverable Cost"
     items_in_wip:
       message: "Items in Progress"
     items_delivered_last_week:

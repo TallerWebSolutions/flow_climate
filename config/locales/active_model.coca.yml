@@ -49,13 +49,13 @@ coca:
         one: Risk Review Action Item
         other: Risk Review Action Items
       demand:
-        one: Activity
-        other: Activities
-      task:
         one: Deliverable
         other: Deliverables
+      task:
+        one: Task
+        other: Tasks
       demand_block:
-        one: Activity Block
+        one: Deliverable Block
         other: Acitivity Blocks
       jira/jira_account:
         one: "Jira Account"
@@ -135,7 +135,7 @@ coca:
         help:
           integration_pipe_id: "Flow ID, board ID, rapidView ID (Jira)..."
       demand_block:
-        demand: Activity
+        demand: Deliverable
         demand_block_id: Id
         blocker_username: Blocked by
         block_time: Blocked at
@@ -151,9 +151,9 @@ coca:
           customer_low_urgency: Customer Low Urgency
           integration_needed: Integration Needed
           customer_unavailable: Customer Unavailable
-          other_demand_dependency: Other Activity Dependency
+          other_demand_dependency: Other Deliverable Dependency
           external_dependency: External Dependency
-          other_demand_priority: Other Activity Priority
+          other_demand_priority: Other Deliverable Priority
           waiting_for_code_review: Waiting for Code Review
           budget_approval: Budget Approval
           waiting_deploy_window: Waiting Deploy Window
@@ -181,7 +181,7 @@ coca:
             story: Story
             epic: Epic
             theme: Theme
-        demand_url: "Activity URL"
+        demand_url: "Deliverable URL"
         external_url: "External Link"
       slack_configuration:
         enums:
@@ -217,14 +217,14 @@ coca:
         event_type: Event Type
         event_size: Event Size
         event_description: Event Description
-        demand: Activity
+        demand: Deliverable
         event_date: Event Date
         enums:
           event_type:
             other_team_dependency: Other team dependency
             api_not_ready: API is not ready
             customer_not_available: Customer unavailable
-            other_demand_dependency: Other Activity dependency
+            other_demand_dependency: Other Deliverable dependency
             fixes_out_of_scope: Fixes outside scope
             external_service_unavailable: External service unavailable
             waiting_for_code_review: Waiting for code review
@@ -254,7 +254,7 @@ coca:
             customer_dimension: "Customer Dimension"
             service_provider_dimension: "Service Provider Dimension"
       contract:
-        hours_per_demand: Hours per Activity (HpD)
+        hours_per_demand: Hours per Deliverable (HpD)
       user_company_role:
         user: User
         company: Company
@@ -269,7 +269,7 @@ coca:
             director: Director
             customer: Customer
       task:
-        demand: Activity
+        demand: Deliverable
         title: Title
         created_date: Creation Date
         end_date: End date
@@ -312,7 +312,7 @@ coca:
       uniqueness: "Should have only one to the same company."
   projects:
     portfolio_bulletin:
-      delivered_demands: "Delivered activitys in last week"
+      delivered_demands: "Delivered deliverables in last week"
   stage_project_config:
     validations:
       stage_project_unique:
@@ -320,10 +320,10 @@ coca:
   demand:
     validations:
       external_id_unique:
-        message: "You can have only one activity id per company."
+        message: "You can have only one deliverable id per company."
   jira_custom_field_mapping:
     uniqueness:
-      custom_field_type: "Should have only one activity field per Jira account."
+      custom_field_type: "Should have only one deliverable field per Jira account."
   jira_product_config:
     validations:
       jira_product_key_uniqueness:
@@ -333,7 +333,7 @@ coca:
       user_plan_active: "Você já tem um plano para o período."
   slack_configurations:
     notifications:
-      cmd_text: "> *%{team_name}* | Average Activity Cost: %{cmd_value} | Variation: *%{cmd_difference_to_last_week}%* for the average of previous 4 weeks (%{previous_cmd}) | Last week: *%{last_week_cmd}*"
+      cmd_text: "> *%{team_name}* | Average Deliverable Cost: %{cmd_value} | Variation: *%{cmd_difference_to_last_week}%* for the average of previous 4 weeks (%{previous_cmd}) | Last week: *%{last_week_cmd}*"
       th_week_text: "> *%{team_name}* | Throughput: %{th_current_week} activitys | Variation: *%{difference_last_week_th_value}%* for the average of previous 4 weeks (%{four_weeks_th_average})."
       th_last_week_text: "> *%{team_name}* | Throughput: %{th_last_week} activitys last week."
       th_last_week_demand_info_text: "> *%{external_id}* %{demand_title} | *Responsibles:* %{responsibles_names} | *Cost to Project:* %{cost_to_project}"
@@ -351,7 +351,7 @@ coca:
         message: "You should have only one fix version name per product."
   item_assignment:
     validations:
-      demand_unique: "You can have only one activity assigned to the same team member at the same time."
+      demand_unique: "You can have only one deliverable assigned to the same team member at the same time."
   service_delivery_review:
     attributes:
       validations:
