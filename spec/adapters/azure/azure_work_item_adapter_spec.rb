@@ -38,7 +38,7 @@ RSpec.describe Azure::AzureWorkItemAdapter do
   describe '#work_item' do
     context 'when success' do
       context 'when epic' do
-        it 'returns the created demand' do
+        it 'returns the created portfolio unit' do
           first_item_mocked_azure_return = file_fixture('azure_work_item_1_expanded.json').read
           first_response = instance_double(HTTParty::Response, parsed_response: JSON.parse(first_item_mocked_azure_return))
 
@@ -48,13 +48,13 @@ RSpec.describe Azure::AzureWorkItemAdapter do
 
           described_class.new(azure_account).work_item(1, azure_product_config.azure_team.azure_project)
 
-          expect(Demand.all.count).to eq 1
+          expect(PortfolioUnit.all.count).to eq 1
         end
       end
 
-      context 'when issue' do
+      context 'when user story' do
         context 'with valid parent and it does not exist' do
-          it 'does not create the task and the parent' do
+          it 'creates the task and the parent' do
             first_item_mocked_azure_return = file_fixture('azure_work_item_1_expanded.json').read
             second_item_mocked_azure_return = file_fixture('azure_work_item_2_expanded.json').read
 

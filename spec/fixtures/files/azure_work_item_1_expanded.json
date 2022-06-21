@@ -16,7 +16,7 @@
     "System.IterationPath": "FlowClimate",
     "System.IterationLevel1": "FlowClimate",
     "Custom.TeamName":"Great Team",
-    "System.WorkItemType": "Epic",
+    "System.WorkItemType": "Feature",
     "System.State": "To Do",
     "System.Reason": "Added to backlog",
     "System.CreatedDate": "2022-01-13T14:03:27.423Z",

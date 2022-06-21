@@ -45,47 +45,28 @@ module Azure
     def read_work_item(azure_project, company, work_item_response, project_custom_field, team_custom_field)
       product = Product.find_by(name: azure_project.project_name, company: company)
 
-      process_valid_area(product, work_item_response, team_custom_field, azure_project, company, project_custom_field)
+      process_valid_area(product, work_item_response, team_custom_field, company, project_custom_field)
     end
 
-    def process_valid_area(product, work_item_response, team_custom_field, azure_project, company, project_custom_field)
+    def process_valid_area(product, work_item_response, team_custom_field, company, project_custom_field)
       team_name = work_item_response['fields'][team_custom_field.custom_field_name]
       return if team_name.blank?
 
-      team = Team.where('name ILIKE :team_name', team_name: "%#{team_name}%").where(company: company).first
+      team = company.teams.where('name ILIKE :team_name', team_name: "%#{team_name}%").first_or_create
+      project = project(company, project_custom_field, team, work_item_response)
 
       work_item_type = work_item_response['fields']['System.WorkItemType']
       if work_item_type.casecmp('epic').zero?
-        read_epic(product, project_custom_field, team, work_item_response)
+        read_epic(product, work_item_response)
       elsif work_item_type.casecmp('feature').zero?
-        read_feature(product, project_custom_field, team, azure_project, work_item_response)
+        read_feature(product, project, team, work_item_response)
+      elsif work_item_type.casecmp('user story').zero?
+        read_user_story(product, project, team, work_item_response)
       end
     end
 
-    def read_feature(product, project_custom_field, team, azure_project, work_item_response)
-      demand = feature_parent(product, project_custom_field, team, azure_project, work_item_response)
-
-      task = Task.where(demand: demand, external_id: work_item_response['id']).first_or_initialize
-      task.update(title: work_item_response['fields']['System.Title'], created_date: work_item_response['fields']['System.CreatedDate'],
-                  end_date: work_item_response['fields']['Microsoft.VSTS.Common.ClosedDate'], discarded_at: nil)
-
-      team.tasks.where(external_id: work_item_response['id']).where.not(id: task.id).map(&:destroy)
-    end
-
-    def feature_parent(product, project_custom_field, team, azure_project, work_item_response)
-      parent_response = client.work_item(work_item_response['fields']['System.Parent'], azure_project.project_id)
-      return if parent_response.blank? || parent_response.code != 200
-
-      demand = Demand.with_discarded.find_by(external_id: parent_response.parsed_response['id'])
-
-      return read_epic(product, project_custom_field, team, work_item_response) if demand.blank?
-
-      demand
-    end
-
-    def read_epic(product, project_custom_field, team, work_item_response)
+    def read_feature(product, project, team, work_item_response)
       company = product.company
-      project = project(company, project_custom_field, team, work_item_response)
 
       demand = Demand.with_discarded.where(company: company, team: team, external_id: work_item_response['id']).first_or_initialize
 
@@ -93,6 +74,31 @@ module Azure
                     created_date: work_item_response['fields']['System.CreatedDate'],
                     end_date: work_item_response['fields']['Microsoft.VSTS.Common.ClosedDate'],
                     product: product, project: project, demand_type: :feature, discarded_at: nil)
+      demand
+    end
+
+    def read_epic(product, work_item_response)
+      product.portfolio_units.where(name: work_item_response['fields']['System.Title'], portfolio_unit_type: :epic).first_or_create
+    end
+
+    def read_user_story(product, project, team, work_item_response)
+      demand = read_feature(product, project, team, work_item_response)
+
+      task = Task.with_discarded.where(demand: demand, external_id: work_item_response['id']).first_or_initialize
+      task.update(title: work_item_response['fields']['System.Title'], created_date: work_item_response['fields']['System.CreatedDate'],
+                  end_date: work_item_response['fields']['Microsoft.VSTS.Common.ClosedDate'], discarded_at: nil)
+
+      team.tasks.where(external_id: work_item_response['id']).where.not(id: task.id).map(&:destroy)
+    end
+
+    def task_parent(product, project, team, azure_project, work_item_response)
+      parent_response = client.work_item(work_item_response['fields']['System.Parent'], azure_project.project_id)
+      return if parent_response.blank? || parent_response.code != 200
+
+      demand = Demand.with_discarded.find_by(external_id: parent_response.parsed_response['id'])
+
+      return read_epic(product, project, team, work_item_response) if demand.blank?
+
       demand
     end
 
