@@ -82,6 +82,6 @@ RSpec.configure do |config|
   end
 
   config.after(:all) do
-    FileUtils.rm_rf(Dir[Rails.root.join('public/uploads/tmp/*')]) if Rails.env.test?
+    FileUtils.rm_rf(Dir[Rails.public_path.join('uploads/tmp/*')]) if Rails.env.test?
   end
 end

@@ -5,12 +5,12 @@ class ProjectsController < AuthenticatedController
   before_action :assign_project, except: %i[new create index search_projects running_projects_charts search_projects_by_team status_report_dashboard]
 
   def show
-    prepend_view_path Rails.root.join('public')
+    prepend_view_path Rails.public_path
     render 'spa-build/index'
   end
 
   def index
-    prepend_view_path Rails.root.join('public')
+    prepend_view_path Rails.public_path
     render 'spa-build/index'
   end
 
@@ -111,7 +111,7 @@ class ProjectsController < AuthenticatedController
   end
 
   def risk_drill_down
-    prepend_view_path Rails.root.join('public')
+    prepend_view_path Rails.public_path
     render 'spa-build/index'
   end
 
@@ -123,12 +123,12 @@ class ProjectsController < AuthenticatedController
   end
 
   def status_report_dashboard
-    prepend_view_path Rails.root.join('public')
+    prepend_view_path Rails.public_path
     render 'spa-build/index'
   end
 
   def lead_time_dashboard
-    prepend_view_path Rails.root.join('public')
+    prepend_view_path Rails.public_path
     render 'spa-build/index'
   end
 
@@ -161,17 +161,17 @@ class ProjectsController < AuthenticatedController
   end
 
   def statistics_tab
-    prepend_view_path Rails.root.join('public')
+    prepend_view_path Rails.public_path
     render 'spa-build/index'
   end
 
   def financial_report
-    prepend_view_path Rails.root.join('public')
+    prepend_view_path Rails.public_path
     render 'spa-build/index'
   end
 
   def tasks_tab
-    prepend_view_path Rails.root.join('public')
+    prepend_view_path Rails.public_path
     render 'spa-build/index'
   end
 

@@ -5,7 +5,7 @@ class InitiativesController < AuthenticatedController
   before_action :assign_initiative, except: %i[index new create]
 
   def index
-    prepend_view_path Rails.root.join('public')
+    prepend_view_path Rails.public_path
     render 'spa-build/index'
   end
 
