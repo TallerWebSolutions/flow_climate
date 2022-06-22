@@ -36,7 +36,6 @@ class FlowEventsController < AuthenticatedController
 
   def update
     @flow_event.update(flow_event_params)
-    @demands_for_event_form = @flow_event.project.demands.kept.in_flow(Time.zone.now)
 
     redirect_to company_flow_events_path(@company)
   end

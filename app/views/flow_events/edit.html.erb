@@ -10,7 +10,7 @@
 </div>
 
 <%= form_for @flow_event, url: company_flow_event_path(@company, @flow_event), method: :put, html: { class: 'standard-form' } do |f| %>
-  <%= render 'flow_events/form', f: f, company: @company, flow_event: @flow_event, demands_for_event_form: @demands_for_event_form, projects_by_team: @projects_by_team %>
+  <%= render 'flow_events/form', f: f, company: @company, flow_event: @flow_event, projects_by_team: @projects_by_team %>
 <% end %>
 
 <% content_for :javascript do %>
