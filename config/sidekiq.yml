@@ -11,6 +11,7 @@ queues:
   - ['demand_update', 1]
   - ['consolidations', 1]
   - ['dashboards', 1]
+  - ['coca_azure', 1]
 limits:
   consolidations: <%= ENV['SIDEKIQ_CONSOLIDATIONS_THREADS'] || 2 %>
   dashboards: <%= ENV['SIDEKIQ_DASHBOARDS_THREADS'] || 2 %>

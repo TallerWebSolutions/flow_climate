@@ -120,7 +120,7 @@ RSpec.describe FlowEventsController, type: :controller do
           expect(created_event.event_type).to eq 'api_not_ready'
           expect(created_event.event_size).to eq 'medium'
           expect(created_event.event_description).to eq 'foo bar'
-          expect(created_event.event_date).to eq Time.zone.now.beginning_of_day
+          expect(created_event.event_date).to eq Time.zone.today
           expect(created_event.event_end_date).to eq event_end_date.to_date
         end
       end
@@ -242,7 +242,7 @@ RSpec.describe FlowEventsController, type: :controller do
           expect(assigns(:flow_event).project).to eq project
           expect(assigns(:flow_event).event_type).to eq 'api_not_ready'
           expect(assigns(:flow_event).event_description).to eq 'foo bar'
-          expect(assigns(:flow_event).event_date).to eq Time.zone.local(2019, 4, 2, 12, 38, 0)
+          expect(assigns(:flow_event).event_date).to eq Date.new(2019, 4, 2)
         end
       end
 

@@ -78,8 +78,8 @@ class Demand < ApplicationRecord
 
   belongs_to :company
   belongs_to :project
-  belongs_to :product, optional: true
   belongs_to :team
+  belongs_to :product, optional: true
   belongs_to :customer, optional: true
   belongs_to :portfolio_unit, optional: true
   belongs_to :risk_review, optional: true

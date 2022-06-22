@@ -221,11 +221,11 @@ RSpec.describe DemandEffortService, type: :service do
 
         described_class.instance.build_efforts_to_demand(demand)
 
-        expect(DemandEffort.all.count).to eq 5
-        expect(DemandEffort.all.sum(&:effort_value)).to be_within(0.1).of(26.39)
-        expect(DemandEffort.all.sum(&:effort_with_blocks)).to be_within(0.1).of(26.39)
+        expect(DemandEffort.all.count).to eq 3
+        expect(DemandEffort.all.sum(&:effort_value)).to be_within(0.1).of(17.99)
+        expect(DemandEffort.all.sum(&:effort_with_blocks)).to be_within(0.1).of(17.99)
         expect(DemandEffort.all.sum(&:total_blocked)).to eq 0
-        expect(demand.reload.effort_development).to be_within(0.1).of(26.39)
+        expect(demand.reload.effort_development).to be_within(0.1).of(17.99)
         expect(demand.reload.effort_design).to eq 0
         expect(demand.reload.effort_management).to eq 0
       end

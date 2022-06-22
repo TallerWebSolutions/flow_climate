@@ -1594,7 +1594,7 @@ CREATE TABLE public.flow_events (
     project_id integer,
     event_type integer NOT NULL,
     event_description character varying NOT NULL,
-    event_date timestamp without time zone NOT NULL,
+    event_date date NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     risk_review_id integer,
@@ -7218,6 +7218,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220503213916'),
 ('20220509115356'),
 ('20220512123859'),
-('20220602123818');
+('20220602123818'),
+('20220622174041');
 
 

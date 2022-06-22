@@ -2,7 +2,7 @@
 
 module Azure
   class AzureSyncJob < ApplicationJob
-    queue_as :demand_update
+    queue_as :coca_azure
 
     def perform(azure_account, user_email, user_name)
       started_time = Time.zone.now
@@ -14,12 +14,15 @@ module Azure
         azure_product_config = product.azure_product_config
         work_items_ids = work_item_adapter.work_items_ids(azure_product_config)
 
+        next if azure_product_config.azure_team&.azure_project.blank?
+
         remove_deleted_items(azure_account.company, work_items_ids)
 
-        Rails.logger.info("[AzureAPI] found #{work_items_ids.count} work items")
+        items_count = work_items_ids.count
+        Rails.logger.info("[AzureAPI] found #{items_count} work items")
 
-        work_items_ids.sort.uniq.each do |id|
-          next if azure_product_config.azure_team&.azure_project.blank?
+        work_items_ids.sort.uniq.each_with_index do |id, index|
+          Rails.logger.info("[AzureAPI] processing #{index} of #{items_count}")
 
           work_item_adapter.work_item(id, azure_product_config.azure_team.azure_project)
 

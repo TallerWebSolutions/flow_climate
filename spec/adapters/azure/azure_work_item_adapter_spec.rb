@@ -39,7 +39,7 @@ RSpec.describe Azure::AzureWorkItemAdapter do
     context 'when success' do
       context 'when epic' do
         it 'returns the created portfolio unit' do
-          first_item_mocked_azure_return = file_fixture('azure_work_item_1_expanded.json').read
+          first_item_mocked_azure_return = file_fixture('azure_work_item_3_expanded.json').read
           first_response = instance_double(HTTParty::Response, parsed_response: JSON.parse(first_item_mocked_azure_return))
 
           allow(HTTParty).to(receive(:get).with("#{Figaro.env.azure_base_uri}/#{azure_account.azure_organization}/#{azure_project.project_id}/_apis/wit/workitems/1?$expand=all&api-version=6.1-preview.3",
@@ -48,7 +48,7 @@ RSpec.describe Azure::AzureWorkItemAdapter do
 
           described_class.new(azure_account).work_item(1, azure_product_config.azure_team.azure_project)
 
-          expect(PortfolioUnit.all.count).to eq 1
+          expect(PortfolioUnit.all.map(&:name)).to eq ['Primeira issue']
         end
       end
 
@@ -93,7 +93,7 @@ RSpec.describe Azure::AzureWorkItemAdapter do
 
             allow(HTTParty).to(receive(:get).with("#{Figaro.env.azure_base_uri}/#{azure_account.azure_organization}/#{azure_project.project_id}/_apis/wit/workitems/2?$expand=all&api-version=6.1-preview.3",
                                                   basic_auth: { username: azure_account.username, password: azure_account.password },
-                                                  headers: { 'Content-Type' => 'application/json' })).and_return(second_response)
+                                                  headers: { 'Content-Type' => 'application/json' })).once.and_return(second_response)
 
             described_class.new(azure_account).work_item(2, azure_product_config.azure_team.azure_project)
 
@@ -179,6 +179,22 @@ RSpec.describe Azure::AzureWorkItemAdapter do
             expect(Task.all.count).to eq 0
             expect(Demand.all.count).to eq 0
           end
+        end
+      end
+
+      context 'when feature' do
+        it 'creates the demand' do
+          first_item_mocked_azure_return = file_fixture('azure_work_item_1_expanded.json').read
+
+          first_response = instance_double(HTTParty::Response, code: 200, parsed_response: JSON.parse(first_item_mocked_azure_return))
+
+          allow(HTTParty).to(receive(:get).with("#{Figaro.env.azure_base_uri}/#{azure_account.azure_organization}/#{azure_project.project_id}/_apis/wit/workitems/1?$expand=all&api-version=6.1-preview.3",
+                                                basic_auth: { username: azure_account.username, password: azure_account.password },
+                                                headers: { 'Content-Type' => 'application/json' })).once.and_return(first_response)
+
+          described_class.new(azure_account).work_item(1, azure_product_config.azure_team.azure_project)
+
+          expect(Demand.all.count).to eq 1
         end
       end
     end

@@ -30,8 +30,8 @@
           <td><%= I18n.t("activerecord.attributes.flow_event.enums.event_size.#{flow_event.event_size}") %></td>
           <td><%= flow_event.team&.name %></td>
           <td><%= flow_event.project&.name %></td>
-          <td><%= I18n.l(flow_event.event_date, format: :short) %></td>
-          <td><%= I18n.l(flow_event.event_end_date, format: :short) if flow_event.event_end_date.present? %></td>
+          <td><%= I18n.l(flow_event.event_date) %></td>
+          <td><%= I18n.l(flow_event.event_end_date) if flow_event.event_end_date.present? %></td>
           <td><%= flow_event.event_description %></td>
         </tr>
       <% end %>

@@ -23,7 +23,7 @@ en:
   "true": Yes
   "false": No
 
-  datetime:
+  time:
     date_attributes:
       day:
         one: day

@@ -31,7 +31,7 @@ RSpec.describe FlowEvent, type: :model do
       let(:demand) { Fabricate :demand }
       let(:flow_event) { Fabricate :flow_event, project: project, event_date: 2.days.ago }
 
-      it { expect(flow_event.to_hash).to eq(project_name: project.name, event_type: I18n.t("activerecord.attributes.flow_event.enums.event_type.#{flow_event.event_type}"), event_size: I18n.t("activerecord.attributes.flow_event.enums.event_size.#{flow_event.event_size}"), event_date: '2019-10-15T11:20:00-03:00', event_end_date: flow_event.event_end_date, event_url: company_flow_event_path(project.company, flow_event)) }
+      it { expect(flow_event.to_hash).to eq(project_name: project.name, event_type: I18n.t("activerecord.attributes.flow_event.enums.event_type.#{flow_event.event_type}"), event_size: I18n.t("activerecord.attributes.flow_event.enums.event_size.#{flow_event.event_size}"), event_date: '2019-10-15', event_end_date: flow_event.event_end_date, event_url: company_flow_event_path(project.company, flow_event)) }
     end
   end
 end

@@ -6,7 +6,7 @@
 #
 #  id                :bigint           not null, primary key
 #  discarded_at      :datetime
-#  event_date        :datetime         not null
+#  event_date        :date             not null
 #  event_description :string           not null
 #  event_end_date    :date
 #  event_size        :integer          default("small"), not null
