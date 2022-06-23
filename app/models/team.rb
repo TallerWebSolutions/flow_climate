@@ -59,7 +59,11 @@ class Team < ApplicationRecord
   end
 
   def loss_at(date = Time.zone.today)
-    efforts = demand_efforts.
+    efforts_value = demand_efforts.to_dates(date.beginning_of_month, date.end_of_month).sum(&:effort_value)
+
+    available_hours = available_hours_in_month_for(date)
+
+    (available_hours - efforts_value) / available_hours
   end
 
   def consumed_hours_in_month(required_date)
