@@ -33,6 +33,7 @@ class Team < ApplicationRecord
   has_many :projects, dependent: :restrict_with_error
   has_many :demands, dependent: :restrict_with_error
   has_many :tasks, through: :demands
+  has_many :demand_efforts, through: :demands
   has_many :slack_configurations, dependent: :destroy
   has_many :team_resource_allocations, dependent: :destroy
   has_many :team_resources, through: :team_resource_allocations
@@ -54,7 +55,11 @@ class Team < ApplicationRecord
   end
 
   def available_hours_in_month_for(date = Time.zone.today)
-    memberships.active_for_date(date).sum(&:monthly_payment)
+    memberships.active_for_date(date).filter_map(&:hours_per_month).sum
+  end
+
+  def loss_at(date = Time.zone.today)
+    efforts = demand_efforts.
   end
 
   def consumed_hours_in_month(required_date)
@@ -125,8 +130,6 @@ class Team < ApplicationRecord
   def size_at(date = Time.zone.today)
     memberships.active_for_date(date).count
   end
-
-  # def
 
   private
 

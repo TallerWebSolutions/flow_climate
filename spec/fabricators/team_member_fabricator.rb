@@ -7,4 +7,5 @@ Fabricator(:team_member) do
   monthly_payment { Faker::Number.number }
   start_date { 2.days.ago }
   end_date { Time.zone.today }
+  hours_per_month { 120 }
 end

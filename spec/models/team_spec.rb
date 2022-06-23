@@ -6,6 +6,7 @@ RSpec.describe Team, type: :model do
     it { is_expected.to have_many(:projects) }
     it { is_expected.to have_many(:demands).dependent(:restrict_with_error) }
     it { is_expected.to have_many(:tasks).through(:demands) }
+    it { is_expected.to have_many(:demand_efforts).through(:demands) }
     it { is_expected.to have_many(:memberships).dependent(:destroy) }
     it { is_expected.to have_many(:flow_events).dependent(:destroy) }
     it { is_expected.to have_many(:team_members).through(:memberships) }
@@ -83,10 +84,10 @@ RSpec.describe Team, type: :model do
     it { expect(team.monthly_investment).to eq 973.12 }
   end
 
-  describe '#available_hours_in_month' do
+  describe '#available_hours_in_month_for' do
     include_context 'memberships for team'
 
-    it { expect(team.available_hours_in_month(%i[outsourcing consulting])).to eq 340 }
+    it { expect(team.available_hours_in_month_for).to eq 580 }
   end
 
   RSpec.shared_context 'consolidations data for team', shared_context: :metadata do
@@ -462,7 +463,7 @@ RSpec.describe Team, type: :model do
     end
   end
 
-  describe '#size' do
+  describe '#size_at' do
     context 'with memberships' do
       it 'returns the count of active memberships' do
         travel_to Time.zone.local(2022, 6, 23, 10) do
@@ -474,6 +475,35 @@ RSpec.describe Team, type: :model do
 
           expect(team.size_at(Time.zone.yesterday)).to eq 2
           expect(team.size_at).to eq 3
+        end
+      end
+    end
+
+    context 'without memberships' do
+      it 'returns zero' do
+        team = Fabricate :team
+
+        expect(team.size_at).to eq 0
+      end
+    end
+  end
+
+  describe '#loss_at' do
+    context 'with memberships' do
+      it 'returns the loss for the date' do
+        travel_to Time.zone.local(2022, 6, 23, 10) do
+          team = Fabricate :team
+          Fabricate :membership, team: team, start_date: 3.days.ago, end_date: nil, hours_per_month: 60
+          Fabricate :membership, team: team, start_date: Time.zone.today, end_date: 4.days.from_now, hours_per_month: 120
+          Fabricate :membership, team: team, start_date: 4.days.ago, end_date: 3.days.ago, hours_per_month: 40
+          Fabricate :membership, team: team, start_date: 2.days.ago, end_date: 1.day.from_now, hours_per_month: 60
+
+          demand = Fabricate :demand, team: team
+          Fabricate :demand_effort, demand: demand, start_time_to_computation: 4.days.ago, effort_value: 100
+          Fabricate :demand_effort, demand: demand, start_time_to_computation: 15.days.ago, effort_value: 20
+
+          expect(team.loss_at(Time.zone.yesterday)).to eq 2
+          expect(team.loss_at).to eq 3
         end
       end
     end
