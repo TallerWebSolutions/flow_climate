@@ -81,7 +81,7 @@ RSpec.describe Team, type: :model do
   describe '#monthly_investment' do
     include_context 'memberships for team'
 
-    it { expect(team.monthly_investment).to eq 973.12 }
+    it { expect(team.monthly_investment).to be_within(0.1).of(956.4) }
   end
 
   describe '#available_hours_in_month_for' do
@@ -488,6 +488,31 @@ RSpec.describe Team, type: :model do
     end
   end
 
+  describe '#size_using_available_hours' do
+    context 'with memberships' do
+      it 'returns the count of active memberships' do
+        travel_to Time.zone.local(2022, 6, 23, 10) do
+          team = Fabricate :team
+          Fabricate :membership, team: team, start_date: 3.days.ago, end_date: nil, hours_per_month: 10
+          Fabricate :membership, team: team, start_date: Time.zone.today, end_date: 4.days.from_now, hours_per_month: 20
+          Fabricate :membership, team: team, start_date: 4.days.ago, end_date: 3.days.ago, hours_per_month: 30
+          Fabricate :membership, team: team, start_date: 2.days.ago, end_date: 1.day.from_now, hours_per_month: 50
+
+          expect(team.size_using_available_hours(Time.zone.yesterday)).to be_within(0.1).of(0.5)
+          expect(team.size_using_available_hours).to be_within(0.1).of(0.6)
+        end
+      end
+    end
+
+    context 'without memberships' do
+      it 'returns zero' do
+        team = Fabricate :team
+
+        expect(team.size_at).to eq 0
+      end
+    end
+  end
+
   describe '#loss_at' do
     context 'with memberships' do
       it 'returns the loss for the date' do
@@ -500,10 +525,10 @@ RSpec.describe Team, type: :model do
 
           demand = Fabricate :demand, team: team
           Fabricate :demand_effort, demand: demand, start_time_to_computation: 4.days.ago, effort_value: 100
-          Fabricate :demand_effort, demand: demand, start_time_to_computation: 15.days.ago, effort_value: 20
+          Fabricate :demand_effort, demand: demand, start_time_to_computation: 15.days.ago, effort_value: 10
 
-          expect(team.loss_at(Time.zone.yesterday)).to eq 2
-          expect(team.loss_at).to eq 3
+          expect(team.loss_at(Time.zone.yesterday).to_f).to be_within(0.01).of(0.08)
+          expect(team.loss_at.to_f).to be_within(0.01).of(0.54)
         end
       end
     end
@@ -512,7 +537,7 @@ RSpec.describe Team, type: :model do
       it 'returns zero' do
         team = Fabricate :team
 
-        expect(team.size_at).to eq 0
+        expect(team.loss_at).to eq 0
       end
     end
   end

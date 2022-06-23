@@ -63,7 +63,9 @@ class Team < ApplicationRecord
 
     available_hours = available_hours_in_month_for(date)
 
-    (available_hours - efforts_value) / available_hours
+    return 0 if available_hours.zero?
+
+    (available_hours - efforts_value) / available_hours.to_f
   end
 
   def consumed_hours_in_month(required_date)
