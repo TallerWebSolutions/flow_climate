@@ -37,14 +37,14 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
     describe '#notify_cmd' do
       context 'with no exceptions' do
         it 'calls slack notification method' do
-          expect_any_instance_of(Slack::Notifier).to receive(:ping).with("> *#{team.name}* | Custo Médio por Demanda: *R$ 833,33* | Variação: *-61,90%* com relação à média das últimas 4 semanas (R$ 2.187,50) | CMD da últ. semana: *R$ 2.500,00*.").once
+          expect_any_instance_of(Slack::Notifier).to receive(:post).once
           described_class.instance.notify_cmd(first_slack_notifier, team)
         end
       end
 
       context 'with exceptions' do
         it 'calls slack notification method' do
-          allow(first_slack_notifier).to(receive(:ping)).and_raise(Slack::Notifier::APIError)
+          allow(first_slack_notifier).to(receive(:post)).and_raise(Slack::Notifier::APIError)
           expect(Rails.logger).to(receive(:error))
           described_class.instance.notify_cmd(first_slack_notifier, team)
         end
@@ -155,7 +155,7 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
   context 'with no projects to collect data' do
     describe '#notify_cmd' do
       it 'calls slack notification method' do
-        expect_any_instance_of(Slack::Notifier).to receive(:ping).with("> *#{team.name}* | Custo Médio por Demanda: *R$ 2.500,00* | Variação: *0,00%* com relação à média das últimas 4 semanas (R$ 2.500,00) | CMD da últ. semana: *R$ 2.500,00*.").once
+        expect_any_instance_of(Slack::Notifier).to receive(:post).once
         described_class.instance.notify_cmd(first_slack_notifier, team)
       end
     end
