@@ -10,19 +10,14 @@ module Slack
     def notify_cmd(slack_notifier, team)
       average_demand_cost_info = TeamService.instance.average_demand_cost_stats_info_hash(team)
 
-      # team_size: team.size,
-      #   team_investment: team.monthly_investment, team_hours: team.monthly_hours
-      # team.loss
-
       info_block = { type: 'section', text: { type: 'mrkdwn', text: [
-        ">CMD para o time *#{team.name}*",
-        ">Semana atual: *#{number_to_currency(average_demand_cost_info[:current_week])}*",
-        ">Média das últimas 4 semanas: *#{number_to_currency(average_demand_cost_info[:four_weeks_cmd_average])}*",
+        ">*CMD para o time #{team.name}*\n>",
+        ">:money_with_wings: Semana atual: *#{number_to_currency(average_demand_cost_info[:current_week])}* -- Média das últimas 4 semanas: *#{number_to_currency(average_demand_cost_info[:four_weeks_cmd_average])}*",
         ">Diferença (atual e média): *#{number_with_precision(average_demand_cost_info[:cmd_difference_to_avg_last_four_weeks], precision: 2)}%*",
-        ">Semana anterior: *#{number_to_currency(average_demand_cost_info[:last_week])}*",
-        ">Tamanho do time: *#{team.size_at} pessoas*",
-        ">Investimento mensal: *#{number_to_currency(team.monthly_investment)} -- #{team.available_hours_in_month_for} horas*",
-        ">Perda operacional: *#{number_to_percentage(team.loss_at * 100)}*"
+        ">:money_with_wings: Semana anterior: *#{number_to_currency(average_demand_cost_info[:last_week])}*",
+        ">:busts_in_silhouette: Tamanho do time: *#{team.size_at} pessoas -- #{number_with_precision(team.size_using_available_hours, precision: 2)} pessoas faturáveis*",
+        ">:moneybag: Investimento mensal: *#{number_to_currency(team.monthly_investment)} -- #{team.available_hours_in_month_for} horas*",
+        ">:chart_with_downwards_trend: Perda operacional: *#{number_to_percentage(team.loss_at * 100)}*"
       ].join("\n") } }
       divider_block = { type: 'divider' }
       slack_notifier.post(blocks: [info_block, divider_block])
