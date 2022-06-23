@@ -14,12 +14,15 @@ module Slack
       #   team_investment: team.monthly_investment, team_hours: team.monthly_hours
       # team.loss
 
-      header = ">CMD para o time *#{team.name}*\n"
-      current_week = ">Semana atual: *#{number_to_currency(average_demand_cost_info[:current_week])}*\n"
-      last_week = ">Semana anterior: *#{number_to_currency(average_demand_cost_info[:last_week])}*\n"
-      diff = ">Diferença: *#{number_with_precision(average_demand_cost_info[:cmd_difference_to_avg_last_four_weeks], precision: 2)}%*\n"
-      average = ">Média das últimas 4 semanas: *#{number_to_currency(average_demand_cost_info[:four_weeks_cmd_average])}*"
-      info_block = { type: 'section', text: { type: 'mrkdwn', text: header + current_week + last_week + diff + average } }
+      info_block = { type: 'section', text: { type: 'mrkdwn', text: [
+        ">CMD para o time *#{team.name}*",
+        ">Semana atual: *#{number_to_currency(average_demand_cost_info[:current_week])}*",
+        ">Média das últimas 4 semanas: *#{number_to_currency(average_demand_cost_info[:four_weeks_cmd_average])}*",
+        ">Diferença (atual e média): *#{number_with_precision(average_demand_cost_info[:cmd_difference_to_avg_last_four_weeks], precision: 2)}%*",
+        ">Semana anterior: *#{number_to_currency(average_demand_cost_info[:last_week])}*",
+        ">Tamanho do time: *#{team.size_at} pessoas*",
+        ">Investimento mensal: *#{number_to_currency(team.monthly_investment)} -- #{team.available_hours_in_month_for} horas*"
+      ].join("\n") } }
       divider_block = { type: 'divider' }
       slack_notifier.post(blocks: [info_block, divider_block])
 
