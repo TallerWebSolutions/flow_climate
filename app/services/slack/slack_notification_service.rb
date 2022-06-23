@@ -14,12 +14,14 @@ module Slack
       #   team_investment: team.monthly_investment, team_hours: team.monthly_hours
       # team.loss
 
-      slack_notifier.ping(I18n.t('slack_configurations.notifications.cmd_text',
-                                 name: average_demand_cost_info[:team_name],
-                                 cmd_value: number_to_currency(average_demand_cost_info[:current_week]),
-                                 last_week_cmd: number_to_currency(average_demand_cost_info[:last_week]),
-                                 cmd_difference_to_last_week: number_with_precision(average_demand_cost_info[:cmd_difference_to_avg_last_four_weeks], precision: 2),
-                                 previous_cmd: number_to_currency(average_demand_cost_info[:four_weeks_cmd_average])))
+      header = ">CMD para o time *#{team.name}*\n"
+      current_week = ">Semana atual: *#{number_to_currency(average_demand_cost_info[:current_week])}*\n"
+      last_week = ">Semana anterior: *#{number_to_currency(average_demand_cost_info[:last_week])}*\n"
+      diff = ">Diferença: *#{number_with_precision(average_demand_cost_info[:cmd_difference_to_avg_last_four_weeks], precision: 2)}%*\n"
+      average = ">Média das últimas 4 semanas: *#{number_to_currency(average_demand_cost_info[:four_weeks_cmd_average])}*"
+      info_block = { type: 'section', text: { type: 'mrkdwn', text: header + current_week + last_week + diff + average } }
+      divider_block = { type: 'divider' }
+      slack_notifier.post(blocks: [info_block, divider_block])
 
     rescue Slack::Notifier::APIError
       Rails.logger.error('Invalid Slack API - It may be caused by an API token problem')
