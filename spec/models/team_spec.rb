@@ -460,4 +460,29 @@ RSpec.describe Team, type: :model do
       end
     end
   end
+
+  describe '#size' do
+    context 'with memberships' do
+      it 'returns the count of active memberships' do
+        travel_to Time.zone.local(2022, 6, 23, 10) do
+          team = Fabricate :team
+          Fabricate :membership, team: team, start_date: 3.days.ago, end_date: nil
+          Fabricate :membership, team: team, start_date: Time.zone.today, end_date: 4.days.from_now
+          Fabricate :membership, team: team, start_date: 4.days.ago, end_date: 3.days.ago
+          Fabricate :membership, team: team, start_date: 2.days.ago, end_date: 1.day.from_now
+
+          expect(team.size_at(Time.zone.yesterday)).to eq 2
+          expect(team.size_at).to eq 3
+        end
+      end
+    end
+
+    context 'without memberships' do
+      it 'returns zero' do
+        team = Fabricate :team
+
+        expect(team.size_at).to eq 0
+      end
+    end
+  end
 end

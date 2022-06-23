@@ -122,6 +122,12 @@ class Team < ApplicationRecord
     demands.kept.finished_until_date(Time.zone.now).order(:end_date).last&.end_date&.to_date || Time.zone.today
   end
 
+  def size_at(date = Time.zone.today)
+    memberships.active_for_date(date).count
+  end
+
+  # def
+
   private
 
   def assigned_count(not_finished_demands)
