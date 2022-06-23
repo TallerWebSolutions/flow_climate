@@ -29,4 +29,6 @@ class TeamResourceAllocation < ApplicationRecord
   belongs_to :team_resource
 
   validates :start_date, :monthly_payment, presence: true
+
+  scope :active_for_date, ->(limit_date) { where('start_date <= :limit_date AND (end_date IS NULL OR end_date > :limit_date)', limit_date: limit_date) }
 end

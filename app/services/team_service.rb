@@ -67,10 +67,8 @@ class TeamService
 
   def compute_average_demand_cost_to_all_costs(team, demands, start_date_to_cmd, end_date_to_cmd, grouping_period)
     demands_count = DemandsRepository.instance.throughput_to_period(demands, start_date_to_cmd, end_date_to_cmd).count
-    active_billable_members = team.team_members.joins(:memberships).where('memberships.start_date <= :end_date AND (memberships.end_date IS NULL OR memberships.end_date > :end_date) AND team_members.billable = true', end_date: end_date_to_cmd).where(memberships: { member_role: :developer })
-    active_resources = team.team_resource_allocations.where('team_resource_allocations.start_date <= :end_date AND (team_resource_allocations.end_date IS NULL OR team_resource_allocations.end_date > :end_date)', end_date: end_date_to_cmd)
 
-    monthly_payments_array = active_billable_members.map(&:monthly_payment) + active_resources.map(&:monthly_payment)
+    monthly_payments_array = team.monthly_investment
     compute_average_demand_cost(monthly_payments_array, demands_count, grouping_period)
   end
 
@@ -84,8 +82,8 @@ class TeamService
     { team_name: team.name, current_week: current_week, last_week: last_week, cmd_difference_to_avg_last_four_weeks: cmd_difference_to_avg_last_four_weeks, four_weeks_cmd_average: four_weeks_cmd_average }
   end
 
-  def compute_average_demand_cost(monthly_payments_array, demands_count, grouping_period)
-    average_demand_cost = monthly_payments_array.compact.sum / fraction_of_month_to_period(grouping_period)
+  def compute_average_demand_cost(monthly_investment, demands_count, grouping_period)
+    average_demand_cost = monthly_investment / fraction_of_month_to_period(grouping_period)
     average_demand_cost = (average_demand_cost / demands_count.to_f) if demands_count.positive?
     average_demand_cost
   end

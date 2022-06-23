@@ -49,12 +49,12 @@ class Team < ApplicationRecord
     projects.active.present?
   end
 
-  def active_monthly_cost_for_billable_types(billable_type)
-    team_members.active.where(billable: true, billable_type: billable_type).filter_map(&:monthly_payment).sum
+  def monthly_investment(date = Time.zone.today)
+    memberships.active_for_date(date).sum(&:monthly_payment) + team_resource_allocations.active_for_date(date).sum(&:monthly_payment)
   end
 
-  def active_monthly_available_hours_for_billable_types(billable_type)
-    memberships.joins(:team_member).active.where(team_members: { billable: true, billable_type: billable_type }).filter_map(&:hours_per_month).sum
+  def available_hours_in_month_for(date = Time.zone.today)
+    memberships.active_for_date(date).sum(&:monthly_payment)
   end
 
   def consumed_hours_in_month(required_date)

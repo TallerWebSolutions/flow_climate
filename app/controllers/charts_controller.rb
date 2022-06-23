@@ -24,7 +24,7 @@ class ChartsController < AuthenticatedController
 
     teams = @projects.includes(:team).map(&:team).uniq.compact
     @available_hours_in_month = 0
-    @available_hours_in_month = teams.sum { |team| team.active_monthly_available_hours_for_billable_types(@projects.pluck(:project_type).uniq) } if teams.present?
+    @available_hours_in_month = teams.sum { |team| team.available_hours_in_month(@projects.pluck(:project_type).uniq) } if teams.present?
   end
 
   def teams

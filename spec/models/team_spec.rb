@@ -74,18 +74,19 @@ RSpec.describe Team, type: :model do
     let!(:training_membership) { Fabricate :membership, team: team, team_member: training_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
     let!(:not_billable_member_membership) { Fabricate :membership, team: team, team_member: not_billable_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
     let!(:not_active_member_membership) { Fabricate :membership, team: team, team_member: not_active_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
+    let!(:team_resource_allocation) { Fabricate :team_resource_allocation, team: team, monthly_payment: 100 }
   end
 
-  describe '#active_monthly_cost_for_billable_types' do
+  describe '#monthly_investment' do
     include_context 'memberships for team'
 
-    it { expect(team.active_monthly_cost_for_billable_types(%i[outsourcing consulting])).to eq 300.0 }
+    it { expect(team.monthly_investment).to eq 973.12 }
   end
 
-  describe '#active_monthly_available_hours_for_billable_types' do
+  describe '#available_hours_in_month' do
     include_context 'memberships for team'
 
-    it { expect(team.active_monthly_available_hours_for_billable_types(%i[outsourcing consulting])).to eq 340 }
+    it { expect(team.available_hours_in_month(%i[outsourcing consulting])).to eq 340 }
   end
 
   RSpec.shared_context 'consolidations data for team', shared_context: :metadata do
