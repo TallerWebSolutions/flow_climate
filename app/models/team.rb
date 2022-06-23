@@ -135,6 +135,10 @@ class Team < ApplicationRecord
     memberships.active_for_date(date).count
   end
 
+  def size_using_available_hours(date = Time.zone.today)
+    available_hours_in_month_for(date) / 120.to_f
+  end
+
   private
 
   def assigned_count(not_finished_demands)
