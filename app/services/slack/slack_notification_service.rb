@@ -21,7 +21,8 @@ module Slack
         ">Diferença (atual e média): *#{number_with_precision(average_demand_cost_info[:cmd_difference_to_avg_last_four_weeks], precision: 2)}%*",
         ">Semana anterior: *#{number_to_currency(average_demand_cost_info[:last_week])}*",
         ">Tamanho do time: *#{team.size_at} pessoas*",
-        ">Investimento mensal: *#{number_to_currency(team.monthly_investment)} -- #{team.available_hours_in_month_for} horas*"
+        ">Investimento mensal: *#{number_to_currency(team.monthly_investment)} -- #{team.available_hours_in_month_for} horas*",
+        ">Perda operacional: *#{number_to_percentage(team.loss_at * 100)}*"
       ].join("\n") } }
       divider_block = { type: 'divider' }
       slack_notifier.post(blocks: [info_block, divider_block])
