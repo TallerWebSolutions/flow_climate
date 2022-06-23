@@ -65,6 +65,7 @@ Metrics/ClassLength:
     - 'app/repositories/demands_repository.rb'
     - 'app/models/company.rb'
     - 'app/models/project.rb'
+    - 'app/models/team.rb'
     - 'app/models/consolidations/project_consolidation.rb'
     - 'app/models/demand.rb'
     - 'app/models/flow/work_item_flow_information.rb'

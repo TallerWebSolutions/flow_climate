@@ -157,12 +157,6 @@ class Company < ApplicationRecord
     projects.active.sum(&:total_hours_consumed)
   end
 
-  def total_available_hours
-    total_available = 0
-    teams.sum { |team| total_available += team.available_hours_in_month(projects.pluck(:project_type).uniq) }
-    total_available
-  end
-
   def role_for_user(user)
     user_company_role = user_company_roles.find_by(user: user)
     return nil if team_members.find_by(user: user).blank? && user_company_role&.operations?

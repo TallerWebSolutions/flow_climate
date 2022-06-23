@@ -27,7 +27,7 @@ RSpec.describe Highchart::TeamChartsAdapter, type: :service do
         it 'builds the data structure for average_demand_cost monthly' do
           team_chart_data = described_class.new(team, first_project.start_date, second_project.end_date, 'month')
 
-          expect(team_chart_data.average_demand_cost).to eq(data: [10_000.0, 10_000.0, 5000.0], x_axis: TimeService.instance.months_between_of(first_project.start_date, second_project.end_date))
+          expect(team_chart_data.average_demand_cost).to eq(data: [1666.666666666666, 1666.666666666666, 833.333333333333], x_axis: TimeService.instance.months_between_of(first_project.start_date, second_project.end_date))
         end
       end
 
@@ -35,7 +35,7 @@ RSpec.describe Highchart::TeamChartsAdapter, type: :service do
         it 'builds the data structure for average_demand_cost weekly' do
           team_chart_data = described_class.new(team, first_project.start_date, second_project.end_date, 'week')
 
-          expect(team_chart_data.average_demand_cost).to eq(data: [2500.0, 2500.0, 2500.0, 2500.0, 2500.0, 2500.0, 2500.0, 2500.0, 1250.0], x_axis: TimeService.instance.weeks_between_of(first_project.start_date, second_project.end_date))
+          expect(team_chart_data.average_demand_cost).to eq(data: [416.6666666666665, 416.6666666666665, 416.6666666666665, 416.6666666666665, 416.6666666666665, 416.6666666666665, 416.6666666666665, 416.6666666666665, 208.33333333333326], x_axis: TimeService.instance.weeks_between_of(first_project.start_date, second_project.end_date))
         end
       end
 
@@ -43,7 +43,7 @@ RSpec.describe Highchart::TeamChartsAdapter, type: :service do
         it 'builds the data structure for average_demand_cost dayly' do
           team_chart_data = described_class.new(team, second_project.start_date, second_project.end_date, 'day')
 
-          expect(team_chart_data.average_demand_cost[:data]).to eq [333.3333333333333, 333.3333333333333, 333.3333333333333, 333.3333333333333, 333.3333333333333, 333.3333333333333, 333.3333333333333, 333.3333333333333, 333.3333333333333, 333.3333333333333]
+          expect(team_chart_data.average_demand_cost[:data]).to eq [55.555555555555536, 55.555555555555536, 55.555555555555536, 55.555555555555536, 55.555555555555536, 55.555555555555536, 55.555555555555536, 55.555555555555536, 55.555555555555536, 55.555555555555536]
           expect(team_chart_data.average_demand_cost[:x_axis]).to eq TimeService.instance.days_between_of(second_project.start_date.end_of_day, second_project.end_date.end_of_day).map(&:end_of_day)
         end
       end

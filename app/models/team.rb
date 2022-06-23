@@ -104,17 +104,20 @@ class Team < ApplicationRecord
     end
   end
 
-  def percentage_idle_members
-    active_memberships_count = memberships.active.count
-    not_finished_demands = demands.kept.not_finished(Time.zone.now)
+  def percentage_idle_members(date = Time.zone.today)
+    active_memberships = memberships.active_for_date(date).map(&:id)
+    not_finished_demands = demands.kept.not_finished(date)
 
-    return 0 if not_finished_demands.blank? || active_memberships_count.zero?
+    return 0 if not_finished_demands.blank? || active_memberships.count.zero?
 
-    assigned_count = assigned_count(not_finished_demands)
+    idle_memberships_ids(active_memberships, not_finished_demands).count.to_f / active_memberships.count
+  end
 
-    return 0 if assigned_count.zero?
+  def count_idle_by_role(date = Time.zone.today)
+    active_memberships = memberships.active_for_date(date).map(&:id)
+    not_finished_demands = demands.kept.not_finished(date)
 
-    1 - (assigned_count.to_f / active_memberships_count)
+    Membership.where(id: idle_memberships_ids(active_memberships, not_finished_demands)).group(:member_role).count
   end
 
   def initial_scope
@@ -142,6 +145,16 @@ class Team < ApplicationRecord
   end
 
   private
+
+  def idle_memberships_ids(active_memberships, not_finished_demands)
+    assigned_count = assigned_count(not_finished_demands)
+
+    return [] if assigned_count.zero?
+
+    open_assignments = not_finished_demands.map { |demand| demand.item_assignments.open_assignments }.flatten
+
+    active_memberships - open_assignments.map { |assignment| assignment.membership.id }
+  end
 
   def assigned_count(not_finished_demands)
     open_assignments = not_finished_demands.map { |demand| demand.item_assignments.open_assignments }.flatten

@@ -206,37 +206,34 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
         let!(:responsible_custom_field) { Fabricate :jira_custom_field_mapping, jira_account: jira_account, custom_field_type: :responsibles, custom_field_machine_name: 'customfield_10029' }
 
         context 'and the members already exist' do
-          let(:demand) { Fabricate :demand, company: company, team: team, external_id: 'CRE-726' }
-          let!(:other_team_member) { Fabricate :team_member, company: company, jira_account_user_email: 'bar', jira_account_id: 'sbbrubles', name: 'other_team_member' }
-          let!(:other_company_team_member) { Fabricate :team_member, jira_account_user_email: 'bar', jira_account_id: 'xpto' }
-
-          let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
-          let!(:other_membership) { Fabricate :membership, team: team, team_member: other_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
-          let!(:other_company_membership) { Fabricate :membership, team: team, team_member: other_company_team_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
-
-          let!(:jira_issue_changelog) { file_fixture('issue_changelog_paginated_page_one.json').read }
-
           it 'adds the members' do
-            described_class.instance.process_jira_issue_changelog(jira_account, JSON.parse(jira_issue_changelog), demand, team_member)
+            travel_to Time.zone.local(2020, 8, 25, 10) do
+              demand = Fabricate :demand, company: company, team: team, external_id: 'CRE-726'
+              other_team_member = Fabricate :team_member, company: company, jira_account_user_email: 'bar', jira_account_id: 'sbbrubles', name: 'other_team_member'
+              other_company_team_member = Fabricate :team_member, jira_account_user_email: 'bar', jira_account_id: 'xpto'
 
-            updated_demand = Demand.last
-            expect(updated_demand.memberships).to match_array [membership, other_membership]
-            expect(updated_demand.item_assignments.open_assignments).to eq []
+              membership = Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil
+              other_membership = Fabricate :membership, team: team, team_member: other_team_member, hours_per_month: 40, start_date: 6.months.ago, end_date: Time.zone.local(2021, 11, 10)
+              Fabricate :membership, team: team, team_member: other_company_team_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil
+
+              jira_issue_changelog = file_fixture('issue_changelog_paginated_page_one.json').read
+              described_class.instance.process_jira_issue_changelog(jira_account, JSON.parse(jira_issue_changelog), demand, team_member)
+
+              updated_demand = Demand.last
+              expect(updated_demand.memberships).to match_array [membership, other_membership]
+              expect(updated_demand.item_assignments.open_assignments).to eq []
+            end
           end
         end
 
         context 'when the members do not exist yet' do
           let(:demand) { Fabricate :demand, company: company, team: team, external_id: 'CRE-726' }
-          let!(:team_member) { Fabricate :team_member, company: company, jira_account_user_email: 'foo', jira_account_id: 'xpto', name: 'team_member' }
-          let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
-
           let!(:jira_issue_changelog) { file_fixture('issue_changelog_paginated_page_one.json').read }
 
           it 'creates the members' do
             expect(DemandEffortService.instance).to(receive(:build_efforts_to_demand)).once.with(demand)
             described_class.instance.process_jira_issue_changelog(jira_account, JSON.parse(jira_issue_changelog), demand, team_member)
             expect(Demand.last.memberships.size).to eq 2
-            expect(Demand.last.memberships.map(&:team_member_name)).to match_array %w[team_member other_team_member]
           end
         end
 

@@ -17,11 +17,12 @@ module Slack
         ">:money_with_wings: Semana anterior: *#{number_to_currency(average_demand_cost_info[:last_week])}*",
         ">:busts_in_silhouette: Tamanho do time: *#{team.size_at} pessoas -- #{number_with_precision(team.size_using_available_hours, precision: 2)} pessoas faturáveis*",
         ">:moneybag: Investimento mensal: *#{number_to_currency(team.monthly_investment)} -- #{team.available_hours_in_month_for} horas*",
-        ">:chart_with_downwards_trend: Perda operacional: *#{number_to_percentage(team.loss_at * 100)}*"
+        ">:chart_with_downwards_trend: Perda operacional no mês: *#{number_to_percentage(team.loss_at * 100)}*",
+        ">:zzz: #{number_to_percentage(team.percentage_idle_members * 100, precision: 0)}",
+        ">:zzz: :busts_in_silhouette: #{team.count_idle_by_role.map { |role, count| "#{I18n.t("activerecord.attributes.membership.enums.member_role.#{role}")} (#{count})" }.join(', ')}"
       ].join("\n") } }
       divider_block = { type: 'divider' }
       slack_notifier.post(blocks: [info_block, divider_block])
-
     rescue Slack::Notifier::APIError
       Rails.logger.error('Invalid Slack API - It may be caused by an API token problem')
     end

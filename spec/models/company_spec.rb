@@ -681,19 +681,6 @@ RSpec.describe Company, type: :model do
     end
   end
 
-  describe '#total_available_hours' do
-    context 'with data' do
-      include_context 'demands with effort for company'
-      it { expect(company.total_available_hours).to eq 100 }
-    end
-
-    context 'with no data' do
-      let(:company) { Fabricate :company }
-
-      it { expect(company.total_active_consumed_hours).to eq 0 }
-    end
-  end
-
   describe '#role_for_user' do
     let(:company) { Fabricate :company }
     let(:other_company) { Fabricate :company }

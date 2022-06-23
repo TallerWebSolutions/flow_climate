@@ -244,6 +244,42 @@ RSpec.describe Team, type: :model do
     it { expect(team.larger_lead_times(1, 2)).to eq [third_demand] }
   end
 
+  describe '#count_idle_by_role' do
+    let(:company) { Fabricate :company }
+
+    let(:team) { Fabricate :team, company: company }
+
+    let!(:first_team_member) { Fabricate :team_member, company: company }
+    let!(:second_team_member) { Fabricate :team_member, company: company }
+    let!(:third_team_member) { Fabricate :team_member, company: company }
+    let!(:fourth_team_member) { Fabricate :team_member, company: company }
+    let!(:fifth_team_member) { Fabricate :team_member, company: company }
+    let!(:sixth_team_member) { Fabricate :team_member, company: company }
+
+    let!(:first_membership) { Fabricate :membership, team_member: first_team_member, team: team, end_date: nil, member_role: :developer }
+    let!(:second_membership) { Fabricate :membership, team_member: second_team_member, team: team, end_date: nil, member_role: :manager }
+    let!(:third_membership) { Fabricate :membership, team_member: third_team_member, team: team, end_date: nil, member_role: :designer }
+    let!(:fourth_membership) { Fabricate :membership, team_member: fourth_team_member, team: team, end_date: nil, member_role: :manager }
+    let!(:fifth_membership) { Fabricate :membership, team_member: fifth_team_member, team: team, end_date: nil, member_role: :developer }
+    let!(:sixth_membership) { Fabricate :membership, team_member: sixth_team_member, team: team, end_date: Time.zone.today, member_role: :manager }
+
+    let(:other_team) { Fabricate :team, company: company }
+
+    let(:empty_team) { Fabricate :team, company: company }
+
+    let!(:first_demand) { Fabricate :demand, team: team, end_date: nil }
+    let!(:second_demand) { Fabricate :demand, team: team, end_date: nil }
+    let!(:third_demand) { Fabricate :demand, team: team, end_date: nil }
+    let!(:fourth_demand) { Fabricate :demand, team: team, end_date: Time.zone.now }
+    let!(:fifth_demand) { Fabricate :demand, team: other_team, end_date: nil }
+
+    let!(:first_item_assignment) { Fabricate :item_assignment, demand: first_demand, membership: first_membership, finish_time: nil }
+
+    it { expect(team.count_idle_by_role).to eq({ 'designer' => 1, 'developer' => 1, 'manager' => 2 }) }
+    it { expect(other_team.count_idle_by_role).to eq({}) }
+    it { expect(empty_team.count_idle_by_role).to eq({}) }
+  end
+
   describe '#percentage_idle_members' do
     let(:company) { Fabricate :company }
 
