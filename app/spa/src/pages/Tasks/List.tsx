@@ -12,11 +12,10 @@ import {
   TableRow,
   Typography,
 } from "@mui/material"
-import { ChangeEvent, useContext, useEffect, useState } from "react"
+import { ChangeEvent, useContext } from "react"
 import { useTranslation } from "react-i18next"
 import { MeContext } from "../../contexts/MeContext"
 import { secondsToReadbleDate } from "../../lib/date"
-import { Company } from "../../modules/company/company.types"
 import { Task } from "../../modules/task/task.types"
 import User from "../../modules/user/user.types"
 import { TaskFilters } from "./Tasks"
@@ -114,28 +113,11 @@ type TaskListProps = {
 
 const TaskList = ({ filters, setFilters }: TaskListProps) => {
   const { t } = useTranslation(["tasks"])
-  const [tasks, setTasks] = useState<Task[]>([])
-  const [company, setCompany] = useState<Company | null>(null)
-  const [totalOfTasks, setTotalOfTasks] = useState(0)
-  const [totalOfDeliveredTasks, setTotalOfDeliveredTasks] = useState(0)
 
   const { data, loading } = useQuery<TasksListDTO>(TASKS_LIST_QUERY, {
     variables: { ...filters },
   })
   const { me } = useContext(MeContext)
-
-  useEffect(() => {
-    if (!loading) {
-      setTasks(data?.tasksList.tasks ?? [])
-      setCompany(me?.currentCompany!)
-
-      if (data?.tasksList.totalCount) {
-        setTotalOfTasks(0)
-      }
-
-      setTotalOfDeliveredTasks(Number(data?.tasksList.totalDeliveredCount))
-    }
-  }, [data, loading, me?.currentCompany])
 
   const taskListHeadCells = [
     "ID",
@@ -160,6 +142,8 @@ const TaskList = ({ filters, setFilters }: TaskListProps) => {
     setFilters((prevState) => ({ ...prevState, page: newPage }))
   }
 
+  const tasksList = data?.tasksList.tasks || []
+
   return loading ? (
     <Box
       sx={{
@@ -175,9 +159,9 @@ const TaskList = ({ filters, setFilters }: TaskListProps) => {
   ) : (
     <TableContainer>
       <Typography color="primary" variant="h6" component="h6">
-        {`${totalOfTasks} ${t("tasks")} - ${totalOfDeliveredTasks} ${t(
-          "finished_tasks"
-        )}`}
+        {`${data?.tasksList.totalCount} ${t("tasks")} - ${
+          data?.tasksList.totalDeliveredCount
+        } ${t("finished_tasks")}`}
       </Typography>
 
       <Table data-testid="task-list">
@@ -195,8 +179,8 @@ const TaskList = ({ filters, setFilters }: TaskListProps) => {
         </TableHead>
 
         <TableBody>
-          {tasks.map((task, index) => {
-            const baseLink = `/companies/${company?.slug}`
+          {tasksList.map((task, index) => {
+            const baseLink = `/companies/${me?.currentCompany?.slug}`
 
             return (
               <TableRow
@@ -257,7 +241,7 @@ const TaskList = ({ filters, setFilters }: TaskListProps) => {
         }}
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={totalOfTasks}
+        count={data?.tasksList.totalCount || 0}
         rowsPerPage={filters.limit || 10}
         page={filters.page}
         onPageChange={(_, page) => handlePage(page)}
