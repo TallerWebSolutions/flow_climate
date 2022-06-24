@@ -88,12 +88,6 @@ class Stage < ApplicationRecord
     demand_transitions.sum(&:total_seconds_in_transition)
   end
 
-  def commitment_area?
-    return false if commitment_stage.blank?
-
-    order >= commitment_stage.order && (first_done_stage_in_pipe.blank? || order <= first_done_stage_in_pipe.order)
-  end
-
   private
 
   def commitment_stage
