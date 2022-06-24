@@ -10,6 +10,7 @@ module Slack
     def notify_cmd(slack_notifier, team)
       average_demand_cost_info = TeamService.instance.average_demand_cost_stats_info_hash(team)
 
+      idle_roles = team.count_idle_by_role.map { |role, count| "#{I18n.t("activerecord.attributes.membership.enums.member_role.#{role}")} (#{count})" }.join(', ')
       info_block = { type: 'section', text: { type: 'mrkdwn', text: [
         ">*CMD para o time #{team.name}*\n>",
         ">:money_with_wings: Semana atual: *#{number_to_currency(average_demand_cost_info[:current_week])}* -- Média das últimas 4 semanas: *#{number_to_currency(average_demand_cost_info[:four_weeks_cmd_average])}*",
@@ -19,7 +20,7 @@ module Slack
         ">:moneybag: Investimento mensal: *#{number_to_currency(team.monthly_investment)} -- #{team.available_hours_in_month_for} horas*",
         ">:chart_with_downwards_trend: Perda operacional no mês: *#{number_to_percentage(team.loss_at * 100)}*",
         ">:zzz: #{number_to_percentage(team.percentage_idle_members * 100, precision: 0)}",
-        ">:zzz: :busts_in_silhouette: #{team.count_idle_by_role.map { |role, count| "#{I18n.t("activerecord.attributes.membership.enums.member_role.#{role}")} (#{count})" }.join(', ')}"
+        ">:zzz: :busts_in_silhouette: #{idle_roles}"
       ].join("\n") } }
       divider_block = { type: 'divider' }
       slack_notifier.post(blocks: [info_block, divider_block])
