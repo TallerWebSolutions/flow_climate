@@ -7,8 +7,8 @@
     "end_date": "End date",
     "operational_risk": "Operational risk",
     "projects": "Projects",
-    "demands": "Activitys",
-    "tasks": "Deliverables",
+    "demands": "Deliverables",
+    "tasks": "Tasks",
     "deliveries": "Delivered"
   }
 }

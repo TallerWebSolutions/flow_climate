@@ -2,7 +2,7 @@
   "title": "Financial Report",
   "registerAdditionalHours": "Register additional hours",
   "finishedDemands": {
-    "title": "Finished Activities",
+    "title": "Finished Deliverables",
     "code": "Code",
     "demandTitle": "Activity Title",
     "deliveryDate": "Delivery Date",
@@ -12,7 +12,7 @@
     "totalEffort": "Total Effort"
   },
   "discardedDemands": {
-    "title": "Discarded Activities",
+    "title": "Discarded Deliverables",
     "code": "Code",
     "demandTitle": "Activity Title",
     "cost": "Cost",
@@ -22,7 +22,7 @@
   },
   "footer": {
     "total": "Total: ",
-    "demands": "Activities"
+    "demands": "Deliverables"
   },
   "form": {
     "hours": "Hours",

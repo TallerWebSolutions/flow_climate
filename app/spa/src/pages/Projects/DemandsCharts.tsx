@@ -208,8 +208,8 @@ const DemandsCharts = () => {
     ({ bugsOpened, bugsClosed }, index) => {
       return {
         index: index,
-        [t("project_charts.bugs_openned")]: bugsOpened,
-        [t("project_charts.bugs_closed")]: bugsClosed,
+        [t("charts_tab.project_charts.bugs_openned")]: bugsOpened,
+        [t("charts_tab.project_charts.bugs_closed")]: bugsClosed,
       }
     }
   )
@@ -249,12 +249,14 @@ const DemandsCharts = () => {
 
         return {
           index,
-          [t("project_charts.flow_data_created")]: creationChartData[index],
-          [t("project_charts.flow_data_committed_to")]:
+          [t("charts_tab.project_charts.flow_data_created")]:
+            creationChartData[index],
+          [t("charts_tab.project_charts.flow_data_committed_to")]:
             committedChartData[index],
-          [t("project_charts.flow_data_pull_transactions")]:
+          [t("charts_tab.project_charts.flow_data_pull_transactions")]:
             pullTransactionRate[index],
-          [t("project_charts.flow_data_delivered")]: throughputChartData[index],
+          [t("charts_tab.project_charts.flow_data_delivered")]:
+            throughputChartData[index],
         }
       })
     : []
@@ -266,9 +268,9 @@ const DemandsCharts = () => {
 
         return {
           index,
-          [t("project_charts.lead_time_histogram_chart_x_label")]:
+          [t("charts_tab.project_charts.lead_time_histogram_chart_x_label")]:
             projectLeadTimeHistogramDataKeysInDays,
-          [t("project_charts.lead_time_histogram_chart_y_label")]:
+          [t("charts_tab.project_charts.lead_time_histogram_chart_y_label")]:
             leadTimeHistogramData.values[index],
         }
       })
@@ -277,14 +279,14 @@ const DemandsCharts = () => {
   const projectDemandsBurnupChartData = project
     ? [
         {
-          id: t("project_charts.demands_burn_up_label_scope"),
+          id: t("charts_tab.project_charts.demands_burn_up_label_scope"),
           data: project.weeklyProjectScopeUntilEnd.map((scope, index) => ({
             x: index,
             y: scope,
           })),
         },
         {
-          id: t("project_charts.demands_burn_up_label_ideal"),
+          id: t("charts_tab.project_charts.demands_burn_up_label_ideal"),
           data: project.currentWeeklyScopeIdealBurnup.map(
             (idealScope, index) => ({
               x: index,
@@ -293,7 +295,7 @@ const DemandsCharts = () => {
           ),
         },
         {
-          id: t("project_charts.demands_burn_up_label_delivered"),
+          id: t("charts_tab.project_charts.demands_burn_up_label_delivered"),
           data: projectConsolidationsWeekly.map(
             ({ projectThroughput }, index) => ({
               x: index,
@@ -307,14 +309,14 @@ const DemandsCharts = () => {
   const projectHoursBurnupChartData = project
     ? [
         {
-          id: t("project_charts.hours_burn_up_label_scope"),
+          id: t("charts_tab.project_charts.hours_burn_up_label_scope"),
           data: project.weeklyProjectScopeHoursUntilEnd.map((scope, index) => ({
             x: index,
             y: scope,
           })),
         },
         {
-          id: t("project_charts.hours_burn_up_label_ideal"),
+          id: t("charts_tab.project_charts.hours_burn_up_label_ideal"),
           data: project.currentWeeklyHoursIdealBurnup.map(
             (idealScope, index) => ({
               x: index,
@@ -323,7 +325,7 @@ const DemandsCharts = () => {
           ),
         },
         {
-          id: t("project_charts.hours_burn_up_label_delivered"),
+          id: t("charts_tab.project_charts.hours_burn_up_label_delivered"),
           data: projectConsolidationsWeekly.map(
             ({ projectThroughputHours }, index) => ({
               x: index,
@@ -366,7 +368,7 @@ const DemandsCharts = () => {
 
   const leadTimeControlChartData = [
     {
-      id: t("project_charts.lead_time_control_label"),
+      id: t("charts_tab.project_charts.lead_time_control_label"),
       data:
         demandsFinishedWithLeadtime?.map(({ externalId, leadtime }, index) => {
           const leadTimeInDays = secondsToDays(leadtime)
@@ -392,21 +394,21 @@ const DemandsCharts = () => {
 
   const leadTimeControlP65Marker = {
     value: leadTimeP65InDays,
-    legend: t("project_charts.lead_time_control_marker_p65", {
+    legend: t("charts_tab.project_charts.lead_time_control_marker_p65", {
       leadTime: leadTimeP65InDays,
     }),
   }
 
   const leadTimeControlP80Marker = {
     value: leadTimeP80InDays,
-    legend: t("project_charts.lead_time_control_marker_p80", {
+    legend: t("charts_tab.project_charts.lead_time_control_marker_p80", {
       leadTime: leadTimeP80InDays,
     }),
   }
 
   const leadTimeControlP95Marker = {
     value: leadTimeP95InDays,
-    legend: t("project_charts.lead_time_control_marker_p95", {
+    legend: t("charts_tab.project_charts.lead_time_control_marker_p95", {
       leadTime: leadTimeP95InDays,
     }),
   }
@@ -473,14 +475,15 @@ const DemandsCharts = () => {
       projectThroughputHoursDownstream,
     }) => {
       return {
-        [t("project_charts.hours_consumed_x_label")]: consolidationDate,
-        [t("project_charts.hours_consumed_upstream")]:
+        [t("charts_tab.project_charts.hours_consumed_x_label")]:
+          consolidationDate,
+        [t("charts_tab.project_charts.hours_consumed_upstream")]:
           projectThroughputHoursUpstream.toFixed(2),
-        [t("project_charts.hours_consumed_downstream")]:
+        [t("charts_tab.project_charts.hours_consumed_downstream")]:
           projectThroughputHoursDownstream.toFixed(2),
-        [t("project_charts.additional_hours_consumed")]:
+        [t("charts_tab.project_charts.additional_hours_consumed")]:
           projectThroughputHoursAdditional?.toFixed(2) || 0,
-        [t("project_charts.hours_consumed_total_throughput")]:
+        [t("charts_tab.project_charts.hours_consumed_total_throughput")]:
           projectThroughputHours.toFixed(2),
       }
     }
@@ -496,13 +499,15 @@ const DemandsCharts = () => {
     }) => {
       return {
         period: consolidationDate,
-        [t("project_charts.consumed_hours_by_role_design_effort")]:
+        [t("charts_tab.project_charts.consumed_hours_by_role_design_effort")]:
           projectThroughputHoursDesign.toFixed(2),
-        [t("project_charts.consumed_hours_by_role_development_effort")]:
-          projectThroughputHoursDevelopment.toFixed(2),
-        [t("project_charts.consumed_hours_by_role_management_effort")]:
-          projectThroughputHoursManagement.toFixed(2),
-        [t("project_charts.consumed_hours_by_role_total_effort")]:
+        [t(
+          "charts_tab.project_charts.consumed_hours_by_role_development_effort"
+        )]: projectThroughputHoursDevelopment.toFixed(2),
+        [t(
+          "charts_tab.project_charts.consumed_hours_by_role_management_effort"
+        )]: projectThroughputHoursManagement.toFixed(2),
+        [t("charts_tab.project_charts.consumed_hours_by_role_total_effort")]:
           projectThroughputHours.toFixed(2),
       }
     }
@@ -519,16 +524,18 @@ const DemandsCharts = () => {
       }) => {
         return {
           period: consolidationDate,
-          [t("project_charts.consumed_hours_by_role_in_month_design_effort")]:
-            projectThroughputHoursDesignInMonth.toFixed(2),
           [t(
-            "project_charts.consumed_hours_by_role_in_month_development_effort"
+            "charts_tab.project_charts.consumed_hours_by_role_in_month_design_effort"
+          )]: projectThroughputHoursDesignInMonth.toFixed(2),
+          [t(
+            "charts_tab.project_charts.consumed_hours_by_role_in_month_development_effort"
           )]: projectThroughputHoursDevelopmentInMonth.toFixed(2),
           [t(
-            "project_charts.consumed_hours_by_role_in_month_management_effort"
+            "charts_tab.project_charts.consumed_hours_by_role_in_month_management_effort"
           )]: projectThroughputHoursManagementInMonth.toFixed(2),
-          [t("project_charts.consumed_hours_by_role_in_month_total_effort")]:
-            projectThroughputHoursInMonth.toFixed(2),
+          [t(
+            "charts_tab.project_charts.consumed_hours_by_role_in_month_total_effort"
+          )]: projectThroughputHoursInMonth.toFixed(2),
         }
       }
     ) || []
@@ -553,7 +560,7 @@ const DemandsCharts = () => {
 
   const demandsCountByTeamMember = project
     ? project.projectMembers.map((member) => ({
-        [t("project_charts.demandsCount")]: member.demandsCount,
+        [t("charts_tab.project_charts.demandsCount")]: member.demandsCount,
         name: member.memberName,
       }))
     : []
@@ -561,12 +568,14 @@ const DemandsCharts = () => {
   return (
     <Grid container spacing={2} rowSpacing={8} sx={{ marginTop: 4 }}>
       <ChartGridItem
-        title={t("project_charts.operational_math_risk_evolution_chart")}
+        title={t(
+          "charts_tab.project_charts.operational_math_risk_evolution_chart"
+        )}
       >
         <LineChart
           data={operationalRiskChartData}
           axisLeftLegend={`${t(
-            "project_charts.operational_math_risk_evolution_y_label"
+            "charts_tab.project_charts.operational_math_risk_evolution_y_label"
           )} (%)`}
           props={{
             margin: { left: 80, right: 20, top: 25, bottom: 65 },
@@ -583,7 +592,7 @@ const DemandsCharts = () => {
               <LineChartTooltip
                 slice={slice}
                 xLabel={t(
-                  "project_charts.operational_math_risk_evolution_tooltip_label"
+                  "charts_tab.project_charts.operational_math_risk_evolution_tooltip_label"
                 )}
               />
             ),
@@ -592,13 +601,13 @@ const DemandsCharts = () => {
       </ChartGridItem>
       <ChartGridItem
         title={t(
-          "project_charts.operational_math_risk_evolution_team_data_chart"
+          "charts_tab.project_charts.operational_math_risk_evolution_team_data_chart"
         )}
       >
         <LineChart
           data={operationalTeamRiskChartData}
           axisLeftLegend={`${t(
-            "project_charts.operational_math_risk_evolution_team_data_y_label"
+            "charts_tab.project_charts.operational_math_risk_evolution_team_data_y_label"
           )} (%)`}
           props={{
             margin: { left: 80, right: 20, top: 25, bottom: 65 },
@@ -615,47 +624,49 @@ const DemandsCharts = () => {
               <LineChartTooltip
                 slice={slice}
                 xLabel={t(
-                  "project_charts.operational_math_risk_evolution_team_data_tooltip_label"
+                  "charts_tab.project_charts.operational_math_risk_evolution_team_data_tooltip_label"
                 )}
               />
             ),
           }}
         />
       </ChartGridItem>
-      <ChartGridItem title={t("project_charts.bugs_chart")}>
+      <ChartGridItem title={t("charts_tab.project_charts.bugs_chart")}>
         <BarChart
           data={projectBugsChartData}
-          axisLeftLegend={t("project_charts.bugs_y_label")}
+          axisLeftLegend={t("charts_tab.project_charts.bugs_y_label")}
           keys={[
-            t("project_charts.bugs_openned"),
-            t("project_charts.bugs_closed"),
+            t("charts_tab.project_charts.bugs_openned"),
+            t("charts_tab.project_charts.bugs_closed"),
           ]}
           indexBy="index"
         />
       </ChartGridItem>
-      <ChartGridItem title={t("project_charts.flow_data_chart")}>
+      <ChartGridItem title={t("charts_tab.project_charts.flow_data_chart")}>
         <BarChart
           data={projectFlowChartData}
           keys={[
-            t("project_charts.flow_data_created"),
-            t("project_charts.flow_data_committed_to"),
-            t("project_charts.flow_data_pull_transactions"),
-            t("project_charts.flow_data_delivered"),
+            t("charts_tab.project_charts.flow_data_created"),
+            t("charts_tab.project_charts.flow_data_committed_to"),
+            t("charts_tab.project_charts.flow_data_pull_transactions"),
+            t("charts_tab.project_charts.flow_data_delivered"),
           ]}
           indexBy="index"
-          axisLeftLegend={t("project_charts.flow_data_y_label")}
-          axisBottomLegend={t("project_charts.flow_data_x_label")}
+          axisLeftLegend={t("charts_tab.project_charts.flow_data_y_label")}
+          axisBottomLegend={t("charts_tab.project_charts.flow_data_x_label")}
           groupMode="grouped"
         />
       </ChartGridItem>
       <ChartGridItem
-        title={t("project_charts.demands_burn_up_chart", {
+        title={t("charts_tab.project_charts.demands_burn_up_chart", {
           projectName: project?.name || "",
         })}
       >
         <LineChart
           data={projectDemandsBurnupChartData}
-          axisLeftLegend={t("project_charts.demands_burn_up_y_label")}
+          axisLeftLegend={t(
+            "charts_tab.project_charts.demands_burn_up_y_label"
+          )}
           props={{
             enableSlices: "x",
             sliceTooltip: ({ slice }: SliceTooltipProps) => (
@@ -665,13 +676,13 @@ const DemandsCharts = () => {
         />
       </ChartGridItem>
       <ChartGridItem
-        title={t("project_charts.hours_burn_up_chart", {
+        title={t("charts_tab.project_charts.hours_burn_up_chart", {
           projectName: project?.name || "no project",
         })}
       >
         <LineChart
           data={projectHoursBurnupChartData}
-          axisLeftLegend={t("project_charts.hours_burn_up_y_label")}
+          axisLeftLegend={t("charts_tab.project_charts.hours_burn_up_y_label")}
           props={{
             yFormat: "=.2f",
             enableSlices: "x",
@@ -681,10 +692,10 @@ const DemandsCharts = () => {
           }}
         />
       </ChartGridItem>
-      <ChartGridItem title={t("project_charts.lead_time_p80_chart")}>
+      <ChartGridItem title={t("charts_tab.project_charts.lead_time_p80_chart")}>
         <LineChart
           data={leadTimeP80ChartData}
-          axisLeftLegend={t("project_charts.lead_time_p80_y_label")}
+          axisLeftLegend={t("charts_tab.project_charts.lead_time_p80_y_label")}
           props={{
             enableSlices: "x",
             sliceTooltip: ({ slice }: SliceTooltipProps) => (
@@ -695,13 +706,15 @@ const DemandsCharts = () => {
       </ChartGridItem>
       {projectCumulativeFlowChartData && (
         <ChartGridItem
-          title={t("project_charts.cumulative_flow_chart", {
+          title={t("charts_tab.project_charts.cumulative_flow_chart", {
             projectName: project?.name || "no project",
           })}
         >
           <LineChart
             data={normalizeCfdData(projectCumulativeFlowChartData)}
-            axisLeftLegend={t("project_charts.cumulative_flow_y_label")}
+            axisLeftLegend={t(
+              "charts_tab.project_charts.cumulative_flow_y_label"
+            )}
             props={{
               yScale: {
                 type: "linear",
@@ -725,7 +738,9 @@ const DemandsCharts = () => {
           />
         </ChartGridItem>
       )}
-      <ChartGridItem title={t("project_charts.lead_time_control_chart")}>
+      <ChartGridItem
+        title={t("charts_tab.project_charts.lead_time_control_chart")}
+      >
         <ScatterChart
           data={leadTimeControlChartData}
           markers={[
@@ -735,20 +750,26 @@ const DemandsCharts = () => {
           ]}
         />
       </ChartGridItem>
-      <ChartGridItem title={t("project_charts.lead_time_histogram_chart")}>
+      <ChartGridItem
+        title={t("charts_tab.project_charts.lead_time_histogram_chart")}
+      >
         <BarChart
           data={projectLeadTimeHistogramData}
-          keys={[t("project_charts.lead_time_histogram_chart_hits")]}
-          indexBy={t("project_charts.lead_time_histogram_chart_x_label")}
-          axisLeftLegend={t("project_charts.lead_time_histogram_chart_y_label")}
+          keys={[t("charts_tab.project_charts.lead_time_histogram_chart_hits")]}
+          indexBy={t(
+            "charts_tab.project_charts.lead_time_histogram_chart_x_label"
+          )}
+          axisLeftLegend={t(
+            "charts_tab.project_charts.lead_time_histogram_chart_y_label"
+          )}
           axisBottomLegend={t(
-            "project_charts.lead_time_histogram_chart_x_label"
+            "charts_tab.project_charts.lead_time_histogram_chart_x_label"
           )}
           padding={0}
         />
       </ChartGridItem>
 
-      <ChartGridItem title={t("project_charts.quality_bugs_chart")}>
+      <ChartGridItem title={t("charts_tab.project_charts.quality_bugs_chart")}>
         <LineChart
           data={projectQualityChartData}
           axisLeftLegend="%"
@@ -766,16 +787,22 @@ const DemandsCharts = () => {
             sliceTooltip: ({ slice }: SliceTooltipProps) => (
               <LineChartTooltip
                 slice={slice}
-                xLabel={t("project_charts.quality_bugs_tooltip_label")}
+                xLabel={t(
+                  "charts_tab.project_charts.quality_bugs_tooltip_label"
+                )}
               />
             ),
           }}
         />
       </ChartGridItem>
-      <ChartGridItem title={t("project_charts.quality_bugs_for_coding_chart")}>
+      <ChartGridItem
+        title={t("charts_tab.project_charts.quality_bugs_for_coding_chart")}
+      >
         <LineChart
           data={projectQualityForCodingChartData}
-          axisLeftLegend={t("project_charts.quality_bugs_for_coding_y_label")}
+          axisLeftLegend={t(
+            "charts_tab.project_charts.quality_bugs_for_coding_y_label"
+          )}
           props={{
             margin: { left: 80, right: 20, top: 25, bottom: 65 },
             axisBottom: {
@@ -790,7 +817,7 @@ const DemandsCharts = () => {
               <LineChartTooltip
                 slice={slice}
                 xLabel={t(
-                  "project_charts.quality_bugs_for_coding_tooltip_label"
+                  "charts_tab.project_charts.quality_bugs_for_coding_tooltip_label"
                 )}
               />
             ),
@@ -798,12 +825,14 @@ const DemandsCharts = () => {
         />
       </ChartGridItem>
       <ChartGridItem
-        title={t("project_charts.quality_bugs_for_coding_per_demand_chart")}
+        title={t(
+          "charts_tab.project_charts.quality_bugs_for_coding_per_demand_chart"
+        )}
       >
         <LineChart
           data={projectQualityForCodingPerDemand}
           axisLeftLegend={t(
-            "project_charts.quality_bugs_for_coding_per_demand_y_label"
+            "charts_tab.project_charts.quality_bugs_for_coding_per_demand_y_label"
           )}
           props={{
             margin: { left: 80, right: 20, top: 25, bottom: 65 },
@@ -820,14 +849,16 @@ const DemandsCharts = () => {
               <LineChartTooltip
                 slice={slice}
                 xLabel={t(
-                  "project_charts.quality_bugs_for_coding_per_demand_tooltip_label"
+                  "charts_tab.project_charts.quality_bugs_for_coding_per_demand_tooltip_label"
                 )}
               />
             ),
           }}
         />
       </ChartGridItem>
-      <ChartGridItem title={t("project_charts.flow_efficiency_chart")}>
+      <ChartGridItem
+        title={t("charts_tab.project_charts.flow_efficiency_chart")}
+      >
         <LineChart
           data={flowEfficiencyChartData}
           axisLeftLegend={"%"}
@@ -845,16 +876,22 @@ const DemandsCharts = () => {
             sliceTooltip: ({ slice }: SliceTooltipProps) => (
               <LineChartTooltip
                 slice={slice}
-                xLabel={t("project_charts.flow_efficiency_tooltip_label")}
+                xLabel={t(
+                  "charts_tab.project_charts.flow_efficiency_tooltip_label"
+                )}
               />
             ),
           }}
         />
       </ChartGridItem>
-      <ChartGridItem title={t("project_charts.hours_per_demand_chart")}>
+      <ChartGridItem
+        title={t("charts_tab.project_charts.hours_per_demand_chart")}
+      >
         <LineChart
           data={hoursPerDemandChartData}
-          axisLeftLegend={t("project_charts.hours_per_demand_y_label")}
+          axisLeftLegend={t(
+            "charts_tab.project_charts.hours_per_demand_y_label"
+          )}
           props={{
             margin: { left: 80, right: 20, top: 25, bottom: 65 },
             axisBottom: {
@@ -868,88 +905,116 @@ const DemandsCharts = () => {
             sliceTooltip: ({ slice }: SliceTooltipProps) => (
               <LineChartTooltip
                 slice={slice}
-                xLabel={t("project_charts.hours_per_demand_tooltip_label")}
+                xLabel={t(
+                  "charts_tab.project_charts.hours_per_demand_tooltip_label"
+                )}
               />
             ),
           }}
         />
       </ChartGridItem>
-      <ChartGridItem title={t("project_charts.hours_consumed_chart")}>
+      <ChartGridItem
+        title={t("charts_tab.project_charts.hours_consumed_chart")}
+      >
         <BarChart
           data={projectHoursConsummed}
           keys={[
-            t("project_charts.hours_consumed_upstream"),
-            t("project_charts.hours_consumed_downstream"),
-            t("project_charts.additional_hours_consumed"),
-            t("project_charts.hours_consumed_total_throughput"),
+            t("charts_tab.project_charts.hours_consumed_upstream"),
+            t("charts_tab.project_charts.hours_consumed_downstream"),
+            t("charts_tab.project_charts.additional_hours_consumed"),
+            t("charts_tab.project_charts.hours_consumed_total_throughput"),
           ]}
-          indexBy={t("project_charts.hours_consumed_x_label")}
-          axisLeftLegend={t("project_charts.hours_consumed_y_label")}
-          axisBottomLegend={t("project_charts.hours_consumed_x_label")}
-          groupMode="grouped"
-        />
-      </ChartGridItem>
-      <ChartGridItem title={t("project_charts.consumed_hours_by_role_chart")}>
-        <BarChart
-          data={projectConsumedHoursByRoleChartData}
-          keys={[
-            t("project_charts.consumed_hours_by_role_design_effort"),
-            t("project_charts.consumed_hours_by_role_development_effort"),
-            t("project_charts.consumed_hours_by_role_management_effort"),
-            t("project_charts.consumed_hours_by_role_total_effort"),
-          ]}
-          indexBy="period"
-          axisLeftLegend={t("project_charts.consumed_hours_by_role_y_label")}
+          indexBy={t("charts_tab.project_charts.hours_consumed_x_label")}
+          axisLeftLegend={t("charts_tab.project_charts.hours_consumed_y_label")}
+          axisBottomLegend={t(
+            "charts_tab.project_charts.hours_consumed_x_label"
+          )}
           groupMode="grouped"
         />
       </ChartGridItem>
       <ChartGridItem
-        title={t("project_charts.consumed_hours_by_role_in_month_chart")}
+        title={t("charts_tab.project_charts.consumed_hours_by_role_chart")}
+      >
+        <BarChart
+          data={projectConsumedHoursByRoleChartData}
+          keys={[
+            t("charts_tab.project_charts.consumed_hours_by_role_design_effort"),
+            t(
+              "charts_tab.project_charts.consumed_hours_by_role_development_effort"
+            ),
+            t(
+              "charts_tab.project_charts.consumed_hours_by_role_management_effort"
+            ),
+            t("charts_tab.project_charts.consumed_hours_by_role_total_effort"),
+          ]}
+          indexBy="period"
+          axisLeftLegend={t(
+            "charts_tab.project_charts.consumed_hours_by_role_y_label"
+          )}
+          groupMode="grouped"
+        />
+      </ChartGridItem>
+      <ChartGridItem
+        title={t(
+          "charts_tab.project_charts.consumed_hours_by_role_in_month_chart"
+        )}
       >
         <BarChart
           data={projectConsumedHoursByRoleInMonthChartData}
           axisLeftLegend={t(
-            "project_charts.consumed_hours_by_role_in_month_y_label"
+            "charts_tab.project_charts.consumed_hours_by_role_in_month_y_label"
           )}
           keys={[
-            t("project_charts.consumed_hours_by_role_in_month_design_effort"),
             t(
-              "project_charts.consumed_hours_by_role_in_month_development_effort"
+              "charts_tab.project_charts.consumed_hours_by_role_in_month_design_effort"
             ),
             t(
-              "project_charts.consumed_hours_by_role_in_month_management_effort"
+              "charts_tab.project_charts.consumed_hours_by_role_in_month_development_effort"
             ),
-            t("project_charts.consumed_hours_by_role_in_month_total_effort"),
+            t(
+              "charts_tab.project_charts.consumed_hours_by_role_in_month_management_effort"
+            ),
+            t(
+              "charts_tab.project_charts.consumed_hours_by_role_in_month_total_effort"
+            ),
           ]}
           indexBy="period"
           groupMode="grouped"
         />
       </ChartGridItem>
-      <ChartGridItem title={t("project_charts.hours_per_stage_chart")}>
+      <ChartGridItem
+        title={t("charts_tab.project_charts.hours_per_stage_chart")}
+      >
         <BarChart
           data={projectHoursPerStage}
           keys={hoursPerStageChartData?.xAxis.map(String) || []}
           indexBy="index"
-          axisLeftLegend={t("project_charts.hours_per_stage_y_label")}
+          axisLeftLegend={t(
+            "charts_tab.project_charts.hours_per_stage_y_label"
+          )}
         />
       </ChartGridItem>
       <ChartGridItem
-        title={t("project_charts.hours_per_coordination_stage_chart")}
+        title={t(
+          "charts_tab.project_charts.hours_per_coordination_stage_chart"
+        )}
       >
         <BarChart
           data={projectHoursPerCoordinationStage}
           keys={hoursPerCoordinationStageChartData?.xAxis.map(String) || []}
           indexBy="index"
           axisLeftLegend={t(
-            "project_charts.hours_per_coordination_stage_y_label"
+            "charts_tab.project_charts.hours_per_coordination_stage_y_label"
           )}
         />
       </ChartGridItem>
-      <ChartGridItem title={t("project_charts.demandsCountByTeamMember")}>
+      <ChartGridItem
+        title={t("charts_tab.project_charts.demandsCountByTeamMember")}
+      >
         <BarChart
           data={demandsCountByTeamMember}
           indexBy="name"
-          keys={[t("project_charts.demandsCount")]}
+          keys={[t("charts_tab.project_charts.demandsCount")]}
         />
       </ChartGridItem>
     </Grid>

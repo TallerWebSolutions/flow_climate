@@ -19,14 +19,14 @@
   },
   "settings_actions": {
     "update_cache": "Update Cache",
-    "create_demands": "Create Activities",
+    "create_demands": "Create Deliverables",
     "edit_demands": "Edit",
     "jira_settings": "Jira Settings",
     "projects_stages": "Project Stages",
     "risk_settings": "Risk Settings"
   },
   "tabs": {
-    "demands": "Activitys",
-    "tasks": "Deliverables"
+    "demands": "Deliverables",
+    "tasks": "Tasks"
   }
 }

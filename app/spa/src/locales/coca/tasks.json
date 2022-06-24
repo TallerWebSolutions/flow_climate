@@ -1,6 +1,6 @@
 {
-  "tasks": "Deliverables",
-  "tasks_list": "Deliverables List",
+  "tasks": "Tasks",
+  "tasks_list": "Tasks List",
   "finished_tasks": "finished",
   "tasks_table": {
     "demand_title": "Activity",
@@ -53,7 +53,7 @@
     "days": "Days",
     "hits": "Hits",
     "demands": "Activity",
-    "tasks": "Deliverable",
+    "tasks": "Tasks",
     "completion_time_histogram_chart": "Completion Time Histogram",
     "completion_time_histogram_completiontime": "Completion Time",
     "completion_time_histogram_completiontime_y_label": "Days",

@@ -1,15 +1,16 @@
 {
   "projects": "Projects",
+  "charts": "Charts",
   "projects_table": {
     "name": "Project",
     "team": "Team",
     "status": "Status",
-    "demands": "Activitys",
+    "demands": "Deliverables",
     "remaing_days": "Remaining Days",
     "delivered": "Delivered",
     "qty_hours": "Quantity Hours",
     "risk": "Risk",
-    "row_demands": "activitys",
+    "row_demands": "Deliverables",
     "row_days": "days",
     "row_delivered": "delivered",
     "row_total": "totals",

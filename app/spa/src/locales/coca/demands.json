@@ -10,7 +10,7 @@
     }
   },
   "list": {
-    "title": "Activities",
+    "title": "Deliverables",
     "form": {
       "common": {
         "placeholder": "Select..."
@@ -34,7 +34,7 @@
       "downloadCsv": "Download CSV"
     },
     "table": {
-      "title": "{{count}} Activities"
+      "title": "{{count}} Deliverables"
     },
 
     "demandsCharts": {

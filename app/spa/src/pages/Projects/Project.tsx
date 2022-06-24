@@ -4,7 +4,7 @@ import { ProjectPage } from "../../components/ProjectPage"
 import DemandsCharts from "./DemandsCharts"
 
 const Project = () => {
-  const { t } = useTranslation(["project"])
+  const { t } = useTranslation(["projects"])
 
   return (
     <ProjectPage pageName={t("charts")} dashboard>
