@@ -160,7 +160,7 @@ RSpec.describe DemandTransition, type: :model do
         before { Fabricate :demand_transition, stage: second_stage, demand: demand, last_time_in: transition_date }
 
         it 'do not touch the dates' do
-          expect(demand.reload.commitment_date).to be_nil
+          expect(demand.reload.commitment_date).not_to be_nil
           expect(demand.reload.created_date).to eq Time.zone.parse('2018-02-04 12:00:00')
           expect(demand.reload.end_date).to eq Time.zone.parse('2018-02-05 12:00:00')
         end
@@ -194,7 +194,7 @@ RSpec.describe DemandTransition, type: :model do
         before { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: transition_date }
 
         it 'sets the commitment date and do not touch in the others' do
-          expect(demand.reload.commitment_date).to be_nil
+          expect(demand.reload.commitment_date).not_to be_nil
           expect(demand.reload.created_date).to eq Time.zone.parse('2018-02-04 12:00:00')
           expect(demand.reload.end_date).not_to be_nil
         end
