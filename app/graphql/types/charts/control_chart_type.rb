@@ -3,8 +3,8 @@
 module Types
   module Charts
     class ControlChartType < Types::BaseObject
-      field :x_axis, [String], null: false
       field :lead_times, [Float], null: false
+      field :x_axis, [String], null: false
 
       field :lead_time_p65, Float, null: false
       field :lead_time_p80, Float, null: false

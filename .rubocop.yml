@@ -2,6 +2,7 @@ require:
   - rubocop-rails
   - rubocop-performance
   - rubocop-rspec
+  - rubocop-graphql
 
 AllCops:
   TargetRubyVersion: 3.0
@@ -17,6 +18,24 @@ AllCops:
     - 'app/jobs/**/*'
     - 'tmp/**/*'
   NewCops: enable
+
+GraphQL/FieldDescription:
+  Enabled: false
+
+GraphQL/ArgumentDescription:
+  Enabled: false
+
+GraphQL/ObjectDescription:
+  Enabled: false
+
+GraphQL/ExtractType:
+  Enabled: false
+
+GraphQL/ExtractInputType:
+  Enabled: false
+
+GraphQL/FieldMethod:
+  Enabled: false
 
 # This is currently exiting with a rubocop exception error and should be
 # resolved hopefully a future update

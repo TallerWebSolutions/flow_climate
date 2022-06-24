@@ -2,25 +2,25 @@
 
 module Types
   class TeamType < Types::BaseObject
+    field :company, Types::CompanyType, null: false
     field :id, ID, null: false
     field :name, String, null: false
-    field :company, Types::CompanyType, null: false
 
     field :throughput_data, [Int], null: true
 
     field :average_throughput, Float, null: true
     field :increased_avg_throughtput, Boolean, null: true
 
-    field :lead_time, Float, null: true
     field :increased_leadtime_80, Boolean, null: true
+    field :lead_time, Float, null: true
 
-    field :work_in_progress, Int, null: true
     field :max_work_in_progress, Int, null: false
+    field :work_in_progress, Int, null: true
 
     field :last_replenishing_consolidations, [Types::ReplenishingConsolidationType], null: false
 
-    field :projects, [Types::ProjectType], null: true
     field :active_projects, [Types::ProjectType], null: true
+    field :projects, [Types::ProjectType], null: true
 
     delegate :projects, to: :object
 

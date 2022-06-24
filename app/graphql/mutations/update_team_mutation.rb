@@ -2,12 +2,12 @@
 
 module Mutations
   class UpdateTeamMutation < Mutations::BaseMutation
-    argument :team_id, String, required: true
-    argument :name, String, required: true
     argument :max_work_in_progress, Int, required: true
+    argument :name, String, required: true
+    argument :team_id, String, required: true
 
-    field :id, Int, null: true
     field :company, Types::CompanyType, null: true
+    field :id, Int, null: true
     field :status_message, Types::UpdateResponses, null: false
 
     def resolve(team_id:, name:, max_work_in_progress:)

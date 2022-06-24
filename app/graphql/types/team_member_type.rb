@@ -2,32 +2,32 @@
 
 module Types
   class TeamMemberType < Types::BaseObject
+    field :billable, Boolean, null: false
+    field :end_date, GraphQL::Types::ISO8601Date, null: true
+    field :hours_per_month, Int, null: false
     field :id, ID, null: false
-    field :name, String, null: false
     field :jira_account_id, String, null: true
     field :jira_account_user_email, String, null: true
-    field :start_date, GraphQL::Types::ISO8601Date, null: true
-    field :end_date, GraphQL::Types::ISO8601Date, null: true
-    field :billable, Boolean, null: false
-    field :hours_per_month, Int, null: false
     field :monthly_payment, Float, null: true
+    field :name, String, null: false
+    field :start_date, GraphQL::Types::ISO8601Date, null: true
     field :teams, [Types::TeamType], null: true
 
     field :demands, [Types::DemandType] do
+      argument :limit, Int, required: false
       argument :status, Types::Enums::DemandStatusesType, required: false
       argument :type, Types::Enums::DemandTypesType, required: false
-      argument :limit, Int, required: false
     end
 
     field :projects_list, Types::ProjectsListType, null: true do
       argument :order_field, String, required: true
-      argument :sort_direction, Types::Enums::SortDirection, required: false
-      argument :per_page, Int, required: false
       argument :page_number, Int, required: false
+      argument :per_page, Int, required: false
+      argument :sort_direction, Types::Enums::SortDirection, required: false
     end
 
-    field :demand_shortest_lead_time, Types::DemandType, null: true
     field :demand_largest_lead_time, Types::DemandType, null: true
+    field :demand_shortest_lead_time, Types::DemandType, null: true
     field :first_demand_delivery, Types::DemandType, null: true
 
     field :demand_lead_time_p80, Float, null: true
@@ -35,19 +35,19 @@ module Types
 
     field :demand_blocks_list, Types::DemandBlocksListType, null: true do
       argument :order_field, String, required: true
-      argument :sort_direction, Types::Enums::SortDirection, required: false
-      argument :per_page, Int, required: false
       argument :page_number, Int, required: false
+      argument :per_page, Int, required: false
+      argument :sort_direction, Types::Enums::SortDirection, required: false
     end
 
+    field :average_pull_interval_data, Types::Charts::SimpleDateChartDataType, null: true
     field :lead_time_control_chart_data, Types::Charts::LeadTimeControlChartDataType, null: true
     field :lead_time_histogram_chart_data, Types::Charts::LeadTimeHistogramDataType, null: true
     field :member_effort_data, Types::Charts::SimpleDateChartDataType, null: true
-    field :average_pull_interval_data, Types::Charts::SimpleDateChartDataType, null: true
-    field :project_hours_data, Types::Charts::ProjectHoursChartDataType, null: true
     field :member_throughput_data, [Int], null: true do
       argument :number_of_weeks, Int, required: false
     end
+    field :project_hours_data, Types::Charts::ProjectHoursChartDataType, null: true
 
     def demands(status: 'ALL', type: 'ALL', limit: nil)
       demands = if status == 'DELIVERED_DEMANDS'

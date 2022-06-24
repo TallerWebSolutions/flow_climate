@@ -2,15 +2,15 @@
 
 module Mutations
   class UpdateTeamMemberMutation < Mutations::BaseMutation
-    argument :team_member_id, Int, required: true
+    argument :billable, Boolean, required: true
+    argument :end_date, GraphQL::Types::ISO8601Date, required: false
+    argument :hours_per_month, Int, required: true
+    argument :jira_account_id, String, required: false
+    argument :jira_account_user_email, String, required: false
+    argument :monthly_payment, Float, required: false
     argument :name, String, required: true
     argument :start_date, GraphQL::Types::ISO8601Date, required: true
-    argument :end_date, GraphQL::Types::ISO8601Date, required: false
-    argument :jira_account_user_email, String, required: false
-    argument :jira_account_id, String, required: false
-    argument :hours_per_month, Int, required: true
-    argument :monthly_payment, Float, required: false
-    argument :billable, Boolean, required: true
+    argument :team_member_id, Int, required: true
 
     field :updated_team_member, Types::TeamMemberType, null: false
 

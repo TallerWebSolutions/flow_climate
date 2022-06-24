@@ -2,87 +2,87 @@
 
 module Types
   class ProjectType < Types::BaseObject
-    field :id, ID, null: false
-    field :company, Types::CompanyType, null: false
-    field :initiative, Types::InitiativeType, null: true
-    field :name, String, null: false
-    field :start_date, GraphQL::Types::ISO8601Date, null: false
-    field :end_date, GraphQL::Types::ISO8601Date, null: false
     field :aging, Int, null: false
-    field :remaining_weeks, Int, null: false
-    field :total_scope, Int, null: false
-    field :initial_scope, Int, null: false
-    field :current_weekly_hours_ideal_burnup, [Float], null: false
-    field :weekly_project_scope_hours_until_end, [Int], null: false
-    field :weekly_project_scope_until_end, [Int], null: false
-    field :current_weekly_scope_ideal_burnup, [Float], null: false
+    field :average_demand_aging, Float, null: true
+    field :average_queue_time, Float, null: true
+    field :average_speed, Float, null: true
+    field :average_touch_time, Float, null: true
     field :backlog_count_for, Int, null: true
-    field :remaining_backlog, Int, null: false
+    field :company, Types::CompanyType, null: false
+    field :current_cost, Float, null: true
+    field :current_monte_carlo_weeks_max, Int, null: true
+    field :current_monte_carlo_weeks_min, Int, null: true
+    field :current_monte_carlo_weeks_std_dev, Int, null: true
+    field :current_risk_to_deadline, Float, null: true
+    field :current_team_based_risk, Float, null: true
+    field :current_weekly_hours_ideal_burnup, [Float], null: false
+    field :current_weekly_scope_ideal_burnup, [Float], null: false
+    field :current_weeks_by_little_law, Int, null: true
+    field :customers, [Types::CustomerType], null: true
+    field :days_difference_between_first_and_last_deadlines, Int, null: true
+    field :deadlines_change_count, Int, null: true
+    field :demand_blocks, [Types::DemandType], null: true
+    field :demands_finished_with_leadtime, [Types::DemandType], null: true
+    field :discarded_demands, [Types::DemandType], null: true
+    field :discovered_scope, Int, null: true
+    field :end_date, GraphQL::Types::ISO8601Date, null: false
+    field :failure_load, Float, null: true
+    field :first_deadline, GraphQL::Types::ISO8601Date, null: true
     field :flow_pressure, Float, null: false
     field :flow_pressure_percentage, Float, null: false
-    field :qty_selected, Int, null: false
-    field :qty_in_progress, Int, null: false
-    field :past_weeks, Int, null: false
-    field :remaining_work, Int, null: false
-    field :monte_carlo_p80, Float, null: false
-    field :current_monte_carlo_weeks_min, Int, null: true
-    field :current_monte_carlo_weeks_max, Int, null: true
-    field :current_monte_carlo_weeks_std_dev, Int, null: true
-    field :current_weeks_by_little_law, Int, null: true
+    field :general_leadtime, Float, null: true
+    field :hours_per_stage_chart_data, Types::Charts::HoursPerStageChartType, null: true do
+      argument :stage_level, String, required: false
+    end
+    field :consumed_hours, Float, null: false
+    field :id, ID, null: false
+    field :initial_scope, Int, null: false
+    field :initiative, Types::InitiativeType, null: true
+    field :last_project_consolidations_weekly, Types::ProjectConsolidationType, null: true
     field :lead_time_p65, Float, null: false
     field :lead_time_p80, Float, null: false
     field :lead_time_p95, Float, null: false
-    field :work_in_progress_limit, Int, null: false
-    field :weekly_throughputs, [Int], null: false
     field :mode_weekly_troughputs, Int, null: false
+    field :monte_carlo_p80, Float, null: false
+    field :name, String, null: false
+    field :number_of_demands, Int, null: true
+    field :number_of_demands_delivered, Int, null: true
+    field :number_of_downstream_demands, Int, null: true
+    field :past_weeks, Int, null: false
+    field :percentage_expedite, Float, null: true
+    field :percentage_fixed_date, Float, null: true
+    field :percentage_remaining_work, Float, null: true
+    field :percentage_standard, Float, null: true
+    field :products, [Types::ProductType], null: true
+    field :project_consolidations, [Types::ProjectConsolidationType], null: true
+    field :project_consolidations_last_month, [Types::ProjectConsolidationType], null: true
+    field :project_consolidations_weekly, [Types::ProjectConsolidationType], null: true
+    field :qty_hours, Float, null: false
+    field :qty_in_progress, Int, null: false
+    field :qty_selected, Int, null: false
+    field :remaining_backlog, Int, null: false
+    field :remaining_days, Int, null: true
+    field :remaining_weeks, Int, null: false
+    field :remaining_work, Int, null: false
+    field :running, Boolean, null: true
+    field :start_date, GraphQL::Types::ISO8601Date, null: false
+    field :status, String, null: false
     field :std_dev_weekly_troughputs, Float, null: false
+    field :team, Types::TeamType, null: false
+    field :team_based_odds_to_deadline, Float, null: false
     field :team_monte_carlo_p80, Float, null: false
     field :team_monte_carlo_weeks_max, Float, null: false
     field :team_monte_carlo_weeks_min, Float, null: false
     field :team_monte_carlo_weeks_std_dev, Float, null: false
-    field :team_based_odds_to_deadline, Float, null: false
-    field :current_cost, Float, null: true
     field :total_hours_consumed, Float, null: true
-    field :average_speed, Float, null: true
-    field :average_demand_aging, Float, null: true
-    field :average_queue_time, Float, null: true
-    field :average_touch_time, Float, null: true
-    field :number_of_demands, Int, null: true
-    field :number_of_demands_delivered, Int, null: true
-    field :number_of_downstream_demands, Int, null: true
-    field :demands_finished_with_leadtime, [Types::DemandType], null: true
-    field :upstream_demands, [Types::DemandType], null: true
-    field :discarded_demands, [Types::DemandType], null: true
-    field :unscored_demands, [Types::DemandType], null: true
-    field :demand_blocks, [Types::DemandType], null: true
-    field :first_deadline, GraphQL::Types::ISO8601Date, null: true
-    field :days_difference_between_first_and_last_deadlines, Int, null: true
-    field :deadlines_change_count, Int, null: true
-    field :discovered_scope, Int, null: true
+    field :total_scope, Int, null: false
     field :total_throughput, Int, null: true
-    field :percentage_remaining_work, Float, null: true
-    field :failure_load, Float, null: true
-    field :general_leadtime, Float, null: true
-    field :percentage_standard, Float, null: true
-    field :percentage_expedite, Float, null: true
-    field :percentage_fixed_date, Float, null: true
-    field :current_risk_to_deadline, Float, null: true
-    field :remaining_days, Int, null: true
-    field :current_team_based_risk, Float, null: true
-    field :running, Boolean, null: true
-    field :customers, [Types::CustomerType], null: true
-    field :products, [Types::ProductType], null: true
-    field :project_consolidations_weekly, [Types::ProjectConsolidationType], null: true
-    field :project_consolidations_last_month, [Types::ProjectConsolidationType], null: true
-    field :project_consolidations, [Types::ProjectConsolidationType], null: true
-    field :last_project_consolidations_weekly, Types::ProjectConsolidationType, null: true
-    field :hours_per_stage_chart_data, Types::Charts::HoursPerStageChartType, null: true do
-      argument :stage_level, String, required: false
-    end
-    field :status, String, null: false
-    field :team, Types::TeamType, null: false
-    field :qty_hours, Float, null: false
-    field :consumed_hours, Float, null: false
+    field :unscored_demands, [Types::DemandType], null: true
+    field :upstream_demands, [Types::DemandType], null: true
+    field :weekly_project_scope_hours_until_end, [Int], null: false
+    field :weekly_project_scope_until_end, [Int], null: false
+    field :weekly_throughputs, [Int], null: false
+    field :work_in_progress_limit, Int, null: false
 
     field :cumulative_flow_chart_data, Types::Charts::CumulativeFlowChartType, null: true
     field :demands_flow_chart_data, Types::Charts::DemandsFlowChartDataType, null: true

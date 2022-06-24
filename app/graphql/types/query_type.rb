@@ -17,20 +17,20 @@ module Types
     end
 
     field :tasks_list, Types::TasksListType, null: true, description: 'A list of tasks using the arguments as search parameters' do
-      argument :page_number, Int, required: false
-      argument :limit, Int, required: false
-      argument :title, String, required: false
-      argument :status, String, required: false
-      argument :initiative_id, ID, required: false
-      argument :project_id, ID, required: false
-      argument :team_id, ID, required: false
       argument :from_date, GraphQL::Types::ISO8601Date, required: false
+      argument :initiative_id, ID, required: false
+      argument :limit, Int, required: false
+      argument :page_number, Int, required: false
+      argument :project_id, ID, required: false
+      argument :status, String, required: false
+      argument :team_id, ID, required: false
+      argument :title, String, required: false
       argument :until_date, GraphQL::Types::ISO8601Date, required: false
     end
 
     field :project_consolidations, [Types::ProjectConsolidationType], null: true, description: 'Project consolidations' do
-      argument :project_id, ID
       argument :last_data_in_week, Boolean, required: false
+      argument :project_id, ID
     end
 
     field :demands_list, Types::DemandsListType, null: true, description: 'Query for demands' do
@@ -53,10 +53,10 @@ module Types
 
     field :projects, [Types::ProjectType], null: false, description: 'A list of projects using the arguments as search parameters' do
       argument :company_id, Int, required: true
-      argument :name, String, required: false
-      argument :status, String, required: false
-      argument :start_date, GraphQL::Types::ISO8601Date, required: false
       argument :end_date, GraphQL::Types::ISO8601Date, required: false
+      argument :name, String, required: false
+      argument :start_date, GraphQL::Types::ISO8601Date, required: false
+      argument :status, String, required: false
     end
 
     def teams

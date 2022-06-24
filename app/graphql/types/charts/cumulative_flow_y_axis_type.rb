@@ -3,16 +3,8 @@
 module Types
   module Charts
     class CumulativeFlowYAxisType < Types::BaseObject
-      field :name, String, null: false
-      field :data, [Int], null: false
-
-      def name
-        object.first
-      end
-
-      def data
-        object.second
-      end
+      field :data, [Int], null: false, method: :second
+      field :name, String, null: false, method: :first
     end
   end
 end
