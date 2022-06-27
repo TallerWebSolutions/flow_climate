@@ -179,7 +179,7 @@ RSpec.describe DemandTransition, type: :model do
           Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: transition_date
 
           expect(demand.reload.commitment_date).to be_nil
-          expect(demand.reload.created_date).to eq created_date
+          expect(demand.reload.created_date).to be_within(1.second).of(created_date)
           expect(demand.reload.end_date).to be_nil
         end
       end
