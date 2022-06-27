@@ -12,10 +12,10 @@ module Slack
 
       idle_roles = team.count_idle_by_role.map { |role, count| "#{I18n.t("activerecord.attributes.membership.enums.member_role.#{role}")} (#{count})" }.join(', ')
       info_block = { type: 'section', text: { type: 'mrkdwn', text: [
-        ">*CMD para o time #{team.name}*\n>",
+        ">*CMD para o time #{team.name}* -- TH: #{th_for_week(team, Time.zone.now.beginning_of_week, Time.zone.now.end_of_week).count}\n>",
         ">:money_with_wings: Semana atual: *#{number_to_currency(average_demand_cost_info[:current_week])}* -- Média das últimas 4 semanas: *#{number_to_currency(average_demand_cost_info[:four_weeks_cmd_average])}*",
         ">Diferença (atual e média): *#{number_with_precision(average_demand_cost_info[:cmd_difference_to_avg_last_four_weeks], precision: 2)}%*",
-        ">:money_with_wings: Semana anterior: *#{number_to_currency(average_demand_cost_info[:last_week])}*",
+        ">:money_with_wings: Semana anterior: *#{number_to_currency(average_demand_cost_info[:last_week])}* -- TH: #{th_for_week(team, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week).count}",
         ">:busts_in_silhouette: Tamanho do time: *#{team.size_at} pessoas -- #{number_with_precision(team.size_using_available_hours, precision: 2)} pessoas faturáveis*",
         ">:moneybag: Investimento mensal: *#{number_to_currency(team.monthly_investment)} -- #{team.available_hours_in_month_for} horas*",
         ">:chart_with_downwards_trend: Perda operacional no mês: *#{number_to_percentage(team.loss_at * 100)}*",
@@ -41,11 +41,11 @@ module Slack
     end
 
     def notify_last_week_delivered_demands_info(slack_notifier, team)
-      th_last_week = DemandsRepository.instance.throughput_to_period(team.demands.kept, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)
-      slack_notifier.ping(I18n.t('slack_configurations.notifications.th_last_week_text', name: team.name, th_last_week: th_last_week.count))
+      th_for_last_week = th_for_week(team, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)
+      slack_notifier.ping(I18n.t('slack_configurations.notifications.th_last_week_text', name: team.name, th_last_week: th_for_last_week.count))
 
-      th_last_week.each do |demand|
-        slack_notifier.ping(I18n.t('slack_configurations.notifications.th_last_week_demand_info_text', external_id: demand.external_id, responsibles_names: demand.memberships.map(&:team_member_name).join(', '), cost_to_project: number_to_currency(demand.cost_to_project), demand_title: demand.demand_title))
+      th_for_last_week.each do |demand|
+        slack_notifier.ping(I18n.t('slack_configurations.notifications.th_last_week_demand_info_text', external_id: demand.external_id, responsibles_names: demand.memberships.map(&:team_member_name).flatten.uniq.join(', '), cost_to_project: number_to_currency(demand.cost_to_project), demand_title: demand.demand_title))
       end
     rescue Slack::Notifier::APIError
       Rails.logger.error('Invalid Slack API - It may be caused by an API token problem')
@@ -109,9 +109,6 @@ module Slack
 
     def notify_demand_state_changed(stage, demand, demand_transition)
       return if demand_transition.transition_notified?
-
-      demand_transition.save
-      demand = demand.reload
 
       slack_configurations = SlackConfiguration.where(team: demand.team, info_type: :demand_state_changed, active: true)
 
@@ -215,6 +212,10 @@ module Slack
     end
 
     private
+
+    def th_for_week(team, start_date, end_date)
+      DemandsRepository.instance.throughput_to_period(team.demands.kept, start_date, end_date)
+    end
 
     def notify_unblocked(block_type, demand_block, demand_url, divider_block, slack_notifier)
       message_title = { type: 'section', text: { type: 'mrkdwn', text: ":tada: :tada: #{demand_block.unblocker&.name} desbloqueou a <#{demand_url}|#{demand_block.demand.external_id}> em _#{demand_block.demand.stage_at(demand_block.block_time)&.name || 'sem etapa'}_ as #{I18n.l(demand_block.unblock_time, format: :short)}" } }

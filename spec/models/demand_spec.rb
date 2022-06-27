@@ -327,48 +327,44 @@ RSpec.describe Demand, type: :model do
   end
 
   context 'computed fields' do
-    let(:company) { Fabricate :company }
-    let(:customer) { Fabricate :customer, company: company }
-    let(:product) { Fabricate :product, company: company, customer: customer }
-
-    let(:first_project) { Fabricate :project, customers: [customer], products: [product], status: :executing, name: 'first_project', start_date: Date.new(2018, 2, 20), end_date: Date.new(2018, 4, 22), qty_hours: 1000, initial_scope: 10, value: 1000, hour_value: 10 }
-
-    let(:queue_ongoing_stage) { Fabricate :stage, company: company, stage_stream: :downstream, queue: true, order: 0, integration_pipe_id: 1 }
-    let(:touch_ongoing_stage) { Fabricate :stage, company: company, stage_stream: :downstream, queue: false, order: 1, integration_pipe_id: 1 }
-
-    let(:first_stage) { Fabricate :stage, company: company, name: 'first_stage', stage_stream: :downstream, queue: true, commitment_point: true, end_point: false, order: 2 }
-    let(:second_stage) { Fabricate :stage, company: company, name: 'second_stage', stage_stream: :downstream, queue: false, commitment_point: false, end_point: false, order: 3 }
-    let(:third_stage) { Fabricate :stage, company: company, name: 'third_stage', stage_stream: :downstream, queue: true, commitment_point: false, end_point: true, order: 4 }
-
-    let!(:queue_ongoing_stage_project_config) { Fabricate :stage_project_config, project: first_project, stage: queue_ongoing_stage, compute_effort: true, pairing_percentage: 60, stage_percentage: 100, management_percentage: 10 }
-    let!(:touch_ongoing_second_stage_project_config) { Fabricate :stage_project_config, project: first_project, stage: touch_ongoing_stage, compute_effort: true, pairing_percentage: 60, stage_percentage: 100, management_percentage: 10 }
-
-    let!(:first_stage_project_config) { Fabricate :stage_project_config, project: first_project, stage: first_stage, compute_effort: true, pairing_percentage: 60, stage_percentage: 100, management_percentage: 10 }
-    let!(:second_stage_project_config) { Fabricate :stage_project_config, project: first_project, stage: second_stage, compute_effort: true, pairing_percentage: 20, stage_percentage: 30, management_percentage: 20 }
-    let!(:third_stage_project_config) { Fabricate :stage_project_config, project: first_project, stage: third_stage, compute_effort: true, pairing_percentage: 40, stage_percentage: 10, management_percentage: 15 }
-
-    let!(:first_demand) { Fabricate :demand, product: product, project: first_project, external_id: 'first_demand', created_date: Time.zone.local(2018, 1, 21, 23, 1, 46), commitment_date: nil, end_date: nil, effort_upstream: 10, effort_downstream: 5 }
-    let!(:second_demand) { Fabricate :demand, product: product, project: first_project, external_id: 'second_demand', created_date: Time.zone.local(2018, 1, 21, 23, 1, 46), commitment_date: nil, end_date: nil, effort_upstream: 10, effort_downstream: 5 }
-    let!(:third_demand) { Fabricate :demand, product: product, project: first_project, external_id: 'third_demand', created_date: Time.zone.local(2018, 1, 21, 23, 1, 46), commitment_date: nil, end_date: nil, effort_upstream: 10, effort_downstream: 5 }
-
-    let!(:first_block) { Fabricate :demand_block, demand: first_demand, block_time: Time.zone.local(2018, 2, 27, 17, 30, 58), unblock_time: Time.zone.local(2018, 3, 1, 17, 9, 58), active: true }
-    let!(:second_block) { Fabricate :demand_block, demand: first_demand, block_time: Time.zone.local(2018, 3, 2, 17, 9, 58), unblock_time: Time.zone.local(2018, 3, 3, 11, 9, 58), active: true }
-    let!(:third_block) { Fabricate :demand_block, demand: first_demand, block_time: Time.zone.local(2018, 3, 3, 11, 9, 58), unblock_time: Time.zone.local(2018, 3, 4, 9, 9, 58), active: true }
-
-    let!(:first_item_assignment) { Fabricate :item_assignment, demand: first_demand, start_time: Time.zone.local(2018, 1, 8, 17, 9, 58), finish_time: nil }
-
-    let!(:queue_ongoing_transition) { Fabricate :demand_transition, stage: queue_ongoing_stage, demand: first_demand, last_time_in: Time.zone.local(2018, 2, 10, 17, 9, 58), last_time_out: Time.zone.local(2018, 2, 14, 17, 9, 58) }
-    let!(:touch_ongoing_transition) { Fabricate :demand_transition, stage: touch_ongoing_stage, demand: first_demand, last_time_in: Time.zone.local(2018, 2, 15, 17, 9, 58), last_time_out: Time.zone.local(2018, 2, 19, 17, 9, 58) }
-
-    let!(:first_transition) { Fabricate :demand_transition, stage: first_stage, demand: first_demand, last_time_in: Time.zone.local(2018, 2, 27, 17, 9, 58), last_time_out: Time.zone.local(2018, 3, 2, 17, 9, 58) }
-    let!(:second_transition) { Fabricate :demand_transition, stage: second_stage, demand: first_demand, last_time_in: Time.zone.local(2018, 3, 2, 17, 9, 58), last_time_out: Time.zone.local(2018, 3, 5, 17, 9, 58) }
-    let!(:third_transition) { Fabricate :demand_transition, stage: third_stage, demand: first_demand, last_time_in: Time.zone.local(2018, 3, 5, 17, 9, 58), last_time_out: Time.zone.local(2018, 3, 6, 14, 9, 58) }
-
     it 'computes the correct values' do
       travel_to Time.zone.local(2019, 10, 17, 10, 0, 0) do
+        company = Fabricate :company
+        customer = Fabricate :customer, company: company
+        product = Fabricate :product, company: company, customer: customer
+
+        first_project = Fabricate :project, customers: [customer], products: [product], status: :executing, name: 'first_project', start_date: Date.new(2018, 2, 20), end_date: Date.new(2018, 4, 22), qty_hours: 1000, initial_scope: 10, value: 1000, hour_value: 10
+
+        queue_ongoing_stage = Fabricate :stage, company: company, stage_stream: :downstream, queue: true, order: 0, integration_pipe_id: 1
+        touch_ongoing_stage = Fabricate :stage, company: company, stage_stream: :downstream, queue: false, order: 1, integration_pipe_id: 1
+
+        first_stage = Fabricate :stage, company: company, name: 'first_stage', stage_stream: :downstream, queue: true, commitment_point: true, end_point: false, order: 2
+        second_stage = Fabricate :stage, company: company, name: 'second_stage', stage_stream: :downstream, queue: false, commitment_point: false, end_point: false, order: 3
+        third_stage = Fabricate :stage, company: company, name: 'third_stage', stage_stream: :downstream, queue: true, commitment_point: false, end_point: true, order: 4
+
+        Fabricate :stage_project_config, project: first_project, stage: queue_ongoing_stage, compute_effort: true, pairing_percentage: 60, stage_percentage: 100, management_percentage: 10
+        Fabricate :stage_project_config, project: first_project, stage: touch_ongoing_stage, compute_effort: true, pairing_percentage: 60, stage_percentage: 100, management_percentage: 10
+
+        Fabricate :stage_project_config, project: first_project, stage: first_stage, compute_effort: true, pairing_percentage: 60, stage_percentage: 100, management_percentage: 10
+        Fabricate :stage_project_config, project: first_project, stage: second_stage, compute_effort: true, pairing_percentage: 20, stage_percentage: 30, management_percentage: 20
+        Fabricate :stage_project_config, project: first_project, stage: third_stage, compute_effort: true, pairing_percentage: 40, stage_percentage: 10, management_percentage: 15
+
+        first_demand = Fabricate :demand, product: product, project: first_project, external_id: 'first_demand', created_date: Time.zone.local(2018, 1, 21, 23, 1, 46), commitment_date: nil, end_date: nil, effort_upstream: 10, effort_downstream: 5
+        second_demand = Fabricate :demand, product: product, project: first_project, external_id: 'second_demand', created_date: Time.zone.local(2018, 1, 21, 23, 1, 46), commitment_date: nil, end_date: nil, effort_upstream: 10, effort_downstream: 5
+        third_demand = Fabricate :demand, product: product, project: first_project, external_id: 'third_demand', created_date: Time.zone.local(2018, 1, 21, 23, 1, 46), commitment_date: nil, end_date: nil, effort_upstream: 10, effort_downstream: 5
+
+        Fabricate :item_assignment, demand: first_demand, start_time: Time.zone.local(2018, 1, 8, 17, 9, 58), finish_time: nil
+
+        Fabricate :demand_transition, stage: queue_ongoing_stage, demand: first_demand, last_time_in: Time.zone.local(2018, 2, 10, 17, 9, 58), last_time_out: Time.zone.local(2018, 2, 14, 17, 9, 58)
+        Fabricate :demand_transition, stage: touch_ongoing_stage, demand: first_demand, last_time_in: Time.zone.local(2018, 2, 15, 17, 9, 58), last_time_out: Time.zone.local(2018, 2, 19, 17, 9, 58)
+
+        Fabricate :demand_transition, stage: first_stage, demand: first_demand, last_time_in: Time.zone.local(2018, 2, 27, 17, 9, 58), last_time_out: Time.zone.local(2018, 3, 2, 17, 9, 58)
+        Fabricate :demand_transition, stage: second_stage, demand: first_demand, last_time_in: Time.zone.local(2018, 3, 2, 17, 9, 58), last_time_out: Time.zone.local(2018, 3, 5, 17, 9, 58)
+        Fabricate :demand_transition, stage: third_stage, demand: first_demand, last_time_in: Time.zone.local(2018, 3, 5, 17, 9, 58), last_time_out: Time.zone.local(2018, 3, 6, 14, 9, 58)
+
         expect(first_demand.leadtime.to_f).to eq 518_400.0
-        expect(first_demand.total_queue_time.to_f).to eq 748_800.0
-        expect(first_demand.total_touch_time.to_f).to eq 464_400.0
+        expect(first_demand.total_queue_time.to_f).to eq 604_800.0
+        expect(first_demand.total_touch_time.to_f).to eq 608_400.0
         expect(first_demand.cost_to_project.to_f).to eq 150.0
 
         expect(second_demand.leadtime.to_f).to eq 0

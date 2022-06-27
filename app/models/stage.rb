@@ -88,12 +88,6 @@ class Stage < ApplicationRecord
     demand_transitions.sum(&:total_seconds_in_transition)
   end
 
-  private
-
-  def commitment_stage
-    @commitment_stage ||= company.stages.where(integration_pipe_id: integration_pipe_id).find_by(commitment_point: true)
-  end
-
   def first_done_stage_in_pipe
     company.stages.where('stages.integration_pipe_id = :integration_pipe_id AND (stages.order IS NULL OR stages.order >= 0) AND stages.end_point = true', integration_pipe_id: integration_pipe_id).order(:order).first
   end

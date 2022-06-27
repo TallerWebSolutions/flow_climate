@@ -3,8 +3,6 @@
 RSpec.describe Slack::SlackNotificationService, type: :service do
   include ActionView::Helpers::NumberHelper
 
-  before { travel_to Time.zone.local(2020, 3, 19, 10, 0, 0) }
-
   let(:first_user) { Fabricate :user }
 
   let!(:company) { Fabricate :company, users: [first_user] }
@@ -17,7 +15,7 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
   let!(:second_slack_config) { Fabricate :slack_configuration, team: team, info_type: :current_week_throughput, room_webhook: 'http://bla.com' }
   let!(:first_slack_notifier) { Slack::Notifier.new(first_slack_config.room_webhook) }
 
-  context 'with data' do
+  shared_context 'demands to notifications' do
     let!(:project) { Fabricate :project, team: team, company: company, status: :executing, name: 'project' }
 
     let!(:stage) { Fabricate :stage, company: company, stage_stream: :downstream, name: 'stage' }
@@ -33,29 +31,45 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
     let!(:eighth_demand) { Fabricate :demand, team: team, project: project, demand_type: :chore, commitment_date: Time.zone.now, end_date: nil, effort_downstream: 200, effort_upstream: 300 }
 
     let!(:demand_transition) { Fabricate :demand_transition, demand: eighth_demand, stage: stage, last_time_in: 3.days.ago }
+  end
 
+  context 'with data' do
     describe '#notify_cmd' do
       context 'with no exceptions' do
         it 'calls slack notification method' do
-          average_demand_cost_info = TeamService.instance.average_demand_cost_stats_info_hash(team)
+          travel_to Time.zone.local(2022, 6, 27, 10) do
+            project = Fabricate :project, team: team, company: company, status: :executing, name: 'project'
 
-          idle_roles = team.count_idle_by_role.map { |role, count| "#{I18n.t("activerecord.attributes.membership.enums.member_role.#{role}")} (#{count})" }.join(', ')
-          info_block = { type: 'section', text: { type: 'mrkdwn', text: [
-            ">*CMD para o time #{team.name}*\n>",
-            ">:money_with_wings: Semana atual: *#{number_to_currency(average_demand_cost_info[:current_week])}* -- Média das últimas 4 semanas: *#{number_to_currency(average_demand_cost_info[:four_weeks_cmd_average])}*",
-            ">Diferença (atual e média): *#{number_with_precision(average_demand_cost_info[:cmd_difference_to_avg_last_four_weeks], precision: 2)}%*",
-            ">:money_with_wings: Semana anterior: *#{number_to_currency(average_demand_cost_info[:last_week])}*",
-            ">:busts_in_silhouette: Tamanho do time: *#{team.size_at} pessoas -- #{number_with_precision(team.size_using_available_hours, precision: 2)} pessoas faturáveis*",
-            ">:moneybag: Investimento mensal: *#{number_to_currency(team.monthly_investment)} -- #{team.available_hours_in_month_for} horas*",
-            ">:chart_with_downwards_trend: Perda operacional no mês: *#{number_to_percentage(team.loss_at * 100)}*",
-            ">:zzz: #{number_to_percentage(team.percentage_idle_members * 100, precision: 0)}",
-            ">:zzz: :busts_in_silhouette: #{idle_roles}"
-          ].join("\n") } }
+            Fabricate :demand, team: team, project: project, demand_type: :chore, commitment_date: Time.zone.now, end_date: nil, effort_downstream: 200, effort_upstream: 300
+            Fabricate :demand, team: team, project: project, demand_type: :bug, end_date: 1.week.ago, effort_downstream: 100, effort_upstream: 10
+            Fabricate :demand, team: team, project: project, demand_type: :bug, end_date: 3.weeks.ago
+            Fabricate :demand, team: team, project: project, demand_type: :bug, end_date: 2.hours.ago
+            Fabricate :demand, team: team, project: project, demand_type: :feature, end_date: 3.weeks.ago
+            Fabricate :demand, team: team, project: project, demand_type: :chore, end_date: Time.zone.now
+            Fabricate :demand, team: team, project: project, demand_type: :feature, end_date: 2.weeks.ago
+            Fabricate :demand, team: team, project: project, demand_type: :feature, end_date: Time.zone.now
+            Fabricate :demand, team: team, project: project, demand_type: :bug, end_date: Time.zone.now
 
-          divider_block = { type: 'divider' }
+            average_demand_cost_info = TeamService.instance.average_demand_cost_stats_info_hash(team)
 
-          expect_any_instance_of(Slack::Notifier).to receive(:post).with(blocks: [info_block, divider_block]).once
-          described_class.instance.notify_cmd(first_slack_notifier, team)
+            idle_roles = team.count_idle_by_role.map { |role, count| "#{I18n.t("activerecord.attributes.membership.enums.member_role.#{role}")} (#{count})" }.join(', ')
+            info_block = { type: 'section', text: { type: 'mrkdwn', text: [
+              ">*CMD para o time #{team.name}* -- TH: 4\n>",
+              ">:money_with_wings: Semana atual: *#{number_to_currency(average_demand_cost_info[:current_week])}* -- Média das últimas 4 semanas: *#{number_to_currency(average_demand_cost_info[:four_weeks_cmd_average])}*",
+              ">Diferença (atual e média): *#{number_with_precision(average_demand_cost_info[:cmd_difference_to_avg_last_four_weeks], precision: 2)}%*",
+              ">:money_with_wings: Semana anterior: *#{number_to_currency(average_demand_cost_info[:last_week])}* -- TH: 1",
+              ">:busts_in_silhouette: Tamanho do time: *#{team.size_at} pessoas -- #{number_with_precision(team.size_using_available_hours, precision: 2)} pessoas faturáveis*",
+              ">:moneybag: Investimento mensal: *#{number_to_currency(team.monthly_investment)} -- #{team.available_hours_in_month_for} horas*",
+              ">:chart_with_downwards_trend: Perda operacional no mês: *#{number_to_percentage(team.loss_at * 100)}*",
+              ">:zzz: #{number_to_percentage(team.percentage_idle_members * 100, precision: 0)}",
+              ">:zzz: :busts_in_silhouette: #{idle_roles}"
+            ].join("\n") } }
+
+            divider_block = { type: 'divider' }
+
+            expect_any_instance_of(Slack::Notifier).to receive(:post).with(blocks: [info_block, divider_block]).once
+            described_class.instance.notify_cmd(first_slack_notifier, team)
+          end
         end
       end
 
@@ -69,9 +83,11 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
     end
 
     describe '#notify_week_throughput' do
+      include_context 'demands to notifications'
+
       context 'with no exceptions' do
         it 'calls slack notification method' do
-          expect_any_instance_of(Slack::Notifier).to receive(:ping).with("> *#{team.name}* | Throughput na semana: *3 demanda(s)* | Variação: *200,00%* para a média das últimas 4 semanas (1.0).").once
+          expect_any_instance_of(Slack::Notifier).to receive(:ping).with("> *#{team.name}* | Throughput na semana: *2 demanda(s)* | Variação: *60,00%* para a média das últimas 4 semanas (1.25).").once
           described_class.instance.notify_week_throughput(first_slack_notifier, team)
         end
       end
@@ -89,10 +105,26 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
     describe '#notify_last_week_delivered_demands_info' do
       context 'with no exceptions' do
         it 'calls slack notification method' do
-          expect_any_instance_of(Slack::Notifier).to receive(:ping).with("> *#{team.name}* | Throughput: *1 demanda(s)* na semana passada.").once
-          expect_any_instance_of(Slack::Notifier).to receive(:ping).with("> *#{first_demand.external_id}* #{first_demand.demand_title} | *Responsáveis:*  | *Custo pro Projeto:* #{number_to_currency(first_demand.cost_to_project)}").once
+          travel_to Time.zone.local(2020, 3, 19, 10, 0, 0) do
+            project = Fabricate :project
+            first_demand = Fabricate :demand, team: team, project: project, end_date: 1.week.ago
+            second_demand = Fabricate :demand, team: team, project: project, end_date: 1.week.ago
+            Fabricate :demand, team: team, project: project, end_date: Time.zone.now
 
-          described_class.instance.notify_last_week_delivered_demands_info(first_slack_notifier, team)
+            team_member = Fabricate :team_member, name: 'foo'
+            other_team_member = Fabricate :team_member, name: 'bar'
+            membership = Fabricate :membership, team_member: team_member
+            other_membership = Fabricate :membership, team_member: other_team_member
+            Fabricate :item_assignment, membership: membership, demand: first_demand, start_time: 3.days.ago, finish_time: 2.days.ago
+            Fabricate :item_assignment, membership: membership, demand: first_demand, start_time: 1.day.ago, finish_time: Time.zone.now
+            Fabricate :item_assignment, membership: other_membership, demand: second_demand, start_time: 3.days.ago, finish_time: 2.days.ago
+
+            expect_any_instance_of(Slack::Notifier).to receive(:ping).with("> *#{team.name}* | Throughput: *2 demanda(s)* na semana passada.").once
+            expect_any_instance_of(Slack::Notifier).to receive(:ping).with("> *#{first_demand.external_id}* #{first_demand.demand_title} | *Responsáveis:* foo | *Custo pro Projeto:* #{number_to_currency(first_demand.cost_to_project)}").once
+            expect_any_instance_of(Slack::Notifier).to receive(:ping).with("> *#{second_demand.external_id}* #{second_demand.demand_title} | *Responsáveis:* bar | *Custo pro Projeto:* #{number_to_currency(second_demand.cost_to_project)}").once
+
+            described_class.instance.notify_last_week_delivered_demands_info(first_slack_notifier, team)
+          end
         end
       end
 
@@ -107,6 +139,8 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
     end
 
     describe '#notify_wip_demands' do
+      include_context 'demands to notifications'
+
       context 'with no exceptions' do
         it 'calls slack notification method' do
           expect_any_instance_of(Slack::Notifier).to receive(:ping).with("> *#{team.name}* | Trabalho em progresso: 1 demanda(s).").once
@@ -127,6 +161,8 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
     end
 
     describe '#notify_beyond_expected_time_in_stage' do
+      include_context 'demands to notifications'
+
       context 'with no exceptions' do
         it 'calls slack notification method' do
           expect_any_instance_of(Slack::Notifier).to receive(:ping).with(I18n.t('slack_configurations.notifications.beyond_expected_title', team_name: team.name, beyond_expected_count: 1)).once
@@ -147,6 +183,8 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
     end
 
     describe '#notify_failure_load' do
+      include_context 'demands to notifications'
+
       context 'with no exceptions' do
         it 'calls slack notification method' do
           slack_notifier = instance_double(Slack::Notifier)

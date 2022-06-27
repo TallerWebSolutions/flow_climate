@@ -154,48 +154,48 @@ RSpec.describe DemandTransition, type: :model do
       end
 
       context 'and there is an end_date defined by a previous stage' do
-        let(:demand) { Fabricate :demand, project: project, created_date: Time.zone.parse('2018-02-04 12:00:00'), commitment_date: nil, end_date: Time.zone.parse('2018-02-05 12:00:00') }
-        let(:transition_date) { Time.zone.parse('2018-03-13 12:00:00') }
-
-        before { Fabricate :demand_transition, stage: second_stage, demand: demand, last_time_in: transition_date }
-
         it 'do not touch the dates' do
-          expect(demand.reload.commitment_date).not_to be_nil
-          expect(demand.reload.created_date).to eq Time.zone.parse('2018-02-04 12:00:00')
-          expect(demand.reload.end_date).to eq Time.zone.parse('2018-02-05 12:00:00')
+          demand = Fabricate :demand, project: project, created_date: Time.zone.local(2018, 2, 4, 12), commitment_date: Time.zone.local(2018, 2, 4, 12, 30), end_date: Time.zone.local(2018, 2, 5, 13)
+          transition_date = Time.zone.local(2018, 3, 13, 13)
+
+          Fabricate :demand_transition, stage: second_stage, demand: demand, last_time_in: transition_date
+
+          expect(demand.reload.commitment_date).to eq Time.zone.local(2018, 2, 4, 12, 30)
+          expect(demand.reload.created_date).to eq Time.zone.local(2018, 2, 4, 12)
+          expect(demand.reload.end_date).to eq Time.zone.local(2018, 2, 5, 13)
         end
       end
     end
 
     context 'when the stage is a wip and the demand has end_date' do
       context 'and the stage of the transition is before the end_point' do
-        let!(:stage) { Fabricate :stage, company: company, commitment_point: false, end_point: false, projects: [project], order: 0 }
-        let!(:other_stage) { Fabricate :stage, company: company, commitment_point: false, end_point: true, projects: [project], order: 1 }
-
-        let(:demand) { Fabricate :demand, project: project, created_date: Time.zone.parse('2018-02-04 12:00:00'), commitment_date: nil, end_date: 2.weeks.from_now }
-        let(:transition_date) { Time.zone.parse('2018-03-13 12:00:00') }
-
-        before { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: transition_date }
-
         it 'sets the commitment date and do not touch in the others' do
+          stage = Fabricate :stage, company: company, commitment_point: false, end_point: false, projects: [project], order: 0
+
+          created_date = 2.days.ago
+          demand = Fabricate :demand, project: project, created_date: created_date, commitment_date: nil, end_date: 2.weeks.from_now
+          transition_date = 1.day.ago
+
+          Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: transition_date
+
           expect(demand.reload.commitment_date).to be_nil
-          expect(demand.reload.created_date).to eq Time.zone.parse('2018-02-04 12:00:00')
+          expect(demand.reload.created_date).to eq created_date
           expect(demand.reload.end_date).to be_nil
         end
       end
 
       context 'and the stage of the transition is after the end_point' do
-        let!(:stage) { Fabricate :stage, company: company, commitment_point: false, end_point: false, projects: [project], integration_pipe_id: '123', order: 1, stage_stream: :downstream }
-        let!(:other_stage) { Fabricate :stage, company: company, commitment_point: false, end_point: true, projects: [project], integration_pipe_id: '123', order: 0, stage_stream: :downstream }
-
-        let(:demand) { Fabricate :demand, project: project, created_date: Time.zone.parse('2018-02-04 12:00:00'), commitment_date: nil, end_date: 2.weeks.from_now }
-        let(:transition_date) { Time.zone.parse('2018-03-13 12:00:00') }
-
-        before { Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: transition_date }
-
         it 'sets the commitment date and do not touch in the others' do
-          expect(demand.reload.commitment_date).not_to be_nil
-          expect(demand.reload.created_date).to eq Time.zone.parse('2018-02-04 12:00:00')
+          stage = Fabricate :stage, company: company, commitment_point: false, end_point: false, projects: [project], integration_pipe_id: '123', order: 1, stage_stream: :downstream
+          Fabricate :stage, company: company, commitment_point: false, end_point: true, projects: [project], integration_pipe_id: '123', order: 0, stage_stream: :downstream
+
+          demand = Fabricate :demand, project: project, created_date: Time.zone.local(2018, 2, 4, 12), commitment_date: Time.zone.local(2018, 2, 4, 13), end_date: 2.weeks.from_now
+          transition_date = Time.zone.parse('2018-03-13 12:00:00')
+
+          Fabricate :demand_transition, stage: stage, demand: demand, last_time_in: transition_date
+
+          expect(demand.reload.commitment_date).to eq Time.zone.local(2018, 2, 4, 13)
+          expect(demand.reload.created_date).to eq Time.zone.local(2018, 2, 4, 12)
           expect(demand.reload.end_date).not_to be_nil
         end
       end
