@@ -12,7 +12,7 @@ RSpec.describe AuthenticatedController, type: :controller do
       it 'redirects to new session path' do
         routes.draw { get 'some_action' => 'authenticated#some_action' }
         get :some_action
-        expect(response.status).to eq 302
+        expect(response).to have_http_status :found
         expect(response).to redirect_to new_user_session_path
       end
     end
@@ -26,7 +26,7 @@ RSpec.describe AuthenticatedController, type: :controller do
         routes.draw { get 'some_action' => 'authenticated#some_action' }
         expect(controller).to receive(:authenticate_user!).once.and_call_original
         get :some_action
-        expect(response.status).to eq 200
+        expect(response).to have_http_status :ok
         expect(response.body).to eq 'success'
       end
     end
@@ -52,7 +52,7 @@ RSpec.describe AuthenticatedController, type: :controller do
       it 'validates the plan and renders the correct template' do
         get :some_action
         expect(controller.send(:user_gold_check)).to be true
-        expect(response.status).to eq 200
+        expect(response).to have_http_status :ok
         expect(response.body).to eq 'success'
       end
     end
@@ -65,7 +65,7 @@ RSpec.describe AuthenticatedController, type: :controller do
       it 'has free and full access' do
         get :some_action
         expect(controller.send(:user_gold_check)).to be true
-        expect(response.status).to eq 200
+        expect(response).to have_http_status :ok
         expect(response.body).to eq 'success'
       end
     end

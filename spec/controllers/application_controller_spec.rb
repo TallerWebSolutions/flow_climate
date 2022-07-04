@@ -12,7 +12,7 @@ RSpec.describe ApplicationController, type: :controller do
       routes.draw { get 'inexistent_model' => 'anonymous#inexistent_model' }
 
       get :inexistent_model
-      expect(response.status).to eq 404
+      expect(response).to have_http_status :not_found
       expect(response.body).to include I18n.t('general.error.not_found.title')
       expect(response.body).to include I18n.t('general.error.not_found.back')
     end
@@ -21,7 +21,7 @@ RSpec.describe ApplicationController, type: :controller do
       routes.draw { get 'inexistent_model' => 'anonymous#inexistent_model' }
 
       get :inexistent_model, xhr: true, format: :js
-      expect(response.status).to eq 404
+      expect(response).to have_http_status :not_found
       expect(response.body).to eq('404 Not Found')
     end
   end

@@ -5,7 +5,7 @@ RSpec.describe ChartsController, type: :controller do
     describe 'GET #build_strategic_charts' do
       before { get :build_strategic_charts, params: { company_id: 'foo' }, xhr: true }
 
-      it { expect(response.status).to eq 401 }
+      it { expect(response).to have_http_status :unauthorized }
     end
   end
 

@@ -43,7 +43,7 @@ RSpec.describe ProjectsController, type: :controller do
     describe 'GET #statistics' do
       before { get :statistics, params: { company_id: 'foo', id: 'foo' }, xhr: true }
 
-      it { expect(response.status).to eq 401 }
+      it { expect(response).to have_http_status :unauthorized }
     end
 
     describe 'DELETE #destroy' do

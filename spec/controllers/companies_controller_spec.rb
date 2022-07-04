@@ -55,19 +55,19 @@ RSpec.describe CompaniesController, type: :controller do
     describe 'POST #update_settings' do
       before { post :update_settings, params: { id: 'xpto' }, xhr: true }
 
-      it { expect(response.status).to eq 401 }
+      it { expect(response).to have_http_status :unauthorized }
     end
 
     describe 'GET #projects_tab' do
       before { get :strategic_chart_tab, params: { id: 'xpto' }, xhr: true }
 
-      it { expect(response.status).to eq 401 }
+      it { expect(response).to have_http_status :unauthorized }
     end
 
     describe 'GET #strategic_chart_tab' do
       before { post :strategic_chart_tab, params: { id: 'xpto' }, xhr: true }
 
-      it { expect(response.status).to eq 401 }
+      it { expect(response).to have_http_status :unauthorized }
     end
   end
 
@@ -392,7 +392,7 @@ RSpec.describe CompaniesController, type: :controller do
           context 'non-existent' do
             before { post :update_settings, params: { id: 'foo', company_settings: { max_active_parallel_projects: 100, max_flow_pressure: 2.2 } }, xhr: true }
 
-            it { expect(response.status).to eq 404 }
+            it { expect(response).to have_http_status :not_found }
           end
 
           context 'not-permitted' do
@@ -400,7 +400,7 @@ RSpec.describe CompaniesController, type: :controller do
 
             before { post :update_settings, params: { id: company, company_settings: { max_active_parallel_projects: 100, max_flow_pressure: 2.2 } }, xhr: true }
 
-            it { expect(response.status).to eq 404 }
+            it { expect(response).to have_http_status :not_found }
           end
         end
       end

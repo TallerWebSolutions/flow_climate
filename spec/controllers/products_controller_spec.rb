@@ -363,7 +363,7 @@ RSpec.describe ProductsController, type: :controller do
 
           before { get :products_for_customer, params: { company_id: unpermitted_company }, xhr: true }
 
-          it { expect(response.status).to eq 404 }
+          it { expect(response).to have_http_status :not_found }
         end
       end
     end
