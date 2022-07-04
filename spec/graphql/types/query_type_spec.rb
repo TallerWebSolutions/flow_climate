@@ -598,7 +598,7 @@ RSpec.describe Types::QueryType do
 
         result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
 
-        expect(result.dig('data', 'demandsList')).to eq({ 'demands' => [{"numberOfBlocks"=>1, "responsibles"=>[]}] })
+        expect(result.dig('data', 'demandsList')).to eq({ 'demands' => [{ 'numberOfBlocks' => 1, 'responsibles' => [] }] })
       end
     end
 
