@@ -12,6 +12,7 @@ module Types
     field :name, String, null: false
     field :start_date, GraphQL::Types::ISO8601Date, null: true
     field :teams, [Types::TeamType], null: true
+    field :user, Types::UserType, null: true
 
     field :demands, [Types::DemandType] do
       argument :limit, Int, required: false

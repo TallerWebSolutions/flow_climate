@@ -1,7 +1,7 @@
 import { useContext, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { gql, useQuery } from "@apollo/client"
-import { Button, Link } from "@mui/material"
+import { Avatar, AvatarGroup, Button, Link } from "@mui/material"
 import { CSVLink } from "react-csv"
 import { FieldValues } from "react-hook-form"
 import EditIcon from "@mui/icons-material/Edit"
@@ -70,6 +70,16 @@ const DEMANDS_QUERY = gql`
       createdDate
       endDate
       leadtime
+      commitmentDate
+      responsibles {
+        id
+        name
+        user {
+          avatar {
+            imageSource
+          }
+        }
+      }
     }
     lastPage
     totalCount
@@ -118,11 +128,32 @@ const DemandsList = () => {
   ]
 
   const normalizeTableRow = (demand: Demand) => [
-    <Link href={`/companies/${companySlug}/demands/${demand.externalId}`}>
+    <Link
+      href={`/companies/${companySlug}/demands/${demand.externalId}`}
+      sx={{ minWidth: "50px", display: "block" }}
+    >
       {demand.externalId}
     </Link>,
     demand.demandTitle || "",
+    <AvatarGroup max={2}>
+      {demand.responsibles &&
+        demand.responsibles.map((responsible, index) => (
+          <Avatar
+            key={`${responsible.name}--${index}`}
+            alt={responsible.name}
+            src={
+              responsible.user?.avatar?.imageSource ||
+              process.env.PUBLIC_URL + "default.png"
+            }
+          />
+        ))}
+    </AvatarGroup>,
     demand.createdDate ? <DateLocale time date={demand.createdDate} /> : "",
+    demand.commitmentDate ? (
+      <DateLocale time date={demand.commitmentDate} />
+    ) : (
+      ""
+    ),
     demand.endDate ? <DateLocale time date={demand.endDate} /> : "",
     secondsToReadbleDate(demand.leadtime),
     <Link href={`/companies/${companySlug}/demands/${demand.externalId}/edit`}>
@@ -133,7 +164,9 @@ const DemandsList = () => {
   const tableHeader = [
     t("table.header.id"),
     t("table.header.title"),
+    t("table.header.responsibles"),
     t("table.header.createdDate"),
+    t("table.header.commitmentDate"),
     t("table.header.deliveryDate"),
     t("table.header.timeToFinish"),
     t("table.header.actions"),

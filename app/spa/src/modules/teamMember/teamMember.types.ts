@@ -5,6 +5,7 @@ import {
   ChartAxisData,
 } from "../project/project.types"
 import { Team } from "../team/team.types"
+import User from "../user/user.types"
 
 export type TeamMember = {
   id: string
@@ -27,6 +28,7 @@ export type TeamMember = {
   memberEffortData?: ChartAxisData
   memberThroughputData?: number[]
   averagePullIntervalData?: ChartAxisData
+  user?: User
   projectHoursData?: {
     xAxis: string[]
     yAxisHours: number[]

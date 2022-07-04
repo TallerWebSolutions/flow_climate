@@ -60,7 +60,7 @@ module Slack
         slack_notifier.ping(
           I18n.t('slack_configurations.notifications.demands_in_wip_info_text',
                  external_id: demand.external_id,
-                 responsibles_names: demand.active_team_members.map(&:team_member_name).join(', '),
+                 responsibles_names: demand.active_memberships.map(&:team_member_name).join(', '),
                  cost_to_project: number_to_currency(demand.cost_to_project),
                  demand_title: demand.demand_title,
                  current_stage: demand.current_stage&.name,
@@ -129,7 +129,7 @@ module Slack
                              end
 
       change_state_notify += "> #{I18n.t("activerecord.attributes.demand.enums.demand_type.#{demand.demand_type}")} - #{I18n.t("activerecord.attributes.demand.enums.class_of_service.#{demand.class_of_service}")}\n"
-      change_state_notify += "> *Responsáveis:* #{demand.active_team_members.map(&:team_member_name).join(', ')} (_#{demand.team_name}_)\n"
+      change_state_notify += "> *Responsáveis:* #{demand.active_memberships.map(&:team_member_name).join(', ')} (_#{demand.team_name}_)\n"
       change_state_notify += ":alarm_clock: *Lead time (p80) de demandas similares* | *No Projeto*: #{time_distance_in_words(DemandService.instance.similar_p80_project(demand))} | *No Time:* #{time_distance_in_words(DemandService.instance.similar_p80_team(demand))}\n" if stage.commitment_point?
 
       if stage.end_point?

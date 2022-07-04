@@ -6,7 +6,9 @@
       "createdDate": "Creation date",
       "deliveryDate": "Delivery date",
       "timeToFinish": "Time to finish",
-      "actions": "Actions"
+      "actions": "Actions",
+      "responsibles": "Responsibles",
+      "commitmentDate": "Commitment Date"
     }
   },
   "list": {

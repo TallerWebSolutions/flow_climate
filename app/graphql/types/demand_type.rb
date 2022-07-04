@@ -14,13 +14,18 @@ module Types
     field :leadtime, Float, null: true
     field :project, Types::ProjectType, null: false
     field :team, Types::TeamType, null: false
-
+    field :responsibles, [Types::TeamMemberType], null: true
     field :customer, Types::CustomerType, null: true
     field :number_of_blocks, Int, null: false
     field :product, Types::ProductType, null: true
+    field :commitment_date, GraphQL::Types::ISO8601DateTime, null: true
 
     def number_of_blocks
       object.demand_blocks.count
+    end
+
+    def responsibles
+      object.active_memberships.map(&:team_member)
     end
   end
 end

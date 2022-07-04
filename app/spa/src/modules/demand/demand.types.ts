@@ -1,11 +1,13 @@
 import { Company } from "../company/company.types"
 import { Project } from "../project/project.types"
 import ControlChart from "../charts/controlChart.types"
+import { TeamMember } from "../teamMember/teamMember.types"
 
 export type Demand = {
   id: string
   demandTitle?: string
   endDate?: string
+  commitmentDate?: string
   createdDate: string
   product: {
     id: string
@@ -15,6 +17,7 @@ export type Demand = {
     id: string
     name: string
   }
+  responsibles?: TeamMember[]
   externalId: string
   leadtime: number
   numberOfBlocks: number

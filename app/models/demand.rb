@@ -168,7 +168,7 @@ class Demand < ApplicationRecord
       id: id, portfolio_unit: portfolio_unit_name, external_id: external_id, project_id: project_id, demand_title: demand_title,
       demand_score: demand_score, effort_upstream: effort_upstream, effort_downstream: effort_downstream, cost_to_project: cost_to_project,
       current_stage: current_stage&.name, time_in_current_stage: time_in_current_stage, partial_leadtime: partial_leadtime,
-      responsibles: active_team_members.map(&:to_hash), demand_blocks: demand_blocks.map(&:to_hash)
+      responsibles: active_memberships.map(&:to_hash), demand_blocks: demand_blocks.map(&:to_hash)
     }
   end
 
@@ -176,7 +176,7 @@ class Demand < ApplicationRecord
     end_date || commitment_date || created_date
   end
 
-  def active_team_members
+  def active_memberships
     memberships.includes([:team_member]).where(item_assignments: { finish_time: nil }).uniq
   end
 
@@ -251,7 +251,7 @@ class Demand < ApplicationRecord
   end
 
   def assignees_count
-    active_team_members.count
+    active_memberships.count
   end
 
   def time_between_commitment_and_pull

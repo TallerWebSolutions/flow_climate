@@ -2,10 +2,6 @@
 
 module Types
   class AvatarType < Types::BaseObject
-    field :image_source, String, null: false
-
-    def image_source
-      current_user.avatar.url
-    end
+    field :image_source, String, null: true
   end
 end

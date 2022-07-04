@@ -69,8 +69,8 @@
     <td><%= I18n.t("activerecord.attributes.demand.enums.class_of_service.#{demand.class_of_service}") %></td>
   </tr>
   <tr>
-    <td><b><span><%= Demand.human_attribute_name :team_members %></span><sup><%= " (#{demand.active_team_members.count})" %></sup></b></td>
-    <td><%= demand.active_team_members.map(&:team_member_name).join(', ') %></td>
+    <td><b><span><%= Demand.human_attribute_name :team_members %></span><sup><%= " (#{demand.active_memberships.count})" %></sup></b></td>
+    <td><%= demand.active_memberships.map(&:team_member_name).join(', ') %></td>
   </tr>
   <tr>
     <td><b><%= Demand.human_attribute_name :effort_upstream %></b></td>
