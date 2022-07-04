@@ -6,6 +6,8 @@
 </div>
 </div>
 
+<h1><%= @user_company_role.first_name %> <%= @user_company_role.last_name %></h1>
+
 <%= form_for @user_company_role, url: user_company_user_company_role_path(@user, @company, @user_company_role), method: :put, class: 'form' do |f| %>
   <div class="row bottom-spaced-component">
     <div class="col-xs-12">
