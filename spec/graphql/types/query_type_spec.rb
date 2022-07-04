@@ -584,6 +584,7 @@ RSpec.describe Types::QueryType do
           demandsList(searchOptions: { projectId: #{project.id}, perPage: 1, demandStatus: DELIVERED_DEMANDS, orderField: "end_date" }) {
             demands {
               numberOfBlocks
+              responsibles { id }
             }
           }
         }
@@ -597,7 +598,7 @@ RSpec.describe Types::QueryType do
 
         result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
 
-        expect(result.dig('data', 'demandsList')).to eq({ 'demands' => [{ 'numberOfBlocks' => 1 }] })
+        expect(result.dig('data', 'demandsList')).to eq({ 'demands' => [{"numberOfBlocks"=>1, "responsibles"=>[]}] })
       end
     end
 
