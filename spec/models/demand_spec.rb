@@ -2,11 +2,11 @@
 
 RSpec.describe Demand, type: :model do
   context 'enums' do
-    it { is_expected.to define_enum_for(:demand_type).with_values(feature: 0, bug: 1, performance_improvement: 2, ui: 3, chore: 4, wireframe: 5) }
     it { is_expected.to define_enum_for(:class_of_service).with_values(standard: 0, expedite: 1, fixed_date: 2, intangible: 3) }
   end
 
   context 'associations' do
+    it { is_expected.to belong_to :work_item_type }
     it { is_expected.to belong_to :company }
     it { is_expected.to belong_to :project }
     it { is_expected.to belong_to(:product).optional }
@@ -36,7 +36,6 @@ RSpec.describe Demand, type: :model do
     context 'simple ones' do
       it { is_expected.to validate_presence_of :external_id }
       it { is_expected.to validate_presence_of :created_date }
-      it { is_expected.to validate_presence_of :demand_type }
       it { is_expected.to validate_presence_of :class_of_service }
     end
 
@@ -278,6 +277,19 @@ RSpec.describe Demand, type: :model do
       end
     end
 
+    describe '.bug' do
+      it 'returns the unique demands with the type for quality indicator' do
+        work_item_type = Fabricate :work_item_type, company: company, name: 'Bug', quality_indicator_type: true
+        other_work_item_type = Fabricate :work_item_type, company: company, name: 'Bug', quality_indicator_type: false
+
+        demand = Fabricate :demand, work_item_type: work_item_type, created_date: 20.minutes.ago, commitment_date: 15.minutes.ago, end_date: 4.minutes.ago
+        other_demand = Fabricate :demand, work_item_type: work_item_type, created_date: 20.minutes.ago, commitment_date: 15.minutes.ago, end_date: 6.minutes.ago
+        Fabricate :demand, work_item_type: other_work_item_type, created_date: 20.minutes.ago, commitment_date: 15.minutes.ago, end_date: 6.minutes.ago
+
+        expect(described_class.bug).to match_array [demand, other_demand]
+      end
+    end
+
     pending '.unscored_demands'
     pending '.dates_inconsistent_to_project'
   end
@@ -458,8 +470,8 @@ RSpec.describe Demand, type: :model do
         allow(demand_with_portfolio_unit).to(receive(:partial_leadtime)).and_return(2)
       end
 
-      it { expect(demand.csv_array).to eq [demand.id, demand.portfolio_unit_name, demand.current_stage&.name, demand.project.id, demand.project.name, demand.external_id, demand.demand_title, demand.demand_type, demand.class_of_service, '10,5', demand.effort_downstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.effort_upstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), '1,0', demand.created_date&.iso8601, demand.commitment_date&.iso8601, demand.end_date&.iso8601] }
-      it { expect(demand_with_portfolio_unit.csv_array).to eq [demand_with_portfolio_unit.id, demand_with_portfolio_unit.portfolio_unit_name, demand_with_portfolio_unit.current_stage&.name, demand_with_portfolio_unit.project.id, demand_with_portfolio_unit.project.name, demand_with_portfolio_unit.external_id, demand_with_portfolio_unit.demand_title, demand_with_portfolio_unit.demand_type, demand_with_portfolio_unit.class_of_service, '0,0', demand_with_portfolio_unit.effort_downstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand_with_portfolio_unit.effort_upstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), '2,0', demand_with_portfolio_unit.created_date&.iso8601, demand_with_portfolio_unit.commitment_date&.iso8601, demand_with_portfolio_unit.end_date&.iso8601] }
+      it { expect(demand.csv_array).to eq [demand.id, demand.portfolio_unit_name, demand.current_stage&.name, demand.project.id, demand.project.name, demand.external_id, demand.demand_title, demand.work_item_type.name, demand.class_of_service, '10,5', demand.effort_downstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.effort_upstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), '1,0', demand.created_date&.iso8601, demand.commitment_date&.iso8601, demand.end_date&.iso8601] }
+      it { expect(demand_with_portfolio_unit.csv_array).to eq [demand_with_portfolio_unit.id, demand_with_portfolio_unit.portfolio_unit_name, demand_with_portfolio_unit.current_stage&.name, demand_with_portfolio_unit.project.id, demand_with_portfolio_unit.project.name, demand_with_portfolio_unit.external_id, demand_with_portfolio_unit.demand_title, demand_with_portfolio_unit.work_item_type.name, demand_with_portfolio_unit.class_of_service, '0,0', demand_with_portfolio_unit.effort_downstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand_with_portfolio_unit.effort_upstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), '2,0', demand_with_portfolio_unit.created_date&.iso8601, demand_with_portfolio_unit.commitment_date&.iso8601, demand_with_portfolio_unit.end_date&.iso8601] }
     end
 
     context 'with a stage and no end date' do
@@ -474,7 +486,7 @@ RSpec.describe Demand, type: :model do
 
       before { allow(demand).to(receive(:partial_leadtime)).and_return(1) }
 
-      it { expect(demand.csv_array).to eq [demand.id, demand.portfolio_unit_name, demand.current_stage&.name, demand.project.id, demand.project.name, demand.external_id, demand.demand_title, demand.demand_type, demand.class_of_service, '10,5', demand.effort_downstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.effort_upstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), '1,0', demand.created_date&.iso8601, demand.commitment_date&.iso8601, nil] }
+      it { expect(demand.csv_array).to eq [demand.id, demand.portfolio_unit_name, demand.current_stage&.name, demand.project.id, demand.project.name, demand.external_id, demand.demand_title, demand.work_item_type.name, demand.class_of_service, '10,5', demand.effort_downstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), demand.effort_upstream.to_f.to_s.gsub('.', I18n.t('number.format.separator')), '1,0', demand.created_date&.iso8601, demand.commitment_date&.iso8601, nil] }
     end
   end
 

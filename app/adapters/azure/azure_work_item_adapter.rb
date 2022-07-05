@@ -73,7 +73,7 @@ module Azure
       demand.update(company: company, team: team, demand_title: work_item_response['fields']['System.Title'].strip,
                     created_date: work_item_response['fields']['System.CreatedDate'],
                     end_date: work_item_response['fields']['Microsoft.VSTS.Common.ClosedDate'],
-                    product: product, project: project, demand_type: :feature, discarded_at: nil)
+                    product: product, project: project, work_item_type: WorkItemType.order(:id).last, discarded_at: nil)
       demand
     end
 

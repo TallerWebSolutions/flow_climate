@@ -102,7 +102,11 @@ class DemandsRepository
   # rubocop:enable Metrics/AbcSize
 
   def demand_type_query(demands, demand_type)
-    return demands.where(demand_type: demand_type) if demand_type.present? && demand_type.exclude?('all_types')
+    company = demands.map(&:company).uniq.last
+    return demands if company.blank? || demand_type.blank?
+
+    work_item_type = company.work_item_types.where('name ILIKE :type_name', type_name: "%#{demand_type}%").first
+    return demands.where(work_item_type: work_item_type) if work_item_type.present? && demand_type.exclude?('all_types')
 
     demands
   end

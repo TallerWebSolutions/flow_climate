@@ -15,6 +15,13 @@ RSpec.describe DemandsRepository, type: :repository do
   let(:third_project) { Fabricate :project, customers: [other_customer], products: [product, other_product], team: team, end_date: 1.week.from_now }
   let(:fourth_project) { Fabricate :project, company: company, customers: [customer], products: [product, other_product], team: team, end_date: 1.week.from_now }
 
+  let(:feature_type) { Fabricate :work_item_type, company: company, name: 'Feature' }
+  let(:bug_type) { Fabricate :work_item_type, company: company, name: 'Bug', quality_indicator_type: true }
+  let(:chore_type) { Fabricate :work_item_type, company: company, name: 'Chore' }
+  let(:ui_type) { Fabricate :work_item_type, company: company, name: 'UI' }
+  let(:performance_improvement_type) { Fabricate :work_item_type, company: company, name: 'UI' }
+  let(:wireframe_type) { Fabricate :work_item_type, company: company, name: 'Wireframe' }
+
   describe '#known_scope_to_date' do
     let!(:first_demand) { Fabricate :demand, project: first_project, team: team, created_date: 3.days.ago, discarded_at: nil }
     let!(:second_demand) { Fabricate :demand, project: first_project, team: team, created_date: 2.days.ago, discarded_at: nil }
@@ -209,17 +216,17 @@ RSpec.describe DemandsRepository, type: :repository do
     let(:project) { Fabricate :project, company: company, customers: [customer], products: [product, other_product], name: 'sbbrubles' }
     let(:other_project) { Fabricate :project, company: company, customers: [customer], products: [product, other_product], name: 'voyager' }
 
-    let!(:first_demand) { Fabricate :demand, company: company, product: product, project: project, external_id: 'hhh', demand_title: 'foo', demand_type: :feature, class_of_service: :standard, created_date: 2.days.ago, commitment_date: nil, end_date: nil, effort_downstream: 20, effort_upstream: 15, demand_tags: %w[aaa ccc sbbrubles] }
-    let!(:second_demand) { Fabricate :demand, company: company, product: product, portfolio_unit: portfolio_unit, project: project, demand_title: 'foo bar', demand_type: :bug, class_of_service: :expedite, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil, effort_downstream: 0, effort_upstream: 0, demand_tags: %w[sbbrubles xpto] }
-    let!(:third_demand) { Fabricate :demand, company: company, product: product, project: project, demand_title: 'bar foo', demand_type: :feature, class_of_service: :intangible, created_date: 5.days.ago, commitment_date: nil, end_date: 1.day.ago, effort_downstream: 0, effort_upstream: 10, demand_tags: %w[aaa ccc] }
-    let!(:fourth_demand) { Fabricate :demand, company: company, product: product, project: project, demand_title: 'xpto', demand_type: :chore, class_of_service: :standard, created_date: 10.days.ago, commitment_date: 5.days.ago, end_date: Time.zone.today, effort_downstream: 10, effort_upstream: 20, demand_tags: %w[xpto] }
+    let!(:first_demand) { Fabricate :demand, company: company, product: product, project: project, external_id: 'hhh', demand_title: 'foo', work_item_type: feature_type, class_of_service: :standard, created_date: 2.days.ago, commitment_date: nil, end_date: nil, effort_downstream: 20, effort_upstream: 15, demand_tags: %w[aaa ccc sbbrubles] }
+    let!(:second_demand) { Fabricate :demand, company: company, product: product, portfolio_unit: portfolio_unit, project: project, demand_title: 'foo bar', work_item_type: bug_type, class_of_service: :expedite, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil, effort_downstream: 0, effort_upstream: 0, demand_tags: %w[sbbrubles xpto] }
+    let!(:third_demand) { Fabricate :demand, company: company, product: product, project: project, demand_title: 'bar foo', work_item_type: feature_type, class_of_service: :intangible, created_date: 5.days.ago, commitment_date: nil, end_date: 1.day.ago, effort_downstream: 0, effort_upstream: 10, demand_tags: %w[aaa ccc] }
+    let!(:fourth_demand) { Fabricate :demand, company: company, product: product, project: project, demand_title: 'xpto', work_item_type: chore_type, class_of_service: :standard, created_date: 10.days.ago, commitment_date: 5.days.ago, end_date: Time.zone.today, effort_downstream: 10, effort_upstream: 20, demand_tags: %w[xpto] }
 
-    let!(:fifth_demand) { Fabricate :demand, company: company, product: other_product, portfolio_unit: other_portfolio_unit, project: project, demand_title: 'xpto', demand_type: :ui, class_of_service: :fixed_date, created_date: 1.month.ago, commitment_date: nil, end_date: nil, effort_downstream: 30, effort_upstream: 10 }
-    let!(:sixth_demand) { Fabricate :demand, company: company, product: other_product, portfolio_unit: nil, project: project, demand_title: 'voyager sas', demand_type: :feature, class_of_service: :standard, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil, effort_downstream: 10, effort_upstream: 10 }
-    let!(:seventh_demand) { Fabricate :demand, company: company, product: other_product, project: other_project, demand_title: 'sas', demand_type: :performance_improvement, class_of_service: :expedite, created_date: 2.days.ago, commitment_date: 2.days.ago, end_date: 1.day.ago, effort_downstream: 40, effort_upstream: 10 }
-    let!(:eigth_demand) { Fabricate :demand, company: company, product: other_product, project: other_project, demand_title: 'sas', demand_type: :wireframe, class_of_service: :fixed_date, created_date: 3.days.ago, commitment_date: 1.day.ago, end_date: Time.zone.today, effort_downstream: 50, effort_upstream: 60 }
+    let!(:fifth_demand) { Fabricate :demand, company: company, product: other_product, portfolio_unit: other_portfolio_unit, project: project, demand_title: 'xpto', work_item_type: ui_type, class_of_service: :fixed_date, created_date: 1.month.ago, commitment_date: nil, end_date: nil, effort_downstream: 30, effort_upstream: 10 }
+    let!(:sixth_demand) { Fabricate :demand, company: company, product: other_product, portfolio_unit: nil, project: project, demand_title: 'voyager sas', work_item_type: feature_type, class_of_service: :standard, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil, effort_downstream: 10, effort_upstream: 10 }
+    let!(:seventh_demand) { Fabricate :demand, company: company, product: other_product, project: other_project, demand_title: 'sas', work_item_type: performance_improvement_type, class_of_service: :expedite, created_date: 2.days.ago, commitment_date: 2.days.ago, end_date: 1.day.ago, effort_downstream: 40, effort_upstream: 10 }
+    let!(:eigth_demand) { Fabricate :demand, company: company, product: other_product, project: other_project, demand_title: 'sas', work_item_type: wireframe_type, class_of_service: :fixed_date, created_date: 3.days.ago, commitment_date: 1.day.ago, end_date: Time.zone.today, effort_downstream: 50, effort_upstream: 60 }
 
-    let!(:ninth_demand) { Fabricate :demand, company: company, customer: other_customer, demand_title: 'customer test', demand_type: :bug, class_of_service: :fixed_date, created_date: 3.months.ago, commitment_date: 1.month.ago, end_date: 15.days.ago }
+    let!(:ninth_demand) { Fabricate :demand, company: company, customer: other_customer, demand_title: 'customer test', work_item_type: bug_type, class_of_service: :fixed_date, created_date: 3.months.ago, commitment_date: 1.month.ago, end_date: 15.days.ago }
   end
 
   describe '#filter_demands_by_text' do
@@ -234,15 +241,16 @@ RSpec.describe DemandsRepository, type: :repository do
         other_portfolio_unit = Fabricate :portfolio_unit, product: other_product, name: 'command center'
         project = Fabricate :project, company: company, customers: [customer], products: [product, other_product], name: 'sbbrubles'
         other_project = Fabricate :project, company: company, customers: [customer], products: [product, other_product], name: 'voyager'
-        first_demand = Fabricate :demand, company: company, product: product, project: project, external_id: 'hhh', demand_title: 'foo', demand_type: :feature, class_of_service: :standard, created_date: 2.days.ago, commitment_date: nil, end_date: nil, effort_downstream: 20, effort_upstream: 15, demand_tags: %w[aaa ccc sbbrubles]
-        second_demand = Fabricate :demand, company: company, product: product, portfolio_unit: portfolio_unit, project: project, demand_title: 'foo cassini', demand_type: :bug, class_of_service: :expedite, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil, effort_downstream: 0, effort_upstream: 0, demand_tags: %w[sbbrubles xpto]
-        third_demand = Fabricate :demand, company: company, product: product, project: project, demand_title: 'cassini foo', demand_type: :feature, class_of_service: :intangible, created_date: 5.days.ago, commitment_date: nil, end_date: 1.day.ago, effort_downstream: 0, effort_upstream: 10, demand_tags: %w[aaa ccc]
-        fourth_demand = Fabricate :demand, company: company, product: product, project: project, demand_title: 'xpto', demand_type: :chore, class_of_service: :standard, created_date: 10.days.ago, commitment_date: 5.days.ago, end_date: Time.zone.today, effort_downstream: 10, effort_upstream: 20, demand_tags: %w[xpto]
-        fifth_demand = Fabricate :demand, company: company, product: other_product, portfolio_unit: other_portfolio_unit, project: project, demand_title: 'xpto', demand_type: :ui, class_of_service: :fixed_date, created_date: 1.month.ago, commitment_date: nil, end_date: nil, effort_downstream: 30, effort_upstream: 10
-        sixth_demand = Fabricate :demand, company: company, product: other_product, portfolio_unit: nil, project: project, demand_title: 'voyager sas', demand_type: :feature, class_of_service: :standard, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil, effort_downstream: 10, effort_upstream: 10
-        seventh_demand = Fabricate :demand, company: company, product: other_product, project: other_project, demand_title: 'sas', demand_type: :performance_improvement, class_of_service: :expedite, created_date: 2.days.ago, commitment_date: 2.days.ago, end_date: 1.day.ago, effort_downstream: 40, effort_upstream: 10
-        eigth_demand = Fabricate :demand, company: company, product: other_product, project: other_project, demand_title: 'sas', demand_type: :wireframe, class_of_service: :fixed_date, created_date: 3.days.ago, commitment_date: 1.day.ago, end_date: Time.zone.today, effort_downstream: 50, effort_upstream: 60
-        Fabricate :demand, company: company, customer: other_customer, demand_title: 'customer test', demand_type: :bug, class_of_service: :fixed_date, created_date: 3.months.ago, commitment_date: 1.month.ago, end_date: 15.days.ago
+
+        first_demand = Fabricate :demand, company: company, product: product, project: project, external_id: 'hhh', demand_title: 'foo', work_item_type: feature_type, class_of_service: :standard, created_date: 2.days.ago, commitment_date: nil, end_date: nil, effort_downstream: 20, effort_upstream: 15, demand_tags: %w[aaa ccc sbbrubles]
+        second_demand = Fabricate :demand, company: company, product: product, portfolio_unit: portfolio_unit, project: project, demand_title: 'foo cassini', work_item_type: bug_type, class_of_service: :expedite, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil, effort_downstream: 0, effort_upstream: 0, demand_tags: %w[sbbrubles xpto]
+        third_demand = Fabricate :demand, company: company, product: product, project: project, demand_title: 'cassini foo', work_item_type: feature_type, class_of_service: :intangible, created_date: 5.days.ago, commitment_date: nil, end_date: 1.day.ago, effort_downstream: 0, effort_upstream: 10, demand_tags: %w[aaa ccc]
+        fourth_demand = Fabricate :demand, company: company, product: product, project: project, demand_title: 'xpto', work_item_type: chore_type, class_of_service: :standard, created_date: 10.days.ago, commitment_date: 5.days.ago, end_date: Time.zone.today, effort_downstream: 10, effort_upstream: 20, demand_tags: %w[xpto]
+        fifth_demand = Fabricate :demand, company: company, product: other_product, portfolio_unit: other_portfolio_unit, project: project, demand_title: 'xpto', work_item_type: ui_type, class_of_service: :fixed_date, created_date: 1.month.ago, commitment_date: nil, end_date: nil, effort_downstream: 30, effort_upstream: 10
+        sixth_demand = Fabricate :demand, company: company, product: other_product, portfolio_unit: nil, project: project, demand_title: 'voyager sas', work_item_type: feature_type, class_of_service: :standard, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil, effort_downstream: 10, effort_upstream: 10
+        seventh_demand = Fabricate :demand, company: company, product: other_product, project: other_project, demand_title: 'sas', work_item_type: performance_improvement_type, class_of_service: :expedite, created_date: 2.days.ago, commitment_date: 2.days.ago, end_date: 1.day.ago, effort_downstream: 40, effort_upstream: 10
+        eigth_demand = Fabricate :demand, company: company, product: other_product, project: other_project, demand_title: 'sas', work_item_type: wireframe_type, class_of_service: :fixed_date, created_date: 3.days.ago, commitment_date: 1.day.ago, end_date: Time.zone.today, effort_downstream: 50, effort_upstream: 60
+        Fabricate :demand, company: company, customer: other_customer, demand_title: 'customer test', work_item_type: bug_type, class_of_service: :fixed_date, created_date: 3.months.ago, commitment_date: 1.month.ago, end_date: 15.days.ago
 
         expect(described_class.instance.filter_demands_by_text(Demand.all, '')).to eq Demand.all
         expect(described_class.instance.filter_demands_by_text(Demand.none, '')).to eq []
@@ -259,15 +267,15 @@ RSpec.describe DemandsRepository, type: :repository do
   describe '#demand_state_query' do
     it 'filters according to the query' do
       travel_to Time.zone.local(2018, 4, 5, 10, 0, 0) do
-        first_demand = Fabricate :demand, external_id: 'hhh', demand_title: 'foo', demand_type: :feature, class_of_service: :standard, created_date: 2.days.ago, commitment_date: nil, end_date: nil
-        second_demand = Fabricate :demand, demand_title: 'foo cassini', demand_type: :bug, class_of_service: :expedite, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil
-        third_demand = Fabricate :demand, demand_title: 'cassini foo', demand_type: :feature, class_of_service: :intangible, created_date: 5.days.ago, commitment_date: nil, end_date: 1.day.ago
-        fourth_demand = Fabricate :demand, demand_title: 'xpto', demand_type: :chore, class_of_service: :standard, created_date: 10.days.ago, commitment_date: 5.days.ago, end_date: Time.zone.today
-        fifth_demand = Fabricate :demand, demand_title: 'xpto', demand_type: :ui, class_of_service: :fixed_date, created_date: 1.month.ago, commitment_date: nil, end_date: nil
-        sixth_demand = Fabricate :demand, demand_title: 'voyager sas', demand_type: :feature, class_of_service: :standard, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil
-        seventh_demand = Fabricate :demand, demand_title: 'sas', demand_type: :performance_improvement, class_of_service: :expedite, created_date: 2.days.ago, commitment_date: 2.days.ago, end_date: 1.day.ago
-        eigth_demand = Fabricate :demand, demand_title: 'sas', demand_type: :wireframe, class_of_service: :fixed_date, created_date: 3.days.ago, commitment_date: 1.day.ago, end_date: Time.zone.today
-        ninth_demand = Fabricate :demand, demand_title: 'sas', demand_type: :wireframe, class_of_service: :fixed_date, created_date: 3.days.ago, commitment_date: 1.day.ago, end_date: Time.zone.today, discarded_at: Time.zone.now
+        first_demand = Fabricate :demand, external_id: 'hhh', demand_title: 'foo', work_item_type: feature_type, class_of_service: :standard, created_date: 2.days.ago, commitment_date: nil, end_date: nil
+        second_demand = Fabricate :demand, demand_title: 'foo cassini', work_item_type: bug_type, class_of_service: :expedite, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil
+        third_demand = Fabricate :demand, demand_title: 'cassini foo', work_item_type: feature_type, class_of_service: :intangible, created_date: 5.days.ago, commitment_date: nil, end_date: 1.day.ago
+        fourth_demand = Fabricate :demand, demand_title: 'xpto', work_item_type: chore_type, class_of_service: :standard, created_date: 10.days.ago, commitment_date: 5.days.ago, end_date: Time.zone.today
+        fifth_demand = Fabricate :demand, demand_title: 'xpto', work_item_type: ui_type, class_of_service: :fixed_date, created_date: 1.month.ago, commitment_date: nil, end_date: nil
+        sixth_demand = Fabricate :demand, demand_title: 'voyager sas', work_item_type: feature_type, class_of_service: :standard, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil
+        seventh_demand = Fabricate :demand, demand_title: 'sas', work_item_type: performance_improvement_type, class_of_service: :expedite, created_date: 2.days.ago, commitment_date: 2.days.ago, end_date: 1.day.ago
+        eigth_demand = Fabricate :demand, demand_title: 'sas', work_item_type: wireframe_type, class_of_service: :fixed_date, created_date: 3.days.ago, commitment_date: 1.day.ago, end_date: Time.zone.today
+        ninth_demand = Fabricate :demand, demand_title: 'sas', work_item_type: wireframe_type, class_of_service: :fixed_date, created_date: 3.days.ago, commitment_date: 1.day.ago, end_date: Time.zone.today, discarded_at: Time.zone.now
 
         expect(described_class.instance.demand_state_query(Demand.all, '')).to eq Demand.all
         expect(described_class.instance.demand_state_query(Demand.none, '')).to eq []
@@ -283,13 +291,15 @@ RSpec.describe DemandsRepository, type: :repository do
   end
 
   describe '#demand_type_query' do
-    before { travel_to Time.zone.local(2018, 4, 5, 10, 0, 0) }
-
     include_context 'demand data for filters'
 
-    it { expect(described_class.instance.demand_type_query(Demand.all, '')).to eq Demand.all }
-    it { expect(described_class.instance.demand_type_query(Demand.none, '')).to eq [] }
-    it { expect(described_class.instance.demand_type_query(Demand.all, 'bug')).to match_array [second_demand, ninth_demand] }
+    it 'returns the demands according to the query' do
+      travel_to Time.zone.local(2018, 4, 5, 10, 0, 0) do
+        expect(described_class.instance.demand_type_query(Demand.all, '')).to match_array Demand.all
+        expect(described_class.instance.demand_type_query(Demand.none, '')).to eq []
+        expect(described_class.instance.demand_type_query(Demand.all, 'bug')).to match_array [second_demand, ninth_demand]
+      end
+    end
   end
 
   describe '#class_of_service_query' do
@@ -316,10 +326,10 @@ RSpec.describe DemandsRepository, type: :repository do
         third_demand = Fabricate :demand, company: company, team: team, created_date: 5.days.ago, commitment_date: nil, end_date: 1.day.ago, effort_downstream: 0, effort_upstream: 10, demand_tags: %w[aaa ccc]
         fourth_demand = Fabricate :demand, company: company, team: team, created_date: 10.days.ago, commitment_date: 5.days.ago, end_date: Time.zone.today, effort_downstream: 10, effort_upstream: 20, demand_tags: %w[xpto]
 
-        fifth_demand = Fabricate :demand, company: company, team: other_team, demand_title: 'xpto', demand_type: :ui, class_of_service: :fixed_date, created_date: 1.month.ago, commitment_date: nil, end_date: nil, effort_downstream: 30, effort_upstream: 10
-        sixth_demand = Fabricate :demand, company: company, team: other_team, demand_title: 'voyager sas', demand_type: :feature, class_of_service: :standard, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil, effort_downstream: 10, effort_upstream: 10
-        seventh_demand = Fabricate :demand, company: company, team: other_team, demand_title: 'sas', demand_type: :performance_improvement, class_of_service: :expedite, created_date: 2.days.ago, commitment_date: 2.days.ago, end_date: 1.day.ago, effort_downstream: 40, effort_upstream: 10
-        eigth_demand = Fabricate :demand, company: company, team: other_team, demand_title: 'sas', demand_type: :wireframe, class_of_service: :fixed_date, created_date: 3.days.ago, commitment_date: 1.day.ago, end_date: Time.zone.today, effort_downstream: 50, effort_upstream: 60
+        fifth_demand = Fabricate :demand, company: company, team: other_team, demand_title: 'xpto', work_item_type: ui_type, class_of_service: :fixed_date, created_date: 1.month.ago, commitment_date: nil, end_date: nil, effort_downstream: 30, effort_upstream: 10
+        sixth_demand = Fabricate :demand, company: company, team: other_team, demand_title: 'voyager sas', work_item_type: feature_type, class_of_service: :standard, created_date: 1.day.ago, commitment_date: Time.zone.today, end_date: nil, effort_downstream: 10, effort_upstream: 10
+        seventh_demand = Fabricate :demand, company: company, team: other_team, demand_title: 'sas', work_item_type: performance_improvement_type, class_of_service: :expedite, created_date: 2.days.ago, commitment_date: 2.days.ago, end_date: 1.day.ago, effort_downstream: 40, effort_upstream: 10
+        eigth_demand = Fabricate :demand, company: company, team: other_team, demand_title: 'sas', work_item_type: wireframe_type, class_of_service: :fixed_date, created_date: 3.days.ago, commitment_date: 1.day.ago, end_date: Time.zone.today, effort_downstream: 50, effort_upstream: 60
 
         expect(described_class.instance.team_query(Demand.all, team.id)).to match_array [first_demand, second_demand, third_demand, fourth_demand]
         expect(described_class.instance.team_query(Demand.all, other_team.id)).to match_array [fifth_demand, sixth_demand, seventh_demand, eigth_demand]

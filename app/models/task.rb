@@ -14,20 +14,24 @@
 #  updated_at          :datetime         not null
 #  demand_id           :integer          not null
 #  external_id         :integer
+#  work_item_type_id   :integer          not null
 #
 # Indexes
 #
-#  index_tasks_on_demand_id     (demand_id)
-#  index_tasks_on_discarded_at  (discarded_at)
+#  index_tasks_on_demand_id          (demand_id)
+#  index_tasks_on_discarded_at       (discarded_at)
+#  index_tasks_on_work_item_type_id  (work_item_type_id)
 #
 # Foreign Keys
 #
+#  fk_rails_615c6769c9  (work_item_type_id => work_item_types.id)
 #  fk_rails_ae3913c114  (demand_id => demands.id)
 #
 class Task < ApplicationRecord
   include Discard::Model
 
   belongs_to :demand
+  belongs_to :work_item_type
 
   scope :not_discarded_until, ->(date) { where('tasks.discarded_at IS NULL OR tasks.discarded_at > :limit_date', limit_date: date) }
   scope :finished, ->(date = Time.zone.now) { not_discarded_until(date).where('tasks.end_date <= :limit_date', limit_date: date).order(:end_date) }

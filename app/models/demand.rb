@@ -12,7 +12,6 @@
 #  demand_score                         :decimal(, )      default(0.0)
 #  demand_tags                          :string           default([]), is an Array
 #  demand_title                         :string
-#  demand_type                          :integer          not null
 #  demand_url                           :string
 #  discarded_at                         :datetime
 #  effort_design                        :decimal(, )      default(0.0), not null
@@ -43,6 +42,7 @@
 #  risk_review_id                       :integer
 #  service_delivery_review_id           :integer
 #  team_id                              :integer          not null
+#  work_item_type_id                    :integer          not null
 #
 # Indexes
 #
@@ -51,6 +51,7 @@
 #  index_demands_on_discarded_at                (discarded_at)
 #  index_demands_on_external_id_and_company_id  (external_id,company_id) UNIQUE
 #  index_demands_on_slug                        (slug) UNIQUE
+#  index_demands_on_work_item_type_id           (work_item_type_id)
 #
 # Foreign Keys
 #
@@ -62,6 +63,7 @@
 #  fk_rails_b14b9efb68  (customer_id => customers.id)
 #  fk_rails_c9b5eaaa7f  (portfolio_unit_id => portfolio_units.id)
 #  fk_rails_d084bb511c  (contract_id => contracts.id)
+#  fk_rails_ed5f6df6d6  (work_item_type_id => work_item_types.id)
 #  fk_rails_fcc44c0e5d  (service_delivery_review_id => service_delivery_reviews.id)
 #
 
@@ -73,9 +75,9 @@ class Demand < ApplicationRecord
   extend FriendlyId
   friendly_id :external_id, use: :slugged
 
-  enum demand_type: { feature: 0, bug: 1, performance_improvement: 2, ui: 3, chore: 4, wireframe: 5 }
   enum class_of_service: { standard: 0, expedite: 1, fixed_date: 2, intangible: 3 }
 
+  belongs_to :work_item_type
   belongs_to :company
   belongs_to :project
   belongs_to :team
@@ -100,7 +102,7 @@ class Demand < ApplicationRecord
   has_many :class_of_service_change_histories, class_name: 'History::ClassOfServiceChangeHistory', dependent: :destroy
   has_many :tasks, dependent: :destroy
 
-  validates :created_date, :external_id, :demand_type, :class_of_service, :assignees_count, presence: true
+  validates :created_date, :external_id, :class_of_service, :assignees_count, presence: true
   validates :external_id, uniqueness: { scope: :company_id, message: I18n.t('demand.validations.external_id_unique.message') }
 
   scope :opened_before_date, ->(date) { where('demands.created_date <= :analysed_date AND (demands.discarded_at IS NULL OR demands.discarded_at > :analysed_date)', analysed_date: date.end_of_day) }
@@ -126,6 +128,8 @@ class Demand < ApplicationRecord
   scope :with_valid_leadtime, -> { where('demands.leadtime >= :leadtime_data_limit', leadtime_data_limit: 10.minutes.to_i) }
   scope :for_team_member, ->(member) { joins(item_assignments: { membership: :team_member }).where(item_assignments: { memberships: { team_members: member } }).uniq }
 
+  scope :bug, -> { joins(:work_item_type).where(work_item_type: { quality_indicator_type: true }) }
+
   delegate :name, to: :project, prefix: true, allow_nil: true
   delegate :name, to: :product, prefix: true, allow_nil: true
   delegate :name, to: :customer, prefix: true, allow_nil: true
@@ -150,7 +154,7 @@ class Demand < ApplicationRecord
       project_name,
       external_id,
       demand_title,
-      demand_type,
+      work_item_type.name,
       class_of_service,
       decimal_value_to_csv(demand_score),
       decimal_value_to_csv(effort_downstream),
