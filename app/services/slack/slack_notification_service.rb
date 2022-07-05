@@ -192,7 +192,8 @@ module Slack
 
       already_notified = Notifications::DemandBlockNotification.where(demand_block: demand_block, block_state: block_state)
 
-      # return if already_notified.present?
+      return if already_notified.present?
+
       demand_type = I18n.t("activerecord.attributes.demand_block.enums.block_type.#{demand_block.block_type}")
       block_type = { type: 'section', text: { type: 'mrkdwn', text: ">*Tipo:* <#{edit_block_url}|#{demand_type}>\n> <@#{demand_block.blocker.user&.slack_user_for_company(demand_block.demand.company)}> #{I18n.t('slack_configurations.notifications.block_change_type_text')}" } }
       divider_block = { type: 'divider' }
