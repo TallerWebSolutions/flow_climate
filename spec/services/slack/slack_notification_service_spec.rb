@@ -21,14 +21,14 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
     let!(:stage) { Fabricate :stage, company: company, stage_stream: :downstream, name: 'stage' }
     let!(:stage_project_config) { Fabricate :stage_project_config, stage: stage, project: project, max_seconds_in_stage: 1.day }
 
-    let!(:first_demand) { Fabricate :demand, team: team, project: project, demand_type: :bug, end_date: 1.week.ago, effort_downstream: 100, effort_upstream: 10 }
-    let!(:second_demand) { Fabricate :demand, team: team, project: project, demand_type: :bug, end_date: 3.weeks.ago }
-    let!(:third_demand) { Fabricate :demand, team: team, project: project, demand_type: :bug, end_date: 2.days.ago }
-    let!(:fourth_demand) { Fabricate :demand, team: team, project: project, demand_type: :feature, end_date: 3.weeks.ago }
-    let!(:fifth_demand) { Fabricate :demand, team: team, project: project, demand_type: :chore, end_date: Time.zone.now }
-    let!(:sixth_demand) { Fabricate :demand, team: team, project: project, demand_type: :feature, end_date: 2.weeks.ago }
-    let!(:seventh_demand) { Fabricate :demand, team: team, project: project, demand_type: :feature, end_date: Time.zone.now }
-    let!(:eighth_demand) { Fabricate :demand, team: team, project: project, demand_type: :chore, commitment_date: Time.zone.now, end_date: nil, effort_downstream: 200, effort_upstream: 300 }
+    let!(:first_demand) { Fabricate :demand, team: team, project: project, work_item_type: bug_type, end_date: 1.week.ago, effort_downstream: 100, effort_upstream: 10 }
+    let!(:second_demand) { Fabricate :demand, team: team, project: project, work_item_type: bug_type, end_date: 3.weeks.ago }
+    let!(:third_demand) { Fabricate :demand, team: team, project: project, work_item_type: bug_type, end_date: 2.days.ago }
+    let!(:fourth_demand) { Fabricate :demand, team: team, project: project, work_item_type: feature_type, end_date: 3.weeks.ago }
+    let!(:fifth_demand) { Fabricate :demand, team: team, project: project, work_item_type: chore_type, end_date: Time.zone.now }
+    let!(:sixth_demand) { Fabricate :demand, team: team, project: project, work_item_type: feature_type, end_date: 2.weeks.ago }
+    let!(:seventh_demand) { Fabricate :demand, team: team, project: project, work_item_type: feature_type, end_date: Time.zone.now }
+    let!(:eighth_demand) { Fabricate :demand, team: team, project: project, work_item_type: chore_type, commitment_date: Time.zone.now, end_date: nil, effort_downstream: 200, effort_upstream: 300 }
 
     let!(:demand_transition) { Fabricate :demand_transition, demand: eighth_demand, stage: stage, last_time_in: 3.days.ago }
   end
@@ -40,15 +40,15 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
           travel_to Time.zone.local(2022, 6, 27, 10) do
             project = Fabricate :project, team: team, company: company, status: :executing, name: 'project'
 
-            Fabricate :demand, team: team, project: project, demand_type: :chore, commitment_date: Time.zone.now, end_date: nil, effort_downstream: 200, effort_upstream: 300
-            Fabricate :demand, team: team, project: project, demand_type: :bug, end_date: 1.week.ago, effort_downstream: 100, effort_upstream: 10
-            Fabricate :demand, team: team, project: project, demand_type: :bug, end_date: 3.weeks.ago
-            Fabricate :demand, team: team, project: project, demand_type: :bug, end_date: 2.hours.ago
-            Fabricate :demand, team: team, project: project, demand_type: :feature, end_date: 3.weeks.ago
-            Fabricate :demand, team: team, project: project, demand_type: :chore, end_date: Time.zone.now
-            Fabricate :demand, team: team, project: project, demand_type: :feature, end_date: 2.weeks.ago
-            Fabricate :demand, team: team, project: project, demand_type: :feature, end_date: Time.zone.now
-            Fabricate :demand, team: team, project: project, demand_type: :bug, end_date: Time.zone.now
+            Fabricate :demand, team: team, project: project, work_item_type: chore_type, commitment_date: Time.zone.now, end_date: nil, effort_downstream: 200, effort_upstream: 300
+            Fabricate :demand, team: team, project: project, work_item_type: bug_type, end_date: 1.week.ago, effort_downstream: 100, effort_upstream: 10
+            Fabricate :demand, team: team, project: project, work_item_type: bug_type, end_date: 3.weeks.ago
+            Fabricate :demand, team: team, project: project, work_item_type: bug_type, end_date: 2.hours.ago
+            Fabricate :demand, team: team, project: project, work_item_type: feature_type, end_date: 3.weeks.ago
+            Fabricate :demand, team: team, project: project, work_item_type: chore_type, end_date: Time.zone.now
+            Fabricate :demand, team: team, project: project, work_item_type: feature_type, end_date: 2.weeks.ago
+            Fabricate :demand, team: team, project: project, work_item_type: feature_type, end_date: Time.zone.now
+            Fabricate :demand, team: team, project: project, work_item_type: bug_type, end_date: Time.zone.now
 
             average_demand_cost_info = TeamService.instance.average_demand_cost_stats_info_hash(team)
 

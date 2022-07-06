@@ -324,7 +324,7 @@ class Project < ApplicationRecord
   def percentage_of_demand_type(demand_type)
     return 0 if demands.kept.count.zero?
 
-    (demands.kept.send(demand_type).count.to_f / demands.kept.count) * 100
+    (demands.kept.where(work_item_type: demand_type).count.to_f / demands.kept.count) * 100
   end
 
   def average_block_duration

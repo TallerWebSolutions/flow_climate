@@ -93,6 +93,8 @@ RSpec.describe Team, type: :model do
   RSpec.shared_context 'consolidations data for team', shared_context: :metadata do
     let(:company) { Fabricate :company }
 
+    let(:bug_type) { Fabricate :work_item_type, company: company, name: 'Bug', quality_indicator_type: true }
+
     let(:team) { Fabricate :team, company: company }
     let(:other_team) { Fabricate :team, company: company }
 
@@ -103,7 +105,7 @@ RSpec.describe Team, type: :model do
     let(:other_project) { Fabricate :project, team: team, end_date: 4.weeks.from_now, value: 20_000, hour_value: 100 }
     let(:other_customer_project) { Fabricate :project, team: other_team, end_date: 4.weeks.from_now, value: 45_000, hour_value: 20 }
 
-    let!(:first_demand) { Fabricate :demand, team: team, project: project, created_date: 2.weeks.ago, end_date: 1.week.ago, demand_type: :bug, effort_downstream: 20, effort_upstream: 30 }
+    let!(:first_demand) { Fabricate :demand, team: team, project: project, created_date: 2.weeks.ago, end_date: 1.week.ago, work_item_type: bug_type, effort_downstream: 20, effort_upstream: 30 }
     let!(:second_demand) { Fabricate :demand, team: team, project: project, created_date: 2.weeks.ago, end_date: 1.week.ago, effort_downstream: 40, effort_upstream: 35 }
     let!(:third_demand) { Fabricate :demand, team: team, project: project, created_date: 1.week.ago, end_date: 2.days.ago, effort_downstream: 10, effort_upstream: 78 }
   end
@@ -137,7 +139,7 @@ RSpec.describe Team, type: :model do
     let(:other_project) { Fabricate :project, team: team, end_date: 4.weeks.from_now }
 
     context 'with data' do
-      let!(:first_demand) { Fabricate :demand, team: team, project: project, commitment_date: 2.weeks.ago, end_date: 1.week.ago, demand_type: :bug, effort_downstream: 20, effort_upstream: 30 }
+      let!(:first_demand) { Fabricate :demand, team: team, project: project, commitment_date: 2.weeks.ago, end_date: 1.week.ago, effort_downstream: 20, effort_upstream: 30 }
       let!(:second_demand) { Fabricate :demand, team: team, project: project, commitment_date: 2.weeks.ago, end_date: 1.week.ago, effort_downstream: 40, effort_upstream: 35 }
       let!(:third_demand) { Fabricate :demand, team: team, project: project, commitment_date: 1.week.ago, end_date: 2.days.ago, effort_downstream: 10, effort_upstream: 78 }
 
@@ -151,15 +153,19 @@ RSpec.describe Team, type: :model do
   end
 
   describe '#failure_load' do
+    let(:company) { Fabricate :company }
     let(:team) { Fabricate :team }
+
+    let(:feature_type) { Fabricate :work_item_type, company: company, name: 'Feature' }
+    let(:bug_type) { Fabricate :work_item_type, company: company, name: 'Bug', quality_indicator_type: true }
 
     let(:project) { Fabricate :project, team: team, end_date: 4.weeks.from_now, qty_hours: 2000 }
     let(:other_project) { Fabricate :project, team: team, end_date: 4.weeks.from_now }
 
     context 'with data' do
-      let!(:first_demand) { Fabricate :demand, team: team, project: project, demand_type: :feature, created_date: 2.weeks.ago, end_date: 1.week.ago, effort_downstream: 20, effort_upstream: 30 }
-      let!(:second_demand) { Fabricate :demand, team: team, project: project, demand_type: :bug, created_date: 2.weeks.ago, end_date: 1.week.ago, effort_downstream: 40, effort_upstream: 35 }
-      let!(:third_demand) { Fabricate :demand, team: team, project: other_project, demand_type: :bug, created_date: 1.week.ago, end_date: 2.days.ago, effort_downstream: 10, effort_upstream: 78 }
+      let!(:first_demand) { Fabricate :demand, team: team, project: project, work_item_type: feature_type, created_date: 2.weeks.ago, end_date: 1.week.ago, effort_downstream: 20, effort_upstream: 30 }
+      let!(:second_demand) { Fabricate :demand, team: team, project: project, work_item_type: bug_type, created_date: 2.weeks.ago, end_date: 1.week.ago, effort_downstream: 40, effort_upstream: 35 }
+      let!(:third_demand) { Fabricate :demand, team: team, project: other_project, work_item_type: bug_type, created_date: 1.week.ago, end_date: 2.days.ago, effort_downstream: 10, effort_upstream: 78 }
 
       it { expect(team.failure_load).to eq 66.66666666666666 }
     end
@@ -201,9 +207,9 @@ RSpec.describe Team, type: :model do
     let(:team) { Fabricate :team, company: company }
     let(:other_team) { Fabricate :team, company: company }
 
-    let!(:first_demand) { Fabricate :demand, team: team, project: project, demand_type: :feature, created_date: 2.weeks.ago, end_date: 1.week.ago, total_queue_time: 20, total_touch_time: 30 }
-    let!(:second_demand) { Fabricate :demand, team: team, project: project, demand_type: :bug, created_date: 2.weeks.ago, end_date: 1.week.ago, total_queue_time: 40, total_touch_time: 35 }
-    let!(:third_demand) { Fabricate :demand, team: team, project: other_project, demand_type: :bug, created_date: 1.week.ago, end_date: 2.days.ago, total_queue_time: 10, total_touch_time: 78 }
+    let!(:first_demand) { Fabricate :demand, team: team, project: project, created_date: 2.weeks.ago, end_date: 1.week.ago, total_queue_time: 20, total_touch_time: 30 }
+    let!(:second_demand) { Fabricate :demand, team: team, project: project, created_date: 2.weeks.ago, end_date: 1.week.ago, total_queue_time: 40, total_touch_time: 35 }
+    let!(:third_demand) { Fabricate :demand, team: team, project: other_project, created_date: 1.week.ago, end_date: 2.days.ago, total_queue_time: 10, total_touch_time: 78 }
 
     it { expect(team.average_queue_time).to eq 23.333333333333332 }
     it { expect(other_team.average_queue_time).to eq 0 }
@@ -211,16 +217,15 @@ RSpec.describe Team, type: :model do
 
   describe '#average_touch_time' do
     let(:company) { Fabricate :company }
-
     let(:project) { Fabricate :project, team: team, end_date: 4.weeks.from_now, qty_hours: 2000 }
     let(:other_project) { Fabricate :project, team: team, end_date: 4.weeks.from_now }
 
     let(:team) { Fabricate :team, company: company }
     let(:other_team) { Fabricate :team, company: company }
 
-    let!(:first_demand) { Fabricate :demand, team: team, project: project, demand_type: :feature, created_date: 2.weeks.ago, end_date: 1.week.ago, total_queue_time: 20, total_touch_time: 30 }
-    let!(:second_demand) { Fabricate :demand, team: team, project: project, demand_type: :bug, created_date: 2.weeks.ago, end_date: 1.week.ago, total_queue_time: 40, total_touch_time: 35 }
-    let!(:third_demand) { Fabricate :demand, team: team, project: other_project, demand_type: :bug, created_date: 1.week.ago, end_date: 2.days.ago, total_queue_time: 10, total_touch_time: 78 }
+    let!(:first_demand) { Fabricate :demand, team: team, project: project, created_date: 2.weeks.ago, end_date: 1.week.ago, total_queue_time: 20, total_touch_time: 30 }
+    let!(:second_demand) { Fabricate :demand, team: team, project: project, created_date: 2.weeks.ago, end_date: 1.week.ago, total_queue_time: 40, total_touch_time: 35 }
+    let!(:third_demand) { Fabricate :demand, team: team, project: other_project, created_date: 1.week.ago, end_date: 2.days.ago, total_queue_time: 10, total_touch_time: 78 }
 
     it { expect(team.average_touch_time).to eq 47.666666666666664 }
     it { expect(other_team.average_touch_time).to eq 0 }
@@ -235,10 +240,10 @@ RSpec.describe Team, type: :model do
     let(:team) { Fabricate :team, company: company }
     let(:other_team) { Fabricate :team, company: company }
 
-    let!(:first_demand) { Fabricate :demand, team: team, project: project, demand_type: :feature, created_date: 3.weeks.ago, commitment_date: 17.days.ago, end_date: 2.weeks.ago }
-    let!(:second_demand) { Fabricate :demand, team: team, project: project, demand_type: :bug, created_date: 2.weeks.ago, commitment_date: 18.days.ago, end_date: 1.week.ago }
-    let!(:third_demand) { Fabricate :demand, team: team, project: other_project, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago }
-    let!(:fourth_demand) { Fabricate :demand, team: other_team, project: other_project, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago }
+    let!(:first_demand) { Fabricate :demand, team: team, project: project, created_date: 3.weeks.ago, commitment_date: 17.days.ago, end_date: 2.weeks.ago }
+    let!(:second_demand) { Fabricate :demand, team: team, project: project, created_date: 2.weeks.ago, commitment_date: 18.days.ago, end_date: 1.week.ago }
+    let!(:third_demand) { Fabricate :demand, team: team, project: other_project, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago }
+    let!(:fourth_demand) { Fabricate :demand, team: other_team, project: other_project, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago }
 
     it { expect(team.larger_lead_times(0, 3)).to eq [second_demand, first_demand, third_demand] }
     it { expect(team.larger_lead_times(1, 2)).to eq [third_demand] }
@@ -381,12 +386,15 @@ RSpec.describe Team, type: :model do
       other_team = Fabricate :team, company: company
       empty_team = Fabricate :team, company: company
 
-      Fabricate :demand, team: team, demand_type: :feature, created_date: 3.weeks.ago, commitment_date: 17.days.ago, end_date: 2.weeks.ago, effort_downstream: 30, effort_upstream: 10
-      Fabricate :demand, team: team, demand_type: :bug, created_date: 2.weeks.ago, commitment_date: 18.days.ago, end_date: 1.week.ago, effort_downstream: 2, effort_upstream: 18
-      Fabricate :demand, team: team, demand_type: :bug, created_date: 2.weeks.ago, commitment_date: 18.days.ago, end_date: nil, effort_downstream: 2, effort_upstream: 18
-      Fabricate :demand, team: team, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago, effort_downstream: 43, effort_upstream: 49
-      Fabricate :demand, team: team, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: nil, effort_downstream: 43, effort_upstream: 49
-      Fabricate :demand, team: other_team, demand_type: :bug, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago, effort_downstream: 38, effort_upstream: 15
+      feature_type = Fabricate :work_item_type, company: company, name: 'Feature'
+      bug_type = Fabricate :work_item_type, company: company, name: 'Bug', quality_indicator_type: true
+
+      Fabricate :demand, team: team, work_item_type: feature_type, created_date: 3.weeks.ago, commitment_date: 17.days.ago, end_date: 2.weeks.ago, effort_downstream: 30, effort_upstream: 10
+      Fabricate :demand, team: team, work_item_type: bug_type, created_date: 2.weeks.ago, commitment_date: 18.days.ago, end_date: 1.week.ago, effort_downstream: 2, effort_upstream: 18
+      Fabricate :demand, team: team, work_item_type: bug_type, created_date: 2.weeks.ago, commitment_date: 18.days.ago, end_date: nil, effort_downstream: 2, effort_upstream: 18
+      Fabricate :demand, team: team, work_item_type: bug_type, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago, effort_downstream: 43, effort_upstream: 49
+      Fabricate :demand, team: team, work_item_type: bug_type, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: nil, effort_downstream: 43, effort_upstream: 49
+      Fabricate :demand, team: other_team, work_item_type: bug_type, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago, effort_downstream: 38, effort_upstream: 15
 
       expect(team.start_date).to eq 2.weeks.ago.to_date
       expect(team.end_date).to eq 2.days.ago.to_date
@@ -432,20 +440,24 @@ RSpec.describe Team, type: :model do
   describe '#lead_time_position_percentage_same_type' do
     context 'with data' do
       it 'returns the demand position within the others demands in the project' do
-        project = Fabricate :project
+        company = Fabricate :company
+        project = Fabricate :project, company: company
 
-        Fabricate :demand, project: project, demand_type: :feature, created_date: 5.days.ago, commitment_date: 3.days.ago, end_date: 2.days.ago
-        Fabricate :demand, project: project, demand_type: :feature, created_date: 5.days.ago, commitment_date: 4.days.ago, end_date: 1.day.ago
-        Fabricate :demand, project: project, demand_type: :feature, created_date: 6.days.ago, commitment_date: 5.days.ago, end_date: 1.day.ago
-        Fabricate :demand, project: project, demand_type: :feature, created_date: 6.days.ago, commitment_date: 4.days.ago, end_date: 3.days.ago
+        feature_type = Fabricate :work_item_type, company: company, name: 'Feature'
+        bug_type = Fabricate :work_item_type, company: company, name: 'Bug', quality_indicator_type: true
 
-        Fabricate :demand, demand_type: :feature, created_date: 6.days.ago, commitment_date: 4.days.ago, end_date: 3.days.ago
-        Fabricate :demand, project: project, demand_type: :feature, created_date: 6.days.ago, commitment_date: 4.days.ago, end_date: 3.days.ago, discarded_at: Time.zone.now
-        Fabricate :demand, project: project, demand_type: :bug, created_date: 6.days.ago, commitment_date: 4.days.ago, end_date: 3.days.ago
+        Fabricate :demand, project: project, work_item_type: feature_type, created_date: 5.days.ago, commitment_date: 3.days.ago, end_date: 2.days.ago
+        Fabricate :demand, project: project, work_item_type: feature_type, created_date: 5.days.ago, commitment_date: 4.days.ago, end_date: 1.day.ago
+        Fabricate :demand, project: project, work_item_type: feature_type, created_date: 6.days.ago, commitment_date: 5.days.ago, end_date: 1.day.ago
+        Fabricate :demand, project: project, work_item_type: feature_type, created_date: 6.days.ago, commitment_date: 4.days.ago, end_date: 3.days.ago
 
-        tested_demand = Fabricate :demand, demand_type: :feature, project: project, created_date: 7.days.ago, commitment_date: 4.days.ago, end_date: 2.days.ago
-        first_place_demand = Fabricate :demand, demand_type: :feature, project: project, created_date: 7.days.ago, commitment_date: 2.hours.ago, end_date: 1.hour.ago
-        last_place_demand = Fabricate :demand, demand_type: :feature, project: project, created_date: 9.days.ago, commitment_date: 8.days.ago, end_date: 1.hour.ago
+        Fabricate :demand, work_item_type: feature_type, created_date: 6.days.ago, commitment_date: 4.days.ago, end_date: 3.days.ago
+        Fabricate :demand, project: project, work_item_type: feature_type, created_date: 6.days.ago, commitment_date: 4.days.ago, end_date: 3.days.ago, discarded_at: Time.zone.now
+        Fabricate :demand, project: project, work_item_type: bug_type, created_date: 6.days.ago, commitment_date: 4.days.ago, end_date: 3.days.ago
+
+        tested_demand = Fabricate :demand, work_item_type: feature_type, project: project, created_date: 7.days.ago, commitment_date: 4.days.ago, end_date: 2.days.ago
+        first_place_demand = Fabricate :demand, work_item_type: feature_type, project: project, created_date: 7.days.ago, commitment_date: 2.hours.ago, end_date: 1.hour.ago
+        last_place_demand = Fabricate :demand, work_item_type: feature_type, project: project, created_date: 9.days.ago, commitment_date: 8.days.ago, end_date: 1.hour.ago
 
         expect(project.lead_time_position_percentage_same_type(tested_demand)).to eq 0.5
         expect(project.lead_time_position_percentage_same_type(first_place_demand)).to eq 1
@@ -457,7 +469,7 @@ RSpec.describe Team, type: :model do
       it 'returns zero' do
         project = Fabricate :project
 
-        tested_demand = Fabricate :demand, demand_type: :feature, project: project, created_date: 7.days.ago, commitment_date: 4.days.ago, end_date: 2.days.ago
+        tested_demand = Fabricate :demand, project: project, created_date: 7.days.ago, commitment_date: 4.days.ago, end_date: 2.days.ago
 
         expect(project.lead_time_position_percentage_same_type(tested_demand)).to eq 0
       end
@@ -467,7 +479,11 @@ RSpec.describe Team, type: :model do
   describe '#lead_time_position_percentage_same_cos' do
     context 'with data' do
       it 'returns the demand position within the others demands in the project' do
-        project = Fabricate :project
+        company = Fabricate :company
+
+        project = Fabricate :project, company: company
+
+        feature_type = Fabricate :work_item_type, company: company, name: 'Feature'
 
         Fabricate :demand, project: project, class_of_service: :standard, created_date: 5.days.ago, commitment_date: 3.days.ago, end_date: 2.days.ago
         Fabricate :demand, project: project, class_of_service: :standard, created_date: 5.days.ago, commitment_date: 4.days.ago, end_date: 1.day.ago
@@ -478,9 +494,9 @@ RSpec.describe Team, type: :model do
         Fabricate :demand, project: project, class_of_service: :standard, created_date: 6.days.ago, commitment_date: 4.days.ago, end_date: 3.days.ago, discarded_at: Time.zone.now
         Fabricate :demand, project: project, class_of_service: :fixed_date, created_date: 6.days.ago, commitment_date: 4.days.ago, end_date: 3.days.ago
 
-        tested_demand = Fabricate :demand, project: project, demand_type: :feature, created_date: 7.days.ago, commitment_date: 4.days.ago, end_date: 2.days.ago
-        first_place_demand = Fabricate :demand, project: project, demand_type: :feature, created_date: 7.days.ago, commitment_date: 2.hours.ago, end_date: 1.hour.ago
-        last_place_demand = Fabricate :demand, project: project, demand_type: :feature, created_date: 9.days.ago, commitment_date: 8.days.ago, end_date: 1.hour.ago
+        tested_demand = Fabricate :demand, project: project, work_item_type: feature_type, created_date: 7.days.ago, commitment_date: 4.days.ago, end_date: 2.days.ago
+        first_place_demand = Fabricate :demand, project: project, work_item_type: feature_type, created_date: 7.days.ago, commitment_date: 2.hours.ago, end_date: 1.hour.ago
+        last_place_demand = Fabricate :demand, project: project, work_item_type: feature_type, created_date: 9.days.ago, commitment_date: 8.days.ago, end_date: 1.hour.ago
 
         expect(project.lead_time_position_percentage_same_cos(tested_demand)).to eq 0.5
         expect(project.lead_time_position_percentage_same_cos(first_place_demand)).to eq 1
@@ -492,7 +508,7 @@ RSpec.describe Team, type: :model do
       it 'returns zero' do
         project = Fabricate :project
 
-        tested_demand = Fabricate :demand, demand_type: :feature, project: project, created_date: 7.days.ago, commitment_date: 4.days.ago, end_date: 2.days.ago
+        tested_demand = Fabricate :demand, project: project, created_date: 7.days.ago, commitment_date: 4.days.ago, end_date: 2.days.ago
 
         expect(project.lead_time_position_percentage_same_cos(tested_demand)).to eq 0
       end

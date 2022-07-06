@@ -35,14 +35,19 @@ RSpec.describe RiskReview, type: :model do
   end
 
   shared_context 'risk reviews data' do
-    let(:product) { Fabricate :product }
+    let(:company) { Fabricate :company }
+    let(:product) { Fabricate :product, company: company }
     let(:risk_review) { Fabricate :risk_review, lead_time_outlier_limit: 5, weekly_avg_blocked_time: [2, 3], monthly_avg_blocked_time: [2] }
     let(:other_risk_review) { Fabricate :risk_review, lead_time_outlier_limit: 2 }
 
-    let!(:first_demand) { Fabricate :demand, risk_review: risk_review, demand_type: :bug, commitment_date: 10.days.ago, end_date: Time.zone.now }
-    let!(:second_demand) { Fabricate :demand, risk_review: risk_review, demand_type: :bug, commitment_date: 6.days.ago, end_date: Time.zone.now }
-    let!(:third_demand) { Fabricate :demand, risk_review: risk_review, demand_type: :feature, commitment_date: 4.days.ago, end_date: Time.zone.now }
-    let!(:fourth_demand) { Fabricate :demand, risk_review: risk_review, demand_type: :chore, commitment_date: 6.days.ago, end_date: nil }
+    let(:feature_type) { Fabricate :work_item_type, company: company, name: 'Feature' }
+    let(:bug_type) { Fabricate :work_item_type, company: company, name: 'Bug', quality_indicator_type: true }
+    let(:chore_type) { Fabricate :work_item_type, company: company, name: 'Chore' }
+
+    let!(:first_demand) { Fabricate :demand, risk_review: risk_review, work_item_type: bug_type, commitment_date: 10.days.ago, end_date: Time.zone.now }
+    let!(:second_demand) { Fabricate :demand, risk_review: risk_review, work_item_type: bug_type, commitment_date: 6.days.ago, end_date: Time.zone.now }
+    let!(:third_demand) { Fabricate :demand, risk_review: risk_review, work_item_type: feature_type, commitment_date: 4.days.ago, end_date: Time.zone.now }
+    let!(:fourth_demand) { Fabricate :demand, risk_review: risk_review, work_item_type: chore_type, commitment_date: 6.days.ago, end_date: nil }
 
     let!(:first_demand_block) { Fabricate :demand_block, demand: first_demand, risk_review: risk_review, block_time: Time.zone.parse('2018-03-05 23:00'), unblock_time: nil }
     let!(:second_demand_block) { Fabricate :demand_block, demand: first_demand, risk_review: risk_review, block_time: Time.zone.parse('2018-03-06 10:00'), unblock_time: nil }
@@ -130,14 +135,20 @@ RSpec.describe RiskReview, type: :model do
   describe '#avg_blocked_time_in_weeks' do
     it 'returns the average block time data' do
       travel_to Time.zone.local(2018, 3, 6, 10, 0, 0) do
-        product = Fabricate :product
+        company = Fabricate :company
+
+        feature_type = Fabricate :work_item_type, company: company, name: 'Feature'
+        bug_type = Fabricate :work_item_type, company: company, name: 'Bug', quality_indicator_type: true
+        chore_type = Fabricate :work_item_type, company: company, name: 'Chore'
+
+        product = Fabricate :product, company: company
         risk_review = Fabricate :risk_review, product: product, meeting_date: Time.zone.yesterday, lead_time_outlier_limit: 5, weekly_avg_blocked_time: [2, 3], monthly_avg_blocked_time: [2]
         other_risk_review = Fabricate :risk_review, product: product, meeting_date: Time.zone.today, lead_time_outlier_limit: 2
 
-        first_demand = Fabricate :demand, risk_review: risk_review, demand_type: :bug, commitment_date: 10.days.ago, end_date: Time.zone.now
-        second_demand = Fabricate :demand, risk_review: risk_review, demand_type: :bug, commitment_date: 6.days.ago, end_date: Time.zone.now
-        Fabricate :demand, risk_review: risk_review, demand_type: :feature, commitment_date: 4.days.ago, end_date: Time.zone.now
-        Fabricate :demand, risk_review: risk_review, demand_type: :chore, commitment_date: 6.days.ago, end_date: nil
+        first_demand = Fabricate :demand, company: company, risk_review: risk_review, work_item_type: bug_type, commitment_date: 10.days.ago, end_date: Time.zone.now
+        second_demand = Fabricate :demand, company: company, risk_review: risk_review, work_item_type: bug_type, commitment_date: 6.days.ago, end_date: Time.zone.now
+        Fabricate :demand, company: company, risk_review: risk_review, work_item_type: feature_type, commitment_date: 4.days.ago, end_date: Time.zone.now
+        Fabricate :demand, company: company, risk_review: risk_review, work_item_type: chore_type, commitment_date: 6.days.ago, end_date: nil
 
         Fabricate :demand_block, demand: first_demand, risk_review: risk_review, block_time: Time.zone.parse('2018-03-05 23:00'), unblock_time: nil
         Fabricate :demand_block, demand: first_demand, risk_review: risk_review, block_time: Time.zone.parse('2018-03-06 10:00'), unblock_time: nil

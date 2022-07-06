@@ -90,11 +90,11 @@ RSpec.describe TeamsController, type: :controller do
               third_project = Fabricate :project, products: [product], customers: [customer], team: team, status: :waiting, start_date: 1.month.ago, end_date: 2.months.from_now
               fourth_project = Fabricate :project, products: [product], customers: [customer], team: team, status: :cancelled, start_date: 35.days.from_now, end_date: 37.days.from_now
 
-              Fabricate :demand, product: product, team: team, project: first_project, demand_type: :feature, class_of_service: :standard, external_id: 'first_demand', created_date: 4.days.ago, commitment_date: 3.days.ago, end_date: 2.days.ago
-              Fabricate :demand, product: product, team: team, project: second_project, demand_type: :bug, class_of_service: :standard, external_id: 'second_demand', created_date: 1.day.ago, commitment_date: 1.day.ago, end_date: 1.day.ago
+              Fabricate :demand, product: product, team: team, project: first_project, work_item_type: feature_type, class_of_service: :standard, external_id: 'first_demand', created_date: 4.days.ago, commitment_date: 3.days.ago, end_date: 2.days.ago
+              Fabricate :demand, product: product, team: team, project: second_project, work_item_type: bug_type, class_of_service: :standard, external_id: 'second_demand', created_date: 1.day.ago, commitment_date: 1.day.ago, end_date: 1.day.ago
               Fabricate :demand, product: product, team: team, project: third_project, demand_type: :performance_improvement, class_of_service: :expedite, external_id: 'third_demand', created_date: 7.days.ago, commitment_date: 7.days.ago, end_date: Time.zone.now
               Fabricate :demand, product: product, team: team, project: first_project, demand_type: :ui, class_of_service: :fixed_date, external_id: 'fourth_demand', created_date: 7.days.ago, commitment_date: 7.days.ago, end_date: nil
-              Fabricate :demand, product: product, team: team, project: fourth_project, demand_type: :chore, class_of_service: :intangible, external_id: 'fifth_demand', end_date: 3.hours.ago
+              Fabricate :demand, product: product, team: team, project: fourth_project, work_item_type: chore_type, class_of_service: :intangible, external_id: 'fifth_demand', end_date: 3.hours.ago
 
               get :show, params: { company_id: company, id: team }
 
@@ -199,11 +199,11 @@ RSpec.describe TeamsController, type: :controller do
               third_project = Fabricate :project, products: [product], customers: [customer], team: team, status: :waiting, start_date: 1.month.ago, end_date: 2.months.from_now
               fourth_project = Fabricate :project, products: [product], customers: [customer], team: team, status: :cancelled, start_date: 35.days.from_now, end_date: 37.days.from_now
 
-              Fabricate :demand, product: product, team: team, project: first_project, demand_type: :feature, class_of_service: :standard, external_id: 'first_demand', created_date: 4.days.ago, commitment_date: 3.days.ago, end_date: 2.days.ago
-              Fabricate :demand, product: product, team: team, project: second_project, demand_type: :bug, class_of_service: :standard, external_id: 'second_demand', created_date: 1.day.ago, commitment_date: 1.day.ago, end_date: 1.day.ago
+              Fabricate :demand, product: product, team: team, project: first_project, work_item_type: feature_type, class_of_service: :standard, external_id: 'first_demand', created_date: 4.days.ago, commitment_date: 3.days.ago, end_date: 2.days.ago
+              Fabricate :demand, product: product, team: team, project: second_project, work_item_type: bug_type, class_of_service: :standard, external_id: 'second_demand', created_date: 1.day.ago, commitment_date: 1.day.ago, end_date: 1.day.ago
               Fabricate :demand, product: product, team: team, project: third_project, demand_type: :performance_improvement, class_of_service: :expedite, external_id: 'third_demand', created_date: 7.days.ago, commitment_date: 7.days.ago, end_date: Time.zone.now
               Fabricate :demand, product: product, team: team, project: first_project, demand_type: :ui, class_of_service: :fixed_date, external_id: 'fourth_demand', created_date: 7.days.ago, commitment_date: 7.days.ago, end_date: nil
-              Fabricate :demand, product: product, team: team, project: fourth_project, demand_type: :chore, class_of_service: :intangible, external_id: 'fifth_demand', end_date: 3.hours.ago
+              Fabricate :demand, product: product, team: team, project: fourth_project, work_item_type: chore_type, class_of_service: :intangible, external_id: 'fifth_demand', end_date: 3.hours.ago
 
               Fabricate :project_consolidation, consolidation_date: 2.weeks.ago, project: first_project, operational_risk: 0.875, team_based_operational_risk: 0.2, last_data_in_week: true
               Fabricate :project_consolidation, consolidation_date: 1.week.ago, project: first_project, operational_risk: 0.875, team_based_operational_risk: 0.1, last_data_in_week: true
@@ -423,11 +423,11 @@ RSpec.describe TeamsController, type: :controller do
               third_project = Fabricate :project, products: [product], customers: [customer], team: team, status: :waiting, start_date: 1.month.ago, end_date: 2.months.from_now
               fourth_project = Fabricate :project, products: [product], customers: [customer], team: team, status: :cancelled, start_date: 35.days.from_now, end_date: 37.days.from_now
 
-              first_demand = Fabricate :demand, product: product, team: team, project: first_project, demand_type: :feature, class_of_service: :standard, external_id: 'first_demand', created_date: 4.days.ago, commitment_date: 3.days.ago, end_date: 2.days.ago
-              second_demand = Fabricate :demand, product: product, team: team, project: second_project, demand_type: :bug, class_of_service: :standard, external_id: 'second_demand', created_date: 1.day.ago, commitment_date: 1.day.ago, end_date: 1.day.ago
+              first_demand = Fabricate :demand, product: product, team: team, project: first_project, work_item_type: feature_type, class_of_service: :standard, external_id: 'first_demand', created_date: 4.days.ago, commitment_date: 3.days.ago, end_date: 2.days.ago
+              second_demand = Fabricate :demand, product: product, team: team, project: second_project, work_item_type: bug_type, class_of_service: :standard, external_id: 'second_demand', created_date: 1.day.ago, commitment_date: 1.day.ago, end_date: 1.day.ago
               third_demand = Fabricate :demand, product: product, team: team, project: third_project, demand_type: :performance_improvement, class_of_service: :expedite, external_id: 'third_demand', created_date: 7.days.ago, commitment_date: 7.days.ago, end_date: Time.zone.now
               Fabricate :demand, product: product, team: team, project: first_project, demand_type: :ui, class_of_service: :fixed_date, external_id: 'fourth_demand', created_date: 7.days.ago, commitment_date: 7.days.ago, end_date: nil
-              Fabricate :demand, product: product, team: team, project: fourth_project, demand_type: :chore, class_of_service: :intangible, external_id: 'fifth_demand', end_date: 3.hours.ago
+              Fabricate :demand, product: product, team: team, project: fourth_project, work_item_type: chore_type, class_of_service: :intangible, external_id: 'fifth_demand', end_date: 3.hours.ago
 
               Fabricate :item_assignment, demand: first_demand, membership: first_membership
               Fabricate :item_assignment, demand: first_demand, membership: second_membership

@@ -46,10 +46,14 @@ RSpec.describe ServiceDeliveryReview, type: :model do
     let(:portfolio_unit) { Fabricate :portfolio_unit, product: product }
     let(:other_portfolio_unit) { Fabricate :portfolio_unit, product: product }
 
-    let!(:first_demand) { Fabricate :demand, project: project, external_id: 'first_demand', portfolio_unit: portfolio_unit, service_delivery_review: service_delivery_review, demand_type: :bug, class_of_service: :expedite }
-    let!(:second_demand) { Fabricate :demand, project: project, external_id: 'second_demand', portfolio_unit: other_portfolio_unit, service_delivery_review: service_delivery_review, demand_type: :bug, class_of_service: :standard }
-    let!(:third_demand) { Fabricate :demand, project: project, external_id: 'third_demand', portfolio_unit: portfolio_unit, service_delivery_review: service_delivery_review, demand_type: :feature, class_of_service: :expedite }
-    let!(:fourth_demand) { Fabricate :demand, project: project, external_id: 'fourth_demand', portfolio_unit: nil, service_delivery_review: service_delivery_review, demand_type: :chore, class_of_service: :expedite }
+    let(:feature_type) { Fabricate :work_item_type, company: company, name: 'Feature' }
+    let(:bug_type) { Fabricate :work_item_type, company: company, name: 'Bug', quality_indicator_type: true }
+    let(:chore_type) { Fabricate :work_item_type, company: company, name: 'Chore' }
+
+    let!(:first_demand) { Fabricate :demand, project: project, external_id: 'first_demand', portfolio_unit: portfolio_unit, service_delivery_review: service_delivery_review, work_item_type: bug_type, class_of_service: :expedite }
+    let!(:second_demand) { Fabricate :demand, project: project, external_id: 'second_demand', portfolio_unit: other_portfolio_unit, service_delivery_review: service_delivery_review, work_item_type: bug_type, class_of_service: :standard }
+    let!(:third_demand) { Fabricate :demand, project: project, external_id: 'third_demand', portfolio_unit: portfolio_unit, service_delivery_review: service_delivery_review, work_item_type: feature_type, class_of_service: :expedite }
+    let!(:fourth_demand) { Fabricate :demand, project: project, external_id: 'fourth_demand', portfolio_unit: nil, service_delivery_review: service_delivery_review, work_item_type: chore_type, class_of_service: :expedite }
 
     let!(:first_transition) { Fabricate :demand_transition, stage: other_stage, demand: first_demand, last_time_in: 18.days.ago, last_time_out: 10.days.ago }
     let!(:second_transition) { Fabricate :demand_transition, stage: other_stage, demand: second_demand, last_time_in: 7.days.ago, last_time_out: 6.days.ago }

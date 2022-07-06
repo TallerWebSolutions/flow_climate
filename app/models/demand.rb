@@ -129,6 +129,8 @@ class Demand < ApplicationRecord
   scope :for_team_member, ->(member) { joins(item_assignments: { membership: :team_member }).where(item_assignments: { memberships: { team_members: member } }).uniq }
 
   scope :bug, -> { joins(:work_item_type).where(work_item_type: { quality_indicator_type: true }) }
+  scope :chore, -> { joins(:work_item_type).where(work_item_type: { name: 'Chore' }) }
+  scope :feature, -> { joins(:work_item_type).where(work_item_type: { name: 'Feature' }) }
 
   delegate :name, to: :project, prefix: true, allow_nil: true
   delegate :name, to: :product, prefix: true, allow_nil: true

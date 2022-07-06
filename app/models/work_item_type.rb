@@ -24,5 +24,4 @@
 #
 class WorkItemType < ApplicationRecord
   belongs_to :company
-
 end

@@ -319,7 +319,7 @@ RSpec.describe Types::QueryType do
           Fabricate :task, created_date: 1.week.ago, end_date: nil
 
           first_finished_demand = Fabricate :demand, project: project, tasks: [first_task, second_task, third_task], effort_downstream: 200, effort_upstream: 10, end_date: Time.zone.parse('2022-04-15 12:30')
-          second_finished_demand = Fabricate :demand, project: project, tasks: [fourth_task, fifth_task, sixth_task], demand_type: :bug, created_date: Time.zone.parse('2022-04-23 13:30'), commitment_date: Time.zone.parse('2022-04-24 10:30'), end_date: Time.zone.parse('2022-04-25 17:30')
+          second_finished_demand = Fabricate :demand, project: project, tasks: [fourth_task, fifth_task, sixth_task], work_item_type: bug_type, created_date: Time.zone.parse('2022-04-23 13:30'), commitment_date: Time.zone.parse('2022-04-24 10:30'), end_date: Time.zone.parse('2022-04-25 17:30')
           project_consolidation = Fabricate :project_consolidation, project: project, monte_carlo_weeks_min: 9, monte_carlo_weeks_max: 85, monte_carlo_weeks_std_dev: 7, team_based_operational_risk: 0.5, consolidation_date: Time.zone.today, project_throughput_hours_additional: 17, project_throughput_hours_additional_in_month: 60
           demand = Fabricate :demand, company: company, project: project, team: team
           Fabricate :demand_block, demand: demand
@@ -1035,10 +1035,10 @@ RSpec.describe Types::QueryType do
         team = Fabricate :team, company: company
         team_member = Fabricate :team_member, company: company
         membership = Fabricate :membership, team_member: team_member, team: team
-        demand_finished = Fabricate :demand, team: team, project: project, created_date: 2.days.ago, commitment_date: 10.hours.ago, end_date: 1.hour.ago, demand_type: :feature
-        other_demand_finished = Fabricate :demand, team: team, project: other_project, created_date: 3.days.ago, commitment_date: 6.hours.ago, end_date: 2.hours.ago, demand_type: :bug
-        bug = Fabricate :demand, team: team, project: project, created_date: 2.days.ago, end_date: nil, demand_type: :bug
-        other_bug = Fabricate :demand, team: team, project: project, created_date: 1.day.ago, end_date: nil, demand_type: :bug
+        demand_finished = Fabricate :demand, team: team, project: project, created_date: 2.days.ago, commitment_date: 10.hours.ago, end_date: 1.hour.ago, work_item_type: feature_type
+        other_demand_finished = Fabricate :demand, team: team, project: other_project, created_date: 3.days.ago, commitment_date: 6.hours.ago, end_date: 2.hours.ago, work_item_type: bug_type
+        bug = Fabricate :demand, team: team, project: project, created_date: 2.days.ago, end_date: nil, work_item_type: bug_type
+        other_bug = Fabricate :demand, team: team, project: project, created_date: 1.day.ago, end_date: nil, work_item_type: bug_type
 
         first_assignmen = Fabricate :item_assignment, membership: membership, demand: demand_finished
         Fabricate :item_assignment, membership: membership, demand: other_demand_finished

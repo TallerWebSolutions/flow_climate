@@ -45,7 +45,7 @@ module DemandsAggregator
   # This method returns the percentage of demands, within the same type, with lead time above the demand informed as argument
   # It will return based on the informed demand type
   def lead_time_position_percentage_same_type(demand)
-    demands_without_tested_demand = demands.where(demand_type: demand.demand_type).kept.where.not(id: demand.id)
+    demands_without_tested_demand = demands.where(work_item_type: demand.work_item_type).kept.where.not(id: demand.id)
     return 0 if demands_without_tested_demand.blank?
 
     compute_demand_lead_time_position(demands_without_tested_demand, demand)

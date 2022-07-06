@@ -91,14 +91,14 @@ RSpec.describe Api::V1::TeamsController, type: :controller do
     context 'authenticated' do
       context 'with valid parameters' do
         context 'with data' do
-          let!(:first_demand) { Fabricate :demand, team: team, project: project, demand_type: :bug, end_date: 1.week.ago, effort_downstream: 100, effort_upstream: 10 }
-          let!(:second_demand) { Fabricate :demand, team: team, project: project, demand_type: :bug, end_date: 3.weeks.ago }
-          let!(:third_demand) { Fabricate :demand, team: team, project: project, demand_type: :bug, end_date: 2.days.ago }
-          let!(:fourth_demand) { Fabricate :demand, team: team, project: project, demand_type: :feature, end_date: 3.weeks.ago }
-          let!(:fifth_demand) { Fabricate :demand, team: team, project: project, demand_type: :chore, end_date: Time.zone.now }
-          let!(:sixth_demand) { Fabricate :demand, team: team, project: project, demand_type: :feature, end_date: 2.weeks.ago }
-          let!(:seventh_demand) { Fabricate :demand, team: team, project: project, demand_type: :feature, end_date: Time.zone.now }
-          let!(:eighth_demand) { Fabricate :demand, team: team, project: project, demand_type: :chore, commitment_date: Time.zone.now, end_date: nil, effort_downstream: 200, effort_upstream: 300 }
+          let!(:first_demand) { Fabricate :demand, team: team, project: project, work_item_type: bug_type, end_date: 1.week.ago, effort_downstream: 100, effort_upstream: 10 }
+          let!(:second_demand) { Fabricate :demand, team: team, project: project, work_item_type: bug_type, end_date: 3.weeks.ago }
+          let!(:third_demand) { Fabricate :demand, team: team, project: project, work_item_type: bug_type, end_date: 2.days.ago }
+          let!(:fourth_demand) { Fabricate :demand, team: team, project: project, work_item_type: feature_type, end_date: 3.weeks.ago }
+          let!(:fifth_demand) { Fabricate :demand, team: team, project: project, work_item_type: chore_type, end_date: Time.zone.now }
+          let!(:sixth_demand) { Fabricate :demand, team: team, project: project, work_item_type: feature_type, end_date: 2.weeks.ago }
+          let!(:seventh_demand) { Fabricate :demand, team: team, project: project, work_item_type: feature_type, end_date: Time.zone.now }
+          let!(:eighth_demand) { Fabricate :demand, team: team, project: project, work_item_type: chore_type, commitment_date: Time.zone.now, end_date: nil, effort_downstream: 200, effort_upstream: 300 }
           let!(:team_member) { Fabricate :team_member, monthly_payment: 1200, end_date: nil }
 
           it 'calls the service to build the response' do

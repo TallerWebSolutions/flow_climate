@@ -62,14 +62,20 @@ RSpec.describe Consolidations::ProjectConsolidation, type: :model do
   end
 
   RSpec.shared_context 'demands with lead time', shared_context: :metadata do
-    let(:project) { Fabricate :project, end_date: 4.weeks.from_now }
+    let(:company) { Fabricate :company }
 
-    let!(:first_demand) { Fabricate :demand, project: project, commitment_date: 3.days.ago, end_date: 2.hours.ago, demand_type: :feature, class_of_service: :standard }
-    let!(:second_demand) { Fabricate :demand, project: project, commitment_date: 4.days.ago, end_date: Time.zone.now, demand_type: :feature, class_of_service: :fixed_date }
-    let!(:third_demand) { Fabricate :demand, project: project, commitment_date: 4.hours.ago, end_date: Time.zone.now, demand_type: :bug, class_of_service: :standard }
-    let!(:fourth_demand) { Fabricate :demand, project: project, commitment_date: 4.hours.ago, end_date: Time.zone.now, demand_type: :chore, class_of_service: :expedite }
-    let!(:fifth_demand) { Fabricate :demand, project: project, commitment_date: 4.hours.ago, end_date: Time.zone.now, demand_type: :chore, class_of_service: :standard }
-    let!(:sixth_demand) { Fabricate :demand, project: project, commitment_date: 4.hours.ago, end_date: Time.zone.now, demand_type: :bug, class_of_service: :expedite }
+    let(:feature_type) { Fabricate :work_item_type, company: company, name: 'Feature' }
+    let(:bug_type) { Fabricate :work_item_type, company: company, name: 'Bug', quality_indicator_type: true }
+    let(:chore_type) { Fabricate :work_item_type, company: company, name: 'Chore' }
+
+    let(:project) { Fabricate :project, company: company, end_date: 4.weeks.from_now }
+
+    let!(:first_demand) { Fabricate :demand, project: project, commitment_date: 3.days.ago, end_date: 2.hours.ago, work_item_type: feature_type, class_of_service: :standard }
+    let!(:second_demand) { Fabricate :demand, project: project, commitment_date: 4.days.ago, end_date: Time.zone.now, work_item_type: feature_type, class_of_service: :fixed_date }
+    let!(:third_demand) { Fabricate :demand, project: project, commitment_date: 4.hours.ago, end_date: Time.zone.now, work_item_type: bug_type, class_of_service: :standard }
+    let!(:fourth_demand) { Fabricate :demand, project: project, commitment_date: 4.hours.ago, end_date: Time.zone.now, work_item_type: chore_type, class_of_service: :expedite }
+    let!(:fifth_demand) { Fabricate :demand, project: project, commitment_date: 4.hours.ago, end_date: Time.zone.now, work_item_type: chore_type, class_of_service: :standard }
+    let!(:sixth_demand) { Fabricate :demand, project: project, commitment_date: 4.hours.ago, end_date: Time.zone.now, work_item_type: bug_type, class_of_service: :expedite }
   end
 
   describe '#lead_time_feature' do

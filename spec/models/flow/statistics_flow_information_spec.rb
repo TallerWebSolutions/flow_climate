@@ -5,6 +5,11 @@ RSpec.describe Flow::StatisticsFlowInformation, type: :model do
 
   shared_context 'demand data' do
     let(:company) { Fabricate :company }
+
+    let(:feature_type) { Fabricate :work_item_type, company: company, name: 'Feature' }
+    let(:bug_type) { Fabricate :work_item_type, company: company, name: 'Bug', quality_indicator_type: true }
+    let(:chore_type) { Fabricate :work_item_type, company: company, name: 'Chore' }
+
     let(:customer) { Fabricate :customer, company: company }
     let(:product) { Fabricate :product, company: company, customer: customer }
 
@@ -35,10 +40,10 @@ RSpec.describe Flow::StatisticsFlowInformation, type: :model do
     let!(:sixth_demand) { Fabricate :demand, product: product, project: first_project, external_id: 'sixth_demand', created_date: Time.zone.local(2018, 1, 15, 23, 1, 46), commitment_date: Time.zone.local(2018, 4, 29, 23, 1, 46), effort_upstream: 56, effort_downstream: 25 }
     let!(:seventh_demand) { Fabricate :demand, product: product, project: first_project, external_id: 'seventh_demand', created_date: Project.all.map(&:end_date).max + 3.months, commitment_date: Project.all.map(&:end_date).max + 4.months, effort_upstream: 56, effort_downstream: 25 }
 
-    let!(:first_bug) { Fabricate :demand, product: product, project: first_project, external_id: 'first_bug', demand_type: :bug, created_date: Time.zone.local(2018, 1, 15, 23, 1, 46), commitment_date: Time.zone.local(2018, 4, 30, 10, 1, 46), end_date: Time.zone.local(2018, 4, 30, 23, 1, 46), effort_upstream: 56, effort_downstream: 25 }
-    let!(:second_bug) { Fabricate :demand, product: product, project: first_project, external_id: 'second_bug', demand_type: :bug, created_date: Time.zone.local(2018, 1, 15, 23, 1, 46), commitment_date: Time.zone.local(2018, 4, 25, 23, 1, 46), end_date: Time.zone.local(2018, 4, 30, 23, 1, 44), effort_upstream: 56, effort_downstream: 25 }
-    let!(:third_bug) { Fabricate :demand, product: product, project: first_project, external_id: 'third_bug', demand_type: :bug, created_date: Time.zone.local(2018, 1, 15, 23, 1, 46), commitment_date: Time.zone.local(2018, 4, 29, 23, 1, 46), end_date: Time.zone.local(2018, 4, 30, 23, 1, 45), effort_upstream: 56, effort_downstream: 25 }
-    let!(:fourth_bug) { Fabricate :demand, product: product, project: first_project, external_id: 'fourth_bug', demand_type: :bug, created_date: Time.zone.local(2018, 1, 15, 23, 1, 46), commitment_date: Time.zone.local(2018, 4, 29, 23, 1, 46), end_date: Time.zone.local(2018, 4, 30, 23, 1, 48), effort_upstream: 56, effort_downstream: 25 }
+    let!(:first_bug) { Fabricate :demand, product: product, project: first_project, external_id: 'first_bug', work_item_type: bug_type, created_date: Time.zone.local(2018, 1, 15, 23, 1, 46), commitment_date: Time.zone.local(2018, 4, 30, 10, 1, 46), end_date: Time.zone.local(2018, 4, 30, 23, 1, 46), effort_upstream: 56, effort_downstream: 25 }
+    let!(:second_bug) { Fabricate :demand, product: product, project: first_project, external_id: 'second_bug', work_item_type: bug_type, created_date: Time.zone.local(2018, 1, 15, 23, 1, 46), commitment_date: Time.zone.local(2018, 4, 25, 23, 1, 46), end_date: Time.zone.local(2018, 4, 30, 23, 1, 44), effort_upstream: 56, effort_downstream: 25 }
+    let!(:third_bug) { Fabricate :demand, product: product, project: first_project, external_id: 'third_bug', work_item_type: bug_type, created_date: Time.zone.local(2018, 1, 15, 23, 1, 46), commitment_date: Time.zone.local(2018, 4, 29, 23, 1, 46), end_date: Time.zone.local(2018, 4, 30, 23, 1, 45), effort_upstream: 56, effort_downstream: 25 }
+    let!(:fourth_bug) { Fabricate :demand, product: product, project: first_project, external_id: 'fourth_bug', work_item_type: bug_type, created_date: Time.zone.local(2018, 1, 15, 23, 1, 46), commitment_date: Time.zone.local(2018, 4, 29, 23, 1, 46), end_date: Time.zone.local(2018, 4, 30, 23, 1, 48), effort_upstream: 56, effort_downstream: 25 }
 
     let!(:first_item_assignment) { Fabricate :item_assignment, demand: first_demand, start_time: Time.zone.local(2018, 1, 8, 17, 9, 58), finish_time: nil }
     let!(:second_item_assignment) { Fabricate :item_assignment, demand: second_demand, start_time: Time.zone.local(2018, 1, 8, 17, 9, 58), finish_time: nil }

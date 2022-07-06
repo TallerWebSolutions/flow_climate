@@ -111,6 +111,8 @@ RSpec.describe Company, type: :model do
 
   RSpec.shared_context 'demands with effort for company', shared_context: :metadata do
     let(:company) { Fabricate :company }
+    let(:bug_type) { Fabricate :work_item_type, company: company, name: 'Bug', quality_indicator_type: true }
+
     let!(:customer) { Fabricate :customer, company: company }
     let!(:product) { Fabricate :product, company: company, customer: customer }
     let!(:team) { Fabricate :team, company: company }
@@ -134,7 +136,7 @@ RSpec.describe Company, type: :model do
     let!(:second_stage_project_config) { Fabricate :stage_project_config, project: active_project, stage: second_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10 }
     let!(:third_stage_project_config) { Fabricate :stage_project_config, project: active_project, stage: third_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10 }
 
-    let!(:first_demand) { Fabricate :demand, company: company, project: active_project, team: team, created_date: 2.weeks.ago, end_date: 1.week.ago, demand_type: :bug }
+    let!(:first_demand) { Fabricate :demand, company: company, project: active_project, team: team, created_date: 2.weeks.ago, end_date: 1.week.ago, work_item_type: bug_type }
     let!(:second_demand) { Fabricate :demand, company: company, project: active_project, team: team, created_date: 2.weeks.ago, end_date: 1.week.ago }
     let!(:third_demand) { Fabricate :demand, company: company, project: active_project, team: team, created_date: 1.week.ago, end_date: 2.days.ago }
 
@@ -265,7 +267,7 @@ RSpec.describe Company, type: :model do
           Fabricate :stage_project_config, project: active_project, stage: second_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10
           Fabricate :stage_project_config, project: active_project, stage: third_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10
 
-          first_demand = Fabricate :demand, project: active_project, team: team, created_date: 2.weeks.ago, end_date: 1.week.ago, demand_type: :bug
+          first_demand = Fabricate :demand, project: active_project, team: team, created_date: 2.weeks.ago, end_date: 1.week.ago
           second_demand = Fabricate :demand, project: active_project, team: team, created_date: 2.weeks.ago, end_date: 1.week.ago
           third_demand = Fabricate :demand, project: active_project, team: team, created_date: 1.week.ago, end_date: 2.days.ago
 
@@ -305,6 +307,8 @@ RSpec.describe Company, type: :model do
     context 'with finances' do
       it 'returns the correct value' do
         travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) do
+          bug_type = Fabricate :work_item_type, company: company, name: 'Bug', quality_indicator_type: true
+
           membership = Fabricate :membership, team: team, team_member: team_member, hours_per_month: 100, start_date: 1.month.ago, end_date: nil
 
           active_project = Fabricate :project, company: company, team: team, start_date: 4.weeks.ago, end_date: 4.days.from_now, customers: [customer], products: [product], status: :executing, qty_hours: 200
@@ -323,7 +327,7 @@ RSpec.describe Company, type: :model do
           Fabricate :stage_project_config, project: active_project, stage: second_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10
           Fabricate :stage_project_config, project: active_project, stage: third_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10
 
-          first_demand = Fabricate :demand, project: active_project, team: team, created_date: 2.weeks.ago, end_date: 1.week.ago, demand_type: :bug
+          first_demand = Fabricate :demand, project: active_project, team: team, created_date: 2.weeks.ago, end_date: 1.week.ago, work_item_type: bug_type
           second_demand = Fabricate :demand, project: active_project, team: team, created_date: 2.weeks.ago, end_date: 1.week.ago
           third_demand = Fabricate :demand, project: active_project, team: team, created_date: 1.week.ago, end_date: 2.days.ago
 
@@ -366,6 +370,8 @@ RSpec.describe Company, type: :model do
 
     it 'returns the correct value' do
       travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) do
+        bug_type = Fabricate :work_item_type, company: company, name: 'Bug', quality_indicator_type: true
+
         membership = Fabricate :membership, team: team, team_member: team_member, hours_per_month: 100, start_date: 1.month.ago, end_date: nil
 
         active_project = Fabricate :project, company: company, team: team, start_date: 4.weeks.ago, end_date: 4.days.from_now, customers: [customer], products: [product], status: :executing, qty_hours: 200
@@ -384,7 +390,7 @@ RSpec.describe Company, type: :model do
         Fabricate :stage_project_config, project: active_project, stage: second_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10
         Fabricate :stage_project_config, project: active_project, stage: third_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10
 
-        first_demand = Fabricate :demand, project: active_project, team: team, created_date: 2.weeks.ago, end_date: 1.week.ago, demand_type: :bug
+        first_demand = Fabricate :demand, project: active_project, team: team, created_date: 2.weeks.ago, end_date: 1.week.ago, work_item_type: bug_type
         second_demand = Fabricate :demand, project: active_project, team: team, created_date: 2.weeks.ago, end_date: 1.week.ago
         third_demand = Fabricate :demand, project: active_project, team: team, created_date: 1.week.ago, end_date: 2.days.ago
 
@@ -414,6 +420,8 @@ RSpec.describe Company, type: :model do
 
     it 'returns the throughput in the month' do
       travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) do
+        bug_type = Fabricate :work_item_type, company: company, name: 'Bug', quality_indicator_type: true
+
         membership = Fabricate :membership, team: team, team_member: team_member, hours_per_month: 100, start_date: 1.month.ago, end_date: nil
 
         active_project = Fabricate :project, company: company, team: team, start_date: 4.weeks.ago, end_date: 4.days.from_now, customers: [customer], products: [product], status: :executing, qty_hours: 200
@@ -432,7 +440,7 @@ RSpec.describe Company, type: :model do
         Fabricate :stage_project_config, project: active_project, stage: second_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10
         Fabricate :stage_project_config, project: active_project, stage: third_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10
 
-        first_demand = Fabricate :demand, project: active_project, team: team, created_date: 2.weeks.ago, end_date: 1.week.ago, demand_type: :bug
+        first_demand = Fabricate :demand, project: active_project, team: team, created_date: 2.weeks.ago, end_date: 1.week.ago, work_item_type: bug_type
         second_demand = Fabricate :demand, project: active_project, team: team, created_date: 2.weeks.ago, end_date: 1.week.ago
         third_demand = Fabricate :demand, project: active_project, team: team, created_date: 1.week.ago, end_date: 2.days.ago
 
@@ -476,19 +484,22 @@ RSpec.describe Company, type: :model do
 
     it 'returns the top three flow pressure' do
       travel_to Time.zone.local(2020, 12, 8, 10, 0, 0) do
+        feature_type = Fabricate :work_item_type, company: company, name: 'Feature'
+        bug_type = Fabricate :work_item_type, company: company, name: 'Bug', quality_indicator_type: true
+
         first_project = Fabricate :project, company: company, customers: [customer], name: 'first_project', status: :executing, initial_scope: 10, start_date: 2.weeks.ago.to_date, end_date: 4.days.from_now
         second_project = Fabricate :project, company: company, customers: [other_customer], name: 'second_project', status: :executing, initial_scope: 40, start_date: 2.weeks.ago.to_date, end_date: 5.days.from_now
         third_project = Fabricate :project, company: company, customers: [other_customer], name: 'third_project', status: :executing, initial_scope: 30, start_date: 2.weeks.ago.to_date, end_date: 6.days.from_now
         Fabricate :project, company: company, customers: [customer], status: :waiting, initial_scope: 5, start_date: 2.weeks.ago.to_date, end_date: 3.days.from_now
 
-        Fabricate :demand, project: first_project, created_date: 2.weeks.ago, end_date: 9.days.ago, demand_type: :bug
-        Fabricate :demand, project: second_project, created_date: 2.weeks.ago, end_date: 1.week.ago, demand_type: :feature
-        Fabricate :demand, project: third_project, created_date: 1.week.ago, end_date: 2.days.ago, demand_type: :feature
-        Fabricate :demand, project: second_project, created_date: 2.weeks.ago, end_date: 1.week.ago, demand_type: :feature
-        Fabricate :demand, project: second_project, created_date: 1.week.ago, end_date: 2.days.ago, demand_type: :feature
-        Fabricate :demand, project: third_project, created_date: 1.week.ago, end_date: 2.days.ago, demand_type: :feature
-        Fabricate :demand, project: third_project, created_date: 1.week.ago, end_date: 1.day.ago, demand_type: :feature
-        Fabricate :demand, project: third_project, created_date: 1.week.ago, end_date: 2.days.ago, demand_type: :feature
+        Fabricate :demand, project: first_project, created_date: 2.weeks.ago, end_date: 9.days.ago, work_item_type: bug_type
+        Fabricate :demand, project: second_project, created_date: 2.weeks.ago, end_date: 1.week.ago, work_item_type: feature_type
+        Fabricate :demand, project: third_project, created_date: 1.week.ago, end_date: 2.days.ago, work_item_type: feature_type
+        Fabricate :demand, project: second_project, created_date: 2.weeks.ago, end_date: 1.week.ago, work_item_type: feature_type
+        Fabricate :demand, project: second_project, created_date: 1.week.ago, end_date: 2.days.ago, work_item_type: feature_type
+        Fabricate :demand, project: third_project, created_date: 1.week.ago, end_date: 2.days.ago, work_item_type: feature_type
+        Fabricate :demand, project: third_project, created_date: 1.week.ago, end_date: 1.day.ago, work_item_type: feature_type
+        Fabricate :demand, project: third_project, created_date: 1.week.ago, end_date: 2.days.ago, work_item_type: feature_type
 
         expect(company.top_three_flow_pressure).to eq [second_project, third_project, first_project]
       end
@@ -505,14 +516,14 @@ RSpec.describe Company, type: :model do
         third_project = Fabricate :project, company: company, customers: [other_customer], name: 'third_project', status: :executing, initial_scope: 30, start_date: 2.weeks.ago.to_date, end_date: 6.days.from_now
         Fabricate :project, company: company, customers: [customer], status: :waiting, initial_scope: 5, start_date: 2.weeks.ago.to_date, end_date: 3.days.from_now
 
-        Fabricate :demand, project: first_project, created_date: 2.weeks.ago, end_date: 9.days.ago, demand_type: :bug
-        Fabricate :demand, project: second_project, created_date: 2.weeks.ago, end_date: 1.week.ago, demand_type: :feature
-        Fabricate :demand, project: third_project, created_date: 1.week.ago, end_date: 2.days.ago, demand_type: :feature
-        Fabricate :demand, project: second_project, created_date: 2.weeks.ago, end_date: 1.week.ago, demand_type: :feature
-        Fabricate :demand, project: second_project, created_date: 1.week.ago, end_date: 2.days.ago, demand_type: :feature
-        Fabricate :demand, project: third_project, created_date: 1.week.ago, end_date: 2.days.ago, demand_type: :feature
-        Fabricate :demand, project: third_project, created_date: 1.week.ago, end_date: 1.day.ago, demand_type: :feature
-        Fabricate :demand, project: third_project, created_date: 1.week.ago, end_date: 2.days.ago, demand_type: :feature
+        Fabricate :demand, project: first_project, created_date: 2.weeks.ago, end_date: 9.days.ago
+        Fabricate :demand, project: second_project, created_date: 2.weeks.ago, end_date: 1.week.ago
+        Fabricate :demand, project: third_project, created_date: 1.week.ago, end_date: 2.days.ago
+        Fabricate :demand, project: second_project, created_date: 2.weeks.ago, end_date: 1.week.ago
+        Fabricate :demand, project: second_project, created_date: 1.week.ago, end_date: 2.days.ago
+        Fabricate :demand, project: third_project, created_date: 1.week.ago, end_date: 2.days.ago
+        Fabricate :demand, project: third_project, created_date: 1.week.ago, end_date: 1.day.ago
+        Fabricate :demand, project: third_project, created_date: 1.week.ago, end_date: 2.days.ago
 
         expect(company.top_three_throughput(1.day.ago)).to match_array [third_project, second_project, first_project]
       end
@@ -572,6 +583,9 @@ RSpec.describe Company, type: :model do
 
   describe '#total_active_hours' do
     let(:company) { Fabricate :company }
+
+    let(:bug_type) { Fabricate :work_item_type, company: company, name: 'Bug', quality_indicator_type: true }
+
     let!(:customer) { Fabricate :customer, company: company }
     let!(:product) { Fabricate :product, company: company, customer: customer }
     let!(:team) { Fabricate :team, company: company }
@@ -598,7 +612,7 @@ RSpec.describe Company, type: :model do
           Fabricate :stage_project_config, project: active_project, stage: second_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10
           Fabricate :stage_project_config, project: active_project, stage: third_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10
 
-          first_demand = Fabricate :demand, project: active_project, team: team, created_date: 2.weeks.ago, end_date: 1.week.ago, demand_type: :bug
+          first_demand = Fabricate :demand, project: active_project, team: team, created_date: 2.weeks.ago, end_date: 1.week.ago, work_item_type: bug_type
           second_demand = Fabricate :demand, project: active_project, team: team, created_date: 2.weeks.ago, end_date: 1.week.ago
           third_demand = Fabricate :demand, project: active_project, team: team, created_date: 1.week.ago, end_date: 2.days.ago
 
@@ -636,6 +650,8 @@ RSpec.describe Company, type: :model do
     context 'with data' do
       it 'returns the correct value' do
         travel_to Time.zone.local(2018, 11, 19, 10, 0, 0) do
+          bug_type = Fabricate :work_item_type, company: company, name: 'Bug', quality_indicator_type: true
+
           membership = Fabricate :membership, team: team, team_member: team_member, hours_per_month: 100, start_date: 1.month.ago, end_date: nil
 
           active_project = Fabricate :project, company: company, team: team, start_date: 4.weeks.ago, end_date: 4.days.from_now, customers: [customer], products: [product], status: :executing, qty_hours: 200
@@ -654,7 +670,7 @@ RSpec.describe Company, type: :model do
           Fabricate :stage_project_config, project: active_project, stage: second_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10
           Fabricate :stage_project_config, project: active_project, stage: third_stage, compute_effort: true, pairing_percentage: 80, stage_percentage: 100, management_percentage: 10
 
-          first_demand = Fabricate :demand, project: active_project, team: team, created_date: 2.weeks.ago, end_date: 1.week.ago, demand_type: :bug
+          first_demand = Fabricate :demand, project: active_project, team: team, created_date: 2.weeks.ago, end_date: 1.week.ago, work_item_type: bug_type
           second_demand = Fabricate :demand, project: active_project, team: team, created_date: 2.weeks.ago, end_date: 1.week.ago
           third_demand = Fabricate :demand, project: active_project, team: team, created_date: 1.week.ago, end_date: 2.days.ago
 

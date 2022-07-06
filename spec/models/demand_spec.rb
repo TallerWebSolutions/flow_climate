@@ -290,6 +290,32 @@ RSpec.describe Demand, type: :model do
       end
     end
 
+    describe '.chore' do
+      it 'returns the unique demands with the type for quality indicator' do
+        work_item_type = Fabricate :work_item_type, company: company, name: 'Chore', quality_indicator_type: true
+        other_work_item_type = Fabricate :work_item_type, company: company, name: 'Feature', quality_indicator_type: false
+
+        demand = Fabricate :demand, work_item_type: work_item_type, created_date: 20.minutes.ago, commitment_date: 15.minutes.ago, end_date: 4.minutes.ago
+        other_demand = Fabricate :demand, work_item_type: work_item_type, created_date: 20.minutes.ago, commitment_date: 15.minutes.ago, end_date: 6.minutes.ago
+        Fabricate :demand, work_item_type: other_work_item_type, created_date: 20.minutes.ago, commitment_date: 15.minutes.ago, end_date: 6.minutes.ago
+
+        expect(described_class.chore).to match_array [demand, other_demand]
+      end
+    end
+
+    describe '.feature' do
+      it 'returns the unique demands with the type for quality indicator' do
+        work_item_type = Fabricate :work_item_type, company: company, name: 'Feature', quality_indicator_type: true
+        other_work_item_type = Fabricate :work_item_type, company: company, name: 'Chore', quality_indicator_type: false
+
+        demand = Fabricate :demand, work_item_type: work_item_type, created_date: 20.minutes.ago, commitment_date: 15.minutes.ago, end_date: 4.minutes.ago
+        other_demand = Fabricate :demand, work_item_type: work_item_type, created_date: 20.minutes.ago, commitment_date: 15.minutes.ago, end_date: 6.minutes.ago
+        Fabricate :demand, work_item_type: other_work_item_type, created_date: 20.minutes.ago, commitment_date: 15.minutes.ago, end_date: 6.minutes.ago
+
+        expect(described_class.feature).to match_array [demand, other_demand]
+      end
+    end
+
     pending '.unscored_demands'
     pending '.dates_inconsistent_to_project'
   end
