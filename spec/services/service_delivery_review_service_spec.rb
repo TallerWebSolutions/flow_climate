@@ -4,8 +4,13 @@ RSpec.describe ServiceDeliveryReviewService, type: :service do
   before { travel_to Time.zone.local(2018, 3, 27, 10, 0, 0) }
 
   describe '#associate_demands_data' do
-    let(:product) { Fabricate :product }
+    let(:company) { Fabricate :company }
+    let(:product) { Fabricate :product, company: company }
     let!(:project) { Fabricate :project, products: [product] }
+
+    let(:feature_type) { Fabricate :work_item_type, company: company, name: 'Feature' }
+    let(:bug_type) { Fabricate :work_item_type, company: company, name: 'Bug', quality_indicator_type: true }
+    let(:chore_type) { Fabricate :work_item_type, company: company, name: 'Chore' }
 
     let(:service_delivery_review) { Fabricate :service_delivery_review, product: product, meeting_date: Time.zone.today }
 
