@@ -12,7 +12,7 @@
     </tr>
     <tr>
       <td><b><%= I18n.t('general.bugs') %></b></td>
-      <td><%= I18n.t('general.demands_text', count: demands.kept.bug.count), target: '_blank' %></td>
+      <td><%= I18n.t('general.demands_text', count: demands.kept.bug.count) %></td>
     </tr>
     <% if team_member.present? %>
       <% if team_member.lead_time_min.present? %>

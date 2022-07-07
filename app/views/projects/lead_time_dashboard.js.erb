@@ -1,9 +1,0 @@
-var leadTimeDashboard = $("#project-lead-time-div").modal({
-    show: false,
-    backdrop: 'static',
-    keyboard: false
-});
-
-leadTimeDashboard.html("<%= escape_javascript(render 'projects/project_lead_time_drill_down', project: @project, project_consolidations: @project_consolidations) %>");
-
-leadTimeDashboard.modal("show");

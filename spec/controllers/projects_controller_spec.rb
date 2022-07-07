@@ -40,12 +40,6 @@ RSpec.describe ProjectsController, type: :controller do
       it { expect(response).to redirect_to new_user_session_path }
     end
 
-    describe 'GET #statistics' do
-      before { get :statistics, params: { company_id: 'foo', id: 'foo' }, xhr: true }
-
-      it { expect(response).to have_http_status :unauthorized }
-    end
-
     describe 'DELETE #destroy' do
       before { delete :destroy, params: { company_id: 'foo', id: 'bar' } }
 
@@ -70,12 +64,6 @@ RSpec.describe ProjectsController, type: :controller do
       it { expect(response).to redirect_to new_user_session_path }
     end
 
-    describe 'GET #closing_dashboard' do
-      before { get :closing_dashboard, params: { company_id: 'foo', id: 'sbbrubles' } }
-
-      it { expect(response).to redirect_to new_user_session_path }
-    end
-
     describe 'GET #status_report_dashboard' do
       before { get :status_report_dashboard, params: { company_id: 'foo', id: 'sbbrubles' } }
 
@@ -88,18 +76,6 @@ RSpec.describe ProjectsController, type: :controller do
       it { expect(response).to redirect_to new_user_session_path }
     end
 
-    describe 'GET #search_projects' do
-      before { get :search_projects, params: { company_id: 'foo' } }
-
-      it { expect(response).to redirect_to new_user_session_path }
-    end
-
-    describe 'GET #running_projects_charts' do
-      before { get :running_projects_charts, params: { company_id: 'foo' } }
-
-      it { expect(response).to redirect_to new_user_session_path }
-    end
-
     describe 'GET #statistics_tab' do
       before { get :statistics_tab, params: { company_id: 'foo', id: 'bar' } }
 
@@ -108,12 +84,6 @@ RSpec.describe ProjectsController, type: :controller do
 
     describe 'GET #financial_report' do
       before { get :financial_report, params: { company_id: 'foo', id: 'bar' } }
-
-      it { expect(response).to redirect_to new_user_session_path }
-    end
-
-    describe 'GET #search_projects_by_team' do
-      before { get :search_projects_by_team, params: { company_id: 'foo' } }
 
       it { expect(response).to redirect_to new_user_session_path }
     end
@@ -133,6 +103,10 @@ RSpec.describe ProjectsController, type: :controller do
     before { sign_in user }
 
     let(:company) { Fabricate :company, users: [user] }
+    let(:feature_type) { Fabricate :work_item_type, company: company, name: 'Feature' }
+    let(:bug_type) { Fabricate :work_item_type, company: company, name: 'Bug', quality_indicator_type: true }
+    let(:chore_type) { Fabricate :work_item_type, company: company, name: 'Chore' }
+
     let!(:customer) { Fabricate :customer, company: company, name: 'zzz' }
     let!(:other_customer) { Fabricate :customer, company: company, name: 'aaa' }
 
@@ -483,36 +457,6 @@ RSpec.describe ProjectsController, type: :controller do
       end
     end
 
-    describe 'GET #statistics' do
-      let(:company) { Fabricate :company, users: [user] }
-      let(:customer) { Fabricate :customer, company: company }
-      let!(:project) { Fabricate :project, company: company, customers: [customer] }
-
-      context 'passing valid parameters' do
-        before { get :statistics, params: { company_id: company, id: project }, xhr: true }
-
-        it 'assigns the instance variable and renders the template' do
-          expect(project).to eq project
-          expect(company).to eq company
-          expect(response).to render_template 'projects/project_statistics'
-        end
-      end
-
-      context 'passing invalid' do
-        context 'company' do
-          before { get :statistics, params: { company_id: 'foo', id: project }, xhr: true }
-
-          it { expect(response).to have_http_status :not_found }
-        end
-
-        context 'project' do
-          before { get :statistics, params: { company_id: company, id: 'foo' }, xhr: true }
-
-          it { expect(response).to have_http_status :not_found }
-        end
-      end
-    end
-
     describe 'PATCH #copy_stages_from' do
       let(:company) { Fabricate :company, users: [user] }
       let!(:stage_in_first_project) { Fabricate :stage, company: company }
@@ -799,44 +743,6 @@ RSpec.describe ProjectsController, type: :controller do
       end
     end
 
-    describe 'GET #closing_dashboard' do
-      let(:company) { Fabricate :company, users: [user] }
-      let(:customer) { Fabricate :customer, company: company }
-      let!(:project) { Fabricate :project, company: company }
-
-      context 'passing valid parameters' do
-        it 'assigns the instance variables and renders the template' do
-          get :closing_dashboard, params: { company_id: company, id: project }, xhr: true
-          expect(response).to render_template 'projects/closing_info'
-          expect(assigns(:project)).to eq project
-        end
-      end
-
-      context 'passing an invalid' do
-        context 'non-existent project' do
-          before { get :closing_dashboard, params: { company_id: company, id: 'foo' }, xhr: true }
-
-          it { expect(response).to have_http_status :not_found }
-        end
-
-        context 'company' do
-          context 'non-existent' do
-            before { get :closing_dashboard, params: { company_id: 'foo', id: project }, xhr: true }
-
-            it { expect(response).to have_http_status :not_found }
-          end
-
-          context 'not permitted' do
-            let(:company) { Fabricate :company, users: [] }
-
-            before { get :closing_dashboard, params: { company_id: company, id: project }, xhr: true }
-
-            it { expect(response).to have_http_status :not_found }
-          end
-        end
-      end
-    end
-
     describe 'GET #status_report_dashboard' do
       let(:company) { Fabricate :company, users: [user] }
       let(:project) { Fabricate :project, company: company }
@@ -897,223 +803,6 @@ RSpec.describe ProjectsController, type: :controller do
             let(:company) { Fabricate :company, users: [] }
 
             before { get :lead_time_dashboard, params: { company_id: company, id: project }, xhr: true }
-
-            it { expect(response).to have_http_status :not_found }
-          end
-        end
-      end
-    end
-
-    describe 'GET #search_projects' do
-      let(:company) { Fabricate :company, users: [user] }
-
-      context 'passing valid parameters' do
-        context 'with no search parameters' do
-          it 'retrieves all the projects to the company' do
-            travel_to Time.zone.local(2021, 5, 14, 10, 0, 0) do
-              first_project = Fabricate :project, company: company, start_date: 2.months.ago, end_date: 1.month.ago, status: :waiting, name: 'FooBarXpTO'
-              second_project = Fabricate :project, company: company, start_date: 1.month.ago, end_date: 15.days.ago, status: :executing, name: 'XpTO'
-              third_project = Fabricate :project, company: company, start_date: 2.days.ago, end_date: 1.day.ago, status: :finished, name: 'FooBar'
-              fourth_project = Fabricate :project, company: company, start_date: 2.days.ago, end_date: 1.hour.ago, status: :executing, name: 'Foo'
-
-              get :search_projects, params: { company_id: company, projects_ids: [first_project, second_project, third_project, fourth_project].map(&:id).join(',') }
-
-              expect(response).to render_template 'projects/index'
-              expect(assigns(:projects)).to eq [fourth_project, third_project, second_project, first_project]
-            end
-          end
-        end
-
-        context 'with search by status' do
-          it 'retrieves all executing the projects to the company' do
-            travel_to Time.zone.local(2021, 5, 14, 10, 0, 0) do
-              first_project = Fabricate :project, company: company, start_date: 2.months.ago, end_date: 1.month.ago, status: :waiting, name: 'FooBarXpTO'
-              second_project = Fabricate :project, company: company, start_date: 1.month.ago, end_date: 15.days.ago, status: :executing, name: 'XpTO'
-              third_project = Fabricate :project, company: company, start_date: 2.days.ago, end_date: 1.day.ago, status: :finished, name: 'FooBar'
-              fourth_project = Fabricate :project, company: company, start_date: 2.days.ago, end_date: 1.hour.ago, status: :executing, name: 'Foo'
-
-              get :search_projects, params: { company_id: company, projects_ids: [first_project, second_project, third_project, fourth_project].map(&:id).join(','), project_status: :executing }
-
-              expect(response).to render_template 'projects/index'
-              expect(assigns(:projects)).to eq [fourth_project, second_project]
-            end
-          end
-        end
-
-        context 'with search by start_date' do
-          it 'retrieves all executing the projects to the company' do
-            travel_to Time.zone.local(2021, 5, 14, 10, 0, 0) do
-              first_project = Fabricate :project, company: company, start_date: 2.months.ago, end_date: 1.month.ago, status: :waiting, name: 'FooBarXpTO'
-              second_project = Fabricate :project, company: company, start_date: 1.month.ago, end_date: 15.days.ago, status: :executing, name: 'XpTO'
-              third_project = Fabricate :project, company: company, start_date: 2.days.ago, end_date: 1.day.ago, status: :finished, name: 'FooBar'
-              fourth_project = Fabricate :project, company: company, start_date: 2.days.ago, end_date: 1.hour.ago, status: :executing, name: 'Foo'
-
-              get :search_projects, params: { company_id: company, projects_ids: [first_project, second_project, third_project, fourth_project].map(&:id).join(','), projects_filter_start_date: 3.days.ago }
-
-              expect(response).to render_template 'projects/index'
-              expect(assigns(:projects)).to eq [fourth_project, third_project]
-            end
-          end
-        end
-
-        context 'with search by end_date' do
-          it 'retrieves all executing the projects to the company' do
-            travel_to Time.zone.local(2021, 5, 14, 10, 0, 0) do
-              first_project = Fabricate :project, company: company, start_date: 2.months.ago, end_date: 1.month.ago, status: :waiting, name: 'FooBarXpTO'
-              second_project = Fabricate :project, company: company, start_date: 1.month.ago, end_date: 15.days.ago, status: :executing, name: 'XpTO'
-              third_project = Fabricate :project, company: company, start_date: 2.days.ago, end_date: 1.day.ago, status: :finished, name: 'FooBar'
-              fourth_project = Fabricate :project, company: company, start_date: 2.days.ago, end_date: 1.hour.ago, status: :executing, name: 'Foo'
-
-              get :search_projects, params: { company_id: company, projects_ids: [first_project, second_project, third_project, fourth_project].map(&:id).join(','), projects_filter_end_date: 16.days.ago }
-
-              expect(response).to render_template 'projects/index'
-              expect(assigns(:projects)).to eq [first_project]
-            end
-          end
-        end
-
-        context 'with search by status and start_date' do
-          it 'retrieves all executing the projects to the company' do
-            travel_to Time.zone.local(2021, 5, 14, 10, 0, 0) do
-              first_project = Fabricate :project, company: company, start_date: 2.months.ago, end_date: 1.month.ago, status: :waiting, name: 'FooBarXpTO'
-              second_project = Fabricate :project, company: company, start_date: 1.month.ago, end_date: 15.days.ago, status: :executing, name: 'XpTO'
-              third_project = Fabricate :project, company: company, start_date: 2.days.ago, end_date: 1.day.ago, status: :finished, name: 'FooBar'
-              fourth_project = Fabricate :project, company: company, start_date: 2.days.ago, end_date: 1.hour.ago, status: :executing, name: 'Foo'
-
-              get :search_projects, params: { company_id: company, projects_ids: [first_project, second_project, third_project, fourth_project].map(&:id).join(','), project_status: :executing, projects_filter_start_date: 3.days.ago }
-
-              expect(response).to render_template 'projects/index'
-              expect(assigns(:projects)).to eq [fourth_project]
-            end
-          end
-        end
-
-        context 'with search by project name' do
-          it 'retrieves all executing the projects to the company' do
-            travel_to Time.zone.local(2021, 5, 14, 10, 0, 0) do
-              first_project = Fabricate :project, company: company, start_date: 2.months.ago, end_date: 1.month.ago, status: :waiting, name: 'FooBarXpTO'
-              second_project = Fabricate :project, company: company, start_date: 1.month.ago, end_date: 15.days.ago, status: :executing, name: 'XpTO'
-              third_project = Fabricate :project, company: company, start_date: 2.days.ago, end_date: 1.day.ago, status: :finished, name: 'FooBar'
-              fourth_project = Fabricate :project, company: company, start_date: 2.days.ago, end_date: 1.hour.ago, status: :executing, name: 'Foo'
-
-              get :search_projects, params: { company_id: company, projects_ids: [first_project, second_project, third_project, fourth_project].map(&:id).join(','), project_name: 'bar' }
-
-              expect(response).to render_template 'projects/index'
-              expect(assigns(:projects)).to eq [third_project, first_project]
-              expect(assigns(:unpaged_projects)).to eq [third_project, first_project]
-            end
-          end
-        end
-      end
-
-      context 'passing an invalid' do
-        context 'company' do
-          context 'non-existent' do
-            before { get :search_projects, params: { company_id: 'foo' } }
-
-            it { expect(response).to have_http_status :not_found }
-          end
-
-          context 'not permitted' do
-            let(:company) { Fabricate :company, users: [] }
-
-            before { get :search_projects, params: { company_id: company } }
-
-            it { expect(response).to have_http_status :not_found }
-          end
-        end
-      end
-    end
-
-    describe 'GET #search_projects_by_team' do
-      context 'valid' do
-        let(:team) { Fabricate :team, company: company }
-
-        context 'with data' do
-          it 'responds with projects by team' do
-            first_project = Fabricate :project, company: company, team: team, name: 'zzz', status: :executing
-            second_project = Fabricate :project, company: company, team: team, name: 'bbb', status: :maintenance
-            third_project = Fabricate :project, company: company, team: team, name: 'ccc', status: :executing
-
-            Fabricate :project, company: company, team: team, status: :waiting
-            Fabricate :project, company: company, team: team, status: :finished
-            Fabricate :project, company: company, status: :executing
-
-            get :search_projects_by_team, params: { company_id: company, team_id: team }, xhr: true
-
-            expect(response).to have_http_status :ok
-            expect(response).to render_template 'flow_events/search_projects_by_team'
-            expect(assigns(:projects_by_team)).to eq [second_project, third_project, first_project]
-          end
-        end
-
-        context 'no data' do
-          before { get :search_projects_by_team, params: { company_id: company, team_id: team }, xhr: true }
-
-          it 'responds with projects by team' do
-            expect(response).to have_http_status :ok
-            expect(response).to render_template 'flow_events/search_projects_by_team'
-            expect(assigns(:projects_by_team)).to eq []
-          end
-        end
-      end
-
-      context 'invalid' do
-        context 'not permitted company' do
-          let(:other_company) { Fabricate :company }
-          let(:team) { Fabricate :team, company: other_company }
-
-          before { get :search_projects_by_team, params: { company_id: other_company, team_id: team }, xhr: true }
-
-          it { expect(response).to have_http_status :not_found }
-        end
-
-        context 'not found company' do
-          let(:team) { Fabricate :team }
-
-          before { get :search_projects_by_team, params: { company_id: 'foo', team_id: team }, xhr: true }
-
-          it { expect(response).to have_http_status :not_found }
-        end
-
-        context 'not found team' do
-          before { get :search_projects_by_team, params: { company_id: company, team_id: 'foo' }, xhr: true }
-
-          it { expect(response).to have_http_status :not_found }
-        end
-      end
-    end
-
-    describe 'GET #running_projects_charts' do
-      let(:company) { Fabricate :company, users: [user] }
-      let!(:first_project) { Fabricate :project, company: company, start_date: 2.months.ago, end_date: 1.month.ago, status: :waiting, name: 'FooBarXpTO' }
-      let!(:second_project) { Fabricate :project, company: company, start_date: 1.month.ago, end_date: 15.days.ago, status: :executing, name: 'XpTO' }
-      let!(:third_project) { Fabricate :project, company: company, start_date: 2.days.ago, end_date: 1.day.ago, status: :finished, name: 'FooBar' }
-      let!(:fourth_project) { Fabricate :project, company: company, start_date: 2.days.ago, end_date: 1.hour.ago, status: :executing, name: 'Foo' }
-
-      context 'passing valid parameters' do
-        context 'with no search parameters' do
-          it 'retrieves all the projects to the company' do
-            get :running_projects_charts, params: { company_id: company }, xhr: true
-
-            expect(response).to render_template 'projects/running_projects_charts'
-            expect(assigns(:running_projects_leadtime_data).keys).to match_array [second_project, fourth_project]
-          end
-        end
-      end
-
-      context 'passing an invalid' do
-        context 'company' do
-          context 'non-existent' do
-            before { get :running_projects_charts, params: { company_id: 'foo' }, xhr: true }
-
-            it { expect(response).to have_http_status :not_found }
-          end
-
-          context 'not permitted' do
-            let(:company) { Fabricate :company, users: [] }
-
-            before { get :running_projects_charts, params: { company_id: company }, xhr: true }
 
             it { expect(response).to have_http_status :not_found }
           end

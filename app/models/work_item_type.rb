@@ -24,4 +24,6 @@
 #
 class WorkItemType < ApplicationRecord
   belongs_to :company
+
+  validates :item_level, :name, presence: true
 end

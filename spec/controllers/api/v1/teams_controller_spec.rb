@@ -1,10 +1,15 @@
 # frozen_string_literal: true
 
 RSpec.describe Api::V1::TeamsController, type: :controller do
-  describe 'GET #average_demand_cost' do
-    let(:company) { Fabricate :company }
-    let!(:headers) { { HTTP_API_TOKEN: company.api_token } }
+  let(:company) { Fabricate :company }
 
+  let(:feature_type) { Fabricate :work_item_type, company: company, name: 'Feature' }
+  let(:bug_type) { Fabricate :work_item_type, company: company, name: 'Bug', quality_indicator_type: true }
+  let(:chore_type) { Fabricate :work_item_type, company: company, name: 'Chore' }
+
+  let!(:headers) { { HTTP_API_TOKEN: company.api_token } }
+
+  describe 'GET #average_demand_cost' do
     context 'authenticated' do
       context 'with valid parameters' do
         let!(:team) { Fabricate :team, company: company }

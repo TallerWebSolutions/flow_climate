@@ -1,9 +1,3 @@
-<div id="projects-filter">
-  <%= render 'projects/projects_filter', company: company, projects_ids: projects_ids %>
-</div>
-
-<hr>
-
 <h3><%= I18n.t('general.projects_count', count: projects_summary.projects.count) %></h3>
 <h4><%= I18n.t('general.demands_per_day', count: number_with_precision(projects_summary.total_flow_pressure, precision: 2)) %></h4>
 

@@ -37,7 +37,7 @@
           <tr id='demand_<%= demand.id %>'>
             <td><%= link_to demand.portfolio_unit.name, company_product_portfolio_unit_path(company, product, demand.portfolio_unit) if demand.portfolio_unit.present? %></td>
             <td><%= link_to demand.external_id, company_demand_path(company, demand.slug) %></td>
-            <td><%= I18n.t("activerecord.attributes.demand.enums.demand_type.#{demand.demand_type}") %></td>
+            <td><%= demand.work_item_type.name %></td>
             <td><%= I18n.t("activerecord.attributes.demand.enums.class_of_service.#{demand.class_of_service}") %></td>
             <td><%= demand.current_stage&.name %></td>
             <td><%= I18n.l(demand.created_date, format: :short) %></td>

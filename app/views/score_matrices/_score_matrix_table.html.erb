@@ -17,7 +17,7 @@
         <%= link_to score_research_company_demand_path(demand.company, demand) do %>
           <i class="fas fa-tasks" title="<%= I18n.t('demand_score_matrices.new.title') %>"></i>
         <% end %>
-        <i class="far fa-question-circle" title="<%= "#{I18n.t("activerecord.attributes.demand.enums.demand_type.#{demand.demand_type}")} | #{I18n.t("activerecord.attributes.demand.enums.class_of_service.#{demand.class_of_service}")} | #{demand.current_stage_name}" %>"></i>
+        <i class="far fa-question-circle" title="<%= "#{demand.work_item_type.name} | #{I18n.t("activerecord.attributes.demand.enums.class_of_service.#{demand.class_of_service}")} | #{demand.current_stage_name}" %>"></i>
       </td>
       <td><%= demand.external_id %></td>
       <td><%= demand.demand_title %></td>

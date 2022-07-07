@@ -2,7 +2,7 @@
 
 class ProjectsController < AuthenticatedController
   before_action :assign_company
-  before_action :assign_project, except: %i[new create index search_projects running_projects_charts search_projects_by_team status_report_dashboard]
+  before_action :assign_project, except: %i[new create index status_report_dashboard]
 
   def show
     prepend_view_path Rails.public_path
@@ -64,10 +64,6 @@ class ProjectsController < AuthenticatedController
     redirect_to company_project_path(@company, @project)
   end
 
-  def statistics
-    respond_to { |format| format.js { render 'projects/project_statistics' } }
-  end
-
   def copy_stages_from
     @project_to_copy_stages_from = Project.find(params[:project_to_copy_stages_from])
 
@@ -115,13 +111,6 @@ class ProjectsController < AuthenticatedController
     render 'spa-build/index'
   end
 
-  def closing_dashboard
-    @project_summary = ProjectsSummaryData.new([@project])
-    @average_speed = DemandService.instance.average_speed(demands)
-
-    respond_to { |format| format.js { render 'projects/closing_info' } }
-  end
-
   def status_report_dashboard
     prepend_view_path Rails.public_path
     render 'spa-build/index'
@@ -130,34 +119,6 @@ class ProjectsController < AuthenticatedController
   def lead_time_dashboard
     prepend_view_path Rails.public_path
     render 'spa-build/index'
-  end
-
-  def search_projects
-    @target_name = params[:target_name]
-
-    @projects = build_projects_search(params[:projects_filter_start_date], params[:projects_filter_end_date], params[:project_status], params[:project_name])
-    @unpaged_projects = @projects.except(:limit, :offset)
-
-    @projects_summary = ProjectsSummaryData.new(@unpaged_projects)
-
-    render 'projects/index'
-  end
-
-  def search_projects_by_team
-    @projects_by_team = @company.teams.find(params[:team_id]).projects.running.order(:name)
-    respond_to { |format| format.js { render 'flow_events/search_projects_by_team' } }
-  end
-
-  def running_projects_charts
-    @running_projects = @company.projects.running.order(:end_date)
-
-    @running_projects_leadtime_data = {}
-    @running_projects.each do |project|
-      demands_chart_adapter = Highchart::DemandsChartsAdapter.new(project.demands, project.start_date, Time.zone.today, 'week')
-      @running_projects_leadtime_data[project] = demands_chart_adapter
-    end
-
-    render 'projects/running_projects_charts'
   end
 
   def statistics_tab
@@ -176,19 +137,6 @@ class ProjectsController < AuthenticatedController
   end
 
   private
-
-  def demands
-    @demands ||= @project.demands
-  end
-
-  def build_projects_search(start_date, end_date, project_status, project_name)
-    projects = @company.projects
-    projects = projects.where('name ILIKE :name', name: "%#{project_name.tr(' ', '%')}%") if project_name.present?
-    projects = projects.where(status: project_status) if project_status.present?
-    projects = projects.where('start_date >= :start_date', start_date: start_date) if start_date.present?
-    projects = projects.where('end_date <= :end_date', end_date: end_date) if end_date.present?
-    projects.order(end_date: :desc).page(page_param)
-  end
 
   def check_change_in_deadline!
     return if project_params[:end_date].blank? || @project.end_date == Date.parse(project_params[:end_date])

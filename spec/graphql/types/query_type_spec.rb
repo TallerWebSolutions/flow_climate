@@ -305,11 +305,16 @@ RSpec.describe Types::QueryType do
       it 'returns the project and its fields' do
         travel_to Time.zone.local(2022, 5, 4, 10, 0, 0) do
           company = Fabricate :company
+
+          bug_type = Fabricate :work_item_type, company: company, name: 'Bug', quality_indicator_type: true
+
           team = Fabricate :team, company: company
           customer = Fabricate :customer, company: company
           product = Fabricate :product, company: company, customer: customer
           project = Fabricate :project, company: company, customers: [customer], products: [product], team: team, status: :executing, start_date: Time.zone.parse('2022-04-23 10:51'), end_date: 1.day.from_now, max_work_in_progress: 2
+
           Fabricate :demand, company: company, project: project, team: team
+
           first_task = Fabricate :task, created_date: 3.weeks.ago, end_date: 2.weeks.ago
           second_task = Fabricate :task, created_date: 3.weeks.ago, end_date: 1.week.ago
           third_task = Fabricate :task, created_date: 2.weeks.ago, end_date: Time.zone.now
@@ -1029,6 +1034,9 @@ RSpec.describe Types::QueryType do
     it 'returns the team member and its fields' do
       travel_to(Time.zone.local(2022, 5, 18, 10, 0, 0)) do
         company = Fabricate :company
+        feature_type = Fabricate :work_item_type, company: company, name: 'Feature'
+        bug_type = Fabricate :work_item_type, company: company, name: 'Bug', quality_indicator_type: true
+
         project = Fabricate :project, start_date: 2.weeks.ago, end_date: 1.day.from_now
         other_project = Fabricate :project, start_date: 2.weeks.ago, end_date: 2.days.from_now
 

@@ -296,6 +296,7 @@ RSpec.describe DemandsRepository, type: :repository do
     it 'returns the demands according to the query' do
       travel_to Time.zone.local(2018, 4, 5, 10, 0, 0) do
         expect(described_class.instance.demand_type_query(Demand.all, '')).to match_array Demand.all
+        expect(described_class.instance.demand_type_query(Demand.all, 'Foo')).to match_array Demand.all
         expect(described_class.instance.demand_type_query(Demand.none, '')).to eq []
         expect(described_class.instance.demand_type_query(Demand.all, 'bug')).to match_array [second_demand, ninth_demand]
       end

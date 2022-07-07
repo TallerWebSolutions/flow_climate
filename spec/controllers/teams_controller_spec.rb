@@ -61,6 +61,10 @@ RSpec.describe TeamsController, type: :controller do
     before { sign_in user }
 
     let(:company) { Fabricate :company, users: [user] }
+    let(:feature_type) { Fabricate :work_item_type, company: company, name: 'Feature' }
+    let(:bug_type) { Fabricate :work_item_type, company: company, name: 'Bug', quality_indicator_type: true }
+    let(:chore_type) { Fabricate :work_item_type, company: company, name: 'Chore' }
+
     let(:team) { Fabricate :team, company: company }
 
     let(:first_team_member) { Fabricate :team_member, company: company }

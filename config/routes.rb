@@ -206,9 +206,7 @@ Rails.application.routes.draw do
       member do
         get :tasks_tab
 
-        get :statistics
         get :risk_drill_down
-        get :closing_dashboard
         get :status_report_dashboard
         get :lead_time_dashboard
         get :statistics_tab
@@ -220,12 +218,6 @@ Rails.application.routes.draw do
         patch 'dissociate_customer/:customer_id', action: :dissociate_customer, as: 'dissociate_customer'
         patch 'associate_product/:product_id', action: :associate_product, as: 'associate_product'
         patch 'dissociate_product/:product_id', action: :dissociate_product, as: 'dissociate_product'
-      end
-
-      collection do
-        get :search_projects
-        get :search_projects_by_team
-        get :running_projects_charts
       end
 
       resources :demands, only: [] do

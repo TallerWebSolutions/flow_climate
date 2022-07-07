@@ -6,10 +6,6 @@
   <i class="far fa-calendar-check" title='<%= I18n.t('projects.actions.finish.tooltip') %>'></i>
 <% end %>
 
-<%= link_to statistics_company_project_path(company, project), class: 'statistics-project', remote: true do %>
-  <i class="fas fa-superscript" title='<%= I18n.t('projects.actions.statistics.tooltip') %>'></i>
-<% end %>
-
 <%= link_to '#', class: 'toggle-table-details', onclick: "toggleTableDetails('customers_table_#{project.id}')" do %>
   <i class="fas fa-users" title='<%= I18n.t('projects.actions.customers.tooltip') %>'></i>
 <% end %>
