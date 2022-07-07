@@ -39,6 +39,7 @@
     "projects": "Projetos",
     "leadTimeP80": "Lead time p80",
     "latestDeliveries": {
+      "title": "Últimas Entregas",
       "project": "Projeto",
       "product": "Produto",
       "externalId": "ID Externo",

@@ -1,7 +1,7 @@
 {
   "tasks": "Tasks",
   "tasks_list": "Tasks List",
-  "finished_tasks": "finished",
+  "finished_tasks": "Finished",
   "tasks_table": {
     "demand_title": "Activity",
     "creation_date": "Creation date",
@@ -52,7 +52,7 @@
     "current_partial_completion_tooltip_x_legend": "External ID",
     "days": "Days",
     "hits": "Hits",
-    "demands": "Activity",
+    "demands": "Activities",
     "tasks": "Tasks",
     "completion_time_histogram_chart": "Completion Time Histogram",
     "completion_time_histogram_completiontime": "Completion Time",
