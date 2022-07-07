@@ -22,15 +22,15 @@ const ProjectDemandsCharts = ({
   hoursPerCoordinationStageChartData,
 }: ProjectDemandsChartsProps) => {
   const { t } = useTranslation(["projectChart"])
-  const projectConsolidationsWeekly = project?.projectConsolidationsWeekly || []
-  const projectConsolidationsLastMonth = project?.projectConsolidationsLastMonth
-  const demandsFinishedWithLeadtime = project?.demandsFinishedWithLeadtime
+  const projectConsolidationsWeekly = project.projectConsolidationsWeekly
+  const projectConsolidationsLastMonth = project.projectConsolidationsLastMonth
+  const demandsFinishedWithLeadtime = project.demandsFinishedWithLeadtime
   const lastProjectConsolidationsWeekly =
-    project?.lastProjectConsolidationsWeekly
-  const demandsFlowChartData = project?.demandsFlowChartData
-  const leadTimeHistogramData = project?.leadTimeHistogramData
-  const hoursPerStageChartData = project?.hoursPerStageChartData
-  const cumulativeFlowChartData = project?.cumulativeFlowChartData
+    project.lastProjectConsolidationsWeekly
+  const demandsFlowChartData = project.demandsFlowChartData
+  const leadTimeHistogramData = project.leadTimeHistogramData
+  const hoursPerStageChartData = project.hoursPerStageChartData
+  const cumulativeFlowChartData = project.cumulativeFlowChartData
 
   const operationalRiskChartData = [
     {
@@ -267,7 +267,7 @@ const ProjectDemandsCharts = ({
 
   const projectQualityForCodingChartData = [
     {
-      id: project?.name || "",
+      id: project.name || "",
       data: projectConsolidationsWeekly.map(
         ({ consolidationDate, codeNeededBlocksCount }) => ({
           x: consolidationDate,
@@ -279,7 +279,7 @@ const ProjectDemandsCharts = ({
 
   const projectQualityForCodingPerDemand = [
     {
-      id: project?.name || "",
+      id: project.name || "",
       data: projectConsolidationsWeekly.map(
         ({ consolidationDate, codeNeededBlocksPerDemand }) => ({
           x: consolidationDate,
@@ -291,7 +291,7 @@ const ProjectDemandsCharts = ({
 
   const flowEfficiencyChartData = [
     {
-      id: project?.name || "",
+      id: project.name || "",
       data: projectConsolidationsWeekly.map(
         ({ consolidationDate, flowEfficiency }) => {
           const flowEfficiencyInPercentage = flowEfficiency / 100
@@ -306,7 +306,7 @@ const ProjectDemandsCharts = ({
 
   const hoursPerDemandChartData = [
     {
-      id: project?.name || "",
+      id: project.name || "",
       data: projectConsolidationsWeekly.map(
         ({ consolidationDate, hoursPerDemand }) => {
           return {
@@ -511,7 +511,7 @@ const ProjectDemandsCharts = ({
       </ChartGridItem>
       <ChartGridItem
         title={t("charts_tab.project_charts.demands_burn_up_chart", {
-          projectName: project?.name || "",
+          projectName: project.name || "",
         })}
       >
         <LineChart
@@ -529,7 +529,7 @@ const ProjectDemandsCharts = ({
       </ChartGridItem>
       <ChartGridItem
         title={t("charts_tab.project_charts.hours_burn_up_chart", {
-          projectName: project?.name || "no project",
+          projectName: project.name || "no project",
         })}
       >
         <LineChart
@@ -559,7 +559,7 @@ const ProjectDemandsCharts = ({
       {projectCumulativeFlowChartData && (
         <ChartGridItem
           title={t("charts_tab.project_charts.cumulative_flow_chart", {
-            projectName: project?.name || "no project",
+            projectName: project.name || "no project",
           })}
         >
           <LineChart
