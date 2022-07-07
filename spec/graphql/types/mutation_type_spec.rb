@@ -306,4 +306,34 @@ RSpec.describe Types::MutationType do
       end
     end
   end
+
+  describe 'create work item type' do
+    let(:company) { Fabricate :company }
+    let(:user) { Fabricate :user, companies: [company], last_company_id: company.id }
+    let(:context) { { current_user: user } }
+
+    describe '#resolve' do
+      let(:mutation) do
+        %(mutation {
+          createWorkItemType(
+            name: "Fire Supression"
+            itemLevel: TASK
+            qualityIndicatorType: true
+          ) {
+            workItemType {
+              id
+              name
+            }
+          }
+        })
+      end
+
+      it 'creates a new work item type' do
+        result = FlowClimateSchema.execute(mutation, variables: nil, context: context).as_json
+        created_work_item_type = WorkItemType.last
+        expect(result['data']['createWorkItemType']['workItemType']['name']).to eq("Fire Supression")
+        expect(created_work_item_type.name).to eq "Fire Supression"
+      end
+    end
+  end
 end
