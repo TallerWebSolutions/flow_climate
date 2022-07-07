@@ -11,6 +11,7 @@ module Types
     field :send_auth_token, mutation: Mutations::SendAuthTokenMutation
     field :update_team, mutation: Mutations::UpdateTeamMutation
     field :update_team_member, mutation: Mutations::UpdateTeamMemberMutation
+    field :create_work_item_type, mutation: Mutations::CreateWorkItemTypeMutation
 
     def me
       context[:current_user]
