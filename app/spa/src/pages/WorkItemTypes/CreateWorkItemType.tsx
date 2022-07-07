@@ -1,3 +1,4 @@
+import { gql, useMutation } from "@apollo/client"
 import {
   Box,
   Button,
@@ -10,17 +11,36 @@ import {
   FormControlLabel,
 } from "@mui/material"
 import { useContext } from "react"
-import { useForm } from "react-hook-form"
+import { FieldValues, useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import { Link } from "react-router-dom"
 
 import BasicPage from "../../components/BasicPage"
 import { MeContext } from "../../contexts/MeContext"
 
+const CREATE_WORK_ITEM_TYPE = gql`
+  mutation CreateWorkItemType(
+    $name: String!
+    $itemLevel: WorkItemLevel!
+    $qualityIndicatorType: Boolean!
+  ) {
+    createWorkItemType(
+      name: $name
+      itemLevel: $itemLevel
+      qualityIndicatorType: $qualityIndicatorType
+    ) {
+      workItemType {
+        id
+      }
+    }
+  }
+`
+
 const CreateWorkItemType = () => {
   const { me } = useContext(MeContext)
   const { t } = useTranslation("workItemTypes")
   const { register, handleSubmit } = useForm()
+  const [createWorkItemType] = useMutation(CREATE_WORK_ITEM_TYPE)
 
   const companyUrl = `/companies/${me?.currentCompany?.slug}`
   const breadcrumbsLinks = [
@@ -29,7 +49,11 @@ const CreateWorkItemType = () => {
       name: t("title"),
     },
   ]
-  const handleCreateWorkItemType = () => alert("criou")
+
+  const handleCreateWorkItemType = (data: FieldValues) =>
+    createWorkItemType({
+      variables: data,
+    })
 
   return (
     <BasicPage breadcrumbsLinks={breadcrumbsLinks} title={t("title")}>
