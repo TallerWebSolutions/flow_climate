@@ -128,7 +128,7 @@ module Slack
                                "\n"
                              end
 
-      change_state_notify += "> #{I18n.t("activerecord.attributes.demand.enums.demand_type.#{demand.demand_type}")} - #{I18n.t("activerecord.attributes.demand.enums.class_of_service.#{demand.class_of_service}")}\n"
+      change_state_notify += "> #{demand.work_item_type.name.downcase} - #{I18n.t("activerecord.attributes.demand.enums.class_of_service.#{demand.class_of_service}")}\n"
       change_state_notify += "> *Responsáveis:* #{demand.active_memberships.map(&:team_member_name).join(', ')} (_#{demand.team_name}_)\n"
       change_state_notify += ":alarm_clock: *Lead time (p80) de demandas similares* | *No Projeto*: #{time_distance_in_words(DemandService.instance.similar_p80_project(demand))} | *No Time:* #{time_distance_in_words(DemandService.instance.similar_p80_team(demand))}\n" if stage.commitment_point?
 

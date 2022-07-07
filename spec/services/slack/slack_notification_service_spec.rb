@@ -7,6 +7,10 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
 
   let!(:company) { Fabricate :company, users: [first_user] }
 
+  let(:feature_type) { Fabricate :work_item_type, company: company, name: 'Feature' }
+  let(:bug_type) { Fabricate :work_item_type, company: company, name: 'Bug', quality_indicator_type: true }
+  let(:chore_type) { Fabricate :work_item_type, company: company, name: 'Chore' }
+
   let(:team) { Fabricate :team, company: company, name: 'team' }
   let!(:team_member) { Fabricate :team_member, monthly_payment: 10_000, start_date: 5.weeks.ago, end_date: nil, name: 'team_member' }
   let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
@@ -14,32 +18,16 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
   let!(:first_slack_config) { Fabricate :slack_configuration, team: team, info_type: :current_week_throughput, room_webhook: 'http://foo.com' }
   let!(:second_slack_config) { Fabricate :slack_configuration, team: team, info_type: :current_week_throughput, room_webhook: 'http://bla.com' }
   let!(:first_slack_notifier) { Slack::Notifier.new(first_slack_config.room_webhook) }
+  let!(:project) { Fabricate :project, team: team, company: company, status: :executing, name: 'project' }
 
-  shared_context 'demands to notifications' do
-    let!(:project) { Fabricate :project, team: team, company: company, status: :executing, name: 'project' }
-
-    let!(:stage) { Fabricate :stage, company: company, stage_stream: :downstream, name: 'stage' }
-    let!(:stage_project_config) { Fabricate :stage_project_config, stage: stage, project: project, max_seconds_in_stage: 1.day }
-
-    let!(:first_demand) { Fabricate :demand, team: team, project: project, work_item_type: bug_type, end_date: 1.week.ago, effort_downstream: 100, effort_upstream: 10 }
-    let!(:second_demand) { Fabricate :demand, team: team, project: project, work_item_type: bug_type, end_date: 3.weeks.ago }
-    let!(:third_demand) { Fabricate :demand, team: team, project: project, work_item_type: bug_type, end_date: 2.days.ago }
-    let!(:fourth_demand) { Fabricate :demand, team: team, project: project, work_item_type: feature_type, end_date: 3.weeks.ago }
-    let!(:fifth_demand) { Fabricate :demand, team: team, project: project, work_item_type: chore_type, end_date: Time.zone.now }
-    let!(:sixth_demand) { Fabricate :demand, team: team, project: project, work_item_type: feature_type, end_date: 2.weeks.ago }
-    let!(:seventh_demand) { Fabricate :demand, team: team, project: project, work_item_type: feature_type, end_date: Time.zone.now }
-    let!(:eighth_demand) { Fabricate :demand, team: team, project: project, work_item_type: chore_type, commitment_date: Time.zone.now, end_date: nil, effort_downstream: 200, effort_upstream: 300 }
-
-    let!(:demand_transition) { Fabricate :demand_transition, demand: eighth_demand, stage: stage, last_time_in: 3.days.ago }
-  end
+  let!(:stage) { Fabricate :stage, company: company, stage_stream: :downstream, name: 'stage' }
+  let!(:stage_project_config) { Fabricate :stage_project_config, stage: stage, project: project, max_seconds_in_stage: 1.day }
 
   context 'with data' do
     describe '#notify_cmd' do
       context 'with no exceptions' do
         it 'calls slack notification method' do
           travel_to Time.zone.local(2022, 6, 27, 10) do
-            project = Fabricate :project, team: team, company: company, status: :executing, name: 'project'
-
             Fabricate :demand, team: team, project: project, work_item_type: chore_type, commitment_date: Time.zone.now, end_date: nil, effort_downstream: 200, effort_upstream: 300
             Fabricate :demand, team: team, project: project, work_item_type: bug_type, end_date: 1.week.ago, effort_downstream: 100, effort_upstream: 10
             Fabricate :demand, team: team, project: project, work_item_type: bug_type, end_date: 3.weeks.ago
@@ -83,17 +71,26 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
     end
 
     describe '#notify_week_throughput' do
-      include_context 'demands to notifications'
-
       context 'with no exceptions' do
         it 'calls slack notification method' do
-          expect_any_instance_of(Slack::Notifier).to receive(:ping).with("> *#{team.name}* | Throughput na semana: *2 demanda(s)* | Variação: *60,00%* para a média das últimas 4 semanas (1.25).").once
-          described_class.instance.notify_week_throughput(first_slack_notifier, team)
+          travel_to Time.zone.local(2022, 7, 5, 10) do
+            Fabricate :demand, team: team, project: project, work_item_type: bug_type, end_date: 1.week.ago, effort_downstream: 100, effort_upstream: 10
+            Fabricate :demand, team: team, project: project, work_item_type: bug_type, end_date: 3.weeks.ago
+            Fabricate :demand, team: team, project: project, work_item_type: bug_type, end_date: 2.days.ago
+            Fabricate :demand, team: team, project: project, work_item_type: feature_type, end_date: 3.weeks.ago
+            Fabricate :demand, team: team, project: project, work_item_type: chore_type, end_date: Time.zone.now
+            Fabricate :demand, team: team, project: project, work_item_type: feature_type, end_date: 2.weeks.ago
+            Fabricate :demand, team: team, project: project, work_item_type: feature_type, end_date: Time.zone.now
+            Fabricate :demand, team: team, project: project, work_item_type: chore_type, commitment_date: Time.zone.now, end_date: nil, effort_downstream: 200, effort_upstream: 300
+
+            expect_any_instance_of(Slack::Notifier).to receive(:ping).with("> *#{team.name}* | Throughput na semana: *2 demanda(s)* | Variação: *60,00%* para a média das últimas 4 semanas (1.25).").once
+            described_class.instance.notify_week_throughput(first_slack_notifier, team)
+          end
         end
       end
 
       context 'with exceptions' do
-        it 'calls slack notification method' do
+        it 'never calls slack notification method and raises the error' do
           allow(first_slack_notifier).to(receive(:ping)).and_raise(Slack::Notifier::APIError)
           expect(Rails.logger).to(receive(:error))
 
@@ -139,12 +136,13 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
     end
 
     describe '#notify_wip_demands' do
-      include_context 'demands to notifications'
-
       context 'with no exceptions' do
         it 'calls slack notification method' do
+          demand = Fabricate :demand, team: team, project: project, work_item_type: chore_type, commitment_date: Time.zone.now, end_date: nil, effort_downstream: 200, effort_upstream: 300
+          Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: 3.days.ago
+
           expect_any_instance_of(Slack::Notifier).to receive(:ping).with("> *#{team.name}* | Trabalho em progresso: 1 demanda(s).").once
-          expect_any_instance_of(Slack::Notifier).to receive(:ping).with("> *#{eighth_demand.external_id}* #{eighth_demand.demand_title} | *Responsáveis:*  | *Custo pro Projeto:* #{number_to_currency(eighth_demand.cost_to_project)} | *Etapa atual:* #{stage.name} | *Tempo na Etapa:* 3 dias | *% Fluxo Concluído*: 100,00%").once
+          expect_any_instance_of(Slack::Notifier).to receive(:ping).with("> *#{demand.external_id}* #{demand.demand_title} | *Responsáveis:*  | *Custo pro Projeto:* #{number_to_currency(demand.cost_to_project)} | *Etapa atual:* #{stage.name} | *Tempo na Etapa:* 3 dias | *% Fluxo Concluído*: 100,00%").once
 
           described_class.instance.notify_wip_demands(first_slack_notifier, team)
         end
@@ -161,19 +159,23 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
     end
 
     describe '#notify_beyond_expected_time_in_stage' do
-      include_context 'demands to notifications'
-
       context 'with no exceptions' do
         it 'calls slack notification method' do
+          demand = Fabricate :demand, team: team, project: project, work_item_type: chore_type, commitment_date: Time.zone.now, end_date: nil, effort_downstream: 200, effort_upstream: 300
+          Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: 3.days.ago
+
           expect_any_instance_of(Slack::Notifier).to receive(:ping).with(I18n.t('slack_configurations.notifications.beyond_expected_title', team_name: team.name, beyond_expected_count: 1)).once
-          expect_any_instance_of(Slack::Notifier).to receive(:ping).with("> *#{eighth_demand.external_id}* #{eighth_demand.demand_title} | *Etapa atual:* #{stage.name} | *Tempo na Etapa:* 3 dias").once
+          expect_any_instance_of(Slack::Notifier).to receive(:ping).with("> *#{demand.external_id}* #{demand.demand_title} | *Etapa atual:* #{stage.name} | *Tempo na Etapa:* 3 dias").once
 
           described_class.instance.notify_beyond_expected_time_in_stage(first_slack_notifier, team)
         end
       end
 
       context 'with exceptions' do
-        it 'calls slack notification method' do
+        it 'never calls the slack notification method and raises the exception' do
+          demand = Fabricate :demand, team: team, project: project, work_item_type: chore_type, commitment_date: Time.zone.now, end_date: nil, effort_downstream: 200, effort_upstream: 300
+          Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: 3.days.ago
+
           allow(first_slack_notifier).to(receive(:ping)).and_raise(Slack::Notifier::APIError)
           expect(Rails.logger).to(receive(:error))
 
@@ -183,10 +185,17 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
     end
 
     describe '#notify_failure_load' do
-      include_context 'demands to notifications'
-
       context 'with no exceptions' do
         it 'calls slack notification method' do
+          Fabricate :demand, team: team, project: project, work_item_type: bug_type, end_date: 1.week.ago, effort_downstream: 100, effort_upstream: 10
+          Fabricate :demand, team: team, project: project, work_item_type: bug_type, end_date: 3.weeks.ago
+          Fabricate :demand, team: team, project: project, work_item_type: bug_type, end_date: 2.days.ago
+          Fabricate :demand, team: team, project: project, work_item_type: feature_type, end_date: 3.weeks.ago
+          Fabricate :demand, team: team, project: project, work_item_type: chore_type, end_date: Time.zone.now
+          Fabricate :demand, team: team, project: project, work_item_type: feature_type, end_date: 2.weeks.ago
+          Fabricate :demand, team: team, project: project, work_item_type: feature_type, end_date: Time.zone.now
+          Fabricate :demand, team: team, project: project, work_item_type: chore_type, commitment_date: Time.zone.now, end_date: nil, effort_downstream: 200, effort_upstream: 300
+
           slack_notifier = instance_double(Slack::Notifier)
 
           allow(Project).to receive(:running) { Project.all }
@@ -199,6 +208,8 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
 
       context 'with exceptions' do
         it 'calls slack notification method' do
+          Fabricate :demand, team: team, project: project, work_item_type: bug_type, end_date: 1.week.ago, effort_downstream: 100, effort_upstream: 10
+
           allow(first_slack_notifier).to(receive(:ping)).and_raise(Slack::Notifier::APIError)
           expect(Rails.logger).to(receive(:error))
           described_class.instance.notify_failure_load(first_slack_notifier, team)
