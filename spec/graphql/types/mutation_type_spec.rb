@@ -323,6 +323,7 @@ RSpec.describe Types::MutationType do
             workItemType {
               id
               name
+              itemLevel
             }
           }
         })
@@ -332,7 +333,9 @@ RSpec.describe Types::MutationType do
         result = FlowClimateSchema.execute(mutation, variables: nil, context: context).as_json
         created_work_item_type = WorkItemType.last
         expect(result['data']['createWorkItemType']['workItemType']['name']).to eq("Fire Supression")
+        expect(result['data']['createWorkItemType']['workItemType']['itemLevel']).to eq("TASK")
         expect(created_work_item_type.name).to eq "Fire Supression"
+        expect(created_work_item_type.item_level).to eq 1
       end
     end
   end
