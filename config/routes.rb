@@ -228,7 +228,7 @@ Rails.application.routes.draw do
         get :running_projects_charts
       end
 
-      resources :demands, except: %i[show destroy index edit update] do
+      resources :demands, only: [] do
         resources :demand_blocks, only: %i[edit update] do
           member do
             patch :activate

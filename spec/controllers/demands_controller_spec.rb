@@ -2,18 +2,6 @@
 
 RSpec.describe DemandsController, type: :controller do
   context 'unauthenticated' do
-    describe 'GET #new' do
-      before { get :new, params: { company_id: 'foo', project_id: 'bar' } }
-
-      it { expect(response).to redirect_to new_user_session_path }
-    end
-
-    describe 'POST #create' do
-      before { post :create, params: { company_id: 'foo', project_id: 'bar' } }
-
-      it { expect(response).to redirect_to new_user_session_path }
-    end
-
     describe 'DELETE #destroy' do
       before { delete :destroy, params: { company_id: 'foo', id: 'sbbrubles' }, xhr: true }
 
@@ -93,6 +81,11 @@ RSpec.describe DemandsController, type: :controller do
     let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true, paid: true, finish_at: 1.week.from_now }
 
     let(:company) { Fabricate :company, users: [user] }
+
+    let(:feature_type) { Fabricate :work_item_type, company: company, name: 'Feature', quality_indicator_type: false }
+    let(:bug_type) { Fabricate :work_item_type, company: company, name: 'Bug', quality_indicator_type: true }
+    let(:chore_type) { Fabricate :work_item_type, company: company, name: 'Chore', quality_indicator_type: false }
+
     let(:customer) { Fabricate :customer, company: company }
     let(:team) { Fabricate :team, company: company }
     let(:product) { Fabricate :product, company: company, customer: customer }
@@ -104,114 +97,16 @@ RSpec.describe DemandsController, type: :controller do
       let!(:third_demand) { Fabricate :demand, company: company, product: product, project: project, demand_title: 'bar foo', work_item_type: feature_type, class_of_service: :intangible, created_date: Time.zone.local(2019, 1, 19, 10, 0, 0), commitment_date: nil, end_date: Time.zone.local(2019, 1, 23, 10, 0, 0), effort_downstream: 0, effort_upstream: 10 }
       let!(:fourth_demand) { Fabricate :demand, company: company, product: product, project: project, demand_title: 'xpto', work_item_type: chore_type, class_of_service: :standard, created_date: Time.zone.local(2019, 1, 14, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 19, 10, 0, 0), end_date: Time.zone.local(2019, 1, 24, 10, 0, 0), effort_downstream: 10, effort_upstream: 20 }
 
-      let!(:fifth_demand) { Fabricate :demand, company: company, product: product, project: project, demand_title: 'xpto', demand_type: :ui, class_of_service: :fixed_date, created_date: 1.month.ago, commitment_date: nil, end_date: nil, effort_downstream: 30, effort_upstream: 10 }
+      let!(:fifth_demand) { Fabricate :demand, company: company, product: product, project: project, demand_title: 'xpto', work_item_type: feature_type, class_of_service: :fixed_date, created_date: 1.month.ago, commitment_date: nil, end_date: nil, effort_downstream: 30, effort_upstream: 10 }
       let!(:sixth_demand) { Fabricate :demand, company: company, product: product, project: project, demand_title: 'sas', work_item_type: feature_type, class_of_service: :standard, created_date: Time.zone.local(2019, 1, 23, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 24, 10, 0, 0), end_date: nil, effort_downstream: 10, effort_upstream: 10 }
-      let!(:seventh_demand) { Fabricate :demand, company: company, product: product, project: project, demand_title: 'sas', demand_type: :performance_improvement, class_of_service: :expedite, created_date: Time.zone.local(2019, 1, 22, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 22, 10, 0, 0), end_date: Time.zone.local(2019, 1, 23, 10, 0, 0), effort_downstream: 40, effort_upstream: 10 }
-      let!(:eigth_demand) { Fabricate :demand, company: company, product: product, project: project, demand_title: 'sas', demand_type: :wireframe, class_of_service: :fixed_date, created_date: Time.zone.local(2019, 1, 21, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 23, 10, 0, 0), end_date: Time.zone.today, effort_downstream: 50, effort_upstream: 60 }
+      let!(:seventh_demand) { Fabricate :demand, company: company, product: product, project: project, demand_title: 'sas', work_item_type: chore_type, class_of_service: :expedite, created_date: Time.zone.local(2019, 1, 22, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 22, 10, 0, 0), end_date: Time.zone.local(2019, 1, 23, 10, 0, 0), effort_downstream: 40, effort_upstream: 10 }
+      let!(:eigth_demand) { Fabricate :demand, company: company, product: product, project: project, demand_title: 'sas', work_item_type: feature_type, class_of_service: :fixed_date, created_date: Time.zone.local(2019, 1, 21, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 23, 10, 0, 0), end_date: Time.zone.today, effort_downstream: 50, effort_upstream: 60 }
     end
 
     before do
       sign_in user
 
       allow_any_instance_of(User).to receive(:current_user_plan).and_return(user_plan)
-    end
-
-    describe 'GET #new' do
-      context 'valid parameters' do
-        before { get :new, params: { company_id: company, project_id: project } }
-
-        it 'instantiates a new Demand and renders the template' do
-          expect(response).to render_template :new
-          expect(assigns(:company)).to eq company
-          expect(assigns(:project)).to eq project
-          expect(assigns(:demand)).to be_a_new Demand
-        end
-      end
-
-      context 'invalid' do
-        context 'company' do
-          before { get :new, params: { company_id: 'foo', project_id: project } }
-
-          it { expect(response).to have_http_status :not_found }
-        end
-
-        context 'project' do
-          before { get :new, params: { company_id: company, project_id: 'foo' } }
-
-          it { expect(response).to have_http_status :not_found }
-        end
-
-        context 'and not permitted company' do
-          let(:company) { Fabricate :company }
-
-          before { get :new, params: { company_id: company, project_id: project } }
-
-          it { expect(response).to have_http_status :not_found }
-        end
-      end
-    end
-
-    describe 'POST #create' do
-      context 'passing valid parameters' do
-        let(:date_to_demand) { 1.day.ago.change(usec: 0) }
-
-        it 'creates the new demand and redirects' do
-          post :create, params: { company_id: company, project_id: project, demand: { product_id: product, customer_id: customer, team_id: team, external_id: 'xpto', demand_type: 'bug', manual_effort: true, class_of_service: 'expedite', assignees_count: 3, effort_upstream: 5, effort_downstream: 2, created_date: date_to_demand, commitment_date: date_to_demand, end_date: date_to_demand, demand_score: 10.5 } }
-
-          expect(assigns(:company)).to eq company
-          expect(assigns(:project)).to eq project
-
-          created_demand = Demand.last
-          expect(created_demand.customer).to eq customer
-          expect(created_demand.product).to eq product
-          expect(created_demand.team).to eq team
-          expect(created_demand.external_id).to eq 'xpto'
-          expect(created_demand.demand_type).to eq 'bug'
-          expect(created_demand.class_of_service).to eq 'expedite'
-          expect(created_demand.demand_score).to eq 10.5
-          expect(created_demand.downstream_demand?).to be true
-          expect(created_demand.manual_effort).to be true
-          expect(created_demand.effort_upstream).to eq 5
-          expect(created_demand.effort_downstream.to_f).to eq 2
-          expect(created_demand.created_date).to eq date_to_demand
-          expect(created_demand.commitment_date).to eq date_to_demand
-          expect(created_demand.end_date).to eq date_to_demand
-
-          expect(response).to redirect_to company_demand_path(company, created_demand)
-        end
-      end
-
-      context 'invalid' do
-        context 'parameters' do
-          before { post :create, params: { company_id: company, project_id: project, demand: { finances: nil, income_total: nil, expenses_total: nil } } }
-
-          it 'does not create the demand and re-render the template with the errors' do
-            expect(Demand.last).to be_nil
-            expect(response).to render_template :new
-            expect(assigns(:demand).errors.full_messages).to eq ['Time deve existir', 'Data de Criação não pode ficar em branco', 'Id da Demanda não pode ficar em branco', 'Tipo da Demanda não pode ficar em branco']
-          end
-        end
-
-        context 'company' do
-          before { post :create, params: { company_id: 'foo', project_id: project, demand: { finances_date: Time.zone.today, income_total: 10, expenses_total: 5 } } }
-
-          it { expect(response).to have_http_status :not_found }
-        end
-
-        context 'project' do
-          before { post :create, params: { company_id: company, project_id: 'foo' } }
-
-          it { expect(response).to have_http_status :not_found }
-        end
-
-        context 'and not permitted company' do
-          let(:company) { Fabricate :company }
-
-          before { post :create, params: { company_id: company, project_id: project, demand: { finances_date: Time.zone.today, income_total: 10, expenses_total: 5 } } }
-
-          it { expect(response).to have_http_status :not_found }
-        end
-      end
     end
 
     describe 'DELETE #destroy' do
@@ -225,10 +120,10 @@ RSpec.describe DemandsController, type: :controller do
             third_demand = Fabricate :demand, company: company, product: product, project: project, demand_title: 'bar foo', work_item_type: feature_type, class_of_service: :intangible, created_date: Time.zone.local(2019, 1, 19, 10, 0, 0), commitment_date: nil, end_date: Time.zone.local(2019, 1, 23, 10, 0, 0), effort_downstream: 0, effort_upstream: 10
             fourth_demand = Fabricate :demand, company: company, product: product, project: project, demand_title: 'xpto', work_item_type: chore_type, class_of_service: :standard, created_date: Time.zone.local(2019, 1, 14, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 19, 10, 0, 0), end_date: Time.zone.local(2019, 1, 24, 10, 0, 0), effort_downstream: 10, effort_upstream: 20
 
-            fifth_demand = Fabricate :demand, company: company, product: product, project: project, demand_title: 'xpto', demand_type: :ui, class_of_service: :fixed_date, created_date: 1.month.ago, commitment_date: nil, end_date: nil, effort_downstream: 30, effort_upstream: 10
+            fifth_demand = Fabricate :demand, company: company, product: product, project: project, demand_title: 'xpto', work_item_type: feature_type, class_of_service: :fixed_date, created_date: 1.month.ago, commitment_date: nil, end_date: nil, effort_downstream: 30, effort_upstream: 10
             sixth_demand = Fabricate :demand, company: company, product: product, project: project, demand_title: 'sas', work_item_type: feature_type, class_of_service: :standard, created_date: Time.zone.local(2019, 1, 23, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 24, 10, 0, 0), end_date: nil, effort_downstream: 10, effort_upstream: 10
-            seventh_demand = Fabricate :demand, company: company, product: product, project: project, demand_title: 'sas', demand_type: :performance_improvement, class_of_service: :expedite, created_date: Time.zone.local(2019, 1, 22, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 22, 10, 0, 0), end_date: Time.zone.local(2019, 1, 23, 10, 0, 0), effort_downstream: 40, effort_upstream: 10
-            eigth_demand = Fabricate :demand, company: company, product: product, project: project, demand_title: 'sas', demand_type: :wireframe, class_of_service: :fixed_date, created_date: Time.zone.local(2019, 1, 21, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 23, 10, 0, 0), end_date: Time.zone.today, effort_downstream: 50, effort_upstream: 60
+            seventh_demand = Fabricate :demand, company: company, product: product, project: project, demand_title: 'sas', work_item_type: chore_type, class_of_service: :expedite, created_date: Time.zone.local(2019, 1, 22, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 22, 10, 0, 0), end_date: Time.zone.local(2019, 1, 23, 10, 0, 0), effort_downstream: 40, effort_upstream: 10
+            eigth_demand = Fabricate :demand, company: company, product: product, project: project, demand_title: 'sas', work_item_type: feature_type, class_of_service: :fixed_date, created_date: Time.zone.local(2019, 1, 21, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 23, 10, 0, 0), end_date: Time.zone.today, effort_downstream: 50, effort_upstream: 60
 
             delete :destroy, params: { company_id: company, id: first_demand, object_type: 'Project', flow_object_id: project.id }, xhr: true
 
@@ -320,16 +215,14 @@ RSpec.describe DemandsController, type: :controller do
 
       context 'passing valid parameters' do
         it 'updates the demand and redirects to demand' do
-          put :update, params: { company_id: company, project_id: project, id: demand, demands_ids: Demand.all.map(&:id), demand: { product_id: product, customer_id: customer, team_id: team, external_id: 'xpto', demand_type: 'bug', manual_effort: true, class_of_service: 'expedite', effort_upstream: 5, effort_downstream: 2, created_date: created_date, commitment_date: created_date, end_date: end_date, demand_score: 10.5 } }, xhr: true
+          put :update, params: { company_id: company, project_id: project, id: demand, demands_ids: Demand.all.map(&:id), demand: { product_id: product, customer_id: customer, team_id: team, external_id: 'xpto', manual_effort: true, effort_upstream: 5, effort_downstream: 2, created_date: created_date, commitment_date: created_date, end_date: end_date, demand_score: 10.5 } }, xhr: true
           updated_demand = Demand.last
           expect(updated_demand.customer).to eq customer
           expect(updated_demand.product).to eq product
           expect(updated_demand.team).to eq team
           expect(updated_demand.external_id).to eq 'xpto'
-          expect(updated_demand.demand_type).to eq 'bug'
           expect(updated_demand.downstream_demand?).to be true
           expect(updated_demand.manual_effort).to be true
-          expect(updated_demand.class_of_service).to eq 'expedite'
           expect(updated_demand.demand_score).to eq 10.5
           expect(updated_demand.effort_upstream.to_f).to eq 5
           expect(updated_demand.effort_downstream.to_f).to eq 2
@@ -346,9 +239,9 @@ RSpec.describe DemandsController, type: :controller do
             put :update, params: { company_id: company, project_id: project, id: demand, demands_ids: Demand.all.map(&:id), demand: { external_id: '', demand_type: '', effort: nil, created_date: nil, commitment_date: nil, end_date: nil } }, xhr: true
 
             expect(response).to render_template 'layouts/_error'
-            expect(assigns(:demand).errors.full_messages).to match_array ['Data de Criação não pode ficar em branco', 'Id da Demanda não pode ficar em branco', 'Tipo da Demanda não pode ficar em branco']
+            expect(assigns(:demand).errors.full_messages).to match_array ['Data de Criação não pode ficar em branco', 'Id da Demanda não pode ficar em branco']
             expect(flash[:notice]).to be_nil
-            expect(flash[:error]).to eq 'Falhou | Data de Criação não pode ficar em branco | Id da Demanda não pode ficar em branco | Tipo da Demanda não pode ficar em branco'
+            expect(flash[:error]).to eq 'Falhou | Data de Criação não pode ficar em branco | Id da Demanda não pode ficar em branco'
           end
         end
 
@@ -725,10 +618,10 @@ RSpec.describe DemandsController, type: :controller do
               Fabricate :demand, company: company, product: product, project: project, demand_title: 'bar foo', work_item_type: feature_type, class_of_service: :intangible, created_date: Time.zone.local(2019, 1, 19, 10, 0, 0), commitment_date: nil, end_date: Time.zone.local(2019, 1, 23, 10, 0, 0), effort_downstream: 0, effort_upstream: 10
               Fabricate :demand, company: company, product: product, project: project, demand_title: 'xpto', work_item_type: chore_type, class_of_service: :standard, created_date: Time.zone.local(2019, 1, 14, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 19, 10, 0, 0), end_date: Time.zone.local(2019, 1, 24, 10, 0, 0), effort_downstream: 10, effort_upstream: 20
 
-              Fabricate :demand, company: company, product: product, project: project, demand_title: 'xpto', demand_type: :ui, class_of_service: :fixed_date, created_date: 1.month.ago, commitment_date: nil, end_date: nil, effort_downstream: 30, effort_upstream: 10
+              Fabricate :demand, company: company, product: product, project: project, demand_title: 'xpto', work_item_type: feature_type, class_of_service: :fixed_date, created_date: 1.month.ago, commitment_date: nil, end_date: nil, effort_downstream: 30, effort_upstream: 10
               Fabricate :demand, company: company, product: product, project: project, demand_title: 'sas', work_item_type: feature_type, class_of_service: :standard, created_date: Time.zone.local(2019, 1, 23, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 24, 10, 0, 0), end_date: nil, effort_downstream: 10, effort_upstream: 10
-              Fabricate :demand, company: company, product: product, project: project, demand_title: 'sas', demand_type: :performance_improvement, class_of_service: :expedite, created_date: Time.zone.local(2019, 1, 22, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 22, 10, 0, 0), end_date: Time.zone.local(2019, 1, 23, 10, 0, 0), effort_downstream: 40, effort_upstream: 10
-              Fabricate :demand, company: company, product: product, project: project, demand_title: 'sas', demand_type: :wireframe, class_of_service: :fixed_date, created_date: Time.zone.local(2019, 1, 21, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 23, 10, 0, 0), end_date: Time.zone.today, effort_downstream: 50, effort_upstream: 60
+              Fabricate :demand, company: company, product: product, project: project, demand_title: 'sas', work_item_type: chore_type, class_of_service: :expedite, created_date: Time.zone.local(2019, 1, 22, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 22, 10, 0, 0), end_date: Time.zone.local(2019, 1, 23, 10, 0, 0), effort_downstream: 40, effort_upstream: 10
+              Fabricate :demand, company: company, product: product, project: project, demand_title: 'sas', work_item_type: feature_type, class_of_service: :fixed_date, created_date: Time.zone.local(2019, 1, 21, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 23, 10, 0, 0), end_date: Time.zone.today, effort_downstream: 50, effort_upstream: 60
 
               get :demands_list_by_ids, params: { company_id: company, object_type: 'Product', flow_object_id: product.id, demand_state: '', demand_fitness: '', demand_type: '' }
 
@@ -751,10 +644,10 @@ RSpec.describe DemandsController, type: :controller do
               Fabricate :demand, company: company, product: product, project: project, demand_title: 'bar foo', work_item_type: feature_type, class_of_service: :intangible, created_date: Time.zone.local(2019, 1, 19, 10, 0, 0), commitment_date: nil, end_date: Time.zone.local(2019, 1, 23, 10, 0, 0), effort_downstream: 0, effort_upstream: 10
               Fabricate :demand, company: company, product: product, project: project, demand_title: 'xpto', work_item_type: chore_type, class_of_service: :standard, created_date: Time.zone.local(2019, 1, 14, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 19, 10, 0, 0), end_date: Time.zone.local(2019, 1, 24, 10, 0, 0), effort_downstream: 10, effort_upstream: 20
 
-              Fabricate :demand, company: company, product: product, project: project, demand_title: 'xpto', demand_type: :ui, class_of_service: :fixed_date, created_date: 1.month.ago, commitment_date: nil, end_date: nil, effort_downstream: 30, effort_upstream: 10
+              Fabricate :demand, company: company, product: product, project: project, demand_title: 'xpto', work_item_type: feature_type, class_of_service: :fixed_date, created_date: 1.month.ago, commitment_date: nil, end_date: nil, effort_downstream: 30, effort_upstream: 10
               Fabricate :demand, company: company, product: product, project: project, demand_title: 'sas', work_item_type: feature_type, class_of_service: :standard, created_date: Time.zone.local(2019, 1, 23, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 24, 10, 0, 0), end_date: nil, effort_downstream: 10, effort_upstream: 10
-              Fabricate :demand, company: company, product: product, project: project, demand_title: 'sas', demand_type: :performance_improvement, class_of_service: :expedite, created_date: Time.zone.local(2019, 1, 22, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 22, 10, 0, 0), end_date: Time.zone.local(2019, 1, 23, 10, 0, 0), effort_downstream: 40, effort_upstream: 10
-              Fabricate :demand, company: company, product: product, project: project, demand_title: 'sas', demand_type: :wireframe, class_of_service: :fixed_date, created_date: Time.zone.local(2019, 1, 21, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 23, 10, 0, 0), end_date: Time.zone.today, effort_downstream: 50, effort_upstream: 60
+              Fabricate :demand, company: company, product: product, project: project, demand_title: 'sas', work_item_type: chore_type, class_of_service: :expedite, created_date: Time.zone.local(2019, 1, 22, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 22, 10, 0, 0), end_date: Time.zone.local(2019, 1, 23, 10, 0, 0), effort_downstream: 40, effort_upstream: 10
+              Fabricate :demand, company: company, product: product, project: project, demand_title: 'sas', work_item_type: feature_type, class_of_service: :fixed_date, created_date: Time.zone.local(2019, 1, 21, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 23, 10, 0, 0), end_date: Time.zone.today, effort_downstream: 50, effort_upstream: 60
 
               get :demands_list_by_ids, params: { company_id: company, object_type: 'Product', flow_object_id: product.id, demand_state: '', demand_fitness: '', demand_type: 'bug' }
 
@@ -778,10 +671,10 @@ RSpec.describe DemandsController, type: :controller do
             Fabricate :demand, company: company, product: product, project: project, service_delivery_review: sdr, demand_title: 'bar foo', work_item_type: feature_type, class_of_service: :intangible, created_date: Time.zone.local(2019, 1, 19, 10, 0, 0), commitment_date: nil, end_date: Time.zone.local(2019, 1, 23, 10, 0, 0), effort_downstream: 0, effort_upstream: 10
             first_demand = Fabricate :demand, company: company, product: product, project: project, service_delivery_review: sdr, demand_title: 'xpto', work_item_type: chore_type, class_of_service: :standard, created_date: Time.zone.local(2019, 1, 14, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 19, 10, 0, 0), end_date: Time.zone.local(2019, 1, 24, 10, 0, 0), effort_downstream: 10, effort_upstream: 20
 
-            Fabricate :demand, company: company, product: product, project: project, service_delivery_review: sdr, demand_title: 'xpto', demand_type: :ui, class_of_service: :fixed_date, created_date: 1.month.ago, commitment_date: nil, end_date: nil, effort_downstream: 30, effort_upstream: 10
+            Fabricate :demand, company: company, product: product, project: project, service_delivery_review: sdr, demand_title: 'xpto', work_item_type: feature_type, class_of_service: :fixed_date, created_date: 1.month.ago, commitment_date: nil, end_date: nil, effort_downstream: 30, effort_upstream: 10
             Fabricate :demand, company: company, product: product, project: project, service_delivery_review: sdr, demand_title: 'sas', work_item_type: feature_type, class_of_service: :standard, created_date: Time.zone.local(2019, 1, 23, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 24, 10, 0, 0), end_date: nil, effort_downstream: 10, effort_upstream: 10
-            second_demand = Fabricate :demand, company: company, product: product, project: project, service_delivery_review: sdr, demand_title: 'sas', demand_type: :performance_improvement, class_of_service: :expedite, created_date: Time.zone.local(2019, 1, 22, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 22, 10, 0, 0), end_date: Time.zone.local(2019, 1, 23, 10, 0, 0), effort_downstream: 40, effort_upstream: 10
-            Fabricate :demand, company: company, product: product, project: project, service_delivery_review: sdr, demand_title: 'sas', demand_type: :wireframe, class_of_service: :fixed_date, created_date: Time.zone.local(2019, 1, 21, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 23, 10, 0, 0), end_date: Time.zone.today, effort_downstream: 50, effort_upstream: 60
+            second_demand = Fabricate :demand, company: company, product: product, project: project, service_delivery_review: sdr, demand_title: 'sas', work_item_type: chore_type, class_of_service: :expedite, created_date: Time.zone.local(2019, 1, 22, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 22, 10, 0, 0), end_date: Time.zone.local(2019, 1, 23, 10, 0, 0), effort_downstream: 40, effort_upstream: 10
+            Fabricate :demand, company: company, product: product, project: project, service_delivery_review: sdr, demand_title: 'sas', work_item_type: chore_type, class_of_service: :fixed_date, created_date: Time.zone.local(2019, 1, 21, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 23, 10, 0, 0), end_date: Time.zone.today, effort_downstream: 50, effort_upstream: 60
 
             get :demands_list_by_ids, params: { company_id: company, object_type: 'ServiceDeliveryReview', flow_object_id: sdr.id, demand_state: '', demand_fitness: 'overserved', demand_type: '' }
 
@@ -800,10 +693,10 @@ RSpec.describe DemandsController, type: :controller do
             Fabricate :demand, company: company, product: product, project: project, service_delivery_review: sdr, demand_title: 'bar foo', work_item_type: feature_type, class_of_service: :intangible, created_date: Time.zone.local(2019, 1, 19, 10, 0, 0), commitment_date: nil, end_date: Time.zone.local(2019, 1, 23, 10, 0, 0), effort_downstream: 0, effort_upstream: 10
             Fabricate :demand, company: company, product: product, project: project, service_delivery_review: sdr, demand_title: 'xpto', work_item_type: chore_type, class_of_service: :standard, created_date: Time.zone.local(2019, 1, 14, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 19, 10, 0, 0), end_date: Time.zone.local(2019, 1, 24, 10, 0, 0), effort_downstream: 10, effort_upstream: 20
 
-            Fabricate :demand, company: company, product: product, project: project, service_delivery_review: sdr, demand_title: 'xpto', demand_type: :ui, class_of_service: :fixed_date, created_date: 1.month.ago, commitment_date: nil, end_date: nil, effort_downstream: 30, effort_upstream: 10
+            Fabricate :demand, company: company, product: product, project: project, service_delivery_review: sdr, demand_title: 'xpto', work_item_type: feature_type, class_of_service: :fixed_date, created_date: 1.month.ago, commitment_date: nil, end_date: nil, effort_downstream: 30, effort_upstream: 10
             Fabricate :demand, company: company, product: product, project: project, service_delivery_review: sdr, demand_title: 'sas', work_item_type: feature_type, class_of_service: :standard, created_date: Time.zone.local(2019, 1, 23, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 24, 10, 0, 0), end_date: nil, effort_downstream: 10, effort_upstream: 10
-            Fabricate :demand, company: company, product: product, project: project, service_delivery_review: sdr, demand_title: 'sas', demand_type: :performance_improvement, class_of_service: :expedite, created_date: Time.zone.local(2019, 1, 22, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 22, 10, 0, 0), end_date: Time.zone.local(2019, 1, 23, 10, 0, 0), effort_downstream: 40, effort_upstream: 10
-            demand = Fabricate :demand, company: company, product: product, project: project, service_delivery_review: sdr, demand_title: 'sas', demand_type: :wireframe, class_of_service: :fixed_date, created_date: Time.zone.local(2019, 1, 21, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 23, 10, 0, 0), end_date: Time.zone.today, effort_downstream: 50, effort_upstream: 60
+            Fabricate :demand, company: company, product: product, project: project, service_delivery_review: sdr, demand_title: 'sas', work_item_type: chore_type, class_of_service: :expedite, created_date: Time.zone.local(2019, 1, 22, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 22, 10, 0, 0), end_date: Time.zone.local(2019, 1, 23, 10, 0, 0), effort_downstream: 40, effort_upstream: 10
+            demand = Fabricate :demand, company: company, product: product, project: project, service_delivery_review: sdr, demand_title: 'sas', work_item_type: feature_type, class_of_service: :fixed_date, created_date: Time.zone.local(2019, 1, 21, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 23, 10, 0, 0), end_date: Time.zone.today, effort_downstream: 50, effort_upstream: 60
 
             get :demands_list_by_ids, params: { company_id: company, object_type: 'ServiceDeliveryReview', flow_object_id: sdr.id, demand_state: '', demand_fitness: 'underserved', demand_type: '' }
 
@@ -822,10 +715,10 @@ RSpec.describe DemandsController, type: :controller do
             third_demand = Fabricate :demand, company: company, product: product, project: project, service_delivery_review: sdr, demand_title: 'bar foo', work_item_type: feature_type, class_of_service: :intangible, created_date: Time.zone.local(2019, 1, 19, 10, 0, 0), commitment_date: nil, end_date: Time.zone.local(2019, 1, 23, 10, 0, 0), effort_downstream: 0, effort_upstream: 10
             Fabricate :demand, company: company, product: product, project: project, service_delivery_review: sdr, demand_title: 'xpto', work_item_type: chore_type, class_of_service: :standard, created_date: Time.zone.local(2019, 1, 14, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 19, 10, 0, 0), end_date: Time.zone.local(2019, 1, 24, 10, 0, 0), effort_downstream: 10, effort_upstream: 20
 
-            fourth_demand = Fabricate :demand, company: company, product: product, project: project, service_delivery_review: sdr, demand_title: 'xpto', demand_type: :ui, class_of_service: :fixed_date, created_date: 1.month.ago, commitment_date: nil, end_date: nil, effort_downstream: 30, effort_upstream: 10
+            fourth_demand = Fabricate :demand, company: company, product: product, project: project, service_delivery_review: sdr, demand_title: 'xpto', work_item_type: feature_type, class_of_service: :fixed_date, created_date: 1.month.ago, commitment_date: nil, end_date: nil, effort_downstream: 30, effort_upstream: 10
             fifth_demand = Fabricate :demand, company: company, product: product, project: project, service_delivery_review: sdr, demand_title: 'sas', work_item_type: feature_type, class_of_service: :standard, created_date: Time.zone.local(2019, 1, 23, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 24, 10, 0, 0), end_date: nil, effort_downstream: 10, effort_upstream: 10
-            Fabricate :demand, company: company, product: product, project: project, service_delivery_review: sdr, demand_title: 'sas', demand_type: :performance_improvement, class_of_service: :expedite, created_date: Time.zone.local(2019, 1, 22, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 22, 10, 0, 0), end_date: Time.zone.local(2019, 1, 23, 10, 0, 0), effort_downstream: 40, effort_upstream: 10
-            Fabricate :demand, company: company, product: product, project: project, service_delivery_review: sdr, demand_title: 'sas', demand_type: :wireframe, class_of_service: :fixed_date, created_date: Time.zone.local(2019, 1, 21, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 23, 10, 0, 0), end_date: Time.zone.today, effort_downstream: 50, effort_upstream: 60
+            Fabricate :demand, company: company, product: product, project: project, service_delivery_review: sdr, demand_title: 'sas', work_item_type: chore_type, class_of_service: :expedite, created_date: Time.zone.local(2019, 1, 22, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 22, 10, 0, 0), end_date: Time.zone.local(2019, 1, 23, 10, 0, 0), effort_downstream: 40, effort_upstream: 10
+            Fabricate :demand, company: company, product: product, project: project, service_delivery_review: sdr, demand_title: 'sas', work_item_type: feature_type, class_of_service: :fixed_date, created_date: Time.zone.local(2019, 1, 21, 10, 0, 0), commitment_date: Time.zone.local(2019, 1, 23, 10, 0, 0), end_date: Time.zone.today, effort_downstream: 50, effort_upstream: 60
 
             get :demands_list_by_ids, params: { company_id: company, object_type: 'ServiceDeliveryReview', flow_object_id: sdr.id, demand_state: '', demand_fitness: 'f4p', demand_type: '' }
 

@@ -2,6 +2,8 @@
 
 RSpec.describe Azure::AzureWorkItemAdapter do
   let(:company) { Fabricate :company }
+  let!(:feature) { Fabricate :work_item_type, company: company, name: 'Feature' }
+
   let(:azure_account) { Fabricate :azure_account, company: company }
   let(:product) { Fabricate :product, company: company, name: 'FlowClimate' }
   let(:team) { Fabricate :team, company: company, name: 'Great Team' }

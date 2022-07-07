@@ -73,7 +73,8 @@ module Azure
       demand.update(company: company, team: team, demand_title: work_item_response['fields']['System.Title'].strip,
                     created_date: work_item_response['fields']['System.CreatedDate'],
                     end_date: work_item_response['fields']['Microsoft.VSTS.Common.ClosedDate'],
-                    product: product, project: project, work_item_type: WorkItemType.order(:id).last, discarded_at: nil)
+                    product: product, project: project, work_item_type: team.company.work_item_types.order(:id).last,
+                    discarded_at: nil)
       demand
     end
 
@@ -86,7 +87,8 @@ module Azure
 
       task = Task.with_discarded.where(external_id: work_item_response['id']).first_or_initialize
       task.update(title: work_item_response['fields']['System.Title'], created_date: work_item_response['fields']['System.CreatedDate'],
-                  end_date: work_item_response['fields']['Microsoft.VSTS.Common.ClosedDate'], demand: demand, discarded_at: nil)
+                  end_date: work_item_response['fields']['Microsoft.VSTS.Common.ClosedDate'], demand: demand,
+                  work_item_type: team.company.work_item_types.order(:id).last, discarded_at: nil)
 
       task
     end
@@ -105,7 +107,7 @@ module Azure
 
     def read_team(company, team_name)
       team = company.teams.where('name ILIKE :team_name', team_name: "%#{team_name}%").first
-      team = Team.create(company: company, name: team_name) if team.blank?
+      team = company.teams.create(name: team_name) if team.blank?
       team
     end
 
@@ -116,7 +118,7 @@ module Azure
 
       project_name += " - #{team.name}"
 
-      project = Project.where(name: project_name, company: company, team: team).first_or_initialize
+      project = company.projects.where(name: project_name, team: team).first_or_initialize
       unless project.persisted?
         project.update(qty_hours: 0, project_type: :outsourcing, status: :executing, start_date: Time.zone.today,
                        end_date: 3.months.from_now, initial_scope: 0, value: 0, hour_value: 0)

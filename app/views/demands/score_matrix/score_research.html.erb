@@ -37,7 +37,7 @@
     <tr class="center-text">
       <td class="larger-font"><%= @demand.product_name %></td>
       <td class="larger-font"><%= @demand.portfolio_unit_name %></td>
-      <td class="larger-font"><%= I18n.t("activerecord.attributes.demand.enums.demand_type.#{@demand.demand_type}") %></td>
+      <td class="larger-font"><%= I18n.t("activerecord.attributes.demand.enums.demand_type.#{@demand.work_item_type.name}") %></td>
       <td class="larger-font"><%= I18n.t("activerecord.attributes.demand.enums.class_of_service.#{@demand.class_of_service}") %></td>
       <td class="larger-font"><%= @demand.current_stage_name %></td>
     </tr>

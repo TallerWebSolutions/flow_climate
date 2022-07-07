@@ -3,6 +3,8 @@
 RSpec.describe Highchart::StatusReportChartsAdapter, type: :data_object do
   context 'with projects' do
     let(:company) { Fabricate :company }
+    let(:bug_type) { Fabricate :work_item_type, company: company, name: 'Bug', quality_indicator_type: true }
+
     let(:customer) { Fabricate :customer, company: company }
 
     describe '.initialize' do

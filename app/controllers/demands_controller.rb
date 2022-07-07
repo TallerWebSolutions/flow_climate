@@ -7,17 +7,6 @@ class DemandsController < DemandsListController
   before_action :assign_demand, only: %i[edit update show synchronize_jira synchronize_azure destroy destroy_physically score_research]
   before_action :assign_project, except: %i[demands_csv show destroy edit update destroy_physically score_research index demands_list_by_ids demands_charts synchronize_jira synchronize_azure]
 
-  def new
-    @demand = Demand.new(project: @project)
-  end
-
-  def create
-    @demand = Demand.new(demand_params.merge(project: @project, company: @company))
-    return render :new unless @demand.save
-
-    redirect_to company_demand_path(@company, @demand)
-  end
-
   def destroy
     @demand.discard
     assign_dates_to_query
@@ -139,11 +128,7 @@ class DemandsController < DemandsListController
 
     @demand_fitness = params[:demand_fitness]
     @demand_state = params[:demand_state]
-    @demand_type = if params[:demand].present?
-                     demand_params[:demand_type]
-                   else
-                     params[:demand_type]
-                   end
+    @demand_type = @company.work_item_types.where('name ILIKE :type_name', type_name: "%#{params[:demand_type]}%").first if params[:demand_type].present?
 
     @demands = if @demand_fitness == 'overserved'
                  demandable.overserved_demands[:value]
@@ -155,8 +140,8 @@ class DemandsController < DemandsListController
                  demandable.demands.discarded
                elsif @demand_state == 'not_discarded'
                  demandable.demands.kept
-               elsif @demand_type.present? && @demand_type.exclude?('all_types')
-                 demandable.demands.where(demand_type: @demand_type)
+               elsif @demand_type.present?
+                 demandable.demands.where(work_item_type: @demand_type)
                elsif @demand_state == 'delivered'
                  demandable.demands.finished_until_date(Time.zone.now)
                elsif @demand_state == 'backlog'
@@ -206,7 +191,7 @@ class DemandsController < DemandsListController
   end
 
   def demand_params
-    params.require(:demand).permit(:team_id, :product_id, :customer_id, :external_id, :demand_type, :downstream, :manual_effort, :class_of_service, :effort_upstream, :effort_downstream, :created_date, :commitment_date, :end_date, :demand_score, :external_url, :object_type, :flow_object_id, :demand_state, :demand_fitness)
+    params.require(:demand).permit(:team_id, :product_id, :customer_id, :external_id, :downstream, :manual_effort, :effort_upstream, :effort_downstream, :created_date, :commitment_date, :end_date, :demand_score, :external_url, :object_type, :flow_object_id, :demand_state, :demand_fitness)
   end
 
   def assign_project
