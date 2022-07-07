@@ -55,7 +55,7 @@ module Jira
       demand.update(project: project, company: project.company, product: product, team: project.team,
                     customer: customer,
                     created_date: issue_fields_value(jira_issue, 'created'),
-                    demand_type: read_issue_type(jira_issue_attrs(jira_issue)),
+                    work_item_type: read_issue_type(demand.company, jira_issue_attrs(jira_issue)),
                     class_of_service: class_of_service,
                     demand_title: issue_fields_value(jira_issue, 'summary'),
                     external_url: build_jira_url(jira_account, demand.external_id), commitment_date: nil, discarded_at: nil)
@@ -172,15 +172,10 @@ module Jira
       jira_issue_attrs(jira_issue)['fields'][field_name]
     end
 
-    def read_issue_type(jira_issue_attrs)
+    def read_issue_type(company, jira_issue_attrs)
       issue_type_name = jira_issue_attrs['fields']['issuetype']['name']
-      return :bug if issue_type_name.casecmp('bug').zero?
-      return :chore if issue_type_name.casecmp('chore').zero?
-      return :performance_improvement if issue_type_name.casecmp('performance improvement').zero?
-      return :wireframe if issue_type_name.casecmp('wireframes').zero?
-      return :ui if issue_type_name.casecmp('ui').zero?
 
-      :feature
+      company.work_item_types.where(name: issue_type_name.capitalize).first_or_create
     end
 
     def read_responsibles_info(demand, jira_account, jira_issue_changelog)

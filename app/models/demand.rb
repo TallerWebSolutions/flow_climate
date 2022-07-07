@@ -178,6 +178,18 @@ class Demand < ApplicationRecord
     }
   end
 
+  def feature?
+    work_item_type.name.casecmp('feature').zero?
+  end
+
+  def chore?
+    work_item_type.name.casecmp('chore').zero?
+  end
+
+  def bug?
+    work_item_type.quality_indicator_type
+  end
+
   def date_to_use
     end_date || commitment_date || created_date
   end

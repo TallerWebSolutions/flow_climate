@@ -41,7 +41,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
         let!(:out_membership) { Fabricate :membership, team: team, team_member: out_team_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
         let!(:other_company_membership) { Fabricate :membership, team: team, team_member: other_company_team_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
 
-        let!(:jira_issue) { client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'Story' }, customfield_10028: { value: 'Expedite' }, customfield_10013: { value: 'xpto of bla' }, customfield_10015: [contract.id], project: { key: 'foo' }, customfield_10024: [{ emailAddress: 'foo' }, { emailAddress: 'bar' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', created: '2018-07-08T22:34:47.440-0300', author: { displayName: default_member.name }, items: [{ field: 'status', from: 'backlog', to: 'first_stage' }] }, { id: '10038', created: '2018-07-09T09:40:43.886-0300', author: { displayName: default_member.name }, items: [{ field: 'status', from: 'first_stage', to: 'second_stage' }] }, { id: '10431', created: '2018-07-06T09:10:43.886-0300', author: { displayName: default_member.name }, items: [{ field: 'Responsible', fieldId: 'customfield_10024', from: nil, fromString: nil, to: "[#{out_team_member.name}, #{team_member.name}, 'foobarxpto']", toString: "[#{out_team_member.name}, #{team_member.name}]" }] }, { id: '10432', created: '2018-07-06T09:40:43.886-0300', author: { displayName: default_member.name }, items: [{ field: 'Responsible', fieldId: 'customfield_10024', from: "[#{team_member.name}, #{out_team_member.name}]", fromString: "[#{team_member.name}, #{out_team_member.name}]", to: "[#{team_member.name}, #{other_team_member.name}]", toString: "[#{team_member.name}, #{other_team_member.name}]" }] }] } }.with_indifferent_access) }
+        let!(:jira_issue) { client.Issue.build({ key: '10000', fields: { created: '2018-07-02T11:20:18.998-0300', summary: 'foo of bar', issuetype: { name: 'FeaTuRe' }, customfield_10028: { value: 'Expedite' }, customfield_10013: { value: 'xpto of bla' }, customfield_10015: [contract.id], project: { key: 'foo' }, customfield_10024: [{ emailAddress: 'foo' }, { emailAddress: 'bar' }] }, changelog: { startAt: 0, maxResults: 2, total: 2, histories: [{ id: '10039', created: '2018-07-08T22:34:47.440-0300', author: { displayName: default_member.name }, items: [{ field: 'status', from: 'backlog', to: 'first_stage' }] }, { id: '10038', created: '2018-07-09T09:40:43.886-0300', author: { displayName: default_member.name }, items: [{ field: 'status', from: 'first_stage', to: 'second_stage' }] }, { id: '10431', created: '2018-07-06T09:10:43.886-0300', author: { displayName: default_member.name }, items: [{ field: 'Responsible', fieldId: 'customfield_10024', from: nil, fromString: nil, to: "[#{out_team_member.name}, #{team_member.name}, 'foobarxpto']", toString: "[#{out_team_member.name}, #{team_member.name}]" }] }, { id: '10432', created: '2018-07-06T09:40:43.886-0300', author: { displayName: default_member.name }, items: [{ field: 'Responsible', fieldId: 'customfield_10024', from: "[#{team_member.name}, #{out_team_member.name}]", fromString: "[#{team_member.name}, #{out_team_member.name}]", to: "[#{team_member.name}, #{other_team_member.name}]", toString: "[#{team_member.name}, #{other_team_member.name}]" }] }] } }.with_indifferent_access) }
 
         it 'creates the demand' do
           described_class.instance.process_issue(jira_account, jira_issue, product, first_project)
@@ -58,6 +58,7 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
           expect(created_demand).to be_feature
           expect(created_demand).to be_expedite
           expect(created_demand.created_date).to eq Time.zone.parse('2018-07-02T11:20:18.998-0300')
+          expect(WorkItemType.last.name).to eq 'Feature'
         end
       end
 
@@ -68,15 +69,6 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
           described_class.instance.process_issue(jira_account, jira_issue, product, first_project)
           expect(Demand.last).to be_chore
           expect(Demand.last).to be_standard
-        end
-      end
-
-      context 'and it is an epic' do
-        let!(:jira_issue) { client.Issue.build({ key: '10000', summary: 'foo of bar', fields: { created: '2018-07-03T11:20:18.998-0300', issuetype: { name: 'ePIc' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }] } }.with_indifferent_access) }
-
-        it 'creates the demand as chore as type and standard as class of service' do
-          described_class.instance.process_issue(jira_account, jira_issue, product, first_project)
-          expect(Demand.last).to be_feature
         end
       end
 

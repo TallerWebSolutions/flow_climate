@@ -882,4 +882,58 @@ RSpec.describe Demand, type: :model do
       expect(filled_project.initial_scope).to eq 9
     end
   end
+
+  describe '#feature?' do
+    it 'returns true when the demand is a feature' do
+      company = Fabricate :company
+
+      feature_type = Fabricate :work_item_type, company: company, name: 'Feature'
+      bug_type = Fabricate :work_item_type, company: company, name: 'Bug', quality_indicator_type: true
+      chore_type = Fabricate :work_item_type, company: company, name: 'Chore'
+
+      feature = Fabricate :demand, work_item_type: feature_type
+      bug = Fabricate :demand, work_item_type: bug_type
+      chore = Fabricate :demand, work_item_type: chore_type
+
+      expect(feature).to be_a_feature
+      expect(bug).not_to be_a_feature
+      expect(chore).not_to be_a_feature
+    end
+  end
+
+  describe '#bug?' do
+    it 'returns true when the demand is a bug' do
+      company = Fabricate :company
+
+      feature_type = Fabricate :work_item_type, company: company, name: 'Feature'
+      bug_type = Fabricate :work_item_type, company: company, name: 'Bug', quality_indicator_type: true
+      chore_type = Fabricate :work_item_type, company: company, name: 'Chore'
+
+      feature = Fabricate :demand, work_item_type: feature_type
+      bug = Fabricate :demand, work_item_type: bug_type
+      chore = Fabricate :demand, work_item_type: chore_type
+
+      expect(bug).to be_a_bug
+      expect(feature).not_to be_a_bug
+      expect(chore).not_to be_a_bug
+    end
+  end
+
+  describe '#chore?' do
+    it 'returns true when the demand is a bug' do
+      company = Fabricate :company
+
+      feature_type = Fabricate :work_item_type, company: company, name: 'Feature'
+      bug_type = Fabricate :work_item_type, company: company, name: 'Bug', quality_indicator_type: true
+      chore_type = Fabricate :work_item_type, company: company, name: 'Chore'
+
+      feature = Fabricate :demand, work_item_type: feature_type
+      bug = Fabricate :demand, work_item_type: bug_type
+      chore = Fabricate :demand, work_item_type: chore_type
+
+      expect(chore).to be_a_chore
+      expect(bug).not_to be_a_chore
+      expect(feature).not_to be_a_chore
+    end
+  end
 end
