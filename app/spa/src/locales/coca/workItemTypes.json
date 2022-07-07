@@ -1,0 +1,12 @@
+{
+  "title": "Create Work Item Type",
+  "form": {
+    "name": "Name",
+    "itemLevel": "Item Level",
+    "demand": "Deliverable",
+    "task": "Task",
+    "cancel": "Cancel",
+    "save": "Save",
+    "qualityIndicatorType": "Quality Indicator"
+  }
+}
