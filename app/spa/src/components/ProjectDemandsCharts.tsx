@@ -128,95 +128,81 @@ const ProjectDemandsCharts = ({
       })
     : []
 
-  const projectDemandsBurnupChartData = project
-    ? [
-        {
-          id: t("charts_tab.project_charts.demands_burn_up_label_scope"),
-          data: project.weeklyProjectScopeUntilEnd.map((scope, index) => ({
-            x: index,
-            y: scope,
-          })),
-        },
-        {
-          id: t("charts_tab.project_charts.demands_burn_up_label_ideal"),
-          data: project.currentWeeklyScopeIdealBurnup.map(
-            (idealScope, index) => ({
-              x: index,
-              y: idealScope,
-            })
-          ),
-        },
-        {
-          id: t("charts_tab.project_charts.demands_burn_up_label_delivered"),
-          data: projectConsolidationsWeekly.map(
-            ({ projectThroughput }, index) => ({
-              x: index,
-              y: projectThroughput,
-            })
-          ),
-        },
-      ]
-    : []
+  const projectDemandsBurnupChartData = [
+    {
+      id: t("charts_tab.project_charts.demands_burn_up_label_scope"),
+      data: project.weeklyProjectScopeUntilEnd.map((scope, index) => ({
+        x: index,
+        y: scope,
+      })),
+    },
+    {
+      id: t("charts_tab.project_charts.demands_burn_up_label_ideal"),
+      data: project.currentWeeklyScopeIdealBurnup.map((idealScope, index) => ({
+        x: index,
+        y: idealScope,
+      })),
+    },
+    {
+      id: t("charts_tab.project_charts.demands_burn_up_label_delivered"),
+      data: projectConsolidationsWeekly.map(({ projectThroughput }, index) => ({
+        x: index,
+        y: projectThroughput,
+      })),
+    },
+  ]
 
-  const projectHoursBurnupChartData = project
-    ? [
-        {
-          id: t("charts_tab.project_charts.hours_burn_up_label_scope"),
-          data: project.weeklyProjectScopeHoursUntilEnd.map((scope, index) => ({
-            x: index,
-            y: scope,
-          })),
-        },
-        {
-          id: t("charts_tab.project_charts.hours_burn_up_label_ideal"),
-          data: project.currentWeeklyHoursIdealBurnup.map(
-            (idealScope, index) => ({
-              x: index,
-              y: idealScope,
-            })
-          ),
-        },
-        {
-          id: t("charts_tab.project_charts.hours_burn_up_label_delivered"),
-          data: projectConsolidationsWeekly.map(
-            ({ projectThroughputHours }, index) => ({
-              x: index,
-              y: projectThroughputHours.toFixed(2),
-            })
-          ),
-        },
-      ]
-    : []
+  const projectHoursBurnupChartData = [
+    {
+      id: t("charts_tab.project_charts.hours_burn_up_label_scope"),
+      data: project.weeklyProjectScopeHoursUntilEnd.map((scope, index) => ({
+        x: index,
+        y: scope,
+      })),
+    },
+    {
+      id: t("charts_tab.project_charts.hours_burn_up_label_ideal"),
+      data: project.currentWeeklyHoursIdealBurnup.map((idealScope, index) => ({
+        x: index,
+        y: idealScope,
+      })),
+    },
+    {
+      id: t("charts_tab.project_charts.hours_burn_up_label_delivered"),
+      data: projectConsolidationsWeekly.map(
+        ({ projectThroughputHours }, index) => ({
+          x: index,
+          y: projectThroughputHours.toFixed(2),
+        })
+      ),
+    },
+  ]
 
-  const leadTimeP80ChartData = project
-    ? [
-        {
-          id: project.name,
-          data: projectConsolidationsWeekly.map(({ leadTimeP80 }, index) => {
-            const leadTimep80InDays = secondsToDays(leadTimeP80)
+  const leadTimeP80ChartData = [
+    {
+      id: project.name,
+      data: projectConsolidationsWeekly.map(({ leadTimeP80 }, index) => {
+        const leadTimep80InDays = secondsToDays(leadTimeP80)
 
-            return {
-              x: index,
-              y: leadTimep80InDays,
-            }
-          }),
-        },
-      ]
-    : []
+        return {
+          x: index,
+          y: leadTimep80InDays,
+        }
+      }),
+    },
+  ]
 
-  const projectQualityChartData = project
-    ? [
-        {
-          id: project.name,
-          data: projectConsolidationsWeekly.map(
-            ({ consolidationDate, projectQuality }) => ({
-              x: consolidationDate,
-              y: (1 - projectQuality) * 100,
-            })
-          ),
-        },
-      ]
-    : []
+  const projectQualityChartData = [
+    {
+      id: project.name,
+      data: projectConsolidationsWeekly.map(
+        ({ consolidationDate, projectQuality }) => ({
+          x: consolidationDate,
+          y: (1 - projectQuality) * 100,
+        })
+      ),
+    },
+  ]
 
   const leadTimeControlChartData = [
     {
@@ -410,12 +396,10 @@ const ProjectDemandsCharts = ({
       })
     : []
 
-  const demandsCountByTeamMember = project
-    ? project.projectMembers.map((member) => ({
-        [t("charts_tab.project_charts.demandsCount")]: member.demandsCount,
-        name: member.memberName,
-      }))
-    : []
+  const demandsCountByTeamMember = project.projectMembers.map((member) => ({
+    [t("charts_tab.project_charts.demandsCount")]: member.demandsCount,
+    name: member.memberName,
+  }))
 
   return (
     <Grid container spacing={2} rowSpacing={8} sx={{ marginTop: 4 }}>
@@ -511,7 +495,7 @@ const ProjectDemandsCharts = ({
       </ChartGridItem>
       <ChartGridItem
         title={t("charts_tab.project_charts.demands_burn_up_chart", {
-          projectName: project.name || "",
+          projectName: project.name,
         })}
       >
         <LineChart
@@ -529,7 +513,7 @@ const ProjectDemandsCharts = ({
       </ChartGridItem>
       <ChartGridItem
         title={t("charts_tab.project_charts.hours_burn_up_chart", {
-          projectName: project.name || "no project",
+          projectName: project.name,
         })}
       >
         <LineChart
@@ -559,7 +543,7 @@ const ProjectDemandsCharts = ({
       {projectCumulativeFlowChartData && (
         <ChartGridItem
           title={t("charts_tab.project_charts.cumulative_flow_chart", {
-            projectName: project.name || "no project",
+            projectName: project.name,
           })}
         >
           <LineChart

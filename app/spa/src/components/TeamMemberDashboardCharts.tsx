@@ -58,8 +58,8 @@ const TeamMemberDashboardCharts = ({
   const projectHoursData = teamMember.projectHoursData
   const projectHoursKeys = projectHoursData?.xAxis || []
   const projectHoursNames = projectHoursData?.yAxisProjectsNames || []
-  const projectHoursGroups: BarDatum[] =
-    projectHoursKeys?.map((key, indexKeys, { length: lengthKeys }) => {
+  const projectHoursGroups: BarDatum[] = projectHoursKeys.map(
+    (key, indexKeys, { length: lengthKeys }) => {
       const group: BarDatum = { key }
       projectHoursNames.forEach((name, indexNames) => {
         group[name] =
@@ -67,7 +67,8 @@ const TeamMemberDashboardCharts = ({
           ""
       })
       return group
-    }) || []
+    }
+  )
 
   return (
     <Grid container spacing={2}>
