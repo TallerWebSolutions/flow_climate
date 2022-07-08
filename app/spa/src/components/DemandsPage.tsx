@@ -53,18 +53,23 @@ const DemandsPage = ({
   const teams = me?.currentCompany?.teams
   const { pathname } = useLocation()
 
+  const sanitizedFilters = Object.keys(filters).reduce(
+    (acc, key) =>
+      filters[key] && filters[key] !== "null"
+        ? { ...acc, [key]: filters[key] }
+        : acc,
+    {}
+  )
+  const urlSearchParams = new URLSearchParams(sanitizedFilters).toString()
+
   const demandsTabs = [
     {
       label: t("list.title"),
-      to: `/companies/${companySlug}/demands?${new URLSearchParams(
-        filters
-      ).toString()}`,
+      to: `/companies/${companySlug}/demands?${urlSearchParams}`,
     },
     {
       label: t("charts.title"),
-      to: `/companies/${companySlug}/demands/demands_charts?${new URLSearchParams(
-        filters
-      ).toString()}`,
+      to: `/companies/${companySlug}/demands/demands_charts?${urlSearchParams}`,
     },
   ]
 

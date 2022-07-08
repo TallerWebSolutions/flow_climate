@@ -93,11 +93,16 @@ const DemandsList = () => {
   const companySlug = me?.currentCompany?.slug
   const [searchParams] = useSearchParams()
 
+  // eslint-disable-next-line
+  console.log("truco")
+  // eslint-disable-next-line
+  console.log(searchParams.get("searchText"))
+
   const [filters, setFilters] = useState<FieldValues>({
     initiative: searchParams.get("initiative"),
     team: searchParams.get("team"),
     project: searchParams.get("project"),
-    searchText: searchParams.get("searchText"),
+    searchText: searchParams.get("searchText") || "",
     demandStatus: searchParams.get("demandStatus"),
     sortDirection: "DESC",
     orderField: "end_date",
