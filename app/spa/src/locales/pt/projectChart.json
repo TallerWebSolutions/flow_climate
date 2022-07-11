@@ -10,7 +10,7 @@
       "client": "Cliente",
       "product": "Produto",
       "demand_id": "ID da Demanda",
-      "delivery_date": "Data de Entrega",
+      "deliveryDate": "Data de Entrega",
       "leadtime": "Lead Time",
       "demand_blocks": "Bloqueios",
       "general_info": "Informações Gerais",

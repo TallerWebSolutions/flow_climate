@@ -162,7 +162,7 @@ export const ProjectChartsTable = () => {
     t("charts_tab.project_chart_table.demand_id"),
     t("charts_tab.project_chart_table.client"),
     t("charts_tab.project_chart_table.product"),
-    t("charts_tab.project_chart_table.delivery_date"),
+    t("charts_tab.project_chart_table.deliveryDate"),
     t("charts_tab.project_chart_table.leadtime"),
     t("charts_tab.project_chart_table.demand_blocks"),
   ]

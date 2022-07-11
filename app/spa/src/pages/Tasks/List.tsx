@@ -19,6 +19,7 @@ import { secondsToReadbleDate } from "../../lib/date"
 import { Task } from "../../modules/task/task.types"
 import User from "../../modules/user/user.types"
 import { TaskFilters } from "./Tasks"
+import DateLocale from "../../components/ui/DateLocale"
 
 export const TASKS_LIST_QUERY = gql`
   query TasksPage(
@@ -125,12 +126,12 @@ const TaskList = ({ filters, setFilters }: TaskListProps) => {
     t("tasks_table.team"),
     t("tasks_table.initiative"),
     t("tasks_table.project"),
-    t("tasks_table.demand_title"),
+    t("tasks_table.demandTitle"),
     t("tasks_table.taskType"),
     t("tasks_table.title"),
-    t("tasks_table.creation_date"),
-    t("tasks_table.delivery_date"),
-    t("tasks_table.time_to_finish"),
+    t("tasks_table.creationDate"),
+    t("tasks_table.deliveryDate"),
+    t("tasks_table.timeToFinish"),
   ]
 
   const handleRowsPerPage = (
@@ -221,8 +222,12 @@ const TaskList = ({ filters, setFilters }: TaskListProps) => {
                 </TableCell>
                 <TableCell padding="checkbox">{task.taskType}</TableCell>
                 <TableCell padding="checkbox">{task.title}</TableCell>
-                <TableCell padding="checkbox">{task.createdDate}</TableCell>
-                <TableCell padding="checkbox">{task.endDate}</TableCell>
+                <TableCell padding="checkbox">
+                  <DateLocale time date={task.createdDate} />
+                </TableCell>
+                <TableCell padding="checkbox">
+                  {task.endDate ? <DateLocale time date={task.endDate} /> : ""}
+                </TableCell>
                 <TableCell padding="checkbox">
                   {normalizeTimeToFinish(
                     task.secondsToComplete,

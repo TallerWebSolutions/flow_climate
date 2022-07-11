@@ -11,8 +11,8 @@ export type Task = {
   externalId: number
   title: string
   taskType: string
-  createdDate: string | Date
-  endDate: string | Date
+  createdDate: string
+  endDate?: string
   delivered: boolean
   secondsToComplete: number
   partialCompletionTime: number

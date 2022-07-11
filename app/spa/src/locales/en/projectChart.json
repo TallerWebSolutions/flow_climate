@@ -10,7 +10,7 @@
       "client": "Client",
       "product": "Product",
       "demand_id": "Demand ID",
-      "delivery_date": "Delivery Date",
+      "deliveryDate": "Delivery Date",
       "leadtime": "Lead Time",
       "demand_blocks": "Blocks",
       "general_info": "General Info",
