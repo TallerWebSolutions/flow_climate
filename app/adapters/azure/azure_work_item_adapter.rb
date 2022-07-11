@@ -70,10 +70,12 @@ module Azure
 
       demand = Demand.with_discarded.where(external_id: work_item_response['id']).first_or_initialize
 
+      demand_type = read_card_type(project.company, work_item_response, :demand)
+
       demand.update(company: company, team: team, demand_title: work_item_response['fields']['System.Title'].strip,
                     created_date: work_item_response['fields']['System.CreatedDate'],
                     end_date: work_item_response['fields']['Microsoft.VSTS.Common.ClosedDate'],
-                    product: product, project: project, work_item_type: team.company.work_item_types.order(:id).last,
+                    product: product, project: project, work_item_type: demand_type,
                     discarded_at: nil)
       demand
     end
@@ -85,12 +87,22 @@ module Azure
     def read_user_story(product, project, team, azure_project, work_item_response)
       demand = read_task_parent(product, project, team, azure_project, work_item_response)
 
+      task_type = read_card_type(project.company, work_item_response, :task)
+
       task = Task.with_discarded.where(external_id: work_item_response['id']).first_or_initialize
       task.update(title: work_item_response['fields']['System.Title'], created_date: work_item_response['fields']['System.CreatedDate'],
                   end_date: work_item_response['fields']['Microsoft.VSTS.Common.ClosedDate'], demand: demand,
-                  work_item_type: team.company.work_item_types.order(:id).last, discarded_at: nil)
+                  work_item_type: task_type, discarded_at: nil)
 
       task
+    end
+
+    def read_card_type(company, work_item_response, item_level)
+      type = company.work_item_types.where(name: work_item_response['fields']['System.Tags'], item_level: item_level).first_or_create
+
+      return type if type.valid?
+
+      company.work_item_types.where(name: 'Default', item_level: item_level).first_or_create
     end
 
     def read_task_parent(product, project, team, azure_project, work_item_response)

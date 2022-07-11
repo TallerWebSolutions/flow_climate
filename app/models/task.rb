@@ -49,6 +49,10 @@ class Task < ApplicationRecord
     (Time.zone.now - created_date).to_i
   end
 
+  def task_type
+    work_item_type.name
+  end
+
   private
 
   def compute_time_to_deliver

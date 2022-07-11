@@ -50,6 +50,7 @@ export const TASKS_LIST_QUERY = gql`
       tasks {
         id
         title
+        taskType
         createdDate
         endDate
         secondsToComplete
@@ -125,6 +126,7 @@ const TaskList = ({ filters, setFilters }: TaskListProps) => {
     t("tasks_table.initiative"),
     t("tasks_table.project"),
     t("tasks_table.demand_title"),
+    t("tasks_table.taskType"),
     t("tasks_table.title"),
     t("tasks_table.creation_date"),
     t("tasks_table.delivery_date"),
@@ -217,6 +219,7 @@ const TaskList = ({ filters, setFilters }: TaskListProps) => {
                 <TableCell padding="checkbox">
                   {task.demand.demandTitle}
                 </TableCell>
+                <TableCell padding="checkbox">{task.taskType}</TableCell>
                 <TableCell padding="checkbox">{task.title}</TableCell>
                 <TableCell padding="checkbox">{task.createdDate}</TableCell>
                 <TableCell padding="checkbox">{task.endDate}</TableCell>

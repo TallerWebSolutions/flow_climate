@@ -8,6 +8,7 @@ module Types
     field :created_date, GraphQL::Types::ISO8601DateTime, null: true
     field :customer, Types::CustomerType, null: true
     field :demand_title, String, null: true
+    field :demand_type, String, null: false
     field :effort_downstream, Float, null: true
     field :effort_upstream, Float, null: true
     field :end_date, GraphQL::Types::ISO8601DateTime, null: true

@@ -75,6 +75,15 @@ RSpec.describe Azure::AzureWorkItemAdapter do
 
             expect(Demand.all.count).to eq 1
             expect(Task.all.count).to eq 1
+
+            expect(Demand.all.map(&:demand_title)).to eq ['Primeiro Contato']
+            expect(Demand.all.map(&:demand_type)).to eq ['AV']
+
+            expect(Task.all.map(&:title)).to eq ['Primeira issue']
+            expect(Task.all.map(&:task_type)).to eq ['Default']
+
+            expect(WorkItemType.all.map(&:name)).to match_array %w[Default AV Feature]
+            expect(WorkItemType.all.map(&:item_level)).to match_array %w[demand task demand]
           end
         end
 

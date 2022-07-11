@@ -71,6 +71,7 @@ const DEMANDS_QUERY = gql`
       endDate
       leadtime
       commitmentDate
+      demandType
       responsibles {
         id
         name
@@ -92,11 +93,6 @@ const DemandsList = () => {
   const { me } = useContext(MeContext)
   const companySlug = me?.currentCompany?.slug
   const [searchParams] = useSearchParams()
-
-  // eslint-disable-next-line
-  console.log("truco")
-  // eslint-disable-next-line
-  console.log(searchParams.get("searchText"))
 
   const [filters, setFilters] = useState<FieldValues>({
     initiative: searchParams.get("initiative"),
@@ -140,12 +136,14 @@ const DemandsList = () => {
       {demand.externalId}
     </Link>,
     demand.demandTitle || "",
+    demand.demandType,
     <AvatarGroup max={2}>
       {demand.responsibles &&
         demand.responsibles.map((responsible, index) => (
           <Avatar
             key={`${responsible.name}--${index}`}
             alt={responsible.name}
+            sx={{ width: 25, height: 25 }}
             src={
               responsible.user?.avatar?.imageSource ||
               process.env.PUBLIC_URL + "default.png"
@@ -169,6 +167,7 @@ const DemandsList = () => {
   const tableHeader = [
     t("table.header.id"),
     t("table.header.title"),
+    t("table.header.demandType"),
     t("table.header.responsibles"),
     t("table.header.createdDate"),
     t("table.header.commitmentDate"),

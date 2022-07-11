@@ -3,6 +3,7 @@
     "header": {
       "id": "ID",
       "title": "Title",
+      "demandType": "Type",
       "createdDate": "Creation date",
       "deliveryDate": "Delivery date",
       "timeToFinish": "Time to finish",

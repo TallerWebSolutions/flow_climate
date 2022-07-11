@@ -190,6 +190,10 @@ class Demand < ApplicationRecord
     work_item_type.quality_indicator_type
   end
 
+  def demand_type
+    work_item_type.name
+  end
+
   def date_to_use
     end_date || commitment_date || created_date
   end

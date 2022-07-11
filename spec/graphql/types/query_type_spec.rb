@@ -678,6 +678,7 @@ RSpec.describe Types::QueryType do
             totalCount
             demands {
               id
+              demandType
             }
           }
         }
@@ -691,7 +692,9 @@ RSpec.describe Types::QueryType do
 
         result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
 
-        expect(result.dig('data', 'demandsList')).to match_array({ 'totalCount' => 2, 'demands' => [{ 'id' => other_demand.id.to_s }, 'id' => demand.id.to_s] })
+        expect(result.dig('data', 'demandsList', 'totalCount')).to eq 2
+        expect(result.dig('data', 'demandsList', 'demands')[0]).to eq({ 'id' => other_demand.id.to_s, 'demandType' => other_demand.demand_type })
+        expect(result.dig('data', 'demandsList', 'demands')[1]).to eq({ 'id' => demand.id.to_s, 'demandType' => demand.demand_type })
       end
     end
   end
@@ -850,6 +853,7 @@ RSpec.describe Types::QueryType do
           inProgressLeadTimeP95
           tasks {
             id
+            taskType
             title
             delivered
             initiative {
@@ -960,6 +964,7 @@ RSpec.describe Types::QueryType do
               {
                 'id' => task.id.to_s,
                 'title' => task.title,
+                'taskType' => task.task_type,
                 'delivered' => task.end_date.present?,
                 'initiative' => {
                   'id' => task.demand.project.initiative.id.to_s

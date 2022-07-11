@@ -936,4 +936,11 @@ RSpec.describe Demand, type: :model do
       expect(feature).not_to be_a_chore
     end
   end
+
+  describe '#demand_type' do
+    it 'returns the work item type name' do
+      demand = Fabricate :demand
+      expect(demand.demand_type).to eq WorkItemType.last.name
+    end
+  end
 end

@@ -13,6 +13,7 @@ module Types
     field :partial_completion_time, Float, null: true
     field :project, Types::ProjectType, null: false
     field :seconds_to_complete, Float, null: true
+    field :task_type, String, null: false
     field :team, Types::TeamType, null: false
     field :title, String, null: false
 

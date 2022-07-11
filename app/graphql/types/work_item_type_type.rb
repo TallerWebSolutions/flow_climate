@@ -8,7 +8,7 @@ module Types
     field :quality_indicator_type, Boolean, null: false
 
     def item_level
-      return 'DEMAND' if object.item_level.zero?
+      return 'DEMAND' if object.item_level_before_type_cast.zero?
 
       'TASK'
     end

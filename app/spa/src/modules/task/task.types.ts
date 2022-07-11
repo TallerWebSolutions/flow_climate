@@ -10,6 +10,7 @@ export type Task = {
   id: number
   externalId: number
   title: string
+  taskType: string
   createdDate: string | Date
   endDate: string | Date
   delivered: boolean

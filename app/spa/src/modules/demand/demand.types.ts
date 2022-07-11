@@ -6,6 +6,7 @@ import { TeamMember } from "../teamMember/teamMember.types"
 export type Demand = {
   id: string
   demandTitle?: string
+  demandType: string
   endDate?: string
   commitmentDate?: string
   createdDate: string

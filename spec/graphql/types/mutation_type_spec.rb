@@ -335,7 +335,7 @@ RSpec.describe Types::MutationType do
         expect(result['data']['createWorkItemType']['workItemType']['name']).to eq('Fire Supression')
         expect(result['data']['createWorkItemType']['workItemType']['itemLevel']).to eq('TASK')
         expect(created_work_item_type.name).to eq 'Fire Supression'
-        expect(created_work_item_type.item_level).to eq 1
+        expect(created_work_item_type).to be_a_task
       end
     end
   end

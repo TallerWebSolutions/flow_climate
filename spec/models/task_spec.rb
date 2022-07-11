@@ -112,4 +112,11 @@ RSpec.describe Task, type: :model do
       end
     end
   end
+
+  describe '#task_type' do
+    it 'returns the work item type name' do
+      task = Fabricate :task
+      expect(task.task_type).to eq task.work_item_type.name
+    end
+  end
 end
