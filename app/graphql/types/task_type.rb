@@ -3,10 +3,10 @@
 module Types
   class TaskType < Types::BaseObject
     field :company, Types::CompanyType, null: false
-    field :created_date, GraphQL::Types::ISO8601Date, null: false
+    field :created_date, GraphQL::Types::ISO8601DateTime, null: false
     field :delivered, Boolean, null: false
     field :demand, Types::DemandType, null: false
-    field :end_date, GraphQL::Types::ISO8601Date, null: true
+    field :end_date, GraphQL::Types::ISO8601DateTime, null: true
     field :external_id, ID, null: true
     field :id, ID, null: false
     field :initiative, Types::InitiativeType, null: true

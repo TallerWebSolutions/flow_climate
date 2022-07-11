@@ -5,6 +5,7 @@ import { Avatar, AvatarGroup, Button, Link } from "@mui/material"
 import { CSVLink } from "react-csv"
 import { FieldValues } from "react-hook-form"
 import EditIcon from "@mui/icons-material/Edit"
+import { formatISO } from "date-fns"
 
 import { Demand } from "../../modules/demand/demand.types"
 import Table from "../../components/ui/Table"
@@ -164,6 +165,17 @@ const DemandsList = () => {
     </Link>,
   ]
 
+  const normalizeCsvTableRow = (demand: Demand) => [
+    demand.externalId,
+    demand.demandTitle || "",
+    demand.demandType,
+    demand.responsibles?.map(({ name }) => name).join(", "),
+    demand.createdDate,
+    demand.commitmentDate,
+    demand.endDate,
+    secondsToReadbleDate(demand.leadtime),
+  ]
+
   const tableHeader = [
     t("table.header.id"),
     t("table.header.title"),
@@ -176,9 +188,20 @@ const DemandsList = () => {
     t("table.header.actions"),
   ]
 
+  const tableCsvHeader = [
+    t("table.header.id"),
+    t("table.header.title"),
+    t("table.header.demandType"),
+    t("table.header.responsibles"),
+    t("table.header.createdDate"),
+    t("table.header.commitmentDate"),
+    t("table.header.deliveryDate"),
+    t("table.header.timeToFinish"),
+  ]
+
   const demandsCount = data?.demandsTableData.totalCount || 0
   const tableRows = data?.demandsTableData.demands.map(normalizeTableRow) || []
-  const csvRows = data?.demandsCsvData.demands.map(normalizeTableRow) || []
+  const csvRows = data?.demandsCsvData.demands.map(normalizeCsvTableRow) || []
 
   const TableTitle = () => (
     <>
@@ -187,7 +210,11 @@ const DemandsList = () => {
         variant="contained"
         sx={{ a: { color: "white", textDecoration: "none" } }}
       >
-        <CSVLink data={csvRows} headers={tableHeader}>
+        <CSVLink
+          data={csvRows}
+          headers={tableCsvHeader}
+          filename={`demands_${formatISO(new Date())}.csv`}
+        >
           {t("list.form.downloadCsv")}
         </CSVLink>
       </Button>
