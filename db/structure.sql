@@ -1713,7 +1713,9 @@ CREATE TABLE public.initiatives (
     start_date date NOT NULL,
     end_date date NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    target_quarter integer DEFAULT 1 NOT NULL,
+    target_year integer DEFAULT 2022 NOT NULL
 );
 
 
@@ -5326,6 +5328,20 @@ CREATE INDEX index_initiatives_on_name ON public.initiatives USING btree (name);
 
 
 --
+-- Name: index_initiatives_on_target_quarter; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_initiatives_on_target_quarter ON public.initiatives USING btree (target_quarter);
+
+
+--
+-- Name: index_initiatives_on_target_year; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_initiatives_on_target_year ON public.initiatives USING btree (target_year);
+
+
+--
 -- Name: index_integration_errors_on_company_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -7329,6 +7345,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220512123859'),
 ('20220602123818'),
 ('20220622174041'),
-('20220705145931');
+('20220705145931'),
+('20220711193708');
 
 

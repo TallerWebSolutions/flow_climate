@@ -92,3 +92,17 @@ en:
     currency:
       format:
         unit: "$"
+  datetime:
+    date_attributes:
+      second:
+        one: "second"
+        other: "seconds"
+      minute:
+        one: "minute"
+        other: "minutes"
+      hour:
+        one: "hour"
+        other: "hours"
+      day:
+        one: "days"
+        other: "days"

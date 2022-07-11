@@ -1,6 +1,10 @@
 # frozen-string-literal: true
 
 RSpec.describe Initiative, type: :model do
+  context 'enums' do
+    it { is_expected.to define_enum_for(:target_quarter).with_values(q1: 1, q2: 2, q3: 3, q4: 4) }
+  end
+
   context 'associations' do
     it { is_expected.to belong_to :company }
     it { is_expected.to have_many(:projects).dependent(:nullify) }
@@ -14,6 +18,8 @@ RSpec.describe Initiative, type: :model do
       it { is_expected.to validate_presence_of :name }
       it { is_expected.to validate_presence_of :start_date }
       it { is_expected.to validate_presence_of :end_date }
+      it { is_expected.to validate_presence_of :target_quarter }
+      it { is_expected.to validate_presence_of :target_year }
     end
 
     context 'complex ones' do

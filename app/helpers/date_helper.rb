@@ -44,4 +44,8 @@ module DateHelper
                          [I18n.t('activerecord.attributes.slack_configuration.enums.weekday_to_notify.friday'), :friday]
                        ], selected)
   end
+
+  def years_to_plan
+    Time.zone.today.year..10.years.from_now.year
+  end
 end

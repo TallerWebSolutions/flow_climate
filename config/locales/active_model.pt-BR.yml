@@ -749,6 +749,14 @@ pt-BR:
         tasks: "Tarefas"
         start_date: "Dt Início"
         end_date: "Dt Fim"
+        target_quarter: "Trimestre"
+        target_year: "Ano"
+        enums:
+          target_quarter:
+            q1: "1º Trimestre"
+            q2: "2º Trimestre"
+            q3: "3º Trimestre"
+            q4: "4º Trimestre"
       azure/azure_custom_field:
         custom_field_name: Nome de Máquina do Campo
         custom_field_type: Tipo do Campo

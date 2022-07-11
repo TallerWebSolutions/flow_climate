@@ -5,7 +5,7 @@
 # Table name: work_item_types
 #
 #  id                     :bigint           not null, primary key
-#  item_level             :integer          default(0), not null
+#  item_level             :integer          default("demand"), not null
 #  name                   :string           not null
 #  quality_indicator_type :boolean          default(FALSE), not null
 #  created_at             :datetime         not null

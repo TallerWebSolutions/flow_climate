@@ -165,7 +165,7 @@ RSpec.describe InitiativesController, type: :controller do
           start_date = 2.days.ago
           end_date = 3.days.from_now
 
-          post :create, params: { company_id: company, initiative: { name: 'foo', start_date: start_date, end_date: end_date } }
+          post :create, params: { company_id: company, initiative: { name: 'foo', start_date: start_date, end_date: end_date, target_quarter: :q4, target_year: 2022 } }
 
           expect(assigns(:company)).to eq company
 
@@ -173,6 +173,8 @@ RSpec.describe InitiativesController, type: :controller do
           expect(created_initiative.name).to eq 'foo'
           expect(created_initiative.start_date).to eq start_date.to_date
           expect(created_initiative.end_date).to eq end_date.to_date
+          expect(created_initiative).to be_an_q4
+          expect(created_initiative.target_year).to eq 2022
 
           expect(response).to redirect_to company_initiatives_path(company)
         end
@@ -180,12 +182,12 @@ RSpec.describe InitiativesController, type: :controller do
 
       context 'invalid' do
         context 'parameters' do
-          before { post :create, params: { company_id: company, initiative: { name: nil, start_date: nil, end_date: nil } } }
+          before { post :create, params: { company_id: company, initiative: { name: nil, start_date: nil, end_date: nil, target_quarter: nil, target_year: nil } } }
 
           it 'does not create the initiative and re-render the template with the errors' do
             expect(Initiative.last).to be_nil
             expect(response).to render_template :new
-            expect(assigns(:initiative).errors.full_messages).to eq ['Nome não pode ficar em branco', 'Dt Início não pode ficar em branco', 'Dt Fim não pode ficar em branco']
+            expect(assigns(:initiative).errors.full_messages).to eq ['Nome não pode ficar em branco', 'Dt Início não pode ficar em branco', 'Dt Fim não pode ficar em branco', 'Trimestre não pode ficar em branco', 'Ano não pode ficar em branco']
           end
         end
 

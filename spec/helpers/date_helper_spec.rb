@@ -44,4 +44,8 @@ RSpec.describe DateHelper, type: :helper do
   describe '#weekdays_options' do
     it { expect(helper.weekdays_options(:all)).to eq options_for_select([[I18n.t('activerecord.attributes.slack_configuration.enums.weekday_to_notify.all_weekdays'), :all_weekdays], [I18n.t('activerecord.attributes.slack_configuration.enums.weekday_to_notify.monday'), :monday], [I18n.t('activerecord.attributes.slack_configuration.enums.weekday_to_notify.tuesday'), :tuesday], [I18n.t('activerecord.attributes.slack_configuration.enums.weekday_to_notify.wednesday'), :wednesday], [I18n.t('activerecord.attributes.slack_configuration.enums.weekday_to_notify.thursday'), :thursday], [I18n.t('activerecord.attributes.slack_configuration.enums.weekday_to_notify.friday'), :friday]], :all) }
   end
+
+  describe '#years_to_plan' do
+    it { expect(helper.years_to_plan.to_a).to eq (Time.zone.today.year..10.years.from_now.year).to_a }
+  end
 end

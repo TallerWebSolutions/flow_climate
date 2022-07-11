@@ -57,6 +57,6 @@ class InitiativesController < AuthenticatedController
   end
 
   def initiative_params
-    params.require(:initiative).permit(:name, :start_date, :end_date)
+    params.require(:initiative).permit(:name, :start_date, :end_date, :target_quarter, :target_year)
   end
 end

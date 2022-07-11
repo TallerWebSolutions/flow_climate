@@ -281,6 +281,13 @@ coca:
           custom_field_type:
             project_name: Project Name
             team_name: Team Name
+      initiative:
+        enums:
+          target_quarter:
+            q1: "1º Quarter"
+            q2: "2º Quarter"
+            q3: "3º Quarter"
+            q4: "4º Quarter"
     errors:
       messages:
         record_invalid: 'Validation failed: %{errors}'
