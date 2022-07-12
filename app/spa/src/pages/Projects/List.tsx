@@ -1,9 +1,6 @@
 import { gql, useQuery } from "@apollo/client"
 import { useTranslation } from "react-i18next"
-import { useContext, useEffect, useState } from "react"
-import { MeContext } from "../../contexts/MeContext"
-import { Project } from "../../modules/project/project.types"
-import { ProjectsFilters } from "./Projects"
+import { useContext } from "react"
 import {
   Backdrop,
   CircularProgress,
@@ -14,8 +11,11 @@ import {
   Link,
   Typography,
 } from "@mui/material"
-import { Company } from "../../modules/company/company.types"
+
+import { MeContext } from "../../contexts/MeContext"
+import { Project } from "../../modules/project/project.types"
 import Table from "../../components/ui/Table"
+import { ProjectsFilters } from "./Projects"
 
 const PROJECT_LIST_QUERY = gql`
   query projectList(
@@ -62,10 +62,9 @@ type ProjectsListProps = {
 
 const ProjectsList = ({ filters, setFilters }: ProjectsListProps) => {
   const { t } = useTranslation(["projects"])
-  const [company, setCompany] = useState<Company | null>(null)
-  const [projects, setProjects] = useState<Project[]>([])
 
   const { me } = useContext(MeContext)
+  const company = me?.currentCompany
   const companyId = Number(company?.id)
   const companyUrl = `/companies/${company?.slug}`
 
@@ -76,12 +75,7 @@ const ProjectsList = ({ filters, setFilters }: ProjectsListProps) => {
     },
   })
 
-  useEffect(() => {
-    if (!loading) {
-      setProjects(data?.projects ?? [])
-      setCompany(me?.currentCompany!)
-    }
-  }, [data, loading, me?.currentCompany])
+  const projects = data?.projects || []
 
   if (loading)
     return (
@@ -165,7 +159,7 @@ const ProjectsList = ({ filters, setFilters }: ProjectsListProps) => {
           </Typography>
         </Box>
       </Box>,
-      `${(project.currentRiskToDeadline || 0 * 100).toFixed(2)}%`,
+      `${((project.currentRiskToDeadline || 0) * 100).toFixed(2)}%`,
     ]) || []
 
   return <Table headerCells={projectsListHeaderCells} rows={projectList} />
