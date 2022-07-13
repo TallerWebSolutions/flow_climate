@@ -182,14 +182,16 @@ const ProjectDemandsCharts = ({
   const leadTimeP80ChartData = [
     {
       id: project.name,
-      data: projectConsolidationsWeekly.map(({ leadTimeP80 }, index) => {
-        const leadTimep80InDays = secondsToDays(leadTimeP80)
+      data: projectConsolidationsWeekly.map(
+        ({ leadTimeP80, consolidationDate }) => {
+          const leadTimep80InDays = secondsToDays(leadTimeP80)
 
-        return {
-          x: index,
-          y: leadTimep80InDays,
+          return {
+            x: consolidationDate,
+            y: leadTimep80InDays,
+          }
         }
-      }),
+      ),
     },
   ]
 
