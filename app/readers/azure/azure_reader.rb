@@ -52,7 +52,8 @@ module Azure
 
     def read_project(company, customer, team, initiative, azure_account, work_item_response)
       project_custom_field = azure_account.azure_custom_fields.find_by(custom_field_type: :project_name)
-      project_name = work_item_response['fields'][project_custom_field.custom_field_name]
+
+      project_name = work_item_response['fields'][project_custom_field&.custom_field_name]
 
       project_name = 'Other' if project_name.blank?
 

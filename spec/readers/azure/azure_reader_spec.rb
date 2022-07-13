@@ -88,7 +88,65 @@ RSpec.describe Azure::AzureReader, type: :service do
       end
     end
   end
-  
-  pending '#read_card_type'
-  pending '#read_project'
+
+  describe '#read_card_type' do
+    context 'with the type information' do
+      it 'reads the card type inside the payload' do
+        company = Fabricate :company
+        azure_item_return = file_fixture('azure_work_item_1_expanded.json').read
+
+        described_class.instance.read_card_type(company, JSON.parse(azure_item_return), :demand)
+
+        expect(WorkItemType.all.map(&:name)).to eq ['AV']
+      end
+    end
+
+    context 'without the type information' do
+      it 'reads a default type' do
+        company = Fabricate :company
+        azure_item_return = file_fixture('azure_work_item_2_expanded.json').read
+
+        described_class.instance.read_card_type(company, JSON.parse(azure_item_return), :task)
+
+        expect(WorkItemType.all.map(&:name)).to eq ['Default']
+      end
+    end
+  end
+
+  describe '#read_project' do
+    context 'with a project custom field' do
+      it 'reads the project field' do
+        company = Fabricate :company
+        azure_account = Fabricate :azure_account, company: company
+        Fabricate :azure_custom_field, custom_field_type: :project_name, custom_field_name: 'Custom.ProjectName', azure_account: azure_account
+
+        customer = Fabricate :customer, company: company, name: 'The Customer'
+        initiative = Fabricate :initiative, company: company, name: 'The Initiative'
+        team = Fabricate :team, company: company, name: 'The Team'
+
+        azure_item_return = file_fixture('azure_work_item_2_expanded.json').read
+
+        described_class.instance.read_project(company, customer, team, initiative, azure_account, JSON.parse(azure_item_return))
+
+        expect(Project.all.map(&:name)).to eq ['FlowClimate - The Team']
+      end
+    end
+
+    context 'with no project custom field' do
+      it 'reads the project field' do
+        company = Fabricate :company
+        azure_account = Fabricate :azure_account, company: company
+
+        customer = Fabricate :customer, company: company, name: 'The Customer'
+        initiative = Fabricate :initiative, company: company, name: 'The Initiative'
+        team = Fabricate :team, company: company, name: 'The Team'
+
+        azure_item_return = file_fixture('azure_work_item_2_expanded.json').read
+
+        described_class.instance.read_project(company, customer, team, initiative, azure_account, JSON.parse(azure_item_return))
+
+        expect(Project.all.map(&:name)).to eq ['Other - The Team']
+      end
+    end
+  end
 end
