@@ -34,11 +34,11 @@ const ProjectDemandsCharts = ({
 
   const operationalRiskChartData = [
     {
-      id: "Operational Math Risk Evolution",
+      id: t("charts_tab.project_charts.operational_math_risk_evolution_chart"),
       data: projectConsolidationsWeekly.map(
         ({ consolidationDate, operationalRisk }) => ({
           x: consolidationDate,
-          y: operationalRisk,
+          y: operationalRisk * 100,
         })
       ),
     },
@@ -46,20 +46,20 @@ const ProjectDemandsCharts = ({
 
   const operationalTeamRiskChartData = [
     {
-      id: "Operational Risk (%)",
+      id: t("charts_tab.project_charts.operationalRisk"),
       data: projectConsolidationsWeekly.map(
         ({ consolidationDate, tasksBasedOperationalRisk }) => ({
           x: consolidationDate,
-          y: tasksBasedOperationalRisk,
+          y: tasksBasedOperationalRisk * 100,
         })
       ),
     },
   ]
 
   const projectBugsChartData: BarDatum[] = projectConsolidationsWeekly.map(
-    ({ bugsOpened, bugsClosed }, index) => {
+    ({ bugsOpened, bugsClosed, consolidationDate }, index) => {
       return {
-        index: index,
+        index: consolidationDate,
         [t("charts_tab.project_charts.bugs_openned")]: bugsOpened,
         [t("charts_tab.project_charts.bugs_closed")]: bugsClosed,
       }
@@ -128,25 +128,26 @@ const ProjectDemandsCharts = ({
       })
     : []
 
+  const projectWeeks = project.projectWeeks
   const projectDemandsBurnupChartData = [
     {
       id: t("charts_tab.project_charts.demands_burn_up_label_scope"),
       data: project.weeklyProjectScopeUntilEnd.map((scope, index) => ({
-        x: index,
+        x: projectWeeks?.[index],
         y: scope,
       })),
     },
     {
       id: t("charts_tab.project_charts.demands_burn_up_label_ideal"),
       data: project.currentWeeklyScopeIdealBurnup.map((idealScope, index) => ({
-        x: index,
+        x: projectWeeks?.[index],
         y: idealScope,
       })),
     },
     {
       id: t("charts_tab.project_charts.demands_burn_up_label_delivered"),
       data: projectConsolidationsWeekly.map(({ projectThroughput }, index) => ({
-        x: index,
+        x: projectWeeks?.[index],
         y: projectThroughput,
       })),
     },
@@ -156,14 +157,14 @@ const ProjectDemandsCharts = ({
     {
       id: t("charts_tab.project_charts.hours_burn_up_label_scope"),
       data: project.weeklyProjectScopeHoursUntilEnd.map((scope, index) => ({
-        x: index,
+        x: projectWeeks?.[index],
         y: scope,
       })),
     },
     {
       id: t("charts_tab.project_charts.hours_burn_up_label_ideal"),
       data: project.currentWeeklyHoursIdealBurnup.map((idealScope, index) => ({
-        x: index,
+        x: projectWeeks?.[index],
         y: idealScope,
       })),
     },
@@ -171,7 +172,7 @@ const ProjectDemandsCharts = ({
       id: t("charts_tab.project_charts.hours_burn_up_label_delivered"),
       data: projectConsolidationsWeekly.map(
         ({ projectThroughputHours }, index) => ({
-          x: index,
+          x: projectWeeks?.[index],
           y: projectThroughputHours.toFixed(2),
         })
       ),

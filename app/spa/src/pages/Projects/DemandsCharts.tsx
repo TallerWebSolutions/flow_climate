@@ -16,13 +16,13 @@ const PROJECT_CHART_QUERY = gql`
       currentTeamBasedRisk
       remainingDays
       running
-
       startDate
       endDate
       initialScope
       numberOfDemands
       numberOfDemandsDelivered
       remainingBacklog
+      projectWeeks
       projectMembers {
         demandsCount
         memberName

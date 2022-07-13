@@ -57,6 +57,7 @@ module Types
     field :project_consolidations, [Types::ProjectConsolidationType], null: true
     field :project_consolidations_last_month, [Types::ProjectConsolidationType], null: true
     field :project_consolidations_weekly, [Types::ProjectConsolidationType], null: true
+    field :project_weeks, [GraphQL::Types::ISO8601Date], null: true
     field :qty_hours, Float, null: false
     field :qty_in_progress, Int, null: false
     field :qty_selected, Int, null: false
@@ -210,6 +211,10 @@ module Types
     def project_consolidations_weekly
       weekly_project_consolidations = object.project_consolidations.weekly_data.order(:consolidation_date)
       Consolidations::ProjectConsolidation.where(id: weekly_project_consolidations.map(&:id) + [last_consolidation&.id]).order(:consolidation_date)
+    end
+
+    def project_weeks
+      TimeService.instance.weeks_between_of(object.start_date.end_of_week, object.end_date.end_of_week)
     end
 
     def project_consolidations_last_month
