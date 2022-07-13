@@ -100,7 +100,7 @@ const ProjectDemandsCharts = ({
           : []
 
         return {
-          index,
+          index: demandsFlowChartData.xAxis?.[index] || index,
           [t("charts_tab.project_charts.flow_data_created")]:
             creationChartData[index],
           [t("charts_tab.project_charts.flow_data_committed_to")]:

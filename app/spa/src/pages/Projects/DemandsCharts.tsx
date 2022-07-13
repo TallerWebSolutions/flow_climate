@@ -58,6 +58,7 @@ const PROJECT_CHART_QUERY = gql`
         committedChartData
         pullTransactionRate
         throughputChartData
+        xAxis
       }
 
       projectConsolidationsWeekly {

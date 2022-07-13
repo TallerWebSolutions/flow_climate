@@ -107,6 +107,7 @@ export type Project = {
     committedChartData?: number[]
     pullTransactionRate?: number[]
     throughputChartData?: number[]
+    xAxis?: string[]
   }
   cumulativeFlowChartData?: {
     xAxis: string[]

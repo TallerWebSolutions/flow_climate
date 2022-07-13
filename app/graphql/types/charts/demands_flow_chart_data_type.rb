@@ -7,6 +7,7 @@ module Types
       field :creation_chart_data, [Int], null: true
       field :pull_transaction_rate, [Int], null: true
       field :throughput_chart_data, [Int], null: true
+      field :x_axis, [GraphQL::Types::ISO8601Date], null: true
     end
   end
 end
