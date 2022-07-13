@@ -49,24 +49,26 @@ module Azure
       if work_item_type.casecmp('epic').zero?
         read_epic(product, work_item_response)
       elsif work_item_type.casecmp('feature').zero?
-        read_feature(product, project, team, work_item_response)
+        read_feature(customer, product, project, team, work_item_response)
       elsif work_item_type.casecmp('user story').zero?
-        read_user_story(product, project, team, azure_project, work_item_response)
+        read_user_story(customer, product, project, team, azure_project, work_item_response)
       end
     end
 
-    def read_feature(product, project, team, work_item_response)
+    def read_feature(customer, product, project, team, work_item_response)
       company = product.company
 
       demand = Demand.with_discarded.where(external_id: work_item_response['id']).first_or_initialize
 
       demand_type = AzureReader.instance.read_card_type(project.company, work_item_response, :demand)
 
-      demand.update(company: company, team: team, demand_title: work_item_response['fields']['System.Title'].strip,
+      demand.update(company: company, team: team, customer: customer,
+                    demand_title: work_item_response['fields']['System.Title'].strip,
                     created_date: work_item_response['fields']['System.CreatedDate'],
                     end_date: work_item_response['fields']['Microsoft.VSTS.Common.ClosedDate'],
                     product: product, project: project, work_item_type: demand_type,
                     discarded_at: nil)
+
       demand
     end
 
@@ -74,8 +76,8 @@ module Azure
       product.portfolio_units.where(name: work_item_response['fields']['System.Title'], portfolio_unit_type: :epic).first_or_create
     end
 
-    def read_user_story(product, project, team, azure_project, work_item_response)
-      demand = read_task_parent(product, project, team, azure_project, work_item_response)
+    def read_user_story(customer, product, project, team, azure_project, work_item_response)
+      demand = read_task_parent(customer, product, project, team, azure_project, work_item_response)
 
       task_type = AzureReader.instance.read_card_type(project.company, work_item_response, :task)
 
@@ -87,7 +89,7 @@ module Azure
       task
     end
 
-    def read_task_parent(product, project, team, azure_project, work_item_response)
+    def read_task_parent(customer, product, project, team, azure_project, work_item_response)
       parent_id = work_item_response['fields']['System.Parent']
       demand = Demand.find_by(company: project.company, external_id: parent_id)
 
@@ -96,7 +98,7 @@ module Azure
       parent_response = client.work_item(parent_id, azure_project.project_id)
       return if parent_response.blank? || parent_response.code != 200
 
-      read_feature(product, project, team, parent_response.parsed_response)
+      read_feature(customer, product, project, team, parent_response.parsed_response)
     end
   end
 end

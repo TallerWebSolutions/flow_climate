@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Jira::JiraReader do
+RSpec.describe Jira::JiraReader, type: :service do
   let(:company) { Fabricate :company }
 
   let(:options) { { username: 'foo', password: 'bar', site: 'http://foo.bar', context_path: '/', auth_type: :basic } }
