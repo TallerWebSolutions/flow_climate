@@ -100,7 +100,6 @@
     "Custom.ReleasePlan":"Projeto Integração Azure",
     "Custom.TeamName":"Great Team",
     "Custom.ProjectName":"FlowClimate",
-    "Custom.Category": "CCTM",
     "System.Description":"<div>Testando a integração para ler a primeira issue. </div>",
     "System.Parent":1
   },

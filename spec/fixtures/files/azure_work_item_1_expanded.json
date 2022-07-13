@@ -65,6 +65,10 @@
     "System.Watermark": 1,
     "System.CommentCount": 0,
     "System.Title": "Primeiro Contato",
+    "Custom.AgencyName": "Air Force Cloud One",
+    "Custom.Category": "Beer",
+    "Custom.TargetQuarter": "Q1",
+    "Custom.Year": "2023",
     "Microsoft.VSTS.Common.StateChangeDate": "2022-01-13T14:03:27.423Z",
     "Microsoft.VSTS.Common.Priority": 2,
     "Custom.ProjectName": "FlowClimate"

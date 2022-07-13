@@ -6,8 +6,14 @@ module Azure
 
     def read_team(company, azure_account, work_item_response)
       team_custom_field = azure_account.azure_custom_fields.find_by(custom_field_type: :team_name)
+      return if team_custom_field.blank?
+
       team_name = work_item_response['fields'][team_custom_field.custom_field_name] || 'Default Team'
-      company.teams.where('name ILIKE :team_name', team_name: "%#{team_name}%").first_or_create
+      team = company.teams.where('name ILIKE :team_name', team_name: "%#{team_name}%").first
+
+      return company.teams.create(name: team_name) if team.blank?
+
+      team
     end
 
     def read_customer(company, work_item_response)
@@ -28,7 +34,12 @@ module Azure
 
       return if quarter.blank? || year.blank?
 
-      company.initiatives.where('name ILIKE :team_name', team_name: "%#{quarter}/#{year}%").first_or_create
+      initiative_name = "#{quarter}/#{year}"
+      initiative = company.initiatives.where('name ILIKE :team_name', team_name: "%#{initiative_name}%").first
+
+      return company.initiatives.create(name: initiative_name, start_date: Time.zone.today, end_date: 3.months.from_now)
+
+      initiative
     end
 
     def read_card_type(company, work_item_response, item_level)
