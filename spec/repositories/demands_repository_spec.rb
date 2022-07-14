@@ -19,7 +19,7 @@ RSpec.describe DemandsRepository, type: :repository do
   let(:bug_type) { Fabricate :work_item_type, company: company, name: 'Bug', quality_indicator_type: true }
   let(:chore_type) { Fabricate :work_item_type, company: company, name: 'Chore' }
   let(:ui_type) { Fabricate :work_item_type, company: company, name: 'UI' }
-  let(:performance_improvement_type) { Fabricate :work_item_type, company: company, name: 'UI' }
+  let(:performance_improvement_type) { Fabricate :work_item_type, company: company, name: 'Performance' }
   let(:wireframe_type) { Fabricate :work_item_type, company: company, name: 'Wireframe' }
 
   describe '#known_scope_to_date' do
