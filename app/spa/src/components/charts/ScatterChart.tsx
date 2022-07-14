@@ -4,10 +4,11 @@ import {
   ScatterPlotMouseHandler,
   ScatterPlotRawSerie,
 } from "@nivo/scatterplot"
-import { Box, useTheme } from "@mui/material"
+import { Box, Link, Paper, Tooltip, useTheme } from "@mui/material"
 
 import { axisDataToScatter } from "../../lib/charts"
 import { ChartAxisData } from "../../modules/project/project.types"
+import { useTranslation } from "react-i18next"
 
 type Marker = {
   value: number
@@ -39,6 +40,7 @@ export const ScatterChart = ({
   ...props
 }: ScatterChartProps) => {
   const theme = useTheme()
+  const { t } = useTranslation("common")
   const chartData = Array.isArray(data)
     ? data
     : axisDataToScatter(data, "Demands")
@@ -51,11 +53,11 @@ export const ScatterChart = ({
     })) || []
 
   return (
-    <Box height={380}>
+    <Box height={380} style={{ fontSize: 12 }}>
       <ResponsiveScatterPlot
         data={chartData}
         margin={{ left: 65, right: 40, top: 25, bottom: 40 }}
-        xScale={{ type: "linear", min: "auto", max: "auto" }}
+        xScale={{ type: "point" }}
         yScale={{ type: "linear", min: "auto", max: "auto" }}
         colors={{ scheme: "category10" }}
         axisTop={null}
@@ -66,7 +68,8 @@ export const ScatterChart = ({
         axisBottom={{
           tickSize: 5,
           tickPadding: 5,
-          tickRotation: 0,
+          tickRotation: -30,
+          tickValues: 10,
         }}
         axisLeft={{
           tickSize: 5,
@@ -105,6 +108,13 @@ export const ScatterChart = ({
           },
         ]}
         markers={chartMarkers}
+        tooltip={({ node }) => (
+          <Paper elevation={3} sx={{ padding: 1 }}>
+            {node.data.x}
+            <br />
+            Lead time: {node.data.y} {t("days")}
+          </Paper>
+        )}
         {...props}
       />
     </Box>

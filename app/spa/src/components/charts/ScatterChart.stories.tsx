@@ -1,4 +1,3 @@
-// @ts-ignore
 import React from "react"
 
 import { ComponentStory, ComponentMeta } from "@storybook/react"
@@ -37,11 +36,53 @@ export const Primary: ComponentStory<typeof ScatterChart> = () => (
   <ScatterChart {...props} />
 )
 
+const withMarkersData = [
+  {
+    id: "Demands Scatter",
+    data: [
+      {
+        x: "Demand-1",
+        y: 10,
+      },
+      {
+        x: "Demand-2",
+        y: 13,
+      },
+      {
+        x: "Demand-3",
+        y: 8,
+      },
+      {
+        x: "Demand-4",
+        y: 1,
+      },
+      {
+        x: "Demand-5",
+        y: 9,
+      },
+      {
+        x: "Demand-6",
+        y: 6,
+      },
+    ],
+  },
+]
+
 const markers = [
-  { value: data.yAxis[10], legend: "test" },
-  { value: data.yAxis[6], legend: "another test" },
+  { value: withMarkersData[0].data[4].y, legend: "test" },
+  { value: withMarkersData[0].data[5].y, legend: "another test" },
 ]
 
 export const WithMarkers: ComponentStory<typeof ScatterChart> = () => (
-  <ScatterChart {...props} markers={markers} />
+  <ScatterChart markers={markers} data={withMarkersData} />
+)
+
+export const WithClick: ComponentStory<typeof ScatterChart> = () => (
+  <ScatterChart
+    markers={markers}
+    data={withMarkersData}
+    onClick={(props) => {
+      alert(`You just clicked on item ${props.data.x}`)
+    }}
+  />
 )

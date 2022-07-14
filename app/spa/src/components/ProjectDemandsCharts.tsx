@@ -15,6 +15,9 @@ import {
   Project,
 } from "../modules/project/project.types"
 import { Grid } from "@mui/material"
+import { openWindow } from "../lib/func"
+import { useContext } from "react"
+import { MeContext } from "../contexts/MeContext"
 
 type ProjectDemandsChartsProps = {
   project: Project
@@ -58,6 +61,7 @@ const ProjectDemandsCharts = ({
   hoursPerCoordinationStageChartData,
 }: ProjectDemandsChartsProps) => {
   const { t } = useTranslation(["projectChart"])
+  const { me } = useContext(MeContext)
   const projectConsolidationsWeekly = project.projectConsolidationsWeekly
   const projectConsolidationsLastMonth = project.projectConsolidationsLastMonth
   const demandsFinishedWithLeadtime = project.demandsFinishedWithLeadtime
@@ -210,13 +214,12 @@ const ProjectDemandsCharts = ({
     {
       id: t("charts_tab.project_charts.lead_time_control_label"),
       data:
-        demandsFinishedWithLeadtime?.map(({ externalId, leadtime }, index) => {
+        demandsFinishedWithLeadtime?.map(({ externalId, leadtime }) => {
           const leadTimeInDays = secondsToDays(leadtime)
 
           return {
-            x: index,
+            x: externalId,
             y: leadTimeInDays,
-            label: externalId,
           }
         }) || [],
     },
@@ -586,6 +589,11 @@ const ProjectDemandsCharts = ({
             leadTimeControlP80Marker,
             leadTimeControlP95Marker,
           ]}
+          onClick={(props) => {
+            openWindow(
+              `/companies/${me?.currentCompany?.slug}/demands/${props.data.x}`
+            )
+          }}
         />
       </ChartGridItem>
       <ChartGridItem

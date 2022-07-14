@@ -12,6 +12,7 @@ import { ProjectConsolidation } from "../../modules/project/projectConsolidation
 
 const ONE_DAY_IN_SECONDS = 60 * 60 * 24
 
+// @TODO: projectConsolidations should exist inside project field.
 export const PROJECT_STATISTICS_QUERY = gql`
   query ProjectStatistics($id: Int!) {
     project(id: $id) {
