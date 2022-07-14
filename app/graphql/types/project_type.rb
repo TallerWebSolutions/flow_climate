@@ -221,8 +221,8 @@ module Types
 
     def hours_per_stage_chart_data(stage_level: 'team')
       start_date = object.start_date
-      end_date = [object.end_date, Time.zone.today].min
-      Highchart::StatusReportChartsAdapter.new(object.demands, start_date, end_date, 'week', stage_level).hours_per_stage
+      hours_per_stage = StagesRepository.instance.hours_per_stage([object], :downstream, stage_level, start_date)
+      { x_axis: hours_per_stage.to_h.keys, y_axis: { name: I18n.t('general.hours'), data: hours_per_stage.to_h.values.map { |hours| hours.to_f / 1.hour } } }
     end
 
     def cumulative_flow_chart_data

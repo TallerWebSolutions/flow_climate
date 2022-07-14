@@ -22,7 +22,6 @@ const PROJECT_CHART_QUERY = gql`
       numberOfDemands
       numberOfDemandsDelivered
       remainingBacklog
-      projectWeeks
       projectMembers {
         demandsCount
         memberName
@@ -119,11 +118,24 @@ const PROJECT_CHART_QUERY = gql`
           data
         }
       }
-
-      weeklyProjectScopeUntilEnd
-      currentWeeklyScopeIdealBurnup
-      currentWeeklyHoursIdealBurnup
-      weeklyProjectScopeHoursUntilEnd
+      hoursBurnup {
+        scope
+        xAxis
+        idealBurn
+        currentBurn
+      }
+      tasksBurnup {
+        scope
+        xAxis
+        idealBurn
+        currentBurn
+      }
+      demandsBurnup {
+        scope
+        xAxis
+        idealBurn
+        currentBurn
+      }
     }
     hoursPerCoordinationStageChartData: project(id: $projectId) {
       hoursPerStageChartData(stageLevel: "coordination") {
