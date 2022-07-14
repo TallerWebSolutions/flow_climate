@@ -5,5 +5,5 @@ Fabricator(:work_item_type) do
 
   name { Faker::Name.first_name }
 
-  item_le
+  item_level { WorkItemType.item_levels.keys.sample }
 end

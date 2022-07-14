@@ -280,7 +280,7 @@ RSpec.describe Demand, type: :model do
     describe '.bug' do
       it 'returns the unique demands with the type for quality indicator' do
         work_item_type = Fabricate :work_item_type, company: company, name: 'Bug', quality_indicator_type: true
-        other_work_item_type = Fabricate :work_item_type, company: company, name: 'Bug', quality_indicator_type: false
+        other_work_item_type = Fabricate :work_item_type, company: company, name: 'Feature', quality_indicator_type: false
 
         demand = Fabricate :demand, work_item_type: work_item_type, created_date: 20.minutes.ago, commitment_date: 15.minutes.ago, end_date: 4.minutes.ago
         other_demand = Fabricate :demand, work_item_type: work_item_type, created_date: 20.minutes.ago, commitment_date: 15.minutes.ago, end_date: 6.minutes.ago
