@@ -9,13 +9,49 @@ import { normalizeCfdData } from "./charts/LineChart"
 import { ScatterChart } from "./charts/ScatterChart"
 import LineChartTooltip from "./charts/tooltips/LineChartTooltip"
 import { secondsToDays } from "../lib/date"
-import { ChartAxisData, Project } from "../modules/project/project.types"
+import {
+  Burnup,
+  ChartAxisData,
+  Project,
+} from "../modules/project/project.types"
 import { Grid } from "@mui/material"
 
 type ProjectDemandsChartsProps = {
   project: Project
   hoursPerCoordinationStageChartData?: ChartAxisData
 }
+
+const buildBurnupData = (
+  scopeLabel: string,
+  idealLabel: string,
+  deliveredLabel: string,
+  data?: Burnup
+) => [
+  {
+    id: scopeLabel,
+    data:
+      data?.scope.map((scope, index) => ({
+        x: data.xAxis?.[index],
+        y: scope,
+      })) || [],
+  },
+  {
+    id: idealLabel,
+    data:
+      data?.idealBurn.map((idealScope, index) => ({
+        x: data.xAxis?.[index],
+        y: idealScope,
+      })) || [],
+  },
+  {
+    id: deliveredLabel,
+    data:
+      data?.currentBurn.map((projectThroughput, index) => ({
+        x: data.xAxis?.[index],
+        y: projectThroughput,
+      })) || [],
+  },
+]
 
 const ProjectDemandsCharts = ({
   project,
@@ -128,56 +164,19 @@ const ProjectDemandsCharts = ({
       })
     : []
 
-  const projectWeeks = project.projectWeeks
-  const projectDemandsBurnupChartData = [
-    {
-      id: t("charts_tab.project_charts.demands_burn_up_label_scope"),
-      data: project.weeklyProjectScopeUntilEnd.map((scope, index) => ({
-        x: projectWeeks?.[index],
-        y: scope,
-      })),
-    },
-    {
-      id: t("charts_tab.project_charts.demands_burn_up_label_ideal"),
-      data: project.currentWeeklyScopeIdealBurnup.map((idealScope, index) => ({
-        x: projectWeeks?.[index],
-        y: idealScope,
-      })),
-    },
-    {
-      id: t("charts_tab.project_charts.demands_burn_up_label_delivered"),
-      data: projectConsolidationsWeekly.map(({ projectThroughput }, index) => ({
-        x: projectWeeks?.[index],
-        y: projectThroughput,
-      })),
-    },
-  ]
+  const projectDemandsBurnupChartData = buildBurnupData(
+    t("charts_tab.project_charts.demands_burn_up_label_scope"),
+    t("charts_tab.project_charts.demands_burn_up_label_ideal"),
+    t("charts_tab.project_charts.demands_burn_up_label_delivered"),
+    project.demandsBurnup
+  )
 
-  const projectHoursBurnupChartData = [
-    {
-      id: t("charts_tab.project_charts.hours_burn_up_label_scope"),
-      data: project.weeklyProjectScopeHoursUntilEnd.map((scope, index) => ({
-        x: projectWeeks?.[index],
-        y: scope,
-      })),
-    },
-    {
-      id: t("charts_tab.project_charts.hours_burn_up_label_ideal"),
-      data: project.currentWeeklyHoursIdealBurnup.map((idealScope, index) => ({
-        x: projectWeeks?.[index],
-        y: idealScope,
-      })),
-    },
-    {
-      id: t("charts_tab.project_charts.hours_burn_up_label_delivered"),
-      data: projectConsolidationsWeekly.map(
-        ({ projectThroughputHours }, index) => ({
-          x: projectWeeks?.[index],
-          y: projectThroughputHours.toFixed(2),
-        })
-      ),
-    },
-  ]
+  const projectHoursBurnupChartData = buildBurnupData(
+    t("charts_tab.project_charts.hours_burn_up_label_scope"),
+    t("charts_tab.project_charts.hours_burn_up_label_ideal"),
+    t("charts_tab.project_charts.hours_burn_up_label_delivered"),
+    project.hoursBurnup
+  )
 
   const leadTimeP80ChartData = [
     {

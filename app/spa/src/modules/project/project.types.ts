@@ -76,14 +76,11 @@ export type Project = {
   failureLoad: number
   discoveredScope: number
   scope: number
-  weeklyProjectScopeUntilEnd: number[]
-  currentWeeklyScopeIdealBurnup: number[]
   initialScope: number
   projectConsolidations: ProjectConsolidation[]
   projectConsolidationsWeekly: ProjectConsolidation[]
   projectConsolidationsLastMonth: ProjectConsolidation[]
   lastProjectConsolidationsWeekly?: ProjectConsolidation
-  projectWeeks?: string[]
   currentRiskToDeadline?: number
   remainingDays: number
   currentTeamBasedRisk: number
@@ -96,8 +93,6 @@ export type Project = {
   numberOfDownstreamDemands: number
   averageQueueTime: number
   averageTouchTime: number
-  currentWeeklyHoursIdealBurnup: number[]
-  weeklyProjectScopeHoursUntilEnd: number[]
   projectMembers: {
     demandsCount: number
     memberName: string
@@ -119,14 +114,16 @@ export type Project = {
   }
   leadTimeHistogramData: KeyValueData
   currentWeeklyTasksScopeIdealBurnup: number[]
-  tasksBurnup: TasksBurnup
+  tasksBurnup?: Burnup
+  demandsBurnup?: Burnup
+  hoursBurnup?: Burnup
 }
 
-export type TasksBurnup = {
-  projectTasksIdeal: number[]
-  projectTasksScope: number[]
-  projectTasksThroughtput: number[]
-  xAxis: number[]
+export type Burnup = {
+  idealBurn: number[]
+  scope: number[]
+  currentBurn: number[]
+  xAxis: string[]
 }
 
 export type ProjectsList = {

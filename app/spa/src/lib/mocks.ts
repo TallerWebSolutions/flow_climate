@@ -88,10 +88,6 @@ export const companyMock: Company = {
       leadTimeP65: 0,
       leadTimeP95: 0,
       projectConsolidationsWeekly: [],
-      currentWeeklyScopeIdealBurnup: [],
-      weeklyProjectScopeUntilEnd: [],
-      currentWeeklyHoursIdealBurnup: [],
-      weeklyProjectScopeHoursUntilEnd: [],
       projectConsolidationsLastMonth: [],
       demandsFinishedWithLeadtime: [],
       projectMembers: [
@@ -116,9 +112,9 @@ export const companyMock: Company = {
       },
       currentWeeklyTasksScopeIdealBurnup: [],
       tasksBurnup: {
-        projectTasksIdeal: [],
-        projectTasksScope: [],
-        projectTasksThroughtput: [],
+        idealBurn: [],
+        scope: [],
+        currentBurn: [],
         xAxis: [],
       },
     },
@@ -198,10 +194,6 @@ export const projectMock: Project = {
   leadTimeP65: 0,
   leadTimeP95: 0,
   projectConsolidationsWeekly: [],
-  currentWeeklyScopeIdealBurnup: [],
-  weeklyProjectScopeUntilEnd: [],
-  currentWeeklyHoursIdealBurnup: [],
-  weeklyProjectScopeHoursUntilEnd: [],
   projectConsolidationsLastMonth: [],
   demandsFinishedWithLeadtime: [],
   projectMembers: [
@@ -226,9 +218,9 @@ export const projectMock: Project = {
   },
   currentWeeklyTasksScopeIdealBurnup: [],
   tasksBurnup: {
-    projectTasksIdeal: [],
-    projectTasksScope: [],
-    projectTasksThroughtput: [],
+    idealBurn: [],
+    scope: [],
+    currentBurn: [],
     xAxis: [],
   },
 }

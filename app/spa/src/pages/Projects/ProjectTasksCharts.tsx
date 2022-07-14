@@ -80,26 +80,24 @@ const ProjectTasksCharts = () => {
     ? [
         {
           id: t("charts.scope"),
-          data: tasksBurnup.projectTasksScope.map((scope, index) => ({
+          data: tasksBurnup.scope.map((scope, index) => ({
             x: tasksBurnup.xAxis[index],
             y: scope,
           })),
         },
         {
           id: t("charts.ideal"),
-          data: tasksBurnup.projectTasksIdeal.map((idealScope, index) => ({
+          data: tasksBurnup.idealBurn.map((idealScope, index) => ({
             x: tasksBurnup.xAxis[index],
             y: idealScope.toFixed(2),
           })),
         },
         {
           id: t("charts.delivered"),
-          data: tasksBurnup.projectTasksThroughtput.map(
-            (throughtput, index) => ({
-              x: tasksBurnup.xAxis[index],
-              y: throughtput,
-            })
-          ),
+          data: tasksBurnup.currentBurn.map((throughtput, index) => ({
+            x: tasksBurnup.xAxis[index],
+            y: throughtput,
+          })),
         },
       ]
     : []
