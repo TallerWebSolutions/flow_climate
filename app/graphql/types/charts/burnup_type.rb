@@ -3,9 +3,9 @@
 module Types
   module Charts
     class BurnupType < Types::BaseObject
-      field :project_tasks_ideal, [Float], null: true
-      field :project_tasks_scope, [Int], null: true
-      field :project_tasks_throughtput, [Int], null: true
+      field :ideal_burn, [Float], null: true
+      field :scope, [Int], null: true
+      field :current_burn, [Int], null: true
       field :x_axis, [GraphQL::Types::ISO8601Date], null: true
     end
   end

@@ -15,8 +15,6 @@ module Types
     field :current_monte_carlo_weeks_std_dev, Int, null: true
     field :current_risk_to_deadline, Float, null: true
     field :current_team_based_risk, Float, null: true
-    field :current_weekly_hours_ideal_burnup, [Float], null: false
-    field :current_weekly_scope_ideal_burnup, [Float], null: false
     field :current_weeks_by_little_law, Int, null: true
     field :customers, [Types::CustomerType], null: true
     field :days_difference_between_first_and_last_deadlines, Int, null: true
@@ -80,8 +78,6 @@ module Types
     field :total_throughput, Int, null: true
     field :unscored_demands, [Types::DemandType], null: true
     field :upstream_demands, [Types::DemandType], null: true
-    field :weekly_project_scope_hours_until_end, [Int], null: false
-    field :weekly_project_scope_until_end, [Int], null: false
     field :weekly_throughputs, [Int], null: false
     field :work_in_progress_limit, Int, null: false
 
@@ -91,6 +87,8 @@ module Types
     field :project_members, [Types::ProjectMemberType], null: true
     field :quality, Float, null: true
     field :tasks_burnup, Types::Charts::BurnupType, null: true
+    field :demands_burnup, Types::Charts::BurnupType, null: true
+    field :hours_burnup, Types::Charts::BurnupType, null: true
 
     delegate :remaining_backlog, to: :object
     delegate :remaining_weeks, to: :object
@@ -262,9 +260,17 @@ module Types
     end
 
     def tasks_burnup
-      burnup_adapter = Highchart::BurnupAdapter.new(Task.where(id: object.tasks.map(&:id)), object.start_date, object.end_date)
+      Highchart::BurnupAdapter.new(Task.where(id: object.tasks.map(&:id)), object.start_date, object.end_date)
+    end
 
-      { x_axis: burnup_adapter.x_axis, project_tasks_ideal: burnup_adapter.ideal_burn, project_tasks_scope: burnup_adapter.scope, project_tasks_throughtput: burnup_adapter.current_burn }
+    def demands_burnup
+      Highchart::BurnupAdapter.new(Demand.where(id: object.demands.map(&:id)), object.start_date, object.end_date)
+    end
+
+    def hours_burnup
+      project_weeks = TimeService.instance.weeks_between_of(object.start_date.end_of_week, object.end_date.end_of_week)
+      hours_th = object.project_consolidations.weekly_data.map(&:project_throughput_hours)
+      { x_axis: project_weeks, ideal_burn: object.current_weekly_hours_ideal_burnup, scope: object.weekly_project_scope_hours_until_end, current_burn: hours_th }
     end
 
     private
