@@ -14,9 +14,10 @@
 #
 # Indexes
 #
-#  index_work_item_types_on_company_id              (company_id)
-#  index_work_item_types_on_item_level              (item_level)
-#  index_work_item_types_on_quality_indicator_type  (quality_indicator_type)
+#  index_work_item_types_on_company_id                          (company_id)
+#  index_work_item_types_on_company_id_and_item_level_and_name  (company_id,item_level,name) UNIQUE
+#  index_work_item_types_on_item_level                          (item_level)
+#  index_work_item_types_on_quality_indicator_type              (quality_indicator_type)
 #
 # Foreign Keys
 #
@@ -28,4 +29,6 @@ class WorkItemType < ApplicationRecord
   belongs_to :company
 
   validates :item_level, :name, presence: true
+
+  validates :name, uniqueness: { scope: %i[company_id item_level] }
 end

@@ -50,37 +50,48 @@ RSpec.describe Azure::AzureWorkItemAdapter do
 
           described_class.new(azure_account).work_item(1, azure_product_config.azure_team.azure_project)
 
-          expect(PortfolioUnit.all.map(&:name)).to eq ['Primeira issue']
+          expect(PortfolioUnit.all.map(&:name)).to eq ['This is an epic']
         end
       end
 
       context 'when user story' do
         context 'with valid parent and it does not exist' do
           it 'creates the task and the parent' do
-            first_item_mocked_azure_return = file_fixture('azure_work_item_1_expanded.json').read
-            second_item_mocked_azure_return = file_fixture('azure_work_item_2_expanded.json').read
+            demand_mocked_response = file_fixture('azure_work_item_1_expanded.json').read
+            task_mocked_response = file_fixture('azure_work_item_2_expanded.json').read
+            epic_mocked_response = file_fixture('azure_work_item_3_expanded.json').read
 
-            first_response = instance_double(HTTParty::Response, code: 200, parsed_response: JSON.parse(first_item_mocked_azure_return))
-            second_response = instance_double(HTTParty::Response, code: 200, parsed_response: JSON.parse(second_item_mocked_azure_return))
+            demand_response = instance_double(HTTParty::Response, code: 200, parsed_response: JSON.parse(demand_mocked_response))
+            task_response = instance_double(HTTParty::Response, code: 200, parsed_response: JSON.parse(task_mocked_response))
+            epic_response = instance_double(HTTParty::Response, code: 200, parsed_response: JSON.parse(epic_mocked_response))
 
             allow(HTTParty).to(receive(:get).with("#{Figaro.env.azure_base_uri}/#{azure_account.azure_organization}/#{azure_project.project_id}/_apis/wit/workitems/1?$expand=all&api-version=6.1-preview.3",
                                                   basic_auth: { username: azure_account.username, password: azure_account.password },
-                                                  headers: { 'Content-Type' => 'application/json' })).once.and_return(first_response)
+                                                  headers: { 'Content-Type' => 'application/json' })).once.and_return(demand_response)
 
             allow(HTTParty).to(receive(:get).with("#{Figaro.env.azure_base_uri}/#{azure_account.azure_organization}/#{azure_project.project_id}/_apis/wit/workitems/2?$expand=all&api-version=6.1-preview.3",
                                                   basic_auth: { username: azure_account.username, password: azure_account.password },
-                                                  headers: { 'Content-Type' => 'application/json' })).and_return(second_response)
+                                                  headers: { 'Content-Type' => 'application/json' })).and_return(task_response)
+
+            allow(HTTParty).to(receive(:get).with("#{Figaro.env.azure_base_uri}/#{azure_account.azure_organization}/#{azure_project.project_id}/_apis/wit/workitems/3?$expand=all&api-version=6.1-preview.3",
+                                                  basic_auth: { username: azure_account.username, password: azure_account.password },
+                                                  headers: { 'Content-Type' => 'application/json' })).and_return(epic_response)
 
             described_class.new(azure_account).work_item(2, azure_product_config.azure_team.azure_project)
 
+            expect(PortfolioUnit.all.count).to eq 1
             expect(Demand.all.count).to eq 1
             expect(Task.all.count).to eq 1
 
-            expect(Demand.all.map(&:demand_title)).to eq ['Primeiro Contato']
-            expect(Demand.all.map(&:demand_type)).to eq ['AV']
-            expect(Demand.last.customer.name).to eq 'Beer'
+            expect(PortfolioUnit.all.map(&:name)).to eq ['This is an epic']
 
-            expect(Task.all.map(&:title)).to eq ['Primeira issue']
+            demand_created = Demand.last
+            expect(demand_created.demand_title).to eq 'This is a demand'
+            expect(demand_created.demand_type).to eq 'AV'
+            expect(demand_created.customer.name).to eq 'Beer'
+            expect(demand_created.portfolio_unit.name).to eq 'This is an epic'
+
+            expect(Task.all.map(&:title)).to eq ['This is a task']
             expect(Task.all.map(&:task_type)).to eq ['Default']
 
             work_item_types = company.reload.work_item_types
@@ -153,11 +164,13 @@ RSpec.describe Azure::AzureWorkItemAdapter do
             demand = Fabricate :demand, company: company, team: team, external_id: 5, project: demand_project
             Fabricate :task, demand: demand, external_id: 2
 
-            first_item_mocked_azure_return = file_fixture('azure_work_item_1_expanded.json').read
-            second_item_mocked_azure_return = file_fixture('azure_work_item_2_expanded.json').read
+            demand_mocked_response = file_fixture('azure_work_item_1_expanded.json').read
+            task_mocked_response = file_fixture('azure_work_item_2_expanded.json').read
+            epic_mocked_response = file_fixture('azure_work_item_3_expanded.json').read
 
-            first_response = instance_double(HTTParty::Response, code: 200, parsed_response: JSON.parse(first_item_mocked_azure_return))
-            second_response = instance_double(HTTParty::Response, code: 200, parsed_response: JSON.parse(second_item_mocked_azure_return))
+            first_response = instance_double(HTTParty::Response, code: 200, parsed_response: JSON.parse(demand_mocked_response))
+            second_response = instance_double(HTTParty::Response, code: 200, parsed_response: JSON.parse(task_mocked_response))
+            epic_response = instance_double(HTTParty::Response, code: 200, parsed_response: JSON.parse(epic_mocked_response))
 
             allow(HTTParty).to(receive(:get).with("#{Figaro.env.azure_base_uri}/#{azure_account.azure_organization}/#{azure_project.project_id}/_apis/wit/workitems/1?$expand=all&api-version=6.1-preview.3",
                                                   basic_auth: { username: azure_account.username, password: azure_account.password },
@@ -167,8 +180,13 @@ RSpec.describe Azure::AzureWorkItemAdapter do
                                                   basic_auth: { username: azure_account.username, password: azure_account.password },
                                                   headers: { 'Content-Type' => 'application/json' })).and_return(second_response)
 
+            allow(HTTParty).to(receive(:get).with("#{Figaro.env.azure_base_uri}/#{azure_account.azure_organization}/#{azure_project.project_id}/_apis/wit/workitems/3?$expand=all&api-version=6.1-preview.3",
+                                                  basic_auth: { username: azure_account.username, password: azure_account.password },
+                                                  headers: { 'Content-Type' => 'application/json' })).and_return(epic_response)
+
             described_class.new(azure_account).work_item(2, azure_product_config.azure_team.azure_project)
 
+            expect(PortfolioUnit.all.count).to eq 1
             expect(Demand.all.count).to eq 2
             expect(Task.all.count).to eq 1
           end
@@ -198,16 +216,23 @@ RSpec.describe Azure::AzureWorkItemAdapter do
 
       context 'when feature' do
         it 'creates the demand' do
-          first_item_mocked_azure_return = file_fixture('azure_work_item_1_expanded.json').read
+          demand_mocked_response = file_fixture('azure_work_item_1_expanded.json').read
+          epic_mocked_response = file_fixture('azure_work_item_3_expanded.json').read
 
-          first_response = instance_double(HTTParty::Response, code: 200, parsed_response: JSON.parse(first_item_mocked_azure_return))
+          demand_response = instance_double(HTTParty::Response, code: 200, parsed_response: JSON.parse(demand_mocked_response))
+          epic_response = instance_double(HTTParty::Response, code: 200, parsed_response: JSON.parse(epic_mocked_response))
 
           allow(HTTParty).to(receive(:get).with("#{Figaro.env.azure_base_uri}/#{azure_account.azure_organization}/#{azure_project.project_id}/_apis/wit/workitems/1?$expand=all&api-version=6.1-preview.3",
                                                 basic_auth: { username: azure_account.username, password: azure_account.password },
-                                                headers: { 'Content-Type' => 'application/json' })).once.and_return(first_response)
+                                                headers: { 'Content-Type' => 'application/json' })).once.and_return(demand_response)
+
+          allow(HTTParty).to(receive(:get).with("#{Figaro.env.azure_base_uri}/#{azure_account.azure_organization}/#{azure_project.project_id}/_apis/wit/workitems/3?$expand=all&api-version=6.1-preview.3",
+                                                basic_auth: { username: azure_account.username, password: azure_account.password },
+                                                headers: { 'Content-Type' => 'application/json' })).and_return(epic_response)
 
           described_class.new(azure_account).work_item(1, azure_product_config.azure_team.azure_project)
 
+          expect(PortfolioUnit.all.count).to eq 1
           expect(Demand.all.count).to eq 1
         end
       end

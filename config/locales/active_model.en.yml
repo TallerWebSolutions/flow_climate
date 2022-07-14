@@ -71,6 +71,9 @@ en:
         zero: Azure Custom Field
         one: Azure Custom Field
         other: Azure Custom Fields
+      work_item_type:
+        one: Work Item Type
+        other: Work Item Types
     attributes:
       user:
         created_at: Joined At
@@ -256,6 +259,11 @@ en:
             q2: "2º Quarter"
             q3: "3º Quarter"
             q4: "4º Quarter"
+      work_item_type:
+        name: Name
+        item_level: Item Lvel
+        company: Company
+        quality_indicator_type: Quality Indicator
     errors:
       messages:
         record_invalid: 'Validation failed: %{errors}'

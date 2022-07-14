@@ -34,6 +34,7 @@ class Company < ApplicationRecord
   has_many :financial_informations, dependent: :restrict_with_error
   has_many :customers, dependent: :restrict_with_error
   has_many :products, dependent: :restrict_with_error
+  has_many :portfolio_units, -> { distinct }, through: :products
   has_many :contracts, through: :customers
   has_many :initiatives, dependent: :destroy
   has_many :projects, counter_cache: true, dependent: :restrict_with_error

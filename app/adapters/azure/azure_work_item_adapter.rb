@@ -46,24 +46,34 @@ module Azure
       if work_item_type.casecmp('epic').zero?
         read_epic(product, work_item_response)
       elsif work_item_type.casecmp('feature').zero?
-        read_feature(company, product, work_item_response)
+        read_feature(company, product, azure_project, work_item_response)
       elsif work_item_type.casecmp('user story').zero?
         read_user_story(product, azure_project, work_item_response)
       end
     end
 
-    def read_feature(company, product, work_item_response)
+    def read_epic(product, work_item_response)
+      product.portfolio_units.where(name: work_item_response['fields']['System.Title'], portfolio_unit_type: :epic).first_or_create
+    end
+
+    def read_feature(company, product, azure_project, work_item_response)
+      parent = read_feature_parent(product, azure_project, work_item_response)
       customer = Azure::AzureReader.instance.read_customer(company, work_item_response)
       team = Azure::AzureReader.instance.read_team(company, @azure_account, work_item_response)
       initiative = Azure::AzureReader.instance.read_initiative(company, work_item_response)
       project = Azure::AzureReader.instance.read_project(company, customer, team, initiative, @azure_account, work_item_response)
       work_item_type = AzureReader.instance.read_card_type(product.company, work_item_response, :demand)
 
+      save_demand(company, customer, parent, product, project, team, work_item_response, work_item_type)
+    end
+
+    def save_demand(company, customer, parent, product, project, team, work_item_response, work_item_type)
       demand = Demand.with_discarded.where(external_id: work_item_response['id']).first_or_initialize
 
       demand.update(company: company, team: team, customer: customer, demand_title: demand_title(work_item_response),
                     created_date: created_date(work_item_response), end_date: end_date(work_item_response),
-                    product: product, project: project, work_item_type: work_item_type, discarded_at: nil)
+                    product: product, project: project, work_item_type: work_item_type, portfolio_unit: parent,
+                    discarded_at: nil)
 
       demand
     end
@@ -91,7 +101,20 @@ module Azure
       parent_response = client.work_item(parent_id, azure_project.project_id)
       return if parent_response.blank? || parent_response.code != 200
 
-      read_feature(company, product, parent_response.parsed_response)
+      read_feature(company, product, azure_project, parent_response.parsed_response)
+    end
+
+    def read_feature_parent(product, azure_project, work_item_response)
+      parent_id = work_item_response['fields']['System.Parent']
+      company = product.company
+      epic = company.portfolio_units.find_by(external_id: parent_id)
+
+      return epic if epic.present?
+
+      parent_response = client.work_item(parent_id, azure_project.project_id)
+      return if parent_response.blank? || parent_response.code != 200
+
+      read_epic(product, parent_response.parsed_response)
     end
 
     def end_date(work_item_response)
@@ -104,10 +127,6 @@ module Azure
 
     def demand_title(work_item_response)
       work_item_response['fields']['System.Title'].strip
-    end
-
-    def read_epic(product, work_item_response)
-      product.portfolio_units.where(name: work_item_response['fields']['System.Title'], portfolio_unit_type: :epic).first_or_create
     end
   end
 end

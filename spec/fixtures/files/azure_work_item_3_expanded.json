@@ -75,7 +75,7 @@
     "System.PersonId":253323968,
     "System.Watermark":5,
     "System.CommentCount":0,
-    "System.Title":"Primeira issue",
+    "System.Title":"This is an epic",
     "System.BoardColumn":"Doing",
     "System.BoardColumnDone":false,
     "Microsoft.VSTS.Common.StateChangeDate":"2022-01-17T13:34:43.95Z",
@@ -100,8 +100,7 @@
     "Custom.ReleasePlan":"Projeto Integração Azure",
     "Custom.TeamName":"Great Team",
     "Custom.ProjectName":"FlowClimate",
-    "System.Description":"<div>Testando a integração para ler a primeira issue. </div>",
-    "System.Parent":1
+    "System.Description":"<div>Testando a integração para ler a primeira issue. </div>"
   },
   "relations":[
     {

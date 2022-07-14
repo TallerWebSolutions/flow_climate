@@ -212,6 +212,10 @@ pt-BR:
         zero: Campo Customizado
         one: Campo Customizado
         other: Campos Customizados
+      work_item_type:
+        zero: Tipo de Item
+        one: Tipo de Item
+        other: Tipos de Item
     attributes:
       user:
         first_name: Nome
@@ -764,6 +768,11 @@ pt-BR:
           custom_field_type:
             project_name: Nome do Projeto
             team_name: Nome do Time
+      work_item_type:
+        name: Nome
+        item_level: Nível do Item
+        company: Empresa
+        quality_indicator_type: Tipo Indicador de Qualidade
   product:
     name:
       uniqueness: "Não deve repetir nome de produto para o mesmo cliente."

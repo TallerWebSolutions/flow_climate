@@ -8,7 +8,7 @@
 #  end_date       :date             not null
 #  name           :string           not null
 #  start_date     :date             not null
-#  target_quarter :integer          default(1), not null
+#  target_quarter :integer          default("q1"), not null
 #  target_year    :integer          default(2022), not null
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null

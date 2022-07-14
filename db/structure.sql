@@ -2175,7 +2175,8 @@ CREATE TABLE public.portfolio_units (
     name character varying NOT NULL,
     portfolio_unit_type integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    external_id character varying
 );
 
 
@@ -5475,6 +5476,13 @@ CREATE INDEX index_operations_dashboards_on_team_member_id ON public.operations_
 
 
 --
+-- Name: index_portfolio_units_on_external_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_portfolio_units_on_external_id ON public.portfolio_units USING btree (external_id);
+
+
+--
 -- Name: index_portfolio_units_on_name; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6032,6 +6040,13 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON public.users USING bt
 --
 
 CREATE INDEX index_work_item_types_on_company_id ON public.work_item_types USING btree (company_id);
+
+
+--
+-- Name: index_work_item_types_on_company_id_and_item_level_and_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_work_item_types_on_company_id_and_item_level_and_name ON public.work_item_types USING btree (company_id, item_level, name);
 
 
 --

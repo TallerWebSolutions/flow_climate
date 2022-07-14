@@ -9,11 +9,13 @@
 #  portfolio_unit_type :integer          not null
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
+#  external_id         :string
 #  parent_id           :integer
 #  product_id          :integer          not null
 #
 # Indexes
 #
+#  index_portfolio_units_on_external_id          (external_id)
 #  index_portfolio_units_on_name                 (name)
 #  index_portfolio_units_on_name_and_product_id  (name,product_id) UNIQUE
 #  index_portfolio_units_on_parent_id            (parent_id)
