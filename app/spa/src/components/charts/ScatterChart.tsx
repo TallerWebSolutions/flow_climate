@@ -4,7 +4,7 @@ import {
   ScatterPlotMouseHandler,
   ScatterPlotRawSerie,
 } from "@nivo/scatterplot"
-import { Box, Link, Paper, Tooltip, useTheme } from "@mui/material"
+import { Box, Paper, useTheme } from "@mui/material"
 
 import { axisDataToScatter } from "../../lib/charts"
 import { ChartAxisData } from "../../modules/project/project.types"
