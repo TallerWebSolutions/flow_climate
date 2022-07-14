@@ -213,10 +213,6 @@ module Types
       Consolidations::ProjectConsolidation.where(id: weekly_project_consolidations.map(&:id) + [last_consolidation&.id]).order(:consolidation_date)
     end
 
-    def project_weeks
-      TimeService.instance.weeks_between_of(object.start_date.end_of_week, object.end_date.end_of_week)
-    end
-
     def project_consolidations_last_month
       object.project_consolidations.order(:consolidation_date).select(&:last_data_for_month?)
     end

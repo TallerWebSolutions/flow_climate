@@ -35,15 +35,16 @@ module Azure
       return if quarter.blank? || year.blank?
 
       initiative_name = "#{quarter}/#{year}"
-      initiative = company.initiatives.where('name ILIKE :team_name', team_name: "%#{initiative_name}%").first
+      initiative = company.initiatives.where('name ILIKE :initiative_name', initiative_name: "%#{initiative_name}%").first
 
-      return company.initiatives.create(name: initiative_name, start_date: Time.zone.today, end_date: 3.months.from_now)
+      return company.initiatives.create(name: initiative_name, start_date: Time.zone.today, end_date: 3.months.from_now) if initiative.blank?
 
       initiative
     end
 
     def read_card_type(company, work_item_response, item_level)
-      type = company.work_item_types.where(name: work_item_response['fields']['System.Tags'], item_level: item_level).first_or_create
+      type_name = work_item_response['fields']['System.Tags']&.split(';')&.first
+      type = company.work_item_types.where(name: type_name, item_level: item_level).first_or_create
 
       return type if type.valid?
 

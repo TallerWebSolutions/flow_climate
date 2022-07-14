@@ -63,6 +63,18 @@ RSpec.describe Azure::AzureReader, type: :service do
         expect(Customer.all.map(&:name)).to eq ['Default Customer']
       end
     end
+
+    context 'with an already registered customer' do
+      it 'uses the registered information' do
+        company = Fabricate :company
+        Fabricate :customer, company: company, name: 'Beer'
+        azure_item_return = file_fixture('azure_work_item_1_expanded.json').read
+
+        described_class.instance.read_customer(company, JSON.parse(azure_item_return))
+
+        expect(Customer.all.count).to eq 1
+      end
+    end
   end
 
   describe '#read_initiative' do
@@ -77,14 +89,26 @@ RSpec.describe Azure::AzureReader, type: :service do
       end
     end
 
-    context 'without the customer in the payload' do
-      it 'reads a default customer' do
+    context 'without the initiative in the payload' do
+      it 'reads a default initiative' do
         company = Fabricate :company
         azure_item_return = file_fixture('azure_work_item_2_expanded.json').read
 
         described_class.instance.read_initiative(company, JSON.parse(azure_item_return))
 
         expect(Initiative.all.count).to be_zero
+      end
+    end
+
+    context 'with an already registered initiative' do
+      it 'uses the registered information' do
+        company = Fabricate :company
+        Fabricate :initiative, company: company, name: 'Q1/2023'
+        azure_item_return = file_fixture('azure_work_item_1_expanded.json').read
+
+        described_class.instance.read_initiative(company, JSON.parse(azure_item_return))
+
+        expect(Initiative.all.count).to eq 1
       end
     end
   end
