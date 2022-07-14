@@ -84,6 +84,7 @@ RSpec.describe Azure::AzureWorkItemAdapter do
             expect(Task.all.map(&:task_type)).to eq ['Default']
 
             work_item_types = company.reload.work_item_types
+            expect(work_item_types.count).to eq 3
             expect(work_item_types.map(&:name)).to match_array %w[Default AV Feature]
             expect(work_item_types.map(&:item_level)).to match_array %w[demand task demand]
           end

@@ -40,19 +40,19 @@ module Azure
     end
 
     def process_valid_area(product, azure_project, work_item_response)
+      company = product.company
+
       work_item_type = work_item_response['fields']['System.WorkItemType']
       if work_item_type.casecmp('epic').zero?
         read_epic(product, work_item_response)
       elsif work_item_type.casecmp('feature').zero?
-        read_feature(product, work_item_response)
+        read_feature(company, product, work_item_response)
       elsif work_item_type.casecmp('user story').zero?
         read_user_story(product, azure_project, work_item_response)
       end
     end
 
-    def read_feature(product, work_item_response)
-      company = product.company
-
+    def read_feature(company, product, work_item_response)
       customer = Azure::AzureReader.instance.read_customer(company, work_item_response)
       team = Azure::AzureReader.instance.read_team(company, @azure_account, work_item_response)
       initiative = Azure::AzureReader.instance.read_initiative(company, work_item_response)
@@ -69,9 +69,7 @@ module Azure
     end
 
     def read_user_story(product, azure_project, work_item_response)
-      work_item_type = AzureReader.instance.read_card_type(product.company, work_item_response, :demand)
-
-      demand = read_task_parent(product, work_item_type, azure_project, work_item_response)
+      demand = read_task_parent(product, azure_project, work_item_response)
 
       task_type = AzureReader.instance.read_card_type(product.company, work_item_response, :task)
 
@@ -83,16 +81,17 @@ module Azure
       task
     end
 
-    def read_task_parent(product, work_item_type, azure_project, work_item_response)
+    def read_task_parent(product, azure_project, work_item_response)
       parent_id = work_item_response['fields']['System.Parent']
-      demand = product.company.demands.find_by(external_id: parent_id)
+      company = product.company
+      demand = company.demands.find_by(external_id: parent_id)
 
       return demand if demand.present?
 
       parent_response = client.work_item(parent_id, azure_project.project_id)
       return if parent_response.blank? || parent_response.code != 200
 
-      read_feature(product, parent_response.parsed_response)
+      read_feature(company, product, parent_response.parsed_response)
     end
 
     def end_date(work_item_response)
