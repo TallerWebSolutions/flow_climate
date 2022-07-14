@@ -12,19 +12,19 @@ module Flow
       super(demands)
       start_attributes
 
-      return if demands.blank?
-
       @uncertain_scope = uncertain_scope_amount
 
       end_sample_date ||= Time.zone.today
 
       @current_scope = @demands.opened_before_date(end_sample_date).count + @uncertain_scope
       @period_size = period_size
+      @data_period = data_period
+
       teams = demands.map(&:team).uniq
 
-      @stages = teams.last.stages.downstream.where('stages.order >= 0').order(:order)
+      return if teams.blank?
 
-      @data_period = data_period
+      @stages = teams.last.stages.downstream.where('stages.order >= 0').order(:order)
     end
 
     def work_items_flow_behaviour(start_population_date, analysed_date, distribution_index, add_data_to_chart)
@@ -121,7 +121,11 @@ module Flow
       @accumulated_bugs_opened_data_array << bugs_created_until_date_count
       @accumulated_bugs_closed_data_array << bugs_finished_until_date_count
 
-      @bugs_share_data_array << ((bugs_created_until_date_count.to_f / demands_created_until_date_count) * 100)
+      @bugs_share_data_array << if bugs_created_until_date_count.to_f.positive? && demands_created_until_date_count.positive?
+                                  ((bugs_created_until_date_count.to_f / demands_created_until_date_count) * 100)
+                                else
+                                  0
+                                end
     end
 
     def start_attributes

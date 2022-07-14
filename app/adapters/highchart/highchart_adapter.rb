@@ -20,10 +20,6 @@ module Highchart
 
     private
 
-    def uncertain_scope
-      @uncertain_scope ||= @all_projects.filter_map(&:initial_scope).sum
-    end
-
     def daily?
       @chart_period_interval == 'day'
     end

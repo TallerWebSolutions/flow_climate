@@ -303,7 +303,7 @@ RSpec.describe Types::QueryType do
   describe '#project' do
     context 'with project' do
       it 'returns the project and its fields' do
-        travel_to Time.zone.local(2022, 5, 4, 10, 0, 0) do
+        travel_to Time.zone.local(2022, 4, 30, 10, 0, 0) do
           company = Fabricate :company
 
           bug_type = Fabricate :work_item_type, company: company, name: 'Bug', quality_indicator_type: true
@@ -311,7 +311,9 @@ RSpec.describe Types::QueryType do
           team = Fabricate :team, company: company
           customer = Fabricate :customer, company: company
           product = Fabricate :product, company: company, customer: customer
-          project = Fabricate :project, company: company, customers: [customer], products: [product], team: team, status: :executing, start_date: Time.zone.parse('2022-04-23 10:51'), end_date: 1.day.from_now, max_work_in_progress: 2
+          project = Fabricate :project, company: company, customers: [customer], products: [product], team: team,
+                                        status: :executing, start_date: 31.days.ago,
+                                        end_date: 1.day.from_now, max_work_in_progress: 2, qty_hours: 500
 
           Fabricate :demand, company: company, project: project, team: team
 
@@ -323,9 +325,12 @@ RSpec.describe Types::QueryType do
           sixth_task = Fabricate :task, created_date: 1.week.ago, end_date: Time.zone.now
           Fabricate :task, created_date: 1.week.ago, end_date: nil
 
-          first_finished_demand = Fabricate :demand, project: project, tasks: [first_task, second_task, third_task], effort_downstream: 200, effort_upstream: 10, end_date: Time.zone.parse('2022-04-15 12:30')
-          second_finished_demand = Fabricate :demand, project: project, tasks: [fourth_task, fifth_task, sixth_task], work_item_type: bug_type, created_date: Time.zone.parse('2022-04-23 13:30'), commitment_date: Time.zone.parse('2022-04-24 10:30'), end_date: Time.zone.parse('2022-04-25 17:30')
-          project_consolidation = Fabricate :project_consolidation, project: project, monte_carlo_weeks_min: 9, monte_carlo_weeks_max: 85, monte_carlo_weeks_std_dev: 7, team_based_operational_risk: 0.5, consolidation_date: Time.zone.today, project_throughput_hours_additional: 17, project_throughput_hours_additional_in_month: 60
+          first_finished_demand = Fabricate :demand, project: project, tasks: [first_task, second_task, third_task], effort_downstream: 200, effort_upstream: 10, end_date: Time.zone.local(2022, 4, 24, 12, 30)
+          second_finished_demand = Fabricate :demand, project: project, tasks: [fourth_task, fifth_task, sixth_task], work_item_type: bug_type, created_date: Time.zone.local(2022, 4, 2, 13, 30), commitment_date: Time.zone.local(2022, 4, 3, 10, 30), end_date: Time.zone.local(2022, 4, 5, 17, 30), effort_downstream: 15, effort_upstream: 30
+
+          project_consolidation = Fabricate :project_consolidation, project: project, consolidation_date: 1.month.ago, last_data_in_week: true, monte_carlo_weeks_min: 3, monte_carlo_weeks_max: 20, monte_carlo_weeks_std_dev: 8, team_based_operational_risk: 2.5, project_throughput_hours_additional: 14, project_throughput_hours_additional_in_month: 100, project_throughput_hours: 20, project_scope_hours: 200
+          other_project_consolidation = Fabricate :project_consolidation, project: project, consolidation_date: Time.zone.local(2022, 4, 24), last_data_in_week: true, monte_carlo_weeks_min: 9, monte_carlo_weeks_max: 85, monte_carlo_weeks_std_dev: 7, team_based_operational_risk: 0.5, project_throughput_hours_additional: 17, project_throughput_hours_additional_in_month: 60, project_throughput_hours: 30, project_scope_hours: 250
+
           demand = Fabricate :demand, company: company, project: project, team: team
           Fabricate :demand_block, demand: demand
 
@@ -389,7 +394,6 @@ RSpec.describe Types::QueryType do
           numberOfDemandsDelivered
           numberOfDemands
           numberOfDownstreamDemands
-          currentWeeklyHoursIdealBurnup
           demandBlocks {
             id
           }
@@ -438,9 +442,21 @@ RSpec.describe Types::QueryType do
           }
           tasksBurnup {
             xAxis
-            projectTasksIdeal
-            projectTasksScope
-            projectTasksThroughtput
+            idealBurn
+            currentBurn
+            scope
+          }
+          demandsBurnup {
+            xAxis
+            idealBurn
+            currentBurn
+            scope
+          }
+          hoursBurnup {
+            xAxis
+            idealBurn
+            currentBurn
+            scope
           }
         }
 
@@ -494,7 +510,6 @@ RSpec.describe Types::QueryType do
                                                         'currentTeamBasedRisk' => 0.5,
                                                         'currentRiskToDeadline' => 0.0,
                                                         'remainingDays' => project.remaining_days,
-                                                        'currentWeeklyHoursIdealBurnup' => project.current_weekly_hours_ideal_burnup,
                                                         'running' => true,
                                                         'company' => {
                                                           'id' => company.id.to_s,
@@ -509,8 +524,19 @@ RSpec.describe Types::QueryType do
                                                           'leadTimeMinMonth' => 0.0,
                                                           'leadTimeP25' => project_consolidation.lead_time_p65,
                                                           'leadTimeP75' => project_consolidation.lead_time_p75,
-                                                          'projectThroughputHoursAdditional' => 17,
-                                                          'projectThroughputHoursAdditionalInMonth' => 60
+                                                          'projectThroughputHoursAdditional' => project_consolidation.project_throughput_hours_additional,
+                                                          'projectThroughputHoursAdditionalInMonth' => project_consolidation.project_throughput_hours_additional_in_month
+                                                        }, {
+                                                          'id' => other_project_consolidation.id.to_s,
+                                                          'interquartileRange' => 0.0,
+                                                          'leadTimeHistogramBinMax' => 0.0,
+                                                          'leadTimeHistogramBinMin' => 0.0,
+                                                          'leadTimeMaxMonth' => 0.0,
+                                                          'leadTimeMinMonth' => 0.0,
+                                                          'leadTimeP25' => other_project_consolidation.lead_time_p65,
+                                                          'leadTimeP75' => other_project_consolidation.lead_time_p75,
+                                                          'projectThroughputHoursAdditional' => other_project_consolidation.project_throughput_hours_additional,
+                                                          'projectThroughputHoursAdditionalInMonth' => other_project_consolidation.project_throughput_hours_additional_in_month
                                                         }],
                                                         'demandsFinishedWithLeadtime' => [{ 'id' => second_finished_demand.id.to_s }],
                                                         'discardedDemands' => [],
@@ -533,13 +559,13 @@ RSpec.describe Types::QueryType do
                                                           'xAxis' => [],
                                                           'yAxis' => []
                                                         },
-                                                        'projectConsolidationsWeekly' => [{ 'id' => project_consolidation.id.to_s }],
-                                                        'projectConsolidationsLastMonth' => [{ 'id' => project_consolidation.id.to_s }],
-                                                        'lastProjectConsolidationsWeekly' => nil,
-                                                        'demandsFlowChartData' => { 'committedChartData' => [0, 0, 0], 'creationChartData' => [1, 2, 0], 'pullTransactionRate' => [0, 0, 0], 'throughputChartData' => [0, 1, 0] },
-                                                        'cumulativeFlowChartData' => { 'xAxis' => %w[2022-04-24 2022-05-01 2022-05-08], 'yAxis' => [{ 'data' => [1, 2, 3], 'name' => 'Bla' }, { 'data' => [3, 2, 1], 'name' => 'Xpto' }] },
+                                                        'projectConsolidationsWeekly' => [{ 'id' => project_consolidation.id.to_s }, { 'id' => other_project_consolidation.id.to_s }],
+                                                        'projectConsolidationsLastMonth' => [],
+                                                        'lastProjectConsolidationsWeekly' => { 'id' => other_project_consolidation.id.to_s },
+                                                        'demandsFlowChartData' => { 'committedChartData' => [0, 0, 0, 0, 0], 'creationChartData' => [1, 0, 0, 0, 3], 'pullTransactionRate' => [0, 0, 0, 0, 0], 'throughputChartData' => [0, 1, 0, 1, 0] },
+                                                        'cumulativeFlowChartData' => { 'xAxis' => %w[2022-04-03 2022-04-10 2022-04-17 2022-04-24 2022-05-01], 'yAxis' => [{ 'data' => [1, 2, 3], 'name' => 'Bla' }, { 'data' => [3, 2, 1], 'name' => 'Xpto' }] },
                                                         'leadTimeHistogramData' => {
-                                                          'keys' => [111_600.0],
+                                                          'keys' => [198_000.0],
                                                           'values' => [1]
                                                         },
                                                         'projectMembers' => [{
@@ -548,22 +574,43 @@ RSpec.describe Types::QueryType do
                                                         }],
                                                         'tasksBurnup' => {
                                                           'xAxis' => TimeService.instance.weeks_between_of(project.start_date, project.end_date).map(&:iso8601),
-                                                          'projectTasksIdeal' => [2.0, 4.0, 6.0],
-                                                          'projectTasksScope' => [4, 6, 6],
-                                                          'projectTasksThroughtput' => [1, 2, 5]
+                                                          'idealBurn' => [1.2, 2.4, 3.5999999999999996, 4.8, 6.0],
+                                                          'currentBurn' => [0, 0, 1, 2, 5],
+                                                          'scope' => [0, 3, 4, 6, 6]
+                                                        },
+                                                        'demandsBurnup' => {
+                                                          'xAxis' => TimeService.instance.weeks_between_of(project.start_date, project.end_date).map(&:iso8601),
+                                                          'idealBurn' => [0.8, 1.6, 2.4000000000000004, 3.2, 4.0],
+                                                          'currentBurn' => [0, 1, 1, 1, 2],
+                                                          'scope' => [1, 1, 1, 1, 4]
+                                                        },
+                                                        'hoursBurnup' => {
+                                                          'xAxis' => TimeService.instance.weeks_between_of(project.start_date, project.end_date).map(&:iso8601),
+                                                          'idealBurn' => [100.0, 200.0, 300.0, 400.0, 500.0],
+                                                          'currentBurn' => [20, 30],
+                                                          'scope' => [200, 250, 250, 250, 250]
                                                         }
                                                       })
 
-          expect(result.dig('data', 'projectConsolidations')).to eq([{
-                                                                      'id' => project_consolidation.id.to_s,
-                                                                      'interquartileRange' => 0.0,
-                                                                      'leadTimeHistogramBinMax' => 0.0,
-                                                                      'leadTimeHistogramBinMin' => 0.0,
-                                                                      'leadTimeMaxMonth' => 0.0,
-                                                                      'leadTimeMinMonth' => 0.0,
-                                                                      'leadTimeP25' => 0.0,
-                                                                      'leadTimeP75' => 0.0
-                                                                    }])
+          expect(result.dig('data', 'projectConsolidations')).to match_array([{
+                                                                               'id' => project_consolidation.id.to_s,
+                                                                               'interquartileRange' => 0.0,
+                                                                               'leadTimeHistogramBinMax' => 0.0,
+                                                                               'leadTimeHistogramBinMin' => 0.0,
+                                                                               'leadTimeMaxMonth' => 0.0,
+                                                                               'leadTimeMinMonth' => 0.0,
+                                                                               'leadTimeP25' => 0.0,
+                                                                               'leadTimeP75' => 0.0
+                                                                             }, {
+                                                                               'id' => other_project_consolidation.id.to_s,
+                                                                               'interquartileRange' => 0.0,
+                                                                               'leadTimeHistogramBinMax' => 0.0,
+                                                                               'leadTimeHistogramBinMin' => 0.0,
+                                                                               'leadTimeMaxMonth' => 0.0,
+                                                                               'leadTimeMinMonth' => 0.0,
+                                                                               'leadTimeP25' => 0.0,
+                                                                               'leadTimeP75' => 0.0
+                                                                             }])
         end
       end
     end

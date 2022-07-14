@@ -28,6 +28,7 @@ module Types
       argument :until_date, GraphQL::Types::ISO8601Date, required: false
     end
 
+    # TODO: this should be get inside the Project query
     field :project_consolidations, [Types::ProjectConsolidationType], null: true, description: 'Project consolidations' do
       argument :last_data_in_week, Boolean, required: false
       argument :project_id, ID
@@ -67,7 +68,7 @@ module Types
       Team.find(id)
     end
 
-    def project_consolidations(project_id:, last_data_in_week: false)
+    def project_consolidations(project_id:, last_data_in_week: true)
       Consolidations::ProjectConsolidation.where(project_id: project_id, last_data_in_week: last_data_in_week).order(:consolidation_date)
     end
 

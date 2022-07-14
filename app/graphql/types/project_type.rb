@@ -82,13 +82,13 @@ module Types
     field :work_in_progress_limit, Int, null: false
 
     field :cumulative_flow_chart_data, Types::Charts::CumulativeFlowChartType, null: true
+    field :demands_burnup, Types::Charts::BurnupType, null: true
     field :demands_flow_chart_data, Types::Charts::DemandsFlowChartDataType, null: true
+    field :hours_burnup, Types::Charts::BurnupType, null: true
     field :lead_time_histogram_data, Types::Charts::LeadTimeHistogramDataType, null: true
     field :project_members, [Types::ProjectMemberType], null: true
     field :quality, Float, null: true
     field :tasks_burnup, Types::Charts::BurnupType, null: true
-    field :demands_burnup, Types::Charts::BurnupType, null: true
-    field :hours_burnup, Types::Charts::BurnupType, null: true
 
     delegate :remaining_backlog, to: :object
     delegate :remaining_weeks, to: :object
