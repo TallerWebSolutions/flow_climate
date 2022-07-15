@@ -19,8 +19,8 @@ import { ScatterChart } from "../../components/charts/ScatterChart"
 import { ChartGridItem } from "../../components/charts/ChartGridItem"
 
 const PROJECT_TASKS_CHARTS_QUERY = gql`
-  query ProjectDemandsCharts($TasksProjectId: ID, $ID: Int!) {
-    tasksList(projectId: $TasksProjectId) {
+  query ProjectDemandsChartsTasks($projectId: ID!) {
+    tasksList(projectId: $projectId) {
       tasksCharts {
         xAxis
         creation: creationArray
@@ -34,12 +34,12 @@ const PROJECT_TASKS_CHARTS_QUERY = gql`
         values
       }
     }
-    project(id: $ID) {
+    project(id: $projectId) {
       tasksBurnup {
-        projectTasksIdeal
-        projectTasksScope
-        projectTasksThroughtput
+        scope
         xAxis
+        idealBurn
+        currentBurn
       }
       projectConsolidationsWeekly {
         consolidationDate
@@ -56,8 +56,7 @@ const ProjectTasksCharts = () => {
     PROJECT_TASKS_CHARTS_QUERY,
     {
       variables: {
-        TasksProjectId: projectId,
-        ID: Number(projectId),
+        projectId: projectId,
       },
     }
   )
