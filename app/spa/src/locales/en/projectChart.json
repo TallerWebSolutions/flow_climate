@@ -42,6 +42,7 @@
       "operational_math_risk_evolution_team_data_chart": "Operational Math Risk Evolution - Team Data",
       "operational_math_risk_evolution_team_data_tooltip_label": "Period",
       "operational_math_risk_evolution_team_data_y_label": "Risk",
+      "operationalRisk": "Operational Risk (%)",
       "bugs_chart": "Bugs",
       "bugs_y_label": "Bugs",
       "bugs_openned": "Bugs Openned",
