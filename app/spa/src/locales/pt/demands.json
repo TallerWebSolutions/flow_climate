@@ -34,7 +34,8 @@
       "initiative": "Iniciativa",
       "project": "Projeto",
       "team": "Time",
-      "downloadCsv": "Download CSV"
+      "prepareCSVFile": "Preparar CSV",
+      "downloadCsv": "Baixar CSV"
     },
     "table": {
       "title": "{{count}} Demandas"

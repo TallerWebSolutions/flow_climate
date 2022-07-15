@@ -34,6 +34,7 @@
       "initiative": "Initiative",
       "project": "Project",
       "team": "Team",
+      "prepareCSVFile": "Prepare CSV",
       "downloadCsv": "Download CSV"
     },
     "table": {

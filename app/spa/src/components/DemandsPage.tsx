@@ -26,7 +26,6 @@ const FormElement = ({ children }: { children: ReactNode }) => (
 
 export type DemandsSearchDTO = {
   demandsTableData: DemandsList
-  demandsCsvData: DemandsList
 }
 
 type DemandPageProps = {

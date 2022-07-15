@@ -1,19 +1,52 @@
 import { useContext, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { gql, useQuery } from "@apollo/client"
-import { Avatar, AvatarGroup, Button, Link } from "@mui/material"
+import { gql, useLazyQuery, useQuery } from "@apollo/client"
+import {
+  Avatar,
+  AvatarGroup,
+  Button,
+  CircularProgress,
+  Link,
+} from "@mui/material"
 import { CSVLink } from "react-csv"
 import { FieldValues } from "react-hook-form"
 import EditIcon from "@mui/icons-material/Edit"
 import { formatISO } from "date-fns"
 
-import { Demand } from "../../modules/demand/demand.types"
+import { Demand, DemandsList } from "../../modules/demand/demand.types"
 import Table from "../../components/ui/Table"
 import DemandsPage, { DemandsSearchDTO } from "../../components/DemandsPage"
 import { MeContext } from "../../contexts/MeContext"
 import { useSearchParams } from "react-router-dom"
 import { secondsToReadbleDate } from "../../lib/date"
 import DateLocale from "../../components/ui/DateLocale"
+
+const DEMAND_FRAGMENT = gql`
+  fragment demandsList on DemandsList {
+    demands {
+      id
+      externalId
+      demandTitle
+      createdDate
+      endDate
+      leadtime
+      commitmentDate
+      demandType
+      responsibles {
+        id
+        name
+        user {
+          avatar {
+            imageSource
+          }
+        }
+      }
+    }
+    lastPage
+    totalCount
+    totalPages
+  }
+`
 
 const DEMANDS_QUERY = gql`
   query DemandsSearch(
@@ -46,6 +79,23 @@ const DEMANDS_QUERY = gql`
     ) {
       ...demandsList
     }
+  }
+
+  ${DEMAND_FRAGMENT}
+`
+
+const DEMANDS_CSV_QUERY = gql`
+  query DemandsCSV(
+    $orderField: String!
+    $searchText: String
+    $project: ID
+    $startDate: ISO8601Date
+    $endDate: ISO8601Date
+    $demandStatus: DemandStatuses
+    $initiative: ID
+    $team: ID
+    $sortDirection: SortDirection
+  ) {
     demandsCsvData: demandsList(
       searchOptions: {
         projectId: $project
@@ -63,33 +113,14 @@ const DEMANDS_QUERY = gql`
     }
   }
 
-  fragment demandsList on DemandsList {
-    demands {
-      id
-      externalId
-      demandTitle
-      createdDate
-      endDate
-      leadtime
-      commitmentDate
-      demandType
-      responsibles {
-        id
-        name
-        user {
-          avatar {
-            imageSource
-          }
-        }
-      }
-    }
-    lastPage
-    totalCount
-    totalPages
-  }
+  ${DEMAND_FRAGMENT}
 `
 
-const DemandsList = () => {
+type DemandsCSVDTO = {
+  demandsCsvData: DemandsList
+}
+
+const DemandsListPage = () => {
   const { t } = useTranslation("demands")
   const { me } = useContext(MeContext)
   const companySlug = me?.currentCompany?.slug
@@ -108,15 +139,22 @@ const DemandsList = () => {
     pageNumber: searchParams.get("pageNumber"),
     perPage: 10,
   })
+  const demandsQueryFilters = Object.keys(filters)
+    .filter((key) => {
+      return String(filters[key]).length > 0
+    })
+    .reduce<Record<string, string>>((acc, el) => {
+      return { ...acc, [el]: filters[el] }
+    }, {})
 
   const { data, loading } = useQuery<DemandsSearchDTO>(DEMANDS_QUERY, {
-    variables: Object.keys(filters)
-      .filter((key) => {
-        return String(filters[key]).length > 0
-      })
-      .reduce<Record<string, string>>((acc, el) => {
-        return { ...acc, [el]: filters[el] }
-      }, {}),
+    variables: demandsQueryFilters,
+  })
+  const [
+    fetchCSVData,
+    { data: csvData, loading: csvLoading, called: csvQueryCalled },
+  ] = useLazyQuery<DemandsCSVDTO>(DEMANDS_CSV_QUERY, {
+    variables: demandsQueryFilters,
   })
 
   const breadcrumbsLinks = [
@@ -201,22 +239,39 @@ const DemandsList = () => {
 
   const demandsCount = data?.demandsTableData.totalCount || 0
   const tableRows = data?.demandsTableData.demands.map(normalizeTableRow) || []
-  const csvRows = data?.demandsCsvData.demands.map(normalizeCsvTableRow) || []
+  const csvRows =
+    csvData?.demandsCsvData.demands.map(normalizeCsvTableRow) || []
+
+  const csvFileReady = csvQueryCalled && !csvLoading
 
   const TableTitle = () => (
     <>
       {t("list.table.title", { count: demandsCount })}{" "}
       <Button
         variant="contained"
-        sx={{ a: { color: "white", textDecoration: "none" } }}
+        sx={{
+          minWidth: "160px",
+          a: { color: "white", textDecoration: "none" },
+        }}
+        onClick={() => !csvQueryCalled && fetchCSVData()}
+        disabled={csvLoading}
+        color={csvFileReady ? "success" : "primary"}
       >
-        <CSVLink
-          data={csvRows}
-          headers={tableCsvHeader}
-          filename={`demands_${formatISO(new Date())}.csv`}
-        >
-          {t("list.form.downloadCsv")}
-        </CSVLink>
+        {csvQueryCalled ? (
+          csvLoading ? (
+            <CircularProgress size={20} />
+          ) : (
+            <CSVLink
+              data={csvRows}
+              headers={tableCsvHeader}
+              filename={`demands_${formatISO(new Date())}.csv`}
+            >
+              {t("list.form.downloadCsv")}
+            </CSVLink>
+          )
+        ) : (
+          t("list.form.prepareCSVFile")
+        )}
       </Button>
     </>
   )
@@ -243,4 +298,4 @@ const DemandsList = () => {
   )
 }
 
-export default DemandsList
+export default DemandsListPage
