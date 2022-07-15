@@ -32,6 +32,12 @@ type ScatterChartProps = {
   markers?: Marker[]
 }
 
+const reduceTicks = (ticks: (string | number | Date)[]) => {
+  if (ticks.length <= 20) return ticks
+  const factor = Math.ceil(ticks.length / 20)
+  return ticks.filter((_, index) => index % factor === 0)
+}
+
 export const ScatterChart = ({
   axisLeftLegend,
   data,
@@ -44,6 +50,7 @@ export const ScatterChart = ({
   const chartData = Array.isArray(data)
     ? data
     : axisDataToScatter(data, "Demands")
+  const bottomAxisTicks = chartData[0].data.map((item) => item.x)
   const chartMarkers: NivoMarker[] =
     markers?.map(({ value, legend }) => ({
       axis: "y",
@@ -69,7 +76,7 @@ export const ScatterChart = ({
           tickSize: 5,
           tickPadding: 5,
           tickRotation: -30,
-          tickValues: 10,
+          tickValues: reduceTicks(bottomAxisTicks),
         }}
         axisLeft={{
           tickSize: 5,
@@ -115,6 +122,8 @@ export const ScatterChart = ({
             Lead time: {node.data.y} {t("days")}
           </Paper>
         )}
+        enableGridX={false}
+        enableGridY={false}
         {...props}
       />
     </Box>

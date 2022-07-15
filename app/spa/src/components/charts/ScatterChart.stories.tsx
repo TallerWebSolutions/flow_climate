@@ -86,3 +86,147 @@ export const WithClick: ComponentStory<typeof ScatterChart> = () => (
     }}
   />
 )
+
+const bigData = [
+  {
+    id: "Demands Scatter",
+    data: [
+      {
+        x: "Demand-1",
+        y: 10,
+      },
+      {
+        x: "Demand-2",
+        y: 13,
+      },
+      {
+        x: "Demand-3",
+        y: 8,
+      },
+      {
+        x: "Demand-4",
+        y: 1,
+      },
+      {
+        x: "Demand-5",
+        y: 9,
+      },
+      {
+        x: "Demand-6",
+        y: 6,
+      },
+      {
+        x: "Demand-7",
+        y: 6,
+      },
+      {
+        x: "Demand-8",
+        y: 6,
+      },
+      {
+        x: "Demand-9",
+        y: 6,
+      },
+      {
+        x: "Demand-10",
+        y: 6,
+      },
+      {
+        x: "Demand-11",
+        y: 10,
+      },
+      {
+        x: "Demand-12",
+        y: 6,
+      },
+      {
+        x: "Demand-13",
+        y: 8,
+      },
+      {
+        x: "Demand-14",
+        y: 6,
+      },
+      {
+        x: "Demand-15",
+        y: 3,
+      },
+      {
+        x: "Demand-16",
+        y: 6,
+      },
+      {
+        x: "Demand-17",
+        y: 6,
+      },
+      {
+        x: "Demand-18",
+        y: 6,
+      },
+      {
+        x: "Demand-19",
+        y: 9,
+      },
+      {
+        x: "Demand-20",
+        y: 6,
+      },
+      {
+        x: "Demand-21",
+        y: 6,
+      },
+      {
+        x: "Demand-22",
+        y: 4,
+      },
+      {
+        x: "Demand-23",
+        y: 6,
+      },
+      {
+        x: "Demand-24",
+        y: 6,
+      },
+      {
+        x: "Demand-25",
+        y: 6,
+      },
+      {
+        x: "Demand-26",
+        y: 6,
+      },
+      {
+        x: "Demand-27",
+        y: 2,
+      },
+      {
+        x: "Demand-28",
+        y: 6,
+      },
+      {
+        x: "Demand-29",
+        y: 6,
+      },
+      {
+        x: "Demand-30",
+        y: 11,
+      },
+      {
+        x: "Demand-31",
+        y: 6,
+      },
+      {
+        x: "Demand-32",
+        y: 3,
+      },
+      {
+        x: "Demand-33",
+        y: 6,
+      },
+    ],
+  },
+]
+
+export const WithTooMuchData: ComponentStory<typeof ScatterChart> = () => (
+  <ScatterChart data={bigData} />
+)
