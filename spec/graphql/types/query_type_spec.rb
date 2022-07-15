@@ -312,6 +312,7 @@ RSpec.describe Types::QueryType do
           customer = Fabricate :customer, company: company
           product = Fabricate :product, company: company, customer: customer
           project = Fabricate :project, company: company, customers: [customer], products: [product], team: team,
+                                        initial_scope: 20,
                                         status: :executing, start_date: 31.days.ago,
                                         end_date: 1.day.from_now, max_work_in_progress: 2, qty_hours: 500
 
@@ -328,8 +329,8 @@ RSpec.describe Types::QueryType do
           first_finished_demand = Fabricate :demand, project: project, tasks: [first_task, second_task, third_task], effort_downstream: 200, effort_upstream: 10, end_date: Time.zone.local(2022, 4, 24, 12, 30)
           second_finished_demand = Fabricate :demand, project: project, tasks: [fourth_task, fifth_task, sixth_task], work_item_type: bug_type, created_date: Time.zone.local(2022, 4, 2, 13, 30), commitment_date: Time.zone.local(2022, 4, 3, 10, 30), end_date: Time.zone.local(2022, 4, 5, 17, 30), effort_downstream: 15, effort_upstream: 30
 
-          project_consolidation = Fabricate :project_consolidation, project: project, consolidation_date: 1.month.ago, last_data_in_week: true, monte_carlo_weeks_min: 3, monte_carlo_weeks_max: 20, monte_carlo_weeks_std_dev: 8, team_based_operational_risk: 2.5, project_throughput_hours_additional: 14, project_throughput_hours_additional_in_month: 100, project_throughput_hours: 20, project_scope_hours: 200
-          other_project_consolidation = Fabricate :project_consolidation, project: project, consolidation_date: Time.zone.local(2022, 4, 24), last_data_in_week: true, monte_carlo_weeks_min: 9, monte_carlo_weeks_max: 85, monte_carlo_weeks_std_dev: 7, team_based_operational_risk: 0.5, project_throughput_hours_additional: 17, project_throughput_hours_additional_in_month: 60, project_throughput_hours: 30, project_scope_hours: 250
+          project_consolidation = Fabricate :project_consolidation, project: project, consolidation_date: 1.month.ago, last_data_in_week: true, monte_carlo_weeks_min: 3, monte_carlo_weeks_max: 20, monte_carlo_weeks_std_dev: 8, team_based_operational_risk: 2.5, project_throughput_hours_additional: 14, project_throughput_hours_additional_in_month: 100, project_throughput_hours: 20, project_scope_hours: 200, project_scope: 41, project_throughput: 20
+          other_project_consolidation = Fabricate :project_consolidation, project: project, consolidation_date: Time.zone.local(2022, 4, 24), last_data_in_week: true, monte_carlo_weeks_min: 9, monte_carlo_weeks_max: 85, monte_carlo_weeks_std_dev: 7, team_based_operational_risk: 0.5, project_throughput_hours_additional: 17, project_throughput_hours_additional_in_month: 60, project_throughput_hours: 30, project_scope_hours: 250, project_scope: 61, project_throughput: 10
 
           demand = Fabricate :demand, company: company, project: project, team: team
           Fabricate :demand_block, demand: demand
@@ -506,7 +507,7 @@ RSpec.describe Types::QueryType do
                                                         'currentMonteCarloWeeksMin' => 9,
                                                         'currentMonteCarloWeeksMax' => 85,
                                                         'currentMonteCarloWeeksStdDev' => 7,
-                                                        'remainingWork' => 28,
+                                                        'remainingWork' => 18,
                                                         'currentTeamBasedRisk' => 0.5,
                                                         'currentRiskToDeadline' => 0.0,
                                                         'remainingDays' => project.remaining_days,
@@ -580,9 +581,9 @@ RSpec.describe Types::QueryType do
                                                         },
                                                         'demandsBurnup' => {
                                                           'xAxis' => TimeService.instance.weeks_between_of(project.start_date, project.end_date).map(&:iso8601),
-                                                          'idealBurn' => [0.8, 1.6, 2.4000000000000004, 3.2, 4.0],
-                                                          'currentBurn' => [0, 1, 1, 1, 2],
-                                                          'scope' => [1, 1, 1, 1, 4]
+                                                          'idealBurn' => [12.2, 24.4, 36.599999999999994, 48.8, 61.0],
+                                                          'currentBurn' => [20, 10],
+                                                          'scope' => [41, 61]
                                                         },
                                                         'hoursBurnup' => {
                                                           'xAxis' => TimeService.instance.weeks_between_of(project.start_date, project.end_date).map(&:iso8601),

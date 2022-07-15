@@ -264,13 +264,21 @@ module Types
     end
 
     def demands_burnup
-      Highchart::BurnupAdapter.new(Demand.where(id: object.demands.map(&:id)), object.start_date, object.end_date)
+      consolidations = weekly_consolidations
+
+      th = consolidations.map(&:project_throughput)
+      scopes = consolidations.map(&:project_scope)
+
+      { x_axis: project_weeks, current_burn: th, ideal_burn: object.current_weekly_scope_ideal_burnup, scope: scopes }
     end
 
     def hours_burnup
-      project_weeks = TimeService.instance.weeks_between_of(object.start_date.beginning_of_week, object.end_date.end_of_week)
       hours_th = weekly_consolidations.map(&:project_throughput_hours)
       { x_axis: project_weeks, ideal_burn: object.current_weekly_hours_ideal_burnup, scope: object.weekly_project_scope_hours_until_end, current_burn: hours_th }
+    end
+
+    def project_weeks
+      TimeService.instance.weeks_between_of(object.start_date.beginning_of_week, object.end_date.end_of_week)
     end
 
     private
