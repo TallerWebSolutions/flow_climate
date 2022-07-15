@@ -26,7 +26,7 @@ module Types
     end
 
     def responsibles
-      object.active_memberships.map(&:team_member)
+      object.memberships.map(&:team_member).uniq
     end
   end
 end
