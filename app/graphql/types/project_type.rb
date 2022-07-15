@@ -268,8 +268,10 @@ module Types
     end
 
     def hours_burnup
-      project_weeks = TimeService.instance.weeks_between_of(object.start_date.end_of_week, object.end_date.end_of_week)
-      hours_th = object.project_consolidations.weekly_data.order(:consolidation_date).map(&:project_throughput_hours)
+      project_weeks = TimeService.instance.weeks_between_of(object.start_date.beginning_of_week, object.end_date.end_of_week)
+      weekly_consolidations_ids = object.project_consolidations.weekly_data.order(:consolidation_date).map(&:id)
+      last_consolidation_id = [object.project_consolidations.order(:consolidation_date).last&.id]
+      hours_th = Consolidations::ProjectConsolidation.where(id: [weekly_consolidations_ids + last_consolidation_id].flatten.uniq).map(&:project_throughput_hours)
       { x_axis: project_weeks, ideal_burn: object.current_weekly_hours_ideal_burnup, scope: object.weekly_project_scope_hours_until_end, current_burn: hours_th }
     end
 

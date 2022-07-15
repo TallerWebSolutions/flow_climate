@@ -43,7 +43,7 @@ const buildBurnupData = (
     data:
       data?.idealBurn.map((idealScope, index) => ({
         x: data.xAxis?.[index],
-        y: idealScope,
+        y: idealScope.toFixed(2),
       })) || [],
   },
   {
