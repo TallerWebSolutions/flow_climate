@@ -583,7 +583,7 @@ RSpec.describe Types::QueryType do
                                                           'xAxis' => TimeService.instance.weeks_between_of(project.start_date, project.end_date).map(&:iso8601),
                                                           'idealBurn' => [12.2, 24.4, 36.599999999999994, 48.8, 61.0],
                                                           'currentBurn' => [20, 10],
-                                                          'scope' => [41, 61]
+                                                          'scope' => [41, 61, 61, 61, 61]
                                                         },
                                                         'hoursBurnup' => {
                                                           'xAxis' => TimeService.instance.weeks_between_of(project.start_date, project.end_date).map(&:iso8601),

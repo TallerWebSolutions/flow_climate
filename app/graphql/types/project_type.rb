@@ -267,9 +267,8 @@ module Types
       consolidations = weekly_consolidations
 
       th = consolidations.map(&:project_throughput)
-      scopes = consolidations.map(&:project_scope)
 
-      { x_axis: project_weeks, current_burn: th, ideal_burn: object.current_weekly_scope_ideal_burnup, scope: scopes }
+      { x_axis: project_weeks, current_burn: th, ideal_burn: object.current_weekly_scope_ideal_burnup, scope: object.weekly_project_scope_until_end }
     end
 
     def hours_burnup
