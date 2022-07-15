@@ -1,26 +1,31 @@
 module Azure
   class AzureItemSyncJob < ApplicationJob
-    queue_as :demand_update
+    queue_as :coca_azure
 
-    def perform(demand_id, azure_account, user_email, user_name, demand_url)
+    def perform(external_id, azure_account, azure_project, user_email = nil, user_name = nil, demand_url = nil)
       started_time = Time.zone.now
-      demand = Demand.find_by(id: demand_id)
+      demand = azure_account.company.demands.where(external_id: external_id).first_or_initialize
 
-      if demand.present?
-        azure_product_config = demand.product.azure_product_config
-        azure_azure_work_item_adapter = Azure::AzureWorkItemAdapter.new(azure_account)
+      azure_azure_work_item_adapter = Azure::AzureWorkItemAdapter.new(azure_account)
 
-        azure_azure_work_item_adapter.work_item(demand.external_id, azure_product_config.azure_team.azure_project)
+      azure_azure_work_item_adapter.work_item(external_id, azure_project)
 
-        demand.tasks.each do |task|
-          azure_azure_work_item_adapter.work_item(task.external_id, azure_product_config.azure_team.azure_project)
-        end
+      if demand.persisted?
+        demand.tasks.each { |task| azure_azure_work_item_adapter.work_item(task.external_id, azure_project) }
+      end
 
-        Azure::AzureWorkItemUpdatesAdapter.new(azure_account).transitions(demand, azure_product_config.azure_team.azure_project.project_id)
+      Azure::AzureWorkItemUpdatesAdapter.new(azure_account).transitions(demand, azure_project.project_id)
 
-        finished_time = Time.zone.now
+      finished_time = Time.zone.now
 
-        UserNotifierMailer.async_activity_finished(user_email, user_name, Demand.model_name.human.downcase, azure_account.id, started_time, finished_time, demand_url).deliver
+      if user_email.present?
+        UserNotifierMailer.async_activity_finished(user_email,
+                                                   user_name,
+                                                   Demand.model_name.human.downcase,
+                                                   azure_account.id,
+                                                   started_time,
+                                                   finished_time,
+                                                   demand_url).deliver
       end
     end
   end

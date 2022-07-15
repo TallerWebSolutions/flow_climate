@@ -54,7 +54,8 @@ class DemandsController < DemandsListController
   def synchronize_azure
     azure_account = @company.azure_account
     demand_url = company_demand_url(@demand.project.company, @demand)
-    Azure::AzureItemSyncJob.perform_later(@demand.id, azure_account, current_user.email, current_user.full_name, demand_url)
+    azure_project = @demand.product.azure_product_config.azure_team.azure_project
+    Azure::AzureItemSyncJob.perform_later(@demand.external_id, azure_account, azure_project, current_user.email, current_user.full_name, demand_url)
     flash[:notice] = I18n.t('general.enqueued')
     redirect_to company_demand_path(@company, @demand)
   end

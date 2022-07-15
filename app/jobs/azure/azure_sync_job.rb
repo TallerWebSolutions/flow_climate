@@ -8,7 +8,6 @@ module Azure
       started_time = Time.zone.now
       products = Azure::AzureProjectAdapter.new(azure_account).products
       work_item_adapter = Azure::AzureWorkItemAdapter.new(azure_account)
-      azure_work_item_update = Azure::AzureWorkItemUpdatesAdapter.new(azure_account)
 
       products.each do |product|
         azure_product_config = product.azure_product_config
@@ -24,10 +23,7 @@ module Azure
         work_items_ids.sort.uniq.each_with_index do |id, index|
           Rails.logger.info("[AzureAPI] processing #{index} of #{items_count}")
 
-          work_item_adapter.work_item(id, azure_product_config.azure_team.azure_project)
-
-          demand = Demand.find_by(external_id: id)
-          azure_work_item_update.transitions(demand, azure_product_config.azure_team.azure_project.project_id) if demand.present?
+          Azure::AzureItemSyncJob.perform_later(id, azure_account, azure_product_config.azure_team.azure_project)
         end
       end
 

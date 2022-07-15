@@ -71,6 +71,8 @@ module Azure
 
       from_stage = Stage.where(company: company, integration_id: azure_account.id).where('name ILIKE :stage_name', stage_name: from_stage_name).first
       from_transition = DemandTransition.where(demand: demand, stage: from_stage).last
+      return if from_transition.blank?
+
       from_transition.update(last_time_out: to_date)
     end
 

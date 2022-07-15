@@ -23,10 +23,7 @@ RSpec.describe Azure::AzureSyncJob do
 
       expect_any_instance_of(Azure::AzureProjectAdapter).to(receive(:products)).once.and_return([product])
       expect_any_instance_of(Azure::AzureWorkItemAdapter).to(receive(:work_items_ids)).and_return([1, 2, 3])
-      expect_any_instance_of(Azure::AzureWorkItemAdapter).to(receive(:work_item)).exactly(3).times
-      expect_any_instance_of(Azure::AzureWorkItemUpdatesAdapter).to(receive(:transitions).with(other_demand, azure_product_config.azure_team.azure_project.project_id)).once
-      expect_any_instance_of(Azure::AzureWorkItemUpdatesAdapter).to(receive(:transitions).with(valid_demand, azure_product_config.azure_team.azure_project.project_id)).once
-      expect(UserNotifierMailer).to receive(:async_activity_finished).once.and_call_original
+      expect(Azure::AzureItemSyncJob).to(receive(:perform_later)).thrice
 
       described_class.perform_now(azure_account, 'bla', 'foo@bar.com')
 
