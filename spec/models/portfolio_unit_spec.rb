@@ -21,13 +21,18 @@ RSpec.describe PortfolioUnit, type: :model do
 
     context 'with complex ones' do
       let(:product) { Fabricate :product }
-      let!(:first_portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'aaa' }
-      let!(:second_portfolio_unit) { Fabricate.build :portfolio_unit, product: product, name: 'aaa' }
 
-      it 'rejects the one duplicated on name' do
+      it 'rejects the one duplicated on name and parent' do
+        parent = Fabricate.build :portfolio_unit, product: product, name: 'parent'
+        first_portfolio_unit = Fabricate :portfolio_unit, product: product, parent: parent, name: 'aaa'
+        second_portfolio_unit = Fabricate.build :portfolio_unit, product: product, name: 'aaa'
+        third_portfolio_unit = Fabricate.build :portfolio_unit, product: product, parent: parent, name: 'aaa'
+
+        expect(parent.valid?).to be true
         expect(first_portfolio_unit.valid?).to be true
-        expect(second_portfolio_unit.valid?).to be false
-        expect(second_portfolio_unit.errors_on(:name)).to eq [I18n.t('portfolio_unit.validations.name')]
+        expect(second_portfolio_unit.valid?).to be true
+        expect(third_portfolio_unit.valid?).to be false
+        expect(third_portfolio_unit.errors_on(:name)).to eq [I18n.t('portfolio_unit.validations.name')]
       end
     end
   end

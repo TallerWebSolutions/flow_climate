@@ -44,7 +44,7 @@ class PortfolioUnit < ApplicationRecord
   accepts_nested_attributes_for :jira_portfolio_unit_config, reject_if: :all_blank
 
   validates :portfolio_unit_type, :name, presence: true
-  validates :name, uniqueness: { scope: :product, message: I18n.t('portfolio_unit.validations.name') }
+  validates :name, uniqueness: { scope: %i[product parent], message: I18n.t('portfolio_unit.validations.name') }
 
   scope :root_units, -> { where(parent: nil) }
 

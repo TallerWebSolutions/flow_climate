@@ -4831,13 +4831,6 @@ CREATE INDEX index_portfolio_units_on_name ON public.portfolio_units USING btree
 
 
 --
--- Name: index_portfolio_units_on_name_and_product_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_portfolio_units_on_name_and_product_id ON public.portfolio_units USING btree (name, product_id);
-
-
---
 -- Name: index_portfolio_units_on_parent_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6711,6 +6704,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220705145931'),
 ('20220711193708'),
 ('20220714235702'),
-('20220718205253');
+('20220718205253'),
+('20220718213803');
 
 

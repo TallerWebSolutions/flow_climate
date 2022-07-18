@@ -23,5 +23,19 @@ function buildDemandsTabCharts() {
     if (demandsByProject.length !== 0) {
         buildColumnChart(demandsByProject);
     }
-}
-;
+
+    let donutDemandTypeDiv = $('#demands-type-donut');
+    if (donutDemandTypeDiv.length !== 0) {
+        buildDonutChart(donutDemandTypeDiv);
+    }
+
+    let donutDemandDeliveredDiv = $('#demands-delivered-donut');
+    if (donutDemandDeliveredDiv.length !== 0) {
+        buildDonutChart(donutDemandDeliveredDiv);
+    }
+
+    const leadtimeControlChart = $('#leadtime-control-chart');
+    if (leadtimeControlChart.length !== 0) {
+        buildScatterChart(leadtimeControlChart);
+    }
+};
