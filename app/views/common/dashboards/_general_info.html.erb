@@ -29,7 +29,7 @@
   </tr>
   <tr>
     <td><b><%= I18n.t('general.delivered') %></b></td>
-    <td><%= link_to I18n.t('general.demands_text', count: demands_delivered.count), demands_list_by_ids_company_demands_path(company, object_type: object_type, flow_object_id: flow_object_id, demand_type: '', demand_state: 'delivered', demand_fitness: '' ), target: '_blank' %></td>
+    <td><%= sanitize("#{I18n.t('general.demands_text', count: demands_delivered.count)} <sup><b>(#{number_to_percentage(demandable.percentage_concluded * 100, precision: 0)})</b></sup>") %></td>
   </tr>
   <tr>
     <td><b><%= I18n.t('projects.index.remaining_backlog') %></b></td>

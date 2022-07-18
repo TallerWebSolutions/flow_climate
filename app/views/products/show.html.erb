@@ -19,7 +19,6 @@
 <div class="row">
   <div class="topnav">
     <%= link_to I18n.t('navbar.details'), '#', id: 'nav-item-stamps', class: 'active nav-item', data: { container: '#stamps' } %>
-    <%= link_to I18n.t('navbar.demands'), '#', id: 'nav-portfolio-demands', class: 'nav-item', data: { container: '#demands-tab' } %>
     <%= link_to I18n.t('navbar.risk_reviews'), '#', id: 'nav-risk-reviews', class: 'nav-item', data: { container: '#risk-reviews' } %>
     <%= link_to I18n.t('navbar.service_delivery_reviews'), '#', id: 'nav-service-delivery-reviews', class: 'nav-item', data: { container: '#service-delivery-reviews' } %>
     <%= link_to I18n.t('navbar.portfolio_units'), '#', id: 'nav-portfolio-unit', class: 'nav-item', data: { container: '#portfolio-units' } %>
@@ -35,10 +34,6 @@
 <%= render 'layouts/load_spinner' %>
 
 <div id="projects-table" class="tab-container">
-
-</div>
-
-<div id="demands-tab" class="tab-container">
 
 </div>
 
@@ -68,6 +63,7 @@
   <%= javascript_include_tag 'charts/line' %>
   <%= javascript_include_tag 'charts/column' %>
   <%= javascript_include_tag 'charts/donut' %>
+  <%= javascript_include_tag 'charts/scatter' %>
 
   <%= javascript_include_tag 'projects/projects_search' %>
 

@@ -126,4 +126,36 @@ RSpec.describe PortfolioUnit, type: :model do
       it { expect(portfolio_unit.total_hours).to eq 1350 }
     end
   end
+
+  describe '#percentage_concluded' do
+    context 'when it has no demands' do
+      it 'returns zero' do
+        unit = Fabricate :portfolio_unit
+        expect(unit.percentage_concluded).to be_zero
+      end
+    end
+
+    context 'when it has demands' do
+      context 'and none concluded' do
+        it 'returns zero' do
+          unit = Fabricate :portfolio_unit
+          Fabricate :demand, portfolio_unit: unit, end_date: nil
+          expect(unit.percentage_concluded).to be_zero
+        end
+      end
+
+      context 'and some are concluded' do
+        it 'returns the relation between the numbers' do
+          unit = Fabricate :portfolio_unit
+          Fabricate :demand, portfolio_unit: unit, end_date: nil
+          Fabricate :demand, portfolio_unit: unit, end_date: nil
+          Fabricate :demand, portfolio_unit: unit, end_date: nil
+          Fabricate :demand, portfolio_unit: unit, end_date: Time.zone.now
+          Fabricate :demand, portfolio_unit: unit, end_date: Time.zone.now
+
+          expect(unit.percentage_concluded).to eq 0.4
+        end
+      end
+    end
+  end
 end

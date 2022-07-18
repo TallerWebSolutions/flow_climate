@@ -593,4 +593,36 @@ RSpec.describe Team, type: :model do
       end
     end
   end
+
+  describe '#percentage_concluded' do
+    context 'when it has no demands' do
+      it 'returns zero' do
+        unit = Fabricate :portfolio_unit
+        expect(unit.percentage_concluded).to be_zero
+      end
+    end
+
+    context 'when it has demands' do
+      context 'and none concluded' do
+        it 'returns zero' do
+          team = Fabricate :team
+          Fabricate :demand, team: team, end_date: nil
+          expect(team.percentage_concluded).to be_zero
+        end
+      end
+
+      context 'and some are concluded' do
+        it 'returns the relation between the numbers' do
+          team = Fabricate :team
+          Fabricate :demand, team: team, end_date: nil
+          Fabricate :demand, team: team, end_date: nil
+          Fabricate :demand, team: team, end_date: nil
+          Fabricate :demand, team: team, end_date: Time.zone.now
+          Fabricate :demand, team: team, end_date: Time.zone.now
+
+          expect(team.percentage_concluded).to eq 0.4
+        end
+      end
+    end
+  end
 end

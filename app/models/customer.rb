@@ -25,7 +25,7 @@
 #
 
 class Customer < ApplicationRecord
-  include DemandsAggregator
+  include Demandable
 
   belongs_to :company, counter_cache: true
   belongs_to :customer, optional: true

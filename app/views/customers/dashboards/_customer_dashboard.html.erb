@@ -2,6 +2,7 @@
   <div class="col-xs-4">
     <h4><%= customer.name %></h4>
     <%= render 'common/dashboards/general_info',
+               demandable: demandable,
                company: company,
                dashboard_name: customer.name,
                start_date: customer.start_date,

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module DemandsAggregator
+module Demandable
   extend ActiveSupport::Concern
 
   def average_queue_time
@@ -29,6 +29,19 @@ module DemandsAggregator
 
   def upstream_demands(limit_date = Time.zone.now)
     demands.not_discarded_until(limit_date).not_committed(limit_date) - demands.not_discarded_until(limit_date).not_started(limit_date)
+  end
+
+  ##
+  # This method returns the relation between concluded and not concluded demands
+  def percentage_concluded
+    demands_kept = demands.kept
+    finished = demands_kept.finished_until_date(Time.zone.now).count
+
+    demands_count = demands_kept.count
+
+    return 0 if demands_count.zero? || finished.zero?
+
+    finished / demands_count.to_f
   end
 
   ##

@@ -22,7 +22,7 @@
 #
 
 class Team < ApplicationRecord
-  include DemandsAggregator
+  include Demandable
 
   belongs_to :company
   has_many :stages_teams, dependent: :destroy

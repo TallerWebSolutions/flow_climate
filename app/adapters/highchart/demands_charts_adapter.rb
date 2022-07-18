@@ -3,7 +3,8 @@
 module Highchart
   class DemandsChartsAdapter < HighchartAdapter
     attr_reader :demands_in_chart, :throughput_chart_data, :creation_chart_data, :committed_chart_data,
-                :leadtime_percentiles_on_time_chart_data, :demands_by_project, :pull_transaction_rate
+                :leadtime_percentiles_on_time_chart_data, :demands_by_project, :pull_transaction_rate,
+                :demands_by_type
 
     def initialize(demands, start_date, end_date, chart_period_interval)
       super(demands, start_date, end_date, chart_period_interval)
@@ -19,6 +20,24 @@ module Highchart
 
       build_leadtime_percentiles_on_time
       build_demands_by_project
+      build_demands_by_type
+    end
+
+    def not_delivered_count
+      demands.count - (throughput_chart_data&.sum || 0)
+    end
+
+    def delivered_count
+      throughput_chart_data&.sum || 0
+    end
+
+    def lead_time_control_chart
+      demands_delivered = demands.finished_until_date(Time.zone.now).order(:end_date)
+      lead_times = demands_delivered.map(&:leadtime_in_days).map(&:to_f)
+      { x_axis: demands_delivered.map(&:external_id), lead_times: lead_times,
+        lead_time_95p: Stats::StatisticsService.instance.percentile(95, lead_times),
+        lead_time_80p: Stats::StatisticsService.instance.percentile(80, lead_times),
+        lead_time_65p: Stats::StatisticsService.instance.percentile(80, lead_times) }
     end
 
     private
@@ -72,6 +91,13 @@ module Highchart
       demands_grouped = @demands_in_chart.joins(:project).group('projects.name').count.sort_by { |_key, value| value }.reverse.to_h
 
       @demands_by_project = { x_axis: demands_grouped.keys, y_axis: [{ name: I18n.t('general.demands'), data: demands_grouped.values, marker: { enabled: true } }] }
+    end
+
+    def build_demands_by_type
+      demands_grouped = @demands_in_chart.joins(:work_item_type).group('work_item_types.name').count.sort_by { |_key, value| value }.reverse.to_h
+
+      @demands_by_type = []
+      demands_grouped.each { |type_grouped, group_count| @demands_by_type << { name: type_grouped, y: group_count } }
     end
 
     def beginning_of_period_for_query(date)

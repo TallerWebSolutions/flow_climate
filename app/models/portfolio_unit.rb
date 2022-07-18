@@ -29,7 +29,7 @@
 #
 
 class PortfolioUnit < ApplicationRecord
-  include DemandsAggregator
+  include Demandable
 
   enum portfolio_unit_type: { product_module: 0, journey_stage: 1, theme: 2, epic: 4 }
 
@@ -79,5 +79,16 @@ class PortfolioUnit < ApplicationRecord
 
   def total_hours
     total_portfolio_demands.sum(&:total_effort)
+  end
+
+  def percentage_concluded
+    demands_kept = total_portfolio_demands.kept
+    finished = demands_kept.finished_until_date(Time.zone.now).count
+
+    demands_count = demands_kept.count
+
+    return 0 if demands_count.zero? || finished.zero?
+
+    finished / demands_count.to_f
   end
 end

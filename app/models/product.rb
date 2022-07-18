@@ -24,7 +24,7 @@
 #
 
 class Product < ApplicationRecord
-  include DemandsAggregator
+  include Demandable
 
   belongs_to :company
   belongs_to :customer, optional: true, counter_cache: true

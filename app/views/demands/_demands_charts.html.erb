@@ -43,6 +43,45 @@
     <%= render 'layouts/no_data', missing_data: Demand.model_name.human(count: 2).downcase %>
   <% end %>
 
+  <div class="col-xs-6 bottom-spaced-component">
+    <div id="demands-type-donut"
+         class="flow-chart"
+         data-title=''
+         data-seriesname=''
+         data-tooltipsuffix='<%= I18n.t('general.demands') %>'
+         data-series='<%= [
+                            { name: I18n.t('general.backlog'), y: demands_chart_adapter.not_delivered_count },
+                            { name: I18n.t('general.delivered'), y: demands_chart_adapter.delivered_count }
+                          ].to_json %>'
+         data-decimals='0'>
+    </div>
+  </div>
+
+  <div class="col-xs-6 bottom-spaced-component">
+    <div id="demands-delivered-donut"
+         class="flow-chart"
+         data-title=''
+         data-seriesname=''
+         data-tooltipsuffix='<%= I18n.t('general.demands') %>'
+         data-series='<%= demands_chart_adapter.demands_by_type.to_json %>'
+         data-decimals='0'>
+    </div>
+  </div>
+
+  <div class="col-xs-6">
+    <div id="leadtime-control-chart"
+         class="flow-chart"
+         data-xcategories='<%= demands_chart_adapter.lead_time_control_chart[:x_axis] %>'
+         data-series='<%= [{ name: 'Lead time', color: 'rgb(51, 51, 255)', data: demands_chart_adapter.lead_time_control_chart[:lead_times] }].to_json %>'
+         data-title=''
+         data-prefix=''
+         data-tooltipsuffix='<%= I18n.t('projects.charts.lead_time_chart.ylabel') %>'
+         data-percentile95='<%= demands_chart_adapter.lead_time_control_chart[:lead_time_95p] %>'
+         data-percentile80='<%= demands_chart_adapter.lead_time_control_chart[:lead_time_80p] %>'
+         data-percentile65='<%= demands_chart_adapter.lead_time_control_chart[:lead_time_65p] %>'>
+    </div>
+  </div>
+
   <% if demands_chart_adapter.demands_by_project.present? %>
     <div class="col-xs-6 bottom-spaced-component">
       <div id="demands-by-project"
