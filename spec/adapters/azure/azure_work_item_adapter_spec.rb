@@ -50,7 +50,7 @@ RSpec.describe Azure::AzureWorkItemAdapter do
 
           described_class.new(azure_account).work_item(1, azure_product_config.azure_team.azure_project)
 
-          expect(PortfolioUnit.all.map(&:name)).to eq ['This is an epic']
+          expect(PortfolioUnit.all.map(&:name)).to eq ['This Is An Epic']
         end
       end
 
@@ -83,13 +83,13 @@ RSpec.describe Azure::AzureWorkItemAdapter do
             expect(Demand.all.count).to eq 1
             expect(Task.all.count).to eq 1
 
-            expect(PortfolioUnit.all.map(&:name)).to eq ['This is an epic']
+            expect(PortfolioUnit.all.map(&:name)).to eq ['This Is An Epic']
 
             demand_created = Demand.last
             expect(demand_created.demand_title).to eq 'This is a demand'
             expect(demand_created.demand_type).to eq 'AV'
             expect(demand_created.customer.name).to eq 'Beer'
-            expect(demand_created.portfolio_unit.name).to eq 'This is an epic'
+            expect(demand_created.portfolio_unit.name).to eq 'This Is An Epic'
 
             expect(Task.all.map(&:title)).to eq ['This is a task']
             expect(Task.all.map(&:task_type)).to eq ['Default']
@@ -250,7 +250,7 @@ RSpec.describe Azure::AzureWorkItemAdapter do
 
                 described_class.new(azure_account).work_item(1, azure_product_config.azure_team.azure_project)
 
-                expect(PortfolioUnit.all.map(&:name)).to eq ['This is an epic']
+                expect(PortfolioUnit.all.map(&:name)).to eq ['This Is An Epic']
                 expect(Demand.all.map(&:portfolio_unit)).to eq PortfolioUnit.all
               end
             end
@@ -260,7 +260,7 @@ RSpec.describe Azure::AzureWorkItemAdapter do
             it 'creates the demand using the parent information' do
               described_class.new(azure_account).work_item(1, azure_product_config.azure_team.azure_project)
 
-              expect(PortfolioUnit.all.map(&:name)).to eq ['This is an epic']
+              expect(PortfolioUnit.all.map(&:name)).to eq ['This Is An Epic']
               expect(Demand.all.map(&:portfolio_unit)).to eq PortfolioUnit.all
             end
           end

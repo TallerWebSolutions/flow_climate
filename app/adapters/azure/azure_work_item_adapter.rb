@@ -53,7 +53,12 @@ module Azure
     end
 
     def read_epic(product, unit_name)
-      product.portfolio_units.where(name: unit_name, portfolio_unit_type: :epic).first_or_create
+      controlled_name = unit_name.downcase
+      unit = product.portfolio_units.where('name ILIKE :name', name: controlled_name).where(portfolio_unit_type: :epic).first_or_initialize
+      return unit if unit.persisted?
+
+      unit.update(name: controlled_name.strip.titleize)
+      unit
     end
 
     def read_feature(company, product, azure_project, work_item_response)

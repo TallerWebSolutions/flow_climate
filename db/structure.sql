@@ -4047,6 +4047,13 @@ CREATE UNIQUE INDEX idx_demand_score_answers_unique ON public.score_matrix_answe
 
 
 --
+-- Name: idx_portfolio_unit_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_portfolio_unit_name ON public.portfolio_units USING btree (name, product_id, parent_id);
+
+
+--
 -- Name: idx_replenishing_unique; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6703,6 +6710,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220622174041'),
 ('20220705145931'),
 ('20220711193708'),
-('20220714235702');
+('20220714235702'),
+('20220718205253');
 
 

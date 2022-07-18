@@ -10,8 +10,9 @@
   <table class="table table-striped">
     <thead>
       <tr>
-        <th><%= PortfolioUnit.human_attribute_name :parent %></th>
+        <th><%= PortfolioUnit.human_attribute_name :id %></th>
         <th><%= PortfolioUnit.human_attribute_name :name %></th>
+        <th><%= PortfolioUnit.human_attribute_name :parent %></th>
         <th><%= PortfolioUnit.human_attribute_name :portfolio_unit_type %></th>
         <th><%= Demand.model_name.human(count: 2) %></th>
         <th><%= I18n.t('general.delivered') %></th>
@@ -21,8 +22,9 @@
     <tbody>
       <% portfolio_units.each do |unit| %>
         <tr>
-          <td><%= unit.parent_branches.map(&:name).reverse.join(' > ') %></td>
+          <td><%= unit.id %></td>
           <td><%= link_to unit.name, company_product_portfolio_unit_path(company, product, unit) %></td>
+          <td><%= unit.parent_branches.map(&:name).reverse.join(' > ') %></td>
           <td><%= I18n.t("activerecord.attributes.portfolio_unit.enums.portfolio_unit_type.#{unit.portfolio_unit_type}") %></td>
           <td><%= unit.total_portfolio_demands.count %></td>
           <td><%= sanitize("#{unit.total_portfolio_demands.finished_until_date(Time.zone.now).count} <sup><b>(#{number_to_percentage(unit.percentage_concluded * 100, precision: 0)})</b></sup>") %></td>
