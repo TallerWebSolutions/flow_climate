@@ -212,8 +212,9 @@ coca:
       jira/jira_custom_field_machine_name:
         enums:
           custom_field_type:
-            class_of_service: "Class of Service"
-            responsibles: "Responsibles"
+            class_of_service: Class of Service
+            responsibles: Responsibles
+            epic_name: Epic Name
       flow_event:
         user: Created by
         project: Project
@@ -284,6 +285,7 @@ coca:
           custom_field_type:
             project_name: Project Name
             team_name: Team Name
+            epic_name: Epic Name
       initiative:
         enums:
           target_quarter:

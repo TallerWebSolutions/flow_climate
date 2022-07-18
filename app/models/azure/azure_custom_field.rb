@@ -17,7 +17,7 @@
 #
 module Azure
   class AzureCustomField < ApplicationRecord
-    enum custom_field_type: { project_name: 0, team_name: 1 }
+    enum custom_field_type: { project_name: 0, team_name: 1, epic_name: 2 }
 
     belongs_to :azure_account, class_name: 'Azure::AzureAccount'
 

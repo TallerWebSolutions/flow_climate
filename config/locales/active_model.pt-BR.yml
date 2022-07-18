@@ -768,6 +768,7 @@ pt-BR:
           custom_field_type:
             project_name: Nome do Projeto
             team_name: Nome do Time
+            epic_name: Nome do Épico
       work_item_type:
         name: Nome
         item_level: Nível do Item

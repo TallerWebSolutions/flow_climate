@@ -72,7 +72,8 @@
     "Custom.Year": "2023",
     "Microsoft.VSTS.Common.StateChangeDate": "2022-01-13T14:03:27.423Z",
     "Microsoft.VSTS.Common.Priority": 2,
-    "Custom.ProjectName": "FlowClimate"
+    "Custom.ProjectName": "FlowClimate",
+    "Custom.Country": "Brazil"
   },
   "relations": [{
     "rel": "System.LinkTypes.Hierarchy-Forward",

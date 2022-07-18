@@ -44,7 +44,7 @@ module Azure
 
       work_item_type = work_item_response['fields']['System.WorkItemType']
       if work_item_type.casecmp('epic').zero?
-        read_epic(product, work_item_response)
+        read_epic(product, work_item_response['fields']['System.Title'])
       elsif work_item_type.casecmp('feature').zero?
         read_feature(company, product, azure_project, work_item_response)
       elsif work_item_type.casecmp('user story').zero?
@@ -52,8 +52,8 @@ module Azure
       end
     end
 
-    def read_epic(product, work_item_response)
-      product.portfolio_units.where(name: work_item_response['fields']['System.Title'], portfolio_unit_type: :epic).first_or_create
+    def read_epic(product, unit_name)
+      product.portfolio_units.where(name: unit_name, portfolio_unit_type: :epic).first_or_create
     end
 
     def read_feature(company, product, azure_project, work_item_response)
@@ -62,7 +62,7 @@ module Azure
       team = Azure::AzureReader.instance.read_team(company, @azure_account, work_item_response)
       initiative = Azure::AzureReader.instance.read_initiative(company, work_item_response)
       project = Azure::AzureReader.instance.read_project(company, customer, team, initiative, @azure_account, work_item_response)
-      work_item_type = AzureReader.instance.read_card_type(product.company, work_item_response, :demand)
+      work_item_type = AzureReader.instance.read_card_type(company, work_item_response, :demand)
 
       save_demand(company, customer, parent, product, project, team, work_item_response, work_item_type)
     end
@@ -105,16 +105,27 @@ module Azure
     end
 
     def read_feature_parent(product, azure_project, work_item_response)
+      custom_epic_field = azure_project.azure_team.azure_product_config.azure_account.azure_custom_fields.epic_name.first
+
+      custom_epic_name = work_item_response['fields'][custom_epic_field.custom_field_name] if custom_epic_field.present?
+
+      return read_epic(product, custom_epic_name) if custom_epic_name.present?
+
       parent_id = work_item_response['fields']['System.Parent']
       company = product.company
       epic = company.portfolio_units.find_by(external_id: parent_id)
 
       return epic if epic.present?
 
+      read_parent_from_azure(azure_project, parent_id, product)
+    end
+
+    def read_parent_from_azure(azure_project, parent_id, product)
       parent_response = client.work_item(parent_id, azure_project.project_id)
       return if parent_response.blank? || parent_response.code != 200
 
-      read_epic(product, parent_response.parsed_response)
+      parsed_parent_response = parent_response.parsed_response
+      read_epic(product, parsed_parent_response['fields']['System.Title'])
     end
 
     def end_date(work_item_response)
