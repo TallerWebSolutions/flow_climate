@@ -152,7 +152,7 @@ RSpec.describe Azure::AzureReader, type: :service do
 
         described_class.instance.read_project(company, customer, team, initiative, azure_account, JSON.parse(azure_item_return))
 
-        expect(Project.all.map(&:name)).to eq ['FlowClimate - The Team']
+        expect(Project.all.map(&:name)).to eq ['FlowClimate']
       end
     end
 

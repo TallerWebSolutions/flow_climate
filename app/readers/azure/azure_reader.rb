@@ -56,9 +56,7 @@ module Azure
 
       project_name = work_item_response['fields'][project_custom_field&.custom_field_name]
 
-      project_name = 'Other' if project_name.blank?
-
-      project_name += " - #{team.name}"
+      project_name = "Other - #{team.name}" if project_name.blank?
 
       project = company.projects.where(name: project_name, team: team).first_or_initialize
       unless project.persisted?

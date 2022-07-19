@@ -53,7 +53,7 @@ module Azure
     end
 
     def read_epic(product, unit_name)
-      controlled_name = unit_name.downcase
+      controlled_name = unit_name.downcase.strip
       unit = product.portfolio_units.where('name ILIKE :name', name: controlled_name).where(portfolio_unit_type: :epic).first_or_initialize
       return unit if unit.persisted?
 
