@@ -6,7 +6,7 @@ module Azure
 
     def read_team(company, azure_account, work_item_response)
       team_custom_field = azure_account.azure_custom_fields.find_by(custom_field_type: :team_name)
-      return if team_custom_field.blank?
+      return company.teams.last if team_custom_field.blank?
 
       team_name = work_item_response['fields'][team_custom_field.custom_field_name] || 'Default Team'
       team = company.teams.where('name ILIKE :team_name', team_name: "%#{team_name}%").first
