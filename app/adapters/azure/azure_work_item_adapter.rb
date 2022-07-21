@@ -69,7 +69,9 @@ module Azure
       project = Azure::AzureReader.instance.read_project(company, customer, team, initiative, @azure_account, work_item_response)
       work_item_type = AzureReader.instance.read_card_type(company, work_item_response, :demand)
 
-      save_demand(company, customer, parent, product, project, team, work_item_response, work_item_type)
+      demand = save_demand(company, customer, parent, product, project, team, work_item_response, work_item_type)
+      AzureReader.instance.read_assigned(company, team, demand, work_item_response)
+      demand
     end
 
     def save_demand(company, customer, parent, product, project, team, work_item_response, work_item_type)

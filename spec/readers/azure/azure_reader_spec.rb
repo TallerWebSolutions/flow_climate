@@ -173,4 +173,30 @@ RSpec.describe Azure::AzureReader, type: :service do
       end
     end
   end
+
+  describe '#read_assigned' do
+    context 'with the responsible information' do
+      it 'reads the team member inside the payload' do
+        company = Fabricate :company
+        team = Fabricate :team, company: company
+        demand = Fabricate :demand, company: company, team: team
+        azure_item_return = file_fixture('azure_work_item_1_expanded.json').read
+
+        described_class.instance.read_assigned(company, team, demand, JSON.parse(azure_item_return))
+
+        expect(TeamMember.all.map(&:name)).to eq ['Foo Bar']
+      end
+    end
+
+    context 'without the assigned information' do
+      it 'reads a default type' do
+        company = Fabricate :company
+        azure_item_return = file_fixture('azure_work_item_2_expanded.json').read
+
+        described_class.instance.read_card_type(company, JSON.parse(azure_item_return), :task)
+
+        expect(WorkItemType.all.map(&:name)).to eq ['Default']
+      end
+    end
+  end
 end

@@ -11,6 +11,9 @@
     "System.AreaLevel2": "E2E",
     "System.Rev": 1,
     "System.Tags": "AV; PoS",
+    "System.AssignedTo": {
+      "displayName": "fOo bAR"
+    },
     "System.AuthorizedDate": "2022-01-13T14:03:27.423Z",
     "System.RevisedDate": "9999-01-01T00:00:00Z",
     "System.IterationId": 1,
