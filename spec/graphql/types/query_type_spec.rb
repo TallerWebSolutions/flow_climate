@@ -699,6 +699,10 @@ RSpec.describe Types::QueryType do
               leadTimes
               xAxis
             }
+            leadTimeBreakdown {
+              xAxis
+              yAxis
+            }
           }
         }
       )
@@ -718,6 +722,8 @@ RSpec.describe Types::QueryType do
           expect(result.dig('data', 'demandsList', 'controlChart', 'leadTimeP95')).to be_within(0.1).of lead_time_p95
           expect(result.dig('data', 'demandsList', 'controlChart', 'xAxis')).to eq demands_external_ids
           expect(result.dig('data', 'demandsList', 'controlChart', 'leadTimes')).to eq demands_lead_times
+          expect(result.dig('data', 'demandsList', 'leadTimeBreakdown', 'xAxis')).to eq []
+          expect(result.dig('data', 'demandsList', 'leadTimeBreakdown', 'yAxis')).to eq []
         end
       end
     end

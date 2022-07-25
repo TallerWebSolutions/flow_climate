@@ -49,6 +49,10 @@
     "leadTimeControlChart": "Control chart do lead time"
   },
   "charts": {
-    "title": "Gráficos"
+    "title": "Gráficos",
+    "leadTimeBreakdown": {
+      "title": "Lead time breakdown para 1 ano",
+      "yLabel": "Dias"
+    }
   }
 }

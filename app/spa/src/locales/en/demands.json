@@ -48,6 +48,10 @@
     "leadTimeControlChart": "Lead time control chart"
   },
   "charts": {
-    "title": "Charts"
+    "title": "Charts",
+    "leadTimeBreakdown": {
+      "title": "One year lead time breakdown",
+      "yLabel": "Days"
+    }
   }
 }

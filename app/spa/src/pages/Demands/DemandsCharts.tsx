@@ -9,6 +9,7 @@ import { MeContext } from "../../contexts/MeContext"
 import { FieldValues } from "react-hook-form"
 import DemandsPage, { DemandsSearchDTO } from "../../components/DemandsPage"
 import { useSearchParams } from "react-router-dom"
+import { BarChart } from "../../components/charts/BarChart"
 
 const DEMANDS_CHART_QUERY = gql`
   query DemandsSearch(
@@ -46,6 +47,10 @@ const DEMANDS_CHART_QUERY = gql`
 
         leadTimes
         xAxis
+      }
+      leadTimeBreakdown {
+        xAxis
+        yAxis
       }
     }
   }
@@ -88,9 +93,18 @@ const DemandsCharts = () => {
       }, {}),
   })
 
-  const controlChart = data?.demandsTableData.controlChart
+  const leadTimeBreakdownData = data?.demandsTableData.leadTimeBreakdown
+  const projectLeadTimeBreakdown = leadTimeBreakdownData
+    ? leadTimeBreakdownData.xAxis.map((xValue, index: number) => {
+        return {
+          index: index,
+          [xValue]: leadTimeBreakdownData.yAxis[index].toFixed(2),
+        }
+      })
+    : []
 
-  const xAxis = controlChart?.xAxis || []
+  const controlChart = data?.demandsTableData.controlChart
+  const controlChartXAxis = controlChart?.xAxis || []
   const demandsLeadTime =
     controlChart?.leadTimes.map((leadTime) =>
       secondsToDays(Number(leadTime))
@@ -99,8 +113,8 @@ const DemandsCharts = () => {
   const leadTimeP80InDays = secondsToDays(Number(controlChart?.leadTimeP80))
   const leadTimeP65InDays = secondsToDays(Number(controlChart?.leadTimeP65))
 
-  const chartData = {
-    xAxis: xAxis,
+  const controlChartData = {
+    xAxis: controlChartXAxis,
     yAxis: demandsLeadTime,
     leadTimeP65: leadTimeP65InDays,
     leadTimeP80: leadTimeP80InDays,
@@ -145,12 +159,21 @@ const DemandsCharts = () => {
       <Grid container spacing={2} rowSpacing={8} sx={{ marginTop: 4 }}>
         <ChartGridItem title={t("demandsCharts.leadTimeControlChart")}>
           <ScatterChart
-            data={chartData}
+            data={controlChartData}
             markers={[
               leadTimeControlP65Marker,
               leadTimeControlP80Marker,
               leadTimeControlP95Marker,
             ]}
+          />
+        </ChartGridItem>
+
+        <ChartGridItem title={t("charts.leadTimeBreakdown.title")}>
+          <BarChart
+            data={projectLeadTimeBreakdown}
+            keys={leadTimeBreakdownData?.xAxis.map(String) || []}
+            indexBy="index"
+            axisLeftLegend={t("charts.leadTimeBreakdown.yLabel")}
           />
         </ChartGridItem>
       </Grid>
