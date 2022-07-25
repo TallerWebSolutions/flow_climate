@@ -17,6 +17,7 @@ type BarChartProps = {
   legendDirection?: BarLegendProps["direction"]
   padding?: number
   groupMode?: "stacked" | "grouped"
+  showLegends?: boolean
 }
 
 export const BarChart = ({
@@ -29,6 +30,7 @@ export const BarChart = ({
   legendDirection = "row",
   padding,
   groupMode = "stacked",
+  showLegends = true,
 }: BarChartProps) => {
   const chartData = Array.isArray(data) ? data : keyValueToHistogramData(data)
 
@@ -68,34 +70,38 @@ export const BarChart = ({
           from: "color",
           modifiers: [["darker", 1.6]],
         }}
-        legends={[
-          {
-            dataFrom: "keys",
-            anchor: legendAnchor,
-            direction: legendDirection,
-            toggleSerie: true,
-            justify: false,
-            translateX: 0,
-            translateY: -25,
-            itemsSpacing: 0,
-            itemDirection: "left-to-right",
-            itemWidth: 125,
-            itemHeight: 20,
-            itemOpacity: 0.75,
-            symbolSize: 12,
-            symbolShape: "circle",
-            symbolBorderColor: "rgba(0, 0, 0, .5)",
-            effects: [
-              {
-                on: "hover",
-                style: {
-                  itemBackground: "rgba(0, 0, 0, .03)",
-                  itemOpacity: 1,
+        legends={
+          showLegends
+            ? [
+                {
+                  dataFrom: "keys",
+                  anchor: legendAnchor,
+                  direction: legendDirection,
+                  toggleSerie: true,
+                  justify: false,
+                  translateX: 0,
+                  translateY: -25,
+                  itemsSpacing: 0,
+                  itemDirection: "left-to-right",
+                  itemWidth: 125,
+                  itemHeight: 20,
+                  itemOpacity: 0.75,
+                  symbolSize: 12,
+                  symbolShape: "circle",
+                  symbolBorderColor: "rgba(0, 0, 0, .5)",
+                  effects: [
+                    {
+                      on: "hover",
+                      style: {
+                        itemBackground: "rgba(0, 0, 0, .03)",
+                        itemOpacity: 1,
+                      },
+                    },
+                  ],
                 },
-              },
-            ],
-          },
-        ]}
+              ]
+            : undefined
+        }
       />
     </Box>
   )

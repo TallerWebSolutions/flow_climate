@@ -97,7 +97,7 @@ const DemandsCharts = () => {
   const projectLeadTimeBreakdown = leadTimeBreakdownData
     ? leadTimeBreakdownData.xAxis.map((xValue, index: number) => {
         return {
-          index: index,
+          index: xValue,
           [xValue]: leadTimeBreakdownData.yAxis[index].toFixed(2),
         }
       })
@@ -172,6 +172,7 @@ const DemandsCharts = () => {
           <BarChart
             data={projectLeadTimeBreakdown}
             keys={leadTimeBreakdownData?.xAxis.map(String) || []}
+            showLegends={false}
             indexBy="index"
             axisLeftLegend={t("charts.leadTimeBreakdown.yLabel")}
           />
