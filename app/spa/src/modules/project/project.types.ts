@@ -17,6 +17,11 @@ export type ChartAxisData = {
   leadTimeP95?: number
 }
 
+export type NumberChartData = {
+  xAxis: (string | number)[]
+  yAxis: number[]
+}
+
 export type Project = {
   id: string
   name: string
@@ -98,6 +103,7 @@ export type Project = {
     memberName: string
   }[]
   hoursPerStageChartData: ChartAxisData
+  leadTimeBreakdown: NumberChartData
   demandsFlowChartData: {
     creationChartData?: number[]
     committedChartData?: number[]

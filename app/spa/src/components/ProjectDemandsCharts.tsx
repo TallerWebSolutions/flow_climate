@@ -69,6 +69,7 @@ const ProjectDemandsCharts = ({
     project.lastProjectConsolidationsWeekly
   const demandsFlowChartData = project.demandsFlowChartData
   const leadTimeHistogramData = project.leadTimeHistogramData
+  const leadTimeBreakdownData = project.leadTimeBreakdown
   const hoursPerStageChartData = project.hoursPerStageChartData
   const cumulativeFlowChartData = project.cumulativeFlowChartData
 
@@ -78,7 +79,7 @@ const ProjectDemandsCharts = ({
       data: projectConsolidationsWeekly.map(
         ({ consolidationDate, operationalRisk }) => ({
           x: consolidationDate,
-          y: operationalRisk * 100,
+          y: operationalRisk,
         })
       ),
     },
@@ -392,6 +393,15 @@ const ProjectDemandsCharts = ({
       })
     : []
 
+  const projectLeadTimeBreakdown = leadTimeBreakdownData
+    ? leadTimeBreakdownData.xAxis.map((xValue, index: number) => {
+        return {
+          index: index,
+          [xValue]: leadTimeBreakdownData.yAxis[index].toFixed(2),
+        }
+      })
+    : []
+
   const projectHoursPerCoordinationStage = hoursPerCoordinationStageChartData
     ? hoursPerCoordinationStageChartData.xAxis.map((xValue, index: number) => {
         return {
@@ -545,40 +555,7 @@ const ProjectDemandsCharts = ({
           }}
         />
       </ChartGridItem>
-      {projectCumulativeFlowChartData && (
-        <ChartGridItem
-          title={t("charts_tab.project_charts.cumulative_flow_chart", {
-            projectName: project.name,
-          })}
-        >
-          <LineChart
-            data={normalizeCfdData(projectCumulativeFlowChartData)}
-            axisLeftLegend={t(
-              "charts_tab.project_charts.cumulative_flow_y_label"
-            )}
-            props={{
-              yScale: {
-                type: "linear",
-                stacked: true,
-              },
-              areaOpacity: 1,
-              enableArea: true,
-              enableSlices: "x",
-              sliceTooltip: ({ slice }: SliceTooltipProps) => (
-                <LineChartTooltip slice={slice} />
-              ),
-              margin: { left: 80, right: 20, top: 25, bottom: 65 },
-              axisBottom: {
-                tickSize: 5,
-                tickPadding: 5,
-                legendPosition: "middle",
-                legendOffset: 60,
-                tickRotation: -40,
-              },
-            }}
-          />
-        </ChartGridItem>
-      )}
+
       <ChartGridItem
         title={t("charts_tab.project_charts.lead_time_control_chart")}
       >
@@ -614,6 +591,52 @@ const ProjectDemandsCharts = ({
           padding={0}
         />
       </ChartGridItem>
+
+      <ChartGridItem title={t("charts_tab.project_charts.lead_time_breakdown")}>
+        <BarChart
+          data={projectLeadTimeBreakdown}
+          keys={leadTimeBreakdownData?.xAxis.map(String) || []}
+          indexBy="index"
+          axisLeftLegend={t(
+            "charts_tab.project_charts.lead_time_breakdown_y_label"
+          )}
+        />
+      </ChartGridItem>
+
+      {projectCumulativeFlowChartData && (
+        <ChartGridItem
+          title={t("charts_tab.project_charts.cumulative_flow_chart", {
+            projectName: project.name,
+          })}
+        >
+          <LineChart
+            data={normalizeCfdData(projectCumulativeFlowChartData)}
+            axisLeftLegend={t(
+              "charts_tab.project_charts.cumulative_flow_y_label"
+            )}
+            props={{
+              yScale: {
+                type: "linear",
+                stacked: true,
+              },
+              areaOpacity: 1,
+              enableArea: true,
+              enableSlices: "x",
+              sliceTooltip: ({ slice }: SliceTooltipProps) => (
+                <LineChartTooltip slice={slice} />
+              ),
+              margin: { left: 80, right: 20, top: 25, bottom: 65 },
+              axisBottom: {
+                tickSize: 5,
+                tickPadding: 5,
+                legendPosition: "middle",
+                legendOffset: 60,
+                tickRotation: -40,
+              },
+            }}
+          />
+        </ChartGridItem>
+      )}
 
       <ChartGridItem title={t("charts_tab.project_charts.quality_bugs_chart")}>
         <LineChart
@@ -840,6 +863,7 @@ const ProjectDemandsCharts = ({
           )}
         />
       </ChartGridItem>
+
       <ChartGridItem
         title={t(
           "charts_tab.project_charts.hours_per_coordination_stage_chart"

@@ -100,6 +100,10 @@ export const companyMock: Company = {
         xAxis: [],
         yAxis: [],
       },
+      leadTimeBreakdown: {
+        xAxis: [],
+        yAxis: [],
+      },
       demandsFlowChartData: {
         creationChartData: [],
         committedChartData: [],
@@ -206,6 +210,10 @@ export const projectMock: Project = {
     xAxis: ["foo", "bar", "tor"],
     yAxis: [10, 20, 15],
   },
+  leadTimeBreakdown: {
+    xAxis: ["xpto", "sbbrubles", "bla"],
+    yAxis: [32, 27, 85],
+  },
   demandsFlowChartData: {
     creationChartData: [],
     committedChartData: [],
@@ -273,6 +281,7 @@ export const tasksMock = {
         {
           id: 1,
           title: "Task #1",
+          taskType: "la tarea",
           externalId: 220,
           createdDate: "2022-07-31",
           delivered: true,

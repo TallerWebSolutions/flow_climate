@@ -72,6 +72,8 @@
       "lead_time_control_tooltip_label": "Demand",
       "hours_per_stage_chart": "Hours per Stage",
       "hours_per_stage_y_label": "Hours",
+      "lead_time_breakdown": "Lead Time Breakdown",
+      "lead_time_breakdown_y_label": "Hours",
       "consumed_hours_by_role_in_month_chart": "Consumed Hours by Role in Month",
       "consumed_hours_by_role_in_month_y_label": "Hours",
       "consumed_hours_by_role_in_month_design_effort": "Design",
