@@ -3,8 +3,8 @@ import { Box } from "@mui/material"
 import { ReactElement } from "react"
 
 import { BarData } from "./tooltips/BarChartTooltip"
-import { KeyValueData } from "../../modules/project/project.types"
 import { keyValueToHistogramData } from "../../lib/charts"
+import { KeyValueData } from "../../modules/charts/charts.types"
 
 type BarChartProps = {
   data: BarDatum[] | KeyValueData

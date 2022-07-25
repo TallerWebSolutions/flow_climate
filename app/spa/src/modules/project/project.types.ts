@@ -3,24 +3,12 @@ import { Customer } from "../customer/customer.types"
 import { Demand } from "../demand/demand.types"
 import { Product } from "../product/product.types"
 import { ProjectConsolidation } from "./projectConsolidation.types"
-
-export type KeyValueData = {
-  keys: (number | string)[]
-  values: (number | string)[]
-}
-
-export type ChartAxisData = {
-  xAxis: (string | number)[]
-  yAxis: (string | number)[]
-  leadTimeP65?: number
-  leadTimeP80?: number
-  leadTimeP95?: number
-}
-
-export type NumberChartData = {
-  xAxis: (string | number)[]
-  yAxis: number[]
-}
+import {
+  ChartAxisData,
+  DemandsFlowChartData,
+  KeyValueData,
+  NumberChartData,
+} from "../charts/charts.types"
 
 export type Project = {
   id: string
@@ -104,13 +92,7 @@ export type Project = {
   }[]
   hoursPerStageChartData: ChartAxisData
   leadTimeBreakdown: NumberChartData
-  demandsFlowChartData: {
-    creationChartData?: number[]
-    committedChartData?: number[]
-    pullTransactionRate?: number[]
-    throughputChartData?: number[]
-    xAxis?: string[]
-  }
+  demandsFlowChartData: DemandsFlowChartData
   cumulativeFlowChartData?: {
     xAxis: string[]
     yAxis: {

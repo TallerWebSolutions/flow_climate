@@ -9,15 +9,12 @@ import { normalizeCfdData } from "./charts/LineChart"
 import { ScatterChart } from "./charts/ScatterChart"
 import LineChartTooltip from "./charts/tooltips/LineChartTooltip"
 import { secondsToDays } from "../lib/date"
-import {
-  Burnup,
-  ChartAxisData,
-  Project,
-} from "../modules/project/project.types"
+import { Burnup, Project } from "../modules/project/project.types"
 import { Grid } from "@mui/material"
 import { openWindow } from "../lib/func"
 import { useContext } from "react"
 import { MeContext } from "../contexts/MeContext"
+import { ChartAxisData } from "../modules/charts/charts.types"
 
 type ProjectDemandsChartsProps = {
   project: Project
@@ -98,7 +95,7 @@ const ProjectDemandsCharts = ({
   ]
 
   const projectBugsChartData: BarDatum[] = projectConsolidationsWeekly.map(
-    ({ bugsOpened, bugsClosed, consolidationDate }, index) => {
+    ({ bugsOpened, bugsClosed, consolidationDate }) => {
       return {
         index: consolidationDate,
         [t("charts_tab.project_charts.bugs_openned")]: bugsOpened,

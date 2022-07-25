@@ -7,8 +7,8 @@ import {
 import { Box, Paper, useTheme } from "@mui/material"
 
 import { axisDataToScatter } from "../../lib/charts"
-import { ChartAxisData } from "../../modules/project/project.types"
 import { useTranslation } from "react-i18next"
+import { ChartAxisData } from "../../modules/charts/charts.types"
 
 type Marker = {
   value: number

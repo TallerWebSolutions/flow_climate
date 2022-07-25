@@ -1,7 +1,8 @@
 import { Company } from "../company/company.types"
-import { NumberChartData, Project } from "../project/project.types"
+import { Project } from "../project/project.types"
 import ControlChart from "../charts/controlChart.types"
 import { TeamMember } from "../teamMember/teamMember.types"
+import { DemandsFlowChartData, NumberChartData } from "../charts/charts.types"
 
 export type Demand = {
   id: string
@@ -36,6 +37,7 @@ export type DemandsList = {
   totalPages: number
   controlChart: ControlChart
   leadTimeBreakdown: NumberChartData
+  flowData: DemandsFlowChartData
 }
 
 export type DemandBlock = {

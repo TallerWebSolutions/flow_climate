@@ -53,6 +53,10 @@
     "leadTimeBreakdown": {
       "title": "Lead time breakdown para 1 ano",
       "yLabel": "Dias"
+    },
+    "flowData": {
+      "title": "Flow data",
+      "yLabel": "demandas"
     }
   }
 }

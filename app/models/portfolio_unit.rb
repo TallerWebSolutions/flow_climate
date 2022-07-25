@@ -18,7 +18,6 @@
 #  idx_portfolio_unit_name                       (name,product_id,parent_id)
 #  index_portfolio_units_on_external_id          (external_id)
 #  index_portfolio_units_on_name                 (name)
-#  index_portfolio_units_on_name_and_product_id  (name,product_id) UNIQUE
 #  index_portfolio_units_on_parent_id            (parent_id)
 #  index_portfolio_units_on_portfolio_unit_type  (portfolio_unit_type)
 #  index_portfolio_units_on_product_id           (product_id)

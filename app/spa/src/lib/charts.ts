@@ -1,7 +1,6 @@
 import { BarDatum } from "@nivo/bar"
 import { ScatterPlotDatum, ScatterPlotRawSerie } from "@nivo/scatterplot"
-
-import { KeyValueData, ChartAxisData } from "../modules/project/project.types"
+import { ChartAxisData, KeyValueData } from "../modules/charts/charts.types"
 
 export const keyValueToHistogramData = (data: KeyValueData): BarDatum[] =>
   data.keys.map((key, index) => {

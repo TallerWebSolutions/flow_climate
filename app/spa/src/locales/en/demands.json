@@ -52,6 +52,10 @@
     "leadTimeBreakdown": {
       "title": "One year lead time breakdown",
       "yLabel": "Days"
+    },
+    "flowData": {
+      "title": "Flow data",
+      "yLabel": "demands"
     }
   }
 }

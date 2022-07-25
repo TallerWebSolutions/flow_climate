@@ -17,11 +17,11 @@ import { openWindow } from "../../lib/func"
 import { Task } from "../../modules/task/task.types"
 import { normalizeTasksFlowChart } from "../../modules/task/normalize"
 import User from "../../modules/user/user.types"
-import { KeyValueData, Project } from "../../modules/project/project.types"
 import TasksPage from "../../components/TasksPage"
-import { ChartAxisData } from "../../modules/project/project.types"
 import LineChartTooltip from "../../components/charts/tooltips/LineChartTooltip"
 import { ChartGridItem } from "../../components/charts/ChartGridItem"
+import { ChartAxisData, KeyValueData } from "../../modules/charts/charts.types"
+import { Project } from "../../modules/project/project.types"
 
 const TASKS_CHARTS_QUERY = gql`
   query TasksCharts(

@@ -1,11 +1,8 @@
 import { Demand, DemandBlocksList } from "../demand/demand.types"
-import {
-  KeyValueData,
-  ProjectsList,
-  ChartAxisData,
-} from "../project/project.types"
+import { ProjectsList } from "../project/project.types"
 import { Team } from "../team/team.types"
 import User from "../user/user.types"
+import { ChartAxisData, KeyValueData } from "../charts/charts.types"
 
 export type TeamMember = {
   id: string

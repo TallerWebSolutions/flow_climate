@@ -703,6 +703,13 @@ RSpec.describe Types::QueryType do
               xAxis
               yAxis
             }
+            flowData {
+              xAxis
+              creationChartData
+              committedChartData
+              pullTransactionRate
+              throughputChartData
+            }
           }
         }
       )
@@ -724,6 +731,11 @@ RSpec.describe Types::QueryType do
           expect(result.dig('data', 'demandsList', 'controlChart', 'leadTimes')).to eq demands_lead_times
           expect(result.dig('data', 'demandsList', 'leadTimeBreakdown', 'xAxis')).to eq []
           expect(result.dig('data', 'demandsList', 'leadTimeBreakdown', 'yAxis')).to eq []
+          expect(result.dig('data', 'demandsList', 'flowData', 'xAxis')).to eq %w[2022-04-17 2022-04-24 2022-05-01 2022-05-08 2022-05-15 2022-05-22 2022-05-29 2022-06-05 2022-06-12]
+          expect(result.dig('data', 'demandsList', 'flowData', 'creationChartData')).to eq [0, 0, 0, 0, 0, 0, 0, 6, 0]
+          expect(result.dig('data', 'demandsList', 'flowData', 'committedChartData')).to eq [0, 0, 0, 0, 0, 0, 0, 4, 0]
+          expect(result.dig('data', 'demandsList', 'flowData', 'pullTransactionRate')).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0]
+          expect(result.dig('data', 'demandsList', 'flowData', 'throughputChartData')).to eq [0, 0, 0, 0, 0, 0, 0, 5, 2]
         end
       end
     end

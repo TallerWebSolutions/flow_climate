@@ -10,6 +10,7 @@ import { FieldValues } from "react-hook-form"
 import DemandsPage, { DemandsSearchDTO } from "../../components/DemandsPage"
 import { useSearchParams } from "react-router-dom"
 import { BarChart } from "../../components/charts/BarChart"
+import { BarDatum } from "@nivo/bar"
 
 const DEMANDS_CHART_QUERY = gql`
   query DemandsSearch(
@@ -52,6 +53,13 @@ const DEMANDS_CHART_QUERY = gql`
         xAxis
         yAxis
       }
+      flowData {
+        creationChartData
+        committedChartData
+        pullTransactionRate
+        throughputChartData
+        xAxis
+      }
     }
   }
 `
@@ -93,12 +101,42 @@ const DemandsCharts = () => {
       }, {}),
   })
 
-  const leadTimeBreakdownData = data?.demandsTableData.leadTimeBreakdown
-  const projectLeadTimeBreakdown = leadTimeBreakdownData
-    ? leadTimeBreakdownData.xAxis.map((xValue, index: number) => {
+  const demandsLeadTimeBreakdownData = data?.demandsTableData.leadTimeBreakdown
+  const demandsLeadTimeBreakdown = demandsLeadTimeBreakdownData
+    ? demandsLeadTimeBreakdownData.xAxis.map((xValue, index: number) => {
         return {
           index: xValue,
-          [xValue]: leadTimeBreakdownData.yAxis[index].toFixed(2),
+          [xValue]: demandsLeadTimeBreakdownData.yAxis[index].toFixed(2),
+        }
+      })
+    : []
+
+  const demandsFlowChartData = data?.demandsTableData.flowData
+  const committedChartData = demandsFlowChartData?.committedChartData
+  const flowChartData: BarDatum[] = committedChartData
+    ? committedChartData?.map((_, index) => {
+        const creationChartData = demandsFlowChartData.creationChartData
+          ? demandsFlowChartData.creationChartData
+          : []
+
+        const pullTransactionRate = demandsFlowChartData.pullTransactionRate
+          ? demandsFlowChartData.pullTransactionRate
+          : []
+
+        const throughputChartData = demandsFlowChartData.throughputChartData
+          ? demandsFlowChartData.throughputChartData
+          : []
+
+        return {
+          index: demandsFlowChartData.xAxis?.[index] || index,
+          [t("charts_tab.project_charts.flow_data_created")]:
+            creationChartData[index],
+          [t("charts_tab.project_charts.flow_data_committed_to")]:
+            committedChartData[index],
+          [t("charts_tab.project_charts.flow_data_pull_transactions")]:
+            pullTransactionRate[index],
+          [t("charts_tab.project_charts.flow_data_delivered")]:
+            throughputChartData[index],
         }
       })
     : []
@@ -170,11 +208,27 @@ const DemandsCharts = () => {
 
         <ChartGridItem title={t("charts.leadTimeBreakdown.title")}>
           <BarChart
-            data={projectLeadTimeBreakdown}
-            keys={leadTimeBreakdownData?.xAxis.map(String) || []}
+            data={demandsLeadTimeBreakdown}
+            keys={demandsLeadTimeBreakdownData?.xAxis.map(String) || []}
             showLegends={false}
             indexBy="index"
             axisLeftLegend={t("charts.leadTimeBreakdown.yLabel")}
+          />
+        </ChartGridItem>
+
+        <ChartGridItem title={t("charts_tab.project_charts.flow_data_chart")}>
+          <BarChart
+            data={flowChartData}
+            keys={[
+              t("charts_tab.project_charts.flow_data_created"),
+              t("charts_tab.project_charts.flow_data_committed_to"),
+              t("charts_tab.project_charts.flow_data_pull_transactions"),
+              t("charts_tab.project_charts.flow_data_delivered"),
+            ]}
+            indexBy="index"
+            axisLeftLegend={t("charts_tab.project_charts.flow_data_y_label")}
+            axisBottomLegend={t("charts_tab.project_charts.flow_data_x_label")}
+            groupMode="grouped"
           />
         </ChartGridItem>
       </Grid>

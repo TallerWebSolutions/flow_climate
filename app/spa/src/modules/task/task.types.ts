@@ -1,6 +1,7 @@
 import { Initiative } from "../initiative/initiative.types"
-import { Project, KeyValueData } from "../project/project.types"
+import { Project } from "../project/project.types"
 import { Team } from "../team/team.types"
+import { KeyValueData } from "../charts/charts.types"
 
 type Demand = {
   demandTitle: string
