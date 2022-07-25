@@ -55,7 +55,12 @@
     },
     "flowData": {
       "title": "Flow data",
-      "yLabel": "deliverables"
+      "yLabel": "deliverables",
+      "xLabel": "weeks",
+      "created": "Created",
+      "committed": "Committed",
+      "pulled": "Pulled",
+      "delivered": "Delivered"
     }
   }
 }

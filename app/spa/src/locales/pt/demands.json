@@ -56,7 +56,12 @@
     },
     "flowData": {
       "title": "Flow data",
-      "yLabel": "demandas"
+      "yLabel": "demandas",
+      "xLabel": "semanas",
+      "created": "Created",
+      "committed": "Committed",
+      "pulled": "Pulled",
+      "delivered": "Delivered"
     }
   }
 }

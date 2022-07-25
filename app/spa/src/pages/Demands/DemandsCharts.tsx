@@ -129,14 +129,10 @@ const DemandsCharts = () => {
 
         return {
           index: demandsFlowChartData.xAxis?.[index] || index,
-          [t("charts_tab.project_charts.flow_data_created")]:
-            creationChartData[index],
-          [t("charts_tab.project_charts.flow_data_committed_to")]:
-            committedChartData[index],
-          [t("charts_tab.project_charts.flow_data_pull_transactions")]:
-            pullTransactionRate[index],
-          [t("charts_tab.project_charts.flow_data_delivered")]:
-            throughputChartData[index],
+          [t("charts.flowData.created")]: creationChartData[index],
+          [t("charts.flowData.committed")]: committedChartData[index],
+          [t("charts.flowData.pulled")]: pullTransactionRate[index],
+          [t("charts.flowData.delivered")]: throughputChartData[index],
         }
       })
     : []
@@ -216,18 +212,18 @@ const DemandsCharts = () => {
           />
         </ChartGridItem>
 
-        <ChartGridItem title={t("charts_tab.project_charts.flow_data_chart")}>
+        <ChartGridItem title={t("charts.flowData.title")}>
           <BarChart
             data={flowChartData}
             keys={[
-              t("charts_tab.project_charts.flow_data_created"),
-              t("charts_tab.project_charts.flow_data_committed_to"),
-              t("charts_tab.project_charts.flow_data_pull_transactions"),
-              t("charts_tab.project_charts.flow_data_delivered"),
+              t("charts.flowData.created"),
+              t("charts.flowData.committed"),
+              t("charts.flowData.pulled"),
+              t("charts.flowData.delivered"),
             ]}
             indexBy="index"
-            axisLeftLegend={t("charts_tab.project_charts.flow_data_y_label")}
-            axisBottomLegend={t("charts_tab.project_charts.flow_data_x_label")}
+            axisLeftLegend={t("charts.flowData.yLabel")}
+            axisBottomLegend={t("charts.flowData.xLabel")}
             groupMode="grouped"
           />
         </ChartGridItem>
