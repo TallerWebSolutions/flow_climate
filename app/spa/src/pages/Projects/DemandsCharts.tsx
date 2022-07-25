@@ -111,6 +111,11 @@ const PROJECT_CHART_QUERY = gql`
         yAxis
       }
 
+      leadTimeBreakdown {
+        xAxis
+        yAxis
+      }
+
       cumulativeFlowChartData {
         xAxis
         yAxis {

@@ -37,6 +37,7 @@ module Types
     field :initial_scope, Int, null: false
     field :initiative, Types::InitiativeType, null: true
     field :last_project_consolidations_weekly, Types::ProjectConsolidationType, null: true
+    field :lead_time_breakdown, Types::Charts::LeadTimeBreakdownType, null: true
     field :lead_time_p65, Float, null: false
     field :lead_time_p80, Float, null: false
     field :lead_time_p95, Float, null: false
@@ -278,6 +279,12 @@ module Types
 
     def project_weeks
       TimeService.instance.weeks_between_of(object.start_date.beginning_of_week, object.end_date.end_of_week)
+    end
+
+    def lead_time_breakdown
+      breakdown_stages = object.lead_time_breakdown.keys
+      breakdown_values = object.lead_time_breakdown.values.map { |transitions| (transitions.sum(&:total_seconds_in_transition) / 1.hour) }
+      { x_axis: breakdown_stages, y_axis: breakdown_values }
     end
 
     private

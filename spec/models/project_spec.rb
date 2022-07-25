@@ -1888,4 +1888,14 @@ RSpec.describe Project, type: :model do
       end
     end
   end
+
+  describe '#lead_time_breakdown' do
+    it 'calls the service that breaks the demands lead times into stages' do
+      project = Fabricate :project
+
+      expect(DemandService.instance).to(receive(:lead_time_breakdown)).once
+
+      project.lead_time_breakdown
+    end
+  end
 end

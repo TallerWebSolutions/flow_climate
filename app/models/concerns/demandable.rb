@@ -74,6 +74,10 @@ module Demandable
     compute_demand_lead_time_position(demands_without_tested_demand, demand)
   end
 
+  def lead_time_breakdown
+    DemandService.instance.lead_time_breakdown(demands)
+  end
+
   private
 
   def compute_demand_lead_time_position(demands, demand)

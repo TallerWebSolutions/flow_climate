@@ -411,6 +411,10 @@ RSpec.describe Types::QueryType do
             xAxis
             yAxis
           }
+          leadTimeBreakdown {
+            xAxis
+            yAxis
+          }
           projectConsolidationsWeekly {
             id
           }
@@ -557,6 +561,10 @@ RSpec.describe Types::QueryType do
                                                         'numberOfDemandsDelivered' => project.demands.kept.finished_until_date(Time.zone.now).count,
                                                         'numberOfDownstreamDemands' => 0,
                                                         'hoursPerStageChartData' => {
+                                                          'xAxis' => [],
+                                                          'yAxis' => []
+                                                        },
+                                                        'leadTimeBreakdown' => {
                                                           'xAxis' => [],
                                                           'yAxis' => []
                                                         },
