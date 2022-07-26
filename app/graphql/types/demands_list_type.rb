@@ -12,6 +12,7 @@ module Types
     field :flow_data, Types::Charts::DemandsFlowChartDataType, null: true
     field :flow_efficiency, Types::Charts::SimpleDateChartDataType, null: true
     field :lead_time_breakdown, Types::Charts::LeadTimeBreakdownType, null: true
+    field :lead_time_evolution_p80, Types::Charts::SimpleDateChartDataType, null: true
 
     def control_chart
       demands_finished = demands.finished_with_leadtime.order(end_date: :asc)
@@ -44,6 +45,18 @@ module Types
       x_axis.each { |analysed_date| time_flow_info.hours_flow_behaviour(analysed_date) }
 
       { x_axis: x_axis, y_axis: time_flow_info.flow_efficiency }
+    end
+
+    def lead_time_evolution_p80
+      demands_finished = demands.finished_with_leadtime.order(end_date: :asc)
+      lead_times_p80 = []
+      x_axis = TimeService.instance.weeks_between_of(charts_start_date(demands_finished), charts_end_date(demands_finished))
+
+      x_axis.each do |analysed_date|
+        demands = demands_finished.finished_until_date(analysed_date)
+        lead_times_p80 << Stats::StatisticsService.instance.percentile(80, demands.map(&:leadtime))
+      end
+      { x_axis: x_axis, y_axis: lead_times_p80 }
     end
 
     private

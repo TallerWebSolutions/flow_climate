@@ -67,6 +67,11 @@
       "queue": "Queue",
       "touch": "Touch",
       "xLabel": "weeks"
+    },
+    "leadTimeEvolutionP80": {
+      "title": "Lead time evolution p80",
+      "yLabel": "days",
+      "xLabel": "weeks"
     }
   }
 }

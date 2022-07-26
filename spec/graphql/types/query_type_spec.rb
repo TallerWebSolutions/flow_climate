@@ -714,6 +714,10 @@ RSpec.describe Types::QueryType do
               xAxis
               yAxis
             }
+            leadTimeEvolutionP80 {
+              xAxis
+              yAxis
+            }
           }
         }
       )
@@ -725,7 +729,6 @@ RSpec.describe Types::QueryType do
           }
 
           result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
-
           expect(result.dig('data', 'demandsList', 'totalCount')).to eq 7
           expect(result.dig('data', 'demandsList', 'demands')).to match_array(demands_ids.map { |id| { 'id' => id.to_s } })
           expect(result.dig('data', 'demandsList', 'controlChart', 'leadTimeP65')).to be_within(0.1).of lead_time_p65
@@ -742,6 +745,8 @@ RSpec.describe Types::QueryType do
           expect(result.dig('data', 'demandsList', 'flowData', 'throughputChartData')).to eq [0, 0, 0, 0, 0, 0, 0, 5, 2]
           expect(result.dig('data', 'demandsList', 'flowEfficiency', 'xAxis')).to eq %w[2022-04-17 2022-04-24 2022-05-01 2022-05-08 2022-05-15 2022-05-22 2022-05-29 2022-06-05 2022-06-12]
           expect(result.dig('data', 'demandsList', 'flowEfficiency', 'yAxis')).to eq [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 76.31009142725382, 66.2699791346091]
+          expect(result.dig('data', 'demandsList', 'leadTimeEvolutionP80', 'xAxis')).to eq %w[2022-04-17 2022-04-24 2022-05-01 2022-05-08 2022-05-15 2022-05-22 2022-05-29 2022-06-05 2022-06-12]
+          expect(result.dig('data', 'demandsList', 'leadTimeEvolutionP80', 'yAxis')).to eq [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 138_240.0, 103_680.00000000001]
         end
       end
     end

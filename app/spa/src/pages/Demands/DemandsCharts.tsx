@@ -67,6 +67,10 @@ const DEMANDS_CHART_QUERY = gql`
         xAxis
         yAxis
       }
+      leadTimeEvolutionP80 {
+        xAxis
+        yAxis
+      }
     }
   }
 `
@@ -198,6 +202,26 @@ const DemandsCharts = () => {
       ]
     : []
 
+  const leadTimeEvolutionP80ChartData =
+    data?.demandsTableData.leadTimeEvolutionP80
+  const leadTimeEvolutionP80Chart = leadTimeEvolutionP80ChartData
+    ? [
+        {
+          id: t("charts.leadTimeEvolutionP80.title"),
+          data: leadTimeEvolutionP80ChartData.xAxis.map(
+            (xValue, index: number) => {
+              return {
+                x: xValue,
+                y: secondsToDays(
+                  leadTimeEvolutionP80ChartData.yAxis[index]
+                ).toFixed(2),
+              }
+            }
+          ),
+        },
+      ]
+    : []
+
   if (loading)
     return (
       <Backdrop open>
@@ -269,6 +293,31 @@ const DemandsCharts = () => {
                 <LineChartTooltip
                   slice={slice}
                   xLabel={t("charts.flowEfficiency.xLabel")}
+                />
+              ),
+            }}
+          />
+        </ChartGridItem>
+
+        <ChartGridItem title={t("charts.leadTimeEvolutionP80.title")}>
+          <LineChart
+            data={leadTimeEvolutionP80Chart}
+            axisLeftLegend={t("charts.leadTimeEvolutionP80.yLabel")}
+            props={{
+              margin: { left: 80, right: 20, top: 25, bottom: 65 },
+              axisBottom: {
+                tickSize: 5,
+                tickPadding: 5,
+                legendPosition: "middle",
+                legendOffset: 60,
+                tickRotation: -40,
+              },
+
+              enableSlices: "x",
+              sliceTooltip: ({ slice }: SliceTooltipProps) => (
+                <LineChartTooltip
+                  slice={slice}
+                  xLabel={t("charts.leadTimeEvolutionP80.xLabel")}
                 />
               ),
             }}
