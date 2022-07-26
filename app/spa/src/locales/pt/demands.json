@@ -51,7 +51,7 @@
   "charts": {
     "title": "Gráficos",
     "leadTimeBreakdown": {
-      "title": "Lead time breakdown para 1 ano",
+      "title": "Lead time breakdown",
       "yLabel": "Dias"
     },
     "shared": {
@@ -70,6 +70,11 @@
       "committed": "Committed",
       "pulled": "Pulled",
       "delivered": "Delivered"
+    },
+    "leadTimeEvolutionP80": {
+      "title": "Lead time evolution p80",
+      "yLabel": "days",
+      "xLabel": "weeks"
     }
   }
 }

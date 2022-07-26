@@ -50,7 +50,7 @@
   "charts": {
     "title": "Charts",
     "leadTimeBreakdown": {
-      "title": "One year lead time breakdown",
+      "title": "Lead time breakdown",
       "yLabel": "Days"
     },
     "flowData": {
@@ -61,6 +61,11 @@
       "committed": "Committed",
       "pulled": "Pulled",
       "delivered": "Delivered"
+    },
+    "leadTimeEvolutionP80": {
+      "title": "Lead time evolution p80",
+      "yLabel": "days",
+      "xLabel": "weeks"
     }
   }
 }

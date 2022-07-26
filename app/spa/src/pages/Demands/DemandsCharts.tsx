@@ -310,7 +310,10 @@ const DemandsCharts = () => {
           />
         </ChartGridItem>
 
-        <ChartGridItem title={t("charts.leadTimeEvolutionP80.title")}>
+        <ChartGridItem
+          title={t("charts.leadTimeEvolutionP80.title")}
+          chartTip={t("charts.shared.eightWeeksChart.chartTip")}
+        >
           <LineChart
             data={leadTimeEvolutionP80Chart}
             axisLeftLegend={t("charts.leadTimeEvolutionP80.yLabel")}
