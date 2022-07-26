@@ -61,6 +61,12 @@
       "committed": "Committed",
       "pulled": "Pulled",
       "delivered": "Delivered"
+    },
+    "flowEfficiency": {
+      "title": "Flow Efficiency",
+      "queue": "Queue",
+      "touch": "Touch",
+      "xLabel": "weeks"
     }
   }
 }

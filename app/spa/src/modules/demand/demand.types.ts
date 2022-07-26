@@ -38,6 +38,7 @@ export type DemandsList = {
   controlChart: ControlChart
   leadTimeBreakdown: NumberChartData
   flowData: DemandsFlowChartData
+  flowEfficiency: NumberChartData
 }
 
 export type DemandBlock = {

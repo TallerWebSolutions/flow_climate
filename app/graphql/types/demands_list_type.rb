@@ -10,6 +10,7 @@ module Types
 
     field :control_chart, Types::Charts::ControlChartType, null: true
     field :flow_data, Types::Charts::DemandsFlowChartDataType, null: true
+    field :flow_efficiency, Types::Charts::SimpleDateChartDataType, null: true
     field :lead_time_breakdown, Types::Charts::LeadTimeBreakdownType, null: true
 
     def control_chart
@@ -31,12 +32,29 @@ module Types
 
     def flow_data
       flow_demands = demands
-      start_date = [flow_demands.filter_map(&:created_date).min, 8.weeks.ago].compact.min
-      end_date = [flow_demands.filter_map(&:end_date).max, Time.zone.today].compact.min
+      start_date = charts_start_date(flow_demands)
+      end_date = charts_end_date(flow_demands)
       Highchart::DemandsChartsAdapter.new(flow_demands.kept, start_date, end_date, 'week')
     end
 
+    def flow_efficiency
+      flow_demands = demands
+      x_axis = TimeService.instance.weeks_between_of(charts_start_date(flow_demands), charts_end_date(flow_demands))
+      time_flow_info = Flow::TimeFlowInformation.new(flow_demands)
+      x_axis.each { |analysed_date| time_flow_info.hours_flow_behaviour(analysed_date) }
+
+      { x_axis: x_axis, y_axis: time_flow_info.flow_efficiency }
+    end
+
     private
+
+    def charts_end_date(flow_demands)
+      [flow_demands.filter_map(&:end_date).max, Time.zone.today].compact.min
+    end
+
+    def charts_start_date(flow_demands)
+      [flow_demands.filter_map(&:created_date).min, 8.weeks.ago].compact.min
+    end
 
     def demands
       Demand.where(id: object['demands'].map(&:id)).where('created_date >= :limit_date', limit_date: 1.year.ago).order(created_date: :asc)

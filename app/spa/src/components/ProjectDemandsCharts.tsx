@@ -283,10 +283,9 @@ const ProjectDemandsCharts = ({
       id: project.name || "",
       data: projectConsolidationsWeekly.map(
         ({ consolidationDate, flowEfficiency }) => {
-          const flowEfficiencyInPercentage = flowEfficiency / 100
           return {
             x: consolidationDate,
-            y: flowEfficiencyInPercentage * 100,
+            y: flowEfficiency,
           }
         }
       ),

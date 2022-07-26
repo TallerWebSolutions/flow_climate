@@ -669,11 +669,11 @@ RSpec.describe Types::QueryType do
           Fabricate :demand, company: company, project: project, team: team, end_date: 2.days.ago
           Fabricate :demand, company: company, project: other_project, team: team, end_date: 1.day.ago
 
-          Fabricate :demand, company: company, project: project, team: team, created_date: 3.days.ago, commitment_date: 3.days.ago, end_date: 2.days.ago
-          Fabricate :demand, company: company, project: project, team: team, created_date: 4.days.ago, commitment_date: 4.days.ago, end_date: 3.days.ago
-          Fabricate :demand, company: company, project: project, team: team, created_date: 5.days.ago, commitment_date: 5.days.ago, end_date: 4.days.ago
-          Fabricate :demand, company: company, project: project, team: team, created_date: 2.days.ago, commitment_date: 2.days.ago, end_date: 1.day.ago
-          Fabricate :demand, company: company, project: project, team: team, created_date: 7.days.ago, commitment_date: 7.days.ago, end_date: 5.days.ago
+          Fabricate :demand, company: company, project: project, team: team, created_date: 3.days.ago, commitment_date: 3.days.ago, end_date: 2.days.ago, total_queue_time: 100_000, total_touch_time: 3763
+          Fabricate :demand, company: company, project: project, team: team, created_date: 4.days.ago, commitment_date: 4.days.ago, end_date: 3.days.ago, total_queue_time: 100_000, total_touch_time: 23_212
+          Fabricate :demand, company: company, project: project, team: team, created_date: 5.days.ago, commitment_date: 5.days.ago, end_date: 4.days.ago, total_queue_time: 100_000, total_touch_time: 939_382
+          Fabricate :demand, company: company, project: project, team: team, created_date: 2.days.ago, commitment_date: 2.days.ago, end_date: 1.day.ago, total_queue_time: 100_000, total_touch_time: 12_234
+          Fabricate :demand, company: company, project: project, team: team, created_date: 7.days.ago, commitment_date: 7.days.ago, end_date: 5.days.ago, total_queue_time: 100_000, total_touch_time: 3768
 
           demands_external_ids = Demand.finished_with_leadtime.order(end_date: :asc).map(&:external_id)
           demands_lead_times = Demand.finished_with_leadtime.order(end_date: :asc).map(&:leadtime).map(&:to_f)
@@ -710,6 +710,10 @@ RSpec.describe Types::QueryType do
               pullTransactionRate
               throughputChartData
             }
+            flowEfficiency {
+              xAxis
+              yAxis
+            }
           }
         }
       )
@@ -736,6 +740,8 @@ RSpec.describe Types::QueryType do
           expect(result.dig('data', 'demandsList', 'flowData', 'committedChartData')).to eq [0, 0, 0, 0, 0, 0, 0, 4, 0]
           expect(result.dig('data', 'demandsList', 'flowData', 'pullTransactionRate')).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0]
           expect(result.dig('data', 'demandsList', 'flowData', 'throughputChartData')).to eq [0, 0, 0, 0, 0, 0, 0, 5, 2]
+          expect(result.dig('data', 'demandsList', 'flowEfficiency', 'xAxis')).to eq %w[2022-04-17 2022-04-24 2022-05-01 2022-05-08 2022-05-15 2022-05-22 2022-05-29 2022-06-05 2022-06-12]
+          expect(result.dig('data', 'demandsList', 'flowEfficiency', 'yAxis')).to eq [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 76.31009142725382, 66.2699791346091]
         end
       end
     end

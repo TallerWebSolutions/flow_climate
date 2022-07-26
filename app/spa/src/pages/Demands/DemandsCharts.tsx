@@ -11,6 +11,9 @@ import DemandsPage, { DemandsSearchDTO } from "../../components/DemandsPage"
 import { useSearchParams } from "react-router-dom"
 import { BarChart } from "../../components/charts/BarChart"
 import { BarDatum } from "@nivo/bar"
+import { LineChart } from "../../components/charts/LineChart"
+import { SliceTooltipProps } from "@nivo/line"
+import LineChartTooltip from "../../components/charts/tooltips/LineChartTooltip"
 
 const DEMANDS_CHART_QUERY = gql`
   query DemandsSearch(
@@ -59,6 +62,10 @@ const DEMANDS_CHART_QUERY = gql`
         pullTransactionRate
         throughputChartData
         xAxis
+      }
+      flowEfficiency {
+        xAxis
+        yAxis
       }
     }
   }
@@ -176,6 +183,21 @@ const DemandsCharts = () => {
     }),
   }
 
+  const flowEfficiencyChartData = data?.demandsTableData.flowEfficiency
+  const flowEfficiencyChart = flowEfficiencyChartData
+    ? [
+        {
+          id: t("charts.flowEfficiency.title"),
+          data: flowEfficiencyChartData.xAxis.map((xValue, index: number) => {
+            return {
+              x: xValue,
+              y: (flowEfficiencyChartData.yAxis[index] / 100).toFixed(2),
+            }
+          }),
+        },
+      ]
+    : []
+
   if (loading)
     return (
       <Backdrop open>
@@ -225,6 +247,31 @@ const DemandsCharts = () => {
             axisLeftLegend={t("charts.flowData.yLabel")}
             axisBottomLegend={t("charts.flowData.xLabel")}
             groupMode="grouped"
+          />
+        </ChartGridItem>
+
+        <ChartGridItem title={t("charts.flowEfficiency.title")}>
+          <LineChart
+            data={flowEfficiencyChart}
+            axisLeftLegend={"%"}
+            props={{
+              margin: { left: 80, right: 20, top: 25, bottom: 65 },
+              axisBottom: {
+                tickSize: 5,
+                tickPadding: 5,
+                legendPosition: "middle",
+                legendOffset: 60,
+                tickRotation: -40,
+              },
+              yFormat: "=.2%",
+              enableSlices: "x",
+              sliceTooltip: ({ slice }: SliceTooltipProps) => (
+                <LineChartTooltip
+                  slice={slice}
+                  xLabel={t("charts.flowEfficiency.xLabel")}
+                />
+              ),
+            }}
           />
         </ChartGridItem>
       </Grid>
