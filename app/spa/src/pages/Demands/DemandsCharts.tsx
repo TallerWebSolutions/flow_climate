@@ -195,7 +195,7 @@ const DemandsCharts = () => {
           data: flowEfficiencyChartData.xAxis.map((xValue, index: number) => {
             return {
               x: xValue,
-              y: (flowEfficiencyChartData.yAxis[index] / 100).toFixed(2),
+              y: flowEfficiencyChartData.yAxis[index].toFixed(2),
             }
           }),
         },
@@ -237,7 +237,10 @@ const DemandsCharts = () => {
       setFilters={setFilters}
     >
       <Grid container spacing={2} rowSpacing={8} sx={{ marginTop: 4 }}>
-        <ChartGridItem title={t("demandsCharts.leadTimeControlChart")}>
+        <ChartGridItem
+          title={t("demandsCharts.leadTimeControlChart")}
+          chartTip={t("charts.shared.oneYearChart.chartTip")}
+        >
           <ScatterChart
             data={controlChartData}
             markers={[
@@ -248,7 +251,10 @@ const DemandsCharts = () => {
           />
         </ChartGridItem>
 
-        <ChartGridItem title={t("charts.leadTimeBreakdown.title")}>
+        <ChartGridItem
+          title={t("charts.leadTimeBreakdown.title")}
+          chartTip={t("charts.shared.oneYearChart.chartTip")}
+        >
           <BarChart
             data={demandsLeadTimeBreakdown}
             keys={demandsLeadTimeBreakdownData?.xAxis.map(String) || []}
@@ -258,7 +264,10 @@ const DemandsCharts = () => {
           />
         </ChartGridItem>
 
-        <ChartGridItem title={t("charts.flowData.title")}>
+        <ChartGridItem
+          title={t("charts.flowData.title")}
+          chartTip={t("charts.shared.eightWeeksChart.chartTip")}
+        >
           <BarChart
             data={flowChartData}
             keys={[
@@ -274,7 +283,10 @@ const DemandsCharts = () => {
           />
         </ChartGridItem>
 
-        <ChartGridItem title={t("charts.flowEfficiency.title")}>
+        <ChartGridItem
+          title={t("charts.flowEfficiency.title")}
+          chartTip={t("charts.shared.eightWeeksChart.chartTip")}
+        >
           <LineChart
             data={flowEfficiencyChart}
             axisLeftLegend={"%"}
@@ -287,7 +299,6 @@ const DemandsCharts = () => {
                 legendOffset: 60,
                 tickRotation: -40,
               },
-              yFormat: "=.2%",
               enableSlices: "x",
               sliceTooltip: ({ slice }: SliceTooltipProps) => (
                 <LineChartTooltip

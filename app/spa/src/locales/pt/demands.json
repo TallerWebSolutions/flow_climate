@@ -54,6 +54,14 @@
       "title": "Lead time breakdown para 1 ano",
       "yLabel": "Dias"
     },
+    "shared": {
+      "eightWeeksChart": {
+        "chartTip": "Este gráfico é limitado em oito semanas devido a questões de performance"
+      },
+      "oneYearChart": {
+        "chartTip": "Este gráfico é limitado em um ano devido a questões de performance"
+      }
+    },
     "flowData": {
       "title": "Flow data",
       "yLabel": "demandas",
