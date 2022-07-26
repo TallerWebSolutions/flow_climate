@@ -66,6 +66,14 @@
       "title": "Lead time evolution p80",
       "yLabel": "days",
       "xLabel": "weeks"
+    },
+    "shared": {
+      "eightWeeksChart": {
+        "chartTip": "This chart is limited to eight weeks due to performance issues"
+      },
+      "oneYearChart": {
+        "chartTip": "This chart is limited to one year due to performance issues"
+      }
     }
   }
 }

@@ -70,7 +70,7 @@
     },
     "shared": {
       "eightWeeksChart": {
-        "chartTip": "This chart is limited to eight weeks data due to performance issues"
+        "chartTip": "This chart is limited to eight weeks due to performance issues"
       },
       "oneYearChart": {
         "chartTip": "This chart is limited to one year due to performance issues"
