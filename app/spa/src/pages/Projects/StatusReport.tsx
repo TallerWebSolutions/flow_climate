@@ -13,7 +13,7 @@ import {
 import { Project } from "../../modules/project/project.types"
 
 export const QUERY = gql`
-  query ProjectStatusReport($id: Int!) {
+  query ProjectStatusReport($id: ID!) {
     project(id: $id) {
       ...ProjectStandardFragment
 

@@ -14,7 +14,7 @@ const ONE_DAY_IN_SECONDS = 60 * 60 * 24
 
 // @TODO: projectConsolidations should exist inside project field.
 export const PROJECT_STATISTICS_QUERY = gql`
-  query ProjectStatistics($id: Int!) {
+  query ProjectStatistics($id: ID!) {
     project(id: $id) {
       ...ProjectStandardFragment
 
@@ -60,14 +60,14 @@ const GraphBox = ({ title, children }: GraphBoxProps) => {
         alignItems: "center",
         flexDirection: "column",
         height: 350,
-        padding: 1,
-        my: 1,
+        padding: 2,
+        my: 5,
       }}
     >
       <Typography component="h3" variant="h6" my={2}>
         {title}
       </Typography>
-      {children}
+      <Box sx={{ width: "100%" }}>{children}</Box>
     </Box>
   )
 }

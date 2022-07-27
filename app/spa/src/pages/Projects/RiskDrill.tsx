@@ -8,7 +8,7 @@ import TicketGroup from "../../components/TicketGroup"
 import { Project } from "../../modules/project/project.types"
 
 export const PROJECT_RISK_DRILL_QUERY = gql`
-  query ProjectRiskDrill($id: Int!) {
+  query ProjectRiskDrill($id: ID!) {
     project(id: $id) {
       ...ProjectStandardFragment
 

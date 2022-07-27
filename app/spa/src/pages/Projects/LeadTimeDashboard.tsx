@@ -9,7 +9,7 @@ import { secondsToReadbleDate } from "../../lib/date"
 import { Project } from "../../modules/project/project.types"
 
 export const LEAD_TIME_DASHBOARD_QUERY = gql`
-  query ProjectLeadTimeDashboard($id: Int!) {
+  query ProjectLeadTimeDashboard($id: ID!) {
     project(id: $id) {
       ...ProjectStandardFragment
 
