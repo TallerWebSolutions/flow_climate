@@ -14,7 +14,7 @@ import EditIcon from "@mui/icons-material/Edit"
 import { formatISO } from "date-fns"
 
 import { Demand, DemandsList } from "../../modules/demand/demand.types"
-import Table from "../../components/ui/Table"
+import Table, { RowWithCollapse } from "../../components/ui/Table"
 import DemandsPage, { DemandsSearchDTO } from "../../components/DemandsPage"
 import { MeContext } from "../../contexts/MeContext"
 import { useSearchParams } from "react-router-dom"
@@ -32,6 +32,13 @@ const DEMAND_FRAGMENT = gql`
       leadtime
       commitmentDate
       demandType
+      costToProject
+      effortDownstream
+      effortUpstream
+      numberOfBlocks
+      product {
+        name
+      }
       responsibles {
         id
         name
@@ -167,41 +174,63 @@ const DemandsListPage = () => {
     },
   ]
 
-  const normalizeTableRow = (demand: Demand) => [
-    <Link
-      href={`/companies/${companySlug}/demands/${demand.externalId}`}
-      sx={{ minWidth: "50px", display: "block" }}
-    >
-      {demand.externalId}
-    </Link>,
-    demand.demandTitle || "",
-    demand.demandType,
-    <AvatarGroup max={2}>
-      {demand.responsibles &&
-        demand.responsibles.map((responsible, index) => (
-          <Avatar
-            key={`${responsible.name}--${index}`}
-            alt={responsible.name}
-            sx={{ width: 25, height: 25 }}
-            src={
-              responsible.user?.avatar?.imageSource ||
-              process.env.PUBLIC_URL + "default.png"
-            }
-          />
-        ))}
-    </AvatarGroup>,
-    demand.createdDate ? <DateLocale time date={demand.createdDate} /> : "",
-    demand.commitmentDate ? (
-      <DateLocale time date={demand.commitmentDate} />
-    ) : (
-      ""
-    ),
-    demand.endDate ? <DateLocale time date={demand.endDate} /> : "",
-    secondsToReadbleDate(demand.leadtime),
-    <Link href={`/companies/${companySlug}/demands/${demand.externalId}/edit`}>
-      <EditIcon />
-    </Link>,
-  ]
+  const normalizeTableRow = (demand: Demand) => {
+    return {
+      rowInfo: [
+        <Link
+          href={`/companies/${companySlug}/demands/${demand.externalId}`}
+          sx={{ minWidth: "50px", display: "block" }}
+        >
+          {demand.externalId}
+        </Link>,
+        demand.demandTitle || "",
+        demand.demandType,
+        <AvatarGroup max={2}>
+          {demand.responsibles &&
+            demand.responsibles.map((responsible, index) => (
+              <Avatar
+                key={`${responsible.name}--${index}`}
+                alt={responsible.name}
+                sx={{ width: 25, height: 25 }}
+                src={
+                  responsible.user?.avatar?.imageSource ||
+                  process.env.PUBLIC_URL + "default.png"
+                }
+              />
+            ))}
+        </AvatarGroup>,
+        demand.createdDate ? <DateLocale time date={demand.createdDate} /> : "",
+        demand.commitmentDate ? (
+          <DateLocale time date={demand.commitmentDate} />
+        ) : (
+          ""
+        ),
+        demand.endDate ? <DateLocale time date={demand.endDate} /> : "",
+        secondsToReadbleDate(demand.leadtime),
+        <Link
+          href={`/companies/${companySlug}/demands/${demand.externalId}/edit`}
+        >
+          <EditIcon />
+        </Link>,
+      ],
+      collapseInfo: {
+        collapseHeader: [
+          t("table.header.costToProject"),
+          t("table.header.effortDownstream"),
+          t("table.header.effortUpstream"),
+          t("table.header.numberOfBlocks"),
+          t("table.header.productName"),
+        ],
+        collapseBody: [
+          "$" + demand.costToProject?.toFixed(2) || "",
+          demand.effortDownstream?.toFixed(2) + " " + t("hours") || "",
+          demand.effortUpstream?.toFixed(2) + " " + t("hours") || "",
+          demand.numberOfBlocks || "",
+          demand.product?.name || "",
+        ],
+      },
+    }
+  }
 
   const normalizeCsvTableRow = (demand: Demand) => [
     demand.externalId,
@@ -238,7 +267,11 @@ const DemandsListPage = () => {
   ]
 
   const demandsCount = data?.demandsTableData.totalCount || 0
-  const tableRows = data?.demandsTableData.demands.map(normalizeTableRow) || []
+  const tableRows: RowWithCollapse[] =
+    data?.demandsTableData.demands.map(normalizeTableRow) || []
+
+  //eslint-disable-next-line
+  console.log(data?.demandsTableData.demands[0].leadtime)
   const csvRows =
     csvData?.demandsCsvData.demands.map(normalizeCsvTableRow) || []
 
@@ -286,6 +319,7 @@ const DemandsListPage = () => {
         title={<TableTitle />}
         headerCells={tableHeader}
         rows={tableRows}
+        withCollapse={true}
         pagination={{
           count: demandsCount,
           rowsPerPage: filters.perPage,

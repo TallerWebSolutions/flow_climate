@@ -9,7 +9,12 @@
       "timeToFinish": "Tempo para concluir",
       "actions": "Ações",
       "responsibles": "Responsáveis",
-      "commitmentDate": "Data de Comprometimento"
+      "commitmentDate": "Data de Comprometimento",
+      "costToProject": "Custo para o projeto",
+      "effortDownstream": "Esforço em downstream",
+      "effortUpstream": "Esforço em upstream",
+      "numberOfBlocks": "Número de bloqueios",
+      "productName": "Nome do produto"
     }
   },
   "list": {
@@ -76,5 +81,6 @@
       "yLabel": "days",
       "xLabel": "weeks"
     }
-  }
+  },
+  "hours": "horas"
 }
