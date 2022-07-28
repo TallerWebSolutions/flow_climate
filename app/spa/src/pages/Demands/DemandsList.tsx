@@ -225,7 +225,7 @@ const DemandsListPage = () => {
           "$" + demand.costToProject?.toFixed(2) || "",
           demand.effortDownstream?.toFixed(2) + " " + t("hours") || "",
           demand.effortUpstream?.toFixed(2) + " " + t("hours") || "",
-          demand.numberOfBlocks || "",
+          demand.numberOfBlocks || 0,
           demand.product?.name || "",
         ],
       },
