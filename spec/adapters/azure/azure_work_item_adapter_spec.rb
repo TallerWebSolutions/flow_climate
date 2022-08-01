@@ -88,6 +88,7 @@ RSpec.describe Azure::AzureWorkItemAdapter do
             demand_created = Demand.last
             expect(demand_created.demand_title).to eq 'This is a demand'
             expect(demand_created.demand_type).to eq 'AV'
+            expect(demand_created.demand_tags).to eq %w[AV PoS]
             expect(demand_created.customer.name).to eq 'Beer'
             expect(demand_created.portfolio_unit.name).to eq 'This Is An Epic'
 

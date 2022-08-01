@@ -43,7 +43,7 @@ module Azure
     end
 
     def read_card_type(company, work_item_response, item_level)
-      type_name = work_item_response['fields']['System.Tags']&.split(';')&.first
+      type_name = read_tags(work_item_response)&.first
       type = company.work_item_types.where(name: type_name, item_level: item_level).first_or_create
 
       return type if type.valid?
@@ -77,6 +77,12 @@ module Azure
       team_member.update(name: assigned_name.downcase.titleize) unless team_member.persisted?
 
       build_assignments(demand, team, team_member)
+    end
+
+    def read_tags(work_item_response)
+      return [] if work_item_response['fields'].blank?
+
+      work_item_response['fields']['System.Tags']&.split(';')&.map(&:strip)
     end
 
     private

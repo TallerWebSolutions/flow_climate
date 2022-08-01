@@ -68,19 +68,20 @@ module Azure
       initiative = Azure::AzureReader.instance.read_initiative(company, work_item_response)
       project = Azure::AzureReader.instance.read_project(company, customer, team, initiative, @azure_account, work_item_response)
       work_item_type = AzureReader.instance.read_card_type(company, work_item_response, :demand)
+      tags = Azure::AzureReader.instance.read_tags(work_item_response)
 
-      demand = save_demand(company, customer, parent, product, project, team, work_item_response, work_item_type)
+      demand = save_demand(company, customer, parent, product, project, team, work_item_response, work_item_type, tags)
       AzureReader.instance.read_assigned(company, team, demand, work_item_response)
       demand
     end
 
-    def save_demand(company, customer, parent, product, project, team, work_item_response, work_item_type)
+    def save_demand(company, customer, parent, product, project, team, work_item_response, work_item_type, tags)
       demand = Demand.with_discarded.where(external_id: work_item_response['id']).first_or_initialize
 
       demand.update(company: company, team: team, customer: customer, demand_title: demand_title(work_item_response),
                     created_date: created_date(work_item_response), end_date: end_date(work_item_response),
                     product: product, project: project, work_item_type: work_item_type, portfolio_unit: parent,
-                    discarded_at: nil)
+                    demand_tags: tags, discarded_at: nil)
 
       demand
     end

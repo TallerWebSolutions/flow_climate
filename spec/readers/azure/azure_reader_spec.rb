@@ -199,4 +199,30 @@ RSpec.describe Azure::AzureReader, type: :service do
       end
     end
   end
+
+  describe '#read_tags' do
+    context 'with data' do
+      it 'returns the array of tags' do
+        item_response = { 'fields' => { 'System.Tags' => 'xpto ; foo' } }
+
+        expect(described_class.instance.read_tags(item_response)).to eq %w[xpto foo]
+      end
+    end
+
+    context 'with no data' do
+      it 'returns an empty array' do
+        item_response = {}
+
+        expect(described_class.instance.read_tags(item_response)).to eq []
+      end
+    end
+
+    context 'with no System.Tags field' do
+      it 'returns an empty array' do
+        item_response = { 'fields' => {} }
+
+        expect(described_class.instance.read_tags(item_response)).to eq []
+      end
+    end
+  end
 end
