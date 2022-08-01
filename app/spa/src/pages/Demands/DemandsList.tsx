@@ -68,6 +68,7 @@ const DEMANDS_QUERY = gql`
     $initiative: ID
     $team: ID
     $sortDirection: SortDirection
+    $demandType: String
   ) {
     demandsTableData: demandsList(
       searchOptions: {
@@ -82,6 +83,7 @@ const DEMANDS_QUERY = gql`
         searchText: $searchText
         orderField: $orderField
         sortDirection: $sortDirection
+        demandType: $demandType
       }
     ) {
       ...demandsList
@@ -102,6 +104,7 @@ const DEMANDS_CSV_QUERY = gql`
     $initiative: ID
     $team: ID
     $sortDirection: SortDirection
+    $demandType: String
   ) {
     demandsCsvData: demandsList(
       searchOptions: {
@@ -114,6 +117,7 @@ const DEMANDS_CSV_QUERY = gql`
         searchText: $searchText
         orderField: $orderField
         sortDirection: $sortDirection
+        demandType: $demandType
       }
     ) {
       ...demandsList
@@ -145,6 +149,7 @@ const DemandsListPage = () => {
     endDate: searchParams.get("endDate"),
     pageNumber: searchParams.get("pageNumber"),
     perPage: 10,
+    demandType: searchParams.get("demandType"),
   })
   const demandsQueryFilters = Object.keys(filters)
     .filter((key) => {
@@ -244,6 +249,7 @@ const DemandsListPage = () => {
   ]
 
   const tableHeader = [
+    "",
     t("table.header.id"),
     t("table.header.title"),
     t("table.header.demandType"),
@@ -270,8 +276,6 @@ const DemandsListPage = () => {
   const tableRows: RowWithCollapse[] =
     data?.demandsTableData.demands.map(normalizeTableRow) || []
 
-  //eslint-disable-next-line
-  console.log(data?.demandsTableData.demands[0].leadtime)
   const csvRows =
     csvData?.demandsCsvData.demands.map(normalizeCsvTableRow) || []
 

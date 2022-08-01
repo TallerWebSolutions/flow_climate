@@ -17,7 +17,7 @@ module Types
     field :demands, [Types::DemandType] do
       argument :limit, Int, required: false
       argument :status, Types::Enums::DemandStatusesType, required: false
-      argument :type, Types::Enums::DemandTypesType, required: false
+      argument :type, String, required: false
     end
 
     field :projects_list, Types::ProjectsListType, null: true do

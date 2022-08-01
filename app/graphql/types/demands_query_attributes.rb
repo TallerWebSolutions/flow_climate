@@ -13,7 +13,7 @@ module Types
 
     argument :demand_class_of_service, Types::Enums::DemandClassesOfServiceType, required: false
     argument :demand_status, Types::Enums::DemandStatusesType, required: false
-    argument :demand_type, Types::Enums::DemandTypesType, required: false
+    argument :demand_type, String, required: false
     argument :end_date, GraphQL::Types::ISO8601Date, required: false
     argument :iniciative_id, ID, required: false
     argument :start_date, GraphQL::Types::ISO8601Date, required: false

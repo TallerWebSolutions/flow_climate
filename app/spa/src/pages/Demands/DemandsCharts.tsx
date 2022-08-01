@@ -28,6 +28,7 @@ const DEMANDS_CHART_QUERY = gql`
     $initiative: ID
     $team: ID
     $sortDirection: SortDirection
+    $demandType: String
   ) {
     demandsTableData: demandsList(
       searchOptions: {
@@ -42,6 +43,7 @@ const DEMANDS_CHART_QUERY = gql`
         searchText: $searchText
         orderField: $orderField
         sortDirection: $sortDirection
+        demandType: $demandType
       }
     ) {
       controlChart {
@@ -90,6 +92,7 @@ const DemandsCharts = () => {
     orderField: "end_date",
     startDate: searchParams.get("startDate"),
     endDate: searchParams.get("endDate"),
+    demandType: searchParams.get("demandType"),
   })
 
   const breadcrumbsLinks = [

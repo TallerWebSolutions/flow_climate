@@ -9,6 +9,7 @@ import {
   FormControl,
   InputLabel,
   MenuItem,
+  TextFieldProps,
 } from "@mui/material"
 import LocalizationProvider from "@mui/lab/LocalizationProvider"
 import AdapterDateFns from "@mui/lab/AdapterDateFns"
@@ -84,13 +85,17 @@ const ProjectList = () => {
               label={t("filter.initial_date")}
               value={startDate}
               onChange={setStartDate}
-              renderInput={(params) => <TextField {...params} />}
+              renderInput={(params: TextFieldProps) => (
+                <TextField {...params} />
+              )}
             />
             <DatePicker
               label={t("filter.end_date")}
               value={endDate}
               onChange={setEndDate}
-              renderInput={(params) => <TextField {...params} />}
+              renderInput={(params: TextFieldProps) => (
+                <TextField {...params} />
+              )}
             />
             <FormControl fullWidth>
               <InputLabel id="status-filter">{t("filter.status")}</InputLabel>

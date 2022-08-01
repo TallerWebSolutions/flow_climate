@@ -44,6 +44,10 @@ export const ME_QUERY = gql`
         id
         name
         slug
+        workItemTypes {
+          id
+          name
+        }
         initiatives {
           id
           name

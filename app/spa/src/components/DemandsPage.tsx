@@ -19,7 +19,7 @@ import { Tabs } from "./Tabs"
 import { useLocation } from "react-router-dom"
 
 const FormElement = ({ children }: { children: ReactNode }) => (
-  <Grid item xs={3}>
+  <Grid item xs={4}>
     <FormControl sx={{ width: "100%" }}>{children}</FormControl>
   </Grid>
 )
@@ -232,6 +232,27 @@ const DemandsPage = ({
                 </Select>
               </FormElement>
             )}
+            <FormElement>
+              <InputLabel
+                htmlFor="demandType"
+                sx={{ backgroundColor: "white", padding: 1 }}
+                shrink
+              >
+                {t("list.form.demandType")}
+              </InputLabel>
+              <Select
+                native
+                {...register("demandType")}
+                defaultValue={filters.demandType}
+              >
+                <option value="">{t("list.form.common.placeholder")}</option>
+                {company?.workItemTypes?.map((type, index) => (
+                  <option value={type.name} key={`${type.id}--${index}`}>
+                    {type.name}
+                  </option>
+                ))}
+              </Select>
+            </FormElement>
             <FormElement>
               <Button sx={{ alignSelf: "flex-start" }} type="submit">
                 <SearchIcon fontSize="large" color="primary" />

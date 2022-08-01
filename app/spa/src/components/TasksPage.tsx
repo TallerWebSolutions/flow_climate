@@ -12,6 +12,7 @@ import {
   TextField,
   SelectChangeEvent,
   InputBaseComponentProps,
+  TextFieldProps,
 } from "@mui/material"
 import {
   ChangeEvent,
@@ -194,13 +195,13 @@ const TasksPage = ({
             label={t("filter.initial_date")}
             value={fromDate}
             onChange={setFromDate}
-            renderInput={(params) => <TextField {...params} />}
+            renderInput={(params: TextFieldProps) => <TextField {...params} />}
           />
           <DatePicker
             label={t("filter.end_date")}
             value={untilDate}
             onChange={setUntilDate}
-            renderInput={(params) => <TextField {...params} />}
+            renderInput={(params: TextFieldProps) => <TextField {...params} />}
           />
           <FormControl fullWidth>
             <InputLabel id="status-filter">{t("filter.status")}</InputLabel>

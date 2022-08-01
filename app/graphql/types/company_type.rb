@@ -8,5 +8,10 @@ module Types
     field :projects, [Types::ProjectType], null: false
     field :slug, String, null: false
     field :teams, [Types::TeamType], null: false
+    field :work_item_types, [Types::WorkItemTypeType], null: true
+
+    def work_item_types
+      WorkItemType.where(company_id: object.id, item_level: "demand")
+    end
   end
 end
