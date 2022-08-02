@@ -1446,4 +1446,35 @@ RSpec.describe Types::QueryType do
       expect(result.dig('data', 'projectAdditionalHours').map { |add_hour| add_hour['eventDate'] }).to eq [project_additional_hour.event_date.iso8601]
     end
   end
+
+  describe '#me' do
+    it 'retrieves current logged in user' do
+      query =
+        %(query {
+          me {
+            id
+            currentCompany {
+              id
+              workItemTypes {
+                id
+              }
+            }
+          }
+        })
+
+      company = Fabricate :company
+      work_item_type = Fabricate :work_item_type, company: company, name: 'Cornojob', item_level: :demand
+      user = Fabricate :user, companies: [company], last_company_id: company.id
+
+      context = {
+        current_user: user
+      }
+
+      result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
+
+      expect(result.dig('data', 'me', 'id')).to eq user.id.to_s
+      expect(result.dig('data', 'me', 'currentCompany', 'id')).to eq company.id.to_s
+      expect(result.dig('data', 'me', 'currentCompany', 'workItemTypes')).to eq [{ 'id' => work_item_type.id.to_s }]
+    end
+  end
 end
