@@ -1201,10 +1201,10 @@ RSpec.describe Types::QueryType do
           demandsFinished: demands(status: DELIVERED_DEMANDS) {
             id
           }
-          bugs: demands(type: BUG) {
+          bugs: demands(type: "BUG") {
             id
           }
-          bugsFinished: demands(status: DELIVERED_DEMANDS, type: BUG) {
+          bugsFinished: demands(status: DELIVERED_DEMANDS, type: "BUG") {
             id
           }
           lastDeliveries: demands(status: DELIVERED_DEMANDS, limit: 1) {
