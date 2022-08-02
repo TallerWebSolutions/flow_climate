@@ -29,13 +29,6 @@ const BasicPage = ({
 }: BasicPageProps) => {
   const { messages } = useContext(MessagesContext)
 
-  if (loading)
-    return (
-      <Backdrop open>
-        <CircularProgress color="secondary" />
-      </Backdrop>
-    )
-
   return (
     <>
       <Header />
@@ -54,7 +47,13 @@ const BasicPage = ({
           </Typography>
           {actions && actions}
         </Box>
-        {children}
+        {loading ? (
+          <Backdrop open>
+            <CircularProgress color="secondary" />
+          </Backdrop>
+        ) : (
+          children
+        )}
         <MessagesBox messages={messages} />
       </Container>
       <Box sx={{ backgroundColor: "primary.main", py: 7, mt: 11 }}>

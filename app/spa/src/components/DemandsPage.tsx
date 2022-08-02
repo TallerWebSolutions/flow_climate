@@ -50,25 +50,16 @@ const DemandsPage = ({
   const initiatives = me?.currentCompany?.initiatives
   const projects = me?.currentCompany?.projects
   const teams = me?.currentCompany?.teams
-  const { pathname } = useLocation()
-
-  const sanitizedFilters = Object.keys(filters).reduce(
-    (acc, key) =>
-      filters[key] && filters[key] !== "null"
-        ? { ...acc, [key]: filters[key] }
-        : acc,
-    {}
-  )
-  const urlSearchParams = new URLSearchParams(sanitizedFilters).toString()
+  const { pathname, search } = useLocation()
 
   const demandsTabs = [
     {
       label: t("list.title"),
-      to: `/companies/${companySlug}/demands?${urlSearchParams}`,
+      to: `/companies/${companySlug}/demands?${search}`,
     },
     {
       label: t("charts.title"),
-      to: `/companies/${companySlug}/demands/demands_charts?${urlSearchParams}`,
+      to: `/companies/${companySlug}/demands/demands_charts?${search}`,
     },
   ]
 
@@ -87,10 +78,7 @@ const DemandsPage = ({
           justifyContent: "center",
         }}
       >
-        <Tabs
-          tabs={demandsTabs}
-          currentPath={`${pathname}?${new URLSearchParams(filters).toString()}`}
-        />
+        <Tabs tabs={demandsTabs} currentPath={`${pathname}?${search}`} />
       </Box>
 
       <form>
@@ -190,7 +178,7 @@ const DemandsPage = ({
               <FormElement>
                 <InputLabel
                   htmlFor="project"
-                  sx={{ backgroundColor: "white", padding: 1 }}
+                  sx={{ backgroundColor: "white" }}
                   shrink
                 >
                   {t("list.form.project")}
@@ -213,7 +201,7 @@ const DemandsPage = ({
               <FormElement>
                 <InputLabel
                   htmlFor="team"
-                  sx={{ backgroundColor: "white", padding: 1 }}
+                  sx={{ backgroundColor: "white" }}
                   shrink
                 >
                   {t("list.form.team")}
@@ -235,7 +223,7 @@ const DemandsPage = ({
             <FormElement>
               <InputLabel
                 htmlFor="demandType"
-                sx={{ backgroundColor: "white", padding: 1 }}
+                sx={{ backgroundColor: "white" }}
                 shrink
               >
                 {t("list.form.demandType")}

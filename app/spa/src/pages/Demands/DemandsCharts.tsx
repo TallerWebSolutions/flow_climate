@@ -1,6 +1,6 @@
 import { secondsToDays } from "../../lib/date"
 import { gql, useQuery } from "@apollo/client"
-import { Backdrop, CircularProgress, Grid } from "@mui/material"
+import { Grid } from "@mui/material"
 import { ChartGridItem } from "../../components/charts/ChartGridItem"
 import { ScatterChart } from "../../components/charts/ScatterChart"
 import { useTranslation } from "react-i18next"
@@ -224,13 +224,6 @@ const DemandsCharts = () => {
         },
       ]
     : []
-
-  if (loading)
-    return (
-      <Backdrop open>
-        <CircularProgress color="secondary" />
-      </Backdrop>
-    )
 
   return (
     <DemandsPage

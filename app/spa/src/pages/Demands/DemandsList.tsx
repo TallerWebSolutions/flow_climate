@@ -1,4 +1,4 @@
-import { useContext, useState } from "react"
+import { useContext } from "react"
 import { useTranslation } from "react-i18next"
 import { gql, useLazyQuery, useQuery } from "@apollo/client"
 import {
@@ -12,12 +12,12 @@ import { CSVLink } from "react-csv"
 import { FieldValues } from "react-hook-form"
 import EditIcon from "@mui/icons-material/Edit"
 import { formatISO } from "date-fns"
+import { useSearchParams } from "react-router-dom"
 
 import { Demand, DemandsList } from "../../modules/demand/demand.types"
 import Table, { RowWithCollapse } from "../../components/ui/Table"
 import DemandsPage, { DemandsSearchDTO } from "../../components/DemandsPage"
 import { MeContext } from "../../contexts/MeContext"
-import { useSearchParams } from "react-router-dom"
 import { secondsToReadbleDate } from "../../lib/date"
 import DateLocale from "../../components/ui/DateLocale"
 
@@ -135,9 +135,8 @@ const DemandsListPage = () => {
   const { t } = useTranslation("demands")
   const { me } = useContext(MeContext)
   const companySlug = me?.currentCompany?.slug
-  const [searchParams] = useSearchParams()
-
-  const [filters, setFilters] = useState<FieldValues>({
+  const [searchParams, setSearchParams] = useSearchParams()
+  const filters: FieldValues = {
     initiative: searchParams.get("initiative"),
     team: searchParams.get("team"),
     project: searchParams.get("project"),
@@ -147,10 +146,10 @@ const DemandsListPage = () => {
     orderField: "end_date",
     startDate: searchParams.get("startDate"),
     endDate: searchParams.get("endDate"),
-    pageNumber: searchParams.get("pageNumber"),
-    perPage: 10,
+    pageNumber: Number(searchParams.get("pageNumber") || 1),
+    perPage: 20,
     demandType: searchParams.get("demandType"),
-  })
+  }
   const demandsQueryFilters = Object.keys(filters)
     .filter((key) => {
       return String(filters[key]).length > 0
@@ -159,9 +158,12 @@ const DemandsListPage = () => {
       return { ...acc, [el]: filters[el] }
     }, {})
 
-  const { data, loading } = useQuery<DemandsSearchDTO>(DEMANDS_QUERY, {
-    variables: demandsQueryFilters,
-  })
+  const { data, loading, variables } = useQuery<DemandsSearchDTO>(
+    DEMANDS_QUERY,
+    {
+      variables: demandsQueryFilters,
+    }
+  )
   const [
     fetchCSVData,
     { data: csvData, loading: csvLoading, called: csvQueryCalled },
@@ -190,7 +192,14 @@ const DemandsListPage = () => {
         </Link>,
         demand.demandTitle || "",
         demand.demandType,
-        <AvatarGroup max={2}>
+        <AvatarGroup
+          max={2}
+          componentsProps={{
+            additionalAvatar: {
+              sx: { width: 25, height: 25, fontSize: ".875rem" },
+            },
+          }}
+        >
           {demand.responsibles &&
             demand.responsibles.map((responsible, index) => (
               <Avatar
@@ -327,9 +336,12 @@ const DemandsListPage = () => {
         pagination={{
           count: demandsCount,
           rowsPerPage: filters.perPage,
-          page: filters.pageNumber,
+          page: filters.pageNumber - 1,
           onPageChange: (_, newPage: number) =>
-            setFilters((filters) => ({ ...filters, pageNumber: newPage + 1 })),
+            setSearchParams({
+              ...variables,
+              pageNumber: String(newPage + 1),
+            }),
         }}
       />
     </DemandsPage>

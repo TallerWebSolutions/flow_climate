@@ -20,6 +20,7 @@
   "list": {
     "title": "Demandas",
     "form": {
+      "demandType": "Tipo",
       "common": {
         "placeholder": "Selecione..."
       },
