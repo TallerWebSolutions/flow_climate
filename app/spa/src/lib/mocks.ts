@@ -301,6 +301,7 @@ export const tasksMock = {
         {
           id: 2,
           title: "Task #2",
+          taskType: "la tarea",
           externalId: 222,
           createdDate: "2022-07-31",
           delivered: true,
