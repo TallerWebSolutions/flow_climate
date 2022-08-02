@@ -1091,6 +1091,10 @@ RSpec.describe Types::QueryType do
             teams {
               name
             }
+            user {
+              firstName
+              lastName
+            }
           }
         }
       )

@@ -8,8 +8,8 @@ export type TeamMember = {
   id: string
   name: string
   jiraAccountUserEmail: string
-  startDate: string
-  endDate: string
+  startDate?: string
+  endDate?: string
   billable: boolean
   teams: Team[]
   deliveredDemands?: Demand[]

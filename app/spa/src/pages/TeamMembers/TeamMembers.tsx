@@ -68,8 +68,8 @@ const TeamMembers = () => {
       </Link>,
       teamMember.teams.map((team) => team.name).join(", "),
       teamMember.jiraAccountUserEmail,
-      teamMember.startDate,
-      teamMember.endDate,
+      teamMember.startDate || "",
+      teamMember.endDate || "",
       teamMember.billable ? <CheckIcon color="primary" /> : "",
       teamMember.endDate
         ? t("columns.status.inactive")

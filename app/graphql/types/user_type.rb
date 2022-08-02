@@ -5,9 +5,11 @@ module Types
     field :admin, Boolean, null: false
     field :companies, [Types::CompaniesType], null: false
     field :current_company, CompanyType, null: true, method: :last_company
+    field :first_name, String, null: true
     field :full_name, String, null: false
     field :id, ID, null: false
     field :language, String, null: false
+    field :last_name, String, null: true
 
     field :avatar, Types::AvatarType, null: false
 

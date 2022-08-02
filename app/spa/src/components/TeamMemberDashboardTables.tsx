@@ -37,9 +37,12 @@ const TeamMemberDashboardTables = ({
     ],
     [
       t("dashboard.startDate"),
-      <DateLocale date={teamMember.startDate || ""} />,
+      teamMember.startDate ? <DateLocale date={teamMember.startDate} /> : "",
     ],
-    [t("dashboard.endDate"), <DateLocale date={teamMember.endDate || ""} />],
+    [
+      t("dashboard.endDate"),
+      teamMember.endDate ? <DateLocale date={teamMember.endDate} /> : "",
+    ],
     [t("dashboard.projects"), teamMember.projectsList?.totalCount || 0],
   ]
 
@@ -66,7 +69,7 @@ const TeamMemberDashboardTables = ({
         {demand.product?.name}
       </Link>,
       demand.externalId || "",
-      <DateLocale time date={demand.endDate || ""} />,
+      demand.endDate ? <DateLocale time date={demand.endDate} /> : 0,
       `${secondsToDays(demand.leadtime)} ${t("dashboard.days")}`,
     ]) || []
 
@@ -88,8 +91,8 @@ const TeamMemberDashboardTables = ({
   const demandBlocksRows =
     teamMember.demandBlocksList?.demandBlocks?.map((block) => [
       block.demand?.demandTitle || "",
-      <DateLocale time date={block.blockTime} />,
-      <DateLocale time date={block.unblockTime} />,
+      block.blockTime ? <DateLocale time date={block.blockTime} /> : "",
+      block.unblockTime ? <DateLocale time date={block.unblockTime} /> : "",
     ]) || []
 
   const latestProjectsHeader = [

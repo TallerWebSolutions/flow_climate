@@ -11,7 +11,7 @@ module Types
     field :work_item_types, [Types::WorkItemTypeType], null: true
 
     def work_item_types
-      WorkItemType.where(company_id: object.id, item_level: "demand")
+      WorkItemType.where(company_id: object.id, item_level: 'demand')
     end
   end
 end

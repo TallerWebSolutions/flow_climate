@@ -9,6 +9,8 @@ type User = {
   language?: string
   currentCompany?: Company
   fullName?: string
+  firstName?: string
+  lastName?: string
   avatar?: Avatar
   companies?: Company[]
   admin?: boolean

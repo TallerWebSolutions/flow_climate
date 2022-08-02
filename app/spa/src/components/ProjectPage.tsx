@@ -145,10 +145,6 @@ export const ProjectPage = ({
         }),
     },
     {
-      name: t("settings_actions.create_demands"),
-      href: `/companies/${companySlug}/projects/${projectId}/demands/new`,
-    },
-    {
       name: t("settings_actions.edit_demands"),
       href: `/companies/${companySlug}/projects/${projectId}/edit`,
     },

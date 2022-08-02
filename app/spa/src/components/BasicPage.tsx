@@ -57,7 +57,7 @@ const BasicPage = ({
         <MessagesBox messages={messages} />
       </Container>
       <Box sx={{ backgroundColor: "primary.main", py: 7, mt: 11 }}>
-        <Container>
+        <Container maxWidth="xl">
           <Link href="/" sx={{ display: "block" }}>
             <img
               src="https://res.cloudinary.com/taller-digital/image/upload/v1599220860/2_taller_branco_horizontal.png"

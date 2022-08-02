@@ -19,7 +19,7 @@ const TEAM_MEMBER_QUERY = gql`
       deliveredDemands: demands(status: DELIVERED_DEMANDS) {
         id
       }
-      bugs: demands(status: DELIVERED_DEMANDS, type: BUG) {
+      bugs: demands(status: DELIVERED_DEMANDS, type: "BUG") {
         id
       }
       demandShortestLeadTime {

@@ -12,7 +12,7 @@ import { CSVLink } from "react-csv"
 import { FieldValues } from "react-hook-form"
 import EditIcon from "@mui/icons-material/Edit"
 import { formatISO } from "date-fns"
-import { useSearchParams } from "react-router-dom"
+import { useSearchParams, Link as RouterLink } from "react-router-dom"
 
 import { Demand, DemandsList } from "../../modules/demand/demand.types"
 import Table, { RowWithCollapse } from "../../components/ui/Table"
@@ -43,6 +43,9 @@ const DEMAND_FRAGMENT = gql`
         id
         name
         user {
+          id
+          firstName
+          lastName
           avatar {
             imageSource
           }
@@ -170,11 +173,11 @@ const DemandsListPage = () => {
   ] = useLazyQuery<DemandsCSVDTO>(DEMANDS_CSV_QUERY, {
     variables: demandsQueryFilters,
   })
-
+  const companyUrl = `/companies/${me?.currentCompany?.slug}`
   const breadcrumbsLinks = [
     {
       name: me?.currentCompany?.name || "",
-      url: `/companies/${me?.currentCompany?.slug}`,
+      url: companyUrl,
     },
     {
       name: t("list.title"),
@@ -186,31 +189,41 @@ const DemandsListPage = () => {
       rowInfo: [
         <Link
           href={`/companies/${companySlug}/demands/${demand.externalId}`}
-          sx={{ minWidth: "50px", display: "block" }}
+          sx={{ minWidth: "75px", display: "block" }}
         >
           {demand.externalId}
         </Link>,
         demand.demandTitle || "",
         demand.demandType,
         <AvatarGroup
-          max={2}
+          max={3}
+          spacing={1}
           componentsProps={{
             additionalAvatar: {
-              sx: { width: 25, height: 25, fontSize: ".875rem" },
+              sx: { width: "25px", height: "25px", fontSize: ".875rem" },
             },
           }}
         >
           {demand.responsibles &&
             demand.responsibles.map((responsible, index) => (
-              <Avatar
-                key={`${responsible.name}--${index}`}
-                alt={responsible.name}
-                sx={{ width: 25, height: 25 }}
-                src={
-                  responsible.user?.avatar?.imageSource ||
-                  process.env.PUBLIC_URL + "default.png"
-                }
-              />
+              <RouterLink
+                to={`${companyUrl}/team_members/${responsible.id}`}
+                style={{ textDecoration: "none" }}
+              >
+                <Avatar
+                  key={`${responsible.name}--${index}`}
+                  alt={responsible.name}
+                  sx={{ width: "25px", height: "25px", fontSize: ".875rem" }}
+                  src={
+                    responsible.user?.avatar?.imageSource ||
+                    process.env.PUBLIC_URL + "default.png"
+                  }
+                  children={
+                    !responsible.user?.avatar?.imageSource &&
+                    `${responsible.user?.firstName?.[0]}${responsible.user?.lastName?.[0]}`
+                  }
+                />
+              </RouterLink>
             ))}
         </AvatarGroup>,
         demand.createdDate ? <DateLocale time date={demand.createdDate} /> : "",

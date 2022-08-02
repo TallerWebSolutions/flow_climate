@@ -44,9 +44,9 @@ export type DemandsList = {
 
 export type DemandBlock = {
   id: string
-  demand: Demand
-  blockTime: string
-  unblockTime: string
+  demand?: Demand
+  blockTime?: string
+  unblockTime?: string
 }
 
 export type DemandBlocksList = {

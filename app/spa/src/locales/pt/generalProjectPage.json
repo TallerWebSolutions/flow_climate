@@ -19,7 +19,6 @@
   },
   "settings_actions": {
     "update_cache": "Atualizar Cache",
-    "create_demands": "Criar Demandas",
     "edit_demands": "Editar",
     "jira_settings": "Configurações do Jira",
     "projects_stages": "Etapas do Projeto",
