@@ -12,12 +12,13 @@ RSpec.describe Azure::AzureWorkItemAdapter do
   let(:azure_product_config) { Fabricate :azure_product_config, product: product, azure_account: azure_account }
   let!(:azure_team) { Fabricate :azure_team, azure_product_config: azure_product_config, team_name: 'FlowClimate Team', team_id: '75359256-f8b4-4108-8f9c-4dbfb8975548' }
   let!(:azure_project) { Fabricate :azure_project, azure_team: azure_team, project_name: 'FlowClimate', project_id: '19dd7898-d318-4896-8797-afaf2320dcd3' }
-  let!(:project_azure_custom_field) { Fabricate :azure_custom_field, azure_account: azure_account, custom_field_type: :project_name, custom_field_name: 'Custom.ProjectName' }
-  let!(:team_azure_custom_field) { Fabricate :azure_custom_field, azure_account: azure_account, custom_field_type: :team_name, custom_field_name: 'Custom.TeamName' }
 
   describe '#work_items_ids' do
     context 'when success' do
       it 'returns an array with the work items ids' do
+        Fabricate :azure_custom_field, azure_account: azure_account, custom_field_type: :project_name, custom_field_name: 'Custom.ProjectName'
+        Fabricate :azure_custom_field, azure_account: azure_account, custom_field_type: :team_name, custom_field_name: 'Custom.TeamName'
+
         mocked_azure_return = file_fixture('azure_work_items_ids_query.json').read
 
         allow(HTTParty).to(receive(:post)).once { JSON.parse(mocked_azure_return) }
@@ -28,6 +29,9 @@ RSpec.describe Azure::AzureWorkItemAdapter do
 
     context 'when failed' do
       it 'calls the logger and returns an empty array' do
+        Fabricate :azure_custom_field, azure_account: azure_account, custom_field_type: :project_name, custom_field_name: 'Custom.ProjectName'
+        Fabricate :azure_custom_field, azure_account: azure_account, custom_field_type: :team_name, custom_field_name: 'Custom.TeamName'
+
         not_found_response = Net::HTTPResponse.new(1.0, 404, 'not found')
         allow(HTTParty).to(receive(:post)).once { not_found_response }
 
@@ -41,6 +45,9 @@ RSpec.describe Azure::AzureWorkItemAdapter do
     context 'when success' do
       context 'when epic' do
         it 'returns the created portfolio unit' do
+          Fabricate :azure_custom_field, azure_account: azure_account, custom_field_type: :project_name, custom_field_name: 'Custom.ProjectName'
+          Fabricate :azure_custom_field, azure_account: azure_account, custom_field_type: :team_name, custom_field_name: 'Custom.TeamName'
+
           first_item_mocked_azure_return = file_fixture('azure_work_item_3_expanded.json').read
           first_response = instance_double(HTTParty::Response, parsed_response: JSON.parse(first_item_mocked_azure_return))
 
@@ -57,6 +64,9 @@ RSpec.describe Azure::AzureWorkItemAdapter do
       context 'when user story' do
         context 'with a valid parent and it does not exist' do
           it 'creates the task and the parent' do
+            Fabricate :azure_custom_field, azure_account: azure_account, custom_field_type: :project_name, custom_field_name: 'Custom.ProjectName'
+            Fabricate :azure_custom_field, azure_account: azure_account, custom_field_type: :team_name, custom_field_name: 'Custom.TeamName'
+
             demand_mocked_response = file_fixture('azure_work_item_1_expanded.json').read
             task_mocked_response = file_fixture('azure_work_item_2_expanded.json').read
             epic_mocked_response = file_fixture('azure_work_item_3_expanded.json').read
@@ -76,6 +86,8 @@ RSpec.describe Azure::AzureWorkItemAdapter do
             allow(HTTParty).to(receive(:get).with("#{Figaro.env.azure_base_uri}/#{azure_account.azure_organization}/#{azure_project.project_id}/_apis/wit/workitems/3?$expand=all&api-version=6.1-preview.3",
                                                   basic_auth: { username: azure_account.username, password: azure_account.password },
                                                   headers: { 'Content-Type' => 'application/json' })).and_return(epic_response)
+
+            expect(Azure::AzureReader.instance).to(receive(:read_team)).once.and_return(team)
 
             described_class.new(azure_account).work_item(2, azure_product_config.azure_team.azure_project)
 
@@ -104,6 +116,9 @@ RSpec.describe Azure::AzureWorkItemAdapter do
 
         context 'with an already existent and discarded issue' do
           it 'does not read the issue if the demand was not undiscarded first' do
+            Fabricate :azure_custom_field, azure_account: azure_account, custom_field_type: :project_name, custom_field_name: 'Custom.ProjectName'
+            Fabricate :azure_custom_field, azure_account: azure_account, custom_field_type: :team_name, custom_field_name: 'Custom.TeamName'
+
             demand = Fabricate :demand, company: company, team: team, external_id: 1, discarded_at: 2.weeks.ago
             task = Fabricate :task, demand: demand, external_id: 2, discarded_at: 2.weeks.ago
 
@@ -131,6 +146,9 @@ RSpec.describe Azure::AzureWorkItemAdapter do
           end
 
           it 'reads the issue if the demand was undiscarded first' do
+            Fabricate :azure_custom_field, azure_account: azure_account, custom_field_type: :project_name, custom_field_name: 'Custom.ProjectName'
+            Fabricate :azure_custom_field, azure_account: azure_account, custom_field_type: :team_name, custom_field_name: 'Custom.TeamName'
+
             demand = Fabricate :demand, company: company, team: team, external_id: 1, discarded_at: nil
             task = Fabricate :task, demand: demand, external_id: 2, discarded_at: 2.weeks.ago
 
@@ -160,6 +178,9 @@ RSpec.describe Azure::AzureWorkItemAdapter do
 
         context 'with an already existent issue and it is in another project' do
           it 'reads the new project and remove in the previous project' do
+            Fabricate :azure_custom_field, azure_account: azure_account, custom_field_type: :project_name, custom_field_name: 'Custom.ProjectName'
+            Fabricate :azure_custom_field, azure_account: azure_account, custom_field_type: :team_name, custom_field_name: 'Custom.TeamName'
+
             demand_project = Fabricate :project, company: company, team: team
 
             demand = Fabricate :demand, company: company, team: team, external_id: 5, project: demand_project
@@ -195,6 +216,9 @@ RSpec.describe Azure::AzureWorkItemAdapter do
 
         context 'with invalid parent' do
           it 'does not create the task without a demand' do
+            Fabricate :azure_custom_field, azure_account: azure_account, custom_field_type: :project_name, custom_field_name: 'Custom.ProjectName'
+            Fabricate :azure_custom_field, azure_account: azure_account, custom_field_type: :team_name, custom_field_name: 'Custom.TeamName'
+
             second_item_mocked_azure_return = file_fixture('azure_work_item_2_expanded.json').read
 
             first_response = instance_double(HTTParty::Response, parsed_response: JSON.parse(second_item_mocked_azure_return))

@@ -58,9 +58,9 @@ module Azure
 
       project_name = "Other - #{team.name}" if project_name.blank?
 
-      project = company.projects.where(name: project_name, team: team).first_or_initialize
+      project = company.projects.where(name: project_name).first_or_initialize
       unless project.persisted?
-        project.update(qty_hours: 0, project_type: :outsourcing, status: :executing, start_date: Time.zone.today,
+        project.update(team: team, qty_hours: 0, project_type: :outsourcing, status: :executing, start_date: Time.zone.today,
                        end_date: 3.months.from_now, initial_scope: 0, value: 0, hour_value: 0)
       end
 

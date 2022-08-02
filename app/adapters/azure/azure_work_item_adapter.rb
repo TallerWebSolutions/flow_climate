@@ -64,7 +64,9 @@ module Azure
     def read_feature(company, product, azure_project, work_item_response)
       parent = read_feature_parent(product, azure_project, work_item_response)
       customer = Azure::AzureReader.instance.read_customer(company, work_item_response)
-      team = company.teams.first
+
+      team = Azure::AzureReader.instance.read_team(company, @azure_account, work_item_response)
+
       initiative = Azure::AzureReader.instance.read_initiative(company, work_item_response)
       project = Azure::AzureReader.instance.read_project(company, customer, team, initiative, @azure_account, work_item_response)
       work_item_type = AzureReader.instance.read_card_type(company, work_item_response, :demand)
