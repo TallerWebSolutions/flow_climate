@@ -1,6 +1,5 @@
 import {
   FormGroup,
-  FormControl,
   InputLabel,
   Input,
   Select,
@@ -17,12 +16,7 @@ import { MeContext } from "../contexts/MeContext"
 import BasicPage, { BasicPageProps } from "./BasicPage"
 import { Tabs } from "./Tabs"
 import { useLocation } from "react-router-dom"
-
-const FormElement = ({ children }: { children: ReactNode }) => (
-  <Grid item xs={4}>
-    <FormControl sx={{ width: "100%" }}>{children}</FormControl>
-  </Grid>
-)
+import { FormElement } from "./ui/Form"
 
 export type DemandsSearchDTO = {
   demandsTableData: DemandsList
@@ -41,11 +35,10 @@ const DemandsPage = ({
   filters,
 }: DemandPageProps) => {
   const { t } = useTranslation("demands")
+  const { register } = useForm()
   const { me } = useContext(MeContext)
   const company = me?.currentCompany
   const companySlug = company?.slug
-
-  const { register } = useForm()
 
   const initiatives = me?.currentCompany?.initiatives
   const projects = me?.currentCompany?.projects

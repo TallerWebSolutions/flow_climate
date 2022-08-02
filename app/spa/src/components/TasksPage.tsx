@@ -1,37 +1,22 @@
 import SearchIcon from "@mui/icons-material/Search"
-import AdapterDateFns from "@mui/lab/AdapterDateFns"
-import DatePicker from "@mui/lab/DatePicker"
-import LocalizationProvider from "@mui/lab/LocalizationProvider"
 import {
-  FormControl,
   InputLabel,
-  MenuItem,
   Select,
   Box,
   Button,
-  TextField,
-  SelectChangeEvent,
-  InputBaseComponentProps,
-  TextFieldProps,
+  Input,
+  FormGroup,
+  Grid,
 } from "@mui/material"
-import {
-  ChangeEvent,
-  Dispatch,
-  ReactNode,
-  SetStateAction,
-  useCallback,
-  useContext,
-  useState,
-} from "react"
+import { Dispatch, ReactNode, SetStateAction, useContext } from "react"
 import { useTranslation } from "react-i18next"
 
-import { toISOFormat } from "../lib/date"
 import { MeContext } from "../contexts/MeContext"
 import { Tabs } from "./Tabs"
 import BasicPage, { BasicPageProps } from "./BasicPage"
-import { Project } from "../modules/project/project.types"
-import { Team } from "../modules/team/team.types"
 import { TaskFilters } from "../pages/Tasks/Tasks"
+import { FormElement } from "./ui/Form"
+import { FieldValues, useForm } from "react-hook-form"
 
 type TaskPageProps = {
   children: ReactNode | ReactNode[]
@@ -39,54 +24,6 @@ type TaskPageProps = {
   filters: TaskFilters
   charts?: boolean
 } & BasicPageProps
-
-type BasicSelectItem =
-  | {
-      id: number
-      name: string
-    }
-  | Project
-  | Team
-
-type SelectFilterProps = {
-  id: string
-  label: string
-  defaultValue: string
-  value: string
-  inputProps?: InputBaseComponentProps
-  items: BasicSelectItem[]
-  onChange?: (event: SelectChangeEvent<any>, child: React.ReactNode) => void
-}
-
-const SelectFilter = ({
-  id,
-  label,
-  items,
-  value,
-  defaultValue,
-  onChange,
-  inputProps,
-}: SelectFilterProps) => {
-  return (
-    <FormControl fullWidth>
-      <InputLabel id={id}>{label}</InputLabel>
-      <Select
-        labelId={id}
-        value={value ?? ""}
-        label={label}
-        onChange={onChange}
-        inputProps={{ ...inputProps }}
-      >
-        <MenuItem value="">{defaultValue}</MenuItem>
-        {items.map((item) => (
-          <MenuItem key={`${item.id}--${item.name}`} value={item.id}>
-            {item.name}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
-  )
-}
 
 const TasksPage = ({
   children,
@@ -96,6 +33,7 @@ const TasksPage = ({
   ...props
 }: TaskPageProps) => {
   const { t } = useTranslation(["tasks"])
+  const { register, handleSubmit } = useForm()
   const { me } = useContext(MeContext)
   const company = me?.currentCompany
   const companySlug = company?.slug
@@ -111,50 +49,16 @@ const TasksPage = ({
     },
   ]
 
-  const [taskSearchName, setTaskSearchName] = useState("")
-  const [fromDate, setFromDate] = useState<string | null>(null)
-  const [untilDate, setUntilDate] = useState<string | null>(null)
-
   const projects = company?.projects
   const initiatives = company?.initiatives
   const teams = company?.teams
 
-  const handleSearchByName = useCallback(
-    (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-      setTaskSearchName(String(event.target.value)),
-    []
-  )
-
-  const handleSelectFilters = useCallback(
-    (event: SelectChangeEvent<any>, queryParam: string) => {
-      const value = String(event.target.value)
-
-      return setFilters((prevState: any) => {
-        delete prevState.initiativeId
-        delete prevState.projectId
-        delete prevState.teamId
-
-        return { ...prevState, [queryParam]: value }
-      })
-    },
-    [setFilters]
-  )
-
-  const handleStatus = (event: SelectChangeEvent<any>) => {
-    const status = event.target.value
-    setFilters((prevState: any) => ({ ...prevState, status }))
-  }
-
-  const handleRefectSearch = () => {
-    const fromDateISO = fromDate ? toISOFormat(fromDate) : null
-    const untilDateISO = untilDate ? toISOFormat(untilDate) : null
-
-    setFilters((prevState: any) => ({
-      ...prevState,
-      title: taskSearchName,
-      fromDate: fromDateISO,
-      untilDate: untilDateISO,
-    }))
+  const handleTaskSearch = (data: FieldValues) => {
+    const normalizedData = Object.keys(data).reduce((acc, key) => {
+      if (data[key].length > 0) return { ...acc, [key]: data[key] }
+      return acc
+    }, {})
+    setFilters({ ...filters, ...normalizedData, title: data.title })
   }
 
   return (
@@ -175,86 +79,126 @@ const TasksPage = ({
           />
         </Box>
       )}
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
-            gridTemplateRows: "repeat(2, 1fr)",
-            gridColumnGap: "16px",
-            gridRowGap: "20px",
-          }}
-        >
-          <TextField
-            value={taskSearchName}
-            onChange={handleSearchByName}
-            label={t("filter.search")}
-            helperText={t("filter.search_helper")}
-          />
-          <DatePicker
-            label={t("filter.initial_date")}
-            value={fromDate}
-            onChange={setFromDate}
-            renderInput={(params: TextFieldProps) => <TextField {...params} />}
-          />
-          <DatePicker
-            label={t("filter.end_date")}
-            value={untilDate}
-            onChange={setUntilDate}
-            renderInput={(params: TextFieldProps) => <TextField {...params} />}
-          />
-          <FormControl fullWidth>
-            <InputLabel id="status-filter">{t("filter.status")}</InputLabel>
-            <Select
-              labelId="status-filter"
-              label={t("filter.status")}
-              value={filters.status}
-              onChange={(event) => handleStatus(event)}
-            >
-              <MenuItem value="">{t("filter.select_status")}</MenuItem>
-              <MenuItem value="not_finished">
-                {t("filter.status_open")}
-              </MenuItem>
-              <MenuItem value="finished">
-                {t("filter.status_finished")}
-              </MenuItem>
-            </Select>
-          </FormControl>
-          <SelectFilter
-            label={t("filter.initiative")}
-            id="filter-initiative"
-            defaultValue=""
-            items={initiatives || []}
-            value={filters.initiativeId || ""}
-            onChange={(event) => handleSelectFilters(event, "initiativeId")}
-          />
-          <SelectFilter
-            label={t("filter.project")}
-            id="filter-project"
-            defaultValue=""
-            items={projects || []}
-            inputProps={{
-              "data-testid": "select-project",
-            }}
-            value={filters.projectId || ""}
-            onChange={(event) => handleSelectFilters(event, "projectId")}
-          />
-          <SelectFilter
-            label={t("filter.team")}
-            id="filter-team"
-            defaultValue=""
-            items={teams || []}
-            value={filters.teamId || ""}
-            onChange={(event) => handleSelectFilters(event, "teamId")}
-          />
-          <Button
-            onClick={handleRefectSearch}
-            sx={{ width: "60px", height: "55px" }}
-          >
-            <SearchIcon fontSize="large" color="primary" />
-          </Button>
-        </Box>
-      </LocalizationProvider>
+      <form onSubmit={handleSubmit(handleTaskSearch)}>
+        <FormGroup>
+          <Grid container spacing={5}>
+            <FormElement>
+              <InputLabel htmlFor="title">{t("list.form.search")}</InputLabel>
+              <Input {...register("title")} defaultValue={filters.title} />
+            </FormElement>
+            <FormElement>
+              <InputLabel htmlFor="fromDate" shrink>
+                {t("list.form.fromDate")}
+              </InputLabel>
+              <Input
+                type="date"
+                defaultValue={filters.fromDate}
+                {...register("fromDate")}
+              />
+            </FormElement>
+            <FormElement>
+              <InputLabel htmlFor="untilDate" shrink>
+                {t("list.form.untilDate")}
+              </InputLabel>
+              <Input
+                type="date"
+                defaultValue={filters.untilDate}
+                {...register("untilDate")}
+              />
+            </FormElement>
+            <FormElement>
+              <InputLabel
+                htmlFor="status"
+                sx={{ backgroundColor: "white" }}
+                shrink
+              >
+                {t("list.form.status.title")}
+              </InputLabel>
+              <Select
+                native
+                {...register("status")}
+                defaultValue={filters.status}
+              >
+                <option value="">{t("list.form.common.placeholder")}</option>
+                <option value="all">{t("list.form.status.all")}</option>
+                <option value="not_finished">{t("filter.status_open")}</option>
+                <option value="finished">{t("filter.status_finished")}</option>
+              </Select>
+            </FormElement>
+            <FormElement>
+              <InputLabel
+                htmlFor="initiativeId"
+                sx={{ backgroundColor: "white" }}
+                shrink
+              >
+                {t("list.form.initiativeId")}
+              </InputLabel>
+              <Select
+                native
+                {...register("initiativeId")}
+                defaultValue={filters.initiativeId}
+              >
+                <option value="">{t("list.form.common.placeholder")}</option>
+                {initiatives?.map((initiative, index) => (
+                  <option
+                    value={initiative.id}
+                    key={`${initiative.id}--${index}`}
+                  >
+                    {initiative.name}
+                  </option>
+                ))}
+              </Select>
+            </FormElement>
+            <FormElement>
+              <InputLabel
+                htmlFor="projectId"
+                sx={{ backgroundColor: "white" }}
+                shrink
+              >
+                {t("list.form.projectId")}
+              </InputLabel>
+              <Select
+                native
+                {...register("projectId")}
+                defaultValue={filters.projectId}
+              >
+                <option value="">{t("list.form.common.placeholder")}</option>
+                {projects?.map((project, index) => (
+                  <option value={project.id} key={`${project.id}--${index}`}>
+                    {project.name}
+                  </option>
+                ))}
+              </Select>
+            </FormElement>
+            <FormElement>
+              <InputLabel
+                htmlFor="teamId"
+                sx={{ backgroundColor: "white" }}
+                shrink
+              >
+                {t("list.form.teamId")}
+              </InputLabel>
+              <Select
+                native
+                {...register("teamId")}
+                defaultValue={filters.teamId}
+              >
+                <option value="">{t("list.form.common.placeholder")}</option>
+                {teams?.map((team, index) => (
+                  <option value={team.id} key={`${team.id}--${index}`}>
+                    {team.name}
+                  </option>
+                ))}
+              </Select>
+            </FormElement>
+            <FormElement>
+              <Button sx={{ alignSelf: "flex-start" }} type="submit">
+                <SearchIcon fontSize="large" color="primary" />
+              </Button>
+            </FormElement>
+          </Grid>
+        </FormGroup>
+      </form>
       {children}
     </BasicPage>
   )
