@@ -9,7 +9,7 @@ RSpec.describe InitiativesController, type: :controller do
     end
 
     describe 'GET #edit' do
-      before { get :edit, params: { company_id: 'foo' } }
+      before { get :edit, params: { company_id: 'foo', id: 'bar' } }
 
       it { expect(response).to redirect_to new_user_session_path }
     end
