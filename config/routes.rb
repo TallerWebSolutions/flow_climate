@@ -113,7 +113,7 @@ Rails.application.routes.draw do
       get :risks_tab
     end
 
-    resources :initiatives, only: %i[index show new create] do
+    resources :initiatives, only: %i[index show new create edit] do
       post :generate_cache, on: :member
     end
 

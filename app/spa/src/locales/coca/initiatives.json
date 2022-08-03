@@ -1,6 +1,7 @@
 {
   "initiatives": "Initiatives",
   "create_initiatives_button": "New Initiative",
+  "edit": "Edit",
   "initiatives_list_table": {
     "name": "Name",
     "start_date": "Start date",
@@ -9,6 +10,20 @@
     "projects": "Projects",
     "demands": "Deliverables",
     "tasks": "Tasks",
-    "deliveries": "Delivered"
+    "deliveries": "Delivered",
+    "actions": "Actions"
+  },
+  "form": {
+    "name": "Name",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "targetYear": "Target Year",
+    "targetQuarter": "Target Quarter",
+    "firstQuarter": "First Quarter",
+    "secondQuarter": "Second Quarter",
+    "thirdQuarter": "Third Quarter",
+    "fourthQuarter": "Fourth Quarter",
+    "save": "Save",
+    "cancel": "Cancel"
   }
 }

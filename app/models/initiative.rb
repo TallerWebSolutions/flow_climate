@@ -42,7 +42,7 @@ class Initiative < ApplicationRecord
 
   validates :name, uniqueness: { scope: :company_id, case_sensitive: false }
 
-  before_save :set_dates
+  before_create :set_dates
 
   def remaining_weeks(from_date = Time.zone.today)
     start_date_limit = [start_date, from_date].max

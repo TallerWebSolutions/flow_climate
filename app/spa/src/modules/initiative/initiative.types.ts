@@ -9,4 +9,6 @@ export type Initiative = {
   tasksCount: number
   tasksFinishedCount: number
   remainingBacklogTasksPercentage: number
+  targetYear?: number
+  targetQuarter?: number
 }

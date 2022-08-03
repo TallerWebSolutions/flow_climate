@@ -12,6 +12,7 @@ module Types
     field :send_auth_token, mutation: Mutations::SendAuthTokenMutation
     field :update_team, mutation: Mutations::UpdateTeamMutation
     field :update_team_member, mutation: Mutations::UpdateTeamMemberMutation
+    field :update_initiative, mutation: Mutations::UpdateInitiativeMutation
 
     def me
       context[:current_user]

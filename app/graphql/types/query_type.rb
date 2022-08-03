@@ -52,6 +52,10 @@ module Types
       argument :company_id, Int, required: true
     end
 
+    field :initiative, Types::InitiativeType do
+      argument :initiative_id, ID, required: true
+    end
+
     field :projects, [Types::ProjectType], null: false, description: 'A list of projects using the arguments as search parameters' do
       argument :company_id, Int, required: true
       argument :end_date, GraphQL::Types::ISO8601Date, required: false
@@ -117,6 +121,10 @@ module Types
     def initiatives(company_id:)
       company = Company.find(company_id)
       company.initiatives.order(start_date: :desc)
+    end
+
+    def initiative(initiative_id:)
+      Initiative.find(initiative_id)
     end
 
     def projects(company_id:, name: nil, status: nil, start_date: nil, end_date: nil)

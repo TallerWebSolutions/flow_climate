@@ -1,6 +1,7 @@
 {
   "initiatives": "Iniciativas",
   "create_initiatives_button": "New Iniciativa",
+  "edit": "Editar",
   "initiatives_list_table": {
     "name": "Nome",
     "start_date": "Data de início",
@@ -9,6 +10,20 @@
     "projects": "Projetos",
     "demands": "Demandas",
     "tasks": "Tarefas",
-    "deliveries": "Entregas"
+    "deliveries": "Entregas",
+    "actions": "Ações"
+  },
+  "form": {
+    "name": "Nome",
+    "startDate": "Data de Início",
+    "endDate": "Data Final",
+    "targetYear": "Ano Alvo",
+    "targetQuarter": "Trimestre Alvo",
+    "firstQuarter": "Primeiro Trimestre",
+    "secondQuarter": "Segundo Trimestre",
+    "thirdQuarter": "Terceiro Trimestre",
+    "fourthQuarter": "Quarto Trimestre",
+    "save": "Salvar",
+    "cancel": "Cancelar"
   }
 }

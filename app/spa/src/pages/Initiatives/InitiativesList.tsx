@@ -1,9 +1,12 @@
 import { gql, useQuery } from "@apollo/client"
 import { useContext } from "react"
 import { useTranslation } from "react-i18next"
+import { Link as RouterLink } from "react-router-dom"
+import { Button, Link } from "@mui/material"
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined"
+
 import { MeContext } from "../../contexts/MeContext"
 import BasicPage from "../../components/BasicPage"
-import { Button, Link } from "@mui/material"
 import Table from "../../components/ui/Table"
 import { Initiative } from "../../modules/initiative/initiative.types"
 import { formatDate } from "../../lib/date"
@@ -30,7 +33,7 @@ const INITIATIVES_LIST_QUERT = gql`
 `
 
 const InitiativesList = () => {
-  const { t } = useTranslation(["initiatives"])
+  const { t } = useTranslation("initiatives")
   const { me } = useContext(MeContext)
   const companyId = me?.currentCompany?.id
   const { data, loading } = useQuery<InitiativeListDTO>(
@@ -59,9 +62,10 @@ const InitiativesList = () => {
     t("initiatives_list_table.demands"),
     t("initiatives_list_table.tasks"),
     t("initiatives_list_table.deliveries"),
+    t("initiatives_list_table.actions"),
   ]
 
-  const initiativesList =
+  const initiativesRows =
     data?.initiatives.map((initiative) => [
       <Link href={`${companyUrl}/initiatives/${initiative.id}`}>
         {initiative.name}
@@ -73,6 +77,9 @@ const InitiativesList = () => {
       initiative.demandsCount,
       initiative.tasksCount,
       initiative.tasksFinishedCount,
+      <RouterLink to={`${companyUrl}/initiatives/${initiative.id}/edit`}>
+        <EditOutlinedIcon color="primary" />
+      </RouterLink>,
     ]) || []
 
   return (
@@ -88,7 +95,7 @@ const InitiativesList = () => {
       >
         {t("create_initiatives_button")}
       </Button>
-      <Table headerCells={initiativesListHeaderCells} rows={initiativesList} />
+      <Table headerCells={initiativesListHeaderCells} rows={initiativesRows} />
     </BasicPage>
   )
 }

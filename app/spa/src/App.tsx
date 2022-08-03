@@ -30,6 +30,7 @@ import TeamMemberDashboard from "./pages/TeamMembers/TeamMemberDashboard"
 import EditTeamMember from "./pages/TeamMembers/EditTeamMember"
 import User from "./modules/user/user.types"
 import InitiativesList from "./pages/Initiatives/InitiativesList"
+import EditInitiative from "./pages/Initiatives/EditInitiative"
 import ProjectList from "./pages/Projects/Projects"
 import ProjectTasksCharts from "./pages/Projects/ProjectTasksCharts"
 import DemandsCharts from "./pages/Demands/DemandsCharts"
@@ -169,6 +170,10 @@ const App = () => {
             <Route
               path="/companies/:companySlug/initiatives"
               element={<InitiativesList />}
+            />
+            <Route
+              path="/companies/:companySlug/initiatives/:initiativeId/edit"
+              element={<EditInitiative />}
             />
             <Route
               path="/companies/:companySlug/projects"

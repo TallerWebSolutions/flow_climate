@@ -9,6 +9,11 @@ class InitiativesController < AuthenticatedController
     render 'spa-build/index'
   end
 
+  def edit
+    prepend_view_path Rails.public_path
+    render 'spa-build/index'
+  end
+
   def show
     tasks = Task.where(id: @initiative.tasks.map(&:id)).kept
     @initiative_consolidations = @initiative.initiative_consolidations.weekly_data.order(:consolidation_date)

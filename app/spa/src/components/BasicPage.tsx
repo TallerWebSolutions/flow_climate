@@ -25,7 +25,7 @@ const BasicPage = ({
   title,
   children,
   actions,
-  loading,
+  loading = false,
 }: BasicPageProps) => {
   const { messages } = useContext(MessagesContext)
 
