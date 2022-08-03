@@ -914,6 +914,22 @@ RSpec.describe Types::QueryType do
     end
   end
 
+  describe '#initiative' do
+    let(:initiative) { Fabricate :initiative }
+    let(:query) do
+      %(query {
+        initiative(initiativeId: #{initiative.id}) {
+          id
+        }
+      })
+    end
+
+    it 'returns an initiative given an id' do
+      result = FlowClimateSchema.execute(query).as_json
+      expect(result.dig('data', 'initiative', 'id')).to eq initiative.id.to_s
+    end
+  end
+
   describe '#tasks' do
     let(:company) { Fabricate :company }
     let(:team) { Fabricate :team, company: company }

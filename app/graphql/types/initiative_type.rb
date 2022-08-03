@@ -11,10 +11,10 @@ module Types
     field :projects_count, Int, null: false
     field :remaining_backlog_tasks_percentage, Float, null: false
     field :start_date, GraphQL::Types::ISO8601Date, null: false
-    field :tasks_count, Int, null: false
-    field :tasks_finished_count, Int, null: false
     field :target_quarter, Types::Enums::TargetQuarter, null: true
     field :target_year, Int, null: true
+    field :tasks_count, Int, null: false
+    field :tasks_finished_count, Int, null: false
 
     def projects_count
       object.projects.count

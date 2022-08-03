@@ -339,4 +339,44 @@ RSpec.describe Types::MutationType do
       end
     end
   end
+
+  describe 'update_initiative' do
+    describe '#resolve' do
+      let(:initiative) { Fabricate :initiative }
+      let(:mutation) do
+        %(mutation {
+          updateInitiative(
+            initiativeId: #{initiative.id}
+            name: "test"
+            startDate: "2021-01-01"
+            endDate: "2022-08-03"
+            targetQuarter: q3
+            targetYear: 2022
+          ) {
+            statusMessage
+          }
+        })
+      end
+
+      context 'valid data' do
+        it 'updates the fields from mutation input' do
+          result = FlowClimateSchema.execute(mutation).as_json
+          expect(result['data']['updateInitiative']['statusMessage']).to eq('SUCCESS')
+          expect(initiative.reload.name).to eq 'test'
+          expect(initiative.reload.start_date.iso8601).to eq '2021-01-01'
+          expect(initiative.reload.end_date.iso8601).to eq '2022-08-03'
+          expect(initiative.reload.target_quarter).to eq 'q3'
+          expect(initiative.reload.target_year).to eq 2022
+        end
+      end
+
+      context 'when the object is not valid' do
+        it 'fails to update' do
+          allow_any_instance_of(Initiative).to(receive(:update)).and_return(false)
+          result = FlowClimateSchema.execute(mutation).as_json
+          expect(result['data']['updateInitiative']['statusMessage']).to eq('FAIL')
+        end
+      end
+    end
+  end
 end

@@ -2,9 +2,9 @@
 
 module Mutations
   class UpdateInitiativeMutation < Mutations::BaseMutation
+    argument :end_date, GraphQL::Types::ISO8601Date, required: true
     argument :initiative_id, ID, required: true
     argument :name, String, required: true
-    argument :end_date, GraphQL::Types::ISO8601Date, required: true
     argument :start_date, GraphQL::Types::ISO8601Date, required: true
     argument :target_quarter, Types::Enums::TargetQuarter, required: true
     argument :target_year, Int, required: true
