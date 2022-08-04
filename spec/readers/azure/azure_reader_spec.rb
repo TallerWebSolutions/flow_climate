@@ -60,7 +60,7 @@ RSpec.describe Azure::AzureReader, type: :service do
 
         described_class.instance.read_customer(company, JSON.parse(azure_item_return))
 
-        expect(Customer.all.map(&:name)).to eq ['Default Customer']
+        expect(Customer.all.map(&:name)).to eq ['Wakanda']
       end
     end
 
@@ -138,7 +138,7 @@ RSpec.describe Azure::AzureReader, type: :service do
   end
 
   describe '#read_project' do
-    context 'with a project custom field' do
+    context 'with one project custom field' do
       it 'reads the project field' do
         company = Fabricate :company
         azure_account = Fabricate :azure_account, company: company
@@ -153,6 +153,25 @@ RSpec.describe Azure::AzureReader, type: :service do
         described_class.instance.read_project(company, customer, team, initiative, azure_account, JSON.parse(azure_item_return))
 
         expect(Project.all.map(&:name)).to eq ['FlowClimate']
+      end
+    end
+
+    context 'with two project custom fields' do
+      it 'reads the project field concatenating the value in the two fields' do
+        company = Fabricate :company
+        azure_account = Fabricate :azure_account, company: company
+        Fabricate :azure_custom_field, custom_field_type: :project_name, custom_field_name: 'Custom.ProjectName', azure_account: azure_account, field_order: 0
+        Fabricate :azure_custom_field, custom_field_type: :project_name, custom_field_name: 'Custom.Category', azure_account: azure_account, field_order: 1
+
+        customer = Fabricate :customer, company: company, name: 'The Customer'
+        initiative = Fabricate :initiative, company: company, name: 'The Initiative'
+        team = Fabricate :team, company: company, name: 'The Team'
+
+        azure_item_return = file_fixture('azure_work_item_2_expanded.json').read
+
+        described_class.instance.read_project(company, customer, team, initiative, azure_account, JSON.parse(azure_item_return))
+
+        expect(Project.all.map(&:name)).to eq ['FlowClimate - Wakanda']
       end
     end
 

@@ -23,7 +23,7 @@ module Azure
     private
 
     def azure_custom_field_params
-      params.require(:azure_azure_custom_field).permit(:custom_field_type, :custom_field_name)
+      params.require(:azure_azure_custom_field).permit(:custom_field_type, :custom_field_name, :field_order)
     end
   end
 end

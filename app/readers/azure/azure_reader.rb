@@ -52,9 +52,11 @@ module Azure
     end
 
     def read_project(company, customer, team, initiative, azure_account, work_item_response)
-      project_custom_field = azure_account.azure_custom_fields.find_by(custom_field_type: :project_name)
+      project_custom_fields = azure_account.azure_custom_fields.where(custom_field_type: :project_name)
 
-      project_name = work_item_response['fields'][project_custom_field&.custom_field_name]
+      project_names = project_custom_fields.map { |custom| work_item_response['fields'][custom.custom_field_name] }
+
+      project_name = project_names.join(' - ')
 
       project_name = "Other - #{team.name}" if project_name.blank?
 
