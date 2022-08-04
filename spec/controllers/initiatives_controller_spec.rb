@@ -69,6 +69,14 @@ RSpec.describe InitiativesController, type: :controller do
       end
     end
 
+    describe 'GET #edit' do
+      it 'renders the SPA template' do
+        get :edit, params: { company_id: company.id, id: 'foo' }
+
+        expect(response).to render_template 'spa-build/index'
+      end
+    end
+
     describe 'GET #show' do
       let(:initiative) { Fabricate :initiative, company: company, name: 'foo', start_date: 3.days.ago, end_date: 1.day.from_now }
 

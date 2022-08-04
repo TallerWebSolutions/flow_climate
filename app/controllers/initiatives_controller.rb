@@ -2,7 +2,7 @@
 
 class InitiativesController < AuthenticatedController
   before_action :assign_company
-  before_action :assign_initiative, except: %i[index new create]
+  before_action :assign_initiative, except: %i[index new create edit]
 
   def index
     prepend_view_path Rails.public_path
