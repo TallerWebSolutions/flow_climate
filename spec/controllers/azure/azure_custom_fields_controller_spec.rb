@@ -7,6 +7,12 @@ RSpec.describe Azure::AzureCustomFieldsController, type: :controller do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'DELETE #destroy' do
+      before { delete :destroy, params: { company_id: 'foo', id: 'bar' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -55,6 +61,52 @@ RSpec.describe Azure::AzureCustomFieldsController, type: :controller do
 
             it { expect(response).to have_http_status :not_found }
           end
+        end
+      end
+    end
+
+    describe 'DELETE #destroy' do
+      context 'with valid parameters' do
+        it 'deletes the custom field' do
+          azure_account = Fabricate :azure_account, company: company
+          custom_field = Fabricate :azure_custom_field, azure_account: azure_account
+
+          delete :destroy, params: { company_id: company, id: custom_field }, xhr: true
+
+          expect(Azure::AzureCustomField.all.count).to eq 0
+          expect(response).to render_template 'azure/azure_custom_fields/destroy'
+        end
+      end
+
+      context 'with invalid' do
+        context 'non-existent company' do
+          let(:azure_account) { Fabricate :azure_account, company: company }
+          let(:custom_field) { Fabricate :azure_custom_field, azure_account: azure_account }
+
+          before { delete :destroy, params: { company_id: 'foo', id: custom_field }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'custom field for another company' do
+          let!(:azure_account) { Fabricate :azure_account, company: company }
+
+          let(:other_company) { Fabricate :company }
+          let(:other_azure_account) { Fabricate :azure_account, company: other_company }
+          let!(:custom_field) { Fabricate :azure_custom_field, azure_account: other_azure_account }
+
+          before { delete :destroy, params: { company_id: company, id: custom_field }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'inexistent custom field' do
+          let!(:azure_account) { Fabricate :azure_account, company: company }
+          let!(:custom_field) { Fabricate :azure_custom_field, azure_account: azure_account }
+
+          before { delete :destroy, params: { company_id: company, id: 'foo' }, xhr: true }
+
+          it { expect(response).to have_http_status :not_found }
         end
       end
     end

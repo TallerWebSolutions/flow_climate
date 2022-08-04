@@ -3,16 +3,22 @@
   <th><%= Azure::AzureCustomField.human_attribute_name :id %></th>
   <th><%= Azure::AzureCustomField.human_attribute_name :custom_field_name %></th>
   <th><%= Azure::AzureCustomField.human_attribute_name :custom_field_type %></th>
+  <th></th>
 </tr>
 </thead>
 
 <tbody>
 <div >
-  <% @account_custom_fields.each do |custom_field| %>
-    <tr>
+  <% account_custom_fields.each do |custom_field| %>
+    <tr id="<%= "azure_custom_field_#{custom_field.id}" %>">
       <td><%= custom_field.id %></td>
       <td><%= custom_field.custom_field_name %></td>
       <td><%= I18n.t("activerecord.attributes.azure/azure_custom_field.enums.custom_field_type.#{custom_field.custom_field_type}") %></td>
+      <td>
+        <%= link_to company_azure_custom_field_path(company, custom_field), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
+          <i class="fa fa-trash"></i>
+        <% end %>
+      </td>
     </tr>
   <% end %>
 </div>

@@ -14,6 +14,12 @@ module Azure
       respond_to { |format| format.js { render 'azure/azure_custom_fields/create' } }
     end
 
+    def destroy
+      @azure_custom_field = @company.azure_account.azure_custom_fields.find(params[:id])
+      @azure_custom_field.destroy
+      respond_to { |format| format.js { render 'azure/azure_custom_fields/destroy' } }
+    end
+
     private
 
     def azure_custom_field_params

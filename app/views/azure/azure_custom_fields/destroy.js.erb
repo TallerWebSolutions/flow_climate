@@ -1,0 +1,5 @@
+let destroyedRow = $('#azure_custom_field_<%= @azure_custom_field.id %>');
+
+destroyedRow.fadeTo('slow', 0.7, function() {
+  $(this).remove();
+});

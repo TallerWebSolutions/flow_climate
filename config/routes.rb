@@ -129,7 +129,9 @@ Rails.application.routes.draw do
       resources :azure_custom_fields, only: :create
     end
 
-    resources :teams, except: %i[create update destry] do
+    resources :azure_custom_fields, only: :destroy, module: 'azure'
+
+    resources :teams, except: %i[create update destroy] do
       resources :slack_configurations, except: :show do
         patch :toggle_active, on: :member
       end
@@ -186,9 +188,11 @@ Rails.application.routes.draw do
       get 'products_for_customer/(:customer_id)', action: :products_for_customer, on: :collection
 
       resources :portfolio_units, except: :index
+
       resources :risk_reviews, except: :index do
         resources :risk_review_action_items, only: %w[new create destroy]
       end
+
       resources :service_delivery_reviews, except: :index do
         patch :refresh, on: :member
       end
