@@ -160,8 +160,8 @@ RSpec.describe Azure::AzureReader, type: :service do
       it 'reads the project field concatenating the value in the two fields' do
         company = Fabricate :company
         azure_account = Fabricate :azure_account, company: company
-        Fabricate :azure_custom_field, custom_field_type: :project_name, custom_field_name: 'Custom.ProjectName', azure_account: azure_account, field_order: 0
         Fabricate :azure_custom_field, custom_field_type: :project_name, custom_field_name: 'Custom.Category', azure_account: azure_account, field_order: 1
+        Fabricate :azure_custom_field, custom_field_type: :project_name, custom_field_name: 'Custom.ProjectName', azure_account: azure_account, field_order: 0
 
         customer = Fabricate :customer, company: company, name: 'The Customer'
         initiative = Fabricate :initiative, company: company, name: 'The Initiative'

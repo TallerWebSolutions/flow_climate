@@ -52,11 +52,7 @@ module Azure
     end
 
     def read_project(company, customer, team, initiative, azure_account, work_item_response)
-      project_custom_fields = azure_account.azure_custom_fields.where(custom_field_type: :project_name)
-
-      project_names = project_custom_fields.map { |custom| work_item_response['fields'][custom.custom_field_name] }
-
-      project_name = project_names.join(' - ')
+      project_name = read_project_names(azure_account, work_item_response)
 
       project_name = "Other - #{team.name}" if project_name.blank?
 
@@ -88,6 +84,14 @@ module Azure
     end
 
     private
+
+    def read_project_names(azure_account, work_item_response)
+      project_custom_fields = azure_account.azure_custom_fields.where(custom_field_type: :project_name).order(:field_order)
+
+      project_names = project_custom_fields.map { |custom| work_item_response['fields'][custom.custom_field_name] }
+
+      project_names.join(' - ')
+    end
 
     def build_assignments(demand, team, team_member)
       assignment_start_date = [demand.created_date, demand.commitment_date].compact.max
