@@ -248,6 +248,7 @@ en:
       azure/azure_custom_field:
         custom_field_name: Field Machine Name
         custom_field_type: Field Type
+        field_order: Order
         enums:
           custom_field_type:
             project_name: Project Name

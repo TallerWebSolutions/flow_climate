@@ -764,6 +764,7 @@ pt-BR:
       azure/azure_custom_field:
         custom_field_name: Nome de Máquina do Campo
         custom_field_type: Tipo do Campo
+        field_order: Ordem
         enums:
           custom_field_type:
             project_name: Nome do Projeto

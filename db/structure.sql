@@ -70,7 +70,8 @@ CREATE TABLE public.azure_custom_fields (
     custom_field_type integer DEFAULT 0 NOT NULL,
     custom_field_name character varying NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    field_order integer DEFAULT 0 NOT NULL
 );
 
 
@@ -6705,6 +6706,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220711193708'),
 ('20220714235702'),
 ('20220718205253'),
-('20220718213803');
+('20220718213803'),
+('20220804162133');
 
 

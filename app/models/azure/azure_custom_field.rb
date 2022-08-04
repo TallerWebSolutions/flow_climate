@@ -7,6 +7,7 @@
 #  id                :bigint           not null, primary key
 #  custom_field_name :string           not null
 #  custom_field_type :integer          default("project_name"), not null
+#  field_order       :integer          default(0), not null
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  azure_account_id  :integer          not null
