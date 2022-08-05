@@ -17,8 +17,10 @@
     </div>
 
     <div class="show-secondary-info">
-      <% demand.demand_tags.each do |label| %>
-        <span class="label label-info"><%= label %></span>
+      <% if demand.demand_tags.present? %>
+        <% demand.demand_tags.each do |label| %>
+          <span class="label label-info"><%= label %></span>
+        <% end %>
       <% end %>
     </div>
 
