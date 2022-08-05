@@ -201,7 +201,6 @@ RSpec.describe PortfolioUnitsController, type: :controller do
     end
 
     describe 'GET #show' do
-
       context 'with valid data' do
         it 'assigns the instance variables and render the template' do
           portfolio_unit = Fabricate :portfolio_unit, product: product, name: 'zzz'
@@ -230,12 +229,16 @@ RSpec.describe PortfolioUnitsController, type: :controller do
         end
 
         context 'product' do
+          let(:portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'zzz' }
+
           before { get :show, params: { company_id: company, product_id: 'foo', id: portfolio_unit }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end
 
         context 'product in other company' do
+          let(:portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'zzz' }
+
           let(:other_product) { Fabricate :product }
 
           before { get :show, params: { company_id: company, product_id: other_product, id: portfolio_unit }, xhr: true }
@@ -244,6 +247,8 @@ RSpec.describe PortfolioUnitsController, type: :controller do
         end
 
         context 'company' do
+          let(:portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'zzz' }
+
           before { get :show, params: { company_id: 'foo', product_id: product, id: portfolio_unit }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
