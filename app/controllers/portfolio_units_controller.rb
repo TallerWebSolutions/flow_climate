@@ -40,6 +40,7 @@ class PortfolioUnitsController < AuthenticatedController
     @portfolio_data = Highchart::PortfolioChartsAdapter.new(@projects, @start_date, @end_date, '') if @projects.present?
     assign_filter_parameters_to_charts
     @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@demands, @start_date, @end_date, @period) if @demands.present?
+    @lead_time_breakdown = DemandService.instance.lead_time_breakdown(@demands.kept.finished_with_leadtime)
   end
 
   def edit

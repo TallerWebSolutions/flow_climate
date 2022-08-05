@@ -211,7 +211,9 @@ RSpec.describe PortfolioUnitsController, type: :controller do
 
       context 'with valid data' do
         it 'assigns the instance variables and render the template' do
+          expect(DemandService.instance).to(receive(:lead_time_breakdown)).once
           get :show, params: { company_id: company, product_id: product, id: portfolio_unit }, xhr: true
+
           expect(assigns(:company)).to eq company
           expect(assigns(:product)).to eq product
           expect(assigns(:portfolio_unit)).to eq portfolio_unit
