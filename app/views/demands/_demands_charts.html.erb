@@ -57,20 +57,20 @@
     <%= render 'layouts/no_data', missing_data: Demand.model_name.human(count: 2).downcase %>
   <% end %>
 
-  <% if @lead_time_breakdown&.keys.present? %>
+  <% if lead_time_breakdown&.keys.present? %>
     <div class="col-xs-6">
       <h4><%= I18n.t('service_delivery_reviews.show.lead_time_breakdown_label') %></h4>
 
       <div id="portfolio-unit-lead-time-breakdown-column"
            class="flow-chart"
            data-title=''
-           data-xcategories='<%= @lead_time_breakdown.keys %>'
+           data-xcategories='<%= lead_time_breakdown.keys %>'
            data-xtitle='<%= Stage.model_name.human(count: 2).downcase %>'
            data-ytitle='<%= I18n.t('general.days') %>'
            data-prefix=''
            data-tooltipsuffix='<%= I18n.t('general.days') %>'
            data-datalabelsuffix=""
-           data-series='<%= [{ name: I18n.t('service_delivery_reviews.show.lead_time_breakdown_label'), data: @lead_time_breakdown.values.map { |transitions| (transitions.sum(&:total_seconds_in_transition) / 1.day) } }].to_json %>'
+           data-series='<%= [{ name: I18n.t('service_delivery_reviews.show.lead_time_breakdown_label'), data: lead_time_breakdown.values.map { |transitions| (transitions.sum(&:total_seconds_in_transition) / 1.day) } }].to_json %>'
            data-decimals='2'>
       </div>
     </div>

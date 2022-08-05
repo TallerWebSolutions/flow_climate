@@ -201,17 +201,16 @@ RSpec.describe PortfolioUnitsController, type: :controller do
     end
 
     describe 'GET #show' do
-      let!(:portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'zzz' }
-      let!(:other_portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'aaa' }
-
-      let!(:out_portfolio_unit) { Fabricate :portfolio_unit, name: 'aaa' }
-
-      let!(:demand) { Fabricate :demand, portfolio_unit: portfolio_unit, end_date: 2.days.ago }
-      let!(:other_demand) { Fabricate :demand, portfolio_unit: portfolio_unit, end_date: 1.day.ago }
 
       context 'with valid data' do
         it 'assigns the instance variables and render the template' do
-          expect(DemandService.instance).to(receive(:lead_time_breakdown)).once
+          portfolio_unit = Fabricate :portfolio_unit, product: product, name: 'zzz'
+
+          Fabricate :portfolio_unit, name: 'aaa'
+
+          demand = Fabricate :demand, portfolio_unit: portfolio_unit, commitment_date: 3.days.ago, end_date: 2.days.ago
+          other_demand = Fabricate :demand, portfolio_unit: portfolio_unit, commitment_date: 3.days.ago, end_date: 1.day.ago
+
           get :show, params: { company_id: company, product_id: product, id: portfolio_unit }, xhr: true
 
           expect(assigns(:company)).to eq company

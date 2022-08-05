@@ -1,7 +1,7 @@
 <div id="demands-charts">
   <div id="portfolio-charts-tab">
     <% if demands_chart_adapter&.demands_in_chart.present? %>
-      <%= render 'demands/demands_charts', demands: demands, demands_chart_adapter: demands_chart_adapter %>
+      <%= render 'demands/demands_charts', demands: demands, lead_time_breakdown: lead_time_breakdown, demands_chart_adapter: demands_chart_adapter %>
     <% else %>
       <%= render 'layouts/no_data', missing_data: Demand.model_name.human(count: 2).downcase %>
     <% end %>
