@@ -91,4 +91,10 @@ class PortfolioUnit < ApplicationRecord
 
     finished / demands_count.to_f
   end
+
+  def lead_time_p80
+    demands_finished = total_portfolio_demands.kept.finished_with_leadtime
+
+    Stats::StatisticsService.instance.percentile(80, demands_finished.map(&:leadtime))
+  end
 end

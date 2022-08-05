@@ -163,4 +163,24 @@ RSpec.describe PortfolioUnit, type: :model do
       end
     end
   end
+
+  describe '#lead_time_p80' do
+    context 'with finished demands' do
+      it 'returns the lead time for these demands' do
+        travel_to Time.zone.local(2022, 8, 5, 17) do
+          portfolio_unit = Fabricate :portfolio_unit
+          child_portfolio_unit = Fabricate :portfolio_unit, parent: portfolio_unit
+          other_child_portfolio_unit = Fabricate :portfolio_unit, parent: portfolio_unit
+
+          Fabricate :demand, portfolio_unit: portfolio_unit, commitment_date: 2.days.ago, end_date: 1.day.ago
+          Fabricate :demand, portfolio_unit: child_portfolio_unit, commitment_date: 5.days.ago, end_date: 1.day.ago
+          Fabricate :demand, portfolio_unit: other_child_portfolio_unit, commitment_date: 5.days.ago
+          Fabricate :demand, portfolio_unit: other_child_portfolio_unit, commitment_date: 4.days.ago, end_date: 2.days.ago
+          Fabricate :demand, portfolio_unit: other_child_portfolio_unit, commitment_date: 4.days.ago, end_date: 2.days.ago, discarded_at: Time.zone.now
+
+          expect(portfolio_unit.lead_time_p80).to eq 276_480
+        end
+      end
+    end
+  end
 end

@@ -191,6 +191,7 @@ en:
             key_result: "Key Result"
             source: "Source"
             epic: "Epic"
+            theme: "Theme"
       jira/jira_project_config:
         fix_version_name: "Fix Version Name"
       team_member:

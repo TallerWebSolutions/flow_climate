@@ -25,8 +25,9 @@ module PortfolioUnitHelper
         html_output += I18n.t('general.demands_text', count: child.total_portfolio_demands.count)
         html_output += '</div>'
         html_output += "<div class='tf-footer'>"
-        html_output += "<div class='pull-left bottom-spaced-component'>#{number_to_percentage(child.percentage_complete * 100, precision: 2)}</div>"
-        html_output += "<div class='pull-right bottom-spaced-component'>#{I18n.t("activerecord.attributes.portfolio_unit.enums.portfolio_unit_type.#{child.portfolio_unit_type}")}</div>"
+        html_output += "<div class='col-xs-4'>#{number_to_percentage(child.percentage_complete * 100, precision: 2)}</div>"
+        html_output += "<div class='col-xs-4'>LT #{number_with_precision(seconds_to_day(child.lead_time_p80), precision: 2)} #{I18n.t('general.days')}</div>"
+        html_output += "<div class='col-xs-4 bottom-spaced-component'>#{I18n.t("activerecord.attributes.portfolio_unit.enums.portfolio_unit_type.#{child.portfolio_unit_type}")}</div>"
         html_output += '</div>'
         html_output += '</span>'
         html_output += build_portfolio_tree(child.children) if child.children?
