@@ -5,6 +5,8 @@
     "name": "Project",
     "team": "Team",
     "status": "Status",
+    "startDate": "Start Date",
+    "endDate": "End Date",
     "demands": "Demands",
     "remaing_days": "Remaining Days",
     "delivered": "Delivered",

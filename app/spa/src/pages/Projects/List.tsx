@@ -16,6 +16,7 @@ import { MeContext } from "../../contexts/MeContext"
 import { Project } from "../../modules/project/project.types"
 import Table from "../../components/ui/Table"
 import { ProjectsFilters } from "./Projects"
+import DateLocale from "../../components/ui/DateLocale"
 
 const PROJECT_LIST_QUERY = gql`
   query projectList(
@@ -61,7 +62,7 @@ type ProjectsListProps = {
 }
 
 const ProjectsList = ({ filters, setFilters }: ProjectsListProps) => {
-  const { t } = useTranslation(["projects"])
+  const { t } = useTranslation("projects")
 
   const { me } = useContext(MeContext)
   const company = me?.currentCompany
@@ -110,6 +111,8 @@ const ProjectsList = ({ filters, setFilters }: ProjectsListProps) => {
     t("projects_table.name"),
     t("projects_table.team"),
     t("projects_table.status"),
+    t("projects_table.startDate"),
+    t("projects_table.endDate"),
     t("projects_table.demands"),
     t("projects_table.remaing_days"),
     t("projects_table.delivered"),
@@ -119,11 +122,19 @@ const ProjectsList = ({ filters, setFilters }: ProjectsListProps) => {
 
   const projectList =
     projects.map((project) => [
-      <Link href={`${companyUrl}/projects/${project.id}`}>{project.name}</Link>,
+      <Link
+        maxWidth={250}
+        display="inline-block"
+        href={`${companyUrl}/projects/${project.id}`}
+      >
+        {project.name}
+      </Link>,
       <Link href={`${companyUrl}/teams/${project.team?.id}`}>
         {project.team?.name}
       </Link>,
       project.status,
+      <DateLocale date={project.startDate} />,
+      <DateLocale date={project.endDate} />,
       `${project.numberOfDemands} ${t("projects_table.row_demands")}`,
       `${project.remainingDays} ${t("projects_table.row_days")}`,
       `${project.numberOfDemandsDelivered} ${t(
