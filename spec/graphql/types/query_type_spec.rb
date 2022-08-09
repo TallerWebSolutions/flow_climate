@@ -1463,6 +1463,32 @@ RSpec.describe Types::QueryType do
     end
   end
 
+
+  describe '#work_item_types' do
+    it "retrieves the list of work item types to the logged user's last company" do
+      query =
+        %(query {
+          workItemTypes {
+            name
+          }
+        })
+
+      company = Fabricate :company
+      Fabricate :work_item_type, company: company, name: 'Cornojob', item_level: :demand
+      Fabricate :work_item_type, company: company, name: 'Beltrano', item_level: :demand
+      Fabricate :work_item_type, company: company, name: 'Abreu', item_level: :task
+      user = Fabricate :user, companies: [company], last_company_id: company.id
+
+      context = {
+        current_user: user
+      }
+
+      result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
+
+      expect(result.dig('data', 'workItemTypes').map { |item_type| item_type['name'] }).to eq %w[Beltrano Cornojob Abreu]
+    end
+  end
+
   describe '#me' do
     it 'retrieves current logged in user' do
       query =

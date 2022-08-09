@@ -64,7 +64,7 @@ module Types
       argument :status, String, required: false
     end
 
-    field :work_item_types, [Types::WorkItemTypeType], null: false, description: 'A list of work item types registered to the signed up user last company'
+    field :work_item_types, [Types::WorkItemTypeType], null: false, description: 'A list of work item types registered to the logged user last company'
 
     def teams
       me.last_company.teams.preload(:company) if me.last_company.present?
