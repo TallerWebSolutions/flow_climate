@@ -64,6 +64,8 @@ module Types
       argument :status, String, required: false
     end
 
+    field :work_item_types, [Types::WorkItemTypeType], null: false, description: 'A list of work item types registered to the signed up user last company'
+
     def teams
       me.last_company.teams.preload(:company) if me.last_company.present?
     end
@@ -129,6 +131,10 @@ module Types
 
     def projects(company_id:, name: nil, status: nil, start_date: nil, end_date: nil)
       ProjectsRepository.instance.search(company_id, project_name: name, project_status: status, start_date: start_date, end_date: end_date)
+    end
+
+    def work_item_types
+      me.last_company.work_item_types.order(:item_level, :name)
     end
 
     private
