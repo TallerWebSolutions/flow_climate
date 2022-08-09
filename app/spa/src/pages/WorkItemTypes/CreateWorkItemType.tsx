@@ -13,7 +13,7 @@ import {
 import { useContext } from "react"
 import { FieldValues, useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 import BasicPage from "../../components/BasicPage"
 import { MeContext } from "../../contexts/MeContext"
@@ -31,6 +31,9 @@ const CREATE_WORK_ITEM_TYPE = gql`
     ) {
       workItemType {
         id
+        name
+        itemLevel
+        qualityIndicatorType
       }
     }
   }
@@ -40,9 +43,13 @@ const CreateWorkItemType = () => {
   const { me } = useContext(MeContext)
   const { t } = useTranslation("workItemTypes")
   const { register, handleSubmit } = useForm()
-  const [createWorkItemType] = useMutation(CREATE_WORK_ITEM_TYPE)
+  const navigate = useNavigate()
 
   const companyUrl = `/companies/${me?.currentCompany?.slug}`
+  const workItemTypesUrl = `${companyUrl}/work_item_types`
+  const [createWorkItemType, { loading }] = useMutation(CREATE_WORK_ITEM_TYPE, {
+    onCompleted: () => navigate(workItemTypesUrl),
+  })
   const breadcrumbsLinks = [
     { name: me?.currentCompany?.name || "", url: companyUrl },
     {
@@ -56,7 +63,11 @@ const CreateWorkItemType = () => {
     })
 
   return (
-    <BasicPage breadcrumbsLinks={breadcrumbsLinks} title={t("title")}>
+    <BasicPage
+      breadcrumbsLinks={breadcrumbsLinks}
+      title={t("title")}
+      loading={loading}
+    >
       <form onSubmit={handleSubmit(handleCreateWorkItemType)}>
         <FormGroup>
           <FormControl sx={{ marginBottom: 4 }}>
@@ -90,11 +101,7 @@ const CreateWorkItemType = () => {
             <Button type="submit" variant="contained" sx={{ marginRight: 2 }}>
               {t("form.save")}
             </Button>
-            <Button
-              variant="outlined"
-              component={Link}
-              to={`${companyUrl}/demands`}
-            >
+            <Button variant="outlined" component={Link} to={workItemTypesUrl}>
               {t("form.cancel")}
             </Button>
           </Box>

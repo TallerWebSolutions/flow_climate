@@ -8,5 +8,12 @@
     "cancel": "Cancel",
     "save": "Save",
     "qualityIndicatorType": "Quality Indicator"
+  },
+  "table": {
+    "title": "Work Item Types",
+    "name": "Name",
+    "itemLevel": "Item Level",
+    "qualityIndicatorType": "Quality Indicator",
+    "create": "Create Work Item Type"
   }
 }

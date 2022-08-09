@@ -160,7 +160,7 @@ Rails.application.routes.draw do
 
     resources :team_members, only: %i[index edit show]
 
-    resources :work_item_types, only: %i[new]
+    resources :work_item_types, only: %i[new index]
 
     resources :financial_informations, only: %i[new create edit update destroy]
 

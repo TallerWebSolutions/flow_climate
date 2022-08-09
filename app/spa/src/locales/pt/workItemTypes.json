@@ -8,5 +8,12 @@
     "cancel": "Cancelar",
     "save": "Salvar",
     "qualityIndicatorType": "Indicador de Qualidade"
+  },
+  "table": {
+    "title": "Tipos de item de trabalho",
+    "name": "Nome",
+    "itemLevel": "Nível de Item",
+    "qualityIndicatorType": "Indicador de Qualidade",
+    "create": "Criar Tipo de Item de Trabalho"
   }
 }
