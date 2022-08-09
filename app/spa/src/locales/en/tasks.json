@@ -34,6 +34,7 @@
     "list": "List"
   },
   "charts": {
+    "limitAlert": "Due to performance reasons, only the latest 1000 occurrences are shown",
     "completion_time_legend": "Completion Time (P80)",
     "flow_data_created_legend": "Created",
     "flow_data_delivered_legend": "Delivered",

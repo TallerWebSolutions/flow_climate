@@ -16,12 +16,10 @@ import { secondsToDays } from "../../lib/date"
 import { openWindow } from "../../lib/func"
 import { Task } from "../../modules/task/task.types"
 import { normalizeTasksFlowChart } from "../../modules/task/normalize"
-import User from "../../modules/user/user.types"
 import TasksPage from "../../components/TasksPage"
 import LineChartTooltip from "../../components/charts/tooltips/LineChartTooltip"
 import { ChartGridItem } from "../../components/charts/ChartGridItem"
 import { ChartAxisData, KeyValueData } from "../../modules/charts/charts.types"
-import { Project } from "../../modules/project/project.types"
 
 const TASKS_CHARTS_QUERY = gql`
   query TasksCharts(
@@ -81,7 +79,6 @@ const TASKS_CHARTS_QUERY = gql`
 `
 
 export type TasksChartsDTO = {
-  me: User
   tasksList: {
     totalCount: number
     tasks: Task[]
@@ -100,7 +97,6 @@ export type TasksChartsDTO = {
     inProgressLeadTimeP95: number
     completiontimeHistogramChartData: KeyValueData
   }
-  project: Project
 }
 
 export type TaskFilters = {
@@ -116,7 +112,7 @@ export type TaskFilters = {
 }
 
 const TaskCharts = () => {
-  const { t } = useTranslation(["tasks"])
+  const { t } = useTranslation("tasks")
   const [taskFilters, setTaskFilters] = useState<TaskFilters>({
     page: 0,
     status: "",
@@ -170,11 +166,16 @@ const TaskCharts = () => {
 
   const completionTimeChartData = {
     keys:
-      taskList?.completiontimeHistogramChartData.keys.map(secondsToDays) || [],
-    values: taskList?.completiontimeHistogramChartData.values || [],
+      taskList?.completiontimeHistogramChartData.keys
+        .map(secondsToDays)
+        .slice(-1000) || [],
+    values:
+      taskList?.completiontimeHistogramChartData.values.slice(-1000) || [],
   }
 
-  const unfinishedTasks = taskList?.tasks.filter((task) => !task.delivered)
+  const unfinishedTasks = taskList?.tasks
+    .filter((task) => !task.delivered)
+    .slice(-1000)
   const partialCompletionTimeChartData: ChartAxisData = {
     xAxis: unfinishedTasks?.map((task) => task.externalId || "") || [],
     yAxis:
@@ -252,7 +253,10 @@ const TaskCharts = () => {
         }}
       >
         {completionTimeChartData && (
-          <ChartGridItem title={t("charts.control_completion_time_title")}>
+          <ChartGridItem
+            title={t("charts.control_completion_time_title")}
+            chartTip={t("charts.limitAlert")}
+          >
             <ScatterChart
               axisLeftLegend={t("charts.days")}
               data={keyValueToAxisData(completionTimeChartData)}
@@ -270,7 +274,10 @@ const TaskCharts = () => {
           </ChartGridItem>
         )}
 
-        <ChartGridItem title={t("charts.current_partial_completion_title")}>
+        <ChartGridItem
+          title={t("charts.current_partial_completion_title")}
+          chartTip={t("charts.limitAlert")}
+        >
           <ScatterChart
             axisLeftLegend={t("charts.days")}
             data={partialCompletionTimeChartData}

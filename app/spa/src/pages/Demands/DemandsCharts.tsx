@@ -233,10 +233,7 @@ const DemandsCharts = () => {
       setFilters={setFilters}
     >
       <Grid container spacing={2} rowSpacing={8} sx={{ marginTop: 4 }}>
-        <ChartGridItem
-          title={t("demandsCharts.leadTimeControlChart")}
-          chartTip={t("charts.shared.oneYearChart.chartTip")}
-        >
+        <ChartGridItem title={t("demandsCharts.leadTimeControlChart")}>
           <ScatterChart
             data={controlChartData}
             markers={[
@@ -247,10 +244,7 @@ const DemandsCharts = () => {
           />
         </ChartGridItem>
 
-        <ChartGridItem
-          title={t("charts.leadTimeBreakdown.title")}
-          chartTip={t("charts.shared.oneYearChart.chartTip")}
-        >
+        <ChartGridItem title={t("charts.leadTimeBreakdown.title")}>
           <BarChart
             data={demandsLeadTimeBreakdown}
             keys={demandsLeadTimeBreakdownData?.xAxis.map(String) || []}

@@ -17,6 +17,7 @@ import { secondsToDays } from "../../lib/date"
 import { keyValueToAxisData } from "../../lib/charts"
 import { ScatterChart } from "../../components/charts/ScatterChart"
 import { ChartGridItem } from "../../components/charts/ChartGridItem"
+import { Project } from "../../modules/project/project.types"
 
 const PROJECT_TASKS_CHARTS_QUERY = gql`
   query ProjectDemandsChartsTasks($projectId: ID!) {
@@ -49,10 +50,14 @@ const PROJECT_TASKS_CHARTS_QUERY = gql`
   }
 `
 
+type ProjectTasksChartsDTO = {
+  project: Project
+} & TasksChartsDTO
+
 const ProjectTasksCharts = () => {
   const { t } = useTranslation(["tasks"])
   const { projectId } = useParams()
-  const { data, loading } = useQuery<TasksChartsDTO>(
+  const { data, loading } = useQuery<ProjectTasksChartsDTO>(
     PROJECT_TASKS_CHARTS_QUERY,
     {
       variables: {

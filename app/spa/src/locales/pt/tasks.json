@@ -33,6 +33,7 @@
     "list": "Lista"
   },
   "charts": {
+    "limitAlert": "Por motivos de desempenho, apenas as últimas 1000 ocorrências são mostradas",
     "completion_time_data_legend": "Tempo de Conclusão (P80)",
     "flow_data_created_data_legend": "Criadas",
     "flow_data_delivered_data_legend": "Entregas",
