@@ -9,7 +9,6 @@ import BasicPage from "../../components/BasicPage"
 import Table from "../../components/ui/Table"
 import { MeContext } from "../../contexts/MeContext"
 import { useConfirm } from "material-ui-confirm"
-import { TEAMS_QUERY } from "../Teams/Teams"
 import { MessagesContext } from "../../contexts/MessageContext"
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined"
 
