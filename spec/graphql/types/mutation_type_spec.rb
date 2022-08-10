@@ -340,6 +340,36 @@ RSpec.describe Types::MutationType do
     end
   end
 
+  describe 'delete_work_item_type' do
+    describe '#resolve' do
+      let(:work_item_type) { Fabricate :work_item_type }
+
+      let(:mutation) do
+        %(mutation {
+            deleteWorkItemType(workItemTypeId: "#{work_item_type.id}") {
+              statusMessage
+            }
+          })
+      end
+
+      context 'when the work_item_type exists' do
+        it 'succeeds' do
+          result = FlowClimateSchema.execute(mutation).as_json
+          expect(result['data']['deleteWorkItemType']['statusMessage']).to eq('SUCCESS')
+          expect(WorkItemType.all.count).to eq 0
+        end
+      end
+
+      context 'when the object is not valid' do
+        it 'fails' do
+          allow_any_instance_of(WorkItemType).to(receive(:destroy)).and_return(false)
+          result = FlowClimateSchema.execute(mutation).as_json
+          expect(result['data']['deleteWorkItemType']['statusMessage']).to eq('FAIL')
+        end
+      end
+    end
+  end
+
   describe 'update_initiative' do
     describe '#resolve' do
       let(:initiative) { Fabricate :initiative }

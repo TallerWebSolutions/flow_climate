@@ -1463,7 +1463,6 @@ RSpec.describe Types::QueryType do
     end
   end
 
-
   describe '#work_item_types' do
     it "retrieves the list of work item types to the logged user's last company" do
       query =
