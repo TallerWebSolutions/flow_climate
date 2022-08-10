@@ -80,7 +80,7 @@ const TasksPage = ({
         </Box>
       )}
       <form onSubmit={handleSubmit(handleTaskSearch)}>
-        <FormGroup>
+        <FormGroup sx={{ marginBottom: 8 }}>
           <Grid container spacing={5}>
             <FormElement>
               <InputLabel htmlFor="title">{t("list.form.search")}</InputLabel>
