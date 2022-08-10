@@ -13,8 +13,8 @@
     "initiative": "Initiative",
     "project": "Project",
     "team": "Team",
-    "title": "Title",
-    "portfolioUnit": "Portfolio Unit"
+    "portfolioUnit": "Portfolio Unit",
+    "title": "Title"
   },
   "filter": {
     "search": "Search",
