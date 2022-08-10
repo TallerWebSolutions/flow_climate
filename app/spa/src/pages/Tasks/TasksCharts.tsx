@@ -20,6 +20,7 @@ import TasksPage from "../../components/TasksPage"
 import LineChartTooltip from "../../components/charts/tooltips/LineChartTooltip"
 import { ChartGridItem } from "../../components/charts/ChartGridItem"
 import { ChartAxisData, KeyValueData } from "../../modules/charts/charts.types"
+import { TaskFilters } from "./Tasks"
 
 const TASKS_CHARTS_QUERY = gql`
   query TasksCharts(
@@ -30,6 +31,7 @@ const TASKS_CHARTS_QUERY = gql`
     $initiativeId: ID
     $untilDate: ISO8601Date
     $fromDate: ISO8601Date
+    $portfolioUnit: String
   ) {
     tasksList(
       status: $status
@@ -39,6 +41,7 @@ const TASKS_CHARTS_QUERY = gql`
       initiativeId: $initiativeId
       untilDate: $untilDate
       fromDate: $fromDate
+      portfolioUnit: $portfolioUnit
     ) {
       totalCount
       completiontimeHistogramChartData {
@@ -97,18 +100,6 @@ export type TasksChartsDTO = {
     inProgressLeadTimeP95: number
     completiontimeHistogramChartData: KeyValueData
   }
-}
-
-export type TaskFilters = {
-  page: number
-  limit?: number
-  status?: string
-  title?: string
-  teamId?: string
-  projectId?: string
-  initiativeId?: string
-  fromDate?: string | null
-  untilDate?: string | null
 }
 
 const TaskCharts = () => {

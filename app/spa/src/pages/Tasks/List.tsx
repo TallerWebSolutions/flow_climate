@@ -32,6 +32,7 @@ export const TASKS_LIST_QUERY = gql`
     $limit: Int
     $untilDate: ISO8601Date
     $fromDate: ISO8601Date
+    $portfolioUnit: String
   ) {
     tasksList(
       pageNumber: $page
@@ -43,6 +44,7 @@ export const TASKS_LIST_QUERY = gql`
       limit: $limit
       untilDate: $untilDate
       fromDate: $fromDate
+      portfolioUnit: $portfolioUnit
     ) {
       totalCount
       totalDeliveredCount
@@ -69,7 +71,12 @@ export const TASKS_LIST_QUERY = gql`
           name
         }
         demand {
+          id
           demandTitle
+          portfolioUnit {
+            id
+            name
+          }
         }
       }
     }
@@ -132,6 +139,7 @@ const TaskList = ({ filters, setFilters }: TaskListProps) => {
     t("tasks_table.creationDate"),
     t("tasks_table.deliveryDate"),
     t("tasks_table.timeToFinish"),
+    t("tasks_table.portfolioUnit"),
   ]
 
   const handleRowsPerPage = (
@@ -167,7 +175,7 @@ const TaskList = ({ filters, setFilters }: TaskListProps) => {
         } ${t("finished_tasks")}`}
       </Typography>
 
-      <Table data-testid="task-list">
+      <Table data-testid="task-list" table-layout="fixed">
         <TableHead
           sx={{
             borderBottom: "1px solid",
@@ -233,6 +241,9 @@ const TaskList = ({ filters, setFilters }: TaskListProps) => {
                     task.secondsToComplete,
                     task.partialCompletionTime
                   )}
+                </TableCell>
+                <TableCell width={200}>
+                  {task.demand.portfolioUnit?.name}
                 </TableCell>
               </TableRow>
             )

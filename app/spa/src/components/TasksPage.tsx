@@ -107,6 +107,13 @@ const TasksPage = ({
               />
             </FormElement>
             <FormElement>
+              <InputLabel>{t("list.form.portfolioUnit")}</InputLabel>
+              <Input
+                {...register("portfolioUnit")}
+                defaultValue={filters.portfolioUnit}
+              />
+            </FormElement>
+            <FormElement>
               <InputLabel
                 htmlFor="status"
                 sx={{ backgroundColor: "white" }}

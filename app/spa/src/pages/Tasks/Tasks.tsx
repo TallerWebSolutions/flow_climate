@@ -15,6 +15,7 @@ export type TaskFilters = {
   initiativeId?: string
   fromDate?: string | null
   untilDate?: string | null
+  portfolioUnit?: string
 }
 
 const Tasks = () => {

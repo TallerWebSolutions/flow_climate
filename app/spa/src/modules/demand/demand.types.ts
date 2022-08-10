@@ -28,6 +28,12 @@ export type Demand = {
   costToProject?: number
   effortUpstream?: number
   effortDownstream?: number
+  portfolioUnit?: PortfolioUnit
+}
+
+type PortfolioUnit = {
+  id: string
+  name: string
 }
 
 export type DemandsList = {

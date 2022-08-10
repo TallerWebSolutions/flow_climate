@@ -16,6 +16,7 @@ module Types
     field :id, ID, null: false
     field :leadtime, Float, null: true
     field :number_of_blocks, Int, null: false
+    field :portfolio_unit, Types::PortfolioUnitType, null: true
     field :product, Types::ProductType, null: true
     field :project, Types::ProjectType, null: false
     field :responsibles, [Types::TeamMemberType], null: true
