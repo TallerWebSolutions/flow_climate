@@ -6,7 +6,7 @@
   "edit_team_button": "Update Team",
   "delete_team_modal_title": "Are you sure?",
   "delete_team_modal_body": "This action is permanent!",
-  "deleted_team_message_success": "Time deleted!",
+  "deleted_team_message_success": "Team deleted!",
   "deleted_team_message_fail": "Unable to delete team at this time!",
   "create_team": {
     "new_team": "New Team",

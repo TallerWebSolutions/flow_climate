@@ -27,6 +27,8 @@ class WorkItemType < ApplicationRecord
   enum item_level: { demand: 0, task: 1 }
 
   belongs_to :company
+  has_many :demands, dependent: :restrict_with_error
+  has_many :tasks, dependent: :restrict_with_error
 
   validates :item_level, :name, presence: true
 

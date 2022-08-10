@@ -15,5 +15,11 @@
     "itemLevel": "Item Level",
     "qualityIndicatorType": "Quality Indicator",
     "create": "Create Work Item Type"
+  },
+  "deleteWorkItemType": {
+    "title": "Delete Type",
+    "modalBody": "This action is permanent!",
+    "messageSuccess": "Type deleted!",
+    "messageFail": "Unable to delete work item type at this time!"
   }
 }
