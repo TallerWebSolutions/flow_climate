@@ -26,6 +26,7 @@ module Types
       argument :team_id, ID, required: false
       argument :title, String, required: false
       argument :until_date, GraphQL::Types::ISO8601Date, required: false
+      argument :portfolio_unit_id, ID, required: false
     end
 
     # TODO: this should be get inside the Project query
@@ -86,12 +87,12 @@ module Types
       TeamMember.find(id)
     end
 
-    def tasks_list(page_number: 1, limit: 0, title: nil, status: nil, initiative_id: nil, project_id: nil, team_id: nil, from_date: nil, until_date: nil)
+    def tasks_list(page_number: 1, limit: 0, title: nil, status: nil, initiative_id: nil, project_id: nil, team_id: nil, from_date: nil, until_date: nil, portfolio_unit_id: nil)
       return TasksList.new(0, 0, false, 0, []) if me.last_company.blank?
 
       TasksRepository.instance.search(me.last_company_id, page_number, limit,
                                       title: title, status: status, initiative_id: initiative_id,
-                                      project_id: project_id, team_id: team_id, from_date: from_date, until_date: until_date)
+                                      project_id: project_id, team_id: team_id, from_date: from_date, until_date: until_date, portfolio_unit_id: portfolio_unit_id)
     end
 
     def demands_list(search_options:)

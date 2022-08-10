@@ -5,7 +5,7 @@ class TasksRepository
 
   def search(company_id, page_number, limit = 0, search_fields = {})
     tasks = search_tasks(company_id, search_fields[:initiative_id], search_fields[:project_id], search_fields[:team_id],
-                         search_fields[:status], search_fields[:title], search_fields[:from_date], search_fields[:until_date])
+                         search_fields[:status], search_fields[:title], search_fields[:from_date], search_fields[:until_date], search_fields[:portfolio_unit_id])
 
     return TasksList.new(tasks.count, tasks.finished.count, true, 1, tasks) if tasks.blank?
 
@@ -33,6 +33,7 @@ class TasksRepository
     tasks = search_by_project(tasks, project_id)
     tasks = search_by_team(tasks, team_id)
     tasks = search_by_status(tasks, status)
+    tasks = search_by_portfolio_unit(tasks, portfolio_unit_id)
 
     search_by_date(tasks, status, from_date, until_date)
   end
@@ -60,6 +61,12 @@ class TasksRepository
     return tasks if initiative_id.blank?
 
     tasks.joins(demand: :project).where(demand: { projects: { initiative_id: initiative_id } })
+  end
+
+  def search_by_portfolio_unit(tasks, portfolio_unit_id)
+    return tasks if portfolio_unit_id.blank?
+
+    tasks.joins(:demand).where(demand: {portfolio_unit_id: portfolio_unit_id})
   end
 
   def search_by_team(tasks, team_id)
