@@ -13,7 +13,8 @@
     "initiative": "Initiative",
     "project": "Project",
     "team": "Team",
-    "title": "Title"
+    "title": "Title",
+    "portfolioUnit": "Unidade de portifólio"
   },
   "filter": {
     "search": "Buscar",
