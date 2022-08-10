@@ -16,10 +16,11 @@ RSpec.describe TasksRepository, type: :repository do
         second_project = Fabricate :project, company: company, initiative: initiative, team: other_team
         third_project = Fabricate :project, company: company, initiative: other_initiative, team: other_team
 
-        first_demand = Fabricate :demand, company: company, project: first_project, team: team
-        second_demand = Fabricate :demand, company: company, project: first_project, team: team
-        third_demand = Fabricate :demand, company: company, project: second_project, team: team
-        fourth_demand = Fabricate :demand, company: company, project: third_project, team: other_team
+        portfolio_unit = Fabricate :portfolio_unit
+        first_demand = Fabricate :demand, company: company, project: first_project, team: team, portfolio_unit: portfolio_unit
+        second_demand = Fabricate :demand, company: company, project: first_project, team: team, portfolio_unit: portfolio_unit
+        third_demand = Fabricate :demand, company: company, project: second_project, team: team, portfolio_unit: portfolio_unit
+        fourth_demand = Fabricate :demand, company: company, project: third_project, team: other_team, portfolio_unit: portfolio_unit
 
         first_task = Fabricate :task, demand: first_demand, title: 'foo BaR', created_date: 3.days.ago, end_date: 2.days.ago
         second_task = Fabricate :task, demand: second_demand, title: 'BaR', created_date: 2.days.ago, end_date: 1.day.ago
@@ -27,7 +28,7 @@ RSpec.describe TasksRepository, type: :repository do
         fourth_task = Fabricate :task, demand: fourth_demand, title: 'xpTo', created_date: 3.days.ago, end_date: 2.days.ago
         Fabricate :task, title: 'BaR', created_date: 3.days.ago, end_date: 2.days.ago
 
-        tasks_search = described_class.instance.search(company.id, 1, 2)
+        tasks_search = described_class.instance.search(company.id, 1, 2, { portfolio_unit: portfolio_unit.name })
         expect(tasks_search.total_count).to eq 4
         expect(tasks_search.total_delivered_count).to eq 3
         expect(tasks_search.last_page).to be false
