@@ -70,5 +70,23 @@
     "operational_math_risk_evolution_tooltip_label": "Período",
     "operational_math_risk_evolution_y_label": "Risco",
     "histogramHits": "Tarefas"
+  },
+  "list": {
+    "form": {
+      "search": "Título",
+      "portfolioUnit": "Unidade de portifólio",
+      "fromDate": "Data Inicial",
+      "untilDate": "Data Final",
+      "initiativeId": "Iniciativa",
+      "projectId": "Projeto",
+      "teamId": "Time",
+      "status": {
+        "title": "Status",
+        "all": "Todas as Tarefas"
+      },
+      "common": {
+        "placeholder": "Selecionar"
+      }
+    }
   }
 }

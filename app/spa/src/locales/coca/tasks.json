@@ -74,6 +74,7 @@
   "list": {
     "form": {
       "search": "Search",
+      "portfolioUnit": "Portfolio Unit",
       "fromDate": "Start Date",
       "untilDate": "End Date",
       "initiativeId": "Initiative",

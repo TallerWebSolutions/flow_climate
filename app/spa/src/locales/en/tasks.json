@@ -70,5 +70,23 @@
     "operational_math_risk_evolution_tooltip_label": "Period",
     "operational_math_risk_evolution_y_label": "Risk",
     "histogramHits": "Tasks"
+  },
+  "list": {
+    "form": {
+      "search": "Search",
+      "portfolioUnit": "Portfolio Unit",
+      "fromDate": "Start Date",
+      "untilDate": "End Date",
+      "initiativeId": "Initiative",
+      "projectId": "Project",
+      "teamId": "Team",
+      "status": {
+        "title": "Status",
+        "all": "All Tasks"
+      },
+      "common": {
+        "placeholder": "Select"
+      }
+    }
   }
 }
