@@ -18,13 +18,14 @@ RSpec.describe TasksRepository, type: :repository do
         third_project = Fabricate :project, company: company, initiative: other_initiative, team: other_team
 
         parent_unit = Fabricate :portfolio_unit, product: product, name: 'Registration'
+        other_parent_unit = Fabricate :portfolio_unit, product: product, name: 'Charts'
         portfolio_unit = Fabricate :portfolio_unit, product: product, name: 'Registration Unit', parent: parent_unit
-        other_portfolio_unit = Fabricate :portfolio_unit, product: product, name: 'Registration House', parent: parent_unit
+        other_portfolio_unit = Fabricate :portfolio_unit, product: product, name: 'Project Charts', parent: other_parent_unit
 
         first_demand = Fabricate :demand, company: company, project: first_project, team: team, portfolio_unit: portfolio_unit
-        second_demand = Fabricate :demand, company: company, project: first_project, team: team, portfolio_unit: other_portfolio_unit
+        second_demand = Fabricate :demand, company: company, project: first_project, team: team, portfolio_unit: portfolio_unit
         third_demand = Fabricate :demand, company: company, project: second_project, team: team, portfolio_unit: parent_unit
-        fourth_demand = Fabricate :demand, company: company, project: third_project, team: other_team, portfolio_unit: portfolio_unit
+        fourth_demand = Fabricate :demand, company: company, project: third_project, team: other_team, portfolio_unit: other_portfolio_unit
 
         first_task = Fabricate :task, demand: first_demand, title: 'foo BaR', created_date: 3.days.ago, end_date: 2.days.ago
         second_task = Fabricate :task, demand: second_demand, title: 'BaR', created_date: 2.days.ago, end_date: 1.day.ago
@@ -32,9 +33,9 @@ RSpec.describe TasksRepository, type: :repository do
         fourth_task = Fabricate :task, demand: fourth_demand, title: 'xpTo bleh', created_date: 3.days.ago, end_date: 2.days.ago
         Fabricate :task, title: 'BaR', created_date: 3.days.ago, end_date: 2.days.ago
 
-        tasks_search = described_class.instance.search(company.id, 1, 2, { portfolio_unit_name: 'rEGistration uNi' })
-        expect(tasks_search.total_count).to eq 4
-        expect(tasks_search.total_delivered_count).to eq 3
+        tasks_search = described_class.instance.search(company.id, 1, 2, { portfolio_unit_name: 'rEGistration' })
+        expect(tasks_search.total_count).to eq 3
+        expect(tasks_search.total_delivered_count).to eq 2
         expect(tasks_search.last_page).to be false
         expect(tasks_search.total_pages).to eq 2
         expect(tasks_search.tasks).to eq [third_task, second_task]

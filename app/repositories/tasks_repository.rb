@@ -77,9 +77,8 @@ class TasksRepository
   end
 
   def portfolio_unit_tree(portfolio_units)
-    parent_branches = portfolio_units.map(&:parent_branches).flatten
-    parent_children = portfolio_units.map(&:parent_branches).flatten.map(&:children).flatten.uniq
-    units_ids = parent_branches.map(&:id) + portfolio_units.map(&:id) + parent_children.map(&:id)
+    parent_children = portfolio_units.map(&:children).flatten.uniq
+    units_ids = portfolio_units.map(&:id) + parent_children.map(&:id)
     PortfolioUnit.where(id: units_ids.uniq)
   end
 
