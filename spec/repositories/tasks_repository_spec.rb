@@ -19,10 +19,11 @@ RSpec.describe TasksRepository, type: :repository do
 
         parent_unit = Fabricate :portfolio_unit, product: product, name: 'Registration'
         portfolio_unit = Fabricate :portfolio_unit, product: product, name: 'Registration Unit', parent: parent_unit
+        other_portfolio_unit = Fabricate :portfolio_unit, product: product, name: 'Registration House', parent: parent_unit
 
         first_demand = Fabricate :demand, company: company, project: first_project, team: team, portfolio_unit: portfolio_unit
-        second_demand = Fabricate :demand, company: company, project: first_project, team: team, portfolio_unit: parent_unit
-        third_demand = Fabricate :demand, company: company, project: second_project, team: team, portfolio_unit: portfolio_unit
+        second_demand = Fabricate :demand, company: company, project: first_project, team: team, portfolio_unit: other_portfolio_unit
+        third_demand = Fabricate :demand, company: company, project: second_project, team: team, portfolio_unit: parent_unit
         fourth_demand = Fabricate :demand, company: company, project: third_project, team: other_team, portfolio_unit: portfolio_unit
 
         first_task = Fabricate :task, demand: first_demand, title: 'foo BaR', created_date: 3.days.ago, end_date: 2.days.ago

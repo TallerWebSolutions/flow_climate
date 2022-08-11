@@ -71,10 +71,16 @@ class TasksRepository
 
     return tasks if portfolio_units.blank?
 
-    units_ids = portfolio_units.map(&:parent_branches).flatten.map(&:id) + portfolio_units.map(&:id)
-    unit_tree = PortfolioUnit.where(id: units_ids.uniq)
+    unit_tree = portfolio_unit_tree(portfolio_units)
 
     tasks.joins(demand: :portfolio_unit).where(demands: { portfolio_unit: unit_tree })
+  end
+
+  def portfolio_unit_tree(portfolio_units)
+    parent_branches = portfolio_units.map(&:parent_branches).flatten
+    parent_children = portfolio_units.map(&:parent_branches).flatten.map(&:children).flatten.uniq
+    units_ids = parent_branches.map(&:id) + portfolio_units.map(&:id) + parent_children.map(&:id)
+    PortfolioUnit.where(id: units_ids.uniq)
   end
 
   def search_by_team(tasks, team_id)
