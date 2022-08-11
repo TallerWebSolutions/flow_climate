@@ -5,7 +5,7 @@ class TasksRepository
 
   def search(company_id, page_number, limit = 0, search_fields = {})
     tasks = search_tasks(company_id, search_fields[:initiative_id], search_fields[:project_id], search_fields[:team_id],
-                         search_fields[:status], search_fields[:title], search_fields[:from_date], search_fields[:until_date], search_fields[:portfolio_unit])
+                         search_fields[:status], search_fields[:title], search_fields[:from_date], search_fields[:until_date], search_fields[:portfolio_unit_name])
 
     return TasksList.new(tasks.count, tasks.finished.count, true, 1, tasks) if tasks.blank?
 
@@ -25,15 +25,16 @@ class TasksRepository
                   tasks_page)
   end
 
-  def search_tasks(company_id, initiative_id, project_id, team_id, status, title, from_date, until_date, portfolio_unit)
-    tasks = Company.find(company_id).tasks.not_discarded_until(Time.zone.now)
+  def search_tasks(company_id, initiative_id, project_id, team_id, status, title, from_date, until_date, portfolio_unit_name)
+    company = Company.find(company_id)
+    tasks = company.tasks.not_discarded_until(Time.zone.now)
 
     tasks = search_by_title(tasks, title)
     tasks = search_by_initiative(tasks, initiative_id)
     tasks = search_by_project(tasks, project_id)
     tasks = search_by_team(tasks, team_id)
     tasks = search_by_status(tasks, status)
-    tasks = search_by_portfolio_unit(tasks, portfolio_unit)
+    tasks = search_by_portfolio_unit(company, tasks, portfolio_unit_name)
 
     search_by_date(tasks, status, from_date, until_date)
   end
@@ -63,10 +64,17 @@ class TasksRepository
     tasks.joins(demand: :project).where(demand: { projects: { initiative_id: initiative_id } })
   end
 
-  def search_by_portfolio_unit(tasks, portfolio_unit)
-    return tasks if portfolio_unit.blank?
+  def search_by_portfolio_unit(company, tasks, portfolio_unit_name)
+    return tasks if portfolio_unit_name.blank?
 
-    tasks.joins(demand: :portfolio_unit).where('portfolio_units.name ILIKE :unit_name', unit_name: "%#{portfolio_unit}%")
+    portfolio_units = company.portfolio_units.where('portfolio_units.name ILIKE :unit_name', unit_name: "%#{portfolio_unit_name}%")
+
+    return tasks if portfolio_units.blank?
+
+    units_ids = portfolio_units.map(&:parent_branches).flatten.map(&:id) + portfolio_units.map(&:id)
+    unit_tree = PortfolioUnit.where(id: units_ids.uniq)
+
+    tasks.joins(demand: :portfolio_unit).where(demands: { portfolio_unit: unit_tree })
   end
 
   def search_by_team(tasks, team_id)

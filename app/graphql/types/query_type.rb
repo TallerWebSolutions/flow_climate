@@ -92,7 +92,8 @@ module Types
 
       TasksRepository.instance.search(me.last_company_id, page_number, limit,
                                       title: title, status: status, initiative_id: initiative_id,
-                                      project_id: project_id, team_id: team_id, from_date: from_date, until_date: until_date, portfolio_unit: portfolio_unit)
+                                      project_id: project_id, team_id: team_id, from_date: from_date,
+                                      until_date: until_date, portfolio_unit_name: portfolio_unit)
     end
 
     def demands_list(search_options:)

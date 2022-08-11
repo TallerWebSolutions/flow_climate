@@ -10,6 +10,7 @@
 </div>
 
 <h1><%= @task.demand.project&.initiative&.name %></h1>
+<h2><%= link_to @task.demand.portfolio_unit.name, company_product_portfolio_unit_path(@company, @task.demand.product, @task.demand.portfolio_unit) if @task.demand.portfolio_unit.present? %></h2>
 <h2><%= @task.demand.demand_title %></h2>
 <h3><%= @task.title %></h3>
 
