@@ -1,4 +1,4 @@
-# frozen-string-literal: true
+# frozen_string_literal: true
 
 class ItemAssignmentsController < AuthenticatedController
   before_action :assign_company

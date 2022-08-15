@@ -1,4 +1,4 @@
-# frozen-string-literal: true
+# frozen_string_literal: true
 
 RSpec.describe ItemAssignmentsController, type: :controller do
   context 'unauthenticated' do

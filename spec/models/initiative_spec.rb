@@ -1,4 +1,4 @@
-# frozen-string-literal: true
+# frozen_string_literal: true
 
 RSpec.describe Initiative, type: :model do
   context 'enums' do

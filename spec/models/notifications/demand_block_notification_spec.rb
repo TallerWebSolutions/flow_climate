@@ -1,4 +1,4 @@
-# frozen-string-literal: true
+# frozen_string_literal: true
 
 RSpec.describe Notifications::DemandBlockNotification, type: :model do
   context 'associations' do

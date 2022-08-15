@@ -1,4 +1,4 @@
-# frozen-string-literal: true
+# frozen_string_literal: true
 
 RSpec.describe DemandEffortService, type: :service do
   describe '#build_efforts_to_demand' do

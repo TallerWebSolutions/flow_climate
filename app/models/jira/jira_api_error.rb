@@ -16,7 +16,7 @@
 #
 #  fk_rails_cc434c098b  (demand_id => demands.id)
 #
-# frozen-string-literal: true
+# frozen_string_literal: true
 
 module Jira
   class JiraApiError < ApplicationRecord

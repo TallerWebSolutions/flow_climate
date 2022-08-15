@@ -1,4 +1,4 @@
-# frozen-string-literal: true
+# frozen_string_literal: true
 
 RSpec.describe Consolidations::ReplenishingConsolidationJob do
   let(:first_user) { Fabricate :user }

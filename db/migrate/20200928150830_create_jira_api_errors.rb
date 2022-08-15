@@ -1,4 +1,4 @@
-# frozen-string-literal: true
+# frozen_string_literal: true
 
 class CreateJiraApiErrors < ActiveRecord::Migration[6.0]
   def change

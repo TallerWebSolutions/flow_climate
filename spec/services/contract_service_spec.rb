@@ -1,4 +1,4 @@
-# frozen-string-literal: true
+# frozen_string_literal: true
 
 RSpec.describe ContractService, type: :service do
   describe '#update_demands' do
