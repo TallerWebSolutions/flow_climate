@@ -91,14 +91,14 @@ RSpec.describe ViewCharts::TasksCharts do
 
         tasks_chart_adapter = described_class.new(Task.all, 3.weeks.ago, 3.weeks.from_now, 'week')
 
-        expect(tasks_chart_adapter.tasks_by_type).to eq([{ name: 'bar', y: 3 }, { name: 'foo', y: 2 }])
+        expect(tasks_chart_adapter.tasks_by_type).to eq([{ label: 'bar', value: 3 }, { label: 'foo', value: 2 }])
       end
     end
 
     context 'with no data' do
       subject(:tasks_by_type) { described_class.new(Demand.none, 3.weeks.ago, 3.weeks.from_now, 'week').tasks_by_type }
 
-      it { expect(tasks_by_type).to be_nil }
+      it { expect(tasks_by_type).to eq [] }
     end
   end
 end
