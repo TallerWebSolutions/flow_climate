@@ -19,7 +19,8 @@ module Types
 
     field :completiontime_histogram_chart_data, Types::Charts::LeadTimeHistogramDataType, null: true
     field :control_chart, Types::Charts::ControlChartType, null: true
-    field :tasks_by_type, [Types::Charts::PieChartType], null: true
+    field :tasks_by_project, [Types::Charts::SimpleChartType], null: true
+    field :tasks_by_type, [Types::Charts::SimpleChartType], null: true
 
     field :tasks_charts, Types::Charts::TasksChartsType, null: false do
       argument :period, Types::Charts::ChartsPeriodsType, required: false
@@ -47,6 +48,11 @@ module Types
     def tasks_by_type
       tasks_chart = ViewCharts::TasksCharts.new(object_tasks, start_date, end_date, 'weekly')
       tasks_chart.tasks_by_type
+    end
+
+    def tasks_by_project
+      tasks_chart = ViewCharts::TasksCharts.new(object_tasks, start_date, end_date, 'weekly')
+      tasks_chart.tasks_by_project
     end
 
     private

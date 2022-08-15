@@ -95,10 +95,38 @@ RSpec.describe ViewCharts::TasksCharts do
       end
     end
 
-    context 'with no data' do
-      subject(:tasks_by_type) { described_class.new(Demand.none, 3.weeks.ago, 3.weeks.from_now, 'week').tasks_by_type }
+    context 'without data' do
+      subject(:tasks_by_type) { described_class.new(Task.none, 3.weeks.ago, 3.weeks.from_now, 'week').tasks_by_type }
 
       it { expect(tasks_by_type).to eq [] }
+    end
+  end
+
+  describe '#tasks_by_project' do
+    context 'with data' do
+      it 'computes and extracts the information of the tasks count' do
+        project = Fabricate :project, name: 'foo'
+        other_project = Fabricate :project, name: 'bar'
+
+        demand = Fabricate :demand, project: project
+        other_demand = Fabricate :demand, project: other_project
+
+        Fabricate :task, demand: demand
+        Fabricate :task, demand: demand
+        Fabricate :task, demand: demand
+        Fabricate :task, demand: other_demand
+        Fabricate :task, demand: other_demand
+
+        tasks_by_project = described_class.new(Task.all, 3.weeks.ago, 3.weeks.from_now, 'week').tasks_by_project
+
+        expect(tasks_by_project).to eq([{ label: 'foo', value: 3 }, { label: 'bar', value: 2 }])
+      end
+    end
+
+    context 'with no data' do
+      subject(:tasks_by_project) { described_class.new(Task.none, 3.weeks.ago, 3.weeks.from_now, 'week').tasks_by_project }
+
+      it { expect(tasks_by_project).to eq([]) }
     end
   end
 end

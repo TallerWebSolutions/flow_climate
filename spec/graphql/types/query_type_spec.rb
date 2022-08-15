@@ -934,10 +934,11 @@ RSpec.describe Types::QueryType do
     let(:company) { Fabricate :company }
     let(:team) { Fabricate :team, company: company }
     let(:initiative) { Fabricate :initiative, company: company }
-    let(:project) { Fabricate :project, company: company, initiative: initiative, team: team }
+    let(:project) { Fabricate :project, company: company, initiative: initiative, team: team, name: 'foo' }
+    let(:other_project) { Fabricate :project, company: company, initiative: initiative, team: team, name: 'bar' }
 
     let(:first_demand) { Fabricate :demand, company: company, project: project, team: team }
-    let(:second_demand) { Fabricate :demand, company: company, project: project, team: team }
+    let(:second_demand) { Fabricate :demand, company: company, project: other_project, team: team }
 
     let(:query) do
       %(query {
@@ -989,6 +990,10 @@ RSpec.describe Types::QueryType do
             label
             value
           }
+          tasksByProject {
+            label
+            value
+          }
           controlChart {
             xAxis
             leadTimes
@@ -1031,7 +1036,8 @@ RSpec.describe Types::QueryType do
             },
             'completiontimeHistogramChartData' => { 'keys' => [], 'values' => [] },
             'tasksByType' => [],
-            'controlChart' => { 'leadTimeP65' => 0.0, 'leadTimeP80' => 0.0, 'leadTimeP95' => 0.0, 'leadTimes' => [], 'xAxis' => [] }
+            'controlChart' => { 'leadTimeP65' => 0.0, 'leadTimeP80' => 0.0, 'leadTimeP95' => 0.0, 'leadTimes' => [], 'xAxis' => [] },
+            'tasksByProject' => []
           }
         )
       end
@@ -1077,6 +1083,7 @@ RSpec.describe Types::QueryType do
           )
 
           expect(result.dig('data', 'tasksList')['tasksByType']).to match_array([{ 'label' => 'aaa', 'value' => 2 }, { 'label' => 'bbb', 'value' => 1 }])
+          expect(result.dig('data', 'tasksList')['tasksByProject']).to match_array([{ 'label' => 'bar', 'value' => 2 }, { 'label' => 'foo', 'value' => 1 }])
           expect(result.dig('data', 'tasksList')['controlChart']).to eq({ 'leadTimeP65' => 53_820.0, 'leadTimeP80' => 66_240.0, 'leadTimeP95' => 78_660.0, 'leadTimes' => [0.0, 82_800.0], 'xAxis' => %w[555 123] })
 
           expect(result.dig('data', 'tasksList', 'tasks')).to match_array(
