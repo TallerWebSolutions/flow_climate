@@ -21,6 +21,7 @@ import LineChartTooltip from "../../components/charts/tooltips/LineChartTooltip"
 import { ChartGridItem } from "../../components/charts/ChartGridItem"
 import { ChartAxisData, KeyValueData } from "../../modules/charts/charts.types"
 import { TaskFilters } from "./Tasks"
+import PieChart, { PieChartData } from "../../components/charts/PieChart"
 
 const TASKS_CHARTS_QUERY = gql`
   query TasksCharts(
@@ -77,6 +78,11 @@ const TASKS_CHARTS_QUERY = gql`
         keys
         values
       }
+
+      tasksByType {
+        label
+        value
+      }
     }
   }
 `
@@ -99,6 +105,7 @@ export type TasksChartsDTO = {
     inProgressLeadTimeP80: number
     inProgressLeadTimeP95: number
     completiontimeHistogramChartData: KeyValueData
+    tasksByType: PieChartData[]
   }
 }
 
@@ -218,6 +225,7 @@ const TaskCharts = () => {
       tasksList?.completiontimeHistogramChartData?.keys.map(secondsToDays) ||
       [],
   }
+  const tasksByTypeData = tasksList?.tasksByType
 
   const company = me?.currentCompany
   const breadcrumbsLinks = [
@@ -368,6 +376,11 @@ const TaskCharts = () => {
               axisBottomLegend={t("charts.days")}
               padding={0}
             />
+          </ChartGridItem>
+        )}
+        {tasksByTypeData && (
+          <ChartGridItem title={t("charts.tasksByType")}>
+            <PieChart data={tasksByTypeData} />
           </ChartGridItem>
         )}
       </Box>

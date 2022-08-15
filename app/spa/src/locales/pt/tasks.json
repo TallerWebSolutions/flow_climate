@@ -70,7 +70,8 @@
     "operational_math_risk_evolution_chart": "Evolução do Risco Matemático de Operação",
     "operational_math_risk_evolution_tooltip_label": "Período",
     "operational_math_risk_evolution_y_label": "Risco",
-    "histogramHits": "Tarefas"
+    "histogramHits": "Tarefas",
+    "tasksByType": "Tarefas por Tipo"
   },
   "list": {
     "form": {

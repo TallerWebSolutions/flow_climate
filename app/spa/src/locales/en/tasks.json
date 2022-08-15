@@ -70,7 +70,8 @@
     "operational_math_risk_evolution_chart": "Operational Math Risk Evolution",
     "operational_math_risk_evolution_tooltip_label": "Period",
     "operational_math_risk_evolution_y_label": "Risk",
-    "histogramHits": "Tasks"
+    "histogramHits": "Tasks",
+    "tasksByType": "Tasks by Type"
   },
   "list": {
     "form": {
