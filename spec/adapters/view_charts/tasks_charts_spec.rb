@@ -76,4 +76,29 @@ RSpec.describe ViewCharts::TasksCharts do
       end
     end
   end
+
+  describe '#tasks_by_type' do
+    context 'with data' do
+      it 'computes and extracts the information of the demands count' do
+        work_item_type = Fabricate :work_item_type, name: 'foo'
+        other_work_item_type = Fabricate :work_item_type, name: 'bar'
+
+        Fabricate :task, work_item_type: work_item_type
+        Fabricate :task, work_item_type: work_item_type
+        Fabricate :task, work_item_type: other_work_item_type
+        Fabricate :task, work_item_type: other_work_item_type
+        Fabricate :task, work_item_type: other_work_item_type
+
+        tasks_chart_adapter = described_class.new(Task.all, 3.weeks.ago, 3.weeks.from_now, 'week')
+
+        expect(tasks_chart_adapter.tasks_by_type).to eq([{ name: 'bar', y: 3 }, { name: 'foo', y: 2 }])
+      end
+    end
+
+    context 'with no data' do
+      subject(:tasks_by_type) { described_class.new(Demand.none, 3.weeks.ago, 3.weeks.from_now, 'week').tasks_by_type }
+
+      it { expect(tasks_by_type).to be_nil }
+    end
+  end
 end

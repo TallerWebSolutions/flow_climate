@@ -3,7 +3,8 @@
 module ViewCharts
   class TasksCharts
     attr_reader :start_date, :end_date, :x_axis, :throughput_array, :creation_array,
-                :completion_percentiles_on_time_array, :accumulated_completion_percentiles_on_time_array
+                :completion_percentiles_on_time_array, :accumulated_completion_percentiles_on_time_array,
+                :tasks_by_type
 
     def initialize(tasks_ids, start_date, end_date, period)
       start_attributes
@@ -18,6 +19,7 @@ module ViewCharts
       build_creation_array
       build_throughput_array
       build_tasks_completion_time_evolution
+      build_tasks_by_type
     end
 
     private
@@ -98,6 +100,13 @@ module ViewCharts
     def read_completion_time_week_data(start_date, end_date)
       week_tasks_data = @tasks_in_chart.where('tasks.end_date BETWEEN :start_date AND :end_date', start_date: start_date, end_date: end_date)
       Stats::StatisticsService.instance.percentile(80, week_tasks_data.map(&:seconds_to_complete))
+    end
+
+    def build_tasks_by_type
+      tasks_grouped = Task.where(id: @tasks_in_chart.map(&:id)).joins(:work_item_type).group('work_item_types.name').count.sort_by { |_key, value| value }.reverse.to_h
+
+      @tasks_by_type = []
+      tasks_grouped.each { |type_grouped, group_count| @tasks_by_type << { name: type_grouped, y: group_count } }
     end
   end
 end
