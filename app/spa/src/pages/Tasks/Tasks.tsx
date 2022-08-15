@@ -1,22 +1,10 @@
 import { Box } from "@mui/material"
 import { useState, useContext } from "react"
 import { useTranslation } from "react-i18next"
+
 import TaskList from "./List"
 import { MeContext } from "../../contexts/MeContext"
-import TasksPage from "../../components/TasksPage"
-
-export type TaskFilters = {
-  page: number
-  limit?: number
-  status?: string
-  title?: string
-  teamId?: string
-  projectId?: string
-  initiativeId?: string
-  fromDate?: string | null
-  untilDate?: string | null
-  portfolioUnit?: string
-}
+import TasksPage, { TaskFilters } from "../../modules/task/components/TasksPage"
 
 const Tasks = () => {
   const { t } = useTranslation(["tasks"])

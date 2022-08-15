@@ -15,11 +15,10 @@ import { secondsToDays } from "../../lib/date"
 import { openWindow } from "../../lib/func"
 import { Task } from "../../modules/task/task.types"
 import { normalizeTasksFlowChart } from "../../modules/task/normalize"
-import TasksPage from "../../components/TasksPage"
+import TasksPage, { TaskFilters } from "../../modules/task/components/TasksPage"
 import LineChartTooltip from "../../components/charts/tooltips/LineChartTooltip"
 import { ChartGridItem } from "../../components/charts/ChartGridItem"
 import { ChartAxisData, KeyValueData } from "../../modules/charts/charts.types"
-import { TaskFilters } from "./Tasks"
 import PieChart, { PieChartData } from "../../components/charts/PieChart"
 import ControlChart from "../../modules/charts/controlChart.types"
 
@@ -393,6 +392,9 @@ const TaskCharts = () => {
             <PieChart data={tasksByTypeData} />
           </ChartGridItem>
         )}
+        <ChartGridItem title={t("charts.taksByProject")}>
+          <BarChart data={[]} keys={["value"]} indexBy="key" />
+        </ChartGridItem>
       </Box>
     </TasksPage>
   )

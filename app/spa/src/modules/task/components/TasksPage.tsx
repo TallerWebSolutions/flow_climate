@@ -1,22 +1,34 @@
 import SearchIcon from "@mui/icons-material/Search"
 import {
-  InputLabel,
-  Select,
   Box,
   Button,
-  Input,
   FormGroup,
   Grid,
+  Input,
+  InputLabel,
+  Select,
 } from "@mui/material"
 import { Dispatch, ReactNode, SetStateAction, useContext } from "react"
 import { useTranslation } from "react-i18next"
-
-import { MeContext } from "../contexts/MeContext"
-import { Tabs } from "./Tabs"
-import BasicPage, { BasicPageProps } from "./BasicPage"
-import { TaskFilters } from "../pages/Tasks/Tasks"
-import { FormElement } from "./ui/Form"
 import { FieldValues, useForm } from "react-hook-form"
+
+import { MeContext } from "../../../contexts/MeContext"
+import BasicPage, { BasicPageProps } from "../../../components/BasicPage"
+import { Tabs } from "../../../components/Tabs"
+import { FormElement } from "../../../components/ui/Form"
+
+export type TaskFilters = {
+  page: number
+  limit?: number
+  status?: string
+  title?: string
+  teamId?: string
+  projectId?: string
+  initiativeId?: string
+  fromDate?: string | null
+  untilDate?: string | null
+  portfolioUnit?: string
+}
 
 type TaskPageProps = {
   children: ReactNode | ReactNode[]

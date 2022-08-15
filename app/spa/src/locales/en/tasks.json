@@ -71,7 +71,8 @@
     "operational_math_risk_evolution_tooltip_label": "Period",
     "operational_math_risk_evolution_y_label": "Risk",
     "histogramHits": "Tasks",
-    "tasksByType": "Tasks by Type"
+    "tasksByType": "Tasks by Type",
+    "taksByProject": "Tasks by Project"
   },
   "list": {
     "form": {

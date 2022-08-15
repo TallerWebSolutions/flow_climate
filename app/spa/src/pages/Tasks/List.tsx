@@ -14,11 +14,12 @@ import {
 } from "@mui/material"
 import { ChangeEvent, useContext } from "react"
 import { useTranslation } from "react-i18next"
+
+import { TaskFilters } from "../../modules/task/components/TasksPage"
 import { MeContext } from "../../contexts/MeContext"
 import { secondsToReadbleDate } from "../../lib/date"
 import { Task } from "../../modules/task/task.types"
 import User from "../../modules/user/user.types"
-import { TaskFilters } from "./Tasks"
 import DateLocale from "../../components/ui/DateLocale"
 
 export const TASKS_LIST_QUERY = gql`
