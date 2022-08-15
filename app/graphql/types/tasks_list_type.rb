@@ -18,6 +18,7 @@ module Types
     field :in_progress_lead_time_p95, Float, null: false
 
     field :completiontime_histogram_chart_data, Types::Charts::LeadTimeHistogramDataType, null: true
+    field :control_chart, Types::Charts::ControlChartType, null: true
     field :tasks_by_type, [Types::Charts::PieChartType], null: true
 
     field :tasks_charts, Types::Charts::TasksChartsType, null: false do
@@ -33,13 +34,26 @@ module Types
       Stats::StatisticsService.instance.completiontime_histogram_hash(finished_tasks.map(&:seconds_to_complete).map { |completiontime| completiontime.round(3) })
     end
 
+    def control_chart
+      tasks_finished = object_tasks.finished.order(end_date: :asc)
+      completion_times = tasks_finished.map(&:seconds_to_complete)
+      completion_time_p65 = Stats::StatisticsService.instance.percentile(65, completion_times)
+      completion_time_p80 = Stats::StatisticsService.instance.percentile(80, completion_times)
+      completion_time_p95 = Stats::StatisticsService.instance.percentile(95, completion_times)
+
+      { x_axis: tasks_finished.map(&:external_id), lead_time_p65: completion_time_p65, lead_time_p80: completion_time_p80, lead_time_p95: completion_time_p95, lead_times: completion_times }
+    end
+
     def tasks_by_type
-      tasks_to_chart = Task.where(id: object.tasks.map(&:id))
-      tasks_chart = ViewCharts::TasksCharts.new(tasks_to_chart, start_date, end_date, 'weekly')
+      tasks_chart = ViewCharts::TasksCharts.new(object_tasks, start_date, end_date, 'weekly')
       tasks_chart.tasks_by_type
     end
 
     private
+
+    def object_tasks
+      Task.where(id: object.tasks.map(&:id))
+    end
 
     def end_date
       [object.tasks.map(&:created_date).max, object.tasks.filter_map(&:end_date).max].compact.max

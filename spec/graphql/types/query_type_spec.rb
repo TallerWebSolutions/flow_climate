@@ -989,6 +989,13 @@ RSpec.describe Types::QueryType do
             label
             value
           }
+          controlChart {
+            xAxis
+            leadTimes
+            leadTimeP65
+            leadTimeP80
+            leadTimeP95
+          }
         }
       })
     end
@@ -1023,7 +1030,8 @@ RSpec.describe Types::QueryType do
               'accumulatedCompletionPercentilesOnTimeArray' => []
             },
             'completiontimeHistogramChartData' => { 'keys' => [], 'values' => [] },
-            'tasksByType' => []
+            'tasksByType' => [],
+            'controlChart' => { 'leadTimeP65' => 0.0, 'leadTimeP80' => 0.0, 'leadTimeP95' => 0.0, 'leadTimes' => [], 'xAxis' => [] }
           }
         )
       end
@@ -1041,10 +1049,10 @@ RSpec.describe Types::QueryType do
           work_item_type = Fabricate :work_item_type, name: 'aaa'
           other_work_item_type = Fabricate :work_item_type, name: 'bbb'
 
-          first_task = Fabricate :task, demand: first_demand, work_item_type: work_item_type, title: 'foo BaR', created_date: 2.days.ago, end_date: 2.days.ago
-          second_task = Fabricate :task, demand: second_demand, work_item_type: work_item_type, title: 'BaR', created_date: 1.day.ago, end_date: 1.hour.ago
-          third_task = Fabricate :task, demand: second_demand, work_item_type: other_work_item_type, title: 'BaR', created_date: 1.day.ago, end_date: nil
-          Fabricate :task, demand: second_demand, title: 'BaRco', work_item_type: work_item_type, created_date: 3.days.ago, end_date: nil
+          first_task = Fabricate :task, demand: first_demand, work_item_type: work_item_type, title: 'foo BaR', external_id: '555', created_date: 2.days.ago, end_date: 2.days.ago
+          second_task = Fabricate :task, demand: second_demand, work_item_type: work_item_type, title: 'BaR', external_id: '123', created_date: 1.day.ago, end_date: 1.hour.ago
+          third_task = Fabricate :task, demand: second_demand, work_item_type: other_work_item_type, title: 'BaR', external_id: '111', created_date: 1.day.ago, end_date: nil
+          Fabricate :task, demand: second_demand, title: 'BaRco', external_id: '444', work_item_type: work_item_type, created_date: 3.days.ago, end_date: nil
 
           result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
 
@@ -1069,6 +1077,7 @@ RSpec.describe Types::QueryType do
           )
 
           expect(result.dig('data', 'tasksList')['tasksByType']).to match_array([{ 'label' => 'aaa', 'value' => 2 }, { 'label' => 'bbb', 'value' => 1 }])
+          expect(result.dig('data', 'tasksList')['controlChart']).to eq({ 'leadTimeP65' => 53_820.0, 'leadTimeP80' => 66_240.0, 'leadTimeP95' => 78_660.0, 'leadTimes' => [0.0, 82_800.0], 'xAxis' => %w[555 123] })
 
           expect(result.dig('data', 'tasksList', 'tasks')).to match_array(
             [first_task, second_task, third_task].map do |task|
@@ -1264,7 +1273,7 @@ RSpec.describe Types::QueryType do
           }
           leadTimeControlChartData {
             xAxis
-            yAxis
+            leadTimes
             leadTimeP65
             leadTimeP80
             leadTimeP95
@@ -1409,7 +1418,7 @@ RSpec.describe Types::QueryType do
                                                          },
                                                          'leadTimeControlChartData' => {
                                                            'xAxis' => [other_demand_finished.external_id, demand_finished.external_id],
-                                                           'yAxis' => [other_demand_finished.leadtime.to_f, demand_finished.leadtime.to_f],
+                                                           'leadTimes' => [other_demand_finished.leadtime.to_f, demand_finished.leadtime.to_f],
                                                            'leadTimeP65' => lead_time_p65,
                                                            'leadTimeP80' => lead_time_p80,
                                                            'leadTimeP95' => lead_time_p95

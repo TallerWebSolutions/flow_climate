@@ -42,7 +42,7 @@ module Types
     end
 
     field :average_pull_interval_data, Types::Charts::SimpleDateChartDataType, null: true
-    field :lead_time_control_chart_data, Types::Charts::LeadTimeControlChartDataType, null: true
+    field :lead_time_control_chart_data, Types::Charts::ControlChartType, null: true
     field :lead_time_histogram_chart_data, Types::Charts::LeadTimeHistogramDataType, null: true
     field :member_effort_data, Types::Charts::SimpleDateChartDataType, null: true
     field :member_throughput_data, [Int], null: true do
