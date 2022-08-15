@@ -4,7 +4,6 @@ import { SliceTooltipProps } from "@nivo/line"
 import { useContext, useState } from "react"
 import { useTranslation } from "react-i18next"
 
-import { keyValueToAxisData } from "../../lib/charts"
 import { MeContext } from "../../contexts/MeContext"
 import { BarChart } from "../../components/charts/BarChart"
 import { LineChart } from "../../components/charts/LineChart"
@@ -22,6 +21,7 @@ import { ChartGridItem } from "../../components/charts/ChartGridItem"
 import { ChartAxisData, KeyValueData } from "../../modules/charts/charts.types"
 import { TaskFilters } from "./Tasks"
 import PieChart, { PieChartData } from "../../components/charts/PieChart"
+import ControlChart from "../../modules/charts/controlChart.types"
 
 const TASKS_CHARTS_QUERY = gql`
   query TasksCharts(
@@ -57,7 +57,13 @@ const TASKS_CHARTS_QUERY = gql`
         secondsToComplete
         partialCompletionTime
       }
-
+      controlChart {
+        leadTimeP65
+        leadTimeP80
+        leadTimeP95
+        leadTimes
+        xAxis
+      }
       tasksCharts {
         xAxis
         creation: creationArray
@@ -105,7 +111,8 @@ export type TasksChartsDTO = {
     inProgressLeadTimeP80: number
     inProgressLeadTimeP95: number
     completiontimeHistogramChartData: KeyValueData
-    tasksByType: PieChartData[]
+    tasksByType?: PieChartData[]
+    controlChart?: ControlChart
   }
 }
 
@@ -162,13 +169,16 @@ const TaskCharts = () => {
     }),
   }
 
+  const controlChart = data?.tasksList.controlChart
   const completionTimeChartData = {
-    keys:
-      taskList?.completiontimeHistogramChartData.keys
-        .map(secondsToDays)
+    xAxis: controlChart?.xAxis.slice(-1000) || [],
+    yAxis:
+      controlChart?.leadTimes
+        .map((lt) => secondsToDays(Number(lt)))
         .slice(-1000) || [],
-    values:
-      taskList?.completiontimeHistogramChartData.values.slice(-1000) || [],
+    leadTimeP65: secondsToDays(Number(controlChart?.leadTimeP65)),
+    leadTimeP80: secondsToDays(Number(controlChart?.leadTimeP80)),
+    leadTimeP95: secondsToDays(Number(controlChart?.leadTimeP95)),
   }
 
   const unfinishedTasks = taskList?.tasks
@@ -258,7 +268,7 @@ const TaskCharts = () => {
           >
             <ScatterChart
               axisLeftLegend={t("charts.days")}
-              data={keyValueToAxisData(completionTimeChartData)}
+              data={completionTimeChartData}
               markers={[
                 deliveredLeadTimeP65Marker,
                 deliveredLeadTimeP80Marker,

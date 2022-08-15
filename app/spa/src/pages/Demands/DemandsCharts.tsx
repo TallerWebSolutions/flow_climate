@@ -50,7 +50,6 @@ const DEMANDS_CHART_QUERY = gql`
         leadTimeP65
         leadTimeP80
         leadTimeP95
-
         leadTimes
         xAxis
       }
