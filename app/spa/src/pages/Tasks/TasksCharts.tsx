@@ -1,5 +1,5 @@
 import { gql, useQuery } from "@apollo/client"
-import { Box, Grid } from "@mui/material"
+import { Grid } from "@mui/material"
 import { SliceTooltipProps } from "@nivo/line"
 import { useContext, useState } from "react"
 import { useTranslation } from "react-i18next"
