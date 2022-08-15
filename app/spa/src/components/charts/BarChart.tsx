@@ -18,6 +18,9 @@ type BarChartProps = {
   padding?: number
   groupMode?: "stacked" | "grouped"
   showLegends?: boolean
+  height?: number
+  marginBottom?: number
+  marginLeft?: number
 }
 
 export const BarChart = ({
@@ -31,16 +34,19 @@ export const BarChart = ({
   padding,
   groupMode = "stacked",
   showLegends = true,
+  height = 420,
+  marginBottom = 80,
+  marginLeft = 60,
 }: BarChartProps) => {
   const chartData = Array.isArray(data) ? data : keyValueToHistogramData(data)
 
   return (
-    <Box height={420}>
+    <Box height={height}>
       <ResponsiveBar
         data={chartData}
         indexBy={indexBy}
         keys={keys}
-        margin={{ top: 50, right: 50, bottom: 80, left: 60 }}
+        margin={{ top: 50, right: 50, bottom: marginBottom, left: marginLeft }}
         groupMode={groupMode}
         padding={Number.isNaN(padding) ? 0.3 : padding}
         colors={{ scheme: "paired" }}

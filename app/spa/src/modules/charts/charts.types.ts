@@ -24,3 +24,8 @@ export type KeyValueData = {
   keys: (number | string)[]
   values: (number | string)[]
 }
+
+export type SimpleChartData = {
+  label: string
+  value: number
+}

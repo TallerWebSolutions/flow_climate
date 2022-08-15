@@ -1,5 +1,5 @@
 import { gql, useQuery } from "@apollo/client"
-import { Box } from "@mui/material"
+import { Box, Grid } from "@mui/material"
 import { SliceTooltipProps } from "@nivo/line"
 import { useContext, useState } from "react"
 import { useTranslation } from "react-i18next"
@@ -18,8 +18,12 @@ import { normalizeTasksFlowChart } from "../../modules/task/normalize"
 import TasksPage, { TaskFilters } from "../../modules/task/components/TasksPage"
 import LineChartTooltip from "../../components/charts/tooltips/LineChartTooltip"
 import { ChartGridItem } from "../../components/charts/ChartGridItem"
-import { ChartAxisData, KeyValueData } from "../../modules/charts/charts.types"
-import PieChart, { PieChartData } from "../../components/charts/PieChart"
+import {
+  ChartAxisData,
+  KeyValueData,
+  SimpleChartData,
+} from "../../modules/charts/charts.types"
+import PieChart from "../../components/charts/PieChart"
 import ControlChart from "../../modules/charts/controlChart.types"
 
 const TASKS_CHARTS_QUERY = gql`
@@ -83,8 +87,11 @@ const TASKS_CHARTS_QUERY = gql`
         keys
         values
       }
-
       tasksByType {
+        label
+        value
+      }
+      tasksByProject {
         label
         value
       }
@@ -110,7 +117,8 @@ export type TasksChartsDTO = {
     inProgressLeadTimeP80: number
     inProgressLeadTimeP95: number
     completiontimeHistogramChartData: KeyValueData
-    tasksByType?: PieChartData[]
+    tasksByType?: SimpleChartData[]
+    tasksByProject?: SimpleChartData[]
     controlChart?: ControlChart
   }
 }
@@ -235,6 +243,7 @@ const TaskCharts = () => {
       [],
   }
   const tasksByTypeData = tasksList?.tasksByType
+  const tasksByProjectData = tasksList?.tasksByProject
 
   const company = me?.currentCompany
   const breadcrumbsLinks = [
@@ -250,16 +259,7 @@ const TaskCharts = () => {
       loading={loading}
       charts
     >
-      <Box
-        sx={{
-          display: "grid",
-          gridTemplateColumns: "repeat(2, 1fr)",
-          gridTemplateRows: "repeat(2, 1fr)",
-          gridColumnGap: "16px",
-          gridRowGap: "20px",
-          mb: 6,
-        }}
-      >
+      <Grid container>
         {completionTimeChartData && (
           <ChartGridItem
             title={t("charts.control_completion_time_title")}
@@ -392,10 +392,19 @@ const TaskCharts = () => {
             <PieChart data={tasksByTypeData} />
           </ChartGridItem>
         )}
-        <ChartGridItem title={t("charts.taksByProject")}>
-          <BarChart data={[]} keys={["value"]} indexBy="key" />
-        </ChartGridItem>
-      </Box>
+        {tasksByProjectData && (
+          <ChartGridItem title={t("charts.taksByProject")} columns={12}>
+            <BarChart
+              data={tasksByProjectData}
+              keys={["value"]}
+              indexBy="label"
+              marginBottom={160}
+              marginLeft={160}
+              height={640}
+            />
+          </ChartGridItem>
+        )}
+      </Grid>
     </TasksPage>
   )
 }

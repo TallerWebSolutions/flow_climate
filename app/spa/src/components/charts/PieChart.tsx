@@ -1,17 +1,12 @@
 import { Box } from "@mui/material"
 import { ResponsivePieCanvas } from "@nivo/pie"
-
-export type PieChartData = {
-  label: string
-  value: number
-}
+import { SimpleChartData } from "../../modules/charts/charts.types"
 
 type PieChartProps = {
-  // @see https://github.com/plouc/nivo/issues/197#issuecomment-1215065645
-  data: PieChartData[]
+  data: SimpleChartData[]
 }
 
-const pieDataToDatum = (data: PieChartData[]) =>
+const pieDataToDatum = (data: SimpleChartData[]) =>
   data.map((item) => ({ id: item.label, value: item.value }))
 
 const PieChart = ({ data }: PieChartProps) => (
