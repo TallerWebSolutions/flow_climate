@@ -5,7 +5,8 @@ class TasksRepository
 
   def search(company_id, page_number, limit = 0, search_fields = {})
     tasks = search_tasks(company_id, search_fields[:initiative_id], search_fields[:project_id], search_fields[:team_id],
-                         search_fields[:status], search_fields[:title], search_fields[:from_date], search_fields[:until_date], search_fields[:portfolio_unit_name])
+                         search_fields[:status], search_fields[:title], search_fields[:from_date], search_fields[:until_date],
+                         search_fields[:portfolio_unit_name], search_fields[:task_type])
 
     return TasksList.new(tasks.count, tasks.finished.count, true, 1, tasks) if tasks.blank?
 
@@ -25,7 +26,7 @@ class TasksRepository
                   tasks_page)
   end
 
-  def search_tasks(company_id, initiative_id, project_id, team_id, status, title, from_date, until_date, portfolio_unit_name)
+  def search_tasks(company_id, initiative_id, project_id, team_id, status, title, from_date, until_date, portfolio_unit_name, task_type)
     company = Company.find(company_id)
     tasks = company.tasks.not_discarded_until(Time.zone.now)
 
@@ -35,6 +36,7 @@ class TasksRepository
     tasks = search_by_team(tasks, team_id)
     tasks = search_by_status(tasks, status)
     tasks = search_by_portfolio_unit(company, tasks, portfolio_unit_name)
+    tasks = search_by_task_type(company, tasks, task_type)
 
     search_by_date(tasks, status, from_date, until_date)
   end
@@ -74,6 +76,16 @@ class TasksRepository
     unit_tree = portfolio_unit_tree(portfolio_units)
 
     tasks.joins(demand: :portfolio_unit).where(demands: { portfolio_unit: unit_tree })
+  end
+
+  def search_by_task_type(company, tasks, task_type_name)
+    return tasks if task_type_name.blank?
+
+    work_item_types = company.work_item_types.where('LOWER(work_item_types.name) = LOWER(:type_name) AND work_item_types.item_level = 1', type_name: task_type_name)
+
+    return tasks if work_item_types.blank?
+
+    tasks.where(work_item_type: work_item_types)
   end
 
   def portfolio_unit_tree(portfolio_units)

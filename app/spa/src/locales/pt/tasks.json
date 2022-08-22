@@ -1,6 +1,7 @@
 {
   "tasks": "Tarefas",
   "tasks_list": "Lista de tarefas",
+  "tasks_chart": "Gráfico das tarefas",
   "finished_tasks": "Finalizadas",
   "tasks_table": {
     "demandTitle": "Demanda",
@@ -83,6 +84,10 @@
       "initiativeId": "Iniciativa",
       "projectId": "Projeto",
       "teamId": "Time",
+      "taskType": "Tipo",
+      "button": {
+        "label": "Search"
+      },
       "status": {
         "title": "Status",
         "all": "Todas as Tarefas"

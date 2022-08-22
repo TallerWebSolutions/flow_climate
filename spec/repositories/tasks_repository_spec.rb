@@ -27,11 +27,14 @@ RSpec.describe TasksRepository, type: :repository do
         third_demand = Fabricate :demand, company: company, project: second_project, team: team, portfolio_unit: parent_unit
         fourth_demand = Fabricate :demand, company: company, project: third_project, team: other_team, portfolio_unit: other_portfolio_unit
 
-        first_task = Fabricate :task, demand: first_demand, title: 'foo BaR', created_date: 3.days.ago, end_date: 2.days.ago
-        second_task = Fabricate :task, demand: second_demand, title: 'BaR', created_date: 2.days.ago, end_date: 1.day.ago
-        third_task = Fabricate :task, demand: third_demand, title: 'xpTo', created_date: 1.day.ago, end_date: nil
-        fourth_task = Fabricate :task, demand: fourth_demand, title: 'xpTo bleh', created_date: 3.days.ago, end_date: 2.days.ago
-        Fabricate :task, title: 'BaR', created_date: 3.days.ago, end_date: 2.days.ago
+        work_item_type = Fabricate :work_item_type, company: company, name: 'OOH', item_level: :task
+        other_work_item_type = Fabricate :work_item_type, company: company, name: 'bbb', item_level: :task
+
+        first_task = Fabricate :task, demand: first_demand, work_item_type: work_item_type, title: 'foo BaR', created_date: 3.days.ago, end_date: 2.days.ago
+        second_task = Fabricate :task, demand: second_demand, work_item_type: work_item_type, title: 'BaR', created_date: 2.days.ago, end_date: 1.day.ago
+        third_task = Fabricate :task, demand: third_demand, work_item_type: other_work_item_type, title: 'xpTo', created_date: 1.day.ago, end_date: nil
+        fourth_task = Fabricate :task, demand: fourth_demand, work_item_type: other_work_item_type, title: 'xpTo bleh', created_date: 3.days.ago, end_date: 2.days.ago
+        Fabricate :task, title: 'BaR', created_date: 3.days.ago, end_date: 2.days.ago, work_item_type: other_work_item_type
 
         tasks_search = described_class.instance.search(company.id, 1, 2, { portfolio_unit_name: 'rEGistration' })
         expect(tasks_search.total_count).to eq 3
@@ -53,6 +56,7 @@ RSpec.describe TasksRepository, type: :repository do
         expect(described_class.instance.search(company.id, 1, 5, from_date: 2.days.ago).tasks).to match_array [first_task, second_task, third_task, fourth_task]
         expect(described_class.instance.search(company.id, 1, 5, until_date: Time.zone.now).tasks).to match_array [first_task, second_task, third_task, fourth_task]
         expect(described_class.instance.search(company.id, 1, 5, status: 'finished', from_date: 2.days.ago, until_date: Time.zone.now).tasks).to match_array [first_task, second_task, fourth_task]
+        expect(described_class.instance.search(company.id, 1, 5, task_type: 'ooh').tasks).to match_array [first_task, second_task]
       end
     end
 

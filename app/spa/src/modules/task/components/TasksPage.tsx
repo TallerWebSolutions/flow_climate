@@ -28,6 +28,7 @@ export type TaskFilters = {
   fromDate?: string | null
   untilDate?: string | null
   portfolioUnit?: string
+  taskType?: string
 }
 
 type TaskPageProps = {
@@ -52,12 +53,12 @@ const TasksPage = ({
 
   const taskTabs = [
     {
-      label: t("tabs.charts"),
-      to: `/companies/${companySlug}/tasks/charts`,
-    },
-    {
       label: t("tabs.list"),
       to: `/companies/${companySlug}/tasks`,
+    },
+    {
+      label: t("tabs.charts"),
+      to: `/companies/${companySlug}/tasks/charts`,
     },
   ]
 
@@ -87,7 +88,7 @@ const TasksPage = ({
         >
           <Tabs
             tabs={taskTabs}
-            currentPath={charts ? taskTabs[0].to : taskTabs[1].to}
+            currentPath={charts ? taskTabs[1].to : taskTabs[0].to}
           />
         </Box>
       )}
@@ -97,6 +98,12 @@ const TasksPage = ({
             <FormElement>
               <InputLabel htmlFor="title">{t("list.form.search")}</InputLabel>
               <Input {...register("title")} defaultValue={filters.title} />
+            </FormElement>
+            <FormElement>
+              <InputLabel htmlFor="taskType">
+                {t("list.form.taskType")}
+              </InputLabel>
+              <Input {...register("taskType")} defaultValue={filters.title} />
             </FormElement>
             <FormElement>
               <InputLabel htmlFor="fromDate" shrink>
@@ -213,6 +220,7 @@ const TasksPage = ({
             <FormElement>
               <Button sx={{ alignSelf: "flex-start" }} type="submit">
                 <SearchIcon fontSize="large" color="primary" />
+                {t("list.form.button.label")}
               </Button>
             </FormElement>
           </Grid>

@@ -34,6 +34,7 @@ export const TASKS_LIST_QUERY = gql`
     $untilDate: ISO8601Date
     $fromDate: ISO8601Date
     $portfolioUnit: String
+    $taskType: String
   ) {
     tasksList(
       pageNumber: $page
@@ -46,6 +47,7 @@ export const TASKS_LIST_QUERY = gql`
       untilDate: $untilDate
       fromDate: $fromDate
       portfolioUnit: $portfolioUnit
+      taskType: $taskType
     ) {
       totalCount
       totalDeliveredCount

@@ -342,140 +342,140 @@ RSpec.describe Types::QueryType do
 
           query =
             %(query {
-        me {
-          id
-          fullName
-          companies {
-            id
-            name
-            slug
-          }
-          avatar {
-            imageSource
-          }
-          admin
-        }
-        project(id: #{project.id}) {
-          id
-          name
-          startDate
-          endDate
-          deadlinesChangeCount
-          discoveredScope
-          quality
-          company {
-            id
-            name
-          }
-          projectConsolidations {
-            id
-            leadTimeHistogramBinMin
-            leadTimeHistogramBinMax
-            leadTimeMinMonth
-            leadTimeMaxMonth
-            interquartileRange
-            leadTimeP25
-            leadTimeP75
-            leadTimeP75
-            projectThroughputHoursAdditional
-            projectThroughputHoursAdditionalInMonth
-          }
-          pastWeeks
-          remainingWork
-          currentWeeksByLittleLaw
-          currentMonteCarloWeeksMin
-          currentMonteCarloWeeksMax
-          currentMonteCarloWeeksStdDev
-          currentTeamBasedRisk
-          currentRiskToDeadline
-          remainingDays
-          running
-          leadTimeP65
-          leadTimeP95
-          numberOfDemandsDelivered
-          numberOfDemands
-          numberOfDownstreamDemands
-          demandBlocks {
-            id
-          }
-          unscoredDemands {
-            id
-          }
-          demandsFinishedWithLeadtime {
-            id
-          }
-          discardedDemands {
-            id
-          }
-          hoursPerStageChartData {
-            xAxis
-            yAxis
-          }
-          leadTimeBreakdown {
-            xAxis
-            yAxis
-          }
-          projectConsolidationsWeekly {
-            id
-          }
-          projectConsolidationsLastMonth {
-            id
-          }
-          lastProjectConsolidationsWeekly {
-            id
-          }
-          demandsFlowChartData {
-            committedChartData
-            creationChartData
-            pullTransactionRate
-            throughputChartData
-          }
-          cumulativeFlowChartData {
-            xAxis
-            yAxis {
-              name
-              data
-            }
-          }
-          leadTimeHistogramData {
-            keys
-            values
-          }
-          projectMembers {
-            demandsCount
-            memberName
-          }
-          tasksBurnup {
-            xAxis
-            idealBurn
-            currentBurn
-            scope
-          }
-          demandsBurnup {
-            xAxis
-            idealBurn
-            currentBurn
-            scope
-          }
-          hoursBurnup {
-            xAxis
-            idealBurn
-            currentBurn
-            scope
-          }
-        }
+              me {
+                id
+                fullName
+                companies {
+                  id
+                  name
+                  slug
+                }
+                avatar {
+                  imageSource
+                }
+                admin
+              }
+              project(id: #{project.id}) {
+                id
+                name
+                startDate
+                endDate
+                deadlinesChangeCount
+                discoveredScope
+                quality
+                company {
+                  id
+                  name
+                }
+                projectConsolidations {
+                  id
+                  leadTimeHistogramBinMin
+                  leadTimeHistogramBinMax
+                  leadTimeMinMonth
+                  leadTimeMaxMonth
+                  interquartileRange
+                  leadTimeP25
+                  leadTimeP75
+                  leadTimeP75
+                  projectThroughputHoursAdditional
+                  projectThroughputHoursAdditionalInMonth
+                }
+                pastWeeks
+                remainingWork
+                currentWeeksByLittleLaw
+                currentMonteCarloWeeksMin
+                currentMonteCarloWeeksMax
+                currentMonteCarloWeeksStdDev
+                currentTeamBasedRisk
+                currentRiskToDeadline
+                remainingDays
+                running
+                leadTimeP65
+                leadTimeP95
+                numberOfDemandsDelivered
+                numberOfDemands
+                numberOfDownstreamDemands
+                demandBlocks {
+                  id
+                }
+                unscoredDemands {
+                  id
+                }
+                demandsFinishedWithLeadtime {
+                  id
+                }
+                discardedDemands {
+                  id
+                }
+                hoursPerStageChartData {
+                  xAxis
+                  yAxis
+                }
+                leadTimeBreakdown {
+                  xAxis
+                  yAxis
+                }
+                projectConsolidationsWeekly {
+                  id
+                }
+                projectConsolidationsLastMonth {
+                  id
+                }
+                lastProjectConsolidationsWeekly {
+                  id
+                }
+                demandsFlowChartData {
+                  committedChartData
+                  creationChartData
+                  pullTransactionRate
+                  throughputChartData
+                }
+                cumulativeFlowChartData {
+                  xAxis
+                  yAxis {
+                    name
+                    data
+                  }
+                }
+                leadTimeHistogramData {
+                  keys
+                  values
+                }
+                projectMembers {
+                  demandsCount
+                  memberName
+                }
+                tasksBurnup {
+                  xAxis
+                  idealBurn
+                  currentBurn
+                  scope
+                }
+                demandsBurnup {
+                  xAxis
+                  idealBurn
+                  currentBurn
+                  scope
+                }
+                hoursBurnup {
+                  xAxis
+                  idealBurn
+                  currentBurn
+                  scope
+                }
+              }
 
-        projectConsolidations(projectId: #{project.id}) {
-          id
-          leadTimeHistogramBinMin
-          leadTimeHistogramBinMax
-          leadTimeMinMonth
-          leadTimeMaxMonth
-          interquartileRange
-          leadTimeP25
-          leadTimeP75
-        }
-      })
+              projectConsolidations(projectId: #{project.id}) {
+                id
+                leadTimeHistogramBinMin
+                leadTimeHistogramBinMax
+                leadTimeMinMonth
+                leadTimeMaxMonth
+                interquartileRange
+                leadTimeP25
+                leadTimeP75
+              }
+          })
 
           user = Fabricate :user
 
@@ -1113,6 +1113,37 @@ RSpec.describe Types::QueryType do
             end
           )
         end
+      end
+    end
+
+    context 'with search' do
+      let(:search_query) do
+        %(query {
+          tasksList(pageNumber: 1, limit: 3, taskType: "ooh") {
+            tasks {
+              id
+            }
+          }
+        })
+      end
+
+      it 'returns the tasks using the query' do
+        Fabricate :work_item_type, name: 'OOH', item_level: :demand
+
+        work_item_type = Fabricate :work_item_type, company: company, name: 'OOH', item_level: :task
+        other_work_item_type = Fabricate :work_item_type, company: company, name: 'bbb', item_level: :task
+
+        first_task = Fabricate :task, demand: first_demand, work_item_type: work_item_type, title: 'foo BaR'
+        Fabricate :task, demand: second_demand, work_item_type: other_work_item_type, title: 'BaR'
+
+        user = Fabricate :user, companies: [company], last_company_id: company.id
+        context = {
+          current_user: user
+        }
+
+        result = FlowClimateSchema.execute(search_query, variables: nil, context: context).as_json
+        expect(result.dig('data', 'tasksList', 'tasks').count).to eq 1
+        expect(result.dig('data', 'tasksList', 'tasks').first['id']).to eq first_task.id.to_s
       end
     end
   end
