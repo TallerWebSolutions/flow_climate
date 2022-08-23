@@ -188,6 +188,16 @@ coca:
         external_url: "External Link"
       slack_configuration:
         enums:
+          info_type:
+            average_demand_cost: "Average Deliverable Cost"
+            current_week_throughput: "Week Throughput"
+            last_week_delivered_demands_info: "Last Week TH"
+            demands_wip_info: "WiP Deliverables"
+            outdated_demands: "Late Deliverables"
+            failure_load: "Failure Load"
+            demand_state_changed: "State Changed"
+            item_assigned: "Deliverable Assigned"
+            demand_blocked: "Deliverable Blocks"
           weekday_to_notify:
             all_weekdays: "All"
             monday: "Monday"
