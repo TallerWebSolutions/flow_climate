@@ -405,10 +405,10 @@ GEM
     sexp_processor (4.16.1)
     shoulda-matchers (5.1.0)
       activesupport (>= 5.2.0)
-    sidekiq (6.4.2)
+    sidekiq (6.5.5)
       connection_pool (>= 2.2.2)
       rack (~> 2.0)
-      redis (>= 4.2.0)
+      redis (>= 4.5.0)
     sidekiq-limit_fetch (4.3.1)
       redis (>= 4.6.0)
       sidekiq (>= 4)
@@ -530,7 +530,7 @@ DEPENDENCIES
   rubocop-rspec
   rubycritic
   shoulda-matchers
-  sidekiq (= 6.4.2)
+  sidekiq
   sidekiq-limit_fetch
   simplecov
   slack-notifier
