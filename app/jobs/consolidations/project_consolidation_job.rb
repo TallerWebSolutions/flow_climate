@@ -2,7 +2,7 @@
 
 module Consolidations
   class ProjectConsolidationJob < ApplicationJob
-    queue_as :consolidations
+    queue_as :low
 
     def perform(project, cache_date = Time.zone.today)
       end_of_day = cache_date.end_of_day

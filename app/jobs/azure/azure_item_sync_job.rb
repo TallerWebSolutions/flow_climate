@@ -1,6 +1,6 @@
 module Azure
   class AzureItemSyncJob < ApplicationJob
-    queue_as :coca_azure
+    queue_as :default
 
     def perform(external_id, azure_account, azure_project, user_email = nil, user_name = nil, demand_url = nil)
       started_time = Time.zone.now

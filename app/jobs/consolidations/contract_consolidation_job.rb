@@ -2,7 +2,7 @@
 
 module Consolidations
   class ContractConsolidationJob < ApplicationJob
-    queue_as :consolidations
+    queue_as :low
 
     def perform(contract)
       contract_start = contract.start_date

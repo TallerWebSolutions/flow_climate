@@ -2,7 +2,7 @@
 
 module Azure
   class AzureSyncJob < ApplicationJob
-    queue_as :coca_azure
+    queue_as :default
 
     def perform(azure_account, user_email, user_name)
       started_time = Time.zone.now

@@ -2,7 +2,7 @@
 
 module Consolidations
   class TeamConsolidationJob < ApplicationJob
-    queue_as :consolidations
+    queue_as :low
 
     def perform(team, cache_date = Time.zone.now)
       return if cache_date < Date.new(2018, 1, 1)

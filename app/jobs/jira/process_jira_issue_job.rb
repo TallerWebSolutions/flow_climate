@@ -2,7 +2,7 @@
 
 module Jira
   class ProcessJiraIssueJob < ApplicationJob
-    queue_as :demand_update
+    queue_as :critical
 
     def perform(jira_account, project, issue_key, user_email, user_name, demand_url)
       return unless jira_account.company.active?

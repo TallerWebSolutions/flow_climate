@@ -2,7 +2,7 @@
 
 module Consolidations
   class ReplenishingConsolidationJob < ApplicationJob
-    queue_as :consolidations
+    queue_as :low
 
     def perform(team_id = nil)
       if team_id.blank?

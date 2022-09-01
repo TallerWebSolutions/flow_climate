@@ -6,12 +6,5 @@ production:
   :concurrency: <%= ENV['SIDEKIQ_THREADS'] || 2 %>
 queues:
   - ['default', 1]
-  - ['generators', 1]
-  - ['project_update', 1]
-  - ['demand_update', 1]
-  - ['consolidations', 1]
-  - ['dashboards', 1]
-  - ['coca_azure', 3]
-limits:
-  consolidations: <%= ENV['SIDEKIQ_CONSOLIDATIONS_THREADS'] || 2 %>
-  dashboards: <%= ENV['SIDEKIQ_DASHBOARDS_THREADS'] || 2 %>
+  - ['critical', 1]
+  - ['low', 1]

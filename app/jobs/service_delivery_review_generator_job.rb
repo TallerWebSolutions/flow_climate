@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ServiceDeliveryReviewGeneratorJob < ApplicationJob
-  queue_as :generators
+  queue_as :default
 
   rescue_from(StandardError) do |exception|
     Rails.logger.error("[#{self.class.name}] #{exception}")
