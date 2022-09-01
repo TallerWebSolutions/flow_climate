@@ -256,7 +256,7 @@ GEM
     oj (3.13.21)
     orm_adapter (0.5.0)
     parallel (1.22.1)
-    parallel_tests (3.11.1)
+    parallel_tests (3.12.0)
       parallel
     parser (3.1.2.1)
       ast (~> 2.4.1)
@@ -322,7 +322,7 @@ GEM
     rb-fsevent (0.11.2)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
-    redis (5.0.1)
+    redis (5.0.2)
       redis-client (~> 0.7)
     redis-client (0.7.1)
       connection_pool
@@ -363,7 +363,7 @@ GEM
     rspec-support (3.11.0)
     rspec_junit_formatter (0.5.1)
       rspec-core (>= 2, < 4, != 2.12.0)
-    rubocop (1.35.1)
+    rubocop (1.36.0)
       json (~> 2.3)
       parallel (~> 1.10)
       parser (>= 3.1.2.1)
@@ -375,7 +375,7 @@ GEM
       unicode-display_width (>= 1.4.0, < 3.0)
     rubocop-ast (1.21.0)
       parser (>= 3.1.1.0)
-    rubocop-graphql (0.14.5)
+    rubocop-graphql (0.14.6)
       rubocop (>= 0.87, < 2)
     rubocop-performance (1.14.3)
       rubocop (>= 1.7.0, < 2.0)
@@ -409,7 +409,7 @@ GEM
       connection_pool (>= 2.2.2)
       rack (~> 2.0)
       redis (>= 4.5.0)
-    sidekiq-limit_fetch (4.3.1)
+    sidekiq-limit_fetch (4.3.2)
       redis (>= 4.6.0)
       sidekiq (>= 4)
     simplecov (0.21.2)
@@ -429,7 +429,7 @@ GEM
       actionpack (>= 5.2)
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
-    ssrf_filter (1.1.0)
+    ssrf_filter (1.1.1)
     stackprof (0.2.21)
     statsd-ruby (1.5.0)
     strscan (3.0.4)
@@ -519,6 +519,7 @@ DEPENDENCIES
   rails-controller-testing
   rails_12factor
   rails_best_practices
+  redis
   rollbar
   rspec-collection_matchers
   rspec-rails
