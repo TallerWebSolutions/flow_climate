@@ -5,6 +5,6 @@ development:
 production:
   :concurrency: <%= ENV['SIDEKIQ_THREADS'] || 2 %>
 queues:
-  - ['default', 1]
-  - ['critical', 1]
-  - ['low', 1]
+  - critical
+  - default
+  - low
