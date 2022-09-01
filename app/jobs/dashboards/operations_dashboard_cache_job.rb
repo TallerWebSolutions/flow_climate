@@ -2,7 +2,7 @@
 
 module Dashboards
   class OperationsDashboardCacheJob < ApplicationJob
-    queue_as :low
+    queue_as :default
 
     def perform(team_member, start_date, end_date)
       array_of_dates = TimeService.instance.days_between_of(start_date, end_date)
