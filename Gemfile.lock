@@ -519,7 +519,6 @@ DEPENDENCIES
   rails-controller-testing
   rails_12factor
   rails_best_practices
-  redis
   rollbar
   rspec-collection_matchers
   rspec-rails
