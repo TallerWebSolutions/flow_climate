@@ -41,6 +41,7 @@ export type DemandsList = {
   lastPage: boolean
   totalCount: number
   totalPages: number
+  totalEffort?: number
   controlChart: ControlChart
   leadTimeBreakdown: NumberChartData
   flowData: DemandsFlowChartData

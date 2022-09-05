@@ -44,7 +44,7 @@
       "downloadCsv": "Download CSV"
     },
     "table": {
-      "title": "{{count}} Demands"
+      "title": "{{demandsCount}} Demands - {{totalEffort}} Hours"
     }
   },
   "demandsCharts": {

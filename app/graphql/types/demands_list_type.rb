@@ -13,6 +13,7 @@ module Types
     field :flow_efficiency, Types::Charts::SimpleDateChartDataType, null: true
     field :lead_time_breakdown, Types::Charts::LeadTimeBreakdownType, null: true
     field :lead_time_evolution_p80, Types::Charts::SimpleDateChartDataType, null: true
+    field :total_effort, Float, null: false
 
     def control_chart
       demands_finished = demands.finished_with_leadtime.order(end_date: :asc)

@@ -79,10 +79,10 @@ class DemandsRepository
   def demand_state_query(demands, demand_state)
     return demands if demand_state.blank? || demand_state.include?('ALL_DEMANDS')
 
-    filtered_demands = if demand_state.include?('DISCARDED_DEMANDS')
-                         demands.discarded
-                       elsif demand_state.include?('NOT_DISCARDED_DEMANDS')
+    filtered_demands = if demand_state.include?('NOT_DISCARDED_DEMANDS')
                          demands.kept
+                       elsif demand_state.include?('DISCARDED_DEMANDS')
+                         demands.discarded
                        else
                          demands
                        end

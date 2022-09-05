@@ -55,6 +55,7 @@ const DEMAND_FRAGMENT = gql`
     lastPage
     totalCount
     totalPages
+    totalEffort
   }
 `
 
@@ -295,6 +296,7 @@ const DemandsListPage = () => {
   ]
 
   const demandsCount = data?.demandsTableData.totalCount || 0
+  const totalEffort = data?.demandsTableData.totalEffort?.toFixed(2) || 0
   const tableRows: RowWithCollapse[] =
     data?.demandsTableData.demands.map(normalizeTableRow) || []
 
@@ -305,7 +307,7 @@ const DemandsListPage = () => {
 
   const TableTitle = () => (
     <>
-      {t("list.table.title", { count: demandsCount })}{" "}
+      {t("list.table.title", { demandsCount, totalEffort })}{" "}
       <Button
         variant="contained"
         sx={{

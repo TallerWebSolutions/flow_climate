@@ -44,7 +44,7 @@
       "downloadCsv": "Download CSV"
     },
     "table": {
-      "title": "{{count}} Deliverables"
+      "title": "{{demandsCount}} Deliverables - {{totalEffort}} Hours"
     },
     "demandsCharts": {
       "leadTimeControlMarkerP95": "Lead time p95 ({{days}} days)",

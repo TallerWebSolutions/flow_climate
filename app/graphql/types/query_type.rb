@@ -101,12 +101,13 @@ module Types
       demands = base_demands(search_options)
 
       demands = demands.order(end_date: search_options.sort_direction || 'DESC', created_date: search_options.sort_direction || 'DESC')
+      total_effort = demands.sum { |demand| demand.effort_upstream + demand.effort_downstream }
 
       if search_options.per_page.present?
         demands_paged = demands.page(search_options.page_number).per(search_options.per_page)
-        { 'total_count' => demands.count, 'last_page' => demands_paged.last_page?, 'total_pages' => demands_paged.total_pages, 'demands' => demands_paged }
+        { 'total_count' => demands.count, 'last_page' => demands_paged.last_page?, 'total_pages' => demands_paged.total_pages, 'demands' => demands_paged, 'total_effort' => total_effort }
       else
-        { 'total_count' => demands.count, 'last_page' => true, 'total_pages' => 1, 'demands' => demands }
+        { 'total_count' => demands.count, 'last_page' => true, 'total_pages' => 1, 'demands' => demands, 'total_effort' => total_effort }
       end
     end
 
