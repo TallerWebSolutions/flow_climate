@@ -269,6 +269,8 @@ const DemandsListPage = () => {
     demand.commitmentDate,
     demand.endDate,
     secondsToReadbleDate(demand.leadtime),
+    demand.effortUpstream,
+    demand.effortDownstream,
   ]
 
   const tableHeader = [
@@ -293,6 +295,8 @@ const DemandsListPage = () => {
     t("table.header.commitmentDate"),
     t("table.header.deliveryDate"),
     t("table.header.timeToFinish"),
+    t("table.header.effortUpstream"),
+    t("table.header.effortDownstream"),
   ]
 
   const demandsCount = data?.demandsTableData.totalCount || 0
