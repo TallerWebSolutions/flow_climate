@@ -24,7 +24,8 @@ const TeamMemberDashboardCharts = ({
   const leadTimeControlChartData = {
     ...teamMember.leadTimeControlChartData,
     xAxis: teamMember.leadTimeControlChartData?.xAxis || [],
-    yAxis: teamMember.leadTimeControlChartData?.yAxis.map(secondsToDays) || [],
+    yAxis:
+      teamMember.leadTimeControlChartData?.leadTimes.map(secondsToDays) || [],
   }
   const leadTimeP65 = secondsToDays(leadTimeControlChartData?.leadTimeP65 || 0)
   const leadTimeP80 = secondsToDays(leadTimeControlChartData?.leadTimeP80 || 0)

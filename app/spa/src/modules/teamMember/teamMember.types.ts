@@ -4,6 +4,14 @@ import { Team } from "../team/team.types"
 import User from "../user/user.types"
 import { ChartAxisData, KeyValueData } from "../charts/charts.types"
 
+type LeadTimesChartData = {
+  xAxis: (string | number)[]
+  leadTimes: (string | number)[]
+  leadTimeP65?: number
+  leadTimeP80?: number
+  leadTimeP95?: number
+}
+
 export type TeamMember = {
   id: string
   name: string
@@ -21,7 +29,7 @@ export type TeamMember = {
   projectsList?: ProjectsList
   demandBlocksList?: DemandBlocksList
   leadTimeHistogramChartData?: KeyValueData
-  leadTimeControlChartData?: ChartAxisData
+  leadTimeControlChartData?: LeadTimesChartData
   memberEffortData?: ChartAxisData
   memberThroughputData?: number[]
   averagePullIntervalData?: ChartAxisData

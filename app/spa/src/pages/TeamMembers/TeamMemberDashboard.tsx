@@ -36,7 +36,7 @@ const TEAM_MEMBER_QUERY = gql`
       }
       leadTimeControlChartData {
         xAxis
-        yAxis
+        leadTimes
         leadTimeP65
         leadTimeP80
         leadTimeP95
