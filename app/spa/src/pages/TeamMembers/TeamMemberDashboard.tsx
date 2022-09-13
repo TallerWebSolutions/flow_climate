@@ -103,6 +103,10 @@ const TEAM_MEMBER_QUERY = gql`
         externalId
         endDate
         leadtime
+        company {
+          id
+          slug
+        }
       }
     }
   }
