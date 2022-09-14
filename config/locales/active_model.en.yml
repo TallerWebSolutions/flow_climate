@@ -33,7 +33,7 @@ en:
         other: is the wrong length (should be %{count} characters)
       other_than: must be other than %{count}
     template:
-      body: 'There were problems with the following fields:'
+      body: "There were problems with the following fields:"
       header:
         one: 1 error prohibited this %{model} from being saved
         other: "%{count} errors prohibited this %{model} from being saved"
@@ -186,6 +186,9 @@ en:
             demand_state_changed: "State Changed"
             item_assigned: "Demand Assigned"
             demand_blocked: "Demand Blocks"
+          config_type:
+            team: "Team"
+            customer: "Customer"
           weekday_to_notify:
             all_weekdays: "All"
             monday: "Monday"
@@ -280,7 +283,7 @@ en:
         quality_indicator_type: Quality Indicator
     errors:
       messages:
-        record_invalid: 'Validation failed: %{errors}'
+        record_invalid: "Validation failed: %{errors}"
         restrict_dependent_destroy:
           has_one: Cannot delete record because a dependent %{record} exists
           has_many: Cannot delete record because dependent %{record} exist

@@ -1,6 +1,6 @@
 <div class="row bottom-spaced-component">
   <div class="col-xs-12">
-    <%= link_to I18n.t('slack_configurations.new.title'), new_company_team_slack_configuration_path(company, team), class: 'btn btn-success pull-right', remote: true %>
+    <%= link_to I18n.t('slack_configurations.new.title'), new_company_slack_configuration_path(company, team), class: 'btn btn-success pull-right', remote: true %>
   </div>
 </div>
 
@@ -10,6 +10,7 @@
     <th></th>
     <th><%= Team.model_name.human %></th>
     <th><%= SlackConfiguration.human_attribute_name :info_type %></th>
+    <th><%= SlackConfiguration.human_attribute_name :config_type %></th>
     <th><%= SlackConfiguration.human_attribute_name :room_webhook %></th>
     <th><%= SlackConfiguration.human_attribute_name :notification_hour %></th>
     <th><%= SlackConfiguration.human_attribute_name :notification_minute %></th>
