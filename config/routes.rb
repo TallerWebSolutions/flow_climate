@@ -132,10 +132,6 @@ Rails.application.routes.draw do
     resources :azure_custom_fields, only: :destroy, module: 'azure'
 
     resources :teams, except: %i[create update destroy] do
-      resources :slack_configurations, except: :show do
-        patch :toggle_active, on: :member
-      end
-
       resources :memberships do
         get :search_memberships, on: :collection
       end
@@ -172,6 +168,10 @@ Rails.application.routes.draw do
       resources :contracts, except: %i[index] do
         patch :update_consolidations, on: :member
       end
+    end
+
+    resources :slack_configurations, except: :show do
+      patch :toggle_active, on: :member
     end
 
     resources :team_resources, only: %i[new create destroy]

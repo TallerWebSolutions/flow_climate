@@ -2,7 +2,6 @@
 
 class SlackConfigurationsController < AuthenticatedController
   before_action :assign_company
-  before_action :assign_team
   before_action :assign_slack_config, only: %i[edit update toggle_active]
 
   def new
@@ -46,7 +45,7 @@ class SlackConfigurationsController < AuthenticatedController
   end
 
   def index
-    @slack_configurations = @team.slack_configurations.order(:created_at)
+    @slack_configurations = SlackConfiguration.all.order(:created_at)
   end
 
   private
@@ -57,10 +56,6 @@ class SlackConfigurationsController < AuthenticatedController
 
   def slack_configuration_params
     params.require(:slack_configuration).permit(:room_webhook, :notification_hour, :notification_minute, :weekday_to_notify, :info_type)
-  end
-
-  def assign_team
-    @team = Team.find(params[:team_id])
   end
 
   def read_stages_in_params
