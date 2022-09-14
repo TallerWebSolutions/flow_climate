@@ -229,13 +229,26 @@ RSpec.describe SlackConfigurationsController, type: :controller do
     end
 
     describe 'GET #index' do
-      context 'valid parameters' do
+      context 'valid parameters for team' do
         before { get :index, params: { company_id: company, team_id: team } }
 
         it 'assigns the slack configurations variable and renders the templates' do
           expect(response).to render_template 'slack_configurations/index'
           expect(response).to render_template 'slack_configurations/_slack_config_table'
           expect(assigns(:slack_configurations)).to eq [second_slack_config, first_slack_config]
+        end
+      end
+
+      context 'valid paramters for customer' do
+        it 'assigns the slack configurations variable and renders the templates' do
+          customer = Fabricate :customer
+          first_customer_slack_config = Fabricate :slack_configuration, customer: customer
+          second_customer_slack_config = Fabricate :slack_configuration, customer: customer
+          get :index, params: { company_id: company, customer_id: customer }
+
+          expect(response).to render_template 'slack_configurations/index'
+          expect(response).to render_template 'slack_configurations/_slack_config_table'
+          expect(assigns(:slack_configurations)).to eq [second_customer_slack_config, first_customer_slack_config]
         end
       end
 

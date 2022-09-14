@@ -34,8 +34,8 @@ class SlackConfiguration < ApplicationRecord
   enum info_type: { average_demand_cost: 0, current_week_throughput: 1, last_week_delivered_demands_info: 2, demands_wip_info: 3, outdated_demands: 4, failure_load: 5, demand_state_changed: 6, item_assigned: 7, demand_blocked: 8 }
   enum weekday_to_notify: { all_weekdays: 0, monday: 1, tuesday: 2, wednesday: 3, thursday: 4, friday: 5 }
 
-  belongs_to :team
-  belongs_to :customer
+  belongs_to :team, optional: true
+  belongs_to :customer, optional: true
 
   validates :room_webhook, :weekday_to_notify, presence: true
   validates :info_type, uniqueness: { scope: %i[team room_webhook], message: I18n.t('slack_configuration.info_type.uniqueness') }

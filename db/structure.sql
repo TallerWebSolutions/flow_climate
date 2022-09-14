@@ -2246,7 +2246,8 @@ CREATE TABLE public.slack_configurations (
     notification_minute integer,
     active boolean DEFAULT true,
     stages_to_notify_transition integer[],
-    customer_id integer
+    customer_id integer,
+    config_type integer DEFAULT 0
 );
 
 
@@ -5089,6 +5090,13 @@ CREATE UNIQUE INDEX index_sessions_on_session_id ON public.sessions USING btree 
 --
 
 CREATE INDEX index_sessions_on_updated_at ON public.sessions USING btree (updated_at);
+
+
+--
+-- Name: index_slack_configurations_on_config_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_slack_configurations_on_config_type ON public.slack_configurations USING btree (config_type);
 
 
 --
