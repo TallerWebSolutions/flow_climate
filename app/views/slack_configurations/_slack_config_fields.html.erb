@@ -1,12 +1,12 @@
 <td>
-  <%= link_to edit_company_slack_configuration_path(company, slack_config), remote: true do %>
+  <%= link_to edit_company_slack_configuration_path(company, slack_config) do %>
     <i class="fas fa-edit"></i>
   <% end %>
 </td>
 
-<td><%= slack_config.team.name %></td>
-<td><%= I18n.t("activerecord.attributes.slack_configuration.enums.info_type.#{slack_config.info_type}") %></td>
+<td><%= slack_config.customer&.name || slack_config.team&.name %></td>
 <td><%= I18n.t("activerecord.attributes.slack_configuration.enums.config_type.#{slack_config.config_type}") %></td>
+<td><%= I18n.t("activerecord.attributes.slack_configuration.enums.info_type.#{slack_config.info_type}") %></td>
 <td><%= slack_config.room_webhook %></td>
 <td><%= slack_config.notification_hour %></td>
 <td><%= slack_config.notification_minute %></td>

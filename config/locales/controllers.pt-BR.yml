@@ -1259,8 +1259,12 @@ pt-BR:
     info_type:
       uniqueness: 'Você só pode ter um tipo de configuração por cada time.'
   slack_configurations:
+    form:
+      stages_to_notify: "Etapas para notificar"
     new:
       title: 'Nova Config do Slack'
+    edit:
+      title: "Editar Configuração do Slack"
     notifications:
       beyond_expected_title: 'O time %{team_name} está com %{beyond_expected_count} demanda(s) acima do esperado na etapa'
       block_change_type_text: 'Clique no tipo para classificar o bloqueio'
