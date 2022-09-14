@@ -6,15 +6,14 @@ class SlackConfigurationsController < AuthenticatedController
 
   def new
     @slack_configuration = SlackConfiguration.new(team: @team)
-    @slack_configurations = @team.slack_configurations.order(:created_at)
-
-    respond_to { |format| format.js { render 'slack_configurations/new' } }
+    @slack_configurations = SlackConfiguration.all.order(:created_at)
+    assign_stages
   end
 
   def create
     read_stages_in_params
     @slack_configuration = SlackConfiguration.new(slack_configuration_params.merge(team: @team, stages_to_notify_transition: @stage_ids))
-    @slack_configurations = @team.slack_configurations.order(:created_at)
+    @slack_configurations = SlackConfiguration.all.order(:created_at)
 
     if @slack_configuration.save
       respond_to { |format| format.js { render 'slack_configurations/create_update' } }
@@ -24,12 +23,12 @@ class SlackConfigurationsController < AuthenticatedController
   end
 
   def edit
-    @slack_configurations = @team.slack_configurations.order(:created_at)
-    respond_to { |format| format.js { render 'slack_configurations/edit' } }
+    @slack_configurations = SlackConfiguration.all.order(:created_at)
+    assign_stages
   end
 
   def update
-    @slack_configurations = @team.slack_configurations.order(:created_at)
+    @slack_configurations = SlackConfiguration.all.order(:created_at)
     read_stages_in_params
 
     if @slack_configuration.update(slack_configuration_params.merge(stages_to_notify_transition: @stage_ids))
@@ -49,6 +48,10 @@ class SlackConfigurationsController < AuthenticatedController
   end
 
   private
+
+  def assign_stages
+    @stages = @company.stages.where("stages.order >= 0").order(:integration_pipe_id, :order)
+  end
 
   def assign_slack_config
     @slack_configuration = SlackConfiguration.find(params[:id])

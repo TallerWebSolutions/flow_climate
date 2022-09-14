@@ -1,0 +1,5 @@
+<div class="container">
+  <%= form_for @slack_configuration, url: company_slack_configurations_url(@company, @slack_configuration), method: :post, id: 'slack-config-form', remote: true do |form| %>
+    <%= render 'slack_configurations/form', slack_configuration: @slack_configuration, form: form, stages: @stages %>
+  <% end %>
+</div>

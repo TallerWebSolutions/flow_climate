@@ -183,12 +183,6 @@ RSpec.describe SlackConfigurationsController, type: :controller do
           it { expect(response).to have_http_status :not_found }
         end
 
-        context 'team' do
-          before { get :edit, params: { company_id: company, team_id: 'foo', id: slack_config }, xhr: true }
-
-          it { expect(response).to have_http_status :not_found }
-        end
-
         context 'slack_configuration' do
           before { get :edit, params: { company_id: company, team_id: team, id: 'foo' }, xhr: true }
 

@@ -1,4 +1,0 @@
-$('#slack-config-table').html("<%= escape_javascript(render 'slack_configurations/slack_config_table', company: @company, team: @team, slack_configurations: @slack_configurations) %>");
-
-var updatedRow = $('#slack_config_<%= @slack_configuration.id %>');
-updatedRow.effect("highlight", { color: "lightgreen" }, 2000);
