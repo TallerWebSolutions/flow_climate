@@ -13,6 +13,7 @@ RSpec.describe Customer, type: :model do
     it { is_expected.to have_many(:projects).through(:customers_projects) }
     it { is_expected.to have_many(:customers_devise_customers).dependent(:destroy) }
     it { is_expected.to have_many(:devise_customers).through(:customers_devise_customers).dependent(:destroy) }
+    it { is_expected.to have_many(:slack_configurations).dependent(:destroy) }
   end
 
   context 'validations' do

@@ -21,7 +21,11 @@
 #
 # Indexes
 #
+#  index_team_members_on_company_id                               (company_id)
 #  index_team_members_on_company_id_and_name_and_jira_account_id  (company_id,name,jira_account_id) UNIQUE
+#  index_team_members_on_jira_account_id                          (jira_account_id)
+#  index_team_members_on_jira_account_user_email                  (jira_account_user_email)
+#  index_team_members_on_user_id                                  (user_id)
 #
 # Foreign Keys
 #
