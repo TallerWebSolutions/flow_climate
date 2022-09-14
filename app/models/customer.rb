@@ -17,6 +17,7 @@
 #
 #  index_customers_on_company_id           (company_id)
 #  index_customers_on_company_id_and_name  (company_id,name) UNIQUE
+#  index_customers_on_customer_id          (customer_id)
 #
 # Foreign Keys
 #
@@ -39,6 +40,7 @@ class Customer < ApplicationRecord
   has_many :projects, through: :customers_projects, dependent: :restrict_with_error
   has_many :customers_devise_customers, dependent: :destroy
   has_many :devise_customers, through: :customers_devise_customers, dependent: :destroy
+  has_many :slack_configurations, dependent: :destroy
 
   validates :name, presence: true
   validates :name, uniqueness: { scope: :company, message: I18n.t('customer.name.uniqueness') }

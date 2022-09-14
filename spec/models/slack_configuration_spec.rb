@@ -7,6 +7,7 @@ RSpec.describe SlackConfiguration, type: :model do
 
   context 'associations' do
     it { is_expected.to belong_to :team }
+    it { is_expected.to belong_to :customer }
   end
 
   context 'validations' do

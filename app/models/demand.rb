@@ -46,11 +46,20 @@
 #
 # Indexes
 #
+#  index_demands_on_class_of_service            (class_of_service)
+#  index_demands_on_company_id                  (company_id)
 #  index_demands_on_contract_id                 (contract_id)
 #  index_demands_on_current_stage_id            (current_stage_id)
+#  index_demands_on_customer_id                 (customer_id)
 #  index_demands_on_discarded_at                (discarded_at)
 #  index_demands_on_external_id_and_company_id  (external_id,company_id) UNIQUE
+#  index_demands_on_portfolio_unit_id           (portfolio_unit_id)
+#  index_demands_on_product_id                  (product_id)
+#  index_demands_on_project_id                  (project_id)
+#  index_demands_on_risk_review_id              (risk_review_id)
+#  index_demands_on_service_delivery_review_id  (service_delivery_review_id)
 #  index_demands_on_slug                        (slug) UNIQUE
+#  index_demands_on_team_id                     (team_id)
 #  index_demands_on_work_item_type_id           (work_item_type_id)
 #
 # Foreign Keys

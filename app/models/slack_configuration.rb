@@ -14,15 +14,19 @@
 #  weekday_to_notify           :integer          default("all_weekdays"), not null
 #  created_at                  :datetime         not null
 #  updated_at                  :datetime         not null
-#  team_id                     :integer          not null
+#  customer_id                 :integer
+#  team_id                     :integer
 #
 # Indexes
 #
-#  index_slack_configurations_on_team_id  (team_id)
-#  slack_configuration_unique             (info_type,team_id,room_webhook)
+#  index_slack_configurations_on_customer_id  (customer_id)
+#  index_slack_configurations_on_info_type    (info_type)
+#  index_slack_configurations_on_team_id      (team_id)
+#  slack_configuration_unique                 (info_type,team_id,room_webhook)
 #
 # Foreign Keys
 #
+#  fk_rails_27c3678ff8  (customer_id => customers.id)
 #  fk_rails_52597683c1  (team_id => teams.id)
 #
 
@@ -31,6 +35,7 @@ class SlackConfiguration < ApplicationRecord
   enum weekday_to_notify: { all_weekdays: 0, monday: 1, tuesday: 2, wednesday: 3, thursday: 4, friday: 5 }
 
   belongs_to :team
+  belongs_to :customer
 
   validates :room_webhook, :weekday_to_notify, presence: true
   validates :info_type, uniqueness: { scope: %i[team room_webhook], message: I18n.t('slack_configuration.info_type.uniqueness') }

@@ -22,6 +22,7 @@
 #
 # Indexes
 #
+#  index_stages_on_company_id      (company_id)
 #  index_stages_on_integration_id  (integration_id)
 #  index_stages_on_name            (name)
 #  index_stages_on_parent_id       (parent_id)
