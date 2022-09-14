@@ -1,25 +1,28 @@
 <div class="row">
-  <div class='col-xs-4 form-group <%= 'has-error' if slack_configuration.errors[:info_type].present? %>'>
+  <div class='col-xs-6 form-group <%= 'has-error' if slack_configuration.errors[:info_type].present? %>'>
     <%= form.label :info_type, class: 'control-label' %>
     <%= form.select :info_type, SlackConfiguration.info_types.map { |key, _value| [I18n.t("activerecord.attributes.slack_configuration.enums.info_type.#{key}"), key] }, { include_blank: I18n.t('general.select'), selected: slack_configuration.info_type }, class: 'form-control', id: 'slack-config-type-select' %>
     <span class="help-block"><%= slack_configuration.errors[:info_type].join(', ') %></span>
   </div>
-  <div class='col-xs-4 form-group <%= 'has-error' if slack_configuration.errors[:room_webhook].present? %>'>
+  <div class='col-xs-6 form-group <%= 'has-error' if slack_configuration.errors[:room_webhook].present? %>'>
     <%= form.label :room_webhook, class: 'control-label' %>
     <%= form.text_field :room_webhook, class: 'form-control', placeholder: 'https://hooks.slack.com/services/room_key' %>
     <span class="help-block"><%= slack_configuration.errors[:room_webhook].join(', ') %></span>
   </div>
-  <div class='col-xs-1 form-group <%= 'has-error' if slack_configuration.errors[:notification_hour].present? %>'>
+</div>
+
+<div class="row">
+  <div class='col-xs-4 form-group <%= 'has-error' if slack_configuration.errors[:notification_hour].present? %>'>
     <%= form.label :notification_hour, class: 'control-label' %>
     <%= form.select :notification_hour, hours_in_a_day_options, { include_blank: I18n.t('general.select'), selected: slack_configuration.notification_hour }, class: 'form-control' %>
     <span class="help-block"><%= slack_configuration.errors[:notification_hour].join(', ') %></span>
   </div>
-  <div class='col-xs-1 form-group <%= 'has-error' if slack_configuration.errors[:notification_minute].present? %>'>
+  <div class='col-xs-4 form-group <%= 'has-error' if slack_configuration.errors[:notification_minute].present? %>'>
     <%= form.label :notification_minute, class: 'control-label' %>
     <%= form.select :notification_minute, minutes_in_a_day_options, { include_blank: I18n.t('general.select'), selected: slack_configuration.notification_minute }, class: 'form-control' %>
     <span class="help-block"><%= slack_configuration.errors[:notification_minute].join(', ') %></span>
   </div>
-  <div class='col-xs-2 form-group <%= 'has-error' if slack_configuration.errors[:weekday_to_notify].present? %>'>
+  <div class='col-xs-4 form-group <%= 'has-error' if slack_configuration.errors[:weekday_to_notify].present? %>'>
     <%= form.label :weekday_to_notify, class: 'control-label' %>
     <%= form.select :weekday_to_notify, weekdays_options(slack_configuration.weekday_to_notify), {}, { class: 'form-control' } %>
     <span class="help-block"><%= slack_configuration.errors[:weekday_to_notify].join(', ') %></span>
@@ -29,9 +32,10 @@
 <div class="row bottom-spaced-component" id="stages-to-notify-div">
   <div class="col-xs-12">
     <h4>Etapas para notificar</h4>
-    <% team.stages.where('stages.order >= 0').order(:order).each do |stage| %>
+    <% stages.each do |stage| %>
       <%= check_box_tag "stage_#{stage.id}", stage.id, slack_configuration.notify_stage?(stage), class: 'form-check-input' %>
-      <%= label_tag stage.name, nil, class: 'check-box-group-label' %>
+      <%= label_tag "#{stage.name} (#{stage.teams.map(&:name).sort.join(", ")})", nil, class: 'check-box-group-label' %>
+      <br />
     <% end %>
   </div>
 </div>
