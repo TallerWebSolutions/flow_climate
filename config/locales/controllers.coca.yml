@@ -1280,6 +1280,10 @@ coca:
     info_type:
       uniqueness: "You can have only one type of configuration to each team."
   slack_configurations:
+    form:
+      stages_to_notify: "Stages to notify"
+    edit:
+      title: "Edit Slack Configuration"
     new:
       title: "New Slack Config"
     notifications:

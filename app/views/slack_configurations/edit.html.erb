@@ -1,5 +1,6 @@
 <div class="container">
-  <%= form_for @slack_configuration, url: company_slack_configuration_url(@company, @slack_configuration), method: :put, id: 'slack-config-form', remote: true do |form| %>
-    <%= render 'slack_configurations/form', slack_configuration: @slack_configuration, form: form, stages: @stages %>
+  <h1><%= I18n.t("slack_configurations.edit.title") %></h1>
+  <%= form_for @slack_configuration, url: company_slack_configuration_url(@company, @slack_configuration), method: :put, id: 'slack-config-form' do |form| %>
+    <%= render 'slack_configurations/form', slack_configuration: @slack_configuration, form: form, stages: @stages, teams: @teams, customers: @customers %>
   <% end %>
 </div>

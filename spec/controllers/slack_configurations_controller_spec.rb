@@ -88,17 +88,20 @@ RSpec.describe SlackConfigurationsController, type: :controller do
 
       context 'passing valid parameters' do
         it 'creates the new slack config and renders the table' do
-          post :create, params: { company_id: company, team_id: team, "stage_#{stage.id}" => stage.id, "stage_#{other_stage.id}" => other_stage.id, slack_configuration: { info_type: :demand_state_changed, room_webhook: 'http://xpto', notification_hour: 4, notification_minute: 0, weekday_to_notify: :monday } }, xhr: true
+          customer = Fabricate :customer
+          post :create, params: { company_id: company, "stage_#{stage.id}" => stage.id, "stage_#{other_stage.id}" => other_stage.id, slack_configuration: { info_type: :demand_state_changed, config_type: :customer, team_id: team, customer_id: customer, room_webhook: 'http://xpto', notification_hour: 4, notification_minute: 0, weekday_to_notify: :monday } }, xhr: true
 
           config_created = SlackConfiguration.last
           expect(config_created.room_webhook).to eq 'http://xpto'
           expect(config_created.info_type).to eq 'demand_state_changed'
+          expect(config_created.config_type).to eq 'customer'
+          expect(config_created.team).to eq team
+          expect(config_created.customer).to eq customer
           expect(config_created.notification_hour).to eq 4
           expect(config_created.notification_minute).to eq 0
           expect(config_created.weekday_to_notify).to eq 'monday'
           expect(config_created.stages_to_notify_transition).to match_array [stage.id, other_stage.id]
-          expect(assigns(:slack_configurations)).to eq [second_slack_config, first_slack_config, config_created]
-          expect(response).to render_template 'slack_configurations/create_update'
+          expect(response).to redirect_to company_slack_configurations_path
         end
       end
 
@@ -137,12 +140,6 @@ RSpec.describe SlackConfigurationsController, type: :controller do
       context 'with invalid' do
         context 'company' do
           before { patch :toggle_active, params: { company_id: 'foo', team_id: team, id: slack_config }, xhr: true }
-
-          it { expect(response).to have_http_status :not_found }
-        end
-
-        context 'team' do
-          before { patch :toggle_active, params: { company_id: company, team_id: 'foo', id: slack_config }, xhr: true }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -209,7 +206,7 @@ RSpec.describe SlackConfigurationsController, type: :controller do
           expect(slack_config_updated.notification_minute).to eq 0
           expect(slack_config_updated.weekday_to_notify).to eq 'monday'
           expect(slack_config_updated.stages_to_notify_transition).to match_array [stage.id, other_stage.id]
-          expect(response).to render_template 'slack_configurations/create_update'
+          expect(response).to redirect_to company_slack_configurations_path
         end
       end
 
@@ -230,19 +227,6 @@ RSpec.describe SlackConfigurationsController, type: :controller do
           expect(response).to render_template 'slack_configurations/index'
           expect(response).to render_template 'slack_configurations/_slack_config_table'
           expect(assigns(:slack_configurations)).to eq [second_slack_config, first_slack_config]
-        end
-      end
-
-      context 'valid paramters for customer' do
-        it 'assigns the slack configurations variable and renders the templates' do
-          customer = Fabricate :customer
-          first_customer_slack_config = Fabricate :slack_configuration, customer: customer
-          second_customer_slack_config = Fabricate :slack_configuration, customer: customer
-          get :index, params: { company_id: company, customer_id: customer }
-
-          expect(response).to render_template 'slack_configurations/index'
-          expect(response).to render_template 'slack_configurations/_slack_config_table'
-          expect(assigns(:slack_configurations)).to eq [second_customer_slack_config, first_customer_slack_config]
         end
       end
 

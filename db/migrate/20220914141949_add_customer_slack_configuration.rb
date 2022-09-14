@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddCustomerSlackConfiguration < ActiveRecord::Migration[7.0]
   def change
     change_table :slack_configurations, bulk: true do |t|

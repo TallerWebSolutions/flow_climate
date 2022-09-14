@@ -6,24 +6,29 @@ class SlackConfigurationsController < AuthenticatedController
 
   def new
     @slack_configuration = SlackConfiguration.new(team: @team)
-    @slack_configurations = SlackConfiguration.all.order(:created_at)
+    assign_teams
+    assign_customers
     assign_stages
   end
 
   def create
     read_stages_in_params
-    @slack_configuration = SlackConfiguration.new(slack_configuration_params.merge(team: @team, stages_to_notify_transition: @stage_ids))
-    @slack_configurations = SlackConfiguration.all.order(:created_at)
+    @slack_configuration = SlackConfiguration.new(slack_configuration_params.merge(stages_to_notify_transition: @stage_ids))
 
     if @slack_configuration.save
-      respond_to { |format| format.js { render 'slack_configurations/create_update' } }
+      redirect_to company_slack_configurations_path
     else
-      respond_to { |format| format.js { render 'slack_configurations/new' } }
+      assign_stages
+      assign_teams
+      assign_customers
+      render :new
     end
   end
 
   def edit
     @slack_configurations = SlackConfiguration.all.order(:created_at)
+    assign_teams
+    assign_customers
     assign_stages
   end
 
@@ -32,9 +37,12 @@ class SlackConfigurationsController < AuthenticatedController
     read_stages_in_params
 
     if @slack_configuration.update(slack_configuration_params.merge(stages_to_notify_transition: @stage_ids))
-      respond_to { |format| format.js { render 'slack_configurations/create_update' } }
+      redirect_to company_slack_configurations_path
     else
-      respond_to { |format| format.js { render 'slack_configurations/edit' } }
+      assign_teams
+      assign_customers
+      assign_stages
+      render :edit
     end
   end
 
@@ -50,7 +58,15 @@ class SlackConfigurationsController < AuthenticatedController
   private
 
   def assign_stages
-    @stages = @company.stages.where("stages.order >= 0").order(:integration_pipe_id, :order)
+    @stages = @company.stages.where('stages.order >= 0').order(:integration_pipe_id, :order)
+  end
+
+  def assign_teams
+    @teams = @company.teams
+  end
+
+  def assign_customers
+    @customers = @company.customers
   end
 
   def assign_slack_config
@@ -58,7 +74,7 @@ class SlackConfigurationsController < AuthenticatedController
   end
 
   def slack_configuration_params
-    params.require(:slack_configuration).permit(:room_webhook, :notification_hour, :notification_minute, :weekday_to_notify, :info_type)
+    params.require(:slack_configuration).permit(:room_webhook, :notification_hour, :notification_minute, :weekday_to_notify, :info_type, :config_type, :team_id, :customer_id)
   end
 
   def read_stages_in_params
