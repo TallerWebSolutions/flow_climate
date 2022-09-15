@@ -1,4 +1,3 @@
 <li><%= link_to I18n.t('team.edit.title'), edit_company_team_path(company, team), class: 'nav-link dropdown-item' %></li>
 <li class="divider"></li>
-<li><%= link_to SlackConfiguration.model_name.human(count: 2), company_slack_configurations_path(company), class: 'nav-link dropdown-item' %></li>
 <li><%= link_to Membership.model_name.human(count: 2), company_team_memberships_path(company, team), class: 'nav-link dropdown-item' %></li>
