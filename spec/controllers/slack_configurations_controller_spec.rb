@@ -57,10 +57,9 @@ RSpec.describe SlackConfigurationsController, type: :controller do
     describe 'GET #new' do
       context 'valid parameters' do
         it 'instantiates a new Slack Config and renders the template' do
-          get :new, params: { company_id: company, team_id: team }, xhr: true
+          get :new, params: { company_id: company }
 
           expect(response).to render_template 'slack_configurations/new'
-          expect(assigns(:slack_configurations)).to eq [second_slack_config, first_slack_config]
           expect(assigns(:slack_configuration)).to be_a_new SlackConfiguration
         end
       end

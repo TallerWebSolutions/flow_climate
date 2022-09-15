@@ -8,6 +8,11 @@
   <% if current_user.admin? || current_user.gold? %>
     <li class="divider"></li>
 
+    <% if current_user.last_company.present? %>
+      <li><%= link_to I18n.t('users.index.slack_configurations'), company_slack_configurations_path(company_id: current_user.last_company.slug), class: 'nav-link dropdown-item' %></li>
+      <li class="divider"></li>
+    <% end %>
+
     <% if company.present? %>
       <li><%= link_to I18n.t('navbar.copy_api_token'), '#', 'data-clipboard-text' => company.api_token, id: 'copy_token' %></li>
       <li class="divider"></li>

@@ -110,7 +110,9 @@ module Slack
     def notify_demand_state_changed(stage, demand, demand_transition)
       return if demand_transition.transition_notified?
 
-      slack_configurations = SlackConfiguration.where(team: demand.team, info_type: :demand_state_changed, active: true)
+      slack_configurations_teams = SlackConfiguration.where(team: demand.team, info_type: :demand_state_changed, active: true)
+      slack_configurations_customers = SlackConfiguration.where(customer: demand.customer, info_type: :demand_state_changed, active: true)
+      slack_configurations = slack_configurations_teams + slack_configurations_customers
 
       unless slack_configurations.present? && stage.present?
         demand_transition.update(transition_notified: true)

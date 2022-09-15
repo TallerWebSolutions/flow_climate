@@ -268,7 +268,7 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
 
   describe '#notify_demand_state_changed' do
     context 'with no end_point stage' do
-      it 'calls slack notification method' do
+      it 'calls slack notification method with team' do
         stage = Fabricate :stage, end_point: false
         demand = Fabricate :demand, team: team
         team_member = Fabricate :team_member
@@ -276,6 +276,34 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
         Fabricate :slack_configuration, team: team, info_type: :demand_state_changed, stages_to_notify_transition: [stage.id]
 
         expect_any_instance_of(Slack::Notifier).to receive(:ping).with(/#{team_member.name}/)
+
+        described_class.instance.notify_demand_state_changed(stage, demand, demand_transition)
+      end
+
+      it 'calls slack notification method with customer' do
+        stage = Fabricate :stage, end_point: false
+        customer = Fabricate :customer
+        demand = Fabricate :demand, team: team, customer: customer
+        team_member = Fabricate :team_member
+        demand_transition = Fabricate :demand_transition, stage: stage, demand: demand, team_member: team_member
+        Fabricate :slack_configuration, customer: customer, info_type: :demand_state_changed, stages_to_notify_transition: [stage.id]
+
+        expect_any_instance_of(Slack::Notifier).to receive(:ping).with(/#{team_member.name}/)
+
+        described_class.instance.notify_demand_state_changed(stage, demand, demand_transition)
+      end
+
+      it 'calls slack notification method with only targeted customer' do
+        stage = Fabricate :stage, end_point: false
+        customer = Fabricate :customer
+        customer_two = Fabricate :customer
+        demand = Fabricate :demand, team: team, customer: customer
+        team_member = Fabricate :team_member
+        demand_transition = Fabricate :demand_transition, stage: stage, demand: demand, team_member: team_member
+        Fabricate :slack_configuration, customer: customer, info_type: :demand_state_changed, stages_to_notify_transition: [stage.id]
+        Fabricate :slack_configuration, customer: customer_two, info_type: :demand_state_changed, stages_to_notify_transition: [stage.id]
+
+        expect_any_instance_of(Slack::Notifier).to receive(:ping).with(/#{team_member.name}/).once
 
         described_class.instance.notify_demand_state_changed(stage, demand, demand_transition)
       end

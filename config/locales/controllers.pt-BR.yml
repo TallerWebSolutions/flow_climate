@@ -217,6 +217,7 @@ pt-BR:
       title: 'Usuários'
       turn_off_notifications: 'Desligar Notificações'
       turn_on_notifications: 'Ligar Notificações'
+      slack_configurations: 'Configurações do Slack'
     account:
       self: 'Minha Conta'
     edit:
