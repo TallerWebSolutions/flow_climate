@@ -5,7 +5,7 @@ class SlackConfigurationsController < AuthenticatedController
   before_action :assign_slack_config, only: %i[edit update toggle_active]
 
   def new
-    @slack_configuration = SlackConfiguration.new(team: @team)
+    @slack_configuration = SlackConfiguration.new
     assign_teams
     assign_customers
     assign_stages

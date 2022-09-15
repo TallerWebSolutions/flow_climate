@@ -218,6 +218,7 @@ en:
       title: "Users"
       turn_off_notifications: "Turn Off Notifications"
       turn_on_notifications: "Turn On Notifications"
+      slack_configurations: "Slack Configurations"
     account:
       self: "My Account"
     edit:
