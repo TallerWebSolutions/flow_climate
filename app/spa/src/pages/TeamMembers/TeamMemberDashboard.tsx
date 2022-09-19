@@ -74,6 +74,9 @@ const TEAM_MEMBER_QUERY = gql`
       teams {
         id
         name
+        company {
+          slug
+        }
       }
       demandBlocksList(
         orderField: "block_time"
