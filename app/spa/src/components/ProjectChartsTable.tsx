@@ -180,7 +180,7 @@ export const ProjectChartsTable = () => {
         href={`${baseLink}/projects/${project.id}`}
         sx={{ color: "info.dark", textDecoration: "none" }}
       >
-        {demand.customer?.name}
+        {demand.project?.name}
       </Link>,
       <Link
         href={`${baseLink}/products/${demand.product.id}`}

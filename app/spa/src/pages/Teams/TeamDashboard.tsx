@@ -1,9 +1,12 @@
 import { gql, useQuery } from "@apollo/client"
-import { Backdrop, CircularProgress, Grid } from "@mui/material"
+import { Backdrop, CircularProgress, Grid, Link } from "@mui/material"
+import { BarDatum } from "@nivo/bar"
 import { SliceTooltipProps } from "@nivo/line"
+import { format, subWeeks } from "date-fns"
 import { useContext } from "react"
 import { useTranslation } from "react-i18next"
 import { useParams } from "react-router-dom"
+import { BarChart } from "../../components/charts/BarChart"
 import { ChartGridItem } from "../../components/charts/ChartGridItem"
 import { LineChart, normalizeCfdData } from "../../components/charts/LineChart"
 import LineChartTooltip from "../../components/charts/tooltips/LineChartTooltip"
@@ -12,7 +15,8 @@ import DateLocale from "../../components/ui/DateLocale"
 import Table from "../../components/ui/Table"
 import { MeContext } from "../../contexts/MeContext"
 import { cfdChartData } from "../../lib/charts"
-import { secondsToDays } from "../../lib/date"
+import { formatDate, secondsToDays, secondsToReadbleDate } from "../../lib/date"
+import { Demand } from "../../modules/demand/demand.types"
 import TeamBasicPage from "../../modules/team/components/TeamBasicPage"
 import { Team } from "../../modules/team/team.types"
 
@@ -34,6 +38,38 @@ const TEAM_DASHBOARD_QUERY = gql`
           data
         }
       }
+      demandsFlowChartData {
+        creationChartData
+        committedChartData
+        pullTransactionRate
+        throughputChartData
+        xAxis
+      }
+      biggestFiveLeadTimes: latestDeliveries(orderField: "leadtime", sortDirection: DESC, limit: 5) {
+        ...demand
+      }
+      biggestFiveLeadTimesInFourWeeks: latestDeliveries(
+        orderField: "leadtime"
+        sortDirection: DESC
+        limit: 5
+        startDate: "${format(subWeeks(new Date(), 4), "yyyy-MM-dd")}"
+      ) {
+        ...demand
+      }
+    }
+  }
+
+  fragment demand on Demand {
+    id
+    leadtime
+    endDate
+    product {
+      id
+      name
+    }
+    project {
+      id
+      name
     }
   }
 `
@@ -103,6 +139,76 @@ const TeamDashboard = () => {
       ]
     : []
 
+  const deliveriesRows = (demands: Demand[]) =>
+    demands.map((demand) => {
+      return [
+        <Link
+          href={`${companyUrl}/demands/${demand.externalId}`}
+          sx={{ color: "info.dark", textDecoration: "none" }}
+        >
+          {demand.externalId}
+        </Link>,
+        <Link
+          href={`${companyUrl}/projects/${demand.project?.id}`}
+          sx={{ color: "info.dark", textDecoration: "none" }}
+        >
+          {demand.project?.name}
+        </Link>,
+        <Link
+          href={`${companyUrl}/products/${demand.product.id}`}
+          sx={{ color: "info.dark", textDecoration: "none" }}
+        >
+          {demand.product.name}
+        </Link>,
+        demand.endDate
+          ? formatDate({
+              date: demand.endDate,
+              format: "dd/MM/yyyy' 'HH:mm:ss",
+            })
+          : "",
+        secondsToReadbleDate(demand.leadtime),
+        demand.numberOfBlocks,
+      ]
+    })
+
+  const biggestFiveLeadTimesRows = team?.biggestFiveLeadTimes
+    ? deliveriesRows(team.biggestFiveLeadTimes)
+    : []
+  const biggestFiveLeadTimesInFourWeeksRows =
+    team?.biggestFiveLeadTimesInFourWeeks
+      ? deliveriesRows(team.biggestFiveLeadTimesInFourWeeks)
+      : []
+
+  const demandsFlowChartData = team?.demandsFlowChartData
+  const committedChartData = demandsFlowChartData?.committedChartData
+  const teamFlowChartData: BarDatum[] = committedChartData
+    ? committedChartData?.map((_, index) => {
+        const creationChartData = demandsFlowChartData.creationChartData
+          ? demandsFlowChartData.creationChartData
+          : []
+
+        const pullTransactionRate = demandsFlowChartData.pullTransactionRate
+          ? demandsFlowChartData.pullTransactionRate
+          : []
+
+        const throughputChartData = demandsFlowChartData.throughputChartData
+          ? demandsFlowChartData.throughputChartData
+          : []
+
+        return {
+          index: demandsFlowChartData.xAxis?.[index] || index,
+          [t("charts_tab.project_charts.flow_data_created")]:
+            creationChartData[index],
+          [t("charts_tab.project_charts.flow_data_committed_to")]:
+            committedChartData[index],
+          [t("charts_tab.project_charts.flow_data_pull_transactions")]:
+            pullTransactionRate[index],
+          [t("charts_tab.project_charts.flow_data_delivered")]:
+            throughputChartData[index],
+        }
+      })
+    : []
+
   return (
     <TeamBasicPage
       breadcrumbsLinks={breadcrumbsLinks}
@@ -110,15 +216,28 @@ const TeamDashboard = () => {
       title={team?.name}
     >
       <Grid container columnSpacing={4}>
-        <Grid item xs={4} sx={{ padding: 2 }}>
+        <Grid item xs={4}>
           <Table title={t("dashboard.infoTable")} rows={teamInfoRows} />
         </Grid>
+        <Grid item xs={4}>
+          <Table
+            title={t("dashboard.biggestFiveLeadTimes")}
+            rows={biggestFiveLeadTimesRows}
+          />
+        </Grid>
+        <Grid item xs={4}>
+          <Table
+            title={t("dashboard.biggestFiveLeadTimesInFourWeeks")}
+            rows={biggestFiveLeadTimesInFourWeeksRows}
+          />
+        </Grid>
+      </Grid>
+      <Grid container columnSpacing={4}>
         {teamCumulativeFlowChartData && (
           <ChartGridItem
             title={t("charts.cumulativeFlowChart", {
               teamName: team?.name,
             })}
-            columns={8}
           >
             <LineChart
               data={normalizeCfdData(teamCumulativeFlowChartData)}
@@ -146,6 +265,21 @@ const TeamDashboard = () => {
             />
           </ChartGridItem>
         )}
+        <ChartGridItem title={t("charts_tab.project_charts.flow_data_chart")}>
+          <BarChart
+            data={teamFlowChartData}
+            keys={[
+              t("charts_tab.project_charts.flow_data_created"),
+              t("charts_tab.project_charts.flow_data_committed_to"),
+              t("charts_tab.project_charts.flow_data_pull_transactions"),
+              t("charts_tab.project_charts.flow_data_delivered"),
+            ]}
+            indexBy="index"
+            axisLeftLegend={t("charts_tab.project_charts.flow_data_y_label")}
+            axisBottomLegend={t("charts_tab.project_charts.flow_data_x_label")}
+            groupMode="grouped"
+          />
+        </ChartGridItem>
       </Grid>
     </TeamBasicPage>
   )

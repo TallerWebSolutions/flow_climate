@@ -19,13 +19,24 @@ module Types
     field :cumulative_flow_chart_data, Types::Charts::CumulativeFlowChartType, null: true
     field :max_work_in_progress, Int, null: false
     field :work_in_progress, Int, null: true
-
+    field :latest_deliveries, [Types::DemandType], null: true do
+      argument :order_field, String, required: false
+      argument :sort_direction, Types::Enums::SortDirection, required: false
+      argument :limit, Int, required: false
+      argument :start_date, GraphQL::Types::ISO8601Date, required: false, description: "Start Date for the search range, will only bring demands finished after this date"
+    end
     field :last_replenishing_consolidations, [Types::ReplenishingConsolidationType], null: false
-
+    field :demands_flow_chart_data, Types::Charts::DemandsFlowChartDataType, null: true
     field :active_projects, [Types::ProjectType], null: true
     field :projects, [Types::ProjectType], null: true
 
     delegate :projects, to: :object
+
+    def latest_deliveries(order_field: "end_date", sort_direction: :desc, limit: 5, start_date: '')
+      demands = object.demands.finished_until_date(Time.zone.now).where.not(leadtime: nil).limit(limit).order(order_field => sort_direction)
+      demands = demands.where('end_date >= :limit_date', limit_date: start_date) if start_date.present?
+      demands
+    end
 
     def last_replenishing_consolidations
       team_active_projects = active_projects
@@ -85,6 +96,12 @@ module Types
       work_item_flow_information = build_work_item_flow_information(array_of_dates)
 
       { x_axis: array_of_dates, y_axis: work_item_flow_information.demands_stages_count_hash }
+    end
+
+    def demands_flow_chart_data
+      start_date = [object.start_date, 6.months.ago].max
+      end_date = [object.end_date, Time.zone.today].min
+      Highchart::DemandsChartsAdapter.new(object.demands.kept, start_date, end_date, 'week')
     end
 
     private

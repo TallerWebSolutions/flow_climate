@@ -1,5 +1,9 @@
-import { SimpleListChartData } from "../charts/charts.types"
+import {
+  DemandsFlowChartData,
+  SimpleListChartData,
+} from "../charts/charts.types"
 import { Company } from "../company/company.types"
+import { Demand } from "../demand/demand.types"
 import { ReplenishingConsolidation } from "../replenishing/replenishingConsolidation.types"
 
 export type Team = {
@@ -26,4 +30,7 @@ export type Team = {
     xAxis: string[]
     yAxis: SimpleListChartData[]
   }
+  biggestFiveLeadTimes?: Demand[]
+  biggestFiveLeadTimesInFourWeeks?: Demand[]
+  demandsFlowChartData?: DemandsFlowChartData
 }
