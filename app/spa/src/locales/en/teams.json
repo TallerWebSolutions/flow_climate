@@ -39,6 +39,23 @@
   },
   "charts": {
     "cumulativeFlowChart": "Cumulative Flow Diagram",
-    "cumulativeFlowYLabel": "Demands"
+    "cumulativeFlowYLabel": "Demands",
+    "leadTimeHistogramChartHits": "hits",
+    "flow_data_created": "Created",
+    "flow_data_committed_to": "Commited To",
+    "flow_data_pull_transactions": "Pull Transactions",
+    "flow_data_delivered": "Delivered",
+    "lead_time_histogram_chart_x_label": "Days",
+    "lead_time_histogram_chart_y_label": "hits",
+    "flowDataChart": "Flow Data",
+    "flowDataCreated": "Created",
+    "flowDataCommitted_to": "Commited To",
+    "flowDataPullTransactions": "PullTransactions",
+    "flowDataDelivered": "Delivered",
+    "flowDataYLabel": "Deliverables",
+    "flowDataXLabel": "Period",
+    "leadTimeHistogramChart": "Lead Time Histogram Chart",
+    "leadTimeHistogramChartXLabel": "Days",
+    "leadTimeHistogramChartYLabel": "hits"
   }
 }

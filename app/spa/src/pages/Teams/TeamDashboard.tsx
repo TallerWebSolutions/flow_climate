@@ -45,6 +45,10 @@ const TEAM_DASHBOARD_QUERY = gql`
         throughputChartData
         xAxis
       }
+      leadTimeHistogramData {
+        keys
+        values
+      }
       biggestFiveLeadTimes: latestDeliveries(orderField: "leadtime", sortDirection: DESC, limit: 5) {
         ...demand
       }
@@ -197,14 +201,26 @@ const TeamDashboard = () => {
 
         return {
           index: demandsFlowChartData.xAxis?.[index] || index,
-          [t("charts_tab.project_charts.flow_data_created")]:
-            creationChartData[index],
-          [t("charts_tab.project_charts.flow_data_committed_to")]:
-            committedChartData[index],
-          [t("charts_tab.project_charts.flow_data_pull_transactions")]:
-            pullTransactionRate[index],
-          [t("charts_tab.project_charts.flow_data_delivered")]:
-            throughputChartData[index],
+          [t("charts.flow_data_created")]: creationChartData[index],
+          [t("charts.flow_data_committed_to")]: committedChartData[index],
+          [t("charts.flow_data_pull_transactions")]: pullTransactionRate[index],
+          [t("charts.flow_data_delivered")]: throughputChartData[index],
+        }
+      })
+    : []
+
+  const leadTimeHistogramData = team?.leadTimeHistogramData
+  const teamLeadTimeHistogramData: BarDatum[] = leadTimeHistogramData
+    ? leadTimeHistogramData.keys.map((el, index) => {
+        const projectLeadTimeHistogramDataKeysInDays =
+          secondsToDays(el).toFixed(2)
+
+        return {
+          index,
+          [t("charts.lead_time_histogram_chart_x_label")]:
+            projectLeadTimeHistogramDataKeysInDays,
+          [t("charts.lead_time_histogram_chart_y_label")]:
+            leadTimeHistogramData.values[index],
         }
       })
     : []
@@ -265,19 +281,29 @@ const TeamDashboard = () => {
             />
           </ChartGridItem>
         )}
-        <ChartGridItem title={t("charts_tab.project_charts.flow_data_chart")}>
+        <ChartGridItem title={t("charts.flowDataChart")}>
           <BarChart
             data={teamFlowChartData}
             keys={[
-              t("charts_tab.project_charts.flow_data_created"),
-              t("charts_tab.project_charts.flow_data_committed_to"),
-              t("charts_tab.project_charts.flow_data_pull_transactions"),
-              t("charts_tab.project_charts.flow_data_delivered"),
+              t("charts.flowDataCreated"),
+              t("charts.flowDataCommitted_to"),
+              t("charts.flowDataPullTransactions"),
+              t("charts.flowDataDelivered"),
             ]}
             indexBy="index"
-            axisLeftLegend={t("charts_tab.project_charts.flow_data_y_label")}
-            axisBottomLegend={t("charts_tab.project_charts.flow_data_x_label")}
+            axisLeftLegend={t("charts.flowDataYLabel")}
+            axisBottomLegend={t("charts.flowDataXLabel")}
             groupMode="grouped"
+          />
+        </ChartGridItem>
+        <ChartGridItem title={t("charts.leadTimeHistogramChart")}>
+          <BarChart
+            data={teamLeadTimeHistogramData}
+            keys={[t("charts.leadTimeHistogramChartHits")]}
+            indexBy={t("charts.leadTimeHistogramChartXLabel")}
+            axisLeftLegend={t("charts.leadTimeHistogramChartYLabel")}
+            axisBottomLegend={t("charts.leadTimeHistogramChartXLabel")}
+            padding={0}
           />
         </ChartGridItem>
       </Grid>

@@ -1,5 +1,6 @@
 import {
   DemandsFlowChartData,
+  KeyValueData,
   SimpleListChartData,
 } from "../charts/charts.types"
 import { Company } from "../company/company.types"
@@ -33,4 +34,5 @@ export type Team = {
   biggestFiveLeadTimes?: Demand[]
   biggestFiveLeadTimesInFourWeeks?: Demand[]
   demandsFlowChartData?: DemandsFlowChartData
+  leadTimeHistogramData?: KeyValueData
 }

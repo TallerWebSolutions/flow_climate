@@ -29,6 +29,7 @@ module Types
     field :demands_flow_chart_data, Types::Charts::DemandsFlowChartDataType, null: true
     field :active_projects, [Types::ProjectType], null: true
     field :projects, [Types::ProjectType], null: true
+    field :lead_time_histogram_data, Types::Charts::LeadTimeHistogramDataType, null: true
 
     delegate :projects, to: :object
 
@@ -104,12 +105,20 @@ module Types
       Highchart::DemandsChartsAdapter.new(object.demands.kept, start_date, end_date, 'week')
     end
 
+    def lead_time_histogram_data
+      Stats::StatisticsService.instance.leadtime_histogram_hash(demands_finished_with_leadtime.map(&:leadtime).map { |leadtime| leadtime.round(3) })
+    end
+
     private
 
     def build_work_item_flow_information(array_of_dates)
       work_item_flow_information = Flow::WorkItemFlowInformation.new(object.demands, object.initial_scope, array_of_dates.length, array_of_dates.last, 'week')
       array_of_dates.each { |analysed_date| work_item_flow_information.build_cfd_hash(array_of_dates.first.beginning_of_week, analysed_date) }
       work_item_flow_information
+    end
+
+    def demands_finished_with_leadtime
+      object.demands.finished_with_leadtime
     end
   end
 end
