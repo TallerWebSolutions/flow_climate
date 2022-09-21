@@ -5,15 +5,18 @@ module Types
     field :company, Types::CompanyType, null: false
     field :id, ID, null: false
     field :name, String, null: false
-
+    field :end_date, GraphQL::Types::ISO8601Date, null: true
+    field :start_date, GraphQL::Types::ISO8601Date, null: true
     field :throughput_data, [Int], null: true
-
+    field :lead_time_p65, Float, null: true
+    field :lead_time_p80, Float, null: true
+    field :lead_time_p95, Float, null: true
     field :average_throughput, Float, null: true
     field :increased_avg_throughtput, Boolean, null: true
-
+    field :number_of_demands_delivered, Int, null: true
     field :increased_leadtime_80, Boolean, null: true
     field :lead_time, Float, null: true
-
+    field :cumulative_flow_chart_data, Types::Charts::CumulativeFlowChartType, null: true
     field :max_work_in_progress, Int, null: false
     field :work_in_progress, Int, null: true
 
@@ -47,6 +50,22 @@ module Types
       last_replenishing_consolidations.last&.team_lead_time
     end
 
+    def lead_time_p65
+      object.lead_time(object.start_date, object.end_date, 65)
+    end
+
+    def lead_time_p80
+      object.lead_time(object.start_date, object.end_date, 80)
+    end
+
+    def lead_time_p95
+      object.lead_time(object.start_date, object.end_date, 95)
+    end
+
+    def number_of_demands_delivered
+      object.demands.kept.finished_until_date(Time.zone.now).count
+    end
+
     def increased_leadtime_80
       last_replenishing_consolidations.last&.increased_leadtime_80?
     end
@@ -57,6 +76,23 @@ module Types
 
     def active_projects
       projects.active
+    end
+
+    def cumulative_flow_chart_data
+      start_date = object.start_date
+      end_date = [object.end_date, Time.zone.today].min
+      array_of_dates = TimeService.instance.weeks_between_of(start_date, end_date)
+      work_item_flow_information = build_work_item_flow_information(array_of_dates)
+
+      { x_axis: array_of_dates, y_axis: work_item_flow_information.demands_stages_count_hash }
+    end
+
+    private
+
+    def build_work_item_flow_information(array_of_dates)
+      work_item_flow_information = Flow::WorkItemFlowInformation.new(object.demands, object.initial_scope, array_of_dates.length, array_of_dates.last, 'week')
+      array_of_dates.each { |analysed_date| work_item_flow_information.build_cfd_hash(array_of_dates.first.beginning_of_week, analysed_date) }
+      work_item_flow_information
     end
   end
 end

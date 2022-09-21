@@ -1,10 +1,12 @@
 import { gql, useQuery } from "@apollo/client"
 import { Backdrop, CircularProgress, Grid } from "@mui/material"
+import { useContext } from "react"
 import { useTranslation } from "react-i18next"
 import { useParams } from "react-router-dom"
 
 import DateLocale from "../../components/ui/DateLocale"
 import Table from "../../components/ui/Table"
+import { MeContext } from "../../contexts/MeContext"
 import { secondsToDays } from "../../lib/date"
 import TeamBasicPage from "../../modules/team/components/TeamBasicPage"
 import { Team } from "../../modules/team/team.types"
@@ -14,6 +16,19 @@ const TEAM_DASHBOARD_QUERY = gql`
     team(id: $teamId) {
       id
       name
+      startDate
+      endDate
+      leadTimeP65
+      leadTimeP80
+      leadTimeP95
+      numberOfDemandsDelivered
+      cumulativeFlowChartData {
+        xAxis
+        yAxis {
+          name
+          data
+        }
+      }
     }
   }
 `
@@ -25,6 +40,7 @@ type TeamDashboardDTO = {
 const TeamDashboard = () => {
   const { t } = useTranslation("teams")
   const { teamId, companySlug } = useParams()
+  const { me } = useContext(MeContext)
   const { data, loading } = useQuery<TeamDashboardDTO>(TEAM_DASHBOARD_QUERY, {
     variables: { teamId: Number(teamId) },
   })
@@ -36,7 +52,7 @@ const TeamDashboard = () => {
       </Backdrop>
     )
 
-  const company = data?.team.company
+  const company = me?.currentCompany
   const companyName = company?.name
   const companyUrl = `/companies/${companySlug}`
   const team = data?.team
@@ -56,7 +72,7 @@ const TeamDashboard = () => {
           t("dashboard.endDate"),
           team.endDate ? <DateLocale date={team.endDate} /> : "",
         ],
-        [t("dashboard.delivered"), team.deliveredDemands?.length || 0],
+        [t("dashboard.delivered"), team.numberOfDemandsDelivered || 0],
         [
           t("dashboard.leadTimeP65"),
           `${secondsToDays(team.leadTimeP65 || 0)} ${t("dashboard.days")}`,
@@ -80,7 +96,7 @@ const TeamDashboard = () => {
     >
       <Grid container columnSpacing={4}>
         <Grid item xs={4} sx={{ padding: 2 }}>
-          <Table title={t("dashboard.sixMonthsData")} rows={teamInfoRows} />
+          <Table title={t("dashboard.infoTable")} rows={teamInfoRows} />
         </Grid>
       </Grid>
     </TeamBasicPage>

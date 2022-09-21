@@ -31,6 +31,10 @@
     "leadTimeP65": "Lead Time P65",
     "leadTimeP80": "Lead Time P80",
     "leadTimeP95": "Lead Time P95",
-    "sixMonthsData": "Últimos Seis Meses"
+    "infoTable": "Informações do time"
+  },
+  "tabs": {
+    "dashboard": "Dashboard",
+    "replenishing": "Replenishing"
   }
 }

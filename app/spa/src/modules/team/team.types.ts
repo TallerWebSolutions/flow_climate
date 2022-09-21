@@ -1,5 +1,4 @@
 import { Company } from "../company/company.types"
-import { Demand } from "../demand/demand.types"
 import { ReplenishingConsolidation } from "../replenishing/replenishingConsolidation.types"
 
 export type Team = {
@@ -22,5 +21,4 @@ export type Team = {
   numberOfDemands?: number
   numberOfDemandsDelivered?: number
   numberOfRemainingBacklog?: number
-  deliveredDemands?: Demand[]
 }

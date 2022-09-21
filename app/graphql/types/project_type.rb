@@ -23,7 +23,7 @@ module Types
     field :demands_finished_with_leadtime, [Types::DemandType], null: true
     field :discarded_demands, [Types::DemandType], null: true
     field :discovered_scope, Int, null: true
-    field :end_date, GraphQL::Types::ISO8601Date, null: false
+    field :end_date, GraphQL::Types::ISO8601Date, null: true
     field :failure_load, Float, null: true
     field :first_deadline, GraphQL::Types::ISO8601Date, null: true
     field :flow_pressure, Float, null: false

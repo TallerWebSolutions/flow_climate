@@ -9,14 +9,8 @@ class TeamsController < DemandsListController
   end
 
   def show
-    build_cache_object
-    assign_demands_lists
-
-    @demands_blocks = @team.demand_blocks.order(block_time: :desc)
-    @flow_pressure = @team.flow_pressure
-    @average_speed = DemandService.instance.average_speed(charts_demands)
-
-    build_charts_data(charts_demands)
+    prepend_view_path Rails.public_path
+    render 'spa-build/index'
   end
 
   def new
