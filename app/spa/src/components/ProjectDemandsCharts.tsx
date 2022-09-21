@@ -15,6 +15,7 @@ import { openWindow } from "../lib/func"
 import { useContext } from "react"
 import { MeContext } from "../contexts/MeContext"
 import { ChartAxisData } from "../modules/charts/charts.types"
+import { cfdChartData } from "../lib/charts"
 
 type ProjectDemandsChartsProps = {
   project: Project
@@ -107,19 +108,10 @@ const ProjectDemandsCharts = ({
   const cfdXaxis = cumulativeFlowChartData?.xAxis || []
   const cfdYaxis = cumulativeFlowChartData?.yAxis.reverse() || []
   const projectStages = cfdYaxis.map((item) => item.name)
-  const projectCumulativeFlowChartData = projectStages?.map(
-    (stage, stageIndex) => {
-      return {
-        id: stage,
-        data: cfdXaxis.map((x, index) => {
-          const currentStageY = cfdYaxis[stageIndex]?.data[index] || 0
-          return {
-            x,
-            y: currentStageY,
-          }
-        }),
-      }
-    }
+  const projectCumulativeFlowChartData = cfdChartData(
+    projectStages,
+    cfdXaxis,
+    cfdYaxis
   )
 
   const committedChartData = demandsFlowChartData?.committedChartData

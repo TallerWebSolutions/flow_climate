@@ -13,7 +13,6 @@ export type ChartAxisData = {
 
 export type DemandsFlowChartData = {
   xAxis?: string[]
-
   creationChartData?: number[]
   committedChartData?: number[]
   pullTransactionRate?: number[]
@@ -28,4 +27,9 @@ export type KeyValueData = {
 export type SimpleChartData = {
   label: string
   value: number
+}
+
+export type SimpleListChartData = {
+  name: string
+  data: number[]
 }

@@ -79,7 +79,7 @@ module Types
     end
 
     def cumulative_flow_chart_data
-      start_date = object.start_date
+      start_date = [object.start_date, 6.months.ago].max
       end_date = [object.end_date, Time.zone.today].min
       array_of_dates = TimeService.instance.weeks_between_of(start_date, end_date)
       work_item_flow_information = build_work_item_flow_information(array_of_dates)

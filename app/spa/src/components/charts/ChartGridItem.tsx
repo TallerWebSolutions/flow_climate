@@ -1,11 +1,11 @@
 import { Grid, Typography, IconButton, Box, Tooltip } from "@mui/material"
-import { ReactElement, useRef } from "react"
+import { ReactNode, useRef } from "react"
 import DownloadIcon from "@mui/icons-material/Download"
 import { exportComponentAsPNG } from "react-component-export-image"
 import InfoIcon from "@mui/icons-material/Info"
 
 type ChartGridItemProps = {
-  children: ReactElement | ReactElement[]
+  children: ReactNode
   title: string
   chartTip?: string
   columns?: number

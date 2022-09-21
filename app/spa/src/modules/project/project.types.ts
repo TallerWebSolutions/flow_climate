@@ -8,6 +8,7 @@ import {
   DemandsFlowChartData,
   KeyValueData,
   NumberChartData,
+  SimpleListChartData,
 } from "../charts/charts.types"
 
 export type Project = {
@@ -95,10 +96,7 @@ export type Project = {
   demandsFlowChartData: DemandsFlowChartData
   cumulativeFlowChartData?: {
     xAxis: string[]
-    yAxis: {
-      name: string
-      data: number[]
-    }[]
+    yAxis: SimpleListChartData[]
   }
   leadTimeHistogramData: KeyValueData
   currentWeeklyTasksScopeIdealBurnup: number[]

@@ -1,3 +1,4 @@
+import { SimpleListChartData } from "../charts/charts.types"
 import { Company } from "../company/company.types"
 import { ReplenishingConsolidation } from "../replenishing/replenishingConsolidation.types"
 
@@ -21,4 +22,8 @@ export type Team = {
   numberOfDemands?: number
   numberOfDemandsDelivered?: number
   numberOfRemainingBacklog?: number
+  cumulativeFlowChartData?: {
+    xAxis: string[]
+    yAxis: SimpleListChartData[]
+  }
 }

@@ -36,5 +36,9 @@
   "tabs": {
     "dashboard": "Dashboard",
     "replenishing": "Replenishing"
+  },
+  "charts": {
+    "cumulativeFlowChart": "Cumulative Flow Diagram",
+    "cumulativeFlowYLabel": "Deliverables"
   }
 }

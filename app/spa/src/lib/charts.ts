@@ -1,6 +1,10 @@
 import { BarDatum } from "@nivo/bar"
 import { ScatterPlotDatum, ScatterPlotRawSerie } from "@nivo/scatterplot"
-import { ChartAxisData, KeyValueData } from "../modules/charts/charts.types"
+import {
+  ChartAxisData,
+  KeyValueData,
+  SimpleListChartData,
+} from "../modules/charts/charts.types"
 
 export const keyValueToHistogramData = (data: KeyValueData): BarDatum[] =>
   data.keys.map((key, index) => {
@@ -29,3 +33,16 @@ export const keyValueToAxisData = (data: KeyValueData): ChartAxisData => ({
   yAxis: data.keys,
   xAxis: data.values.map(String),
 })
+
+export const cfdChartData = (
+  stages: string[],
+  xAxis: string[],
+  yAxis: SimpleListChartData[]
+) =>
+  stages.map((stage, stageIndex) => ({
+    id: stage,
+    data: xAxis.map((x, index) => ({
+      x,
+      y: yAxis[stageIndex].data[index] || 0,
+    })),
+  }))
