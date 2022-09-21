@@ -3,25 +3,25 @@
 RSpec.describe DemandScoreMatricesController, type: :controller do
   context 'unauthenticated' do
     describe 'POST #create' do
-      before { post :create, params: { demand_id: 'foo' } }
+      before { post :create, params: { company_id: 'bar', demand_id: 'foo' } }
 
       it { expect(response).to redirect_to new_user_session_path }
     end
 
     describe 'POST #create_from_sheet' do
-      before { post :create_from_sheet, params: { demand_id: 'foo' } }
+      before { post :create_from_sheet, params: { company_id: 'bar', demand_id: 'foo' } }
 
       it { expect(response).to redirect_to new_user_session_path }
     end
 
     describe 'DELETE #destroy' do
-      before { delete :destroy, params: { id: 'foo' } }
+      before { delete :destroy, params: { company_id: 'bar', id: 'foo' } }
 
       it { expect(response).to redirect_to new_user_session_path }
     end
 
     describe 'DELETE #destroy_from_sheet' do
-      before { delete :destroy_from_sheet, params: { id: 'foo' } }
+      before { delete :destroy_from_sheet, params: { company_id: 'bar', id: 'foo' } }
 
       it { expect(response).to redirect_to new_user_session_path }
     end
@@ -29,8 +29,9 @@ RSpec.describe DemandScoreMatricesController, type: :controller do
 
   context 'authenticated' do
     let(:user) { Fabricate :user }
-    let(:product) { Fabricate :product }
-    let!(:demand) { Fabricate :demand, product: product }
+    let(:company) { Fabricate :company, users: [user] }
+    let(:product) { Fabricate :product, company: company }
+    let!(:demand) { Fabricate :demand, company: company, product: product }
     let!(:score_matrix) { Fabricate :score_matrix, product: product }
 
     before { sign_in user }
@@ -48,7 +49,7 @@ RSpec.describe DemandScoreMatricesController, type: :controller do
         let!(:first_demand_score_matrix) { Fabricate :demand_score_matrix, user: user, demand: demand, score_matrix_answer: first_answer }
         let!(:second_demand_score_matrix) { Fabricate :demand_score_matrix, user: user, demand: demand, score_matrix_answer: second_answer }
 
-        before { post :create, params: { demand_id: demand.id, "score_matrix_question_#{first_question.id}" => first_answer.id, "score_matrix_question_#{second_question.id}" => second_answer.id } }
+        before { post :create, params: { company_id: company, demand_id: demand.id, "score_matrix_question_#{first_question.id}" => first_answer.id, "score_matrix_question_#{second_question.id}" => second_answer.id } }
 
         it 'assigns the instance variable and renders the template' do
           expect(response).to redirect_to score_research_company_demand_path(demand.company, demand)
@@ -60,7 +61,7 @@ RSpec.describe DemandScoreMatricesController, type: :controller do
       end
 
       context 'with no data' do
-        before { post :create, params: { demand_id: demand.id } }
+        before { post :create, params: { company_id: company, demand_id: demand.id } }
 
         it 'assigns the instance variable and renders the template' do
           expect(response).to redirect_to score_research_company_demand_path(demand.company, demand)
@@ -70,7 +71,7 @@ RSpec.describe DemandScoreMatricesController, type: :controller do
 
       context 'with invalid' do
         context 'demand id' do
-          before { post :create, params: { demand_id: 'foo' } }
+          before { post :create, params: { company_id: company, demand_id: 'foo' } }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -90,10 +91,10 @@ RSpec.describe DemandScoreMatricesController, type: :controller do
         let!(:first_demand_score_matrix) { Fabricate :demand_score_matrix, user: user, demand: demand, score_matrix_answer: first_answer }
         let!(:second_demand_score_matrix) { Fabricate :demand_score_matrix, user: user, demand: demand, score_matrix_answer: second_answer }
 
-        before { post :create_from_sheet, params: { demand_id: demand.id, "score_matrix_question_#{first_question.id}" => first_answer.id, "score_matrix_question_#{second_question.id}" => second_answer.id, score_question_dimensions: 'customer_dimension' } }
+        before { post :create_from_sheet, params: { company_id: company, demand_id: demand.id, "score_matrix_question_#{first_question.id}" => first_answer.id, "score_matrix_question_#{second_question.id}" => second_answer.id, score_question_dimensions: 'customer_dimension' } }
 
         it 'assigns the instance variable and renders the template' do
-          expect(response).to redirect_to score_matrix_path(demand.product.score_matrix, questions_dimension: 'customer_dimension')
+          expect(response).to redirect_to company_score_matrix_path(company, demand.product.score_matrix, questions_dimension: 'customer_dimension')
           expect(DemandScoreMatrix.count).to eq 2
           expect(DemandScoreMatrix.all.map(&:score_matrix_answer)).to match_array [first_answer, second_answer]
           expect(DemandScoreMatrix.all.map(&:user)).to match_array [user, user]
@@ -104,17 +105,17 @@ RSpec.describe DemandScoreMatricesController, type: :controller do
       context 'with no data' do
         let!(:score_matrix) { Fabricate :score_matrix, product: product }
 
-        before { post :create_from_sheet, params: { demand_id: demand.id } }
+        before { post :create_from_sheet, params: { company_id: company, demand_id: demand.id } }
 
         it 'assigns the instance variable and renders the template' do
-          expect(response).to redirect_to score_matrix_path(demand.product.score_matrix)
+          expect(response).to redirect_to company_score_matrix_path(company, demand.product.score_matrix)
           expect(DemandScoreMatrix.count).to eq 0
         end
       end
 
       context 'with invalid' do
         context 'demand id' do
-          before { post :create_from_sheet, params: { demand_id: 'foo' } }
+          before { post :create_from_sheet, params: { company_id: company, demand_id: 'foo' } }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -134,7 +135,7 @@ RSpec.describe DemandScoreMatricesController, type: :controller do
         let!(:first_demand_score_matrix) { Fabricate :demand_score_matrix, user: user, demand: demand, score_matrix_answer: first_answer }
         let!(:second_demand_score_matrix) { Fabricate :demand_score_matrix, user: user, demand: demand, score_matrix_answer: second_answer }
 
-        before { delete :destroy, params: { id: first_demand_score_matrix } }
+        before { delete :destroy, params: { company_id: company, id: first_demand_score_matrix } }
 
         it 'assigns the instance variable and renders the template' do
           expect(response).to redirect_to score_research_company_demand_path(demand.company, demand)
@@ -147,9 +148,8 @@ RSpec.describe DemandScoreMatricesController, type: :controller do
       context 'with no data' do
         let!(:first_demand_score_matrix) { Fabricate :demand_score_matrix, demand: demand }
 
-        before { delete :destroy, params: { id: first_demand_score_matrix } }
-
         it 'assigns the instance variable and renders the template' do
+          delete :destroy, params: { company_id: company, id: first_demand_score_matrix }
           expect(response).to redirect_to score_research_company_demand_path(demand.company, demand)
           expect(assigns(:demand_score_matrix)).to eq first_demand_score_matrix
           expect(assigns(:new_demand_score_matrix)).to be_a_new DemandScoreMatrix
@@ -159,7 +159,7 @@ RSpec.describe DemandScoreMatricesController, type: :controller do
 
       context 'with invalid' do
         context 'score matrix' do
-          before { delete :destroy, params: { id: 'foo' } }
+          before { delete :destroy, params: { company_id: 'bar', id: 'foo' } }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -179,10 +179,10 @@ RSpec.describe DemandScoreMatricesController, type: :controller do
         let!(:first_demand_score_matrix) { Fabricate :demand_score_matrix, user: user, demand: demand, score_matrix_answer: first_answer }
         let!(:second_demand_score_matrix) { Fabricate :demand_score_matrix, user: user, demand: demand, score_matrix_answer: second_answer }
 
-        before { delete :destroy_from_sheet, params: { id: first_demand_score_matrix, score_question_dimensions: 'customer_dimension' } }
+        before { delete :destroy_from_sheet, params: { company_id: company, id: first_demand_score_matrix, score_question_dimensions: 'customer_dimension' } }
 
         it 'assigns the instance variable and renders the template' do
-          expect(response).to redirect_to score_matrix_path(demand.product.score_matrix, questions_dimension: 'customer_dimension')
+          expect(response).to redirect_to company_score_matrix_path(company, demand.product.score_matrix, questions_dimension: 'customer_dimension')
           expect(assigns(:demand_score_matrix)).to eq first_demand_score_matrix
           expect(assigns(:new_demand_score_matrix)).to be_a_new DemandScoreMatrix
           expect(DemandScoreMatrix.count).to eq 1
@@ -192,10 +192,10 @@ RSpec.describe DemandScoreMatricesController, type: :controller do
       context 'with no data' do
         let!(:first_demand_score_matrix) { Fabricate :demand_score_matrix, demand: demand }
 
-        before { delete :destroy_from_sheet, params: { id: first_demand_score_matrix } }
+        before { delete :destroy_from_sheet, params: { company_id: company, id: first_demand_score_matrix } }
 
         it 'assigns the instance variable and renders the template' do
-          expect(response).to redirect_to score_matrix_path(demand.product.score_matrix)
+          expect(response).to redirect_to company_score_matrix_path(company, demand.product.score_matrix)
           expect(assigns(:demand_score_matrix)).to eq first_demand_score_matrix
           expect(assigns(:new_demand_score_matrix)).to be_a_new DemandScoreMatrix
           expect(DemandScoreMatrix.count).to eq 0
@@ -204,7 +204,7 @@ RSpec.describe DemandScoreMatricesController, type: :controller do
 
       context 'with invalid' do
         context 'score matrix' do
-          before { delete :destroy_from_sheet, params: { id: 'foo' } }
+          before { delete :destroy_from_sheet, params: { company_id: 'bar', id: 'foo' } }
 
           it { expect(response).to have_http_status :not_found }
         end

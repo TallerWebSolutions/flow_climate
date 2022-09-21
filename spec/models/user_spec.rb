@@ -240,4 +240,20 @@ RSpec.describe User, type: :model do
     it { expect(user.slack_user_for_company(other_company)).to eq '@other_user' }
     it { expect(no_company_user.slack_user_for_company(other_company)).to be_nil }
   end
+
+  describe '#active_access_to_company?' do
+    it 'returns true if the user has an active access to the company' do
+      first_company = Fabricate :company
+      second_company = Fabricate :company
+      third_company = Fabricate :company
+
+      user = Fabricate :user
+      Fabricate :user_company_role, user: user, company: first_company, start_date: 1.day.ago, end_date: nil
+      Fabricate :user_company_role, user: user, company: second_company, start_date: 1.day.ago, end_date: Time.zone.now
+
+      expect(user.active_access_to_company?(first_company)).to be true
+      expect(user.active_access_to_company?(second_company)).to be false
+      expect(user.active_access_to_company?(third_company)).to be false
+    end
+  end
 end

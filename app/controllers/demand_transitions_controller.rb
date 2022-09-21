@@ -3,7 +3,6 @@
 class DemandTransitionsController < AuthenticatedController
   before_action :user_gold_check
 
-  before_action :assign_company
   before_action :assign_stage, except: %i[new create edit update]
   before_action :assign_demand, except: :destroy
   before_action :assign_demand_transition, except: %i[new create]

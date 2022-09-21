@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class ServiceDeliveryReviewsController < AuthenticatedController
-  before_action :assign_company
   before_action :assign_product
 
   before_action :assign_service_delivery_review, only: %i[show destroy edit update refresh]

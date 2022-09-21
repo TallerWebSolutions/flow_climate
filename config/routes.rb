@@ -90,19 +90,6 @@ Rails.application.routes.draw do
 
   resources :devise_customers, only: :show
 
-  resources :score_matrices, only: :show do
-    member do
-      get :customer_dimension
-      get :service_provider_dimension
-      get :ordered_demands_list
-    end
-  end
-
-  resources :demand_score_matrices, only: %i[create destroy] do
-    post :create_from_sheet, on: :collection
-    delete :destroy_from_sheet, on: :member
-  end
-
   resources :companies, except: :destroy do
     member do
       patch :add_user
@@ -308,5 +295,18 @@ Rails.application.routes.draw do
     end
 
     resources :flow_events
+
+    resources :score_matrices, only: :show do
+      member do
+        get :customer_dimension
+        get :service_provider_dimension
+        get :ordered_demands_list
+      end
+    end
+
+    resources :demand_score_matrices, only: %i[create destroy] do
+      post :create_from_sheet, on: :collection
+      delete :destroy_from_sheet, on: :member
+    end
   end
 end

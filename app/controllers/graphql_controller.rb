@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class GraphqlController < AuthenticatedController
+  skip_before_action :assign_company
+
   def execute
     query = params[:query]
     operation_name = params[:operationName]

@@ -3,7 +3,6 @@
 class DemandsController < DemandsListController
   before_action :user_gold_check
 
-  before_action :assign_company
   before_action :assign_demand, only: %i[edit update show synchronize_jira synchronize_azure destroy destroy_physically score_research]
 
   def destroy

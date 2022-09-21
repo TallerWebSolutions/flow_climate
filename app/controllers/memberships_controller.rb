@@ -3,7 +3,6 @@
 class MembershipsController < AuthenticatedController
   before_action :user_gold_check
 
-  before_action :assign_company
   before_action :assign_team
   before_action :assign_membership, only: %i[edit update destroy]
 

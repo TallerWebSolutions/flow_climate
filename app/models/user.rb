@@ -62,6 +62,12 @@ class User < ApplicationRecord
 
   delegate :pairing_members, to: :team_member, allow_nil: true
 
+  def active_access_to_company?(company)
+    active_companies = companies.joins(:user_company_roles).where(user_company_roles: { end_date: nil })
+
+    active_companies.include?(company)
+  end
+
   def current_plan
     current_user_plan&.plan
   end

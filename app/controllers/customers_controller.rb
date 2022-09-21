@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class CustomersController < AuthenticatedController
-  before_action :assign_company
   before_action :assign_customer, only: %i[edit update show destroy add_user_to_customer update_cache]
 
   def index

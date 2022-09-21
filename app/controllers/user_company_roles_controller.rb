@@ -2,7 +2,6 @@
 
 class UserCompanyRolesController < AuthenticatedController
   before_action :assign_user
-  before_action :assign_company
   before_action :assign_user_company_role, only: %i[edit update]
 
   def edit; end

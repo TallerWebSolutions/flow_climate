@@ -5,6 +5,8 @@ class UserPlansController < AuthenticatedController
   before_action :assign_user
   before_action :assign_user_plan, except: [:index]
 
+  skip_before_action :assign_company
+
   def activate_user_plan
     @user_plan.activate
     redirect_to user_path(@user)

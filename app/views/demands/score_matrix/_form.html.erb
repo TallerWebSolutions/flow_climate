@@ -1,5 +1,5 @@
 <% if demand.product.score_matrix.present? %>
-  <%= form_tag demand_score_matrix, url: demand_score_matrices_path, class: 'form' do %>
+  <%= form_tag [company, demand_score_matrix], url: company_demand_score_matrices_path, class: 'form' do %>
     <%= hidden_field_tag :demand_id, demand.id %>
 
     <% demand.product.score_matrix.score_matrix_questions.each do |score_question| %>

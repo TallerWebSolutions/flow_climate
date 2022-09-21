@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class UsersController < AuthenticatedController
+  skip_before_action :assign_company
   before_action :check_admin, only: %i[toggle_admin admin_dashboard]
   before_action :assign_user, only: %i[toggle_admin show edit update companies]
 

@@ -2,8 +2,6 @@
 
 module Azure
   class AzureCustomFieldsController < AuthenticatedController
-    before_action :assign_company
-
     def create
       @azure_account = @company.azure_account
       @new_azure_custom_field = Azure::AzureCustomField.create(azure_custom_field_params.merge(azure_account: @azure_account))

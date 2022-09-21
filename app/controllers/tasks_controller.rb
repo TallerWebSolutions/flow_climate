@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class TasksController < AuthenticatedController
-  before_action :assign_company
-
   def index
     prepend_view_path Rails.public_path
     render 'spa-build/index'

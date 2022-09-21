@@ -2,6 +2,7 @@
 
 class AuthenticatedController < ApplicationController
   before_action :authenticate_user!
+  before_action :assign_company
 
   private
 
@@ -16,7 +17,7 @@ class AuthenticatedController < ApplicationController
 
   def assign_company
     @company = Company.friendly.find(params[:company_id]&.downcase)
-    not_found unless current_user.companies.include?(@company)
+    not_found unless current_user.active_access_to_company?(@company)
   end
 
   def assign_customers

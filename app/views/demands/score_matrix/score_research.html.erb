@@ -1,4 +1,4 @@
-<p class="bottom-spaced-component"><%= link_to I18n.t('demands.score_research.go_to_list'), score_matrix_path(@demand.product.score_matrix), class: 'btn btn-default' %></p>
+<p class="bottom-spaced-component"><%= link_to I18n.t('demands.score_research.go_to_list'), company_score_matrix_path(@company, @demand.product.score_matrix), class: 'btn btn-default' %></p>
 <h1><%= I18n.t('demands.score_research.title') %></h1>
 
 <div class="row bottom-spaced-component">
@@ -45,5 +45,5 @@
 </table>
 
 <div id="score-research-form">
-  <%= render 'demands/score_matrix/form', demand_score_matrix: @demand_score_matrix, demand: @demand %>
+  <%= render 'demands/score_matrix/form', company: @company, demand_score_matrix: @demand_score_matrix, demand: @demand %>
 </div>

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class InitiativesController < AuthenticatedController
-  before_action :assign_company
   before_action :assign_initiative, except: %i[index new create edit]
 
   def index

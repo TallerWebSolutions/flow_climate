@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class ContractsController < AuthenticatedController
-  before_action :assign_company
   before_action :assign_customer
   before_action :assign_contract, only: %i[edit update destroy show update_consolidations]
 

@@ -7,7 +7,7 @@
 <%= link_to I18n.t('score_matrix_questions.new.title'), new_company_product_score_matrix_question_path(company, product), class: 'btn btn-sm btn-primary' %>
 
 <% if product.score_matrix.present? %>
-  <%= link_to I18n.t('score_matrices.show.title'), score_matrix_path(product.score_matrix), class: 'btn btn-sm btn-primary', target: '_blank' %>
+  <%= link_to I18n.t('score_matrices.show.title'), company_score_matrix_path(company, product.score_matrix), class: 'btn btn-sm btn-primary', target: '_blank' %>
 <% end %>
 
 <hr>

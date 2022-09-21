@@ -22,7 +22,7 @@
       <td><%= demand.external_id %></td>
       <td><%= demand.demand_title %></td>
       <td><%= number_with_precision(demand.demand_score, precision: 3) %></td>
-      <%= form_tag create_from_sheet_demand_score_matrices_path(demand_score_matrix), class: 'form' do %>
+      <%= form_tag create_from_sheet_company_demand_score_matrices_path(company, demand_score_matrix), class: 'form' do %>
         <%= hidden_field_tag :demand_id, demand.id %>
         <%= hidden_field_tag :score_question_dimensions, score_matrix_questions.map(&:question_type).uniq.join(',') %>
 

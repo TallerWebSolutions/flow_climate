@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class SlackConfigurationsController < AuthenticatedController
-  before_action :assign_company
   before_action :assign_slack_config, only: %i[edit update toggle_active]
 
   def new

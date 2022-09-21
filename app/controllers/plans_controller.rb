@@ -2,6 +2,7 @@
 
 class PlansController < AuthenticatedController
   before_action :inactive_plans_in_period
+  skip_before_action :assign_company
 
   def no_plan; end
 

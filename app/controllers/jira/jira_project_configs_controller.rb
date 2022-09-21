@@ -2,7 +2,6 @@
 
 module Jira
   class JiraProjectConfigsController < AuthenticatedController
-    before_action :assign_company
     before_action :assign_project
     before_action :assign_jira_project_config, only: %i[destroy synchronize_jira]
 

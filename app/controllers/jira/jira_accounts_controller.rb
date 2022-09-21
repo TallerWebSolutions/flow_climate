@@ -2,7 +2,6 @@
 
 module Jira
   class JiraAccountsController < AuthenticatedController
-    before_action :assign_company
     before_action :assign_jira_account, only: %i[destroy show]
 
     def new

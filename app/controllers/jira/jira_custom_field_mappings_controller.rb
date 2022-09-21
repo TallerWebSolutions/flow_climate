@@ -4,7 +4,6 @@ module Jira
   class JiraCustomFieldMappingsController < AuthenticatedController
     before_action :user_gold_check
 
-    before_action :assign_company
     before_action :assign_jira_account
     before_action :assign_jira_custom_field_mapping, only: %i[edit update destroy]
 

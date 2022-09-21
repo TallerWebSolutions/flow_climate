@@ -3,7 +3,6 @@
 class StageProjectConfigsController < AuthenticatedController
   before_action :user_gold_check
 
-  before_action :assign_company
   before_action :assign_stage, except: %i[index destroy]
   before_action :assign_project, only: %i[index destroy]
   before_action :assign_stage_project_config, except: :index

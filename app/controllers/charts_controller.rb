@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class ChartsController < AuthenticatedController
-  before_action :assign_company
   before_action :assign_projects
   before_action :assign_target_name
   before_action :assign_filter_parameters_to_charts

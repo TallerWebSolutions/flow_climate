@@ -2,8 +2,6 @@
 
 module Azure
   class AzureAccountsController < AuthenticatedController
-    before_action :assign_company
-
     def synchronize_azure
       azure_account = @company.azure_account
       Azure::AzureSyncJob.perform_later(azure_account, current_user.email, current_user.full_name)

@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class ItemAssignmentsController < AuthenticatedController
-  before_action :assign_company
-
   def destroy
     @demand = @company.demands.find(params[:demand_id])
     @item_assignment = @demand.item_assignments.find(params[:id])

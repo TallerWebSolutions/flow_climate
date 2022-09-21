@@ -2,7 +2,6 @@
 
 class DemandBlocksController < AuthenticatedController
   before_action :user_gold_check
-  before_action :assign_company
   before_action :assign_project, except: %i[index demand_blocks_csv search]
   before_action :assign_demand, except: %i[index demand_blocks_csv search]
   before_action :assign_demand_block, except: %i[index demand_blocks_csv search]

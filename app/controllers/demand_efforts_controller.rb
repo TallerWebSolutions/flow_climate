@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class DemandEffortsController < AuthenticatedController
-  before_action :assign_company
   before_action :assign_demand
 
   def index

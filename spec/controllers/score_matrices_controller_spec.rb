@@ -3,25 +3,25 @@
 RSpec.describe ScoreMatricesController, type: :controller do
   context 'unauthenticated' do
     describe 'GET #show' do
-      before { get :show, params: { id: 'foo' } }
+      before { get :show, params: { company_id: 'bar', id: 'foo' } }
 
       it { expect(response).to redirect_to new_user_session_path }
     end
 
     describe 'GET #customer_dimension' do
-      before { get :customer_dimension, params: { id: 'foo' } }
+      before { get :customer_dimension, params: { company_id: 'bar', id: 'foo' } }
 
       it { expect(response).to redirect_to new_user_session_path }
     end
 
     describe 'GET #service_provider_dimension' do
-      before { get :service_provider_dimension, params: { id: 'foo' } }
+      before { get :service_provider_dimension, params: { company_id: 'bar', id: 'foo' } }
 
       it { expect(response).to redirect_to new_user_session_path }
     end
 
     describe 'GET #ordered_demands_list' do
-      before { get :ordered_demands_list, params: { id: 'foo' } }
+      before { get :ordered_demands_list, params: { company_id: 'bar', id: 'foo' } }
 
       it { expect(response).to redirect_to new_user_session_path }
     end
@@ -29,11 +29,12 @@ RSpec.describe ScoreMatricesController, type: :controller do
 
   context 'authenticated' do
     let(:user) { Fabricate :user }
+    let(:company) { Fabricate :company, users: [user] }
 
     before { sign_in user }
 
     describe 'GET #show' do
-      let(:product) { Fabricate :product }
+      let(:product) { Fabricate :product, company: company }
       let!(:score_matrix) { Fabricate :score_matrix, product: product }
 
       let!(:first_question) { Fabricate :score_matrix_question, score_matrix: score_matrix, question_weight: 20, question_type: :customer_dimension }
@@ -48,7 +49,7 @@ RSpec.describe ScoreMatricesController, type: :controller do
 
       context 'with valid data' do
         context 'when questions_dimension is blank' do
-          before { get :show, params: { id: score_matrix } }
+          before { get :show, params: { company_id: company, id: score_matrix } }
 
           it 'assigns the instance variable and renders the template' do
             expect(response).to render_template :show
@@ -60,7 +61,7 @@ RSpec.describe ScoreMatricesController, type: :controller do
         end
 
         context 'when questions_dimension is a customer_dimension' do
-          before { get :show, params: { id: score_matrix, questions_dimension: :customer_dimension } }
+          before { get :show, params: { company_id: company, id: score_matrix, questions_dimension: :customer_dimension } }
 
           it 'assigns the instance variable and renders the template' do
             expect(response).to render_template :show
@@ -69,7 +70,7 @@ RSpec.describe ScoreMatricesController, type: :controller do
         end
 
         context 'when questions_dimension is a service_provider_dimension' do
-          before { get :show, params: { id: score_matrix, questions_dimension: :service_provider_dimension } }
+          before { get :show, params: { company_id: company, id: score_matrix, questions_dimension: :service_provider_dimension } }
 
           it 'assigns the instance variable and renders the template' do
             expect(response).to render_template :show
@@ -80,7 +81,7 @@ RSpec.describe ScoreMatricesController, type: :controller do
 
       context 'with invalid' do
         context 'score matrix' do
-          before { get :show, params: { id: 'foo' } }
+          before { get :show, params: { company_id: company, id: 'foo' } }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -88,7 +89,7 @@ RSpec.describe ScoreMatricesController, type: :controller do
     end
 
     describe 'GET #ordered_demands_list' do
-      let(:product) { Fabricate :product }
+      let(:product) { Fabricate :product, company: company }
       let!(:score_matrix) { Fabricate :score_matrix, product: product }
 
       let!(:first_question) { Fabricate :score_matrix_question, score_matrix: score_matrix, question_weight: 20, question_type: :customer_dimension }
@@ -103,7 +104,7 @@ RSpec.describe ScoreMatricesController, type: :controller do
 
       context 'with valid data' do
         context 'when questions_dimension is blank' do
-          before { get :ordered_demands_list, params: { id: score_matrix } }
+          before { get :ordered_demands_list, params: { company_id: company, id: score_matrix } }
 
           it 'assigns the instance variable and renders the template' do
             expect(response).to render_template :show
@@ -116,7 +117,7 @@ RSpec.describe ScoreMatricesController, type: :controller do
 
         context 'with invalid' do
           context 'score matrix' do
-            before { get :ordered_demands_list, params: { id: 'foo' } }
+            before { get :ordered_demands_list, params: { company_id: company, id: 'foo' } }
 
             it { expect(response).to have_http_status :not_found }
           end
@@ -125,7 +126,7 @@ RSpec.describe ScoreMatricesController, type: :controller do
     end
 
     describe 'GET #customer_dimension' do
-      let(:product) { Fabricate :product }
+      let(:product) { Fabricate :product, company: company }
       let!(:score_matrix) { Fabricate :score_matrix, product: product }
 
       context 'with valid data' do
@@ -134,7 +135,7 @@ RSpec.describe ScoreMatricesController, type: :controller do
         let!(:third_question) { Fabricate :score_matrix_question, score_matrix: score_matrix, question_weight: 25, question_type: :customer_dimension }
 
         context 'with customer dimension' do
-          before { get :customer_dimension, params: { id: score_matrix } }
+          before { get :customer_dimension, params: { company_id: company, id: score_matrix } }
 
           it 'assigns the instance variable and renders the template' do
             expect(response).to render_template 'score_matrices/show'
@@ -146,7 +147,7 @@ RSpec.describe ScoreMatricesController, type: :controller do
       end
 
       context 'with no data' do
-        before { get :customer_dimension, params: { id: score_matrix } }
+        before { get :customer_dimension, params: { company_id: company, id: score_matrix } }
 
         it 'assigns the instance variable and renders the template' do
           expect(response).to render_template 'score_matrices/show'
@@ -158,7 +159,7 @@ RSpec.describe ScoreMatricesController, type: :controller do
 
       context 'with invalid' do
         context 'score matrix' do
-          before { get :customer_dimension, params: { id: 'foo' } }
+          before { get :customer_dimension, params: { company_id: company, id: 'foo' } }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -166,7 +167,7 @@ RSpec.describe ScoreMatricesController, type: :controller do
     end
 
     describe 'GET #service_provider_dimension' do
-      let(:product) { Fabricate :product }
+      let(:product) { Fabricate :product, company: company }
       let!(:score_matrix) { Fabricate :score_matrix, product: product }
 
       context 'with valid data' do
@@ -175,7 +176,7 @@ RSpec.describe ScoreMatricesController, type: :controller do
         let!(:third_question) { Fabricate :score_matrix_question, score_matrix: score_matrix, question_weight: 25, question_type: :customer_dimension }
 
         context 'with customer dimension' do
-          before { get :service_provider_dimension, params: { id: score_matrix } }
+          before { get :service_provider_dimension, params: { company_id: company, id: score_matrix } }
 
           it 'assigns the instance variable and renders the template' do
             expect(response).to render_template 'score_matrices/show'
@@ -187,7 +188,7 @@ RSpec.describe ScoreMatricesController, type: :controller do
       end
 
       context 'with no data' do
-        before { get :service_provider_dimension, params: { id: score_matrix } }
+        before { get :service_provider_dimension, params: { company_id: company, id: score_matrix } }
 
         it 'assigns the instance variable and renders the template' do
           expect(response).to render_template 'score_matrices/show'
@@ -199,7 +200,7 @@ RSpec.describe ScoreMatricesController, type: :controller do
 
       context 'with invalid' do
         context 'score matrix' do
-          before { get :service_provider_dimension, params: { id: 'foo' } }
+          before { get :service_provider_dimension, params: { company_id: 'bar', id: 'foo' } }
 
           it { expect(response).to have_http_status :not_found }
         end

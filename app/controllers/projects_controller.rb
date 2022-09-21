@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class ProjectsController < AuthenticatedController
-  before_action :assign_company
   before_action :assign_project, except: %i[new create index status_report_dashboard]
 
   def show

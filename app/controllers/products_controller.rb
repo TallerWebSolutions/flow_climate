@@ -3,7 +3,6 @@
 class ProductsController < AuthenticatedController
   before_action :user_gold_check
 
-  before_action :assign_company
   before_action :assign_product, only: %i[show edit update destroy portfolio_units_tab projects_tab portfolio_charts_tab risk_reviews_tab service_delivery_reviews_tab]
   before_action :assign_demands, only: %i[portfolio_charts_tab]
 
