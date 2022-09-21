@@ -6,6 +6,7 @@
 #
 #  id                          :bigint           not null, primary key
 #  active                      :boolean          default(TRUE)
+#  config_type                 :integer          default("team")
 #  info_type                   :integer          default("average_demand_cost"), not null
 #  notification_hour           :integer
 #  notification_minute         :integer
@@ -19,8 +20,8 @@
 #
 # Indexes
 #
+#  index_slack_configurations_on_config_type  (config_type)
 #  index_slack_configurations_on_customer_id  (customer_id)
-#  index_slack_configurations_on_info_type    (info_type)
 #  index_slack_configurations_on_team_id      (team_id)
 #  slack_configuration_unique                 (info_type,team_id,room_webhook)
 #

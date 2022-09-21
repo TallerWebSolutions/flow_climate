@@ -21,7 +21,6 @@
 # Indexes
 #
 #  index_item_assignments_on_demand_id      (demand_id)
-#  index_item_assignments_on_discarded_at   (discarded_at)
 #  index_item_assignments_on_membership_id  (membership_id)
 #
 # Foreign Keys

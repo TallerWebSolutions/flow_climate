@@ -25,9 +25,7 @@
 #
 # Indexes
 #
-#  index_projects_on_company_id           (company_id)
 #  index_projects_on_company_id_and_name  (company_id,name) UNIQUE
-#  index_projects_on_team_id              (team_id)
 #
 # Foreign Keys
 #

@@ -21,12 +21,10 @@
 #
 # Indexes
 #
-#  index_flow_events_on_discarded_at    (discarded_at)
-#  index_flow_events_on_event_size      (event_size)
-#  index_flow_events_on_event_type      (event_type)
-#  index_flow_events_on_project_id      (project_id)
-#  index_flow_events_on_risk_review_id  (risk_review_id)
-#  index_flow_events_on_user_id         (user_id)
+#  index_flow_events_on_event_size  (event_size)
+#  index_flow_events_on_event_type  (event_type)
+#  index_flow_events_on_project_id  (project_id)
+#  index_flow_events_on_user_id     (user_id)
 #
 # Foreign Keys
 #

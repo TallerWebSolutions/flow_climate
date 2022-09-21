@@ -15,9 +15,7 @@
 #
 # Indexes
 #
-#  index_demand_comments_on_demand_id       (demand_id)
-#  index_demand_comments_on_discarded_at    (discarded_at)
-#  index_demand_comments_on_team_member_id  (team_member_id)
+#  index_demand_comments_on_demand_id  (demand_id)
 #
 # Foreign Keys
 #

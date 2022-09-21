@@ -13,10 +13,8 @@
 #
 # Indexes
 #
-#  index_jira_project_configs_on_fix_version_name        (fix_version_name)
-#  index_jira_project_configs_on_jira_product_config_id  (jira_product_config_id)
-#  index_jira_project_configs_on_project_id              (project_id)
-#  unique_fix_version_to_jira_product                    (jira_product_config_id,fix_version_name) UNIQUE
+#  index_jira_project_configs_on_project_id  (project_id)
+#  unique_fix_version_to_jira_product        (jira_product_config_id,fix_version_name) UNIQUE
 #
 # Foreign Keys
 #

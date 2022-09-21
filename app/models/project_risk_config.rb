@@ -13,10 +13,6 @@
 #  updated_at        :datetime         not null
 #  project_id        :integer          not null
 #
-# Indexes
-#
-#  index_project_risk_configs_on_project_id  (project_id)
-#
 
 class ProjectRiskConfig < ApplicationRecord
   enum risk_type: { no_money_to_deadline: 0, backlog_growth_rate: 1, not_enough_available_hours: 2, profit_margin: 3, flow_pressure: 4 }

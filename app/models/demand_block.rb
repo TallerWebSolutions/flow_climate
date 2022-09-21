@@ -24,12 +24,7 @@
 #
 # Indexes
 #
-#  index_demand_blocks_on_blocker_id      (blocker_id)
-#  index_demand_blocks_on_demand_id       (demand_id)
-#  index_demand_blocks_on_discarded_at    (discarded_at)
-#  index_demand_blocks_on_risk_review_id  (risk_review_id)
-#  index_demand_blocks_on_stage_id        (stage_id)
-#  index_demand_blocks_on_unblocker_id    (unblocker_id)
+#  index_demand_blocks_on_demand_id  (demand_id)
 #
 # Foreign Keys
 #

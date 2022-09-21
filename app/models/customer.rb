@@ -17,7 +17,6 @@
 #
 #  index_customers_on_company_id           (company_id)
 #  index_customers_on_company_id_and_name  (company_id,name) UNIQUE
-#  index_customers_on_customer_id          (customer_id)
 #
 # Foreign Keys
 #
