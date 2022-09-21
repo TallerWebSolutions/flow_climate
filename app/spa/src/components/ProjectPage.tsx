@@ -29,7 +29,7 @@ type ProjectPageProps = {
   dashboard?: boolean
 }
 
-const assignCardTypeByRisk = (risk: number) => {
+const cardTypeByRisk = (risk: number) => {
   if (risk > 0.5 && risk <= 0.7) {
     return CardType.WARNING
   } else if (risk > 0.7) {
@@ -39,7 +39,7 @@ const assignCardTypeByRisk = (risk: number) => {
   return CardType.SUCCESS
 }
 
-const GENERATE_PROJECT_MUTATION = gql`
+const GENERATE_PROJECT_CACHE_MUTATION = gql`
   mutation GenerateProjectCache($projectId: ID!) {
     generateProjectCache(projectId: $projectId) {
       statusMessage
@@ -65,7 +65,7 @@ export const ProjectPage = ({
   const { t } = useTranslation(["generalProjectPage"])
   const { pushMessage } = useContext(MessagesContext)
   const [generateProjectCache] = useMutation<ProjectCacheDTO>(
-    GENERATE_PROJECT_MUTATION,
+    GENERATE_PROJECT_CACHE_MUTATION,
     {
       update: () =>
         pushMessage({
@@ -133,8 +133,8 @@ export const ProjectPage = ({
   const remainingDays = projectInfo?.remainingDays
   const currentTeamRisk = projectInfo?.currentTeamBasedRisk || 0
   const currentTeamRiskPercentage = (currentTeamRisk * 100).toFixed(2)
-  const cardTypeTeamRisk = assignCardTypeByRisk(currentTeamRisk)
-  const cardTypeOperationalRisk = assignCardTypeByRisk(currentOperationalRisk)
+  const cardTypeTeamRisk = cardTypeByRisk(currentTeamRisk)
+  const cardTypeOperationalRisk = cardTypeByRisk(currentOperationalRisk)
 
   const actions = [
     {
@@ -202,17 +202,15 @@ export const ProjectPage = ({
             />
           </Box>
         )}
-        {projectTabs && (
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Tabs tabs={projectTabs} currentPath={pathname} />
-          </Box>
-        )}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Tabs tabs={projectTabs} currentPath={pathname} />
+        </Box>
         {dashboard && (
           <Box
             sx={{

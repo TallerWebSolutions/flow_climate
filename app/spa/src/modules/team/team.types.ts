@@ -1,4 +1,5 @@
 import { Company } from "../company/company.types"
+import { Demand } from "../demand/demand.types"
 import { ReplenishingConsolidation } from "../replenishing/replenishingConsolidation.types"
 
 export type Team = {
@@ -12,5 +13,14 @@ export type Team = {
   leadTime: number
   workInProgress: number
   maxWorkInProgress: number
-  lastReplenishingConsolidations: ReplenishingConsolidation[]
+  lastReplenishingConsolidations?: ReplenishingConsolidation[]
+  startDate?: string
+  endDate?: string
+  leadTimeP65?: number
+  leadTimeP80?: number
+  leadTimeP95?: number
+  numberOfDemands?: number
+  numberOfDemandsDelivered?: number
+  numberOfRemainingBacklog?: number
+  deliveredDemands?: Demand[]
 }

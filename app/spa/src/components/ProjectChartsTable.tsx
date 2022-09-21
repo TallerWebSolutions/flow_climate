@@ -201,7 +201,7 @@ export const ProjectChartsTable = () => {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={4} sx={{ padding: "16px " }}>
+      <Grid item xs={4} sx={{ padding: "16px" }}>
         <TableContainer
           component={Paper}
           sx={{ background: "white", marginY: 4 }}

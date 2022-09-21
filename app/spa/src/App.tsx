@@ -5,6 +5,7 @@ import { Fragment, useEffect } from "react"
 import { Helmet } from "react-helmet"
 import { I18nextProvider } from "react-i18next"
 import { BrowserRouter, Route, Routes } from "react-router-dom"
+
 import { MessagesContext } from "./contexts/MessageContext"
 import { MeContext } from "./contexts/MeContext"
 import { useMessages } from "./hooks/useMessages"
@@ -36,6 +37,7 @@ import ProjectTasksCharts from "./pages/Projects/ProjectTasksCharts"
 import DemandsCharts from "./pages/Demands/DemandsCharts"
 import CreateWorkItemType from "./pages/WorkItemTypes/CreateWorkItemType"
 import ListWorkItemTypes from "./pages/WorkItemTypes/ListWorkItemTypes"
+import TeamDashboard from "./pages/Teams/TeamDashboard"
 
 export const ME_QUERY = gql`
   query Me {
@@ -82,7 +84,9 @@ type MeDTO = {
 }
 
 const App = () => {
-  const { data, loading } = useQuery<MeDTO>(ME_QUERY)
+  const { data, loading } = useQuery<MeDTO>(ME_QUERY, {
+    notifyOnNetworkStatusChange: true,
+  })
 
   useEffect(() => {
     if (!loading) loadLanguage(data?.me.language)
@@ -151,6 +155,10 @@ const App = () => {
             <Route
               path="/companies/:companySlug/teams/new"
               element={<CreateTeam />}
+            />
+            <Route
+              path="/companies/:companySlug/teams/:teamId"
+              element={<TeamDashboard />}
             />
             <Route
               path="/companies/:companySlug/teams/:teamId/edit"

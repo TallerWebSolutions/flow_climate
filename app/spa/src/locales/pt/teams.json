@@ -21,5 +21,16 @@
     "edit_team_max_wip": "Máximo de trabalho em andamento",
     "edit_team_message_success": "Time criado com sucesso!",
     "edit_team_message_fail": "Não foi possível criar o time!"
+  },
+  "dashboard": {
+    "name": "Nome",
+    "startDate": "Data Inicial",
+    "endDate": "Data Final",
+    "delivered": "Enregues",
+    "days": "Dias",
+    "leadTimeP65": "Lead Time P65",
+    "leadTimeP80": "Lead Time P80",
+    "leadTimeP95": "Lead Time P95",
+    "sixMonthsData": "Últimos Seis Meses"
   }
 }

@@ -3,16 +3,17 @@ import { Box, Typography } from "@mui/material"
 import { gql, useQuery, useMutation } from "@apollo/client"
 import CachedIcon from "@mui/icons-material/Cached"
 import { useParams } from "react-router-dom"
+
 import ReplenishingTeamInfo, {
   TeamReplenishment,
 } from "../../components/ReplenishingTeamInfo"
 import ReplenishingProjectsInfo from "../../components/ReplenishingProjectsInfo"
-import BasicPage from "../../components/BasicPage"
 import { MessagesContext } from "../../contexts/MessageContext"
 import { Team } from "../../modules/team/team.types"
 import { Project } from "../../modules/project/project.types"
 import { ReplenishingConsolidation } from "../../modules/replenishing/replenishingConsolidation.types"
 import { formatDate } from "../../lib/date"
+import TeamBasicPage from "../../modules/team/components/TeamBasicPage"
 
 export const QUERY = gql`
   query Replenishing($teamId: Int!) {
@@ -128,7 +129,7 @@ const Replenishing = () => {
   ]
 
   return (
-    <BasicPage
+    <TeamBasicPage
       title="Reabastecimento"
       breadcrumbsLinks={breadcrumbsLinks}
       loading={loading}
@@ -145,7 +146,8 @@ const Replenishing = () => {
               {hasReplenishing
                 ? `Última atualização em
               ${formatDate({
-                date: data.team.lastReplenishingConsolidations[0].createdAt,
+                date:
+                  data.team.lastReplenishingConsolidations?.[0].createdAt || "",
                 format: "dd/MM/yyyy' às 'HH:mm",
               })}`
                 : "Sem dados suficientes para atualizar"}
@@ -167,16 +169,16 @@ const Replenishing = () => {
           />
         </Fragment>
       )}
-    </BasicPage>
+    </TeamBasicPage>
   )
 }
 
 export default Replenishing
 
 export const getProjects = (team: Team): Project[] =>
-  team.lastReplenishingConsolidations.map(
+  team.lastReplenishingConsolidations?.map(
     (consolidation) => consolidation.project
-  )
+  ) || []
 
 export const normalizeTeamInfo = (
   data: ReplenishingDTO
@@ -195,13 +197,11 @@ export const normalizeTeamInfo = (
 })
 
 export const normalizeProjectInfo = (data: ReplenishingDTO): Project[] =>
-  data
-    ? data.team.lastReplenishingConsolidations.map(function (
-        consolidation: ReplenishingConsolidation
-      ) {
-        return {
-          ...consolidation.project,
-          customerHappiness: consolidation.customerHappiness,
-        }
-      })
-    : []
+  data?.team.lastReplenishingConsolidations?.map(function (
+    consolidation: ReplenishingConsolidation
+  ) {
+    return {
+      ...consolidation.project,
+      customerHappiness: consolidation.customerHappiness,
+    }
+  }) || []

@@ -21,5 +21,16 @@
     "edit_team_max_wip": "Max work in progress",
     "edit_team_message_success": "Team updated with success!",
     "edit_team_message_fail": "Unable to update team at this time!"
+  },
+  "dashboard": {
+    "name": "Name",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "delivered": "Delivered",
+    "days": "Days",
+    "leadTimeP65": "Lead Time P65",
+    "leadTimeP80": "Lead Time P80",
+    "leadTimeP95": "Lead Time P95",
+    "sixMonthsData": "Six Months Data"
   }
 }
