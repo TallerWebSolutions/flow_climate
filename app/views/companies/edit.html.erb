@@ -45,6 +45,8 @@
       <thead>
         <th><%= User.human_attribute_name :first_name %></th>
         <th><%= User.human_attribute_name :email %></th>
+        <th><%= UserCompanyRole.human_attribute_name :start_date %></th>
+        <th><%= UserCompanyRole.human_attribute_name :end_date %></th>
         <th><%= UserCompanyRole.human_attribute_name :user_role %></th>
         <th><%= UserCompanyRole.human_attribute_name :slack_user %></th>
         <th></th>
@@ -54,6 +56,12 @@
           <tr>
             <td><%= user_company_role.full_name %></td>
             <td><%= user_company_role.email %></td>
+            <td>
+              <%= I18n.l(user_company_role.start_date) if user_company_role.start_date.present? %>
+            </td>
+            <td>
+              <%= I18n.l(user_company_role.end_date) if user_company_role.end_date.present? %>
+            </td>
             <td><%= I18n.t("activerecord.attributes.user_company_role.enums.user_role.#{user_company_role.user_role}") %></td>
             <td><%= user_company_role.slack_user %></td>
             <% if current_user.managing_company?(@company) || current_user.admin? %>
@@ -62,7 +70,6 @@
                   <i class="fas fa-edit"></i>
                 <% end %>
               </td>
-
             <% end %>
           </tr>
         <% end %>
