@@ -3,6 +3,7 @@ import { Project } from "../project/project.types"
 import ControlChart from "../charts/controlChart.types"
 import { TeamMember } from "../teamMember/teamMember.types"
 import { DemandsFlowChartData, NumberChartData } from "../charts/charts.types"
+import { Product } from "../product/product.types"
 
 export type Demand = {
   id: string
@@ -11,10 +12,7 @@ export type Demand = {
   endDate?: string
   commitmentDate?: string
   createdDate: string
-  product: {
-    id: string
-    name: string
-  }
+  product?: Product
   customer?: {
     id: string
     name: string

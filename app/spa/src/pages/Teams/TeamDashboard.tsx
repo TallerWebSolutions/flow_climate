@@ -163,10 +163,10 @@ const TeamDashboard = () => {
           {demand.project?.name}
         </Link>,
         <Link
-          href={`${companyUrl}/products/${demand.product.id}`}
+          href={`${companyUrl}/products/${demand.product?.id}`}
           sx={{ color: "info.dark", textDecoration: "none" }}
         >
-          {demand.product.name}
+          {demand.product?.name}
         </Link>,
         demand.endDate
           ? formatDate({

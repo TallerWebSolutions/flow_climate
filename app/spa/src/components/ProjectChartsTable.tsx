@@ -183,10 +183,10 @@ export const ProjectChartsTable = () => {
         {demand.project?.name}
       </Link>,
       <Link
-        href={`${baseLink}/products/${demand.product.id}`}
+        href={`${baseLink}/products/${demand.product?.id}`}
         sx={{ color: "info.dark", textDecoration: "none" }}
       >
-        {demand.product.name}
+        {demand.product?.name}
       </Link>,
       demand.endDate
         ? formatDate({
