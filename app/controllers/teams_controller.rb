@@ -88,21 +88,6 @@ class TeamsController < DemandsListController
 
   private
 
-  def assign_demands_lists
-    @demands = @team.demands.opened_before_date(Time.zone.now)
-    @demands_delivered = @team.demands.kept.finished_until_date(Time.zone.now)
-    @unscored_demands = charts_demands.unscored_demands.order(external_id: :asc)
-  end
-
-  def build_cache_object
-    ordered_team_consolidations = @team.team_consolidations.order(:consolidation_date)
-    @team_consolidations = ordered_team_consolidations.weekly_data.where('consolidation_date >= :limit_date', limit_date: 6.months.ago)
-    @team_consolidations = ordered_team_consolidations if @team_consolidations.blank?
-
-    last_consolidation = ordered_team_consolidations.last
-    @team_consolidations = Consolidations::TeamConsolidation.where(id: (@team_consolidations.map(&:id) + [last_consolidation&.id].uniq)).order(:consolidation_date)
-  end
-
   def build_projects_lead_time_in_time_array(executing_projects)
     array_of_dates = []
 
@@ -162,24 +147,6 @@ class TeamsController < DemandsListController
 
   def charts_demands
     @charts_demands ||= @team.demands.kept.includes([:product]).to_dates(6.months.ago, Time.zone.now.end_of_day)
-  end
-
-  def build_charts_data(demands)
-    @array_of_dates = TimeService.instance.weeks_between_of(start_date, end_date)
-    @work_item_flow_information = Flow::WorkItemFlowInformation.new(demands, uncertain_scope, @array_of_dates.length, @array_of_dates.last, 'week')
-    @statistics_flow_information = Flow::StatisticsFlowInformation.new(demands)
-
-    build_chart_objects
-  end
-
-  def build_chart_objects
-    @array_of_dates.each do |analysed_date|
-      @work_item_flow_information.build_cfd_hash(@array_of_dates.first.beginning_of_week, analysed_date)
-    end
-  end
-
-  def uncertain_scope
-    @team.projects.filter_map(&:initial_scope).sum
   end
 
   def start_date

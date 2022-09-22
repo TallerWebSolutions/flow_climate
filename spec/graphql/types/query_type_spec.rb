@@ -123,6 +123,33 @@ RSpec.describe Types::QueryType do
             id
             name
           }
+          latestDeliveries { id }
+          leadTimeP65
+          leadTimeP80
+          leadTimeP95
+          numberOfDemandsDelivered
+          cumulativeFlowChartData {
+            xAxis
+            yAxis {
+              name
+              data
+            }
+          }
+          demandsFlowChartData {
+            creationChartData
+            committedChartData
+            pullTransactionRate
+            throughputChartData
+            xAxis
+          }
+          leadTimeHistogramData {
+            keys
+            values
+          }
+          teamConsolidationsWeekly {
+            leadTimeP80
+            consolidationDate
+          }
           lastReplenishingConsolidations {
             id
             customerHappiness
@@ -194,6 +221,13 @@ RSpec.describe Types::QueryType do
                                                        'id' => company.id.to_s,
                                                        'name' => company.name
                                                      },
+                                                     "latestDeliveries" => [],
+                                                     "leadTimeHistogramData" => {"keys"=>[], "values"=>[]},
+                                                    "leadTimeP65" => 0.0,
+                                                    "leadTimeP80" => 0.0,
+                                                    "leadTimeP95" => 0.0,
+                                                    "numberOfDemandsDelivered" => 0,
+       "teamConsolidationsWeekly" => [],
                                                      'lastReplenishingConsolidations' => [
                                                        {
                                                          'id' => replenishing_consolidation.id.to_s,

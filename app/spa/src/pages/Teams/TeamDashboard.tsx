@@ -60,6 +60,10 @@ const TEAM_DASHBOARD_QUERY = gql`
       ) {
         ...demand
       }
+      teamConsolidationsWeekly {
+        leadTimeP80
+        consolidationDate
+      }
     }
   }
 
@@ -225,6 +229,22 @@ const TeamDashboard = () => {
       })
     : []
 
+  const teamConsolidationsWeekly = team?.teamConsolidationsWeekly
+  const leadTimeP80ChartData = [
+    {
+      id: team?.name || "",
+      data:
+        teamConsolidationsWeekly?.map(({ leadTimeP80, consolidationDate }) => {
+          const leadTimep80InDays = secondsToDays(leadTimeP80)
+
+          return {
+            x: consolidationDate,
+            y: leadTimep80InDays,
+          }
+        }) || [],
+    },
+  ]
+
   return (
     <TeamBasicPage
       breadcrumbsLinks={breadcrumbsLinks}
@@ -304,6 +324,18 @@ const TeamDashboard = () => {
             axisLeftLegend={t("charts.leadTimeHistogramChartYLabel")}
             axisBottomLegend={t("charts.leadTimeHistogramChartXLabel")}
             padding={0}
+          />
+        </ChartGridItem>
+        <ChartGridItem title={t("charts.leadTimeP80Chart")}>
+          <LineChart
+            data={leadTimeP80ChartData}
+            axisLeftLegend={t("charts.leadTimeP80YLabel")}
+            props={{
+              enableSlices: "x",
+              sliceTooltip: ({ slice }: SliceTooltipProps) => (
+                <LineChartTooltip slice={slice} />
+              ),
+            }}
           />
         </ChartGridItem>
       </Grid>

@@ -31,7 +31,9 @@
     "leadTimeP65": "Lead Time P65",
     "leadTimeP80": "Lead Time P80",
     "leadTimeP95": "Lead Time P95",
-    "infoTable": "Informações do time"
+    "infoTable": "Informações do time",
+    "biggestFiveLeadTimes": "5 biggest lead times",
+    "biggestFiveLeadTimesInFourWeeks": "5 biggest lead times in last 4 weeks"
   },
   "tabs": {
     "dashboard": "Dashboard",
@@ -56,6 +58,8 @@
     "flowDataXLabel": "Period",
     "leadTimeHistogramChart": "Lead Time Histogram Chart",
     "leadTimeHistogramChartXLabel": "Days",
-    "leadTimeHistogramChartYLabel": "hits"
+    "leadTimeHistogramChartYLabel": "hits",
+    "leadTimeP80Chart": "Lead Time P80 Evolution",
+    "leadTimeP80YLabel": "Days"
   }
 }

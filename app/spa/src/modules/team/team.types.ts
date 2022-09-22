@@ -5,6 +5,7 @@ import {
 } from "../charts/charts.types"
 import { Company } from "../company/company.types"
 import { Demand } from "../demand/demand.types"
+import { ProjectConsolidation } from "../project/projectConsolidation.types"
 import { ReplenishingConsolidation } from "../replenishing/replenishingConsolidation.types"
 
 export type Team = {
@@ -35,4 +36,5 @@ export type Team = {
   biggestFiveLeadTimesInFourWeeks?: Demand[]
   demandsFlowChartData?: DemandsFlowChartData
   leadTimeHistogramData?: KeyValueData
+  teamConsolidationsWeekly?: ProjectConsolidation[]
 }

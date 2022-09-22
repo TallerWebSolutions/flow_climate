@@ -30,6 +30,7 @@ module Types
     field :active_projects, [Types::ProjectType], null: true
     field :projects, [Types::ProjectType], null: true
     field :lead_time_histogram_data, Types::Charts::LeadTimeHistogramDataType, null: true
+    field :team_consolidations_weekly, [Types::ProjectConsolidationType], null: true
 
     delegate :projects, to: :object
 
@@ -109,6 +110,14 @@ module Types
       Stats::StatisticsService.instance.leadtime_histogram_hash(demands_finished_with_leadtime.map(&:leadtime).map { |leadtime| leadtime.round(3) })
     end
 
+    def team_consolidations_weekly
+      weekly_team_consolidations = object.team_consolidations.weekly_data.order(:consolidation_date)
+      Consolidations::TeamConsolidation
+        .where(id: weekly_team_consolidations.map(&:id) + [last_consolidation&.id])
+        .where('consolidation_date >= :limit_date', limit_date: 6.months.ago)
+        .order(:consolidation_date)
+    end
+
     private
 
     def build_work_item_flow_information(array_of_dates)
@@ -119,6 +128,10 @@ module Types
 
     def demands_finished_with_leadtime
       object.demands.finished_with_leadtime
+    end
+
+    def last_consolidation
+      @last_consolidation ||= object.team_consolidations.order(:consolidation_date).last
     end
   end
 end

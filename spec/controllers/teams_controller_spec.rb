@@ -102,13 +102,7 @@ RSpec.describe TeamsController, type: :controller do
 
               get :show, params: { company_id: company, id: team }
 
-              expect(response).to render_template :show
-              expect(assigns(:company)).to eq company
-              expect(assigns(:team)).to eq team
-
-              expect(assigns(:work_item_flow_information)).to be_a Flow::WorkItemFlowInformation
-              expect(assigns(:statistics_flow_information)).to be_a Flow::StatisticsFlowInformation
-              expect(assigns(:average_speed)).to eq 1.3333333333333333
+              expect(response).to render_template 'spa-build/index'
             end
           end
         end
@@ -120,9 +114,7 @@ RSpec.describe TeamsController, type: :controller do
           it 'assigns the empty instance variables and renders the template' do
             get :show, params: { company_id: other_company, id: empty_team }
 
-            expect(response).to render_template :show
-            expect(assigns(:company)).to eq other_company
-            expect(assigns(:team)).to eq empty_team
+            expect(response).to render_template 'spa-build/index'
           end
         end
       end
