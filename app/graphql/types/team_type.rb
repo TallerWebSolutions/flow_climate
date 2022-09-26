@@ -2,39 +2,39 @@
 
 module Types
   class TeamType < Types::BaseObject
+    field :average_throughput, Float, null: true
     field :company, Types::CompanyType, null: false
-    field :id, ID, null: false
-    field :name, String, null: false
+    field :cumulative_flow_chart_data, Types::Charts::CumulativeFlowChartType, null: true
     field :end_date, GraphQL::Types::ISO8601Date, null: true
-    field :start_date, GraphQL::Types::ISO8601Date, null: true
-    field :throughput_data, [Int], null: true
+    field :id, ID, null: false
+    field :increased_avg_throughtput, Boolean, null: true
+    field :increased_leadtime_80, Boolean, null: true
+    field :latest_deliveries, [Types::DemandType], null: true do
+      argument :limit, Int, required: false
+      argument :order_field, String, required: false
+      argument :sort_direction, Types::Enums::SortDirection, required: false
+      argument :start_date, GraphQL::Types::ISO8601Date, required: false, description: 'Start Date for the search range, will only bring demands finished after this date'
+    end
+    field :active_projects, [Types::ProjectType], null: true
+    field :demands_flow_chart_data, Types::Charts::DemandsFlowChartDataType, null: true
+    field :last_replenishing_consolidations, [Types::ReplenishingConsolidationType], null: false
+    field :lead_time, Float, null: true
+    field :lead_time_histogram_data, Types::Charts::LeadTimeHistogramDataType, null: true
     field :lead_time_p65, Float, null: true
     field :lead_time_p80, Float, null: true
     field :lead_time_p95, Float, null: true
-    field :average_throughput, Float, null: true
-    field :increased_avg_throughtput, Boolean, null: true
-    field :number_of_demands_delivered, Int, null: true
-    field :increased_leadtime_80, Boolean, null: true
-    field :lead_time, Float, null: true
-    field :cumulative_flow_chart_data, Types::Charts::CumulativeFlowChartType, null: true
     field :max_work_in_progress, Int, null: false
-    field :work_in_progress, Int, null: true
-    field :latest_deliveries, [Types::DemandType], null: true do
-      argument :order_field, String, required: false
-      argument :sort_direction, Types::Enums::SortDirection, required: false
-      argument :limit, Int, required: false
-      argument :start_date, GraphQL::Types::ISO8601Date, required: false, description: "Start Date for the search range, will only bring demands finished after this date"
-    end
-    field :last_replenishing_consolidations, [Types::ReplenishingConsolidationType], null: false
-    field :demands_flow_chart_data, Types::Charts::DemandsFlowChartDataType, null: true
-    field :active_projects, [Types::ProjectType], null: true
+    field :name, String, null: false
+    field :number_of_demands_delivered, Int, null: true
     field :projects, [Types::ProjectType], null: true
-    field :lead_time_histogram_data, Types::Charts::LeadTimeHistogramDataType, null: true
+    field :start_date, GraphQL::Types::ISO8601Date, null: true
     field :team_consolidations_weekly, [Types::ProjectConsolidationType], null: true
+    field :throughput_data, [Int], null: true
+    field :work_in_progress, Int, null: true
 
     delegate :projects, to: :object
 
-    def latest_deliveries(order_field: "end_date", sort_direction: :desc, limit: 5, start_date: '')
+    def latest_deliveries(order_field: 'end_date', sort_direction: :desc, limit: 5, start_date: '')
       demands = object.demands.finished_until_date(Time.zone.now).where.not(leadtime: nil).limit(limit).order(order_field => sort_direction)
       demands = demands.where('end_date >= :limit_date', limit_date: start_date) if start_date.present?
       demands

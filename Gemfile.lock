@@ -256,7 +256,7 @@ GEM
     oj (3.13.21)
     orm_adapter (0.5.0)
     parallel (1.22.1)
-    parallel_tests (3.12.1)
+    parallel_tests (3.13.0)
       parallel
     parser (3.1.2.1)
       ast (~> 2.4.1)
@@ -300,7 +300,7 @@ GEM
     rails_12factor (0.0.3)
       rails_serve_static_assets
       rails_stdout_logging
-    rails_best_practices (1.23.1)
+    rails_best_practices (1.23.2)
       activesupport
       code_analyzer (~> 0.5.5)
       erubis
@@ -322,9 +322,9 @@ GEM
     rb-fsevent (0.11.2)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
-    redis (5.0.4)
-      redis-client (>= 0.7.4)
-    redis-client (0.8.1)
+    redis (5.0.5)
+      redis-client (>= 0.9.0)
+    redis-client (0.9.0)
       connection_pool
     reek (6.1.1)
       kwalify (~> 0.7.0)
@@ -384,7 +384,7 @@ GEM
       activesupport (>= 4.2.0)
       rack (>= 1.1)
       rubocop (>= 1.33.0, < 2.0)
-    rubocop-rspec (2.13.1)
+    rubocop-rspec (2.13.2)
       rubocop (~> 1.33)
     ruby-progressbar (1.11.0)
     ruby-vips (2.1.4)
@@ -419,9 +419,9 @@ GEM
     simplecov-html (0.12.3)
     simplecov_json_formatter (0.1.4)
     slack-notifier (2.4.0)
-    snaky_hash (2.0.0)
+    snaky_hash (2.0.1)
       hashie
-      version_gem (~> 1.1)
+      version_gem (~> 1.1, >= 1.1.1)
     sprockets (4.1.1)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
