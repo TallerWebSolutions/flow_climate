@@ -61,5 +61,9 @@
     "leadTimeHistogramChartYLabel": "hits",
     "leadTimeP80Chart": "Lead Time P80 Evolution",
     "leadTimeP80YLabel": "Days"
+  },
+  "actions": {
+    "edit": "Editar Time",
+    "memberships": "Associações de Membros"
   }
 }

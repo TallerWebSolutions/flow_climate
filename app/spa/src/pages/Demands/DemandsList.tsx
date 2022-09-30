@@ -320,7 +320,7 @@ const DemandsListPage = () => {
         }}
         onClick={() => !csvQueryCalled && fetchCSVData()}
         disabled={csvLoading}
-        color={csvFileReady ? "success" : "primary"}
+        color={csvFileReady ? "success" : "secondary"}
       >
         {csvQueryCalled ? (
           csvLoading ? (

@@ -1,4 +1,4 @@
-import { ReactElement, ReactNode, useContext } from "react"
+import { ReactNode, useContext } from "react"
 import {
   Container,
   Typography,
@@ -7,6 +7,7 @@ import {
   Backdrop,
   CircularProgress,
 } from "@mui/material"
+
 import Header from "./Header"
 import MessagesBox from "./MessagesBox"
 import Breadcrumbs, { BreadcrumbsLink } from "./Breadcrumbs"
@@ -15,8 +16,8 @@ import { MessagesContext } from "../contexts/MessageContext"
 export type BasicPageProps = {
   breadcrumbsLinks: BreadcrumbsLink[]
   title?: string
-  children?: ReactNode | ReactNode[]
-  actions?: ReactElement | ReactElement[]
+  children?: ReactNode
+  actions?: ReactNode
   loading?: boolean
 }
 
