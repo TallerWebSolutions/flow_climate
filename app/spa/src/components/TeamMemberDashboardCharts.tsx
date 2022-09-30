@@ -1,12 +1,13 @@
-import { Grid, Typography } from "@mui/material"
+import { Grid } from "@mui/material"
 import { useTranslation } from "react-i18next"
+import { BarDatum } from "@nivo/bar"
 
 import { secondsToDays } from "../lib/date"
 import { axisDataToKeyValue } from "../lib/charts"
 import { TeamMember } from "../modules/teamMember/teamMember.types"
 import { BarChart } from "./charts/BarChart"
 import { ScatterChart } from "./charts/ScatterChart"
-import { BarDatum } from "@nivo/bar"
+import { ChartGridItem } from "./charts/ChartGridItem"
 
 type TeamMemberDashboardChartsProps = {
   teamMember: TeamMember
@@ -47,7 +48,7 @@ const TeamMemberDashboardCharts = ({
   const memberEffortData = {
     ...teamMember.memberEffortData,
     xAxis: teamMember.memberEffortData?.xAxis || [],
-    yAxis: teamMember.memberEffortData?.yAxis.map(secondsToDays) || [],
+    yAxis: teamMember.memberEffortData?.yAxis || [],
   }
   const memberThroughputData = teamMember.memberThroughputData?.map(
     (th, index) => ({
@@ -74,69 +75,59 @@ const TeamMemberDashboardCharts = ({
   return (
     <Grid container spacing={2}>
       {leadTimeHistogramChartData && (
-        <Grid item xs={6}>
-          <Typography component="h3">
-            {t("charts.leadTimeHistogram")}
-          </Typography>
+        <ChartGridItem title={t("charts.leadTimeHistogram")}>
           <BarChart
             indexBy="key"
             data={leadTimeHistogramChartData}
             keys={["value"]}
             padding={0}
           />
-        </Grid>
+        </ChartGridItem>
       )}
       {leadTimeControlChartData && (
-        <Grid item xs={6}>
-          <Typography component="h3">{t("charts.leadTimeControl")}</Typography>
+        <ChartGridItem title={t("charts.leadTimeControl")}>
           <ScatterChart
             data={leadTimeControlChartData}
             markers={leadTimeControlChartMarkers}
           />
-        </Grid>
+        </ChartGridItem>
       )}
       {memberEffortData && (
-        <Grid item xs={6}>
-          <Typography component="h3">{t("charts.memberEffort")}</Typography>
+        <ChartGridItem title={t("charts.memberEffort")}>
           <BarChart
             data={axisDataToKeyValue(memberEffortData)}
             keys={["value"]}
             indexBy="key"
           />
-        </Grid>
+        </ChartGridItem>
       )}
       {memberThroughputData && (
-        <Grid item xs={6}>
-          <Typography component="h3">{t("charts.throughput")}</Typography>
+        <ChartGridItem title={t("charts.throughput")}>
           <BarChart
             data={memberThroughputData}
             keys={["value"]}
             indexBy="key"
           />
-        </Grid>
+        </ChartGridItem>
       )}
       {averagePullIntervalData && (
-        <Grid item xs={6}>
-          <Typography component="h3">
-            {t("charts.averagePullInterval")}
-          </Typography>
+        <ChartGridItem title={t("charts.averagePullInterval")}>
           <BarChart
             data={axisDataToKeyValue(averagePullIntervalData)}
             keys={["value"]}
             indexBy="key"
           />
-        </Grid>
+        </ChartGridItem>
       )}
       {projectHoursData && (
-        <Grid item xs={12}>
-          <Typography component="h3">{t("charts.hoursPerProject")}</Typography>
+        <ChartGridItem title={t("charts.hoursPerProject")}>
           <BarChart
             data={projectHoursGroups}
             keys={projectHoursNames}
             indexBy="key"
             groupMode="grouped"
           />
-        </Grid>
+        </ChartGridItem>
       )}
     </Grid>
   )

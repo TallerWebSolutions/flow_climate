@@ -313,7 +313,7 @@ const DemandsListPage = () => {
     <>
       {t("list.table.title", { demandsCount, totalEffort })}{" "}
       <Button
-        variant="contained"
+        variant={csvFileReady ? "contained" : "outlined"}
         sx={{
           minWidth: "160px",
           a: { color: "white", textDecoration: "none" },
