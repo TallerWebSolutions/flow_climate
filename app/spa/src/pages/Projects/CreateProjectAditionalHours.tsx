@@ -13,6 +13,7 @@ import { gql, useMutation } from "@apollo/client"
 import { Link, useParams, useNavigate } from "react-router-dom"
 
 import { ProjectPage } from "../../components/ProjectPage"
+import { FINANCIAL_REPORT_QUERY } from "./ProjectFinancialReport"
 
 const CREATE_ADITIONAL_HOURS_MUTATION = gql`
   mutation CreateAdditionalHours(
@@ -42,6 +43,14 @@ const CreateProjectAditionalHours = () => {
   const [createAdditionalHours, { loading }] = useMutation(
     CREATE_ADITIONAL_HOURS_MUTATION,
     {
+      refetchQueries: [
+        {
+          query: FINANCIAL_REPORT_QUERY,
+          variables: {
+            projectId,
+          },
+        },
+      ],
       update: () => navigate(financialReportUrl),
     }
   )

@@ -1,14 +1,15 @@
 import { useParams, Link as RouterLink } from "react-router-dom"
 import { Container, Link, Button } from "@mui/material"
 import { gql, useQuery } from "@apollo/client"
+import { useTranslation } from "react-i18next"
+
 import { ProjectPage } from "../../components/ProjectPage"
 import Table from "../../components/ui/Table"
 import { formatCurrency } from "../../lib/currency"
 import { formatDate } from "../../lib/date"
-import { useTranslation } from "react-i18next"
 import { DemandsList } from "../../modules/demand/demand.types"
 
-const QUERY = gql`
+export const FINANCIAL_REPORT_QUERY = gql`
   query FinancialReportDemands($projectId: ID!) {
     finishedDemands: demandsList(
       searchOptions: {
@@ -84,11 +85,14 @@ const ProjectFinancialReport = () => {
   const { t, i18n } = useTranslation(["projectFinancialReport"])
   const dateFormat = i18n.language === "pt-BR" ? "dd/MM/yy" : "MM/dd/yy"
   const { projectId, companySlug } = useParams()
-  const { data, loading } = useQuery<FinancialReportDemandsDTO>(QUERY, {
-    variables: {
-      projectId,
-    },
-  })
+  const { data, loading } = useQuery<FinancialReportDemandsDTO>(
+    FINANCIAL_REPORT_QUERY,
+    {
+      variables: {
+        projectId,
+      },
+    }
+  )
 
   const finishedDemandsRows = data?.finishedDemands
     ? data.finishedDemands.demands.map((demand) => [
