@@ -349,10 +349,10 @@ RSpec.describe Types::QueryType do
           team = Fabricate :team, company: company
           customer = Fabricate :customer, company: company
           product = Fabricate :product, company: company, customer: customer
-          project = Fabricate :project, company: company, customers: [customer], products: [product], team: team,
-                                        initial_scope: 20,
-                                        status: :executing, start_date: 31.days.ago,
-                                        end_date: 1.day.from_now, max_work_in_progress: 2, qty_hours: 500
+          project = Fabricate :project, company: company, customers: [customer], products: [product], team: team, name: 'zzz', initial_scope: 20,
+                                        status: :executing, start_date: 31.days.ago, end_date: 1.day.from_now, max_work_in_progress: 2, qty_hours: 500
+          other_project = Fabricate :project, company: company, customers: [customer], products: [product], team: team, name: 'aaa', initial_scope: 20,
+                                              status: :executing, start_date: 31.days.ago, end_date: 1.day.from_now, max_work_in_progress: 2, qty_hours: 500
 
           Fabricate :demand, company: company, project: project, team: team
 
@@ -388,6 +388,13 @@ RSpec.describe Types::QueryType do
                   name
                   slug
                 }
+
+                currentCompany {
+                  projects {
+                    id
+                  }
+                }
+
                 avatar {
                   imageSource
                 }
@@ -515,7 +522,7 @@ RSpec.describe Types::QueryType do
               }
           })
 
-          user = Fabricate :user
+          user = Fabricate :user, last_company: company
 
           context = {
             current_user: user
@@ -530,6 +537,16 @@ RSpec.describe Types::QueryType do
                                                    'id' => user.id.to_s,
                                                    'fullName' => user.full_name,
                                                    'companies' => [],
+                                                   'currentCompany' => {
+                                                     'projects' => [
+                                                       {
+                                                         'id' => other_project.id.to_s
+                                                       },
+                                                       {
+                                                         'id' => project.id.to_s
+                                                       }
+                                                     ]
+                                                   },
                                                    'admin' => false,
                                                    'avatar' => {
                                                      'imageSource' => user.avatar.url

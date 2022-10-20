@@ -13,5 +13,9 @@ module Types
     def work_item_types
       WorkItemType.where(company_id: object.id, item_level: 'demand')
     end
+
+    def projects
+      object.projects.order(:name)
+    end
   end
 end

@@ -4,6 +4,7 @@ RSpec.describe User, type: :model do
   context 'associations' do
     it { is_expected.to have_many(:companies).through(:user_company_roles) }
     it { is_expected.to have_many(:user_company_roles) }
+    it { is_expected.to belong_to(:last_company).class_name('Company').optional }
     it { is_expected.to have_many(:user_project_roles).dependent(:destroy) }
     it { is_expected.to have_many(:projects).through(:user_project_roles) }
     it { is_expected.to have_many(:user_plans).dependent(:destroy) }

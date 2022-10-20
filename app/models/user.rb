@@ -43,6 +43,7 @@ class User < ApplicationRecord
 
   has_many :user_company_roles, dependent: :destroy
   has_many :companies, through: :user_company_roles
+  belongs_to :last_company, class_name: 'Company', optional: true
 
   has_many :user_project_roles, dependent: :destroy
   has_many :projects, through: :user_project_roles
@@ -108,10 +109,6 @@ class User < ApplicationRecord
     return update(admin: false) if admin?
 
     update(admin: true)
-  end
-
-  def last_company
-    Company.find(last_company_id) if last_company_id.present?
   end
 
   def role_in_company(company)
