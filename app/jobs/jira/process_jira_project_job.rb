@@ -2,7 +2,7 @@
 
 module Jira
   class ProcessJiraProjectJob < ApplicationJob
-    queue_as :project_update
+    queue_as :low
 
     def perform(jira_account, jira_project_config, user_email = nil, user_name = nil, project_url = nil)
       started_time = Time.zone.now
