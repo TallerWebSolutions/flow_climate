@@ -9,7 +9,7 @@ namespace :jira do
 
       jira_account = jira_project_config.jira_product_config.company.jira_accounts.first
 
-      Jira::ProcessJiraProjectJob.perform_now(jira_account, jira_project_config, nil, nil, nil)
+      Jira::ProcessJiraProjectJob.perform_later(jira_account, jira_project_config, nil, nil, nil)
     end
   end
 end
