@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Azure::AzureCustomField, type: :model do
+RSpec.describe Azure::AzureCustomField do
   context 'enuns' do
     it { is_expected.to define_enum_for(:custom_field_type).with_values(project_name: 0, team_name: 1, epic_name: 2) }
   end

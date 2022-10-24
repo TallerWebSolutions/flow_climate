@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe MembershipsController, type: :controller do
+RSpec.describe MembershipsController do
   context 'unauthenticated' do
     describe 'GET #new' do
       before { get :new, params: { company_id: 'bar', team_id: 'foo' } }

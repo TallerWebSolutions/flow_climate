@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Initiative, type: :model do
+RSpec.describe Initiative do
   context 'enums' do
     it { is_expected.to define_enum_for(:target_quarter).with_values(q1: 1, q2: 2, q3: 3, q4: 4) }
   end

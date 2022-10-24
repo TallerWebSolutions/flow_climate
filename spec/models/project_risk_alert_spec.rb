@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ProjectRiskAlert, type: :model do
+RSpec.describe ProjectRiskAlert do
   context 'enums' do
     it { is_expected.to define_enum_for(:alert_color).with_values(green: 0, yellow: 1, red: 2) }
   end

@@ -9,6 +9,12 @@ module Azure
       redirect_to company_path(@company)
     end
 
+    def show
+      @azure_account = @company.azure_account
+      @account_custom_fields = @azure_account.azure_custom_fields
+      @new_azure_custom_field = Azure::AzureCustomField.new(azure_account: @azure_account)
+    end
+
     def edit
       @azure_account = @company.azure_account
     end
@@ -23,12 +29,6 @@ module Azure
         flash[:error] = I18n.t('azure_accounts.edit.failure')
         render :edit
       end
-    end
-
-    def show
-      @azure_account = @company.azure_account
-      @account_custom_fields = @azure_account.azure_custom_fields
-      @new_azure_custom_field = Azure::AzureCustomField.new(azure_account: @azure_account)
     end
 
     private

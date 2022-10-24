@@ -5,6 +5,10 @@ module Jira
     before_action :assign_project
     before_action :assign_jira_project_config, only: %i[destroy synchronize_jira]
 
+    def index
+      @jira_project_configs = @project.jira_project_configs
+    end
+
     def new
       @jira_project_config = JiraProjectConfig.new
       @jira_product_configs = @project.products.map(&:jira_product_configs).flatten - @project.jira_project_configs.map(&:jira_product_config)
@@ -14,12 +18,6 @@ module Jira
       @jira_project_config = JiraProjectConfig.new(jira_project_config_params.merge(project: @project))
       flash[:error] = I18n.t('jira_project_config.validations.fix_version_name_uniqueness.message') unless @jira_project_config.save
 
-      redirect_to company_project_jira_project_configs_path(@company, @project)
-    end
-
-    def destroy
-      @jira_project_config.destroy
-      flash[:notice] = I18n.t('general.destroy.success')
       redirect_to company_project_jira_project_configs_path(@company, @project)
     end
 
@@ -33,8 +31,10 @@ module Jira
       respond_to { |format| format.js { render 'jira/jira_project_configs/synchronize_jira' } }
     end
 
-    def index
-      @jira_project_configs = @project.jira_project_configs
+    def destroy
+      @jira_project_config.destroy
+      flash[:notice] = I18n.t('general.destroy.success')
+      redirect_to company_project_jira_project_configs_path(@company, @project)
     end
 
     private

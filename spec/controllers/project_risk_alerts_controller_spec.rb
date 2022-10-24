@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ProjectRiskAlertsController, type: :controller do
+RSpec.describe ProjectRiskAlertsController do
   context 'unauthenticated' do
     describe 'GET #index' do
       before { put :index, params: { company_id: 'xpto', project_id: 'bar' } }

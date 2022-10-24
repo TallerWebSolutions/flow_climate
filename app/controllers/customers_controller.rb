@@ -23,14 +23,14 @@ class CustomersController < AuthenticatedController
     @customer = Customer.new(company: @company)
   end
 
+  def edit; end
+
   def create
     @customer = Customer.new(customer_params.merge(company: @company))
     return redirect_to company_customers_path(@company) if @customer.save
 
     render :new
   end
-
-  def edit; end
 
   def update
     @customer.update(customer_params.merge(company: @company))

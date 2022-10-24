@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe UserProjectRole, type: :model do
+RSpec.describe UserProjectRole do
   context 'enums' do
     it { is_expected.to define_enum_for(:role_in_project).with_values(team: 0, manager: 1, customer: 2) }
   end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Contract, type: :model do
+RSpec.describe Contract do
   context 'enums' do
     it { is_expected.to define_enum_for(:renewal_period).with_values(monthly: 0, yearly: 1) }
   end

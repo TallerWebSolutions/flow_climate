@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Jira::JiraProjectConfig, type: :model do
+RSpec.describe Jira::JiraProjectConfig do
   context 'associations' do
     it { is_expected.to belong_to :project }
     it { is_expected.to belong_to :jira_product_config }

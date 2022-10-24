@@ -3,8 +3,18 @@
 class FlowEventsController < AuthenticatedController
   before_action :assign_flow_event, only: %i[destroy edit update show]
 
+  def index
+    @flow_events = @company.flow_events.order(event_date: :desc)
+  end
+
+  def show; end
+
   def new
     @flow_event = FlowEvent.new(company: @company, event_date: Time.zone.now)
+  end
+
+  def edit
+    @projects_by_team = @company.teams.find(@flow_event.team_id).projects.running.order(:name) if @flow_event.team.present?
   end
 
   def create
@@ -19,27 +29,17 @@ class FlowEventsController < AuthenticatedController
     end
   end
 
-  def destroy
-    @flow_event.destroy
-    @flow_events = @company.flow_events.order(event_date: :desc)
-    respond_to { |format| format.js { render 'flow_events/destroy' } }
-  end
-
-  def index
-    @flow_events = @company.flow_events.order(event_date: :desc)
-  end
-
-  def edit
-    @projects_by_team = @company.teams.find(@flow_event.team_id).projects.running.order(:name) if @flow_event.team.present?
-  end
-
   def update
     @flow_event.update(flow_event_params)
 
     redirect_to company_flow_events_path(@company)
   end
 
-  def show; end
+  def destroy
+    @flow_event.destroy
+    @flow_events = @company.flow_events.order(event_date: :desc)
+    respond_to { |format| format.js { render 'flow_events/destroy' } }
+  end
 
   private
 

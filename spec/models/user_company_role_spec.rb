@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe UserCompanyRole, type: :model do
+RSpec.describe UserCompanyRole do
   context 'enums' do
     it { is_expected.to define_enum_for(:user_role).with_values(operations: 0, manager: 1, director: 2, customer: 3) }
   end

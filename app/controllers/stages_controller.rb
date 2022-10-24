@@ -5,9 +5,23 @@ class StagesController < AuthenticatedController
 
   before_action :assign_stage, except: %i[new create import_from_jira]
 
+  def show
+    assign_project_stages
+    assign_team_stages
+
+    @transitions_in_stage = @stage.demand_transitions.includes(:demand)
+    @stage_analytic_data = StageAnalyticData.new(@stage)
+  end
+
   def new
     @stage = Stage.new
     parent_stages
+  end
+
+  def edit
+    parent_stages
+
+    respond_to { |format| format.js }
   end
 
   def create
@@ -17,12 +31,6 @@ class StagesController < AuthenticatedController
 
     parent_stages
     render :new
-  end
-
-  def edit
-    parent_stages
-
-    respond_to { |format| format.js }
   end
 
   def update
@@ -35,14 +43,6 @@ class StagesController < AuthenticatedController
     return redirect_to company_path(@company) if @stage.destroy
 
     redirect_to(company_path(@company), flash: { error: @stage.errors.full_messages.join(',') })
-  end
-
-  def show
-    assign_project_stages
-    assign_team_stages
-
-    @transitions_in_stage = @stage.demand_transitions.includes(:demand)
-    @stage_analytic_data = StageAnalyticData.new(@stage)
   end
 
   def associate_project

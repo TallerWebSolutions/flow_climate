@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DeviseCustomersController, type: :controller do
+RSpec.describe DeviseCustomersController do
   context 'unauthenticated' do
     describe 'GET #home' do
       before { get :home }

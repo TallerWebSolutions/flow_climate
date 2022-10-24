@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DemandScoreMatrix, type: :model do
+RSpec.describe DemandScoreMatrix do
   context 'associations' do
     it { is_expected.to belong_to :user }
     it { is_expected.to belong_to :demand }

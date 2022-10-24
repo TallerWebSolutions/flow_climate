@@ -5,13 +5,17 @@ class DemandsController < DemandsListController
 
   before_action :assign_demand, only: %i[edit update show synchronize_jira synchronize_azure destroy destroy_physically score_research]
 
-  def destroy
-    @demand.discard
-    assign_dates_to_query
-    build_demands_list
-    assign_consolidations
+  def index
+    prepend_view_path Rails.public_path
+    render 'spa-build/index'
+  end
 
-    redirect_to company_demands_path
+  def show
+    read_demand_children
+
+    compute_flow_efficiency
+    compute_stream_percentages
+    lead_time_breakdown
   end
 
   def edit; end
@@ -29,17 +33,13 @@ class DemandsController < DemandsListController
     end
   end
 
-  def show
-    read_demand_children
+  def destroy
+    @demand.discard
+    assign_dates_to_query
+    build_demands_list
+    assign_consolidations
 
-    compute_flow_efficiency
-    compute_stream_percentages
-    lead_time_breakdown
-  end
-
-  def index
-    prepend_view_path Rails.public_path
-    render 'spa-build/index'
+    redirect_to company_demands_path
   end
 
   def synchronize_jira

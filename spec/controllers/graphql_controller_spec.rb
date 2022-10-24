@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe GraphqlController, type: :controller do
+RSpec.describe GraphqlController do
   context 'unauthenticated' do
     describe 'POST #execute' do
       before { post :execute, params: { format: :json, query: '' } }

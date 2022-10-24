@@ -4,6 +4,10 @@ module Jira
   class JiraAccountsController < AuthenticatedController
     before_action :assign_jira_account, only: %i[destroy show]
 
+    def show
+      @jira_custom_field_mappings = @jira_account.jira_custom_field_mappings.order(:custom_field_type)
+    end
+
     def new
       @jira_account = JiraAccount.new(company_id: @company.id)
     end
@@ -23,10 +27,6 @@ module Jira
       @jira_account.destroy
       @jira_accounts_list = @company.reload.jira_accounts.order(:created_at)
       render 'jira/jira_accounts/destroy'
-    end
-
-    def show
-      @jira_custom_field_mappings = @jira_account.jira_custom_field_mappings.order(:custom_field_type)
     end
 
     private

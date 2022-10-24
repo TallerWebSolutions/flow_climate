@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Api::V1::TeamsController, type: :controller do
+RSpec.describe Api::V1::TeamsController do
   let(:company) { Fabricate :company }
 
   let(:feature_type) { Fabricate :work_item_type, company: company, name: 'Feature' }
@@ -117,8 +117,8 @@ RSpec.describe Api::V1::TeamsController, type: :controller do
             get :items_delivered_last_week, params: { id: team.id }
 
             expect(response).to have_http_status :ok
-            expect(JSON.parse(response.body)['data'].map { |demand| demand['id'] }).to match_array [first_demand.id, third_demand.id]
-            expect(JSON.parse(response.body)['data'].map { |demand| demand['external_id'] }).to match_array [first_demand.external_id, third_demand.external_id]
+            expect(JSON.parse(response.body)['data'].pluck('id')).to match_array [first_demand.id, third_demand.id]
+            expect(JSON.parse(response.body)['data'].pluck('external_id')).to match_array [first_demand.external_id, third_demand.external_id]
           end
         end
 

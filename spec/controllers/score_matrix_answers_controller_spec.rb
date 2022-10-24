@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ScoreMatrixAnswersController, type: :controller do
+RSpec.describe ScoreMatrixAnswersController do
   context 'unauthenticated' do
     describe 'POST #create' do
       before { post :create, params: { company_id: 'bar', product_id: 'foo', score_matrix_question_id: 'xpto' } }

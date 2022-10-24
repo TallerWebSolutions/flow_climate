@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Jira::JiraProductConfig, type: :model do
+RSpec.describe Jira::JiraProductConfig do
   context 'associations' do
     it { is_expected.to belong_to :product }
     it { is_expected.to have_many(:jira_project_configs).dependent(:destroy) }

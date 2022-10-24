@@ -7,6 +7,11 @@ class StageProjectConfigsController < AuthenticatedController
   before_action :assign_project, only: %i[index destroy]
   before_action :assign_stage_project_config, except: :index
 
+  def index
+    @projects_to_copy_stages_from = (@company.projects - [@project]).sort_by(&:name)
+    @stages_config_list = @project.stage_project_configs.joins(:stage).where('stages.order >= 0').order('stages.order, stages.name')
+  end
+
   def edit; end
 
   def update
@@ -19,11 +24,6 @@ class StageProjectConfigsController < AuthenticatedController
     replicate_to_other_projects if params['replicate_to_projects'] == '1'
 
     redirect_to edit_company_stage_stage_project_config_path(@company, @stage, @stage_project_config)
-  end
-
-  def index
-    @projects_to_copy_stages_from = (@company.projects - [@project]).sort_by(&:name)
-    @stages_config_list = @project.stage_project_configs.joins(:stage).where('stages.order >= 0').order('stages.order, stages.name')
   end
 
   def destroy

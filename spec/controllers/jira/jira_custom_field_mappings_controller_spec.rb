@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Jira::JiraCustomFieldMappingsController, type: :controller do
+RSpec.describe Jira::JiraCustomFieldMappingsController do
   context 'unauthenticated' do
     describe 'GET #new' do
       before { get :new, params: { company_id: 'bar', jira_account_id: 'foo' } }

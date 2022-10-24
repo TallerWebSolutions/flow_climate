@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe User, type: :model do
+RSpec.describe User do
   context 'associations' do
     it { is_expected.to have_many(:companies).through(:user_company_roles) }
     it { is_expected.to have_many(:user_company_roles) }

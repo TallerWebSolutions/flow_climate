@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DemandTransitionsController, type: :controller do
+RSpec.describe DemandTransitionsController do
   context 'unauthenticated' do
     describe 'DELETE #destroy' do
       before { delete :destroy, params: { company_id: 'foo', stage_id: 'bar', id: 'sbbrubles' } }

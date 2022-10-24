@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ProjectRiskConfigsController, type: :controller do
+RSpec.describe ProjectRiskConfigsController do
   context 'unauthenticated' do
     describe 'GET #new' do
       before { get :new, params: { company_id: 'xpto', project_id: 'bar' } }

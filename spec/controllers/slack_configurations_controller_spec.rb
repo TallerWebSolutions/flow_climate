@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe SlackConfigurationsController, type: :controller do
+RSpec.describe SlackConfigurationsController do
   context 'unauthenticated' do
     describe 'GET #new' do
       before { get :new, params: { company_id: 'bar', team_id: 'foo' } }

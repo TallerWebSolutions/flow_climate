@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe FlowEvent, type: :model do
+RSpec.describe FlowEvent do
   include Rails.application.routes.url_helpers
 
   context 'enums' do

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ChartsController, type: :controller do
+RSpec.describe ChartsController do
   context 'unauthenticated' do
     describe 'GET #build_strategic_charts' do
       before { get :build_strategic_charts, params: { company_id: 'foo' }, xhr: true }

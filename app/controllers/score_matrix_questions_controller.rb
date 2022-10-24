@@ -4,11 +4,18 @@ class ScoreMatrixQuestionsController < AuthenticatedController
   before_action :assign_product
   before_action :assign_score_matrix_question, only: %i[show destroy edit update]
 
+  def show
+    @score_matrix_answers = @score_matrix_question.score_matrix_answers.order(:answer_value)
+    @score_matrix_answer = ScoreMatrixAnswer.new(score_matrix_question: @score_matrix_question)
+  end
+
   def new
     @score_matrix_question = ScoreMatrixQuestion.new(score_matrix: product_score_matrix)
 
     render :new
   end
+
+  def edit; end
 
   def create
     @score_matrix_question = ScoreMatrixQuestion.new(score_matrix_question_params.merge(score_matrix: product_score_matrix))
@@ -24,19 +31,6 @@ class ScoreMatrixQuestionsController < AuthenticatedController
     end
   end
 
-  def destroy
-    @score_matrix_question.destroy
-    @score_matrix_questions = @product.score_matrix_questions.order(:question_type, :question_weight, :description)
-    render 'score_matrix_questions/destroy'
-  end
-
-  def show
-    @score_matrix_answers = @score_matrix_question.score_matrix_answers.order(:answer_value)
-    @score_matrix_answer = ScoreMatrixAnswer.new(score_matrix_question: @score_matrix_question)
-  end
-
-  def edit; end
-
   def update
     @score_matrix_question.update(score_matrix_question_params)
 
@@ -49,6 +43,12 @@ class ScoreMatrixQuestionsController < AuthenticatedController
       flash[:error] = @score_matrix_question.errors.full_messages.join(', ')
       render :edit
     end
+  end
+
+  def destroy
+    @score_matrix_question.destroy
+    @score_matrix_questions = @product.score_matrix_questions.order(:question_type, :question_weight, :description)
+    render 'score_matrix_questions/destroy'
   end
 
   private

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Jira::JiraAccount, type: :model do
+RSpec.describe Jira::JiraAccount do
   context 'associations' do
     it { is_expected.to belong_to :company }
     it { is_expected.to have_many(:jira_custom_field_mappings).dependent(:destroy) }

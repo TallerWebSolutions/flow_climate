@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Azure::AzureProductConfig, type: :model do
+RSpec.describe Azure::AzureProductConfig do
   context 'associations' do
     it { is_expected.to belong_to :product }
     it { is_expected.to belong_to :azure_account }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Api::V1::CompaniesController, type: :controller do
+RSpec.describe Api::V1::CompaniesController do
   describe 'GET #show' do
     let(:company) { Fabricate :company }
     let!(:headers) { { HTTP_API_TOKEN: company.api_token } }

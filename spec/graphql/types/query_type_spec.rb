@@ -1247,9 +1247,9 @@ RSpec.describe Types::QueryType do
       Fabricate :team_member, name: 'aaa'
 
       result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
-      expect(result.dig('data', 'teamMembers').map { |member| member['name'] }).to eq %w[aaa zzz]
-      expect(result.dig('data', 'teamMembers').first['teams'].map { |team_query| team_query['name'] }).to eq ['xpto']
-      expect(result.dig('data', 'teamMembers').second['teams'].map { |team_query| team_query['name'] }).to match_array %w[xpto foo]
+      expect(result.dig('data', 'teamMembers').pluck('name')).to eq %w[aaa zzz]
+      expect(result.dig('data', 'teamMembers').first['teams'].pluck('name')).to eq ['xpto']
+      expect(result.dig('data', 'teamMembers').second['teams'].pluck('name')).to match_array %w[xpto foo]
     end
   end
 
@@ -1569,10 +1569,10 @@ RSpec.describe Types::QueryType do
       }
 
       result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
-      expect(result.dig('data', 'projectAdditionalHours').map { |add_hour| add_hour['obs'] }).to eq ['foo']
-      expect(result.dig('data', 'projectAdditionalHours').map { |add_hour| add_hour['hours'] }).to eq [project_additional_hour.hours]
-      expect(result.dig('data', 'projectAdditionalHours').map { |add_hour| add_hour['hoursType'] }).to eq [0]
-      expect(result.dig('data', 'projectAdditionalHours').map { |add_hour| add_hour['eventDate'] }).to eq [project_additional_hour.event_date.iso8601]
+      expect(result.dig('data', 'projectAdditionalHours').pluck('obs')).to eq ['foo']
+      expect(result.dig('data', 'projectAdditionalHours').pluck('hours')).to eq [project_additional_hour.hours]
+      expect(result.dig('data', 'projectAdditionalHours').pluck('hoursType')).to eq [0]
+      expect(result.dig('data', 'projectAdditionalHours').pluck('eventDate')).to eq [project_additional_hour.event_date.iso8601]
     end
   end
 
@@ -1597,7 +1597,7 @@ RSpec.describe Types::QueryType do
 
       result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
 
-      expect(result.dig('data', 'workItemTypes').map { |item_type| item_type['name'] }).to eq %w[Beltrano Cornojob Abreu]
+      expect(result.dig('data', 'workItemTypes').pluck('name')).to eq %w[Beltrano Cornojob Abreu]
     end
   end
 

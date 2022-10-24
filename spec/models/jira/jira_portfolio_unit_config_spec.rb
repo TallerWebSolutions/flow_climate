@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Jira::JiraPortfolioUnitConfig, type: :model do
+RSpec.describe Jira::JiraPortfolioUnitConfig do
   context 'associations' do
     it { is_expected.to belong_to :portfolio_unit }
   end

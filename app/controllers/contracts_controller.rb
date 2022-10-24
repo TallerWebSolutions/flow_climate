@@ -4,8 +4,16 @@ class ContractsController < AuthenticatedController
   before_action :assign_customer
   before_action :assign_contract, only: %i[edit update destroy show update_consolidations]
 
+  def show
+    @contracts_flow_information = Flow::ContractsFlowInformation.new(@contract)
+  end
+
   def new
     @contract = Contract.new(customer: @customer)
+    assign_products_in_customer
+  end
+
+  def edit
     assign_products_in_customer
   end
 
@@ -20,10 +28,6 @@ class ContractsController < AuthenticatedController
       flash[:error] = I18n.t('contracts.save.error')
       render :new
     end
-  end
-
-  def edit
-    assign_products_in_customer
   end
 
   def update
@@ -43,10 +47,6 @@ class ContractsController < AuthenticatedController
   def destroy
     @contract.destroy
     redirect_to company_customer_path(@company, @customer)
-  end
-
-  def show
-    @contracts_flow_information = Flow::ContractsFlowInformation.new(@contract)
   end
 
   def update_consolidations

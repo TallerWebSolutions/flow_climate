@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe UserCompanyRolesController, type: :controller do
+RSpec.describe UserCompanyRolesController do
   context 'unauthenticated' do
     describe 'GET #edit' do
       before { get :edit, params: { user_id: 'bla', company_id: 'xpto', id: 'foo' } }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ScoreMatrixAnswer, type: :model do
+RSpec.describe ScoreMatrixAnswer do
   context 'associations' do
     it { is_expected.to belong_to :score_matrix_question }
   end

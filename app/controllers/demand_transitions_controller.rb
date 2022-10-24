@@ -7,18 +7,19 @@ class DemandTransitionsController < AuthenticatedController
   before_action :assign_demand, except: :destroy
   before_action :assign_demand_transition, except: %i[new create]
 
-  def destroy
-    @demand_transition.destroy
-
-    redirect_to company_stage_path(@company, @stage)
-  end
-
   def new
     @demand_transition = DemandTransition.new(demand: @demand)
     demand_transitions
     stages_to_select
 
     respond_to { |format| format.js { render 'demand_transitions/new' } }
+  end
+
+  def edit
+    demand_transitions
+    stages_to_select
+
+    respond_to { |format| format.js { render 'demand_transitions/edit' } }
   end
 
   def create
@@ -29,19 +30,18 @@ class DemandTransitionsController < AuthenticatedController
     respond_to { |format| format.js { render 'demand_transitions/create' } }
   end
 
-  def edit
-    demand_transitions
-    stages_to_select
-
-    respond_to { |format| format.js { render 'demand_transitions/edit' } }
-  end
-
   def update
     @demand_transition.update(demand_transition_params)
     demand_transitions
     stages_to_select
 
     respond_to { |format| format.js { render 'demand_transitions/update' } }
+  end
+
+  def destroy
+    @demand_transition.destroy
+
+    redirect_to company_stage_path(@company, @stage)
   end
 
   private

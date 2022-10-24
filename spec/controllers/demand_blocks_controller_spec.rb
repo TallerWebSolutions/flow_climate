@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DemandBlocksController, type: :controller do
+RSpec.describe DemandBlocksController do
   context 'unauthenticated' do
     describe 'PATCH #activate' do
       before { patch :activate, params: { company_id: 'xpto', project_id: 'bar', demand_id: 'foo', id: 'sbbrubles' } }

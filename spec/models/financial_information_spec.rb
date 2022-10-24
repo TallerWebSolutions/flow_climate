@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe FinancialInformation, type: :model do
+RSpec.describe FinancialInformation do
   context 'associations' do
     it { is_expected.to belong_to :company }
   end

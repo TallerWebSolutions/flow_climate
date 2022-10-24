@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Azure::AzureAccountsController, type: :controller do
+RSpec.describe Azure::AzureAccountsController do
   context 'unauthenticated' do
     describe 'POST #synchronize_azure' do
       before { post :synchronize_azure, params: { company_id: 'bar' } }

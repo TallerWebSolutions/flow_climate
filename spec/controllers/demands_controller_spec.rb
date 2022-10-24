@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DemandsController, type: :controller do
+RSpec.describe DemandsController do
   context 'unauthenticated' do
     describe 'DELETE #destroy' do
       before { delete :destroy, params: { company_id: 'foo', id: 'sbbrubles' }, xhr: true }

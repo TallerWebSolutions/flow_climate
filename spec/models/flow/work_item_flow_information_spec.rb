@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Flow::WorkItemFlowInformation, type: :model do
+RSpec.describe Flow::WorkItemFlowInformation do
   let(:company) { Fabricate :company }
   let(:team) { Fabricate :team }
 

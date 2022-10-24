@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe WebhookIntegrationsController, type: :controller do
+RSpec.describe WebhookIntegrationsController do
   let(:options) { { username: 'foo', password: 'bar', site: 'http://foo.bar', context_path: '/', auth_type: :basic } }
   let(:client) { JIRA::Client.new(options) }
 

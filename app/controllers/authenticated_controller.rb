@@ -38,7 +38,7 @@ class AuthenticatedController < ApplicationController
   def no_plan_to_access(plan_type)
     flash[:alert] = I18n.t('plans.validations.no_lite_plan')
 
-    flash[:alert] = I18n.t('plans.validations.no_gold_plan') if plan_type == :gold
+    flash.now[:alert] = I18n.t('plans.validations.no_gold_plan') if plan_type == :gold
     redirect_to user_path(current_user)
   end
 

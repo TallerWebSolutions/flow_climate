@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DemandTransition, type: :model do
+RSpec.describe DemandTransition do
   context 'associations' do
     it { is_expected.to belong_to(:demand) }
     it { is_expected.to belong_to(:stage) }

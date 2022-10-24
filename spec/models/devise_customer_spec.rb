@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DeviseCustomer, type: :model do
+RSpec.describe DeviseCustomer do
   context 'associations' do
     it { is_expected.to have_many(:customers_devise_customers).dependent(:destroy) }
     it { is_expected.to have_many(:customers).dependent(:destroy) }

@@ -5,11 +5,22 @@ class RiskReviewsController < AuthenticatedController
 
   before_action :assign_risk_review, only: %i[show destroy edit update]
 
+  def show
+    @demand_blocks = @risk_review.demand_blocks.order(:block_time)
+    @demands_count = @risk_review.demands.count
+    @paged_demand_blocks = @risk_review.demand_blocks.order(:block_time).page(page_param)
+  end
+
   def new
     @risk_review = RiskReview.new(product: @product)
     risk_reviews
 
     respond_to { |format| format.js { render 'risk_reviews/new' } }
+  end
+
+  def edit
+    risk_reviews
+    render 'risk_reviews/edit'
   end
 
   def create
@@ -24,22 +35,6 @@ class RiskReviewsController < AuthenticatedController
     respond_to { |format| format.js { render 'risk_reviews/create' } }
   end
 
-  def show
-    @demand_blocks = @risk_review.demand_blocks.order(:block_time)
-    @demands_count = @risk_review.demands.count
-    @paged_demand_blocks = @risk_review.demand_blocks.order(:block_time).page(page_param)
-  end
-
-  def destroy
-    @risk_review.destroy
-    respond_to { |format| format.js { render 'risk_reviews/destroy' } }
-  end
-
-  def edit
-    risk_reviews
-    render 'risk_reviews/edit'
-  end
-
   def update
     @risk_review.update(risk_review_params)
     if @risk_review.valid?
@@ -49,6 +44,11 @@ class RiskReviewsController < AuthenticatedController
     end
 
     render 'risk_reviews/update'
+  end
+
+  def destroy
+    @risk_review.destroy
+    respond_to { |format| format.js { render 'risk_reviews/destroy' } }
   end
 
   private

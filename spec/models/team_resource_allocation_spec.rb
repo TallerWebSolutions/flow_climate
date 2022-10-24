@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe TeamResourceAllocation, type: :model do
+RSpec.describe TeamResourceAllocation do
   context 'associations' do
     it { is_expected.to belong_to :team }
     it { is_expected.to belong_to :team_resource }

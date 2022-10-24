@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe WorkItemType, type: :model do
+RSpec.describe WorkItemType do
   context 'enums' do
     it { is_expected.to define_enum_for(:item_level).with_values(demand: 0, task: 1) }
   end

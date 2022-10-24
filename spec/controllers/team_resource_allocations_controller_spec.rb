@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe TeamResourceAllocationsController, type: :controller do
+RSpec.describe TeamResourceAllocationsController do
   context 'unauthenticated' do
     describe 'GET #new' do
       before { get :new, params: { company_id: 'bar', team_id: 'bar' } }

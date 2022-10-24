@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Notifications::DemandBlockNotification, type: :model do
+RSpec.describe Notifications::DemandBlockNotification do
   context 'associations' do
     it { is_expected.to belong_to :demand_block }
   end

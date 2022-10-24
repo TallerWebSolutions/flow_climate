@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Dashboards::OperationsDashboard, type: :model do
+RSpec.describe Dashboards::OperationsDashboard do
   context 'associations' do
     it { is_expected.to belong_to(:team_member) }
     it { is_expected.to belong_to(:first_delivery).class_name('Demand').optional }

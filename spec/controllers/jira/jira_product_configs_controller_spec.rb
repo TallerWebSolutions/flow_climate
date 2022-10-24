@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Jira::JiraProductConfigsController, type: :controller do
+RSpec.describe Jira::JiraProductConfigsController do
   context 'unauthenticated' do
     describe 'GET #new' do
       before { get :new, params: { company_id: 'bar', product_id: 'foo' } }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DemandComment, type: :model do
+RSpec.describe DemandComment do
   context 'associations' do
     it { is_expected.to belong_to :demand }
     it { is_expected.to belong_to :team_member }

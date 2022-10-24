@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe RiskReviewActionItemsController, type: :controller do
+RSpec.describe RiskReviewActionItemsController do
   context 'unauthenticated' do
     describe 'GET #new' do
       before { get :new, params: { company_id: 'bar', product_id: 'foo', risk_review_id: 'bla' } }

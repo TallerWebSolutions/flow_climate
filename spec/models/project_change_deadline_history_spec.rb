@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ProjectChangeDeadlineHistory, type: :model do
+RSpec.describe ProjectChangeDeadlineHistory do
   context 'associations' do
     it { is_expected.to belong_to :project }
     it { is_expected.to belong_to :user }

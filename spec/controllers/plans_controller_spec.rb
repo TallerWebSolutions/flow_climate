@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe PlansController, type: :controller do
+RSpec.describe PlansController do
   context 'unauthenticated' do
     describe 'GET #no_plan' do
       before { get :no_plan }

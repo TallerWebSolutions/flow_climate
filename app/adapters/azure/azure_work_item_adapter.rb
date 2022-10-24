@@ -12,7 +12,7 @@ module Azure
         Rails.logger.error("[AzureAPI] Failed to request - #{items_ids_response.code}")
       else
         items_ids = items_ids_response
-        work_items_ids = items_ids['workItems'].map { |item| item['id'] }
+        work_items_ids = items_ids['workItems'].pluck('id')
       end
 
       work_items_ids

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe UsersController, type: :controller do
+RSpec.describe UsersController do
   context 'unauthenticated' do
     describe 'PATCH #activate_email_notifications' do
       before { patch :activate_email_notifications }

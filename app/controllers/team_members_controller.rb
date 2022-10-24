@@ -6,12 +6,12 @@ class TeamMembersController < AuthenticatedController
     render 'spa-build/index'
   end
 
-  def edit
+  def show
     prepend_view_path Rails.public_path
     render 'spa-build/index'
   end
 
-  def show
+  def edit
     prepend_view_path Rails.public_path
     render 'spa-build/index'
   end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe TeamsController, type: :controller do
+RSpec.describe TeamsController do
   context 'unauthenticated' do
     describe 'GET #show' do
       before { get :show, params: { company_id: 'bar', id: 'foo' } }

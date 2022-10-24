@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DemandBlocksHelper, type: :helper do
+RSpec.describe DemandBlocksHelper do
   describe '#team_members_options' do
     let(:team_member) { Fabricate :team_member, name: 'zzz' }
     let(:other_team_member) { Fabricate :team_member, name: 'aaa' }

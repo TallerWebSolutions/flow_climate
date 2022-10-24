@@ -6,6 +6,10 @@ class MembershipsController < AuthenticatedController
   before_action :assign_team
   before_action :assign_membership, only: %i[edit update destroy]
 
+  def index
+    @memberships = assign_memberships_list.active
+  end
+
   def new
     @membership = Membership.new(team: @team)
 
@@ -15,6 +19,13 @@ class MembershipsController < AuthenticatedController
     respond_to { |format| format.js { render 'memberships/new' } }
   end
 
+  def edit
+    assign_memberships_list
+    assign_team_members_list
+
+    respond_to { |format| format.js { render 'memberships/edit' } }
+  end
+
   def create
     @membership = Membership.create(membership_params.merge(team: @team))
 
@@ -22,13 +33,6 @@ class MembershipsController < AuthenticatedController
     assign_team_members_list
 
     respond_to { |format| format.js { render 'memberships/create' } }
-  end
-
-  def edit
-    assign_memberships_list
-    assign_team_members_list
-
-    respond_to { |format| format.js { render 'memberships/edit' } }
   end
 
   def update
@@ -44,10 +48,6 @@ class MembershipsController < AuthenticatedController
     @membership.destroy
 
     respond_to { |format| format.js { render 'memberships/destroy' } }
-  end
-
-  def index
-    @memberships = assign_memberships_list.active
   end
 
   def search_memberships

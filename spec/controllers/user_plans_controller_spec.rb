@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe UserPlansController, type: :controller do
+RSpec.describe UserPlansController do
   context 'unauthenticated' do
     describe 'PATCH #activate_user_plan' do
       before { patch :activate_user_plan, params: { user_id: 'foo', id: 'bar' } }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DateHelper, type: :helper do
+RSpec.describe DateHelper do
   describe '#time_distance_in_words' do
     context 'less than a day' do
       it { expect(helper.time_distance_in_words(5000)).to eq "1 #{I18n.t('datetime.date_attributes.hour', count: 1)}" }

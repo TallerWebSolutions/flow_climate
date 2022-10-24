@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ServiceDeliveryReviewsController, type: :controller do
+RSpec.describe ServiceDeliveryReviewsController do
   context 'unauthenticated' do
     describe 'GET #show' do
       before { get :show, params: { company_id: 'bar', product_id: 'foo', id: 'xpto' } }

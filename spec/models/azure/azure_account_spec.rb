@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Azure::AzureAccount, type: :model do
+RSpec.describe Azure::AzureAccount do
   context 'associations' do
     it { is_expected.to belong_to :company }
     it { is_expected.to have_many(:azure_product_configs).class_name('Azure::AzureProductConfig').dependent(:destroy) }

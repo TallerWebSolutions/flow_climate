@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ProjectAdditionalHoursController, type: :controller do
+RSpec.describe ProjectAdditionalHoursController do
   context 'unauthenticated' do
     describe 'GET #new' do
       it 'redirects to the new session path' do

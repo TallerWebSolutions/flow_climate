@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Customer, type: :model do
+RSpec.describe Customer do
   context 'associations' do
     it { is_expected.to belong_to :company }
     it { is_expected.to belong_to(:customer).optional }

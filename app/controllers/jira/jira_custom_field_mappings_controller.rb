@@ -15,18 +15,18 @@ module Jira
       respond_to { |format| format.js { render 'jira/jira_custom_field_mappings/new' } }
     end
 
+    def edit
+      assign_jira_custom_field_mappings_list
+
+      respond_to { |format| format.js { render 'jira/jira_custom_field_mappings/edit' } }
+    end
+
     def create
       @jira_custom_field_mapping = Jira::JiraCustomFieldMapping.create(jira_custom_field_mapping_params.merge(jira_account: @jira_account))
 
       assign_jira_custom_field_mappings_list
 
       respond_to { |format| format.js { render 'jira/jira_custom_field_mappings/create' } }
-    end
-
-    def edit
-      assign_jira_custom_field_mappings_list
-
-      respond_to { |format| format.js { render 'jira/jira_custom_field_mappings/edit' } }
     end
 
     def update

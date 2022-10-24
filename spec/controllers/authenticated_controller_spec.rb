@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe AuthenticatedController, type: :controller do
+RSpec.describe AuthenticatedController do
   describe '#authenticate_user!' do
     controller do
       def some_action

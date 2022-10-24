@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe History::ClassOfServiceChangeHistory, type: :model do
+RSpec.describe History::ClassOfServiceChangeHistory do
   context 'enums' do
     it { is_expected.to define_enum_for(:from_class_of_service).with_values(from_standard: 0, from_expedite: 1, from_fixed_date: 2, from_intangible: 3) }
     it { is_expected.to define_enum_for(:to_class_of_service).with_values(to_standard: 0, to_expedite: 1, to_fixed_date: 2, to_intangible: 3) }

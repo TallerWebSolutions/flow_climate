@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Consolidations::CustomerConsolidation, type: :model do
+RSpec.describe Consolidations::CustomerConsolidation do
   context 'associations' do
     it { is_expected.to belong_to :customer }
   end

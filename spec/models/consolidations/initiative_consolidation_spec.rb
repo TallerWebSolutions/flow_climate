@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Consolidations::InitiativeConsolidation, type: :model do
+RSpec.describe Consolidations::InitiativeConsolidation do
   context 'associations' do
     it { is_expected.to belong_to :initiative }
   end

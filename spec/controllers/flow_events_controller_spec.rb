@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe FlowEventsController, type: :controller do
+RSpec.describe FlowEventsController do
   context 'unauthenticated' do
     describe 'GET #new' do
       before { get :new, params: { company_id: 'bar', project_id: 'foo' } }

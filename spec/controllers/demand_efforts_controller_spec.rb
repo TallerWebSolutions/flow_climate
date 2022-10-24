@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DemandEffortsController, type: :controller do
+RSpec.describe DemandEffortsController do
   context 'unauthenticated' do
     describe '#index' do
       before { get :index, params: { company_id: 'foo', demand_id: 'bar' } }
@@ -27,7 +27,7 @@ RSpec.describe DemandEffortsController, type: :controller do
 
             csv = CSV.parse(response.body, headers: true)
             expect(csv.count).to eq 2
-            expect(csv.map { |row| row[0] }).to match_array [effort.demand.external_id, other_effort.demand.external_id]
+            expect(csv.pluck(0)).to match_array [effort.demand.external_id, other_effort.demand.external_id]
           end
         end
 

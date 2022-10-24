@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Azure::AzureCustomFieldsController, type: :controller do
+RSpec.describe Azure::AzureCustomFieldsController do
   context 'unauthenticated' do
     describe 'POST #create' do
       before { post :create, params: { company_id: 'foo', azure_account_id: 'bar' } }

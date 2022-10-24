@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Jira::JiraCustomFieldMapping, type: :model do
+RSpec.describe Jira::JiraCustomFieldMapping do
   context 'enums' do
     it { is_expected.to define_enum_for(:custom_field_type).with_values(class_of_service: 0, responsibles: 1, customer: 2, contract: 3) }
   end

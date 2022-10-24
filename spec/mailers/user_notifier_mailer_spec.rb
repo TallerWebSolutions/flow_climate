@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe UserNotifierMailer, type: :mailer do
+RSpec.describe UserNotifierMailer do
   let!(:company) { Fabricate :company, users: [first_user, second_user, third_user] }
   let(:customer) { Fabricate :customer, company: company }
   let(:product) { Fabricate :product, company: company, customer: customer }

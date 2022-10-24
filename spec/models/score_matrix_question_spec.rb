@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ScoreMatrixQuestion, type: :model do
+RSpec.describe ScoreMatrixQuestion do
   context 'enums' do
     it { is_expected.to define_enum_for(:question_type).with_values(customer_dimension: 0, service_provider_dimension: 1) }
   end

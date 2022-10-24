@@ -16,6 +16,13 @@ class DemandBlocksController < AuthenticatedController
     render 'demand_blocks/activate_deactivate_block'
   end
 
+  def index
+    @demand_blocks_ids = @company.demand_blocks.unscoped.map(&:id)
+    @demand_blocks = @company.demand_blocks.for_active_projects.active.order(block_time: :desc)
+    @paged_demand_blocks = @demand_blocks.page(page_param)
+    demands_count
+  end
+
   def edit
     respond_to do |format|
       format.js { render 'demand_blocks/edit' }
@@ -30,13 +37,6 @@ class DemandBlocksController < AuthenticatedController
       format.js { render 'demand_blocks/update' }
       format.html { redirect_to company_demand_path(@company, @demand) }
     end
-  end
-
-  def index
-    @demand_blocks_ids = @company.demand_blocks.unscoped.map(&:id)
-    @demand_blocks = @company.demand_blocks.for_active_projects.active.order(block_time: :desc)
-    @paged_demand_blocks = @demand_blocks.page(page_param)
-    demands_count
   end
 
   def demand_blocks_csv

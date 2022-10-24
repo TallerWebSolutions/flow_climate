@@ -3,12 +3,12 @@
 class ProjectsController < AuthenticatedController
   before_action :assign_project, except: %i[new create index status_report_dashboard]
 
-  def show
+  def index
     prepend_view_path Rails.public_path
     render 'spa-build/index'
   end
 
-  def index
+  def show
     prepend_view_path Rails.public_path
     render 'spa-build/index'
   end
@@ -18,18 +18,18 @@ class ProjectsController < AuthenticatedController
     @project = Project.new
   end
 
+  def edit
+    assign_customers
+    assign_customer_projects
+    assign_product_projects
+  end
+
   def create
     @project = Project.new(project_params.merge(company: @company))
     return redirect_to company_projects_path(@company) if @project.save
 
     assign_customers
     render :new
-  end
-
-  def edit
-    assign_customers
-    assign_customer_projects
-    assign_product_projects
   end
 
   def update

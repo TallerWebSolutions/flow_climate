@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe UserPlan, type: :model do
+RSpec.describe UserPlan do
   context 'enums' do
     it { is_expected.to define_enum_for(:plan_billing_period).with_values(monthly: 0, yearly: 1) }
   end

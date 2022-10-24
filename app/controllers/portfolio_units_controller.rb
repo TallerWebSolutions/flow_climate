@@ -4,6 +4,14 @@ class PortfolioUnitsController < AuthenticatedController
   before_action :assign_product
   before_action :assign_portfolio_unit, only: %i[show destroy edit update]
 
+  def show
+    @demands = @portfolio_unit.total_portfolio_demands.kept.order(end_date: :desc)
+    @portfolio_data = Highchart::PortfolioChartsAdapter.new(@projects, @start_date, @end_date, '') if @projects.present?
+    assign_filter_parameters_to_charts
+    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@demands, @start_date, @end_date, @period) if @demands.present?
+    @lead_time_breakdown = DemandService.instance.lead_time_breakdown(@demands.kept.finished_with_leadtime)
+  end
+
   def new
     @portfolio_unit = PortfolioUnit.new(product: @product)
     @portfolio_unit.build_jira_portfolio_unit_config
@@ -12,6 +20,11 @@ class PortfolioUnitsController < AuthenticatedController
     assign_parent_portfolio_units_list
 
     respond_to { |format| format.js { render 'portfolio_units/new' } }
+  end
+
+  def edit
+    assign_portfolio_units_list
+    assign_parent_portfolio_units_list
   end
 
   def create
@@ -28,25 +41,6 @@ class PortfolioUnitsController < AuthenticatedController
     respond_to { |format| format.js { render 'portfolio_units/create' } }
   end
 
-  def destroy
-    @portfolio_unit.destroy
-    @portfolio_units = @product.portfolio_units.order(:name)
-    render 'portfolio_units/destroy'
-  end
-
-  def show
-    @demands = @portfolio_unit.total_portfolio_demands.kept.order(end_date: :desc)
-    @portfolio_data = Highchart::PortfolioChartsAdapter.new(@projects, @start_date, @end_date, '') if @projects.present?
-    assign_filter_parameters_to_charts
-    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@demands, @start_date, @end_date, @period) if @demands.present?
-    @lead_time_breakdown = DemandService.instance.lead_time_breakdown(@demands.kept.finished_with_leadtime)
-  end
-
-  def edit
-    assign_portfolio_units_list
-    assign_parent_portfolio_units_list
-  end
-
   def update
     @portfolio_unit.update(portfolio_unit_params)
     if @portfolio_unit.valid?
@@ -57,6 +51,12 @@ class PortfolioUnitsController < AuthenticatedController
     end
 
     respond_to { |format| format.js { render 'portfolio_units/update' } }
+  end
+
+  def destroy
+    @portfolio_unit.destroy
+    @portfolio_units = @product.portfolio_units.order(:name)
+    render 'portfolio_units/destroy'
   end
 
   private

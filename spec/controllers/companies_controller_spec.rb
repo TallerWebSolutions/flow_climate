@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe CompaniesController, type: :controller do
+RSpec.describe CompaniesController do
   before { travel_to Time.zone.local(2018, 9, 3, 12, 20, 31) }
 
   context 'unauthenticated' do

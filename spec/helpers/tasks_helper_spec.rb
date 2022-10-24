@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe TasksHelper, type: :helper do
+RSpec.describe TasksHelper do
   describe '#initiatives_for_search_options' do
     let(:company) { Fabricate :company }
     let!(:initiative) { Fabricate :initiative, company: company }

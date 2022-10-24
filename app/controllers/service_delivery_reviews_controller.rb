@@ -5,11 +5,20 @@ class ServiceDeliveryReviewsController < AuthenticatedController
 
   before_action :assign_service_delivery_review, only: %i[show destroy edit update refresh]
 
+  def show
+    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@service_delivery_review.demands, @service_delivery_review.start_date, @service_delivery_review.meeting_date, 'week')
+  end
+
   def new
     @service_delivery_review = ServiceDeliveryReview.new(product: @product)
     service_delivery_reviews
 
     respond_to { |format| format.js { render 'service_delivery_reviews/new' } }
+  end
+
+  def edit
+    service_delivery_reviews
+    respond_to { |format| format.js { render 'service_delivery_reviews/edit' } }
   end
 
   def create
@@ -20,27 +29,18 @@ class ServiceDeliveryReviewsController < AuthenticatedController
     respond_to { |format| format.js { render 'service_delivery_reviews/create' } }
   end
 
-  def show
-    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@service_delivery_review.demands, @service_delivery_review.start_date, @service_delivery_review.meeting_date, 'week')
-  end
-
-  def destroy
-    @service_delivery_review.destroy
-    service_delivery_reviews
-    respond_to { |format| format.js { render 'service_delivery_reviews/destroy' } }
-  end
-
-  def edit
-    service_delivery_reviews
-    respond_to { |format| format.js { render 'service_delivery_reviews/edit' } }
-  end
-
   def update
     @service_delivery_review.update(service_delivery_review_params.merge(time_computed_params).merge(percent_computed_params))
 
     process_valid_service_delivery_review if @service_delivery_review.valid?
 
     respond_to { |format| format.js { render 'service_delivery_reviews/update' } }
+  end
+
+  def destroy
+    @service_delivery_review.destroy
+    service_delivery_reviews
+    respond_to { |format| format.js { render 'service_delivery_reviews/destroy' } }
   end
 
   def refresh

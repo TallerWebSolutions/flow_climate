@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DemandEffort, type: :model do
+RSpec.describe DemandEffort do
   context 'associations' do
     it { is_expected.to belong_to :item_assignment }
     it { is_expected.to belong_to :demand_transition }

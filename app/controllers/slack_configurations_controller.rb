@@ -3,8 +3,19 @@
 class SlackConfigurationsController < AuthenticatedController
   before_action :assign_slack_config, only: %i[edit update toggle_active]
 
+  def index
+    @slack_configurations = SlackConfiguration.all.order(:created_at)
+  end
+
   def new
     @slack_configuration = SlackConfiguration.new
+    assign_teams
+    assign_customers
+    assign_stages
+  end
+
+  def edit
+    @slack_configurations = SlackConfiguration.all.order(:created_at)
     assign_teams
     assign_customers
     assign_stages
@@ -24,11 +35,9 @@ class SlackConfigurationsController < AuthenticatedController
     end
   end
 
-  def edit
-    @slack_configurations = SlackConfiguration.all.order(:created_at)
-    assign_teams
-    assign_customers
-    assign_stages
+  def toggle_active
+    @slack_configuration.toggle_active
+    respond_to { |format| format.js { render 'slack_configurations/toggle_active' } }
   end
 
   def update
@@ -43,15 +52,6 @@ class SlackConfigurationsController < AuthenticatedController
       assign_stages
       render :edit
     end
-  end
-
-  def toggle_active
-    @slack_configuration.toggle_active
-    respond_to { |format| format.js { render 'slack_configurations/toggle_active' } }
-  end
-
-  def index
-    @slack_configurations = SlackConfiguration.all.order(:created_at)
   end
 
   private

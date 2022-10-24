@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ContractEstimationChangeHistory, type: :model do
+RSpec.describe ContractEstimationChangeHistory do
   context 'associations' do
     it { is_expected.to belong_to :contract }
   end

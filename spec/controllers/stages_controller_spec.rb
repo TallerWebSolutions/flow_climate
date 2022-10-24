@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe StagesController, type: :controller do
+RSpec.describe StagesController do
   context 'unauthenticated' do
     describe 'GET #new' do
       before { get :new, params: { company_id: 'foo' } }

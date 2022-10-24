@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe StageProjectConfig, type: :model do
+RSpec.describe StageProjectConfig do
   context 'associations' do
     it { is_expected.to belong_to(:stage) }
     it { is_expected.to belong_to(:project) }

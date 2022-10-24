@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ServiceDeliveryReview, type: :model do
+RSpec.describe ServiceDeliveryReview do
   context 'associations' do
     it { is_expected.to have_many(:demands).dependent(:nullify) }
   end

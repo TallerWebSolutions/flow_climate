@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ProjectAdditionalHour, type: :model do
+RSpec.describe ProjectAdditionalHour do
   context 'enums' do
     it { is_expected.to define_enum_for(:hours_type).with_values(meeting: 0) }
   end

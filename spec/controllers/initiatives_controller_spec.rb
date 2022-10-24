@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe InitiativesController, type: :controller do
+RSpec.describe InitiativesController do
   context 'unauthenticated' do
     describe 'GET #index' do
       before { get :index, params: { company_id: 'foo' } }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ContractsController, type: :controller do
+RSpec.describe ContractsController do
   context 'unauthenticated' do
     describe 'GET #new' do
       before { get :new, params: { company_id: 'bar', customer_id: 'xpto' } }

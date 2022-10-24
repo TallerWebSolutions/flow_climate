@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe TasksController, type: :controller do
+RSpec.describe TasksController do
   context 'unauthenticated' do
     describe 'GET #show' do
       before { get :show, params: { company_id: 'foo', id: 'bar' } }

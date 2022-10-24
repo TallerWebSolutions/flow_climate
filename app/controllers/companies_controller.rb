@@ -27,16 +27,16 @@ class CompaniesController < AuthenticatedController
     @company = Company.new
   end
 
+  def edit
+    assign_users_in_company
+  end
+
   def create
     @company = Company.new(company_params)
     @company.add_user(current_user)
     return redirect_to company_path(@company) if @company.save
 
     render :new
-  end
-
-  def edit
-    assign_users_in_company
   end
 
   def update

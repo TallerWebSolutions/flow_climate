@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DemandScoreMatricesController, type: :controller do
+RSpec.describe DemandScoreMatricesController do
   context 'unauthenticated' do
     describe 'POST #create' do
       before { post :create, params: { company_id: 'bar', demand_id: 'foo' } }

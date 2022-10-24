@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ProjectsController, type: :controller do
+RSpec.describe ProjectsController do
   context 'unauthenticated' do
     describe 'GET #show' do
       it 'renders the spa page' do

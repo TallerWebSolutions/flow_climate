@@ -64,7 +64,7 @@ class PortfolioUnit < ApplicationRecord
   end
 
   def total_portfolio_demands
-    Demand.where(id: (demands.kept + children.map(&:total_portfolio_demands).flatten).flatten.map { |demand| demand['id'] })
+    Demand.where(id: (demands.kept + children.map(&:total_portfolio_demands).flatten).flatten.pluck('id'))
   end
 
   def percentage_complete

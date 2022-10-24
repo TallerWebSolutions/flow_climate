@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Demand, type: :model do
+RSpec.describe Demand do
   context 'enums' do
     it { is_expected.to define_enum_for(:class_of_service).with_values(standard: 0, expedite: 1, fixed_date: 2, intangible: 3) }
   end

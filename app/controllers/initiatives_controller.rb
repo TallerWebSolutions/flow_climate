@@ -8,11 +8,6 @@ class InitiativesController < AuthenticatedController
     render 'spa-build/index'
   end
 
-  def edit
-    prepend_view_path Rails.public_path
-    render 'spa-build/index'
-  end
-
   def show
     tasks = Task.where(id: @initiative.tasks.map(&:id)).kept
     @initiative_consolidations = @initiative.initiative_consolidations.weekly_data.order(:consolidation_date)
@@ -21,6 +16,10 @@ class InitiativesController < AuthenticatedController
 
     @burnup_adapter = Highchart::BurnupAdapter.new(tasks, @initiative.start_date, @initiative.end_date)
     @tasks_charts_adapter = ViewCharts::TasksCharts.new(tasks.map(&:id), @initiative.start_date, @initiative.end_date, 'WEEKLY')
+  end
+
+  def new
+    @initiative = Initiative.new(company: @company)
   end
 
   def generate_cache
@@ -38,8 +37,9 @@ class InitiativesController < AuthenticatedController
     redirect_to company_initiative_path(@company, @initiative)
   end
 
-  def new
-    @initiative = Initiative.new(company: @company)
+  def edit
+    prepend_view_path Rails.public_path
+    render 'spa-build/index'
   end
 
   def create

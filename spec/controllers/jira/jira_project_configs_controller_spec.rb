@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Jira::JiraProjectConfigsController, type: :controller do
+RSpec.describe Jira::JiraProjectConfigsController do
   context 'unauthenticated' do
     describe 'GET #new' do
       before { get :new, params: { company_id: 'bar', project_id: 'foo' } }

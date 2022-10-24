@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe PortfolioUnitHelper, type: :helper do
+RSpec.describe PortfolioUnitHelper do
   describe '#period_options' do
     context 'with no argument' do
       it { expect(helper.portfolio_unit_type_options).to eq options_for_select(PortfolioUnit.portfolio_unit_types.keys.map { |unit| [I18n.t("activerecord.attributes.portfolio_unit.enums.portfolio_unit_type.#{unit}"), unit] }, :product_module) }

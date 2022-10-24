@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ScoreMatricesController, type: :controller do
+RSpec.describe ScoreMatricesController do
   context 'unauthenticated' do
     describe 'GET #show' do
       before { get :show, params: { company_id: 'bar', id: 'foo' } }

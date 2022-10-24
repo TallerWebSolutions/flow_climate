@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DeviseCustom::DeviseCustomers::RegistrationsController, type: :controller do
+RSpec.describe DeviseCustom::DeviseCustomers::RegistrationsController do
   before { request.env['devise.mapping'] = Devise.mappings[:devise_customer] }
 
   describe 'GET #new' do

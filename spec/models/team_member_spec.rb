@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe TeamMember, type: :model do
+RSpec.describe TeamMember do
   context 'enums' do
     it { is_expected.to define_enum_for(:billable_type).with_values(outsourcing: 0, consulting: 1, training: 2, domestic_product: 3) }
   end
