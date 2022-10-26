@@ -109,10 +109,20 @@ RSpec.describe Product do
   end
 
   describe '#total_flow_pressure' do
-    include_context 'consolidations variables data for product'
     it 'computes the pressure' do
-      travel_to Time.zone.local(2018, 11, 14, 10, 0, 0) do
-        expect(product.total_flow_pressure).to be_within(0.001).of(0.003)
+      travel_to Time.zone.local(2018, 11, 14, 10) do
+        company = Fabricate :company
+        product = Fabricate :product, company: company, name: 'zzz'
+
+        project = Fabricate :project, start_date: Time.zone.local(2018, 10, 17, 10), end_date: Time.zone.local(2018, 12, 5, 10), customers: [product.customer], products: [product]
+        Fabricate :project, start_date: Time.zone.local(2018, 10, 17, 10), customers: [product.customer], products: [product], status: :executing
+        Fabricate :project, start_date: Time.zone.local(2018, 10, 17, 10), end_date: 3.weeks.from_now, customers: [product.customer], products: [product], value: 5000, qty_hours: 10_000
+
+        Fabricate :demand, product: product, project: project, created_date: Time.zone.local(2018, 11, 14, 10), end_date: nil
+        Fabricate :demand, product: product, project: project, created_date: Time.zone.local(2018, 11, 19, 10), end_date: Time.zone.now
+        Fabricate :demand, product: product, project: project, created_date: Time.zone.local(2018, 11, 20, 10), end_date: nil
+        
+        expect(product.total_flow_pressure).to be_within(0.00001).of(0.03278)
       end
     end
   end
