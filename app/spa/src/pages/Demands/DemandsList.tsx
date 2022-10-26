@@ -268,7 +268,7 @@ const DemandsListPage = () => {
     demand.createdDate,
     demand.commitmentDate,
     demand.endDate,
-    secondsToReadbleDate(demand.leadtime),
+    demand.leadtime,
     demand.effortUpstream,
     demand.effortDownstream,
   ]
