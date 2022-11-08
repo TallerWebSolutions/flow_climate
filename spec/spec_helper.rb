@@ -18,6 +18,7 @@ require 'shoulda/matchers'
 require 'rspec/collection_matchers'
 require 'webmock/rspec'
 require 'jira-ruby'
+require 'redis'
 
 Dir[Rails.root.join('spec/support/*.rb')].each { |f| require f }
 
