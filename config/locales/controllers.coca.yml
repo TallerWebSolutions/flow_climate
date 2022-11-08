@@ -1292,6 +1292,7 @@ coca:
       block_change_type_text: "Click on the type to classify the block"
     index:
       active: "Active?"
+      parent: "Parent"
   portfolio_units:
     index:
       title: "Portfolio Units"

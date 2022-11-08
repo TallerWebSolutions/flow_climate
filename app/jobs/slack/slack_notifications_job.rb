@@ -17,6 +17,8 @@ module Slack
         Slack::SlackNotificationService.instance.notify_beyond_expected_time_in_stage(slack_notifier, team)
       elsif slack_configuration.failure_load?
         Slack::SlackNotificationService.instance.notify_failure_load(slack_notifier, team)
+      elsif slack_configuration.team_review?
+        Slack::SlackNotificationService.instance.notify_team_review(slack_notifier, team)
       end
     end
   end

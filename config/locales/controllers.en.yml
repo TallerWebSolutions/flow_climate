@@ -1222,8 +1222,6 @@ en:
     models:
       demand_comment:
         other: "Demand Comments"
-      slack_configuration:
-        other: "No Slack Configurations Data"
     errors:
       models:
         user_invite:
@@ -1290,6 +1288,7 @@ en:
       block_change_type_text: "Click on the type to classify the block"
     index:
       active: "Active?"
+      parent: "Parent"
   portfolio_units:
     index:
       title: "Portfolio Units"

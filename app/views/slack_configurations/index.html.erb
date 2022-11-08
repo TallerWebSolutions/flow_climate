@@ -3,7 +3,7 @@
     <ul class="breadcrumb">
       <li><%= link_to I18n.t('general.home.title'), root_path %></li>
       <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
-      <li><%= SlackConfiguration.model_name.human(cound: 2) %></li>
+      <li><%= SlackConfiguration.model_name.human(count: 2) %></li>
     </ul>
   </div>
 </div>

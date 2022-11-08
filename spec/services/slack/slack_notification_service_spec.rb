@@ -47,8 +47,6 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
               ">Diferença (atual e média): *#{number_with_precision(average_demand_cost_info[:cmd_difference_to_avg_last_four_weeks], precision: 2)}%*",
               ">:money_with_wings: Semana anterior: *#{number_to_currency(average_demand_cost_info[:last_week])}* -- TH: 1",
               ">:busts_in_silhouette: Tamanho do time: *#{team.size_at} pessoas -- #{number_with_precision(team.size_using_available_hours, precision: 2)} pessoas faturáveis*",
-              ">:moneybag: Investimento mensal: *#{number_to_currency(team.monthly_investment)} -- #{team.available_hours_in_month_for} horas*",
-              ">:chart_with_downwards_trend: Perda operacional no mês: *#{number_to_percentage(team.loss_at * 100)}*",
               ">:zzz: #{number_to_percentage(team.percentage_idle_members * 100, precision: 0)}",
               ">:zzz: :busts_in_silhouette: #{idle_roles}"
             ].join("\n") } }
@@ -66,6 +64,36 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
           allow(first_slack_notifier).to(receive(:post)).and_raise(Slack::Notifier::APIError)
           expect(Rails.logger).to(receive(:error))
           described_class.instance.notify_cmd(first_slack_notifier, team)
+        end
+      end
+    end
+
+    describe '#notify_team_review' do
+      context 'with no exceptions' do
+        it 'calls slack notification method' do
+          travel_to Time.zone.local(2022, 6, 27, 10) do
+            info_block = { type: 'section', text: { type: 'mrkdwn', text: [
+              ">*Team Review - #{team.name}*",
+              ">*TH da semana: 0*\n>",
+              ">:busts_in_silhouette: Tamanho do time: *#{team.size_at} pessoas -- #{number_with_precision(team.size_using_available_hours, precision: 2)} pessoas faturáveis*",
+              ">:moneybag: Investimento mensal: *#{number_to_currency(team.monthly_investment)}* -- *#{team.available_hours_in_month_for}* horas",
+              ">:chart_with_downwards_trend: Perda operacional no mês: *#{number_to_percentage(team.loss_at * 100)}* (#{number_with_precision(team.consumed_hours_in_month(Time.zone.today), precision: 2)}h) de *#{number_to_percentage(team.expected_loss_at * 100)}* (#{number_with_precision(team.expected_consumption, precision: 2)}h) esperados",
+              ">Média de horas por pessoa faturável no mês: *#{number_with_precision(team.average_consumed_hours_per_person_per_day, precision: 2)}*"
+            ].join("\n") } }
+
+            divider_block = { type: 'divider' }
+
+            expect_any_instance_of(Slack::Notifier).to receive(:post).with(blocks: [info_block, divider_block]).once
+            described_class.instance.notify_team_review(first_slack_notifier, team)
+          end
+        end
+      end
+
+      context 'with exceptions' do
+        it 'logs the error' do
+          allow(first_slack_notifier).to(receive(:post)).and_raise(Slack::Notifier::APIError)
+          expect(Rails.logger).to(receive(:error))
+          described_class.instance.notify_team_review(first_slack_notifier, team)
         end
       end
     end

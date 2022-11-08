@@ -531,6 +531,7 @@ pt-BR:
             demand_state_changed: Alteração no Estado da Demanda
             item_assigned: Demanda Atribuída
             demand_blocked: Bloqueios de Demanda
+            team_review: Team Review
           config_type:
             team: "Team"
             customer: "Customer"

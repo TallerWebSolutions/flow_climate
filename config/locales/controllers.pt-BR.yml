@@ -1271,6 +1271,7 @@ pt-BR:
       block_change_type_text: 'Clique no tipo para classificar o bloqueio'
     index:
       active: 'Ativo?'
+      parent: "Pai"
   portfolio_units:
     index:
       title: 'Unidades do Portfólio'

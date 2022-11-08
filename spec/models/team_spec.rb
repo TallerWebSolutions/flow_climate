@@ -97,22 +97,24 @@ RSpec.describe Team do
 
     let(:team) { Fabricate :team, company: company }
     let(:other_team) { Fabricate :team, company: company }
-
-    let(:product) { Fabricate :product, name: 'zzz' }
-    let(:other_product) { Fabricate :product, name: 'zzz' }
-
-    let(:project) { Fabricate :project, team: team, end_date: 4.weeks.from_now, qty_hours: 2000, value: 100_000, hour_value: 50 }
-    let(:other_project) { Fabricate :project, team: team, end_date: 4.weeks.from_now, value: 20_000, hour_value: 100 }
-    let(:other_customer_project) { Fabricate :project, team: other_team, end_date: 4.weeks.from_now, value: 45_000, hour_value: 20 }
-
-    let!(:first_demand) { Fabricate :demand, team: team, project: project, created_date: 2.weeks.ago, end_date: 1.week.ago, work_item_type: bug_type, effort_downstream: 20, effort_upstream: 30 }
-    let!(:second_demand) { Fabricate :demand, team: team, project: project, created_date: 2.weeks.ago, end_date: 1.week.ago, effort_downstream: 40, effort_upstream: 35 }
-    let!(:third_demand) { Fabricate :demand, team: team, project: project, created_date: 1.week.ago, end_date: 2.days.ago, effort_downstream: 10, effort_upstream: 78 }
   end
 
   describe '#avg_hours_per_demand' do
     include_context 'consolidations data for team'
-    it { expect(team.avg_hours_per_demand).to eq team.projects.sum(&:avg_hours_per_demand) / team.projects_count.to_f }
+
+    it 'returns the average hours per demand' do
+      travel_to Time.zone.local(2018, 4, 6, 10, 0, 0) do
+        first_demand = Fabricate :demand, team: team, created_date: 2.weeks.ago, end_date: 1.week.ago, work_item_type: bug_type, effort_downstream: 20
+        second_demand = Fabricate :demand, team: team, created_date: 2.weeks.ago, end_date: 1.week.ago, effort_downstream: 40
+        third_demand = Fabricate :demand, team: team, created_date: 1.week.ago, end_date: 2.days.ago, effort_downstream: 10
+
+        Fabricate :demand_effort, demand: first_demand, start_time_to_computation: 4.days.ago, effort_value: 100
+        Fabricate :demand_effort, demand: second_demand, start_time_to_computation: 15.days.ago, effort_value: 10
+        Fabricate :demand_effort, demand: third_demand, start_time_to_computation: 15.days.ago, effort_value: 30
+
+        expect(team.avg_hours_per_demand.to_f).to eq 73.33333333333333
+      end
+    end
   end
 
   describe '#consumed_hours_in_month' do
@@ -120,12 +122,24 @@ RSpec.describe Team do
 
     let(:team) { Fabricate :team }
 
-    context 'having data' do
+    context 'with data' do
       include_context 'consolidations data for team'
-      it { expect(team.consumed_hours_in_month(Date.new(2018, 4, 5))).to eq 88 }
+      it 'returns the consumed hours in month' do
+        travel_to Time.zone.local(2018, 4, 6, 10, 0, 0) do
+          first_demand = Fabricate :demand, team: team, created_date: 2.weeks.ago, end_date: 1.week.ago, work_item_type: bug_type, effort_downstream: 20
+          second_demand = Fabricate :demand, team: team, created_date: 2.weeks.ago, end_date: 1.week.ago, effort_downstream: 40
+          third_demand = Fabricate :demand, team: team, created_date: 1.week.ago, end_date: 2.days.ago, effort_downstream: 10
+
+          Fabricate :demand_effort, demand: first_demand, start_time_to_computation: 4.days.ago, effort_value: 100
+          Fabricate :demand_effort, demand: second_demand, start_time_to_computation: 15.days.ago, effort_value: 10
+          Fabricate :demand_effort, demand: third_demand, start_time_to_computation: 15.days.ago, effort_value: 30
+
+          expect(team.consumed_hours_in_month(Time.zone.today).to_f).to eq 100
+        end
+      end
     end
 
-    context 'having no data' do
+    context 'with no data' do
       it { expect(team.consumed_hours_in_month(Date.new(2018, 4, 5))).to eq 0 }
     end
   end
@@ -622,6 +636,64 @@ RSpec.describe Team do
 
           expect(team.percentage_concluded).to eq 0.4
         end
+      end
+    end
+  end
+
+  describe '#expected_loss_at' do
+    context 'for the beginning of month' do
+      it 'returns the proportional loss to the date' do
+        travel_to Time.zone.local(2022, 11, 8, 10) do
+          team = Fabricate :team
+
+          Fabricate :membership, team: team, hours_per_month: 100, start_date: 30.days.ago, end_date: nil
+          Fabricate :membership, team: team, hours_per_month: 200, start_date: 30.days.ago, end_date: nil
+
+          expect(team.expected_loss_at).to eq 0.7727272727272727
+        end
+      end
+    end
+
+    context 'for the end of month' do
+      it 'returns the proportional loss to the date' do
+        travel_to Time.zone.local(2022, 11, 30, 10) do
+          team = Fabricate :team
+
+          Fabricate :membership, team: team, hours_per_month: 100, start_date: 30.days.ago, end_date: nil
+          Fabricate :membership, team: team, hours_per_month: 200, start_date: 30.days.ago, end_date: nil
+
+          expect(team.expected_loss_at).to be_within(0.01).of 0.045
+        end
+      end
+    end
+  end
+
+  describe '#average_consumed_hours_per_person_per_day' do
+    it 'returns the average value' do
+      travel_to Time.zone.local(2022, 11, 8, 10) do
+        team = Fabricate :team
+
+        Fabricate :membership, team: team, hours_per_month: 100, start_date: 30.days.ago, end_date: nil
+        Fabricate :membership, team: team, hours_per_month: 200, start_date: 30.days.ago, end_date: nil
+
+        demand = Fabricate :demand, team: team
+        Fabricate :demand_effort, demand: demand, start_time_to_computation: 4.days.ago, effort_value: 100
+        Fabricate :demand_effort, demand: demand, start_time_to_computation: 15.days.ago, effort_value: 10
+
+        expect(team.average_consumed_hours_per_person_per_day).to eq 6.666666666666667
+      end
+    end
+  end
+
+  describe '#expected_consumption' do
+    it 'returns the expetected value' do
+      travel_to Time.zone.local(2022, 11, 8, 10) do
+        team = Fabricate :team
+
+        Fabricate :membership, team: team, hours_per_month: 100, start_date: 30.days.ago, end_date: nil
+        Fabricate :membership, team: team, hours_per_month: 200, start_date: 30.days.ago, end_date: nil
+
+        expect(team.expected_consumption).to eq 81.81818181818181
       end
     end
   end

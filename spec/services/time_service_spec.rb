@@ -145,8 +145,8 @@ RSpec.describe TimeService, type: :service do
   end
 
   describe '#beginning_of_semester' do
-    it 'returns beginning of semester' do
-      travel_to Time.zone.local(2021, 1, 11, 19, 0, 0) do
+    it 'returns the beginning of semester' do
+      travel_to Time.zone.local(2021, 1, 11, 19) do
         date = described_class.instance.beginning_of_semester
         expect(date).to eq Date.new(2021, 1, 1).beginning_of_day
 
@@ -155,6 +155,17 @@ RSpec.describe TimeService, type: :service do
 
         date = described_class.instance.beginning_of_semester(Date.new(2021, 7, 30))
         expect(date).to eq Date.new(2021, 7, 1).beginning_of_day
+      end
+    end
+  end
+
+  describe '#business_days' do
+    it 'returns the business days between two dates' do
+      travel_to Time.zone.local(2022, 11, 8, 10) do
+        start_date = 7.days.ago
+        end_date = 7.days.from_now
+
+        expect(described_class.instance.business_days_between(start_date, end_date)).to eq 11
       end
     end
   end

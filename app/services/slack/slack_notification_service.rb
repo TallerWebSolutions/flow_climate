@@ -17,10 +17,23 @@ module Slack
         ">Diferença (atual e média): *#{number_with_precision(average_demand_cost_info[:cmd_difference_to_avg_last_four_weeks], precision: 2)}%*",
         ">:money_with_wings: Semana anterior: *#{number_to_currency(average_demand_cost_info[:last_week])}* -- TH: #{th_for_week(team, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week).count}",
         ">:busts_in_silhouette: Tamanho do time: *#{team.size_at} pessoas -- #{number_with_precision(team.size_using_available_hours, precision: 2)} pessoas faturáveis*",
-        ">:moneybag: Investimento mensal: *#{number_to_currency(team.monthly_investment)} -- #{team.available_hours_in_month_for} horas*",
-        ">:chart_with_downwards_trend: Perda operacional no mês: *#{number_to_percentage(team.loss_at * 100)}*",
         ">:zzz: #{number_to_percentage(team.percentage_idle_members * 100, precision: 0)}",
         ">:zzz: :busts_in_silhouette: #{idle_roles}"
+      ].join("\n") } }
+      divider_block = { type: 'divider' }
+      slack_notifier.post(blocks: [info_block, divider_block])
+    rescue Slack::Notifier::APIError
+      Rails.logger.error('Invalid Slack API - It may be caused by an API token problem')
+    end
+
+    def notify_team_review(slack_notifier, team)
+      info_block = { type: 'section', text: { type: 'mrkdwn', text: [
+        ">*Team Review - #{team.name}*",
+        ">*TH da semana: #{th_for_week(team, Time.zone.now.beginning_of_week, Time.zone.now.end_of_week).count}*\n>",
+        ">:busts_in_silhouette: Tamanho do time: *#{team.size_at} pessoas -- #{number_with_precision(team.size_using_available_hours, precision: 2)} pessoas faturáveis*",
+        ">:moneybag: Investimento mensal: *#{number_to_currency(team.monthly_investment)}* -- *#{team.available_hours_in_month_for}* horas",
+        ">:chart_with_downwards_trend: Perda operacional no mês: *#{number_to_percentage(team.loss_at * 100)}* (#{number_with_precision(team.consumed_hours_in_month(Time.zone.today), precision: 2)}h) de *#{number_to_percentage(team.expected_loss_at * 100)}* (#{number_with_precision(team.expected_consumption, precision: 2)}h) esperados",
+        ">Média de horas por pessoa faturável no mês: *#{number_with_precision(team.average_consumed_hours_per_person_per_day, precision: 2)}*"
       ].join("\n") } }
       divider_block = { type: 'divider' }
       slack_notifier.post(blocks: [info_block, divider_block])

@@ -74,6 +74,9 @@ en:
       work_item_type:
         one: Work Item Type
         other: Work Item Types
+      slack_configuration:
+        one: Slack Configuration
+        other: Slack Configurations
     attributes:
       user:
         created_at: Joined At
@@ -186,6 +189,7 @@ en:
             demand_state_changed: "State Changed"
             item_assigned: "Demand Assigned"
             demand_blocked: "Demand Blocks"
+            team_review: "Team Review"
           config_type:
             team: "Team"
             customer: "Customer"

@@ -68,8 +68,30 @@ class Team < ApplicationRecord
     (available_hours - efforts_value) / available_hours.to_f
   end
 
-  def consumed_hours_in_month(required_date)
-    demands.kept.where('EXTRACT(YEAR from demands.end_date) = :year AND EXTRACT(MONTH from demands.end_date) = :month', year: required_date.to_date.cwyear, month: required_date.to_date.month).sum(&:total_effort)
+  def expected_loss_at(date = Time.zone.today)
+    available_hours = available_hours_in_month_for(date)
+    remaining_days_in_month = TimeService.instance.business_days_between(date, date.end_of_month)
+    all_days_in_month = TimeService.instance.business_days_between(date.beginning_of_month, date.end_of_month)
+    percentage_remaining_month = remaining_days_in_month.to_f / all_days_in_month
+    (available_hours * percentage_remaining_month) / available_hours
+  end
+
+  def expected_consumption(date = Time.zone.today)
+    available_hours = available_hours_in_month_for(date)
+    past_days_in_month = TimeService.instance.business_days_between(date.beginning_of_month, date)
+    all_days_in_month = TimeService.instance.business_days_between(date.beginning_of_month, date.end_of_month)
+
+    available_hours * (past_days_in_month.to_f / all_days_in_month)
+  end
+
+  def consumed_hours_in_month(date)
+    demand_efforts.to_dates(date.beginning_of_month, date).sum(&:effort_value)
+  end
+
+  def average_consumed_hours_per_person_per_day(date = Time.zone.today)
+    consumed = consumed_hours_in_month(date).to_f
+    past_days_in_month = TimeService.instance.business_days_between(date.beginning_of_month, date)
+    consumed / past_days_in_month / size_using_available_hours
   end
 
   def lead_time(start_date, end_date, percentile = 80)

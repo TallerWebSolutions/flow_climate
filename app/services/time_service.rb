@@ -59,6 +59,16 @@ class TimeService
     end
   end
 
+  def business_days_between(start_date, end_date)
+    counter = 0
+
+    (start_date.to_date..end_date.to_date).each do |day|
+      counter += 1 unless day.saturday? || day.sunday?
+    end
+
+    counter
+  end
+
   private
 
   def compute_dates(min_date, max_date, period_frame, end_of_period)
