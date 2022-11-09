@@ -180,7 +180,7 @@ module Slack
 
       return if item_assignment.assignment_notified?
 
-      demand_title = "*<#{demand_url}|#{item_assignment.demand.external_id} - #{item_assignment.demand.demand_title}>*"
+      demand_title = "*<#{item_assignment.demand.external_url}|#{item_assignment.demand.external_id} - #{item_assignment.demand.demand_title}>*"
       assign_message = "#{item_assignment.team_member_name} puxou a demanda em _#{item_assignment.assigned_at&.name || 'sem etapa'}_ às #{I18n.l(item_assignment.start_time, format: :short)}"
       message_previous_pull = "Anterior: #{item_assignment.previous_assignment&.demand&.external_id}"
       message_ongoing = ":computer: #{item_assignment.membership_open_assignments.map(&:demand).flatten.map { |demand| "#{demand.external_id} (#{demand.current_stage_name})" }.join(', ')}"
@@ -234,14 +234,14 @@ module Slack
     end
 
     def notify_unblocked(block_type, demand_block, demand_url, divider_block, slack_notifier)
-      message_title = { type: 'section', text: { type: 'mrkdwn', text: ":tada: :tada: #{demand_block.unblocker&.name} desbloqueou a <#{demand_url}|#{demand_block.demand.external_id}> em _#{demand_block.demand.stage_at(demand_block.block_time)&.name || 'sem etapa'}_ as #{I18n.l(demand_block.unblock_time, format: :short)}" } }
+      message_title = { type: 'section', text: { type: 'mrkdwn', text: ":tada: :tada: #{demand_block.unblocker&.name} desbloqueou a <#{demand_block.demand.external_url}|#{demand_block.demand.external_id}> em _#{demand_block.demand.stage_at(demand_block.block_time)&.name || 'sem etapa'}_ as #{I18n.l(demand_block.unblock_time, format: :short)}" } }
       block_detail = { type: 'section', text: { type: 'mrkdwn', text: ":alarm_clock: #{time_distance_in_words(demand_block.reload.total_blocked_time)}" } }
 
       slack_notifier.post(blocks: [message_title, block_type, block_detail, divider_block])
     end
 
     def notify_blocked(block_type, demand_block, demand_url, divider_block, slack_notifier)
-      message_title = { type: 'section', text: { type: 'mrkdwn', text: ">:no_entry_sign: #{demand_block.blocker_name} bloqueou a <#{demand_url}|#{demand_block.demand.external_id}> em _#{demand_block.demand.stage_at(demand_block.block_time)&.name || 'sem etapa'}_ as #{I18n.l(demand_block.block_time, format: :short)}" } }
+      message_title = { type: 'section', text: { type: 'mrkdwn', text: ">:no_entry_sign: #{demand_block.blocker_name} bloqueou a <#{demand_block.demand.external_url}|#{demand_block.demand.external_id}> em _#{demand_block.demand.stage_at(demand_block.block_time)&.name || 'sem etapa'}_ as #{I18n.l(demand_block.block_time, format: :short)}" } }
       block_detail = { type: 'section', text: { type: 'mrkdwn', text: ">*Motivo:* #{demand_block.block_reason}" } }
 
       slack_notifier.post(blocks: [message_title, block_type, block_detail, divider_block])
