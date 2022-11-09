@@ -4,7 +4,10 @@ module Types
   class TeamType < Types::BaseObject
     field :average_throughput, Float, null: true
     field :company, Types::CompanyType, null: false
-    field :cumulative_flow_chart_data, Types::Charts::CumulativeFlowChartType, null: true
+    field :cumulative_flow_chart_data, Types::Charts::CumulativeFlowChartType, null: true do
+      argument :start_date, GraphQL::Types::ISO8601Date, required: false, description: 'Start Date for the search range'
+      argument :end_date, GraphQL::Types::ISO8601Date, required: false, description: 'End Date for the search range'
+    end
     field :end_date, GraphQL::Types::ISO8601Date, null: true
     field :id, ID, null: false
     field :increased_avg_throughtput, Boolean, null: true
@@ -16,10 +19,16 @@ module Types
       argument :start_date, GraphQL::Types::ISO8601Date, required: false, description: 'Start Date for the search range, will only bring demands finished after this date'
     end
     field :active_projects, [Types::ProjectType], null: true
-    field :demands_flow_chart_data, Types::Charts::DemandsFlowChartDataType, null: true
+    field :demands_flow_chart_data, Types::Charts::DemandsFlowChartDataType, null: true do
+      argument :start_date, GraphQL::Types::ISO8601Date, required: false, description: 'Start Date for the search range'
+      argument :end_date, GraphQL::Types::ISO8601Date, required: false, description: 'End Date for the search range'
+    end
     field :last_replenishing_consolidations, [Types::ReplenishingConsolidationType], null: false
     field :lead_time, Float, null: true
-    field :lead_time_histogram_data, Types::Charts::LeadTimeHistogramDataType, null: true
+    field :lead_time_histogram_data, Types::Charts::LeadTimeHistogramDataType, null: true do
+      argument :start_date, GraphQL::Types::ISO8601Date, required: false, description: 'Start Date for the search range'
+      argument :end_date, GraphQL::Types::ISO8601Date, required: false, description: 'End Date for the search range'
+    end
     field :lead_time_p65, Float, null: true
     field :lead_time_p80, Float, null: true
     field :lead_time_p95, Float, null: true
@@ -28,7 +37,10 @@ module Types
     field :number_of_demands_delivered, Int, null: true
     field :projects, [Types::ProjectType], null: true
     field :start_date, GraphQL::Types::ISO8601Date, null: true
-    field :team_consolidations_weekly, [Types::ProjectConsolidationType], null: true
+    field :team_consolidations_weekly, [Types::ProjectConsolidationType], null: true do
+      argument :start_date, GraphQL::Types::ISO8601Date, required: false, description: 'Start Date for the search range'
+      argument :end_date, GraphQL::Types::ISO8601Date, required: false, description: 'End Date for the search range'
+    end
     field :throughput_data, [Int], null: true
     field :work_in_progress, Int, null: true
 
@@ -91,31 +103,35 @@ module Types
       projects.active
     end
 
-    def cumulative_flow_chart_data
-      start_date = [object.start_date, 6.months.ago].max
-      end_date = [object.end_date, Time.zone.today].min
+    def cumulative_flow_chart_data(start_date: 6.months.ago, end_date: Time.zone.today)
+      start_date = [object.start_date, start_date].max
+      end_date = [object.end_date, end_date].min
       array_of_dates = TimeService.instance.weeks_between_of(start_date, end_date)
       work_item_flow_information = build_work_item_flow_information(array_of_dates)
 
       { x_axis: array_of_dates, y_axis: work_item_flow_information.demands_stages_count_hash }
     end
 
-    def demands_flow_chart_data
-      start_date = [object.start_date, 6.months.ago].max
-      end_date = [object.end_date, Time.zone.today].min
+    def demands_flow_chart_data(start_date: 6.months.ago, end_date: Time.zone.today)
+      start_date = [object.start_date, start_date].max
+      end_date = [object.end_date, end_date].min
       Highchart::DemandsChartsAdapter.new(object.demands.kept, start_date, end_date, 'week')
     end
 
-    def lead_time_histogram_data
-      Stats::StatisticsService.instance.leadtime_histogram_hash(demands_finished_with_leadtime.map(&:leadtime).map { |leadtime| leadtime.round(3) })
+    def lead_time_histogram_data(start_date: 6.months.ago, end_date: Time.zone.today)
+      demands = demands_finished_with_leadtime(start_date, end_date)
+      Stats::StatisticsService.instance.leadtime_histogram_hash(demands.map(&:leadtime).map { |leadtime| leadtime.round(3) })
     end
 
-    def team_consolidations_weekly
+    def team_consolidations_weekly(start_date: 6.months.ago, end_date: Time.zone.today)
       weekly_team_consolidations = object.team_consolidations.weekly_data.order(:consolidation_date)
-      Consolidations::TeamConsolidation
+      
+      consolidations = Consolidations::TeamConsolidation
         .where(id: weekly_team_consolidations.map(&:id) + [last_consolidation&.id])
-        .where('consolidation_date >= :limit_date', limit_date: 6.months.ago)
-        .order(:consolidation_date)
+      consolidations = consolidations.where('consolidation_date >= :limit_date', limit_date: start_date) if start_date.present?
+      consolidations = consolidations.where('consolidation_date <= :limit_date', limit_date: end_date) if end_date.present?
+      
+      consolidations.order(:consolidation_date)
     end
 
     private
@@ -126,8 +142,11 @@ module Types
       work_item_flow_information
     end
 
-    def demands_finished_with_leadtime
-      object.demands.finished_with_leadtime
+    def demands_finished_with_leadtime(start_date, end_date)
+      demands = object.demands.finished_with_leadtime
+      demands = demands.finished_after_date(start_date) if start_date.present?
+      demands = demands.finished_until_date(end_date) if end_date.present?
+      demands
     end
 
     def last_consolidation

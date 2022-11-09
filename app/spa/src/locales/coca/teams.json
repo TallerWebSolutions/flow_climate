@@ -40,6 +40,7 @@
     "replenishing": "Replenishing"
   },
   "charts": {
+    "title": "Charts",
     "cumulativeFlowChart": "Cumulative Flow Diagram",
     "cumulativeFlowYLabel": "Deliverables",
     "leadTimeHistogramChartHits": "hits",
