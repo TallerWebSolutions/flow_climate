@@ -1,23 +1,25 @@
-# frozen_string_literal: true
-
 Rollbar.configure do |config|
   # Without configuration, Rollbar is enabled in all environments.
   # To disable in specific environments, set config.enabled=false.
 
-  config.access_token = Figaro.env.rollbar_access_token
+  config.access_token = '1e75594541b6474d993ac1afdd757fb7'
 
   # Here we'll disable in 'test':
-  config.enabled = false unless Rails.env.production?
+  if Rails.env.test?
+    config.enabled = false
+  end
 
   # By default, Rollbar will try to call the `current_user` controller method
-  # to fetch the logged-in user object, and then call that object's `id`,
-  # `username`, and `email` methods to fetch those properties. To customize:
+  # to fetch the logged-in user object, and then call that object's `id`
+  # method to fetch this property. To customize:
   # config.person_method = "my_current_user"
   # config.person_id_method = "my_id"
-  # config.person_username_method = "my_username"
-  # config.person_email_method = "my_email"
 
-  # If you want to attach custom data to all exception and message charts,
+  # Additionally, you may specify the following:
+  # config.person_username_method = "username"
+  # config.person_email_method = "email"
+
+  # If you want to attach custom data to all exception and message reports,
   # provide a lambda like the following. It should return a hash.
   # config.custom_data_method = lambda { {:some_key => "some_value" } }
 
