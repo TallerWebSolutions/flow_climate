@@ -5,8 +5,8 @@ module Types
     field :average_throughput, Float, null: true
     field :company, Types::CompanyType, null: false
     field :cumulative_flow_chart_data, Types::Charts::CumulativeFlowChartType, null: true do
-      argument :start_date, GraphQL::Types::ISO8601Date, required: false, description: 'Start Date for the search range'
       argument :end_date, GraphQL::Types::ISO8601Date, required: false, description: 'End Date for the search range'
+      argument :start_date, GraphQL::Types::ISO8601Date, required: false, description: 'Start Date for the search range'
     end
     field :end_date, GraphQL::Types::ISO8601Date, null: true
     field :id, ID, null: false
@@ -20,14 +20,14 @@ module Types
     end
     field :active_projects, [Types::ProjectType], null: true
     field :demands_flow_chart_data, Types::Charts::DemandsFlowChartDataType, null: true do
-      argument :start_date, GraphQL::Types::ISO8601Date, required: false, description: 'Start Date for the search range'
       argument :end_date, GraphQL::Types::ISO8601Date, required: false, description: 'End Date for the search range'
+      argument :start_date, GraphQL::Types::ISO8601Date, required: false, description: 'Start Date for the search range'
     end
     field :last_replenishing_consolidations, [Types::ReplenishingConsolidationType], null: false
     field :lead_time, Float, null: true
     field :lead_time_histogram_data, Types::Charts::LeadTimeHistogramDataType, null: true do
-      argument :start_date, GraphQL::Types::ISO8601Date, required: false, description: 'Start Date for the search range'
       argument :end_date, GraphQL::Types::ISO8601Date, required: false, description: 'End Date for the search range'
+      argument :start_date, GraphQL::Types::ISO8601Date, required: false, description: 'Start Date for the search range'
     end
     field :lead_time_p65, Float, null: true
     field :lead_time_p80, Float, null: true
@@ -38,8 +38,8 @@ module Types
     field :projects, [Types::ProjectType], null: true
     field :start_date, GraphQL::Types::ISO8601Date, null: true
     field :team_consolidations_weekly, [Types::ProjectConsolidationType], null: true do
-      argument :start_date, GraphQL::Types::ISO8601Date, required: false, description: 'Start Date for the search range'
       argument :end_date, GraphQL::Types::ISO8601Date, required: false, description: 'End Date for the search range'
+      argument :start_date, GraphQL::Types::ISO8601Date, required: false, description: 'Start Date for the search range'
     end
     field :throughput_data, [Int], null: true
     field :work_in_progress, Int, null: true
@@ -125,12 +125,12 @@ module Types
 
     def team_consolidations_weekly(start_date: 6.months.ago, end_date: Time.zone.today)
       weekly_team_consolidations = object.team_consolidations.weekly_data.order(:consolidation_date)
-      
+
       consolidations = Consolidations::TeamConsolidation
-        .where(id: weekly_team_consolidations.map(&:id) + [last_consolidation&.id])
+                       .where(id: weekly_team_consolidations.map(&:id) + [last_consolidation&.id])
       consolidations = consolidations.where('consolidation_date >= :limit_date', limit_date: start_date) if start_date.present?
       consolidations = consolidations.where('consolidation_date <= :limit_date', limit_date: end_date) if end_date.present?
-      
+
       consolidations.order(:consolidation_date)
     end
 
