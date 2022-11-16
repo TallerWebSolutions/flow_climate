@@ -12,6 +12,6 @@
     "start": "cd app/spa && npm start"
   },
   "engines": {
-    "node": "16.13.2"
+    "node": "18"
   }
 }
