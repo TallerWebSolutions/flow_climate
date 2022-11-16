@@ -4,7 +4,7 @@ Rollbar.configure do |config|
   # Without configuration, Rollbar is enabled in all environments.
   # To disable in specific environments, set config.enabled=false.
 
-  config.access_token = '1e75594541b6474d993ac1afdd757fb7'
+  config.access_token = Figaro.env.rollbar_access_token
 
   # Here we'll disable in 'test':
   config.enabled = false if Rails.env.test?

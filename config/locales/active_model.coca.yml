@@ -114,6 +114,13 @@ coca:
             not_enough_available_hours: "Not Enough Available Hours"
             profit_margin: "Profit Margin"
             flow_pressure: "Flow Pressure"
+      membership:
+        enums:
+          member_role:
+            developer: Developer
+            manager: Manager
+            client: Client
+            designer: Client
       company_settings:
         max_flow_pressure: Maximum Total Flow Pressure
         max_active_parallel_projects: Maximum Parallel Active Projects

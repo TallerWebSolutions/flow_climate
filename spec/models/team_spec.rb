@@ -264,77 +264,79 @@ RSpec.describe Team do
   end
 
   describe '#count_idle_by_role' do
-    let(:company) { Fabricate :company }
+    it 'returns the idle roles' do
+      company = Fabricate :company
+      team = Fabricate :team, company: company
 
-    let(:team) { Fabricate :team, company: company }
+      first_team_member = Fabricate :team_member, company: company
+      second_team_member = Fabricate :team_member, company: company
+      third_team_member = Fabricate :team_member, company: company
+      fourth_team_member = Fabricate :team_member, company: company
+      fifth_team_member = Fabricate :team_member, company: company
+      sixth_team_member = Fabricate :team_member, company: company
 
-    let!(:first_team_member) { Fabricate :team_member, company: company }
-    let!(:second_team_member) { Fabricate :team_member, company: company }
-    let!(:third_team_member) { Fabricate :team_member, company: company }
-    let!(:fourth_team_member) { Fabricate :team_member, company: company }
-    let!(:fifth_team_member) { Fabricate :team_member, company: company }
-    let!(:sixth_team_member) { Fabricate :team_member, company: company }
+      first_membership = Fabricate :membership, team_member: first_team_member, team: team, end_date: nil, member_role: :developer
+      Fabricate :membership, team_member: second_team_member, team: team, end_date: nil, member_role: :manager
+      Fabricate :membership, team_member: third_team_member, team: team, end_date: nil, member_role: :designer
+      Fabricate :membership, team_member: fourth_team_member, team: team, end_date: nil, member_role: :manager
+      Fabricate :membership, team_member: fifth_team_member, team: team, end_date: nil, member_role: :developer
+      Fabricate :membership, team_member: sixth_team_member, team: team, end_date: Time.zone.today, member_role: :manager
 
-    let!(:first_membership) { Fabricate :membership, team_member: first_team_member, team: team, end_date: nil, member_role: :developer }
-    let!(:second_membership) { Fabricate :membership, team_member: second_team_member, team: team, end_date: nil, member_role: :manager }
-    let!(:third_membership) { Fabricate :membership, team_member: third_team_member, team: team, end_date: nil, member_role: :designer }
-    let!(:fourth_membership) { Fabricate :membership, team_member: fourth_team_member, team: team, end_date: nil, member_role: :manager }
-    let!(:fifth_membership) { Fabricate :membership, team_member: fifth_team_member, team: team, end_date: nil, member_role: :developer }
-    let!(:sixth_membership) { Fabricate :membership, team_member: sixth_team_member, team: team, end_date: Time.zone.today, member_role: :manager }
+      other_team = Fabricate :team, company: company
+      empty_team = Fabricate :team, company: company
 
-    let(:other_team) { Fabricate :team, company: company }
+      first_demand = Fabricate :demand, team: team, end_date: nil
+      Fabricate :demand, team: team, end_date: nil
+      Fabricate :demand, team: team, end_date: nil
+      Fabricate :demand, team: team, end_date: Time.zone.now
+      Fabricate :demand, team: other_team, end_date: nil
 
-    let(:empty_team) { Fabricate :team, company: company }
+      Fabricate :item_assignment, demand: first_demand, membership: first_membership, finish_time: nil
 
-    let!(:first_demand) { Fabricate :demand, team: team, end_date: nil }
-    let!(:second_demand) { Fabricate :demand, team: team, end_date: nil }
-    let!(:third_demand) { Fabricate :demand, team: team, end_date: nil }
-    let!(:fourth_demand) { Fabricate :demand, team: team, end_date: Time.zone.now }
-    let!(:fifth_demand) { Fabricate :demand, team: other_team, end_date: nil }
-
-    let!(:first_item_assignment) { Fabricate :item_assignment, demand: first_demand, membership: first_membership, finish_time: nil }
-
-    it { expect(team.count_idle_by_role).to eq({ 'designer' => 1, 'developer' => 1, 'manager' => 2 }) }
-    it { expect(other_team.count_idle_by_role).to eq({}) }
-    it { expect(empty_team.count_idle_by_role).to eq({}) }
+      expect(team.count_idle_by_role).to eq({ 'designer' => 1, 'developer' => 1, 'manager' => 3 })
+      expect(other_team.count_idle_by_role).to eq({})
+      expect(empty_team.count_idle_by_role).to eq({})
+    end
   end
 
   describe '#percentage_idle_members' do
-    let(:company) { Fabricate :company }
+    it 'computes the value' do
+      travel_to Time.zone.local(2018, 4, 6, 10) do
+        company = Fabricate :company
+        team = Fabricate :team, company: company
 
-    let(:team) { Fabricate :team, company: company }
+        first_team_member = Fabricate :team_member, company: company
+        second_team_member = Fabricate :team_member, company: company
+        third_team_member = Fabricate :team_member, company: company
+        fourth_team_member = Fabricate :team_member, company: company
+        fifth_team_member = Fabricate :team_member, company: company
+        sixth_team_member = Fabricate :team_member, company: company
 
-    let!(:first_team_member) { Fabricate :team_member, company: company }
-    let!(:second_team_member) { Fabricate :team_member, company: company }
-    let!(:third_team_member) { Fabricate :team_member, company: company }
-    let!(:fourth_team_member) { Fabricate :team_member, company: company }
-    let!(:fifth_team_member) { Fabricate :team_member, company: company }
-    let!(:sixth_team_member) { Fabricate :team_member, company: company }
+        first_membership = Fabricate :membership, team_member: first_team_member, team: team, end_date: nil
+        second_membership = Fabricate :membership, team_member: second_team_member, team: team, end_date: nil
+        third_membership = Fabricate :membership, team_member: fourth_team_member, team: team, end_date: nil
+        Fabricate :membership, team_member: third_team_member, team: team, end_date: nil
+        Fabricate :membership, team_member: fifth_team_member, team: team, end_date: nil
+        Fabricate :membership, team_member: sixth_team_member, team: team, end_date: Time.zone.today
 
-    let!(:first_membership) { Fabricate :membership, team_member: first_team_member, team: team, end_date: nil }
-    let!(:second_membership) { Fabricate :membership, team_member: second_team_member, team: team, end_date: nil }
-    let!(:third_membership) { Fabricate :membership, team_member: third_team_member, team: team, end_date: nil }
-    let!(:fourth_membership) { Fabricate :membership, team_member: fourth_team_member, team: team, end_date: nil }
-    let!(:fifth_membership) { Fabricate :membership, team_member: fifth_team_member, team: team, end_date: nil }
-    let!(:sixth_membership) { Fabricate :membership, team_member: sixth_team_member, team: team, end_date: Time.zone.today }
+        other_team = Fabricate :team, company: company
+        empty_team = Fabricate :team, company: company
 
-    let(:other_team) { Fabricate :team, company: company }
+        first_demand = Fabricate :demand, team: team, end_date: nil
+        second_demand = Fabricate :demand, team: team, end_date: Time.zone.now
+        Fabricate :demand, team: team, end_date: nil
+        Fabricate :demand, team: team, end_date: nil
+        Fabricate :demand, team: other_team, end_date: nil
 
-    let(:empty_team) { Fabricate :team, company: company }
+        Fabricate :item_assignment, demand: first_demand, membership: first_membership, finish_time: nil
+        Fabricate :item_assignment, demand: first_demand, membership: second_membership, finish_time: nil
+        Fabricate :item_assignment, demand: second_demand, membership: third_membership, finish_time: nil
 
-    let!(:first_demand) { Fabricate :demand, team: team, end_date: nil }
-    let!(:second_demand) { Fabricate :demand, team: team, end_date: nil }
-    let!(:third_demand) { Fabricate :demand, team: team, end_date: nil }
-    let!(:fourth_demand) { Fabricate :demand, team: team, end_date: Time.zone.now }
-    let!(:fifth_demand) { Fabricate :demand, team: other_team, end_date: nil }
-
-    let!(:first_item_assignment) { Fabricate :item_assignment, demand: first_demand, membership: first_membership, finish_time: nil }
-    let!(:second_item_assignment) { Fabricate :item_assignment, demand: first_demand, membership: second_membership, finish_time: nil }
-    let!(:third_item_assignment) { Fabricate :item_assignment, demand: fourth_demand, membership: fourth_membership, finish_time: nil }
-
-    it { expect(team.percentage_idle_members).to eq 0.6 }
-    it { expect(other_team.percentage_idle_members).to eq 0 }
-    it { expect(empty_team.percentage_idle_members).to eq 0 }
+        expect(team.percentage_idle_members).to eq 0.6666666666666666
+        expect(other_team.percentage_idle_members).to eq 0
+        expect(empty_team.percentage_idle_members).to eq 0
+      end
+    end
   end
 
   describe '#initial_scope' do

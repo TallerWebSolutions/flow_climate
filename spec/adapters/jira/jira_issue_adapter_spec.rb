@@ -394,70 +394,89 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
     end
 
     context 'when reading blocks and portfolio unit' do
-      let(:portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'Pre-paid Virtual Card' }
-      let!(:jira_portfolio_unit_config) { Fabricate :jira_portfolio_unit_config, portfolio_unit: portfolio_unit, jira_field_name: 'customfield_10052' }
-
-      let!(:jira_issue) { client.Issue.build({ key: 'EBANX-2', summary: 'foo of bar', fields: { created: '2018-07-03T11:20:18.998-0300', issuetype: { name: 'chore' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }], customfield_10028: { value: 'sTandard' }, customfield_10052: portfolio_unit.name, comment: { comments: [{ created: '2021-04-19 14:46:59.437000000 -0300', body: '(flag) comment example', author: { displayName: 'team_member' } }] } }, changelog: { histories: [{ id: '10038', author: { displayName: 'bla', accountId: 'foo' }, created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'Impediment', fromString: '', to: '10055', toString: 'Impediment' }] }, { id: '10055', author: { displayName: 'xpto', accountId: 'bar' }, created: '2018-07-06T13:40:43.886-0300', items: [{ field: 'Impediment', fromString: 'Impediment', to: '10055', toString: '' }] }, { id: '10057', author: { displayName: 'xpto', accountId: 'bar' }, created: '2018-07-09T13:40:43.886-0300', items: [{ field: 'Impediment', fromString: '', to: '10055', toString: 'Impediment' }] }] } }.with_indifferent_access) }
-      let!(:jira_issue_changelog) { file_fixture('issue_changelog_with_blocks.json').read }
-      let!(:creator) { Fabricate :team_member, company: company, jira_account_user_email: 'foo', jira_account_id: 'xpto', name: 'creator' }
-      let!(:demand) { Fabricate :demand, company: company, team: team, product: product, external_id: 'EBANX-2' }
-
       context 'and there is a specified reason' do
         it 'creates the blocks information' do
-          described_class.instance.process_issue(jira_account, jira_issue, product, first_project)
-          described_class.instance.process_jira_issue_changelog(jira_account, JSON.parse(jira_issue_changelog), demand, creator)
+          travel_to Time.zone.local(2020, 8, 25, 10) do
+            portfolio_unit = Fabricate :portfolio_unit, product: product, name: 'Pre-paid Virtual Card'
+            Fabricate :jira_portfolio_unit_config, portfolio_unit: portfolio_unit, jira_field_name: 'customfield_10052'
 
-          demand_updated = demand.reload
-          expect(demand_updated.demand_blocks.count).to eq 2
-          expect(demand_updated.portfolio_unit).to eq portfolio_unit
+            jira_issue = client.Issue.build({ key: 'EBANX-2', summary: 'foo of bar', fields: { created: '2018-07-03T11:20:18.998-0300', issuetype: { name: 'chore' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }], customfield_10028: { value: 'sTandard' }, customfield_10052: portfolio_unit.name, comment: { comments: [{ created: '2021-04-19 14:46:59.437000000 -0300', body: '(flag) comment example', author: { displayName: 'team_member' } }] } }, changelog: { histories: [{ id: '10038', author: { displayName: 'bla', accountId: 'foo' }, created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'Impediment', fromString: '', to: '10055', toString: 'Impediment' }] }, { id: '10055', author: { displayName: 'xpto', accountId: 'bar' }, created: '2018-07-06T13:40:43.886-0300', items: [{ field: 'Impediment', fromString: 'Impediment', to: '10055', toString: '' }] }, { id: '10057', author: { displayName: 'xpto', accountId: 'bar' }, created: '2018-07-09T13:40:43.886-0300', items: [{ field: 'Impediment', fromString: '', to: '10055', toString: 'Impediment' }] }] } }.with_indifferent_access)
+            jira_issue_changelog = file_fixture('issue_changelog_with_blocks.json').read
+            creator = Fabricate :team_member, company: company, jira_account_user_email: 'foo', jira_account_id: 'xpto', name: 'creator'
+            demand = Fabricate :demand, company: company, team: team, product: product, external_id: 'EBANX-2'
 
-          first_demand_block = demand_updated.demand_blocks.order(created_at: :asc).first
-          expect(first_demand_block.block_time).to eq '2021-04-19 14:46:59.437000000 -0300'
-          expect(first_demand_block.blocker.memberships.last.team).to eq team
-          expect(first_demand_block.blocker.name).to eq 'team_member'
-          expect(first_demand_block.blocker.memberships.last.start_date).to eq Time.zone.today
-          expect(first_demand_block.blocker.memberships.last).to be_developer
-          expect(first_demand_block.block_reason).to eq '(flag) comment example'
+            described_class.instance.process_issue(jira_account, jira_issue, product, first_project)
+            described_class.instance.process_jira_issue_changelog(jira_account, JSON.parse(jira_issue_changelog), demand, creator)
 
-          expect(first_demand_block.blocker.memberships.last.team).to eq team
-          expect(first_demand_block.unblocker.name).to eq 'team_member'
-          expect(first_demand_block.unblocker.memberships.last.start_date).to eq Time.zone.today
-          expect(first_demand_block.unblocker.memberships.last).to be_developer
-          expect(first_demand_block.unblock_time).to eq '2021-04-19 15:29:07.219000000 -0300'
+            demand_updated = demand.reload
+            expect(demand_updated.demand_blocks.count).to eq 2
+            expect(demand_updated.portfolio_unit).to eq portfolio_unit
 
-          second_demand_block = demand_updated.demand_blocks.second
-          expect(second_demand_block.blocker).to be_a TeamMember
-          expect(second_demand_block.block_time).to eq '2021-04-19 17:51:20.104000000 -0300'
+            first_demand_block = demand_updated.demand_blocks.order(created_at: :asc).first
+            expect(first_demand_block.block_time).to eq '2021-04-19 14:46:59.437000000 -0300'
+            expect(first_demand_block.blocker.memberships.last.team).to eq team
+            expect(first_demand_block.blocker.name).to eq 'team_member'
+            expect(first_demand_block.blocker.memberships.last.start_date).to eq Date.new(2021, 4, 19)
+            expect(first_demand_block.blocker.memberships.last).to be_developer
+            expect(first_demand_block.block_reason).to eq '(flag) comment example'
 
-          expect(second_demand_block.unblocker).to be_nil
-          expect(second_demand_block.unblock_time).to be_nil
+            expect(first_demand_block.blocker.memberships.last.team).to eq team
+            expect(first_demand_block.unblocker.name).to eq 'team_member'
+            expect(first_demand_block.unblocker.memberships.last.start_date).to eq Date.new(2021, 4, 19)
+            expect(first_demand_block.unblocker.memberships.last).to be_developer
+            expect(first_demand_block.unblock_time).to eq '2021-04-19 15:29:07.219000000 -0300'
+
+            second_demand_block = demand_updated.demand_blocks.second
+            expect(second_demand_block.blocker).to be_a TeamMember
+            expect(second_demand_block.block_time).to eq '2021-04-19 17:51:20.104000000 -0300'
+
+            expect(second_demand_block.unblocker).to be_nil
+            expect(second_demand_block.unblock_time).to be_nil
+          end
         end
       end
 
       context 'and there is no reason specified but it was already specified in FC' do
         it 'keeps the manual added reason' do
-          # we will not read the comments so the algorithm will not get a reason in the reading process
-          demand_block = Fabricate :demand_block, demand: demand, block_time: '2021-04-19 17:51:20.104000000 -0300', block_reason: 'xpto'
-          described_class.instance.process_jira_issue_changelog(jira_account, JSON.parse(jira_issue_changelog), demand, creator)
+          travel_to Time.zone.local(2020, 8, 25, 10) do
+            portfolio_unit = Fabricate :portfolio_unit, product: product, name: 'Pre-paid Virtual Card'
+            Fabricate :jira_portfolio_unit_config, portfolio_unit: portfolio_unit, jira_field_name: 'customfield_10052'
 
-          expect(demand_block.reload.block_reason).to eq 'xpto'
+            jira_issue_changelog = file_fixture('issue_changelog_with_blocks.json').read
+            creator = Fabricate :team_member, company: company, jira_account_user_email: 'foo', jira_account_id: 'xpto', name: 'creator'
+            demand = Fabricate :demand, company: company, team: team, product: product, external_id: 'EBANX-2'
+            # we will not read the comments so the algorithm will not get a reason in the reading process
+            demand_block = Fabricate :demand_block, demand: demand, block_time: '2021-04-19 17:51:20.104000000 -0300', block_reason: 'xpto'
+            described_class.instance.process_jira_issue_changelog(jira_account, JSON.parse(jira_issue_changelog), demand, creator)
+
+            expect(demand_block.reload.block_reason).to eq 'xpto'
+          end
         end
       end
 
       context 'and it throws StaleObjectError' do
         it 'adds warning in the log' do
-          Fabricate :demand_block, demand: demand, block_time: '2021-04-19 17:51:20.104000000 -0300', block_reason: 'xpto'
+          travel_to Time.zone.local(2020, 8, 25, 10) do
+            portfolio_unit = Fabricate :portfolio_unit, product: product, name: 'Pre-paid Virtual Card'
+            Fabricate :jira_portfolio_unit_config, portfolio_unit: portfolio_unit, jira_field_name: 'customfield_10052'
 
-          call_count = 0
-          allow_any_instance_of(DemandBlock).to receive(:save) do
-            call_count += 1
-            call_count == 1 ? raise(ActiveRecord::StaleObjectError) : DemandBlock.new
+            jira_issue = client.Issue.build({ key: 'EBANX-2', summary: 'foo of bar', fields: { created: '2018-07-03T11:20:18.998-0300', issuetype: { name: 'chore' }, project: { key: 'foo' }, customfield_10024: [{ name: 'foo' }, { name: 'bar' }], customfield_10028: { value: 'sTandard' }, customfield_10052: portfolio_unit.name, comment: { comments: [{ created: '2021-04-19 14:46:59.437000000 -0300', body: '(flag) comment example', author: { displayName: 'team_member' } }] } }, changelog: { histories: [{ id: '10038', author: { displayName: 'bla', accountId: 'foo' }, created: '2018-07-06T09:40:43.886-0300', items: [{ field: 'Impediment', fromString: '', to: '10055', toString: 'Impediment' }] }, { id: '10055', author: { displayName: 'xpto', accountId: 'bar' }, created: '2018-07-06T13:40:43.886-0300', items: [{ field: 'Impediment', fromString: 'Impediment', to: '10055', toString: '' }] }, { id: '10057', author: { displayName: 'xpto', accountId: 'bar' }, created: '2018-07-09T13:40:43.886-0300', items: [{ field: 'Impediment', fromString: '', to: '10055', toString: 'Impediment' }] }] } }.with_indifferent_access)
+            jira_issue_changelog = file_fixture('issue_changelog_with_blocks.json').read
+            creator = Fabricate :team_member, company: company, jira_account_user_email: 'foo', jira_account_id: 'xpto', name: 'creator'
+            demand = Fabricate :demand, company: company, team: team, product: product, external_id: 'EBANX-2'
+            Fabricate :demand_block, demand: demand, block_time: '2021-04-19 17:51:20.104000000 -0300', block_reason: 'xpto'
+
+            call_count = 0
+            allow_any_instance_of(DemandBlock).to receive(:save) do
+              call_count += 1
+              call_count == 1 ? raise(ActiveRecord::StaleObjectError) : DemandBlock.new
+            end
+
+            expect(Rails.logger).to(receive(:warn)).once
+
+            described_class.instance.process_issue(jira_account, jira_issue, product, first_project)
+            described_class.instance.process_jira_issue_changelog(jira_account, JSON.parse(jira_issue_changelog), demand, creator)
           end
-
-          expect(Rails.logger).to(receive(:warn)).once
-
-          described_class.instance.process_issue(jira_account, jira_issue, product, first_project)
-          described_class.instance.process_jira_issue_changelog(jira_account, JSON.parse(jira_issue_changelog), demand, creator)
         end
       end
     end

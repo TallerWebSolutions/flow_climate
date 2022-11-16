@@ -285,6 +285,13 @@ en:
         item_level: Item Lvel
         company: Company
         quality_indicator_type: Quality Indicator
+      membership:
+        enums:
+          member_role:
+            developer: Developer
+            manager: Manager
+            client: Client
+            designer: Client
     errors:
       messages:
         record_invalid: "Validation failed: %{errors}"
