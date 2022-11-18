@@ -19,7 +19,7 @@
 # Foreign Keys
 #
 #  fk_rails_49f9a1ee28  (customer_id => customers.id)
-#  fk_rails_9c6f3519a8  (devise_customer_id => devise_customers.id)
+#  fk_rails_9c6f3519a8  (devise_customer_id => dashboard.id)
 #
 class CustomersDeviseCustomer < ApplicationRecord
   belongs_to :customer

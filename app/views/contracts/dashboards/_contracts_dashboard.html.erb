@@ -111,7 +111,7 @@
   <div class="col-xs-6">
     <h4><%= I18n.t('customer.charts.throughput.title') %></h4>
 
-    <div id="customer-throughput-column-dashboard"
+    <div id="contract-throughput-column-dashboard"
          class="flow-chart"
          data-title=""
          data-xcategories="<%= contracts_flow_information.dates_array.to_json %>"
@@ -120,7 +120,7 @@
          data-tooltipsuffix="<%= I18n.t('general.demands') %>"
          data-datalabelsuffix=""
          data-series="<%= contracts_flow_information.build_throughput_info.to_json %>"
-         data-stacking="normal"
+         data-stacking=""
          data-decimals="0">
     </div>
   </div>

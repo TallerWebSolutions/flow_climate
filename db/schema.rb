@@ -363,7 +363,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_02_14_141346) do
     t.index ["team_id"], name: "index_demands_on_team_id"
   end
 
-  create_table "devise_customers", force: :cascade do |t|
+  create_table "dashboard", force: :cascade do |t|
     t.string "first_name", null: false
     t.string "last_name", null: false
     t.string "email", default: "", null: false
@@ -1189,7 +1189,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_02_14_141346) do
   add_foreign_key "customers", "companies"
   add_foreign_key "customers", "customers"
   add_foreign_key "customers_devise_customers", "customers"
-  add_foreign_key "customers_devise_customers", "devise_customers"
+  add_foreign_key "customers_devise_customers", "dashboard"
   add_foreign_key "customers_projects", "customers"
   add_foreign_key "customers_projects", "projects"
   add_foreign_key "demand_block_notifications", "demand_blocks"

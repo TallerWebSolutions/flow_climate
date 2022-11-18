@@ -672,6 +672,10 @@ coca:
       external_dependency:
         title: "External Dependencies"
       effort_hours_info: "Effort Hours"
+      throughput_in_month:
+        title: "TH in the Month"
+      value_per_demand: "Value per demand"
+      value_per_demand_in_month: "Value per month"
   demands:
     new:
       title: "Create Deliverable"
@@ -1511,3 +1515,6 @@ coca:
       error: "The initiative was not saved. Check the form for further information."
     new:
       title: "New Initiative"
+  dashboard:
+    home:
+      greetings: "Hello, %{name}"

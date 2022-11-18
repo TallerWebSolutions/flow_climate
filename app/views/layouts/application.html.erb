@@ -1,33 +1,3 @@
-<%
-  spa_controllers = [
-    { controller: 'replenishing_consolidations', action: 'index'},
-    { controller: 'projects', action: 'index'},
-    { controller: 'projects', action: 'show'},
-    { controller: 'projects', action: 'status_report_dashboard'},
-    { controller: 'projects', action: 'risk_drill_down'},
-    { controller: 'projects', action: 'lead_time_dashboard'},
-    { controller: 'projects', action: 'statistics_tab'},
-    { controller: 'projects', action: 'financial_report'},
-    { controller: 'projects', action: 'tasks_tab'},
-    { controller: 'project_additional_hours', action: 'new'},
-    { controller: 'teams', action: 'show'},
-    { controller: 'teams', action: 'index'},
-    { controller: 'teams', action: 'new'},
-    { controller: 'teams', action: 'edit'},
-    { controller: 'tasks', action: 'index'},
-    { controller: 'tasks', action: 'charts'},
-    { controller: 'team_members', action: 'index'},
-    { controller: 'team_members', action: 'edit'},
-    { controller: 'team_members', action: 'show'},
-    { controller: 'initiatives', action: 'index'},
-    { controller: 'initiatives', action: 'edit'},
-    { controller: 'demands', action: 'index'},
-    { controller: 'demands', action: 'demands_charts'},
-    { controller: 'work_item_types', action: 'new'},
-    { controller: 'work_item_types', action: 'index'},
-  ]
-%>
-
 <% view_controller = { controller: params['controller'], action: params['action']} %>
 
 <% if spa_controllers.include?(view_controller) %>
@@ -36,42 +6,43 @@
 <% else %>
 <!DOCTYPE html>
   <html>
-  <head>
-    <%= favicon_link_tag 'favicon.ico' %>
-    <title>Flow Climate - Mastering the flow management</title>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <head>
+      <%= favicon_link_tag 'favicon.ico' %>
+      <title>Flow Climate - Mastering the flow management</title>
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 
-    <%= stylesheet_link_tag '//netdna.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css', media: 'all' %>
-    <%= stylesheet_link_tag 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.css', media: 'all' %>
-    <%= stylesheet_link_tag 'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css', media: 'all' %>
-    <%= stylesheet_link_tag 'https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css', media: 'all' %>
+      <%= stylesheet_link_tag '//netdna.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css', media: 'all' %>
+      <%= stylesheet_link_tag 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.css', media: 'all' %>
+      <%= stylesheet_link_tag 'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css', media: 'all' %>
+      <%= stylesheet_link_tag 'https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css', media: 'all' %>
 
-    <%= stylesheet_link_tag 'https://fonts.googleapis.com/css?family=Open+Sans|Ubuntu:500', media: 'all' %>
+      <%= stylesheet_link_tag 'https://fonts.googleapis.com/css?family=Open+Sans|Ubuntu:500', media: 'all' %>
 
-    <%= stylesheet_link_tag 'https://unpkg.com/treeflex/dist/css/treeflex.css', media: 'all' %>
+      <%= stylesheet_link_tag 'https://unpkg.com/treeflex/dist/css/treeflex.css', media: 'all' %>
 
-    <%= stylesheet_link_tag 'application', media: 'all' %>
+      <%= stylesheet_link_tag 'application', media: 'all' %>
 
-    <%= yield :stylesheet %>
-    <%= csrf_meta_tags %>
-  </head>
+      <%= yield :stylesheet %>
+      <%= csrf_meta_tags %>
+    </head>
 
-  <body>
-  <div class="container-fluid">
-    <%= render 'layouts/header', company: (@company || current_user&.last_company) %>
+    <body>
+      <div class="container-fluid">
 
-    <section class="alerts">
-      <%= notice %>
-      <%= alert %>
-      <%= error %>
-    </section>
+        <%= render 'layouts/header', company: (@company || current_user&.last_company) %>
 
-    <div class="page-body">
-      <%= yield %>
-    </div>
+        <section class="alerts">
+          <%= notice %>
+          <%= alert %>
+          <%= error %>
+        </section>
 
-    <%= render 'layouts/footer' %>
-  </div>
-  </body>
+        <div class="page-body">
+          <%= yield %>
+        </div>
+
+        <%= render 'layouts/footer' %>
+      </div>
+    </body>
   </html>
 <% end %>

@@ -5,7 +5,7 @@ module Consolidations
     queue_as :low
 
     def perform(customer, cache_date = Time.zone.today)
-      return if cache_date < Date.new(2018, 1, 1)
+      return if cache_date < 2.years.ago
 
       end_of_day = cache_date.end_of_day
 
@@ -37,7 +37,6 @@ module Consolidations
         value_per_demand_in_month = demands_finished_in_month.sum(&:cost_to_project) / demands_finished_in_month.count
       end
 
-      qty_demands_created = demands.where('created_date <= :limit_date', limit_date: end_of_day)
       qty_demands_committed = demands.where('commitment_date <= :limit_date', limit_date: end_of_day)
       qty_demands_finished = demands.where('end_date <= :limit_date', limit_date: end_of_day)
 
@@ -57,9 +56,9 @@ module Consolidations
                            lead_time_p80_in_month: lead_time_p80_in_month,
                            value_per_demand: value_per_demand,
                            value_per_demand_in_month: value_per_demand_in_month,
-                           qty_demands_created: qty_demands_created,
-                           qty_demands_committed: qty_demands_committed,
-                           qty_demands_finished: qty_demands_finished
+                           qty_demands_created: demands.count,
+                           qty_demands_committed: qty_demands_committed.count,
+                           qty_demands_finished: qty_demands_finished.count
       )
 
     end

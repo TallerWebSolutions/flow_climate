@@ -2,7 +2,7 @@
 
 # == Schema Information
 #
-# Table name: devise_customers
+# Table name: dashboard
 #
 #  id                     :bigint           not null, primary key
 #  current_sign_in_at     :datetime

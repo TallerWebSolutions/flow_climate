@@ -217,7 +217,7 @@ RSpec.describe Flow::ContractsFlowInformation do
 
           contract_flow = described_class.new(contract)
 
-          expect(contract_flow.build_throughput_info).to eq([{ name: I18n.t('customer.charts.throughput.title'), data: [1, 1, 2, 3] }])
+          expect(contract_flow.build_throughput_info).to eq([{ type: 'spline', name: I18n.t('customer.charts.throughput.title'), data: [1, 1, 2, 3] }, { type: 'column', name: I18n.t('customer.charts.throughput_in_month.title'), data: [1, 0, 1, 1], yAxis: 1 }])
         end
       end
     end

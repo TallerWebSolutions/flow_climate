@@ -6,7 +6,7 @@ module Flow
                 :financial_ideal, :financial_current, :financial_ideal_slice, :financial_total, :total_financial_value,
                 :hours_ideal, :hours_current, :hours_ideal_slice, :hours_total, :total_hours_value, :remaining_hours,
                 :scope_ideal, :scope_current, :scope_ideal_slice, :scope_total, :total_scope_value, :delivered_demands_count, :remaining_backlog_count,
-                :quality_info, :quality_info_month, :lead_time_info, :throughput_info, :hours_blocked_per_deliver_info,
+                :quality_info, :quality_info_month, :lead_time_info, :throughput_info, :throughput_in_month, :hours_blocked_per_deliver_info,
                 :effort_info, :effort_info_month
 
     def initialize(contract)
@@ -58,7 +58,7 @@ module Flow
     def build_throughput_info
       return [{ name: I18n.t('customer.charts.throughput.title'), data: [] }] if @demands.blank?
 
-      [{ name: I18n.t('customer.charts.throughput.title'), data: @throughput_info }]
+      [{ type: 'spline', name: I18n.t('customer.charts.throughput.title'), data: @throughput_info }, { type: 'column', yAxis: 1, name: I18n.t('customer.charts.throughput_in_month.title'), data: @throughput_in_month }]
     end
 
     def build_risk_info
@@ -163,13 +163,14 @@ module Flow
       return if date > @limit_date
 
       @throughput_info << demands_delivered_to_date.count
+      @throughput_in_month << demands_delivered_to_date.to_end_dates(date.beginning_of_month, date.end_of_month).count
     end
 
     def add_value_to_hours_blocked_per_deliver_chart(date, demands_delivered_to_date)
       return if date > @limit_date
 
       @hours_blocked_per_deliver_info << if demands_delivered_to_date.count.positive?
-                                           demands_delivered_to_date.sum(&:total_bloked_working_time) / demands_delivered_to_date.count
+                                           demands_delivered_to_date.sum(&:total_bloked_working_time).to_f / demands_delivered_to_date.count
                                          else
                                            0
                                          end
@@ -234,6 +235,7 @@ module Flow
       @lead_time_info_month = []
 
       @throughput_info = []
+      @throughput_in_month = []
 
       @hours_blocked_per_deliver_info = []
 

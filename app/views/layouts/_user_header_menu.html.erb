@@ -28,8 +28,8 @@
   <li class="divider"></li>
   <li><%= link_to I18n.t('header.logout'), destroy_user_session_path, method: :delete, class: 'nav-link dropdown-item'%></li>
 
-<% elsif current_devise_customer.present? %>
-  <li><%= link_to I18n.t('users.account.self'), current_devise_customer, class: 'nav-link dropdown-item'%></li>
+<% elsif devise_customer_signed_in? %>
+  <li><%= link_to I18n.t('users.account.self'), devise_customer_home_path, class: 'nav-link dropdown-item'%></li>
   <li class="divider"></li>
   <li><%= link_to I18n.t('header.logout'), destroy_devise_customer_session_path, method: :delete, class: 'nav-link dropdown-item'%></li>
 

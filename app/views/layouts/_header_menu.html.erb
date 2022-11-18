@@ -3,7 +3,7 @@
 </div>
 
 <div class="col-xs-8 header-nav">
-  <% if company.present? && company.persisted? %>
+  <% if company.present? && company.persisted? && user_signed_in? %>
     <span class="top-nav-bar-text"><%= link_to company.abbreviation.capitalize, company_path(company), class: 'nav-link top-nav-bar-item' %> | </span>
     <span class="top-nav-bar-text"><%= link_to Team.model_name.human(count: 2), company_teams_path(company), class: 'nav-link top-nav-bar-item' %> | </span>
     <span class="top-nav-bar-text"><%= link_to TeamMember.model_name.human(count: 2), company_team_members_path(company), class: 'nav-link top-nav-bar-item' %> | </span>

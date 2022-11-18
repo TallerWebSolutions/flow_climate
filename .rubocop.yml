@@ -65,6 +65,7 @@ Metrics/MethodLength:
     - 'app/services/azure/**/*'
     - 'app/models/flow/contracts_flow_information.rb'
     - 'app/controllers/graphql_controller.rb'
+    - 'app/controllers/concerns/**/*'
   Max: 15
 
 Metrics/BlockLength:

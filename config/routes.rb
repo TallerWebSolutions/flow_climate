@@ -46,7 +46,7 @@ Rails.application.routes.draw do
   end
 
   authenticated :devise_customer do
-    root 'devise_customers#home', as: :devise_customer_home
+    root 'devise_customers/dashboard#home', as: :devise_customer_home
   end
 
   unauthenticated do
@@ -88,7 +88,13 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :devise_customers, only: :show
+  namespace :devise_customers do
+    resources :dashboard, only: [] do
+      get :home, on: :collection
+    end
+
+    resources :contracts, only: :show
+  end
 
   resources :companies, except: :destroy do
     member do

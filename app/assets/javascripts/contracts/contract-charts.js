@@ -34,9 +34,9 @@ function buildContractCharts() {
         buildLineChart(customerQualityPerPeriod);
     }
 
-    const customerThroughputPerPeriod = $("#customer-throughput-column-dashboard");
-    if (customerThroughputPerPeriod.length !== 0) {
-        buildColumnChart(customerThroughputPerPeriod);
+    const contractThroughputPerPeriod = $("#contract-throughput-column-dashboard");
+    if (contractThroughputPerPeriod.length !== 0) {
+        buildColumnLineChart(contractThroughputPerPeriod);
     }
 
     const contractOperationalRiskValues = $("#line-operational-risk-contract");

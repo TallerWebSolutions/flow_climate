@@ -377,6 +377,10 @@ ul.breadcrumb li a:hover {
     padding-top: 8px;
     position: absolute;
 }
+
+.azure-list-actions {
+    width: 70px;
+}
 .tab {
     overflow: hidden;
     /*border: 1px solid #ccc;*/
@@ -822,4 +826,16 @@ ul.breadcrumb li a:hover {
 
 .visible {
     display: block;
+}
+
+.user-avatar {
+    border-radius: 50%;
+}
+
+.mb-5 {
+    margin-bottom: 50px;
+}
+
+.mb-3 {
+    margin-bottom: 30px;
 }

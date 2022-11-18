@@ -34,17 +34,28 @@ function buildContractCharts() {
         buildLineChart(customerQualityPerPeriod);
     }
 
-    const customerHoursConsumed = $("#customer-hours-consumed-column-line");
-    if (customerHoursConsumed.length !== 0) {
-        buildColumnLineChart(customerHoursConsumed);
+    const contractThroughputPerPeriod = $("#contract-throughput-column-dashboard");
+    if (contractThroughputPerPeriod.length !== 0) {
+        buildColumnLineChart(contractThroughputPerPeriod);
     }
 
-    const customerThroughputPerPeriod = $("#customer-throughput-column-dashboard");
-    if (customerThroughputPerPeriod.length !== 0) {
-        buildColumnChart(customerThroughputPerPeriod);
-    }
     const contractOperationalRiskValues = $("#line-operational-risk-contract");
     if (contractOperationalRiskValues.length !== 0) {
         buildLineChart(contractOperationalRiskValues);
+    }
+
+    const hoursBlockedPerDeliveryValues = $("#line-hours-blocked-per-delivery-contract");
+    if (hoursBlockedPerDeliveryValues.length !== 0) {
+        buildLineChart(hoursBlockedPerDeliveryValues);
+    }
+
+    const externalDependecyValues = $("#line-external-dependency-contract");
+    if (externalDependecyValues.length !== 0) {
+        buildLineChart(externalDependecyValues);
+    }
+
+    const effortHoursInfoValues = $("#contract-hours-consumed-column-line");
+    if (effortHoursInfoValues.length !== 0) {
+        buildColumnLineChart(effortHoursInfoValues);
     }
 };

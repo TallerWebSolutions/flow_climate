@@ -1,0 +1,46 @@
+<% if contracts.present? %>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th><%= Contract.human_attribute_name :id %></th>
+        <th><%= Product.model_name.human %></th>
+        <th><%= Contract.human_attribute_name :start_date %></th>
+        <th><%= Contract.human_attribute_name :end_date %></th>
+        <th><%= Contract.human_attribute_name :total_hours %></th>
+        <th><%= Contract.human_attribute_name :total_value %></th>
+        <th>
+          <%= Contract.human_attribute_name :hours_per_demand %>
+          <i class="far fa-question-circle" title="<%= I18n.t('general.hours_per_demand') %>"></i>
+        </th>
+        <th><%= I18n.t('contracts.index.current_hours_per_demand') %></th>
+        <th><%= I18n.t('contracts.index.hours_estimate_gap') %></th>
+        <th><%= I18n.t('contracts.index.average_hours_per_month') %></th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% contracts.each do |contract| %>
+        <tr>
+          <td><%= contract.id %></td>
+          <td><%= contract.product_name %></td>
+          <td><%= I18n.l(contract.start_date) %></td>
+          <td><%= I18n.l(contract.end_date) if contract.end_date.present? %></td>
+          <td><%= I18n.t('general.hours_text', count: contract.total_hours) %></td>
+          <td><%= number_to_currency(contract.total_value, precision: 2) %></td>
+          <td><%= I18n.t('general.hours_text', count: contract.hours_per_demand) %></td>
+          <td><%= I18n.t('general.hours_text', count: number_with_precision(contract.current_hours_per_demand, precision: 2)) %></td>
+          <td><%= number_to_percentage(contract.current_estimate_gap * 100, precision: 2) %></td>
+          <td><%= number_with_precision(contract.avg_hours_per_month, precision: 2) %></td>
+          <td>
+            <%= link_to devise_customers_contract_path(contract) do %>
+              <i class="fa fa-eye"></i>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <%= render 'layouts/no_data', missing_data: Contract.model_name.human(count: 2) %>
+<% end %>

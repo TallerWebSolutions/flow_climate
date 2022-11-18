@@ -31,12 +31,13 @@ RSpec.describe Consolidations::CustomerConsolidationJob, type: :active_job do
 
     context 'with no user' do
       it 'saves de consolidation and does not send the notification email' do
-        # TODO: improve this spec
-
         expect(UserNotifierMailer).not_to(receive(:async_activity_finished))
         described_class.perform_now(customer)
 
         expect(Consolidations::CustomerConsolidation.count).to eq 1
+        expect(Consolidations::CustomerConsolidation.all.map(&:qty_demands_created)).to eq [6]
+        expect(Consolidations::CustomerConsolidation.all.map(&:qty_demands_committed)).to eq [6]
+        expect(Consolidations::CustomerConsolidation.all.map(&:qty_demands_finished)).to eq [6]
       end
     end
 

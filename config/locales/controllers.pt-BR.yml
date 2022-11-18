@@ -741,11 +741,11 @@ pt-BR:
       title: 'Editar Cliente'
     charts:
       contracts_cost_burnup:
-        title: 'Burn-up Financeiro dos Contratos'
+        title: 'Burn-up Financeiro'
       contracts_hours_burnup:
-        title: 'Burn-up de Horas dos Contratos'
+        title: 'Burn-up de Horas'
       contracts_scope_burnup:
-        title: 'Burn-up de Escopo para Contratos Ativos'
+        title: 'Burn-up de Escopo'
       quality_info:
         title: 'Qualidade'
       lead_time:
@@ -761,6 +761,10 @@ pt-BR:
       external_dependency:
         title: 'Dependências Externas'
       effort_hours_info: 'Horas de Esforço'
+      throughput_in_month:
+        title: "TH no Mês"
+      value_per_demand: "Valor por demanda"
+      value_per_demand_in_month: "Valor por mês"
   demands:
     new:
       title: 'Criar Demanda'
@@ -1499,3 +1503,6 @@ pt-BR:
       error: 'A iniciativa não foi salva. Verifique o formulário para mais informações.'
     new:
       title: 'Nova Iniciativa'
+  dashboard:
+    home:
+      greetings: "Olá, %{name}"
