@@ -11,15 +11,10 @@
   <tbody>
     <% demands.each do |demand| %>
       <tr>
-        <% if current_devise_customer.present? %>
+        <% if devise_customer_signed_in? %>
           <td><%= demand.project_name %></td>
         <% else %>
           <td><%= link_to demand.project_name, company_project_path(demand.company, demand.project), target: :_blank %></td>
-          <% if demand.product.present? %>
-            <td><%= link_to demand.product_name, company_product_path(demand.company, demand.product), target: :_blank %></td>
-          <% else %>
-            <td></td>
-          <% end %>
         <% end %>
 
         <% if current_devise_customer.present? %>
