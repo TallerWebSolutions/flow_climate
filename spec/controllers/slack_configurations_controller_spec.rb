@@ -3,25 +3,25 @@
 RSpec.describe SlackConfigurationsController do
   context 'unauthenticated' do
     describe 'GET #new' do
-      before { get :new, params: { company_id: 'bar', team_id: 'foo' } }
+      before { get :new, params: { company_id: 'bar' } }
 
       it { expect(response).to redirect_to new_user_session_path }
     end
 
     describe 'POST #create' do
-      before { post :create, params: { company_id: 'bar', team_id: 'foo' } }
+      before { post :create, params: { company_id: 'bar' } }
 
       it { expect(response).to redirect_to new_user_session_path }
     end
 
     describe 'PATCH #toggle_active' do
-      before { patch :toggle_active, params: { company_id: 'bar', team_id: 'foo', id: 'xpto' } }
+      before { patch :toggle_active, params: { company_id: 'bar', id: 'xpto' } }
 
       it { expect(response).to redirect_to new_user_session_path }
     end
 
     describe 'GET #edit' do
-      before { get :edit, params: { company_id: 'bar', team_id: 'foo', id: 'xpto' } }
+      before { get :edit, params: { company_id: 'bar', id: 'xpto' } }
 
       it { expect(response).to redirect_to new_user_session_path }
     end
@@ -34,6 +34,12 @@ RSpec.describe SlackConfigurationsController do
 
     describe 'GET #index' do
       before { get :index, params: { company_id: 'bar', team_id: 'foo' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
+
+    describe 'DELETE #destroy' do
+      before { delete :destroy, params: { company_id: 'bar', id: 'xpto' } }
 
       it { expect(response).to redirect_to new_user_session_path }
     end
@@ -243,6 +249,35 @@ RSpec.describe SlackConfigurationsController do
 
           it { expect(response).to have_http_status :not_found }
         end
+      end
+    end
+
+    describe 'DELETE #destroy' do
+      context 'with a valid config' do
+        it 'deletes the config and redirects' do
+          customer = Fabricate :customer, company: company
+          config = Fabricate :slack_configuration, customer: customer
+
+          delete :destroy, params: { company_id: company, id: config }
+
+          expect(flash[:notice]).to eq I18n.t('slack_configurations.destroy.success')
+          expect(SlackConfiguration.all.count).to eq 2
+        end
+      end
+
+      context 'with an invalid company' do
+        let(:customer) { Fabricate :customer, company: company }
+        let(:config) { Fabricate :slack_configuration, customer: customer }
+
+        before { delete :destroy, params: { company_id: 'foo', id: config } }
+
+        it { expect(response).to have_http_status :not_found }
+      end
+
+      context 'with an invalid config' do
+        before { delete :destroy, params: { company_id: company, id: 'foo' } }
+
+        it { expect(response).to have_http_status :not_found }
       end
     end
   end

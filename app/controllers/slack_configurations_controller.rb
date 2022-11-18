@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SlackConfigurationsController < AuthenticatedController
-  before_action :assign_slack_config, only: %i[edit update toggle_active]
+  before_action :assign_slack_config, only: %i[edit update toggle_active destroy]
 
   def index
     @slack_configurations = SlackConfiguration.all.order(:created_at)
@@ -52,6 +52,13 @@ class SlackConfigurationsController < AuthenticatedController
       assign_stages
       render :edit
     end
+  end
+
+  def destroy
+    @slack_configuration.destroy
+
+    flash[:notice] = I18n.t('slack_configurations.destroy.success')
+    redirect_to company_slack_configurations_path(@company)
   end
 
   private

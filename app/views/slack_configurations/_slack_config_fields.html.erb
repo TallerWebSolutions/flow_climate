@@ -2,6 +2,10 @@
   <%= link_to edit_company_slack_configuration_path(company, slack_config) do %>
     <i class="fas fa-edit"></i>
   <% end %>
+
+  <%= link_to company_slack_configuration_path(company, slack_config), method: :delete, data: { confirm: I18n.t('general.destroy.confirm_physical') } do %>
+    <i class="fa fa-times" aria-hidden="true"></i>
+  <% end %>
 </td>
 
 <td><%= slack_config.customer&.name || slack_config.team&.name %></td>

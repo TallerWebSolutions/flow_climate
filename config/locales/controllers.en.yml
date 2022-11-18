@@ -1293,6 +1293,8 @@ en:
     index:
       active: "Active?"
       parent: "Parent"
+    destroy:
+      success: "Configuration removed."
   portfolio_units:
     index:
       title: "Portfolio Units"

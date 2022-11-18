@@ -1276,6 +1276,8 @@ pt-BR:
     index:
       active: 'Ativo?'
       parent: "Pai"
+    destroy:
+      success: "Configuração removida."
   portfolio_units:
     index:
       title: 'Unidades do Portfólio'

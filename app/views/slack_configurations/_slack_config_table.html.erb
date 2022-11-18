@@ -7,7 +7,7 @@
 <% if slack_configurations.present? %>
 <table class="table tabble-striped">
   <thead>
-    <th></th>
+    <th><%= I18n.t('general.table.actions') %></th>
     <th><%= I18n.t('slack_configurations.index.parent') %></th>
     <th><%= SlackConfiguration.human_attribute_name :config_type %></th>
     <th><%= SlackConfiguration.human_attribute_name :info_type %></th>
