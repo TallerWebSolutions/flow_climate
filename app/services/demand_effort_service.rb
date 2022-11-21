@@ -50,6 +50,9 @@ class DemandEffortService
     end_date = [end_time, day_to_effort.end_of_day].min
 
     demand = assignment.demand
+    membership = assignment.membership
+    return if membership.client?
+
     team = demand.team
     company = team.company
     flow_events = team.flow_events.day_off + company.flow_events.day_off
