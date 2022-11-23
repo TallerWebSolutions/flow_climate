@@ -72,6 +72,7 @@
     "ltP80": "Lead Time P80",
     "ltP95": "Lead Time P95",
     "memberEffort": "Member Effort",
+    "memberEffortDaily": "Member Effort in Last 30 Calendar Days",
     "throughput": "Throughput",
     "averagePullInterval": "Average Pull Interval",
     "hoursPerProject": "Hours per Project"

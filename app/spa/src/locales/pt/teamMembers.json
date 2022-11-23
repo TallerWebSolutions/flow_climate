@@ -72,6 +72,7 @@
     "ltP80": "Lead Time P80",
     "ltP95": "Lead Time P95",
     "memberEffort": "Esforço do Membro",
+    "memberEffortDaily": "Esforço do Membro nos Últimos 30 Dias Corridos",
     "throughput": "Taxa de Transferência",
     "averagePullInterval": "Intervalo Médio de Extração",
     "hoursPerProject": "Horas por Projeto"

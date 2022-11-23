@@ -44,6 +44,7 @@ module Types
     field :average_pull_interval_data, Types::Charts::SimpleDateChartDataType, null: true
     field :lead_time_control_chart_data, Types::Charts::ControlChartType, null: true
     field :lead_time_histogram_chart_data, Types::Charts::LeadTimeHistogramDataType, null: true
+    field :member_effort_daily_data, Types::Charts::SimpleDateChartDataType, null: true
     field :member_effort_data, Types::Charts::SimpleDateChartDataType, null: true
     field :member_throughput_data, [Int], null: true do
       argument :number_of_weeks, Int, required: false
@@ -109,6 +110,14 @@ module Types
 
     def member_effort_data
       { x_axis: operations_dashboards.map(&:dashboard_date).map(&:iso8601), y_axis: operations_dashboards.map { |dashboard| dashboard.member_effort.to_f } }
+    end
+
+    def member_effort_daily_data
+      accumulator = Hash.new { |hash, key| hash[key] = 0 }
+      object.demand_efforts.joins(:item_assignment).where('item_assignments.start_time >= TIMESTAMP WITH TIME ZONE :date', date: 30.days.ago.beginning_of_day.iso8601).each do |effort|
+        accumulator[effort.start_time_to_computation.beginning_of_day.to_s] += effort.effort_value.round(2)
+      end
+      { x_axis: accumulator.keys, y_axis: accumulator.values }
     end
 
     def average_pull_interval_data

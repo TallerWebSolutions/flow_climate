@@ -1265,25 +1265,35 @@ RSpec.describe Types::QueryType do
 
         team = Fabricate :team, company: company
         team_member = Fabricate :team_member, company: company
+        another_team_member = Fabricate :team_member, company: company
         membership = Fabricate :membership, team_member: team_member, team: team
+        another_membership = Fabricate :membership, team_member: another_team_member, team: team
         demand_finished = Fabricate :demand, team: team, project: project, created_date: 2.days.ago, commitment_date: 10.hours.ago, end_date: 1.hour.ago, work_item_type: feature_type
         other_demand_finished = Fabricate :demand, team: team, project: other_project, created_date: 3.days.ago, commitment_date: 6.hours.ago, end_date: 2.hours.ago, work_item_type: bug_type
         bug = Fabricate :demand, team: team, project: project, created_date: 2.days.ago, end_date: nil, work_item_type: bug_type
         other_bug = Fabricate :demand, team: team, project: project, created_date: 1.day.ago, end_date: nil, work_item_type: bug_type
 
         first_assignmen = Fabricate :item_assignment, membership: membership, demand: demand_finished
+        another_assignmen = Fabricate :item_assignment, membership: another_membership, demand: demand_finished
         Fabricate :item_assignment, membership: membership, demand: other_demand_finished
         Fabricate :item_assignment, membership: membership, demand: bug
         Fabricate :item_assignment, membership: membership, demand: other_bug
 
         demand_block = Fabricate :demand_block, blocker: team_member, block_time: 1.day.ago
         other_demand_block = Fabricate :demand_block, blocker: team_member, block_time: 2.days.ago
+        Fabricate :demand_block, blocker: another_team_member, block_time: 2.days.ago
 
         Dashboards::OperationsDashboard.create(team_member: team_member, dashboard_date: 2.months.ago, last_data_in_month: true, member_effort: 67.8, pull_interval: 200)
         Dashboards::OperationsDashboard.create(team_member: team_member, dashboard_date: 1.month.ago, last_data_in_month: true, member_effort: 12.3, pull_interval: 10)
         Dashboards::OperationsDashboard.create(team_member: team_member, dashboard_date: Time.zone.today, last_data_in_month: true, member_effort: 100, pull_interval: 89)
 
         Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignmen, start_time_to_computation: 2.days.ago, effort_value: 100
+        Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignmen, start_time_to_computation: 2.days.ago, effort_value: 50
+        Fabricate :demand_effort, demand: demand_finished, item_assignment: another_assignmen, start_time_to_computation: 2.days.ago, effort_value: 50
+        Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignmen, start_time_to_computation: 1.day.ago, effort_value: 100
+        Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignmen, start_time_to_computation: 1.day.ago, effort_value: 20
+        Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignmen, start_time_to_computation: 2.days.from_now, effort_value: 100
+        Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignmen, start_time_to_computation: 2.days.from_now, effort_value: 70
 
         query =
           %(query {
@@ -1377,6 +1387,10 @@ RSpec.describe Types::QueryType do
             values
           }
           memberEffortData {
+            xAxis
+            yAxis
+          }
+          memberEffortDailyData {
             xAxis
             yAxis
           }
@@ -1525,13 +1539,17 @@ RSpec.describe Types::QueryType do
                                                            'xAxis' => %w[2022-03-18 2022-04-18 2022-05-18],
                                                            'yAxis' => [67.8, 12.3, 100.0]
                                                          },
+                                                         'memberEffortDailyData' => {
+                                                           'xAxis' => %w[2022-05-16 2022-05-17 2022-05-20],
+                                                           'yAxis' => [150.0, 120.0, 170.0]
+                                                         },
                                                          'averagePullIntervalData' => {
                                                            'xAxis' => %w[2022-03-18 2022-04-18 2022-05-18],
                                                            'yAxis' => [200, 10, 89]
                                                          },
                                                          'projectHoursData' => {
                                                            'xAxis' => ['2022-05-31'],
-                                                           'yAxisHours' => [100],
+                                                           'yAxisHours' => [270],
                                                            'yAxisProjectsNames' => [project.name]
 
                                                          },

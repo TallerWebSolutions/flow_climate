@@ -8,6 +8,7 @@ import { TeamMember } from "../modules/teamMember/teamMember.types"
 import { BarChart } from "./charts/BarChart"
 import { ScatterChart } from "./charts/ScatterChart"
 import { ChartGridItem } from "./charts/ChartGridItem"
+import TeamMemberEffortDailyData from "../modules/teamMember/components/TeamMemberEffortDailyData"
 
 type TeamMemberDashboardChartsProps = {
   teamMember: TeamMember
@@ -92,6 +93,7 @@ const TeamMemberDashboardCharts = ({
           />
         </ChartGridItem>
       )}
+      <TeamMemberEffortDailyData teamMember={teamMember} />
       {memberEffortData && (
         <ChartGridItem title={t("charts.memberEffort")}>
           <BarChart

@@ -45,6 +45,10 @@ const TEAM_MEMBER_QUERY = gql`
         xAxis
         yAxis
       }
+      memberEffortDailyData {
+        xAxis
+        yAxis
+      }
       demandLeadTimeP80
       memberThroughputData(numberOfWeeks: 24)
       averagePullIntervalData {
