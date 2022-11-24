@@ -27,6 +27,7 @@ type NivoMarker = {
 
 type ScatterChartProps = {
   axisLeftLegend?: string
+  axisBottomLegend?: string
   data: ScatterPlotRawSerie<ScatterPlotDatum>[] | ChartAxisData
   onClick?: ScatterPlotMouseHandler<ScatterPlotDatum>
   markers?: Marker[]
@@ -40,6 +41,7 @@ const reduceTicks = (ticks: (string | number | Date)[]) => {
 
 export const ScatterChart = ({
   axisLeftLegend,
+  axisBottomLegend,
   data,
   onClick,
   markers,
@@ -60,10 +62,10 @@ export const ScatterChart = ({
     })) || []
 
   return (
-    <Box height={380} style={{ fontSize: 12 }}>
+    <Box height={420} style={{ fontSize: 12 }}>
       <ResponsiveScatterPlot
         data={chartData}
-        margin={{ left: 65, right: 40, top: 25, bottom: 40 }}
+        margin={{ left: 65, right: 40, top: 25, bottom: 80 }}
         xScale={{ type: "point" }}
         yScale={{ type: "linear", min: "auto", max: "auto" }}
         colors={{ scheme: "category10" }}
@@ -77,6 +79,9 @@ export const ScatterChart = ({
           tickPadding: 5,
           tickRotation: -30,
           tickValues: reduceTicks(bottomAxisTicks),
+          legendPosition: "middle",
+          legendOffset: 60,
+          legend: axisBottomLegend,
         }}
         axisLeft={{
           tickSize: 5,

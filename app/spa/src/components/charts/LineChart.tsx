@@ -19,10 +19,16 @@ export const normalizeCfdData = (data: Serie[]): Serie[] =>
 export type LineGraphProps = {
   data: Serie[]
   axisLeftLegend: string
+  axisBottomLegend?: string
   props?: object
 }
 
-export const LineChart = ({ data, axisLeftLegend, props }: LineGraphProps) => {
+export const LineChart = ({
+  data,
+  axisLeftLegend,
+  axisBottomLegend,
+  props,
+}: LineGraphProps) => {
   return (
     <Box height={420}>
       <ResponsiveLine
@@ -39,7 +45,8 @@ export const LineChart = ({ data, axisLeftLegend, props }: LineGraphProps) => {
           tickPadding: 5,
           tickRotation: -40,
           legendPosition: "middle",
-          legendOffset: 40,
+          legendOffset: 60,
+          legend: axisBottomLegend,
         }}
         useMesh={true}
         legends={[

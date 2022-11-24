@@ -194,7 +194,7 @@ const ProjectDemandsCharts = ({
       data: projectConsolidationsWeekly.map(
         ({ consolidationDate, projectQuality }) => ({
           x: consolidationDate,
-          y: (1 - projectQuality) * 100,
+          y: 1 - projectQuality,
         })
       ),
     },
@@ -399,11 +399,6 @@ const ProjectDemandsCharts = ({
       })
     : []
 
-  const demandsCountByTeamMember = project.projectMembers.map((member) => ({
-    [t("charts_tab.project_charts.demandsCount")]: member.demandsCount,
-    name: member.memberName,
-  }))
-
   return (
     <Grid container spacing={2} rowSpacing={8} sx={{ marginTop: 4 }}>
       <ChartGridItem
@@ -425,7 +420,7 @@ const ProjectDemandsCharts = ({
               legendOffset: 60,
               tickRotation: -40,
             },
-            yFormat: "=.2%",
+            yFormat: "=.2",
             enableSlices: "x",
             sliceTooltip: ({ slice }: SliceTooltipProps) => (
               <LineChartTooltip
@@ -457,7 +452,7 @@ const ProjectDemandsCharts = ({
               legendOffset: 60,
               tickRotation: -40,
             },
-            yFormat: "=.2%",
+            yFormat: (value: number) => value,
             enableSlices: "x",
             sliceTooltip: ({ slice }: SliceTooltipProps) => (
               <LineChartTooltip
@@ -535,8 +530,12 @@ const ProjectDemandsCharts = ({
         <LineChart
           data={leadTimeP80ChartData}
           axisLeftLegend={t("charts_tab.project_charts.lead_time_p80_y_label")}
+          axisBottomLegend={t(
+            "charts_tab.project_charts.lead_time_p80_x_label"
+          )}
           props={{
             enableSlices: "x",
+            yFormat: (value: number) => `${value * 100}%`,
             sliceTooltip: ({ slice }: SliceTooltipProps) => (
               <LineChartTooltip slice={slice} />
             ),
@@ -549,6 +548,12 @@ const ProjectDemandsCharts = ({
       >
         <ScatterChart
           data={leadTimeControlChartData}
+          axisLeftLegend={t(
+            "charts_tab.project_charts.lead_time_control_y_label"
+          )}
+          axisBottomLegend={t(
+            "charts_tab.project_charts.lead_time_control_x_label"
+          )}
           markers={[
             leadTimeControlP65Marker,
             leadTimeControlP80Marker,
@@ -620,6 +625,7 @@ const ProjectDemandsCharts = ({
                 legendPosition: "middle",
                 legendOffset: 60,
                 tickRotation: -40,
+                legend: t("charts_tab.project_charts.cumulative_flow_x_label"),
               },
             }}
           />
@@ -638,6 +644,7 @@ const ProjectDemandsCharts = ({
               legendPosition: "middle",
               legendOffset: 60,
               tickRotation: -40,
+              legend: t("charts_tab.project_charts.quality_bugs_x_label"),
             },
             yFormat: "=.2%",
             enableSlices: "x",
@@ -668,6 +675,9 @@ const ProjectDemandsCharts = ({
               legendPosition: "middle",
               legendOffset: 60,
               tickRotation: -40,
+              legend: t(
+                "charts_tab.project_charts.quality_bugs_for_coding_x_label"
+              ),
             },
             enableSlices: "x",
             sliceTooltip: ({ slice }: SliceTooltipProps) => (
@@ -699,6 +709,9 @@ const ProjectDemandsCharts = ({
               legendPosition: "middle",
               legendOffset: 60,
               tickRotation: -40,
+              legend: t(
+                "charts_tab.project_charts.quality_bugs_for_coding_per_demand_x_label"
+              ),
             },
             enableSlices: "x",
             yFormat: "=.2f",
@@ -727,8 +740,9 @@ const ProjectDemandsCharts = ({
               legendPosition: "middle",
               legendOffset: 60,
               tickRotation: -40,
+              legend: t("charts_tab.project_charts.hours_consumed_x_label"),
             },
-            yFormat: "=.2%",
+            yFormat: (value: number) => `${value}%`,
             enableSlices: "x",
             sliceTooltip: ({ slice }: SliceTooltipProps) => (
               <LineChartTooltip
@@ -757,6 +771,7 @@ const ProjectDemandsCharts = ({
               legendPosition: "middle",
               legendOffset: 60,
               tickRotation: -40,
+              legend: t("charts_tab.project_charts.hours_per_demand_x_label"),
             },
             enableSlices: "x",
             sliceTooltip: ({ slice }: SliceTooltipProps) => (
@@ -807,6 +822,9 @@ const ProjectDemandsCharts = ({
           indexBy="period"
           axisLeftLegend={t(
             "charts_tab.project_charts.consumed_hours_by_role_y_label"
+          )}
+          axisBottomLegend={t(
+            "charts_tab.project_charts.consumed_hours_by_role_x_label"
           )}
           groupMode="grouped"
         />
@@ -864,15 +882,6 @@ const ProjectDemandsCharts = ({
           axisLeftLegend={t(
             "charts_tab.project_charts.hours_per_coordination_stage_y_label"
           )}
-        />
-      </ChartGridItem>
-      <ChartGridItem
-        title={t("charts_tab.project_charts.demandsCountByTeamMember")}
-      >
-        <BarChart
-          data={demandsCountByTeamMember}
-          indexBy="name"
-          keys={[t("charts_tab.project_charts.demandsCount")]}
         />
       </ChartGridItem>
     </Grid>

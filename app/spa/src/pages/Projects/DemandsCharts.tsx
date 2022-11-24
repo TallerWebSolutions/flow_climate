@@ -22,10 +22,6 @@ const PROJECT_CHART_QUERY = gql`
       numberOfDemands
       numberOfDemandsDelivered
       remainingBacklog
-      projectMembers {
-        demandsCount
-        memberName
-      }
       upstreamDemands {
         id
       }
