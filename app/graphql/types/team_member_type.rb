@@ -113,9 +113,9 @@ module Types
     end
 
     def member_effort_daily_data
-      accumulator = Hash.new { |hash, key| hash[key] = 0 }
-      object.demand_efforts.joins(:item_assignment).where('item_assignments.start_time >= TIMESTAMP WITH TIME ZONE :date', date: 30.days.ago.beginning_of_day.iso8601).each do |effort|
-        accumulator[effort.start_time_to_computation.beginning_of_day.to_s] += effort.effort_value.round(2)
+      accumulator = last_30_days_hash
+      object.demand_efforts.where('start_time_to_computation >= TIMESTAMP WITH TIME ZONE :date', date: 30.days.ago.beginning_of_day.iso8601).each do |effort|
+        accumulator[effort.start_time_to_computation.beginning_of_day.to_date.to_s] += effort.effort_value.round(2)
       end
       { x_axis: accumulator.keys, y_axis: accumulator.values }
     end
@@ -143,6 +143,12 @@ module Types
                                  )
                                  .where('operations_dashboards.dashboard_date > :limit_date', limit_date: 6.months.ago.beginning_of_day)
                                  .order(:dashboard_date)
+    end
+
+    def last_30_days_hash
+      accumulator = Hash.new { |hash, key| hash[key] = 0 }
+      (30.days.ago.beginning_of_day.to_date..Time.zone.now).each { |day| accumulator[day.to_s] = 0 }
+      accumulator
     end
   end
 end
