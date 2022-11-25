@@ -9,6 +9,7 @@ import { KeyValueData } from "../../modules/charts/charts.types"
 type BarChartProps = {
   data: BarDatum[] | KeyValueData
   keys: string[]
+  legendLabel?: string
   indexBy: string
   axisLeftLegend?: string
   axisBottomLegend?: string
@@ -29,6 +30,7 @@ export const BarChart = ({
   axisBottomLegend,
   indexBy,
   keys,
+  legendLabel,
   legendAnchor = "top",
   legendDirection = "row",
   padding,
@@ -46,6 +48,7 @@ export const BarChart = ({
   return (
     <Box height={height}>
       <ResponsiveBar
+        legendLabel={legendLabel ? () => legendLabel : undefined}
         data={chartData}
         indexBy={indexBy}
         keys={keys}

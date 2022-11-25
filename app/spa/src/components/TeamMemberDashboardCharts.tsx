@@ -98,6 +98,9 @@ const TeamMemberDashboardCharts = ({
         <ChartGridItem title={t("charts.memberEffort")}>
           <BarChart
             data={axisDataToKeyValue(memberEffortData)}
+            legendLabel={t("charts.memberEffort_legend_label")}
+            axisBottomLegend={t("charts.memberEffort_x_label")}
+            axisLeftLegend={t("charts.memberEffort_y_label")}
             keys={["value"]}
             indexBy="key"
           />

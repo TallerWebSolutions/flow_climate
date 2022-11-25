@@ -27,6 +27,9 @@ const TeamMemberEffortDailyData = ({
             data={axisDataToKeyValue(memberEffortDailyData)}
             keys={["value"]}
             indexBy="key"
+            legendLabel={t("charts.memberEffortDaily_legend_label")}
+            axisBottomLegend={t("charts.memberEffortDaily_x_label")}
+            axisLeftLegend={t("charts.memberEffortDaily_y_label")}
           />
         </ChartGridItem>
       )}
