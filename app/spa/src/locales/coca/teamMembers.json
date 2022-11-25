@@ -75,6 +75,7 @@
     "memberEffort_x_label": "Month",
     "memberEffort_y_label": "Hours",
     "memberEffort_legend_label": "Hours",
+    "memberEffort_x_date_format": "yyyy-MM",
     "memberEffortDaily": "Member Effort in Last 30 Days",
     "memberEffortDaily_x_label": "Day",
     "memberEffortDaily_y_label": "Hours",

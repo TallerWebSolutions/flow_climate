@@ -1551,11 +1551,11 @@ RSpec.describe Types::QueryType do
                                                          },
                                                          'averagePullIntervalData' => {
                                                            'xAxis' => %w[2022-03-18 2022-04-18 2022-05-18],
-                                                           'yAxis' => [200, 10, 89]
+                                                           'yAxis' => [200.0, 10.0, 89.0]
                                                          },
                                                          'projectHoursData' => {
                                                            'xAxis' => ['2022-05-31'],
-                                                           'yAxisHours' => [270],
+                                                           'yAxisHours' => [270.0],
                                                            'yAxisProjectsNames' => [project.name]
 
                                                          },

@@ -2,7 +2,7 @@ import { Grid } from "@mui/material"
 import { useTranslation } from "react-i18next"
 import { BarDatum } from "@nivo/bar"
 
-import { secondsToDays } from "../lib/date"
+import { formatDate, secondsToDays } from "../lib/date"
 import { axisDataToKeyValue } from "../lib/charts"
 import { TeamMember } from "../modules/teamMember/teamMember.types"
 import { BarChart } from "./charts/BarChart"
@@ -48,7 +48,13 @@ const TeamMemberDashboardCharts = ({
   ]
   const memberEffortData = {
     ...teamMember.memberEffortData,
-    xAxis: teamMember.memberEffortData?.xAxis || [],
+    xAxis:
+      teamMember.memberEffortData?.xAxis.map((dateStr) =>
+        formatDate({
+          date: dateStr as string,
+          format: t("charts.memberEffort_x_date_format"),
+        })
+      ) || [],
     yAxis: teamMember.memberEffortData?.yAxis || [],
   }
   const memberThroughputData = teamMember.memberThroughputData?.map(
