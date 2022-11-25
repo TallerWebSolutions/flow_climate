@@ -109,12 +109,19 @@ module Types
     end
 
     def member_effort_data
-      { x_axis: operations_dashboards.map(&:dashboard_date).map(&:iso8601), y_axis: operations_dashboards.map { |dashboard| dashboard.member_effort.to_f } }
+      accumulator = first_day_of_six_months_hash
+      object
+        .demand_efforts.select("sum(effort_value) as effort_value_sum, date_trunc('month', start_time_to_computation) as month")
+        .where('start_time_to_computation >= TIMESTAMP WITH TIME ZONE :date', date: member_effort_data_interval.iso8601)
+        .group('month').each do |item|
+        accumulator[item.month.to_date.to_s] += item.effort_value_sum.round(2)
+      end
+      { x_axis: accumulator.keys, y_axis: accumulator.values }
     end
 
     def member_effort_daily_data
       accumulator = last_30_days_hash
-      object.demand_efforts.where('start_time_to_computation >= TIMESTAMP WITH TIME ZONE :date', date: 30.days.ago.beginning_of_day.iso8601).each do |effort|
+      object.demand_efforts.where('start_time_to_computation >= TIMESTAMP WITH TIME ZONE :date', date: member_effort_daily_interval.iso8601).each do |effort|
         accumulator[effort.start_time_to_computation.beginning_of_day.to_date.to_s] += effort.effort_value.round(2)
       end
       { x_axis: accumulator.keys, y_axis: accumulator.values }
@@ -145,9 +152,23 @@ module Types
                                  .order(:dashboard_date)
     end
 
+    def member_effort_data_interval = 6.months.ago.at_beginning_of_month.beginning_of_day
+    def member_effort_daily_interval = 30.days.ago.beginning_of_day
+
+    def first_day_of_six_months_hash
+      accumulator = Hash.new { |hash, key| hash[key] = 0 }
+      range = (member_effort_data_interval.to_date..Time.zone.now.at_beginning_of_month.beginning_of_day)
+      range.select { |date| date.day == 1 }.each do |day|
+        accumulator[day.to_s] = 0
+      end
+      accumulator
+    end
+
     def last_30_days_hash
       accumulator = Hash.new { |hash, key| hash[key] = 0 }
-      (30.days.ago.beginning_of_day.to_date..Time.zone.now).each { |day| accumulator[day.to_s] = 0 }
+      (member_effort_daily_interval.to_date..Time.zone.now).each do |day|
+        accumulator[day.to_s] = 0
+      end
       accumulator
     end
   end

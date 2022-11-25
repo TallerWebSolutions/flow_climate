@@ -1274,7 +1274,9 @@ RSpec.describe Types::QueryType do
         other_bug = Fabricate :demand, team: team, project: project, created_date: 1.day.ago, end_date: nil, work_item_type: bug_type
 
         first_assignmen = Fabricate :item_assignment, membership: membership, demand: demand_finished
-        another_assignmen = Fabricate :item_assignment, membership: another_membership, demand: demand_finished
+
+        another_team_member_assignmen_that_should_not_appear = Fabricate :item_assignment, membership: another_membership, demand: demand_finished
+
         Fabricate :item_assignment, membership: membership, demand: other_demand_finished
         Fabricate :item_assignment, membership: membership, demand: bug
         Fabricate :item_assignment, membership: membership, demand: other_bug
@@ -1289,11 +1291,15 @@ RSpec.describe Types::QueryType do
 
         Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignmen, start_time_to_computation: 2.days.ago, effort_value: 100
         Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignmen, start_time_to_computation: 2.days.ago, effort_value: 50
-        Fabricate :demand_effort, demand: demand_finished, item_assignment: another_assignmen, start_time_to_computation: 2.days.ago, effort_value: 50
+
+        Fabricate :demand_effort, demand: demand_finished, item_assignment: another_team_member_assignmen_that_should_not_appear, start_time_to_computation: 2.days.ago, effort_value: 10_000
+
         Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignmen, start_time_to_computation: 1.day.ago, effort_value: 100
         Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignmen, start_time_to_computation: 1.day.ago, effort_value: 20
         Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignmen, start_time_to_computation: 2.days.from_now, effort_value: 100
         Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignmen, start_time_to_computation: 2.days.from_now, effort_value: 70
+
+        Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignmen, start_time_to_computation: 2.months.ago, effort_value: 100
 
         query =
           %(query {
@@ -1536,8 +1542,8 @@ RSpec.describe Types::QueryType do
                                                            'values' => [2]
                                                          },
                                                          'memberEffortData' => {
-                                                           'xAxis' => %w[2022-03-18 2022-04-18 2022-05-18],
-                                                           'yAxis' => [67.8, 12.3, 100.0]
+                                                           'xAxis' => %w[2021-11-01 2021-12-01 2022-01-01 2022-02-01 2022-03-01 2022-04-01 2022-05-01],
+                                                           'yAxis' => [0.0, 0.0, 0.0, 0.0, 100.0, 0.0, 440.0]
                                                          },
                                                          'memberEffortDailyData' => {
                                                            'xAxis' => %w[2022-04-18 2022-04-19 2022-04-20 2022-04-21 2022-04-22 2022-04-23 2022-04-24 2022-04-25 2022-04-26 2022-04-27 2022-04-28 2022-04-29 2022-04-30 2022-05-01 2022-05-02 2022-05-03 2022-05-04 2022-05-05 2022-05-06 2022-05-07 2022-05-08 2022-05-09 2022-05-10 2022-05-11 2022-05-12 2022-05-13 2022-05-14 2022-05-15 2022-05-16 2022-05-17 2022-05-18 2022-05-20],
