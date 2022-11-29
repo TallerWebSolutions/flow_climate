@@ -56,9 +56,18 @@ module Slack
 
     def notify_last_week_delivered_demands_info(slack_notifier, team)
       th_for_last_week = th_for_week(team, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)
+      delivered_count = th_for_last_week.count
+      value_generated = th_for_last_week.sum(&:cost_to_project)
+      average_value_per_demand = if delivered_count.positive?
+                                   value_generated / delivered_count
+                                 else
+                                   0
+                                 end
+
       message_text = [
         ">*Deliveries in the last week - #{team.name}*",
-        "> #{I18n.t('slack_configurations.notifications.th_last_week_text', name: team.name, th_last_week: th_for_last_week.count)}",
+        "> #{I18n.t('slack_configurations.notifications.th_last_week_text', name: team.name, th_last_week: delivered_count)}",
+        ">Horas: *#{number_with_precision(th_for_last_week.sum(&:total_effort), precision: 2)}* | *#{number_to_currency(value_generated)}* | Média: *#{number_to_currency(average_value_per_demand)}*",
         "> #{th_for_last_week.map { |d| "<#{company_demand_url(d.company, d.external_id)}|#{d.external_id}>" }.join(' | ')}"
       ].join("\n")
 

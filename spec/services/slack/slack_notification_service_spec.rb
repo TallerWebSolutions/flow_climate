@@ -145,10 +145,16 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
             Fabricate :item_assignment, membership: membership, demand: first_demand, start_time: 1.day.ago, finish_time: Time.zone.now
             Fabricate :item_assignment, membership: other_membership, demand: second_demand, start_time: 3.days.ago, finish_time: 2.days.ago
 
+            th_for_last_week = [first_demand, second_demand]
+            delivered_count = th_for_last_week.count
+            value_generated = th_for_last_week.sum(&:cost_to_project)
+            average_value_per_demand = value_generated / delivered_count
+
             message_text = [
               ">*Deliveries in the last week - #{team.name}*",
-              "> #{I18n.t('slack_configurations.notifications.th_last_week_text', name: team.name, th_last_week: 2)}",
-              "> #{[first_demand, second_demand].map { |d| "<#{company_demand_url(d.company, d.external_id)}|#{d.external_id}>" }.join(' | ')}"
+              "> #{I18n.t('slack_configurations.notifications.th_last_week_text', name: team.name, th_last_week: delivered_count)}",
+              ">Horas: *#{number_with_precision(th_for_last_week.sum(&:total_effort), precision: 2)}* | *#{number_to_currency(value_generated)}* | Média: *#{number_to_currency(average_value_per_demand)}*",
+              "> #{th_for_last_week.map { |d| "<#{company_demand_url(d.company, d.external_id)}|#{d.external_id}>" }.join(' | ')}"
             ].join("\n")
 
             delivered_last_week_message = {
