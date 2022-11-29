@@ -8,6 +8,7 @@
   <% end %>
 </td>
 
+<td><%= slack_config.id %></td>
 <td><%= slack_config.customer&.name || slack_config.team&.name %></td>
 <td><%= I18n.t("activerecord.attributes.slack_configuration.enums.config_type.#{slack_config.config_type}") %></td>
 <td><%= I18n.t("activerecord.attributes.slack_configuration.enums.info_type.#{slack_config.info_type}") %></td>

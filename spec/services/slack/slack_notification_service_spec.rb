@@ -2,6 +2,7 @@
 
 RSpec.describe Slack::SlackNotificationService, type: :service do
   include ActionView::Helpers::NumberHelper
+  include Rails.application.routes.url_helpers
 
   let(:first_user) { Fabricate :user }
 
@@ -144,9 +145,23 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
             Fabricate :item_assignment, membership: membership, demand: first_demand, start_time: 1.day.ago, finish_time: Time.zone.now
             Fabricate :item_assignment, membership: other_membership, demand: second_demand, start_time: 3.days.ago, finish_time: 2.days.ago
 
-            expect_any_instance_of(Slack::Notifier).to receive(:ping).with("> *#{team.name}* | Throughput: *2 demanda(s)* na semana passada.").once
-            expect_any_instance_of(Slack::Notifier).to receive(:ping).with("> *#{first_demand.external_id}* #{first_demand.demand_title} | *Responsáveis:* foo | *Custo pro Projeto:* #{number_to_currency(first_demand.cost_to_project)}").once
-            expect_any_instance_of(Slack::Notifier).to receive(:ping).with("> *#{second_demand.external_id}* #{second_demand.demand_title} | *Responsáveis:* bar | *Custo pro Projeto:* #{number_to_currency(second_demand.cost_to_project)}").once
+            message_text = [
+              ">*Deliveries in the last week - #{team.name}*",
+              "> #{I18n.t('slack_configurations.notifications.th_last_week_text', name: team.name, th_last_week: 2)}",
+              "> #{[first_demand, second_demand].map { |d| "<#{company_demand_url(d.company, d.external_id)}|#{d.external_id}>" }.join(' | ')}"
+            ].join("\n")
+
+            delivered_last_week_message = {
+              type: 'section',
+              text: {
+                type: 'mrkdwn',
+                text: message_text
+              }
+            }
+
+            message = { blocks: [delivered_last_week_message] }
+
+            expect_any_instance_of(Slack::Notifier).to receive(:post).with(message).once
 
             described_class.instance.notify_last_week_delivered_demands_info(first_slack_notifier, team)
           end
@@ -155,7 +170,7 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
 
       context 'with exceptions' do
         it 'calls slack notification method' do
-          allow(first_slack_notifier).to(receive(:ping)).and_raise(Slack::Notifier::APIError)
+          allow(first_slack_notifier).to(receive(:post)).and_raise(Slack::Notifier::APIError)
           expect(Rails.logger).to(receive(:error))
 
           described_class.instance.notify_last_week_delivered_demands_info(first_slack_notifier, team)
@@ -263,7 +278,7 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
 
     describe '#notify_last_week_delivered_demands_info' do
       it 'calls slack notification method' do
-        expect_any_instance_of(Slack::Notifier).to receive(:ping).with("> *#{team.name}* | Throughput: *0 demanda(s)* na semana passada.").once
+        expect_any_instance_of(Slack::Notifier).to receive(:post).once
 
         described_class.instance.notify_last_week_delivered_demands_info(first_slack_notifier, team)
       end

@@ -4,6 +4,7 @@ module Slack
   class SlackNotificationService
     include Singleton
 
+    include Rails.application.routes.url_helpers
     include ActionView::Helpers::NumberHelper
     include DateHelper
 
@@ -55,11 +56,21 @@ module Slack
 
     def notify_last_week_delivered_demands_info(slack_notifier, team)
       th_for_last_week = th_for_week(team, 1.week.ago.beginning_of_week, 1.week.ago.end_of_week)
-      slack_notifier.ping(I18n.t('slack_configurations.notifications.th_last_week_text', name: team.name, th_last_week: th_for_last_week.count))
+      message_text = [
+        ">*Deliveries in the last week - #{team.name}*",
+        "> #{I18n.t('slack_configurations.notifications.th_last_week_text', name: team.name, th_last_week: th_for_last_week.count)}",
+        "> #{th_for_last_week.map { |d| "<#{company_demand_url(d.company, d.external_id)}|#{d.external_id}>" }.join(' | ')}"
+      ].join("\n")
 
-      th_for_last_week.each do |demand|
-        slack_notifier.ping(I18n.t('slack_configurations.notifications.th_last_week_demand_info_text', external_id: demand.external_id, responsibles_names: demand.memberships.map(&:team_member_name).flatten.uniq.join(', '), cost_to_project: number_to_currency(demand.cost_to_project), demand_title: demand.demand_title))
-      end
+      delivered_last_week_message = {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: message_text
+        }
+      }
+
+      slack_notifier.post(blocks: [delivered_last_week_message])
     rescue Slack::Notifier::APIError
       Rails.logger.error('Invalid Slack API - It may be caused by an API token problem')
     end

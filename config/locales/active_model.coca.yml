@@ -378,8 +378,7 @@ coca:
     notifications:
       cmd_text: "> *%{team_name}* | Average Deliverable Cost: %{cmd_value} | Variation: *%{cmd_difference_to_last_week}%* for the average of previous 4 weeks (%{previous_cmd}) | Last week: *%{last_week_cmd}*"
       th_week_text: "> *%{team_name}* | Throughput: %{th_current_week} activitys | Variation: *%{difference_last_week_th_value}%* for the average of previous 4 weeks (%{four_weeks_th_average})."
-      th_last_week_text: "> *%{team_name}* | Throughput: %{th_last_week} activitys last week."
-      th_last_week_demand_info_text: "> *%{external_id}* %{demand_title} | *Responsibles:* %{responsibles_names} | *Cost to Project:* %{cost_to_project}"
+      th_last_week_text: "Throughput: *%{th_last_week} activities.*"
       qty_demands_in_wip: "> *%{team_name}* | Work in Progress: %{in_wip} activitys."
       demands_in_wip_info_text: "> *%{external_id}* %{demand_title} | *Responsibles:* %{responsibles_names} | *Cost to Project:* %{cost_to_project} | *Current Stage:* %{current_stage} | *Time in Stage:* %{time_in_current_stage} | *% Flow Concluded:* %{percentage_concluded}"
       outdated_demands_info_text: "> *%{external_id}* %{demand_title} | *Current Stage:* %{current_stage} | *Time in Stage:* %{time_in_current_stage}"
