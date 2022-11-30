@@ -1,18 +1,18 @@
-let serviceDeliveryReviewActionContainer = $('#service-delivery-review-action-items-container');
+let serviceDeliveryReviewActionContainer = $("#service-delivery-review-action-items-container");
 let alertsContainer = $(".alerts");
 
 <% if @service_delivery_review_action_item.errors.empty? %>
-  serviceDeliveryReviewActionContainer.html("<%= escape_javascript(render('service_delivery_review_action_items/service_delivery_review_action_items_table', company: @company, service_delivery_review_action_items: @service_delivery_review.service_delivery_review_action_items)) %>")
-  alertsContainer.html("<%= escape_javascript(render('layouts/notice', message: flash[:notice].html_safe)) %>")
+  serviceDeliveryReviewActionContainer.html("<%= escape_javascript(render("service_delivery_review_action_items/service_delivery_review_action_items_table", company: @company, service_delivery_review_action_items: @service_delivery_review.service_delivery_review_action_items)) %>")
+  alertsContainer.html("<%= escape_javascript(render("layouts/notice", message: flash[:notice].html_safe)) %>")
 
 <% else %>
-  serviceDeliveryReviewActionContainer.html("<%= escape_javascript(render('service_delivery_review_action_items/new', company: @company, product: @product, service_delivery_review: @service_delivery_review, service_delivery_review_action_item: @service_delivery_review_action_item, memberships: @memberships)) %>")
+  serviceDeliveryReviewActionContainer.html("<%= escape_javascript(render("service_delivery_review_action_items/new", company: @company, product: @product, service_delivery_review: @service_delivery_review, service_delivery_review_action_item: @service_delivery_review_action_item, memberships: @memberships)) %>")
 
-  alertsContainer.html("<%= escape_javascript(render('layouts/error', message: @service_delivery_review_action_item.errors.full_messages.join(' | ').html_safe)) %>")
+  alertsContainer.html("<%= escape_javascript(render("layouts/error", message: @service_delivery_review_action_item.errors.full_messages.join(" | ").html_safe)) %>")
 
   $("#cancel-service-delivery-review-action-item-form").on("click", function(event) {
       event.preventDefault();
 
-      $('#service-delivery-review-action-items-container').html("<%= escape_javascript(render('service_delivery_review_action_items/service_delivery_review_action_items_table', company: @company, service_delivery_review_action_items: @service_delivery_review.service_delivery_review_action_items)) %>")
+      $("#service-delivery-review-action-items-container").html("<%= escape_javascript(render("service_delivery_review_action_items/service_delivery_review_action_items_table", company: @company, service_delivery_review_action_items: @service_delivery_review.service_delivery_review_action_items)) %>")
   });
 <% end %>
