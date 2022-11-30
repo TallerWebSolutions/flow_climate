@@ -1,3 +1,5 @@
+bindBlockFormModalAction();
+
 let donutServiceDeliveryReviewClassesOfServiceDiv = $('#service-delivery-review-class-of-services-donut');
 if (donutServiceDeliveryReviewClassesOfServiceDiv.length !== 0) {
     buildDonutChart(donutServiceDeliveryReviewClassesOfServiceDiv);

@@ -277,6 +277,19 @@ coca:
             internal_process_change: Internal Process Change
             cadences_change: Cadences Change
             internal_comunication_change: Internal Comunication Change
+      service_delivery_review_action_item:
+        action_type: Action type
+        created_at: Creation date
+        deadline: Deadline
+        description: Description
+        done_date: Done date
+        membership: Responsible
+        service_delivery_review: SDR
+        enums:
+          action_type:
+            cadences_change: Cadence change
+            internal_comunication_change: Internal Comunication Change
+            training: Training
       score_matrix_question:
         enums:
           question_type:

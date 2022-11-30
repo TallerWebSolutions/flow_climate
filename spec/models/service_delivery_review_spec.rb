@@ -3,6 +3,7 @@
 RSpec.describe ServiceDeliveryReview do
   context 'associations' do
     it { is_expected.to have_many(:demands).dependent(:nullify) }
+    it { is_expected.to have_many(:service_delivery_review_action_items).dependent(:destroy) }
   end
 
   context 'validations' do

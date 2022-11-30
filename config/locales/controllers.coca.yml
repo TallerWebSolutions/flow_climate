@@ -54,6 +54,7 @@ coca:
       confirm: "You are about to delete a record. Are you sure?"
       success: "Excluded"
       confirm_physical: "You are about to detroy physically a record. Are you sure?"
+      tootip: "Delete"
     period: "Period"
     throughput: "Throughput (items/week)"
     delivered: "Delivered"
@@ -1520,3 +1521,6 @@ coca:
   dashboard:
     home:
       greetings: "Hello, %{name}"
+  service_delivery_review_action_items:
+    create:
+      success: "The action was created."

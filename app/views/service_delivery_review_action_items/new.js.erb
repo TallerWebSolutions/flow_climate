@@ -1,0 +1,7 @@
+$("#service-delivery-review-action-items-container").html("<%= escape_javascript(render('service_delivery_review_action_items/new', company: @company, product: @product, service_delivery_review: @service_delivery_review, service_delivery_review_action_item: @service_delivery_review_action_item, memberships: @memberships)) %>")
+
+$("#cancel-service-delivery-review-action-item-form").on("click", function(event) {
+    event.preventDefault();
+
+    $('#service-delivery-review-action-items-container').html("<%= escape_javascript(render('service_delivery_review_action_items/service_delivery_review_action_items_table', company: @company, service_delivery_review_action_items: @service_delivery_review.service_delivery_review_action_items)) %>")
+});

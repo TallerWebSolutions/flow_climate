@@ -2158,6 +2158,42 @@ ALTER SEQUENCE public.score_matrix_questions_id_seq OWNED BY public.score_matrix
 
 
 --
+-- Name: service_delivery_review_action_items; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.service_delivery_review_action_items (
+    id bigint NOT NULL,
+    service_delivery_review_id integer NOT NULL,
+    membership_id integer NOT NULL,
+    action_type integer DEFAULT 0 NOT NULL,
+    description character varying NOT NULL,
+    deadline date NOT NULL,
+    done_date date,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: service_delivery_review_action_items_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.service_delivery_review_action_items_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: service_delivery_review_action_items_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.service_delivery_review_action_items_id_seq OWNED BY public.service_delivery_review_action_items.id;
+
+
+--
 -- Name: service_delivery_reviews; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3274,6 +3310,13 @@ ALTER TABLE ONLY public.score_matrix_questions ALTER COLUMN id SET DEFAULT nextv
 
 
 --
+-- Name: service_delivery_review_action_items id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.service_delivery_review_action_items ALTER COLUMN id SET DEFAULT nextval('public.service_delivery_review_action_items_id_seq'::regclass);
+
+
+--
 -- Name: service_delivery_reviews id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3861,6 +3904,14 @@ ALTER TABLE ONLY public.score_matrix_answers
 
 ALTER TABLE ONLY public.score_matrix_questions
     ADD CONSTRAINT score_matrix_questions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: service_delivery_review_action_items service_delivery_review_action_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.service_delivery_review_action_items
+    ADD CONSTRAINT service_delivery_review_action_items_pkey PRIMARY KEY (id);
 
 
 --
@@ -5058,6 +5109,20 @@ CREATE INDEX index_score_matrix_questions_on_score_matrix_id ON public.score_mat
 
 
 --
+-- Name: index_service_delivery_review_action_items_on_action_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_service_delivery_review_action_items_on_action_type ON public.service_delivery_review_action_items USING btree (action_type);
+
+
+--
+-- Name: index_service_delivery_review_action_items_on_membership_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_service_delivery_review_action_items_on_membership_id ON public.service_delivery_review_action_items USING btree (membership_id);
+
+
+--
 -- Name: index_service_delivery_reviews_on_company_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5503,6 +5568,13 @@ CREATE UNIQUE INDEX operations_dashboard_cache_unique ON public.operations_dashb
 --
 
 CREATE UNIQUE INDEX operations_dashboard_pairings_cache_unique ON public.operations_dashboard_pairings USING btree (operations_dashboard_id, pair_id);
+
+
+--
+-- Name: service_delivery_review_action_items_sdr_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX service_delivery_review_action_items_sdr_id ON public.service_delivery_review_action_items USING btree (service_delivery_review_id);
 
 
 --
@@ -6238,6 +6310,14 @@ ALTER TABLE ONLY public.demand_comments
 
 
 --
+-- Name: service_delivery_review_action_items fk_rails_b7142151f8; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.service_delivery_review_action_items
+    ADD CONSTRAINT fk_rails_b7142151f8 FOREIGN KEY (service_delivery_review_id) REFERENCES public.service_delivery_reviews(id);
+
+
+--
 -- Name: project_risk_alerts fk_rails_b8b501e2eb; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6251,6 +6331,14 @@ ALTER TABLE ONLY public.project_risk_alerts
 
 ALTER TABLE ONLY public.demand_transitions
     ADD CONSTRAINT fk_rails_b9c641c4b5 FOREIGN KEY (team_member_id) REFERENCES public.team_members(id);
+
+
+--
+-- Name: service_delivery_review_action_items fk_rails_bcb8a4f6b9; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.service_delivery_review_action_items
+    ADD CONSTRAINT fk_rails_bcb8a4f6b9 FOREIGN KEY (membership_id) REFERENCES public.memberships(id);
 
 
 --
@@ -6732,6 +6820,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220718205253'),
 ('20220718213803'),
 ('20220804162133'),
-('20220914141949');
+('20220914141949'),
+('20221130114226');
 
 

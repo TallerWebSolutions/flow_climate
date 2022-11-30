@@ -36,6 +36,7 @@ class ServiceDeliveryReview < ApplicationRecord
   belongs_to :product
 
   has_many :demands, dependent: :nullify
+  has_many :service_delivery_review_action_items, dependent: :destroy
 
   validates :meeting_date, presence: true
 

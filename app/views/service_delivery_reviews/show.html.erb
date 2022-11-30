@@ -38,6 +38,19 @@
     </div>
   </div>
 
+  <h4>
+    <%= ServiceDeliveryReviewActionItem.model_name.human(count: 2) %>
+    <%= link_to new_company_product_service_delivery_review_service_delivery_review_action_item_path(@company, @product, @service_delivery_review), remote: true do %>
+      <i class="fa fa-plus-square"></i>
+    <% end %>
+  </h4>
+
+  <div id="service-delivery-review-action-items-container">
+    <%= render 'service_delivery_review_action_items/service_delivery_review_action_items_table', service_delivery_review_action_items: @service_delivery_review.service_delivery_review_action_items, company: @company %>
+  </div>
+</div>
+
+<div class="row">
   <div class="col-xs-4">
     <h4><%= I18n.t('service_delivery_reviews.show.class_of_services.title') %></h4>
 
@@ -193,6 +206,7 @@
   <%= javascript_include_tag 'charts/chart-with-two-thresholds' %>
   <%= javascript_include_tag 'charts/speedometer' %>
 
+  <%= javascript_include_tag 'demand_blocks/form_modal' %>
   <%= javascript_include_tag 'components/components' %>
   <%= javascript_include_tag 'service_delivery_reviews/show' %>
 <% end %>

@@ -54,6 +54,7 @@ pt-BR:
       confirm: 'Confirma a exclusão do registro?'
       success: 'Excluído com sucesso'
       confirm_physical: 'Você vai excluir fisicamente o registro. Tem certeza?'
+      tootip: "Apagar"
     period: 'Período'
     throughput: 'Vazão (itens/semana)'
     delivered: 'Entregas'
@@ -1508,3 +1509,6 @@ pt-BR:
   dashboard:
     home:
       greetings: "Olá, %{name}"
+  service_delivery_review_action_items:
+    create:
+      success: "A ação foi criada."

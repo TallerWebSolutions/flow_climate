@@ -1,0 +1,41 @@
+<div class="row">
+  <div class="col-xs-6">
+    <% if service_delivery_review_action_items.blank? %>
+      <%= render 'layouts/no_data', missing_data: ServiceDeliveryReviewActionItem.model_name.human(count: 2).downcase %>
+
+    <% else %>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th><%= ServiceDeliveryReviewActionItem.human_attribute_name :service_delivery_review %></th>
+            <th><%= ServiceDeliveryReviewActionItem.human_attribute_name :action_type %></th>
+            <th><%= ServiceDeliveryReviewActionItem.human_attribute_name :created_at %></th>
+            <th><%= ServiceDeliveryReviewActionItem.human_attribute_name :membership %></th>
+            <th><%= ServiceDeliveryReviewActionItem.human_attribute_name :deadline %></th>
+            <th><%= ServiceDeliveryReviewActionItem.human_attribute_name :done_date %></th>
+            <th><%= ServiceDeliveryReviewActionItem.human_attribute_name :description %></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% service_delivery_review_action_items.each do |action_item| %>
+            <tr>
+              <td><%= action_item.service_delivery_review.id %></td>
+              <td><%= I18n.t("activerecord.attributes.service_delivery_review_action_item.enums.action_type.#{action_item.action_type}") %></td>
+              <td><%= I18n.l(action_item.created_at, format: :short) %></td>
+              <td><%= action_item.membership.team_member_name %></td>
+              <td><%= I18n.l(action_item.deadline, format: :short) %></td>
+              <td><%= I18n.l(action_item.done_date, format: :short) if action_item.done_date.present? %></td>
+              <td><%= action_item.description %></td>
+              <td>
+                <%= link_to company_product_service_delivery_review_service_delivery_review_action_item_path(company, action_item.product, action_item.service_delivery_review, action_item), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
+                  <i class="fa fa-times" title='<%= I18n.t('general.destroy.tootip') %>'></i>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+  </div>
+</div>

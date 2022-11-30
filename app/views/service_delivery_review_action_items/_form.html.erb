@@ -1,0 +1,30 @@
+<div class="row">
+  <div class='col-xs-6 form-group <%= 'has-error' if service_delivery_review_action_item.errors[:deadline].present? %>'>
+    <%= form.label :deadline, class: 'control-label required' %>
+    <%= form.date_field :deadline, value: service_delivery_review_action_item.deadline || Time.zone.today, class: 'form-control' %>
+    <span class="help-block"><%= service_delivery_review_action_item.errors[:deadline].join(', ') %></span>
+  </div>
+
+  <div class='col-xs-6 form-group <%= 'has-error' if service_delivery_review_action_item.errors[:action_type].present? %>'>
+    <%= form.label :action_type, class: 'control-label' %>
+    <%= form.select :action_type, ServiceDeliveryReviewActionItem.action_types.map { |key, _value| [I18n.t("activerecord.attributes.service_delivery_review_action_item.enums.action_type.#{key}"), key] }, { include_blank: I18n.t('general.select'), selected: service_delivery_review_action_item.action_type }, class: 'form-control' %>
+    <span class="help-block"><%= service_delivery_review_action_item.errors[:action_type].join(', ') %></span>
+  </div>
+
+  <div class='col-xs-6 form-group <%= 'has-error' if service_delivery_review_action_item.errors[:membership].present? %>'>
+    <%= form.label :membership, class: 'control-label' %>
+    <%= form.select :membership_id, memberships.map { |membership| [membership.team_member_name, membership.id] }, { selected: service_delivery_review_action_item.membership_id }, class: 'form-control' %>
+    <span class="help-block"><%= service_delivery_review_action_item.errors[:membership].join(', ') %></span>
+  </div>
+
+  <div class='col-xs-6 form-group <%= 'has-error' if service_delivery_review_action_item.errors[:description].present? %>'>
+    <%= form.label :description, class: 'control-label required' %>
+    <%= form.text_field :description, class: 'form-control' %>
+    <span class="help-block"><%= service_delivery_review_action_item.errors[:description].join(', ') %></span>
+  </div>
+
+  <div class="col-xs-6">
+    <button type="button" class="btn btn-danger" id="cancel-service-delivery-review-action-item-form"><%= I18n.t('general.buttons.cancel') %></button>
+    <%= form.submit I18n.t('general.buttons.save'), class: 'btn btn-success' %>
+  </div>
+</div>

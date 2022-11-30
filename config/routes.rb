@@ -188,6 +188,7 @@ Rails.application.routes.draw do
 
       resources :service_delivery_reviews, except: :index do
         patch :refresh, on: :member
+        resources :service_delivery_review_action_items, only: %w[new create destroy]
       end
 
       scope :jira do

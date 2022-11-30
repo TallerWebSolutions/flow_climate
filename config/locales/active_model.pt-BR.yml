@@ -181,6 +181,9 @@ pt-BR:
       risk_review_action_item:
         one: Ação da Revisão de Risco
         other: Ações da Revisão de Risco
+      service_delivery_review_action_item:
+        one: Ação da SDR
+        other: Ações da SDR
       user_invite:
         one: Convite de Usuário
         other: Convites de Usuários
@@ -675,6 +678,19 @@ pt-BR:
             internal_comunication_change: Alteração na Comunicação Interna
             training: Treinamento
             guidance: Orientação
+      service_delivery_review_action_item:
+        action_type: Tipo da Ação
+        created_at: Dt Criação
+        deadline: Prazo
+        description: Descrição
+        done_date: Dt Finalizada
+        membership: Responsável
+        service_delivery_review: SDR
+        enums:
+          action_type:
+            cadences_change: Alteração nas Cadências
+            internal_comunication_change: Alteração na Comunicação Interna
+            training: Treinamento
       user_invite:
         company: Empresa
         invite_type: Tipo do Convite
