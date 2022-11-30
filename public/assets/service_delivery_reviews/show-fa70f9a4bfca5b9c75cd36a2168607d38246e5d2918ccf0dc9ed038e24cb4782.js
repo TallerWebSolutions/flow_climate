@@ -1,3 +1,5 @@
+bindBlockFormModalAction();
+
 let donutServiceDeliveryReviewClassesOfServiceDiv = $('#service-delivery-review-class-of-services-donut');
 if (donutServiceDeliveryReviewClassesOfServiceDiv.length !== 0) {
     buildDonutChart(donutServiceDeliveryReviewClassesOfServiceDiv);
@@ -23,12 +25,15 @@ if (donutServiceDeliveryReviewPortfolioUnitsDiv.length !== 0) {
     buildDonutChart(donutServiceDeliveryReviewPortfolioUnitsDiv);
 }
 
-let donutServiceDeliveryReviewFlowDataDiv = $('#service-delivery-review-flow-data-column');
-if (donutServiceDeliveryReviewFlowDataDiv.length !== 0) {
-    buildColumnChart(donutServiceDeliveryReviewFlowDataDiv);
+let columnServiceDeliveryReviewFlowDataDiv = $('#service-delivery-review-flow-data-column');
+if (columnServiceDeliveryReviewFlowDataDiv.length !== 0) {
+    buildColumnChart(columnServiceDeliveryReviewFlowDataDiv);
 }
 
 const leadtimeControlChart = $('#service-delivery-review-leadtime-control-chart');
 if (leadtimeControlChart.length !== 0) {
     buildTwoThresholdsChart(leadtimeControlChart);
-};
+}
+
+$('#general-info-tab').addClass('active');
+$('#sdr-general-info').show();
