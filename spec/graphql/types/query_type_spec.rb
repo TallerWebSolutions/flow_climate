@@ -1251,6 +1251,84 @@ RSpec.describe Types::QueryType do
       expect(result.dig('data', 'teamMembers').first['teams'].pluck('name')).to eq ['xpto']
       expect(result.dig('data', 'teamMembers').second['teams'].pluck('name')).to match_array %w[xpto foo]
     end
+
+    it 'returns active members in the company' do
+      query =
+        %(
+        query {
+          teamMembers(companyId: #{company.id}, active: true) {
+            name
+            jiraAccountUserEmail
+            startDate
+            endDate
+            billable
+            teams {
+              name
+            }
+            user {
+              firstName
+              lastName
+            }
+          }
+        }
+      )
+
+      user = Fabricate :user
+
+      context = {
+        current_user: user
+      }
+
+      team_member = Fabricate :team_member, company: company, name: 'zzz', end_date: 1.day.ago
+      other_team_member = Fabricate :team_member, company: company, name: 'aaa', end_date: nil
+
+      team = Fabricate :team, company: company, name: 'xpto'
+
+      Fabricate :membership, team: team, team_member: team_member
+      Fabricate :membership, team: team, team_member: other_team_member
+
+      result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
+      expect(result.dig('data', 'teamMembers').pluck('name')).to eq %w[aaa]
+    end
+
+    it 'returns inactive members in the company' do
+      query =
+        %(
+        query {
+          teamMembers(companyId: #{company.id}, active: false) {
+            name
+            jiraAccountUserEmail
+            startDate
+            endDate
+            billable
+            teams {
+              name
+            }
+            user {
+              firstName
+              lastName
+            }
+          }
+        }
+      )
+
+      user = Fabricate :user
+
+      context = {
+        current_user: user
+      }
+
+      team_member = Fabricate :team_member, company: company, name: 'zzz', end_date: nil
+      other_team_member = Fabricate :team_member, company: company, name: 'aaa', end_date: 7.days.ago
+
+      team = Fabricate :team, company: company, name: 'xpto'
+
+      Fabricate :membership, team: team, team_member: team_member
+      Fabricate :membership, team: team, team_member: other_team_member
+
+      result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
+      expect(result.dig('data', 'teamMembers').pluck('name')).to eq %w[aaa]
+    end
   end
 
   describe '#team_member' do

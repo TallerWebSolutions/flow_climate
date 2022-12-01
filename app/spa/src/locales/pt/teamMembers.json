@@ -17,7 +17,8 @@
     }
   },
   "list": {
-    "title": "Colaboradores"
+    "title": "Colaboradores",
+    "statusSelectLabel": "Status do Membro"
   },
   "edit": {
     "title": "Colaborador",

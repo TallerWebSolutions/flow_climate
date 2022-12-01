@@ -17,7 +17,8 @@
     }
   },
   "list": {
-    "title": "Employees"
+    "title": "Employees",
+    "statusSelectLabel": "Member Status"
   },
   "edit": {
     "title": "Employee",

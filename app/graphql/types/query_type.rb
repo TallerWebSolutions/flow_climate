@@ -41,6 +41,7 @@ module Types
     end
 
     field :team_members, [Types::TeamMemberType], null: true, description: 'Team Members of a Company' do
+      argument :active, Boolean, required: false
       argument :company_id, Int, required: true
     end
 
@@ -111,9 +112,15 @@ module Types
       end
     end
 
-    def team_members(company_id:)
+    def team_members(company_id:, active: nil)
       company = Company.find(company_id)
-      company.team_members.order(:name)
+      if active.nil?
+        company.team_members.order(:name)
+      elsif active
+        company.team_members.active.order(:name)
+      else
+        company.team_members.inactive.order(:name)
+      end
     end
 
     def project_additional_hours(project_id:)
