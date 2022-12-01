@@ -1,5 +1,5 @@
-let serviceDeliveryReviewActionContainer = $("#service-delivery-review-action-items-container");
-let alertsContainer = $(".alerts");
+var serviceDeliveryReviewActionContainer = $("#service-delivery-review-action-items-container");
+var alertsContainer = $(".alerts");
 
 <% if @service_delivery_review_action_item.errors.empty? %>
   serviceDeliveryReviewActionContainer.html("<%= escape_javascript(render("service_delivery_review_action_items/service_delivery_review_action_items_table", company: @company, service_delivery_review_action_items: @service_delivery_review.service_delivery_review_action_items)) %>")
