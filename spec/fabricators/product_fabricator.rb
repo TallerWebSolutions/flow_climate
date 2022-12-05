@@ -3,5 +3,5 @@
 Fabricator(:product) do
   company
   customer
-  name { Faker::Name.unique.name.gsub(/\W/, '') }
+  name { Faker::Name.unique.name }
 end

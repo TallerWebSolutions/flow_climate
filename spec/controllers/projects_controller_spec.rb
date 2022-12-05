@@ -114,52 +114,10 @@ RSpec.describe ProjectsController do
       let!(:product) { Fabricate :product, company: company, customer: customer }
       let(:project) { Fabricate :project, company: company, customers: [customer], products: [product], start_date: 2.weeks.ago, end_date: Time.zone.today }
 
-      context 'with data' do
-        context 'with running project' do
-          it 'renders project spa page' do
-            first_project = Fabricate :project, company: company, start_date: 15.weeks.ago, end_date: Time.zone.today, status: :executing
-            get :show, params: { company_id: company, id: first_project }
+      it 'renders project spa page' do
+        get :show, params: { company_id: company, id: project }
 
-            expect(response).to render_template 'spa-build/index'
-          end
-        end
-      end
-
-      context 'with no data' do
-        context 'passing valid IDs' do
-          before { get :show, params: { company_id: company, customer_id: customer, id: project } }
-
-          it 'assigns the instance variable and renders the template' do
-            expect(response).to render_template 'spa-build/index'
-            expect(assigns(:company)).to eq company
-            expect(assigns(:project)).to eq project
-          end
-        end
-      end
-
-      context 'invalid' do
-        context 'non-existent' do
-          before { get :show, params: { company_id: company, customer_id: customer, id: 'foo' } }
-
-          it { expect(response).to have_http_status :not_found }
-        end
-
-        context 'not permitted' do
-          let(:company) { Fabricate :company, users: [] }
-
-          before { get :show, params: { company_id: company, customer_id: customer, id: project } }
-
-          it { expect(response).to have_http_status :not_found }
-        end
-
-        context 'a different company' do
-          let(:other_company) { Fabricate :company, users: [user] }
-          let!(:project) { Fabricate :demand, company: company, product: product }
-
-          before { get :show, params: { company_id: other_company, id: project } }
-
-          it { expect(response).to have_http_status :not_found }
-        end
+        expect(response).to render_template 'spa-build/index'
       end
     end
 

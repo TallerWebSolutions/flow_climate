@@ -86,7 +86,7 @@ class ServiceDeliveryReviewsController < AuthenticatedController
   end
 
   def assign_product
-    @product = Product.find(params[:product_id])
+    @product = Product.friendly.find(params[:product_id])
   end
 
   def service_delivery_review_url

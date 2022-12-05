@@ -34,7 +34,7 @@ class ScoreMatrixAnswersController < AuthenticatedController
   end
 
   def assign_product
-    @product = @company.products.find(params[:product_id])
+    @product = @company.products.friendly.find(params[:product_id])
   end
 
   def score_matrix_answer_params

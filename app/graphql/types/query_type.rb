@@ -12,6 +12,10 @@ module Types
       argument :id, ID
     end
 
+    field :product, Types::ProductType, null: true, description: 'A plain product' do
+      argument :slug, String
+    end
+
     field :team_member, Types::TeamMemberType, null: true, description: 'A plain team_member' do
       argument :id, Int
     end
@@ -83,6 +87,10 @@ module Types
 
     def project(id:)
       Project.find(id)
+    end
+
+    def product(slug:)
+      Product.friendly.find(slug)
     end
 
     def team_member(id:)

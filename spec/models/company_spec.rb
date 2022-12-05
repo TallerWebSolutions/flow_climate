@@ -208,7 +208,7 @@ RSpec.describe Company do
     let(:other_customer) { Fabricate :customer, company: company }
 
     let(:product) { Fabricate :product, company: company, customer: customer, name: 'zzz' }
-    let(:other_product) { Fabricate :product, company: company, customer: other_customer, name: 'zzz' }
+    let(:other_product) { Fabricate :product, company: company, customer: other_customer, name: 'aaa' }
 
     let!(:waiting_project) { Fabricate :project, company: company, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :waiting }
     let!(:other_waiting_project) { Fabricate :project, company: company, start_date: 4.weeks.ago, customers: [customer], products: [product], status: :waiting }
@@ -227,7 +227,7 @@ RSpec.describe Company do
     let(:other_customer) { Fabricate :customer }
 
     let(:product) { Fabricate :product, company: company, customer: customer, name: 'zzz' }
-    let(:other_product) { Fabricate :product, company: company, customer: other_customer, name: 'zzz' }
+    let(:other_product) { Fabricate :product, company: company, customer: other_customer, name: 'aaa' }
 
     let!(:first_project) { Fabricate :project, company: company, customers: [customer], products: [product], status: :executing, qty_hours: 1000, value: 100_000, hour_value: 100, start_date: 1.day.ago, end_date: 1.month.from_now }
     let!(:second_project) { Fabricate :project, company: company, customers: [customer], products: [product], status: :executing, qty_hours: 1000, value: 100_000, hour_value: 100, start_date: 1.day.ago, end_date: 1.month.from_now }
@@ -469,7 +469,7 @@ RSpec.describe Company do
     let(:other_company_customer) { Fabricate :customer }
 
     let!(:product) { Fabricate :product, company: company, customer: customer, name: 'zzz' }
-    let!(:other_product) { Fabricate :product, company: company, customer: other_customer, name: 'zzz' }
+    let!(:other_product) { Fabricate :product, company: company, customer: other_customer, name: 'aaa' }
 
     it { expect(company.products_count).to eq 2 }
   end

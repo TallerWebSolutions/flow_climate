@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ProjectsController < AuthenticatedController
-  before_action :assign_project, except: %i[new create index status_report_dashboard]
+  before_action :assign_project, except: %i[show new create index status_report_dashboard]
 
   def index
     prepend_view_path Rails.public_path
@@ -92,14 +92,14 @@ class ProjectsController < AuthenticatedController
   end
 
   def associate_product
-    product = @company.products.find(params[:product_id])
+    product = @company.products.friendly.find(params[:product_id])
     @project.add_product(product)
     assign_product_projects
     respond_to { |format| format.js { render 'projects/associate_dissociate_product' } }
   end
 
   def dissociate_product
-    product = @company.products.find(params[:product_id])
+    product = @company.products.friendly.find(params[:product_id])
     @project.remove_product(product)
     assign_product_projects
     respond_to { |format| format.js { render 'projects/associate_dissociate_product' } }

@@ -1,6 +1,6 @@
 import { gql, useQuery } from "@apollo/client"
 
-export const QUERY = gql`
+export const PROJECT_QUERY = gql`
   query ProjectInfo($projectId: ID!) {
     project(id: $projectId) {
       id
@@ -37,7 +37,7 @@ type ProjectInfo = {
 type ProjectInfoDTO = ProjectInfo | undefined
 
 const useProjectInfo = (projectId: string) => {
-  const { data, loading, error } = useQuery<ProjectInfoDTO>(QUERY, {
+  const { data, loading, error } = useQuery<ProjectInfoDTO>(PROJECT_QUERY, {
     variables: { projectId },
   })
 

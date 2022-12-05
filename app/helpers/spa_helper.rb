@@ -10,6 +10,7 @@ module SpaHelper
       { controller: 'projects', action: 'statistics_tab' },
       { controller: 'projects', action: 'financial_report' },
       { controller: 'projects', action: 'tasks_tab' },
+      { controller: 'products', action: 'show' },
       { controller: 'project_additional_hours', action: 'new' },
       { controller: 'teams', action: 'show' },
       { controller: 'teams', action: 'index' },

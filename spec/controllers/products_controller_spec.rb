@@ -250,70 +250,12 @@ RSpec.describe ProductsController do
     end
 
     describe 'GET #show' do
-      let(:customer) { Fabricate :customer, company: company, name: 'zzz' }
+      let!(:product) { Fabricate :product, company: company }
 
-      let(:product) { Fabricate :product, company: company, customer: customer }
+      it 'renders project spa page' do
+        get :show, params: { company_id: company, id: product }
 
-      let!(:jira_product_config) { Fabricate :jira_product_config, product: product, jira_product_key: 'zzz' }
-      let!(:other_jira_product_config) { Fabricate :jira_product_config, product: product, jira_product_key: 'aaa' }
-
-      context 'passing a valid ID' do
-        context 'having data' do
-          before { get :show, params: { company_id: company, id: product } }
-
-          it 'assigns the instance variable and renders the template' do
-            expect(response).to render_template :show
-            expect(assigns(:company)).to eq company
-            expect(assigns(:product)).to eq product
-            expect(assigns(:start_date)).to eq 3.months.ago.to_date
-            expect(assigns(:end_date)).to eq Time.zone.today
-            expect(assigns(:period)).to eq 'month'
-            expect(assigns(:jira_product_configs)).to eq [other_jira_product_config, jira_product_config]
-          end
-        end
-
-        context 'having no data' do
-          let(:empty_product) { Fabricate :product, company: company, customer: customer }
-
-          before { get :show, params: { company_id: company, id: empty_product } }
-
-          it 'assigns the instance variable and renders the template' do
-            expect(response).to render_template :show
-            expect(assigns(:company)).to eq company
-            expect(assigns(:product)).to eq empty_product
-          end
-        end
-      end
-
-      context 'invalid' do
-        context 'non-existent company' do
-          before { get :show, params: { company_id: 'foo', id: product } }
-
-          it { expect(response).to have_http_status :not_found }
-        end
-
-        context 'non-existent product' do
-          before { get :show, params: { company_id: company, id: 'foo' } }
-
-          it { expect(response).to have_http_status :not_found }
-        end
-
-        context 'not permitted' do
-          let(:company) { Fabricate :company, users: [] }
-
-          before { get :show, params: { company_id: company, id: product } }
-
-          it { expect(response).to have_http_status :not_found }
-        end
-
-        context 'a different company' do
-          let(:other_company) { Fabricate :company, users: [user] }
-          let!(:product) { Fabricate :product, company: company, customer: customer }
-
-          before { get :show, params: { company_id: other_company, id: product } }
-
-          it { expect(response).to have_http_status :not_found }
-        end
+        expect(response).to render_template 'spa-build/index'
       end
     end
 
@@ -325,7 +267,7 @@ RSpec.describe ProductsController do
         context 'having data' do
           let!(:first_product) { Fabricate :product, company: company, customer: customer, name: 'zzz' }
           let!(:second_product) { Fabricate :product, company: company, customer: customer, name: 'aaa' }
-          let!(:third_product) { Fabricate :product, company: company, name: 'aaa' }
+          let!(:third_product) { Fabricate :product, company: company, name: 'bbb' }
 
           before { get :products_for_customer, params: { company_id: company, customer_id: customer }, xhr: true }
 

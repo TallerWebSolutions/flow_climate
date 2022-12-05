@@ -3,8 +3,8 @@
 class ProductsController < AuthenticatedController
   before_action :user_gold_check
 
-  before_action :assign_product, only: %i[show edit update destroy portfolio_units_tab projects_tab portfolio_charts_tab risk_reviews_tab service_delivery_reviews_tab]
-  before_action :assign_demands, only: %i[portfolio_charts_tab]
+  before_action :assign_product, only: %i[edit update destroy portfolio_units_tab projects_tab portfolio_charts_tab risk_reviews_tab service_delivery_reviews_tab]
+  before_action :assign_demands, only: :portfolio_charts_tab
 
   def index
     @products = @company.products.order(:name).includes(:customer).includes(:projects).includes(products_projects: :project)
@@ -12,12 +12,8 @@ class ProductsController < AuthenticatedController
   end
 
   def show
-    @jira_product_configs = @product.jira_product_configs.order(:jira_product_key)
-    @score_matrix_questions = @product.score_matrix_questions.order(:question_type, :question_weight, :description)
-    assign_filter_parameters_to_charts
-    assign_demands_ids
-
-    render :show
+    prepend_view_path Rails.public_path
+    render 'spa-build/index'
   end
 
   def new
@@ -106,7 +102,7 @@ class ProductsController < AuthenticatedController
   end
 
   def assign_product
-    @product = @company.products.find(params[:id])
+    @product = @company.products.friendly.find(params[:id])
   end
 
   def assign_filter_parameters_to_charts
@@ -121,9 +117,5 @@ class ProductsController < AuthenticatedController
 
   def start_date
     params[:start_date]&.to_date || [@demands&.map(&:created_date)&.min, 3.months.ago].compact.max.to_date
-  end
-
-  def assign_demands_ids
-    @demands_ids = @product.demands.map(&:id)
   end
 end

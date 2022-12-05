@@ -680,6 +680,57 @@ RSpec.describe Types::QueryType do
     end
   end
 
+  describe '#product' do
+    context 'with a valid product' do
+      it 'returns the product' do
+        company = Fabricate :company
+
+        product = Fabricate :product, company: company
+        user = Fabricate :user, last_company: company
+
+        graphql_context = {
+          current_user: user
+        }
+
+        query =
+          %(
+          query ProductQuery {
+            product(slug: "#{product.slug}") {
+              id
+            }
+          }
+        )
+
+        result = FlowClimateSchema.execute(query, variables: nil, context: graphql_context).as_json
+
+        expect(result.dig('data', 'product')).to eq({ 'id' => product.id.to_s })
+      end
+    end
+
+    context 'with an inexistent product' do
+      it 'returns 404' do
+        company = Fabricate :company
+
+        user = Fabricate :user, last_company: company
+
+        graphql_context = {
+          current_user: user
+        }
+
+        query =
+          %(
+          query ProductQuery {
+            product(slug: "foo") {
+              id
+            }
+          }
+        )
+
+        expect { FlowClimateSchema.execute(query, variables: nil, context: graphql_context) }.to raise_error ActiveRecord::RecordNotFound
+      end
+    end
+  end
+
   describe '#demands_list' do
     let(:company) { Fabricate :company }
     let(:team) { Fabricate :team, company: company }

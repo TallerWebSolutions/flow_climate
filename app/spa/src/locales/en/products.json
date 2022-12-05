@@ -1,0 +1,9 @@
+{
+  "product": {
+    "title": "Product",
+    "notFound": "Product not found"
+  },
+  "products": {
+    "title": "Products"
+  }
+}

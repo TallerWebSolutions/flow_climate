@@ -6,6 +6,7 @@
 #
 #  id          :bigint           not null, primary key
 #  name        :string           not null
+#  slug        :string           not null
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #  company_id  :integer          not null
@@ -14,6 +15,7 @@
 # Indexes
 #
 #  index_products_on_company_id            (company_id)
+#  index_products_on_company_id_and_slug   (company_id,slug) UNIQUE
 #  index_products_on_customer_id           (customer_id)
 #  index_products_on_customer_id_and_name  (customer_id,name) UNIQUE
 #
@@ -24,6 +26,9 @@
 #
 
 class Product < ApplicationRecord
+  extend FriendlyId
+  friendly_id :slug, use: :slugged
+
   include Demandable
 
   belongs_to :company
@@ -48,6 +53,8 @@ class Product < ApplicationRecord
   validates :name, uniqueness: { scope: :customer, message: I18n.t('product.name.uniqueness') }
 
   delegate :name, to: :customer, prefix: true
+
+  before_validation :define_slug
 
   def percentage_complete
     return 0 unless demands.count.positive?
@@ -93,5 +100,11 @@ class Product < ApplicationRecord
 
   def percentage_remaining_scope
     remaining_backlog / demands.kept.count.to_f
+  end
+
+  private
+
+  def define_slug
+    self.slug = name&.parameterize
   end
 end

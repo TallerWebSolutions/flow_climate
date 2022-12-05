@@ -5,7 +5,7 @@
 # Table name: service_delivery_review_action_items
 #
 #  id                         :bigint           not null, primary key
-#  action_type                :integer          default(0), not null
+#  action_type                :integer          default("cadences_change"), not null
 #  deadline                   :date             not null
 #  description                :string           not null
 #  done_date                  :date

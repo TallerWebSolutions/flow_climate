@@ -81,7 +81,7 @@ RSpec.describe Product do
     let(:product) { Fabricate :product, company: company, name: 'zzz' }
     let!(:portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'ccc' }
 
-    let(:other_product) { Fabricate :product, company: company, name: 'zzz' }
+    let(:other_product) { Fabricate :product, company: company, name: 'aaa' }
 
     let!(:project) { Fabricate :project, start_date: Time.zone.local(2018, 10, 17, 10, 0, 0), end_date: Time.zone.local(2018, 12, 5, 10, 0, 0), customers: [product.customer], products: [product], value: 15_000, qty_hours: 5000, hour_value: 2.5 }
     let!(:nil_value_project) { Fabricate :project, start_date: Time.zone.local(2018, 10, 17, 10, 0, 0), customers: [product.customer], products: [product], status: :executing, value: nil }
