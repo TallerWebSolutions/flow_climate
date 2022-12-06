@@ -44,10 +44,12 @@ class DemandEffortService
   # rubocop:disable Metrics/PerceivedComplexity
   def compute_and_save_effort(day_to_effort, assignment, top_effort_assignment, transition)
     start_time = [assignment.start_time, transition.last_time_in].compact.max
-    effort_start_date = [start_time, day_to_effort.beginning_of_day].max
+    # define as the beginning of charge windows
+    effort_start_date = [start_time, start_time.change(hour: 8, minute: 0, second: 0)].max
 
     end_time = [assignment.finish_time, transition.last_time_out, Time.zone.now].compact.min
-    end_date = [end_time, day_to_effort.end_of_day].min
+    # define as the end of charge windows
+    end_date = [end_time, end_time.change(hour: 20, minute: 0, second: 0)].min
 
     demand = assignment.demand
     membership = assignment.membership
