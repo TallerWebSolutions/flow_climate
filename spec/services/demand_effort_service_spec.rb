@@ -247,5 +247,20 @@ RSpec.describe DemandEffortService, type: :service do
         expect(demand.reload.effort_management).to eq 0
       end
     end
+
+    context 'with efforts in the edges of the day' do
+      it 'computes the correct times' do
+        dev_membership = Fabricate :membership, member_role: :developer
+
+        Fabricate :stage_project_config, stage: stage, project: project, compute_effort: true, stage_percentage: 100, management_percentage: 0, pairing_percentage: 0
+        Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: Time.zone.local(2022, 12, 5, 18, 29), last_time_out: Time.zone.local(2022, 12, 6, 10, 45)
+        Fabricate :item_assignment, demand: demand, membership: dev_membership, start_time: Time.zone.local(2022, 12, 5, 18, 30), finish_time: Time.zone.local(2022, 12, 6, 10, 46)
+
+        described_class.instance.build_efforts_to_demand(demand)
+        expect(DemandEffort.all.count).to eq 1
+        expect(DemandEffort.all.sum(&:effort_value)).to eq 4
+
+      end
+    end
   end
 end
