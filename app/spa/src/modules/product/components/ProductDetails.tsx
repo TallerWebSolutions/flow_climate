@@ -1,7 +1,6 @@
 import { Product } from "../product.types"
 import { useTranslation } from "react-i18next"
 import { useParams } from "react-router-dom"
-import useProductQuery from "../../../hooks/useProductQuery"
 import { Backdrop, CircularProgress } from "@mui/material"
 import BasicPage from "../../../components/BasicPage"
 import ProductGeneralInfo from "./ProductGeneralInfo"
@@ -24,9 +23,6 @@ const ProductDetails = ({ product, loading }: ProductDetailsProps) => {
     )
 
   if (!product && !loading) return <strong>{t("products.notFound")}</strong>
-
-  // eslint-disable-next-line
-  console.log(product)
 
   const productName = product?.name || ""
   const company = product?.company

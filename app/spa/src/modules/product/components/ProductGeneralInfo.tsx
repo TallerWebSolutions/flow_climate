@@ -1,6 +1,5 @@
 import { Grid } from "@mui/material"
 
-import { useTranslation } from "react-i18next"
 import { Product } from "../product.types"
 import LatestDeliveriesTable from "../../demand/components/LatestDeliveriesTable"
 import ProductGeneralInfoTable from "./ProductGeneralInfoTable"
@@ -10,8 +9,6 @@ type ProductGeneralInfoProps = {
 }
 
 const ProductGeneralInfo = ({ product }: ProductGeneralInfoProps) => {
-  const { t: tDemands } = useTranslation(["demands"])
-
   const lastestDeliveries = product.latestDeliveries
   const baseLink = `/companies/${product?.company?.slug}`
 
