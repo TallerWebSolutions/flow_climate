@@ -98,9 +98,9 @@ RSpec.describe Product do
     it { expect(product.avg_hours_per_demand).to eq 950.0 }
   end
 
-  describe '#remaining_backlog' do
+  describe '#remaining_backlog_count' do
     include_context 'consolidations variables data for product'
-    it { expect(product.remaining_backlog).to eq 1 }
+    it { expect(product.remaining_backlog_count).to eq 1 }
   end
 
   describe '#percentage_remaining_scope' do

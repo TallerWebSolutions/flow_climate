@@ -685,8 +685,14 @@ RSpec.describe Types::QueryType do
       it 'returns the product' do
         company = Fabricate :company
 
-        product = Fabricate :product, company: company
+        customer = Fabricate :customer, company: company
+        product = Fabricate :product, company: company, customer: customer
         user = Fabricate :user, last_company: company
+
+        demand = Fabricate :demand, product: product, customer: customer
+        other_demand = Fabricate :demand, product: product, customer: customer
+
+        block = Fabricate :demand_block, demand: demand
 
         graphql_context = {
           current_user: user
@@ -697,13 +703,56 @@ RSpec.describe Types::QueryType do
           query ProductQuery {
             product(slug: "#{product.slug}") {
               id
+              name
+              slug
+              createdDemandsCount
+              deliveredDemandsCount
+              remainingBacklogCount
+              upstreamDemandsCount
+              downstreamDemandsCount
+              discardedDemandsCount
+              unscoredDemandsCount
+              demandsBlocksCount
+              averageSpeed
+              averageQueueTime
+              averageTouchTime
+              leadtimeP95
+              leadtimeP80
+              leadtimeP65
+
+              latestDeliveries {
+                id
+                customerName
+                productName
+                endDate
+                leadtime
+                numberOfBlocks
+              }
+
+              company {
+                id
+                name
+                slug
+              }
             }
           }
         )
 
+        expect(Demand).to(receive(:unscored_demands)).once.and_return(Demand.all)
+        expect(Demand).to(receive(:in_wip)).once.and_return(Demand.all)
+        expect(Demand).to(receive(:discarded)).once.and_return(Demand.all)
+        expect(Demand).to(receive(:finished_until_date)).once.and_return(Demand.all)
+        expect(Demand).to(receive(:opened_before_date)).once.and_return(Demand.all)
+        expect_any_instance_of(Product).to(receive(:upstream_demands)).once.and_return(Demand.all)
+        expect_any_instance_of(Product).to(receive(:demand_blocks)).once.and_return(DemandBlock.all)
+        expect(DemandService.instance).to(receive(:average_speed)).once
+        expect_any_instance_of(Product).to(receive(:general_leadtime).with(95)).once
+        expect_any_instance_of(Product).to(receive(:general_leadtime).with(no_args)).once
+        expect_any_instance_of(Product).to(receive(:general_leadtime).with(65)).once
+
         result = FlowClimateSchema.execute(query, variables: nil, context: graphql_context).as_json
 
-        expect(result.dig('data', 'product')).to eq({ 'id' => product.id.to_s })
+        expect(result.dig('data', 'product')['id']).to eq product.id.to_s
       end
     end
 

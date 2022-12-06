@@ -1,5 +1,5 @@
 import { gql, useQuery } from "@apollo/client"
-import { ProductInfo } from "../modules/product/product.types"
+import { Product } from "../modules/product/product.types"
 
 const PRODUCT_QUERY = gql`
   query ProductInfo($slug: String!) {
@@ -7,6 +7,30 @@ const PRODUCT_QUERY = gql`
       id
       name
       slug
+      createdDemandsCount
+      deliveredDemandsCount
+      remainingBacklogCount
+      upstreamDemandsCount
+      downstreamDemandsCount
+      discardedDemandsCount
+      unscoredDemandsCount
+      numberOfBlocks
+      averageSpeed
+      averageQueueTime
+      averageTouchTime
+      leadtimeP95
+      leadtimeP80
+      leadtimeP65
+
+      latestDeliveries {
+        id
+        customerName
+        productName
+        endDate
+        leadtime
+        demandBlocks
+      }
+
       company {
         id
         name
@@ -16,17 +40,12 @@ const PRODUCT_QUERY = gql`
   }
 `
 
-type ProductInfoDTO = ProductInfo | undefined
-
 const useProductQuery = (slug: string) => {
-  const { data, loading, error } = useQuery<ProductInfoDTO>(PRODUCT_QUERY, {
+  const { data, loading, error } = useQuery<Product>(PRODUCT_QUERY, {
     variables: { slug },
   })
 
-  // eslint-disable-next-line
-  console.log(error)
-
-  return { productInfo: data?.product, loading, error }
+  return { product: data, loading, error }
 }
 
 export default useProductQuery

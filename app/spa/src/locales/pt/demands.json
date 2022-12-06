@@ -45,6 +45,36 @@
     },
     "table": {
       "title": "{{demandsCount}} Demandas - {{totalEffort}} Horas"
+    },
+    "deliverablesTable": {
+      "latestDeliveries": "Últimas entregas",
+      "client": "Cliente",
+      "product": "Produto",
+      "demandId": "ID da Demanda",
+      "deliveryDate": "Data da entrega",
+      "leadtime": "Lead time",
+      "demandBlocks": "Bloqueios",
+      "generalInfo": "Info geral",
+      "start": "Início",
+      "end": "Fim",
+      "initialScope": "Escopo Inicial",
+      "createdDemands": "Demandas criadas",
+      "deliveredDemands": "Demandas entregues",
+      "backlog": "Backlog",
+      "upstreamDemands": "Upstream",
+      "downstreamDemands": "Downstream",
+      "discartedDemands": "Descartadas",
+      "unscoredDemands": "Não pontuadas",
+      "flowPressure": "Pressão do Fluxo",
+      "averageSpeed": "Velocidade Média: {{numberOfDemandsPerDay}} Deliverables/day",
+      "averageQueueTime": "Tempo médio de fila: {{time}} horas",
+      "averageWorkTime": "Tempo médio de trabalho: {{time}} horas",
+      "leadTimeP65": "LT p65: {{days}} dias",
+      "leadTimeP80": "LT p80: {{days}} dias",
+      "leadTimeP95": "LT p95: {{days}} dias"
+    },
+    "infoTables": {
+      "createdDemands": "Created Demands"
     }
   },
 

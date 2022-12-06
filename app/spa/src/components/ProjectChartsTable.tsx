@@ -16,12 +16,12 @@ import { gql, useQuery } from "@apollo/client"
 import { useTranslation } from "react-i18next"
 import { useParams } from "react-router-dom"
 import { Backdrop, CircularProgress } from "@mui/material"
-import { formatDate, secondsToDays, secondsToReadbleDate } from "../lib/date"
+import { formatDate, secondsToDays } from "../lib/date"
 import { DemandsList } from "../modules/demand/demand.types"
 import { Project } from "../modules/project/project.types"
 import { ReadMoreButton } from "./ReadMoreButton"
-import Table from "./ui/Table"
 import { PROJECT_STANDARD_FRAGMENT } from "./ProjectPage"
+import LatestDeliveriesTable from "../modules/demand/components/LatestDeliveriesTable"
 
 const LIMIT_DEMANDS_PER_PAGE = 10
 
@@ -109,8 +109,10 @@ const mountDemandsSearchLink = ({
   projectID,
   companySlug,
 }: MountSearchLinkProps) => {
-  // eslint-disable-next-line max-len
-  return `/companies/${companySlug}/demands/demands_list_by_ids?demand_state=${state}&flow_object_id=${projectID}&object_type=Project`
+  return (
+    `/companies/${companySlug}/demands/demands_list_by_ids?` +
+    `demand_state=${state}&flow_object_id=${projectID}&object_type=Project`
+  )
 }
 
 const Row = (props: TableRowProps) => (
@@ -151,53 +153,14 @@ export const ProjectChartsTable = () => {
     )
 
   const project = data?.project
-  const demands = data?.demandsList.demands || []
+  const latestDeliveries = project?.latestDeliveries || []
 
   if (!project) return <div>Project not found</div>
 
   const projectID = project.id
   const companySlug = project.company?.slug || ""
 
-  const latestDeliveriesHeaderCells = [
-    t("charts_tab.project_chart_table.demand_id"),
-    t("charts_tab.project_chart_table.client"),
-    t("charts_tab.project_chart_table.product"),
-    t("charts_tab.project_chart_table.deliveryDate"),
-    t("charts_tab.project_chart_table.leadtime"),
-    t("charts_tab.project_chart_table.demand_blocks"),
-  ]
-
   const baseLink = `/companies/${project?.company?.slug}`
-  const latestDeliveriesRows = demands.map((demand) => {
-    return [
-      <Link
-        href={`${baseLink}/demands/${demand.externalId}`}
-        sx={{ color: "info.dark", textDecoration: "none" }}
-      >
-        {demand.externalId}
-      </Link>,
-      <Link
-        href={`${baseLink}/projects/${project.id}`}
-        sx={{ color: "info.dark", textDecoration: "none" }}
-      >
-        {demand.project?.name}
-      </Link>,
-      <Link
-        href={`${baseLink}/products/${demand.product?.id}`}
-        sx={{ color: "info.dark", textDecoration: "none" }}
-      >
-        {demand.product?.name}
-      </Link>,
-      demand.endDate
-        ? formatDate({
-            date: demand.endDate,
-            format: "dd/MM/yyyy' 'HH:mm:ss",
-          })
-        : "",
-      secondsToReadbleDate(demand.leadtime),
-      demand.numberOfBlocks,
-    ]
-  })
 
   return (
     <Grid container spacing={2}>
@@ -448,11 +411,7 @@ export const ProjectChartsTable = () => {
       </Grid>
 
       <Grid item xs={8} sx={{ padding: "16px " }}>
-        <Table
-          title={t("charts_tab.project_chart_table.latest_deliveries")}
-          headerCells={latestDeliveriesHeaderCells}
-          rows={latestDeliveriesRows}
-        />
+        <LatestDeliveriesTable demands={latestDeliveries} baseLink={baseLink} />
       </Grid>
     </Grid>
   )

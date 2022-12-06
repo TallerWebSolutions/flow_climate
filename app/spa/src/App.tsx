@@ -38,7 +38,7 @@ import DemandsCharts from "./pages/Demands/DemandsCharts"
 import CreateWorkItemType from "./pages/WorkItemTypes/CreateWorkItemType"
 import ListWorkItemTypes from "./pages/WorkItemTypes/ListWorkItemTypes"
 import TeamDashboard from "./pages/Teams/TeamDashboard"
-import Product from "./pages/Products/Product"
+import { ProductPage } from "./pages/Products/ProductPage"
 
 export const ME_QUERY = gql`
   query Me {
@@ -126,7 +126,7 @@ const App = () => {
             />
             <Route
               path="/companies/:companySlug/products/:productSlug"
-              element={<Product />}
+              element={<ProductPage />}
             />
             <Route
               path="/companies/:companySlug/projects/:projectId/tasks_tab"

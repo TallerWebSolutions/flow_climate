@@ -338,10 +338,6 @@ class Project < ApplicationRecord
     Stats::StatisticsService.instance.percentile(desired_percentile, demands_in_class_of_service.map(&:leadtime))
   end
 
-  def general_leadtime(percentile = 80)
-    Stats::StatisticsService.instance.percentile(percentile, demands.finished_until_date(Time.zone.now).map(&:leadtime))
-  end
-
   def active_kept_closed_blocks
     demand_blocks.kept.active.closed
   end

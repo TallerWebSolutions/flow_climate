@@ -78,6 +78,10 @@ module Demandable
     DemandService.instance.lead_time_breakdown(demands)
   end
 
+  def general_leadtime(percentile = 80)
+    Stats::StatisticsService.instance.percentile(percentile, demands.finished_until_date(Time.zone.now).map(&:leadtime))
+  end
+
   private
 
   def compute_demand_lead_time_position(demands, demand)

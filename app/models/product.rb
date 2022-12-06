@@ -80,7 +80,7 @@ class Product < ApplicationRecord
     ScoreMatrixQuestion.none
   end
 
-  def remaining_backlog
+  def remaining_backlog_count
     demands.kept.not_finished(Time.zone.now).count
   end
 
@@ -95,11 +95,11 @@ class Product < ApplicationRecord
 
     remaining_time = max_end_date - Time.zone.today
 
-    remaining_backlog / remaining_time.to_f
+    remaining_backlog_count / remaining_time.to_f
   end
 
   def percentage_remaining_scope
-    remaining_backlog / demands.kept.count.to_f
+    remaining_backlog_count / demands.kept.count.to_f
   end
 
   private

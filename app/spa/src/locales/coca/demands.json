@@ -51,6 +51,33 @@
       "leadTimeControlMarkerP80": "Lead time p80 ({{days}} days)",
       "leadTimeControlMarkerP65": "Lead time p65 ({{days}} days)",
       "leadTimeControlChart": "Lead time control chart"
+    },
+    "deliverablesTable": {
+      "latestDeliveries": "Latest Deliveries",
+      "client": "Client",
+      "product": "Product",
+      "demandId": "Deliverable ID",
+      "deliveryDate": "Delivery date",
+      "leadtime": "Lead Time",
+      "demandBlocks": "Blocks",
+      "generalInfo": "General Info",
+      "start": "Start",
+      "end": "End",
+      "initialScope": "Initial Scope",
+      "createdDemands": "Created Deliverables",
+      "deliveredDemands": "Delivered",
+      "backlog": "Backlog",
+      "upstreamDemands": "Upstream",
+      "downstreamDemands": "Downstream",
+      "discartedDemands": "Discarted",
+      "unscoredDemands": "Unscored Deliverables",
+      "flowPressure": "Flow Pressure",
+      "averageSpeed": "Average Speed: {{numberOfDemandsPerDay}} Deliverables/day",
+      "averageQueueTime": "Average Queue Time: {{time}} hours",
+      "averageWorkTime": "Average Work Time: {{time}} hours",
+      "leadTimeP65": "Lead Time p65: {{days}} days",
+      "leadTimeP80": "Lead Time p80: {{days}} days",
+      "leadTimeP95": "Lead Time p95: {{days}} days"
     }
   },
   "charts": {

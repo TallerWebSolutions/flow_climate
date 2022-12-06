@@ -10,15 +10,18 @@ import {
   NumberChartData,
   SimpleListChartData,
 } from "../charts/charts.types"
+import { Team } from "../team/team.types"
 
 export type Project = {
+  company?: Company
+  customers: Customer[]
+  products: Product[]
+  latestDeliveries: Demand[]
+
   id: string
   name: string
   quality?: number
-  team: {
-    id: number
-    name: string
-  }
+  team: Team
   status: string
   qtyHours: number
   consumedHours: number
@@ -49,13 +52,10 @@ export type Project = {
   teamMonteCarloWeeksMax: number
   teamMonteCarloWeeksStdDev: number
   teamBasedOddsToDeadline: number
-  customers: Customer[]
-  products: Product[]
   customerHappiness: number
   startDate: string
   endDate: string
   aging: number
-  company?: Company
   firstDeadline: string
   daysDifferenceBetweenFirstAndLastDeadlines: number
   deadlinesChangeCount: number
