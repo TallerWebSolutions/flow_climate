@@ -54,8 +54,8 @@
     },
     "deliverablesTable": {
       "latestDeliveries": "Latest Deliveries",
-      "client": "Client",
       "product": "Product",
+      "project": "Project",
       "demandId": "Deliverable ID",
       "deliveryDate": "Delivery date",
       "leadtime": "Lead Time",
@@ -69,7 +69,7 @@
       "backlog": "Backlog",
       "upstreamDemands": "Upstream",
       "downstreamDemands": "Downstream",
-      "discartedDemands": "Discarted",
+      "discardedDemands": "Discarded",
       "unscoredDemands": "Unscored Deliverables",
       "flowPressure": "Flow Pressure",
       "averageSpeed": "Average Speed: {{numberOfDemandsPerDay}} Deliverables/day",

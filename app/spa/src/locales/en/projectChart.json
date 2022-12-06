@@ -4,6 +4,13 @@
     "demands": "Demands",
     "tasks": "Tasks"
   },
+  "details": {
+    "generalInfo": "General Info",
+    "start": "Start",
+    "end": "End",
+    "initialScope": "Initial Scope",
+    "flowPressure": "Flow pressure"
+  },
   "charts_tab": {
     "project_charts": {
       "flow_efficiency_chart": "Flow Efficiency",

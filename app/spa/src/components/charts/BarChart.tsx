@@ -42,9 +42,6 @@ export const BarChart = ({
 }: BarChartProps) => {
   const chartData = Array.isArray(data) ? data : keyValueToHistogramData(data)
 
-  // eslint-disable-next-line
-  console.log({ chartData })
-
   return (
     <Box height={height}>
       <ResponsiveBar

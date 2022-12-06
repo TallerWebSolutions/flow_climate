@@ -690,9 +690,9 @@ RSpec.describe Types::QueryType do
         user = Fabricate :user, last_company: company
 
         demand = Fabricate :demand, product: product, customer: customer
-        other_demand = Fabricate :demand, product: product, customer: customer
+        Fabricate :demand, product: product, customer: customer
 
-        block = Fabricate :demand_block, demand: demand
+        Fabricate :demand_block, demand: demand
 
         graphql_context = {
           current_user: user
@@ -726,7 +726,7 @@ RSpec.describe Types::QueryType do
                 productName
                 endDate
                 leadtime
-                numberOfBlocks
+                demandBlocksCount
               }
 
               company {
@@ -799,7 +799,7 @@ RSpec.describe Types::QueryType do
         query {
           demandsList(searchOptions: { projectId: #{project.id}, perPage: 1, demandStatus: DELIVERED_DEMANDS, orderField: "end_date" }) {
             demands {
-              numberOfBlocks
+              demandBlocksCount
               responsibles { id }
             }
             totalEffort
@@ -815,7 +815,7 @@ RSpec.describe Types::QueryType do
 
         result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
 
-        expect(result.dig('data', 'demandsList')).to eq({ 'demands' => [{ 'numberOfBlocks' => 1, 'responsibles' => [] }], 'totalEffort' => 90 })
+        expect(result.dig('data', 'demandsList')).to eq({ 'demands' => [{ 'demandBlocksCount' => 1, 'responsibles' => [] }], 'totalEffort' => 90 })
       end
     end
 

@@ -1,0 +1,58 @@
+import { Product } from "../product.types"
+import { useTranslation } from "react-i18next"
+import { useParams } from "react-router-dom"
+import useProductQuery from "../../../hooks/useProductQuery"
+import { Backdrop, CircularProgress } from "@mui/material"
+import BasicPage from "../../../components/BasicPage"
+import ProductGeneralInfo from "./ProductGeneralInfo"
+
+type ProductDetailsProps = {
+  product: Product
+  loading: boolean
+}
+
+const ProductDetails = ({ product, loading }: ProductDetailsProps) => {
+  const { t } = useTranslation(["products"])
+  const params = useParams()
+  const productSlug = params.productSlug || ""
+
+  if (loading)
+    return (
+      <Backdrop open>
+        <CircularProgress color="secondary" />
+      </Backdrop>
+    )
+
+  if (!product && !loading) return <strong>{t("products.notFound")}</strong>
+
+  // eslint-disable-next-line
+  console.log(product)
+
+  const productName = product?.name || ""
+  const company = product?.company
+  const companyName = company?.name || ""
+  const companySlug = company?.slug
+  const breadcrumbsLinks = [
+    { name: companyName, url: `/companies/${companySlug}` },
+    {
+      name: t("products.title"),
+      url: `/companies/${companySlug}/products`,
+    },
+    {
+      name: productName,
+      url: `/companies/${companySlug}/products/${productSlug}`,
+    },
+  ]
+
+  return (
+    <BasicPage
+      title={productName}
+      breadcrumbsLinks={breadcrumbsLinks}
+      loading={loading}
+    >
+      {product && <ProductGeneralInfo product={product} />}
+    </BasicPage>
+  )
+}
+
+export default ProductDetails

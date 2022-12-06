@@ -9,7 +9,7 @@ module Types
     field :slug, String, null: false
 
     field :average_queue_time, Integer, null: true
-    field :average_speed, Integer, null: true
+    field :average_speed, Float, null: true
     field :average_touch_time, Integer, null: true
     field :created_demands_count, Integer, null: true
     field :delivered_demands_count, Integer, null: true

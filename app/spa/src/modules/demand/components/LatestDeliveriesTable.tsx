@@ -1,8 +1,10 @@
 import { useTranslation } from "react-i18next"
 import { Demand } from "../demand.types"
-import { Link } from "@mui/material"
+import { Box, Link } from "@mui/material"
 import Table from "../../../components/ui/Table"
 import { formatDate, secondsToReadbleDate } from "../../../lib/date"
+import { useState } from "react"
+import { ReadMoreButton } from "../../../components/ReadMoreButton"
 
 type LatestDeliveriesTableProps = {
   baseLink: string
@@ -14,9 +16,11 @@ const LatestDeliveriesTable = ({
   demands,
 }: LatestDeliveriesTableProps) => {
   const { t } = useTranslation(["demands"])
+  const [readMore, setReadMore] = useState(true)
+
   const latestDeliveriesHeaderCells = [
     t("list.deliverablesTable.demandId"),
-    t("list.deliverablesTable.client"),
+    t("list.deliverablesTable.project"),
     t("list.deliverablesTable.product"),
     t("list.deliverablesTable.deliveryDate"),
     t("list.deliverablesTable.leadtime"),
@@ -35,13 +39,13 @@ const LatestDeliveriesTable = ({
         href={`${baseLink}/projects/${demand.project?.id}`}
         sx={{ color: "info.dark", textDecoration: "none" }}
       >
-        {demand.project?.name}
+        {demand.projectName}
       </Link>,
       <Link
         href={`${baseLink}/products/${demand.product?.id}`}
         sx={{ color: "info.dark", textDecoration: "none" }}
       >
-        {demand.product?.name}
+        {demand.productName}
       </Link>,
       demand.endDate
         ? formatDate({
@@ -50,16 +54,27 @@ const LatestDeliveriesTable = ({
           })
         : "",
       secondsToReadbleDate(demand.leadtime),
-      demand.numberOfBlocks,
+      demand.demandBlocksCount,
     ]
   })
 
   return (
-    <Table
-      title={t("charts_tab.project_chart_table.latest_deliveries")}
-      headerCells={latestDeliveriesHeaderCells}
-      rows={latestDeliveriesRows}
-    />
+    <Box
+      sx={{
+        position: "relative",
+        height: readMore ? "586px" : "auto",
+        overflow: readMore ? "hidden" : "",
+      }}
+    >
+      <Table
+        title={t("list.deliverablesTable.latestDeliveries")}
+        headerCells={latestDeliveriesHeaderCells}
+        rows={latestDeliveriesRows}
+      />
+      {readMore && (
+        <ReadMoreButton handleDisplayPostContent={() => setReadMore(false)} />
+      )}
+    </Box>
   )
 }
 

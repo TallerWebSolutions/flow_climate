@@ -393,6 +393,6 @@ const deliveriesRows = (demands: Demand[] = [], companyUrl: string) =>
           })
         : "",
       secondsToReadbleDate(demand.leadtime),
-      demand.numberOfBlocks,
+      demand.demandBlocksCount,
     ]
   })

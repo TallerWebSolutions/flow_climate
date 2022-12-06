@@ -4,6 +4,7 @@ import ControlChart from "../charts/controlChart.types"
 import { TeamMember } from "../teamMember/teamMember.types"
 import { DemandsFlowChartData, NumberChartData } from "../charts/charts.types"
 import { Product } from "../product/product.types"
+import { Customer } from "../customer/customer.types"
 
 export type Demand = {
   id: string
@@ -13,20 +14,19 @@ export type Demand = {
   commitmentDate?: string
   createdDate: string
   product?: Product
-  customer?: {
-    id: string
-    name: string
-  }
+  customer?: Customer
   responsibles?: TeamMember[]
   externalId: string
   leadtime: number
-  numberOfBlocks: number
   project?: Project
   company?: Company
   costToProject?: number
   effortUpstream?: number
   effortDownstream?: number
   portfolioUnit?: PortfolioUnit
+  projectName: string
+  productName: string
+  demandBlocksCount: number
 }
 
 type PortfolioUnit = {

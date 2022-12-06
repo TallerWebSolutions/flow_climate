@@ -4,6 +4,13 @@
     "demands": "Demandas",
     "tasks": "Tarefas"
   },
+  "details": {
+    "generalInfo": "Informações Gerais",
+    "start": "Início",
+    "end": "Fim",
+    "initialScope": "Escopo inicial",
+    "flowPressure": "Pressão do fluxo"
+  },
   "charts_tab": {
     "project_charts": {
       "flow_efficiency_chart": "Eficiência do Fluxo",

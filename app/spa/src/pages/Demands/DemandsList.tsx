@@ -35,7 +35,7 @@ const DEMAND_FRAGMENT = gql`
       costToProject
       effortDownstream
       effortUpstream
-      numberOfBlocks
+      demandBlocksCount
       product {
         name
       }
@@ -253,7 +253,7 @@ const DemandsListPage = () => {
           "$" + demand.costToProject?.toFixed(2) || "",
           demand.effortDownstream?.toFixed(2) + " " + t("hours") || "",
           demand.effortUpstream?.toFixed(2) + " " + t("hours") || "",
-          demand.numberOfBlocks || 0,
+          demand.demandBlocksCount || 0,
           demand.product?.name || "",
         ],
       },

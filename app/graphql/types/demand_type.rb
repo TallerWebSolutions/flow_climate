@@ -8,7 +8,7 @@ module Types
     field :created_date, GraphQL::Types::ISO8601DateTime, null: true
     field :customer, Types::CustomerType, null: true
     field :customer_name, String, null: true
-    field :demand_blocks_count, String, null: false
+    field :demand_blocks_count, Int, null: false
     field :demand_title, String, null: true
     field :demand_type, String, null: false
     field :effort_downstream, Float, null: true
@@ -17,17 +17,13 @@ module Types
     field :external_id, String, null: false
     field :id, ID, null: false
     field :leadtime, Float, null: true
-    field :number_of_blocks, Int, null: false
     field :portfolio_unit, Types::PortfolioUnitType, null: true
     field :product, Types::ProductType, null: true
     field :product_name, String, null: true
     field :project, Types::ProjectType, null: false
+    field :project_name, String, null: true
     field :responsibles, [Types::TeamMemberType], null: true
     field :team, Types::TeamType, null: false
-
-    def number_of_blocks
-      object.demand_blocks.count
-    end
 
     def responsibles
       object.memberships.map(&:team_member).uniq

@@ -14,7 +14,7 @@ const PRODUCT_QUERY = gql`
       downstreamDemandsCount
       discardedDemandsCount
       unscoredDemandsCount
-      numberOfBlocks
+      demandsBlocksCount
       averageSpeed
       averageQueueTime
       averageTouchTime
@@ -24,11 +24,13 @@ const PRODUCT_QUERY = gql`
 
       latestDeliveries {
         id
+        externalId
         customerName
         productName
+        projectName
         endDate
         leadtime
-        demandBlocks
+        demandBlocksCount
       }
 
       company {
@@ -40,12 +42,16 @@ const PRODUCT_QUERY = gql`
   }
 `
 
+type ProductDTO = {
+  product: Product
+}
+
 const useProductQuery = (slug: string) => {
-  const { data, loading, error } = useQuery<Product>(PRODUCT_QUERY, {
+  const { data, loading, error } = useQuery<ProductDTO>(PRODUCT_QUERY, {
     variables: { slug },
   })
 
-  return { product: data, loading, error }
+  return { product: data?.product, loading, error }
 }
 
 export default useProductQuery

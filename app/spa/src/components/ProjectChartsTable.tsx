@@ -72,7 +72,13 @@ const PROJECT_CHART_QUERY = gql`
     ) {
       demands {
         id
+        externalId
+        customerName
+        productName
+        projectName
         endDate
+        leadtime
+        demandBlocksCount
         product {
           id
           name
@@ -81,9 +87,6 @@ const PROJECT_CHART_QUERY = gql`
           id
           name
         }
-        externalId
-        leadtime
-        numberOfBlocks
       }
     }
   }
@@ -136,6 +139,7 @@ const Cell = (props: TableCellProps) => (
 
 export const ProjectChartsTable = () => {
   const { t } = useTranslation(["projectChart"])
+  const { t: tDemands } = useTranslation(["demands"])
   const [readMore, setReadMore] = useState(true)
   const { projectId } = useParams()
   const { data, loading } = useQuery<ProjectChartDTO>(PROJECT_CHART_QUERY, {
@@ -153,7 +157,7 @@ export const ProjectChartsTable = () => {
     )
 
   const project = data?.project
-  const latestDeliveries = project?.latestDeliveries || []
+  const latestDeliveries = data?.demandsList.demands || []
 
   if (!project) return <div>Project not found</div>
 
@@ -175,7 +179,7 @@ export const ProjectChartsTable = () => {
             component="h6"
             sx={{ padding: "16px " }}
           >
-            {t("charts_tab.project_chart_table.general_info")}
+            {t("details.generalInfo")}
           </Typography>
           <Box
             sx={{
@@ -186,7 +190,7 @@ export const ProjectChartsTable = () => {
           >
             <MUITable>
               <Row>
-                <Cell>{t("charts_tab.project_chart_table.start")}</Cell>
+                <Cell>{t("details.start")}</Cell>
                 <Cell align="right">
                   {formatDate({
                     date: project.startDate,
@@ -196,9 +200,7 @@ export const ProjectChartsTable = () => {
               </Row>
               <Row>
                 <Cell>
-                  <Box component="span">
-                    {t("charts_tab.project_chart_table.end")}
-                  </Box>
+                  <Box component="span">{t("details.end")}</Box>
                 </Cell>
                 <Cell align="right">
                   {formatDate({ date: project.endDate, format: "dd/MM/yyyy" })}
@@ -206,16 +208,14 @@ export const ProjectChartsTable = () => {
               </Row>
               <Row>
                 <Cell>
-                  <Box component="span">
-                    {t("charts_tab.project_chart_table.initial_scope")}
-                  </Box>
+                  <Box component="span">{t("details.initialScope")}</Box>
                 </Cell>
                 <Cell align="right">{project.initialScope}</Cell>
               </Row>
               <Row>
                 <Cell>
                   <Box component="span">
-                    {t("charts_tab.project_chart_table.created_demands")}
+                    {tDemands("list.deliverablesTable.createdDemands")}
                   </Box>
                 </Cell>
                 <Cell align="right">
@@ -233,7 +233,7 @@ export const ProjectChartsTable = () => {
               </Row>
               <Row>
                 <Cell>
-                  {t("charts_tab.project_chart_table.delivered_demands")}
+                  {tDemands("list.deliverablesTable.deliveredDemands")}
                 </Cell>
                 <Cell align="right">
                   <Link
@@ -251,7 +251,7 @@ export const ProjectChartsTable = () => {
               <Row>
                 <Cell>
                   <Box component="span">
-                    {t("charts_tab.project_chart_table.backlog")}
+                    {tDemands("list.deliverablesTable.backlog")}
                   </Box>
                 </Cell>
                 <Cell align="right">
@@ -270,7 +270,7 @@ export const ProjectChartsTable = () => {
               <Row>
                 <Cell>
                   <Box component="span">
-                    {t("charts_tab.project_chart_table.upstream_demands")}
+                    {tDemands("list.deliverablesTable.upstreamDemands")}
                   </Box>
                 </Cell>
                 <Cell align="right">
@@ -289,7 +289,7 @@ export const ProjectChartsTable = () => {
               <Row>
                 <Cell>
                   <Box component="span">
-                    {t("charts_tab.project_chart_table.downstream_demands")}
+                    {tDemands("list.deliverablesTable.downstreamDemands")}
                   </Box>
                 </Cell>
                 <Cell align="right">
@@ -307,7 +307,7 @@ export const ProjectChartsTable = () => {
               </Row>
               <Row>
                 <Cell>
-                  {t("charts_tab.project_chart_table.discarted_demands")}
+                  {tDemands("list.deliverablesTable.discardedDemands")}
                 </Cell>
                 <Cell align="right">
                   <Link
@@ -324,7 +324,7 @@ export const ProjectChartsTable = () => {
               </Row>
               <Row>
                 <Cell>
-                  {t("charts_tab.project_chart_table.unscored_demands")}
+                  {tDemands("list.deliverablesTable.unscoredDemands")}
                 </Cell>
                 <Cell align="right">
                   <Link
@@ -340,9 +340,7 @@ export const ProjectChartsTable = () => {
                 </Cell>
               </Row>
               <Row>
-                <Cell>
-                  {t("charts_tab.project_chart_table.blocked_demands")}
-                </Cell>
+                <Cell>{tDemands("list.deliverablesTable.demandBlocks")}</Cell>
                 <Cell align="right">
                   <Link
                     href={`/companies/${companySlug}/demand_blocks/search?demand_blocks_ids=${project.demandBlocks
@@ -355,47 +353,47 @@ export const ProjectChartsTable = () => {
                 </Cell>
               </Row>
               <Row>
-                <Cell>{t("charts_tab.project_chart_table.flow_pressure")}</Cell>
+                <Cell>{t("details.flowPressure")}</Cell>
                 <Cell align="right">{project.flowPressure.toFixed(2)}</Cell>
               </Row>
               <Row>
                 <Cell>
-                  {t("charts_tab.project_chart_table.average_speed", {
+                  {tDemands("list.deliverablesTable.averageSpeed", {
                     numberOfDemandsPerDay: project.averageSpeed.toFixed(2),
                   })}
                 </Cell>
               </Row>
               <Row>
                 <Cell>
-                  {t("charts_tab.project_chart_table.average_queue_time", {
+                  {tDemands("list.deliverablesTable.averageQueueTime", {
                     time: secondsToDays(project.averageQueueTime).toFixed(2),
                   })}
                 </Cell>
               </Row>
               <Row>
                 <Cell>
-                  {t("charts_tab.project_chart_table.average_work_time", {
+                  {tDemands("list.deliverablesTable.averageWorkTime", {
                     time: secondsToDays(project.averageTouchTime).toFixed(2),
                   })}
                 </Cell>
               </Row>
               <Row>
                 <Cell>
-                  {t("charts_tab.project_chart_table.lead_time_p95", {
+                  {tDemands("list.deliverablesTable.leadTimeP95", {
                     days: secondsToDays(project.leadTimeP95).toFixed(2),
                   })}
                 </Cell>
               </Row>
               <Row>
                 <Cell>
-                  {t("charts_tab.project_chart_table.lead_time_p80", {
+                  {tDemands("list.deliverablesTable.leadTimeP80", {
                     days: secondsToDays(project.leadTimeP80).toFixed(2),
                   })}
                 </Cell>
               </Row>
               <Row>
                 <Cell>
-                  {t("charts_tab.project_chart_table.lead_time_p65", {
+                  {tDemands("list.deliverablesTable.leadTimeP65", {
                     days: secondsToDays(project.leadTimeP65).toFixed(2),
                   })}
                 </Cell>
