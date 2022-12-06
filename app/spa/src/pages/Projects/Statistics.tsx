@@ -228,7 +228,7 @@ const Statistics = () => {
         <GraphBox title={"Amplitude do Histograma do Lead Time"}>
           <LineChart
             data={leadTimeAmplitudeHistogramDataGraph}
-            axisLeftLegend={"Frequência"}
+            axisLeftLegend={"Bins"}
           />
         </GraphBox>
 
