@@ -39,13 +39,13 @@ const LatestDeliveriesTable = ({
         href={`${baseLink}/projects/${demand.project?.id}`}
         sx={{ color: "info.dark", textDecoration: "none" }}
       >
-        {demand.projectName}
+        {demand.project?.name}
       </Link>,
       <Link
-        href={`${baseLink}/products/${demand.product?.id}`}
+        href={`${baseLink}/products/${demand.product?.slug}`}
         sx={{ color: "info.dark", textDecoration: "none" }}
       >
-        {demand.productName}
+        {demand.product?.name}
       </Link>,
       demand.endDate
         ? formatDate({

@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom"
 import { Backdrop, CircularProgress } from "@mui/material"
 import BasicPage from "../../../components/BasicPage"
 import ProductGeneralInfo from "./ProductGeneralInfo"
+import ProductCharts from "./ProductCharts"
 
 type ProductDetailsProps = {
   product: Product
@@ -13,7 +14,6 @@ type ProductDetailsProps = {
 const ProductDetails = ({ product, loading }: ProductDetailsProps) => {
   const { t } = useTranslation(["products"])
   const params = useParams()
-  const productSlug = params.productSlug || ""
 
   if (loading)
     return (
@@ -24,6 +24,7 @@ const ProductDetails = ({ product, loading }: ProductDetailsProps) => {
 
   if (!product && !loading) return <strong>{t("products.notFound")}</strong>
 
+  const productSlug = params.productSlug || ""
   const productName = product?.name || ""
   const company = product?.company
   const companyName = company?.name || ""
@@ -46,7 +47,12 @@ const ProductDetails = ({ product, loading }: ProductDetailsProps) => {
       breadcrumbsLinks={breadcrumbsLinks}
       loading={loading}
     >
-      {product && <ProductGeneralInfo product={product} />}
+      {product && (
+        <>
+          <ProductGeneralInfo product={product} />
+          <ProductCharts product={product} />
+        </>
+      )}
     </BasicPage>
   )
 }

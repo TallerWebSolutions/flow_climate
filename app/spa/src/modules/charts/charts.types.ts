@@ -3,6 +3,12 @@ export type NumberChartData = {
   yAxis: number[]
 }
 
+export type LeadtimeEvolutionChart = {
+  xAxis: string[]
+  yAxisInMonth: number[]
+  yAxisAccumulated: number[]
+}
+
 export type ChartAxisData = {
   xAxis: (string | number)[]
   yAxis: (string | number)[]

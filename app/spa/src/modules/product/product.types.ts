@@ -1,5 +1,6 @@
 import { Company } from "../company/company.types"
 import { Demand } from "../demand/demand.types"
+import { LeadtimeEvolutionChart } from "../charts/charts.types"
 
 export type Product = {
   company: Company
@@ -18,7 +19,9 @@ export type Product = {
   averageSpeed: number
   averageQueueTime: number
   averageTouchTime: number
-  leadTimeP95: number
-  leadTimeP80: number
-  leadTimeP65: number
+  leadtimeP95: number
+  leadtimeP80: number
+  leadtimeP65: number
+
+  leadtimeEvolutionData: LeadtimeEvolutionChart
 }

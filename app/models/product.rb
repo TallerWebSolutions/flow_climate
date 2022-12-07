@@ -102,6 +102,14 @@ class Product < ApplicationRecord
     remaining_backlog_count / demands.kept.count.to_f
   end
 
+  def start_date
+    projects.map(&:start_date).min || created_at.to_date
+  end
+
+  def end_date
+    projects.map(&:end_date).min || Time.zone.today
+  end
+
   private
 
   def define_slug

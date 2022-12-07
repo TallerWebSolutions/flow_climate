@@ -729,6 +729,12 @@ RSpec.describe Types::QueryType do
                 demandBlocksCount
               }
 
+              leadtimeEvolutionData {
+                xAxis
+                yAxisInMonth
+                yAxisAccumulated
+              }
+
               company {
                 id
                 name
@@ -749,10 +755,12 @@ RSpec.describe Types::QueryType do
         expect_any_instance_of(Product).to(receive(:general_leadtime).with(95)).once
         expect_any_instance_of(Product).to(receive(:general_leadtime).with(no_args)).once
         expect_any_instance_of(Product).to(receive(:general_leadtime).with(65)).once
+        expect_any_instance_of(Highchart::DemandsChartsAdapter).to(receive(:leadtime_percentiles_on_time_chart_data)).once.and_call_original
 
         result = FlowClimateSchema.execute(query, variables: nil, context: graphql_context).as_json
 
         expect(result.dig('data', 'product')['id']).to eq product.id.to_s
+        expect(result.dig('data', 'product')['leadtimeEvolutionData']).to eq({ 'xAxis' => ['2022-12-31'], 'yAxisAccumulated' => [0.0], 'yAxisInMonth' => [0.0] })
       end
     end
 
@@ -841,42 +849,42 @@ RSpec.describe Types::QueryType do
 
           query =
             %(
-        query {
-          demandsList(searchOptions: { perPage: 20, demandStatus: DELIVERED_DEMANDS, orderField: "end_date" }) {
-            totalCount
-            demands {
-              id
-            }
-            controlChart {
-              leadTimeP65
-              leadTimeP80
-              leadTimeP95
+              query {
+                demandsList(searchOptions: { perPage: 20, demandStatus: DELIVERED_DEMANDS, orderField: "end_date" }) {
+                  totalCount
+                  demands {
+                    id
+                  }
+                  controlChart {
+                    leadTimeP65
+                    leadTimeP80
+                    leadTimeP95
 
-              leadTimes
-              xAxis
-            }
-            leadTimeBreakdown {
-              xAxis
-              yAxis
-            }
-            flowData {
-              xAxis
-              creationChartData
-              committedChartData
-              pullTransactionRate
-              throughputChartData
-            }
-            flowEfficiency {
-              xAxis
-              yAxis
-            }
-            leadTimeEvolutionP80 {
-              xAxis
-              yAxis
-            }
-          }
-        }
-      )
+                    leadTimes
+                    xAxis
+                  }
+                  leadTimeBreakdown {
+                    xAxis
+                    yAxis
+                  }
+                  flowData {
+                    xAxis
+                    creationChartData
+                    committedChartData
+                    pullTransactionRate
+                    throughputChartData
+                  }
+                  flowEfficiency {
+                    xAxis
+                    yAxis
+                  }
+                  leadTimeEvolutionP80 {
+                    xAxis
+                    yAxis
+                  }
+                }
+              }
+            )
 
           user = Fabricate :user, last_company_id: company.id
 

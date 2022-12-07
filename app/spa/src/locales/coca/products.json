@@ -1,7 +1,16 @@
 {
   "product": {
-    "title": "Produto",
-    "notFound": "Produto não encontrado"
+    "title": "Product",
+    "notFound": "Product not found",
+    "charts": {
+      "title": "Charts",
+      "leadtimeEvolutionInTime": {
+        "title": "Leadtime p80 Evolution",
+        "accumulated": "Accumulated",
+        "inMonth": "In Month",
+        "axisLeftLegend": "days"
+      }
+    }
   },
   "products": {
     "title": "Products"

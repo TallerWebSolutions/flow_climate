@@ -195,4 +195,48 @@ RSpec.describe Product do
       it { expect(product.score_matrix_questions).to eq [] }
     end
   end
+
+  describe '#start_date' do
+    context 'with projects' do
+      it 'gets the sooner project start date' do
+        product = Fabricate :product
+
+        Fabricate :project, products: [product], start_date: 2.days.ago
+        project = Fabricate :project, products: [product], start_date: 3.days.ago
+
+        expect(product.start_date).to eq project.start_date
+      end
+    end
+
+    context 'without projects' do
+      it 'returns the creation date' do
+        product = Fabricate :product
+
+        expect(product.start_date).to eq product.created_at.to_date
+      end
+    end
+  end
+
+  describe '#end_date' do
+    context 'with projects' do
+      it 'gets the later project end date' do
+        product = Fabricate :product
+
+        Fabricate :project, products: [product], end_date: 2.days.ago
+        project = Fabricate :project, products: [product], end_date: 3.days.ago
+
+        expect(product.end_date).to eq project.end_date
+      end
+    end
+
+    context 'without projects' do
+      it 'returns today' do
+        travel_to Time.zone.local(2022, 12, 7, 10) do
+          product = Fabricate :product
+
+          expect(product.end_date).to eq Time.zone.today
+        end
+      end
+    end
+  end
 end

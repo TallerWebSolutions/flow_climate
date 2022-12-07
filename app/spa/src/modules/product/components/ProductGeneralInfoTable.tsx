@@ -214,21 +214,21 @@ const ProductGeneralInfoTable = ({ product }: ProductGeneralInfoTableProps) => {
           <Row>
             <Cell>
               {tDemands("list.deliverablesTable.leadTimeP95", {
-                days: secondsToDays(product.leadTimeP95).toFixed(2),
+                days: secondsToDays(product.leadtimeP95).toFixed(2),
               })}
             </Cell>
           </Row>
           <Row>
             <Cell>
               {tDemands("list.deliverablesTable.leadTimeP80", {
-                days: secondsToDays(product.leadTimeP80).toFixed(2),
+                days: secondsToDays(product.leadtimeP80).toFixed(2),
               })}
             </Cell>
           </Row>
           <Row>
             <Cell>
               {tDemands("list.deliverablesTable.leadTimeP65", {
-                days: secondsToDays(product.leadTimeP65).toFixed(2),
+                days: secondsToDays(product.leadtimeP65).toFixed(2),
               })}
             </Cell>
           </Row>

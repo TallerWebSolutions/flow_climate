@@ -23,6 +23,8 @@ module Types
     field :unscored_demands_count, Integer, null: true
     field :upstream_demands_count, Integer, null: true
 
+    field :leadtime_evolution_data, Types::Charts::LeadtimeEvolutionType, null: true
+
     def latest_deliveries
       finished_demands.order(end_date: :desc).limit(15)
     end
@@ -69,6 +71,14 @@ module Types
 
     def leadtime_p65
       object.general_leadtime(65)
+    end
+
+    def leadtime_evolution_data
+      demands_charts_adapter = Highchart::DemandsChartsAdapter.new(object.demands.kept, object.start_date, object.end_date, 'month')
+
+      leadtime_evolution = demands_charts_adapter.leadtime_percentiles_on_time_chart_data
+
+      { x_axis: demands_charts_adapter.x_axis.map(&:to_s), y_axis_in_month: leadtime_evolution[:y_axis][0][:data], y_axis_accumulated: leadtime_evolution[:y_axis][1][:data] }
     end
 
     private

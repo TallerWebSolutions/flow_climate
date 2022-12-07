@@ -26,11 +26,25 @@ const PRODUCT_QUERY = gql`
         id
         externalId
         customerName
-        productName
-        projectName
         endDate
         leadtime
         demandBlocksCount
+        product {
+          id
+          slug
+          name
+        }
+
+        project {
+          id
+          name
+        }
+      }
+
+      leadtimeEvolutionData {
+        xAxis
+        yAxisInMonth
+        yAxisAccumulated
       }
 
       company {

@@ -1,7 +1,16 @@
 {
   "product": {
     "title": "Produto",
-    "notFound": "Produto não encontrado."
+    "notFound": "Produto não encontrado.",
+    "charts": {
+      "title": "Gráficos",
+      "leadtimeEvolutionInTime": {
+        "title": "Evolução do Leadtime",
+        "accumulated": "Acumulado",
+        "inMonth": "No mês",
+        "axisLeftLegend": "dias"
+      }
+    }
   },
 
   "products": {
