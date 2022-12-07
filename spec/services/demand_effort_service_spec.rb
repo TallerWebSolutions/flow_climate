@@ -259,7 +259,6 @@ RSpec.describe DemandEffortService, type: :service do
         described_class.instance.build_efforts_to_demand(demand)
         expect(DemandEffort.all.count).to eq 1
         expect(DemandEffort.all.sum(&:effort_value)).to eq 4
-
       end
     end
   end

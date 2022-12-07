@@ -28,12 +28,15 @@ module Slack
     end
 
     def notify_team_review(slack_notifier, team)
+      date = Time.zone.now
+      business_days_in_month = TimeService.instance.business_days_between(date.beginning_of_month, date)
       info_block = { type: 'section', text: { type: 'mrkdwn', text: [
         ">*Team Review - #{team.name}*",
         ">*TH da semana: #{th_for_week(team, Time.zone.now.beginning_of_week, Time.zone.now.end_of_week).count}*\n>",
         ">:busts_in_silhouette: Tamanho do time: *#{team.size_at} pessoas -- #{number_with_precision(team.size_using_available_hours, precision: 2)} pessoas faturáveis*",
         ">:moneybag: Investimento mensal: *#{number_to_currency(team.monthly_investment)}* -- *#{team.available_hours_in_month_for}* horas",
-        ">:chart_with_downwards_trend: Perda operacional no mês: *#{number_to_percentage(team.loss_at * 100)}* (#{number_with_precision(team.consumed_hours_in_month(Time.zone.today), precision: 2)}h) de *#{number_to_percentage(team.expected_loss_at * 100)}* (#{number_with_precision(team.expected_consumption, precision: 2)}h) esperados",
+        ">:chart_with_downwards_trend: Perda operacional no mês: *#{number_to_percentage(team.loss_at * 100)}* #{number_with_precision(team.consumed_hours_in_month(Time.zone.today), precision: 2)}h realizadas de *#{number_to_percentage(team.expected_loss_at * 100)}* - #{number_with_precision(team.expected_consumption, precision: 2)}h esperadas",
+        ">*Dias úteis no mês: #{business_days_in_month}*\n>",
         ">Média de horas por pessoa faturável no mês: *#{number_with_precision(team.average_consumed_hours_per_person_per_day, precision: 2)}*"
       ].join("\n") } }
       divider_block = { type: 'divider' }

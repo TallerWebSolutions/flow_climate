@@ -688,14 +688,26 @@ RSpec.describe Team do
   end
 
   describe '#expected_consumption' do
-    it 'returns the expetected value' do
-      travel_to Time.zone.local(2022, 11, 8, 10) do
-        team = Fabricate :team
+    context 'with memberships' do
+      it 'returns the expetected value' do
+        travel_to Time.zone.local(2022, 11, 8, 10) do
+          team = Fabricate :team
 
-        Fabricate :membership, team: team, hours_per_month: 100, start_date: 30.days.ago, end_date: nil
-        Fabricate :membership, team: team, hours_per_month: 200, start_date: 30.days.ago, end_date: nil
+          Fabricate :membership, team: team, hours_per_month: 100, start_date: 30.days.ago, end_date: nil
+          Fabricate :membership, team: team, hours_per_month: 200, start_date: 30.days.ago, end_date: nil
 
-        expect(team.expected_consumption).to eq 81.81818181818181
+          expect(team.expected_consumption).to eq 81.81818181818181
+        end
+      end
+    end
+
+    context 'without memberships' do
+      it 'returns 0' do
+        travel_to Time.zone.local(2022, 11, 8, 10) do
+          team = Fabricate :team
+
+          expect(team.expected_consumption).to eq 0
+        end
       end
     end
   end
