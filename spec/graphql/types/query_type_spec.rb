@@ -170,7 +170,7 @@ RSpec.describe Types::QueryType do
               qtySelected
               qtyInProgress
               monteCarloP80
-              workInProgressLimit
+              maxWorkInProgress
               weeklyThroughputs
               modeWeeklyTroughputs
               stdDevWeeklyTroughputs
@@ -251,7 +251,7 @@ RSpec.describe Types::QueryType do
                                                              'leadTimeP80' => project.general_leadtime.to_f,
                                                              'qtyInProgress' => project.in_wip.count,
                                                              'monteCarloP80' => project.monte_carlo_p80.to_f,
-                                                             'workInProgressLimit' => project.max_work_in_progress.to_i,
+                                                             'maxWorkInProgress' => project.max_work_in_progress.to_i,
                                                              'weeklyThroughputs' => project.last_weekly_throughput,
                                                              'modeWeeklyTroughputs' => 3,
                                                              'stdDevWeeklyTroughputs' => 4.949747468305833,
@@ -283,7 +283,7 @@ RSpec.describe Types::QueryType do
                                                              'leadTimeP80' => other_project.general_leadtime.to_f,
                                                              'qtyInProgress' => other_project.in_wip.count,
                                                              'monteCarloP80' => other_project.monte_carlo_p80.to_f,
-                                                             'workInProgressLimit' => other_project.max_work_in_progress.to_i,
+                                                             'maxWorkInProgress' => other_project.max_work_in_progress.to_i,
                                                              'weeklyThroughputs' => other_project.last_weekly_throughput,
                                                              'modeWeeklyTroughputs' => 4,
                                                              'stdDevWeeklyTroughputs' => 1.4142135623730951,
@@ -681,17 +681,18 @@ RSpec.describe Types::QueryType do
   end
 
   describe '#product' do
-    context 'with a valid product' do
-      it 'returns the product' do
+    context 'with valid' do
+      it 'returns it' do
         travel_to Time.zone.local(2022, 12, 7, 10) do
           company = Fabricate :company
 
           customer = Fabricate :customer, company: company
           product = Fabricate :product, company: company, customer: customer
           user = Fabricate :user, last_company: company
+          project = Fabricate :project, products: [product], start_date: 1.month.ago
 
-          demand = Fabricate :demand, product: product, customer: customer
-          Fabricate :demand, product: product, customer: customer
+          demand = Fabricate :demand, project: project, product: product, customer: customer
+          Fabricate :demand, project: project, product: product, customer: customer
 
           Fabricate :demand_block, demand: demand
 
@@ -761,7 +762,7 @@ RSpec.describe Types::QueryType do
           result = FlowClimateSchema.execute(query, variables: nil, context: graphql_context).as_json
 
           expect(result.dig('data', 'product')['id']).to eq product.id.to_s
-          expect(result.dig('data', 'product')['leadtimeEvolutionData']).to eq({ 'xAxis' => ['2022-12-31'], 'yAxisAccumulated' => [0.0], 'yAxisInMonth' => [0.0] })
+          expect(result.dig('data', 'product')['leadtimeEvolutionData']).to eq({ 'xAxis' => %w[2022-11-30 2022-12-31 2023-01-31 2023-02-28], 'yAxisAccumulated' => [0.0, 0.0, 0.0, 0.0], 'yAxisInMonth' => [0.0, 0.0, 0.0, 0.0] })
         end
       end
     end

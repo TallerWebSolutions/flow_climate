@@ -20,11 +20,13 @@ export type Project = {
 
   id: string
   name: string
+  customersNames: string
   quality?: number
   team: Team
   status: string
   qtyHours: number
   consumedHours: number
+  percentageHoursDelivered: number
   remainingWeeks: number
   remainingBacklog: number
   backlogCountFor: number
@@ -38,7 +40,7 @@ export type Project = {
   qtySelected: number
   qtyInProgress: number
   monteCarloP80: number
-  workInProgressLimit: number
+  maxWorkInProgress: number
   lastWeekThroughput: number
   weeklyThroughputs: number[]
   modeWeeklyTroughputs: number
@@ -87,6 +89,8 @@ export type Project = {
   numberOfDownstreamDemands: number
   averageQueueTime: number
   averageTouchTime: number
+  value: number
+
   projectMembers: {
     demandsCount: number
     memberName: string

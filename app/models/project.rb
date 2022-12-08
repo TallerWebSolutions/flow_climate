@@ -187,6 +187,12 @@ class Project < ApplicationRecord
     demands.kept.finished_until_date(Time.zone.now).sum(&:total_effort)
   end
 
+  def percentage_hours_delivered
+    return 0 unless qty_hours.positive?
+
+    consumed_hours / qty_hours.to_f
+  end
+
   def last_week_scope
     backlog_for(1.week.ago).count + initial_scope
   end
@@ -240,18 +246,14 @@ class Project < ApplicationRecord
     demands.kept.finished_until_date(Time.zone.now).sum(&:effort_downstream)
   end
 
-  def total_hours_consumed
-    total_hours_upstream + total_hours_downstream
-  end
-
   def required_hours_per_available_hours
     required_hours.to_f / remaining_hours
   end
 
   def avg_hours_per_demand
-    return 0 if total_hours_consumed.zero? || total_throughput.zero?
+    return 0 if consumed_hours.zero? || total_throughput.zero?
 
-    (total_hours_consumed.to_f / total_throughput)
+    (consumed_hours.to_f / total_throughput)
   end
 
   def remaining_backlog(date = Time.zone.now)
@@ -274,7 +276,7 @@ class Project < ApplicationRecord
   end
 
   def remaining_hours
-    qty_hours - total_hours_consumed
+    qty_hours - consumed_hours
   end
 
   def risk_color
@@ -314,7 +316,7 @@ class Project < ApplicationRecord
   end
 
   def current_cost
-    @current_cost ||= total_hours_consumed * hour_value
+    @current_cost ||= consumed_hours * hour_value
   end
 
   def average_speed
@@ -540,6 +542,10 @@ class Project < ApplicationRecord
 
   def running?
     executing? || maintenance?
+  end
+
+  def customers_names
+    customers.map(&:name).sort.join(', ')
   end
 
   private

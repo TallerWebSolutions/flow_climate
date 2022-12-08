@@ -3,10 +3,10 @@
   "charts": "Charts",
   "projectsTable": {
     "name": "Project",
+    "customers": "Customers",
     "team": "Team",
-    "status": "Status",
-    "startDate": "Start Date",
-    "endDate": "End Date",
+    "startDate": "Start",
+    "endDate": "End",
     "demands": "Deliverables",
     "remaingDays": "Remaining Days",
     "delivered": "Delivered",
@@ -17,6 +17,8 @@
     "row_delivered": "delivered",
     "row_total": "totals",
     "row_consumed": "consumed",
+    "value": "Value",
+    "maxWorkInProgress": "WiP Limit",
     "filter": {
       "projectName": "Project Name",
       "projectNamePlaceholder": "Search by the project name",

@@ -624,21 +624,6 @@ RSpec.describe Project do
     end
   end
 
-  describe '#total_hours_consumed' do
-    before { travel_to Date.new(2018, 11, 19) }
-
-    context 'having data' do
-      include_context 'demands with effort'
-      it { expect(project.total_hours_consumed.to_f).to eq 270 }
-    end
-
-    context 'having no data' do
-      let(:project) { Fabricate :project, initial_scope: 30, start_date: 1.day.ago, end_date: 1.week.from_now, qty_hours: 5000 }
-
-      it { expect(project.total_hours_consumed).to eq 0 }
-    end
-  end
-
   describe '#remaining_hours' do
     before { travel_to Date.new(2018, 11, 19) }
 
@@ -1896,6 +1881,55 @@ RSpec.describe Project do
       expect(DemandService.instance).to(receive(:lead_time_breakdown)).once
 
       project.lead_time_breakdown
+    end
+  end
+
+  describe '#percentage_hours_delivered' do
+    context 'with positive qty hours' do
+      it 'returns the percentage concluded' do
+        project = Fabricate :project, qty_hours: 20
+        allow(project).to(receive(:consumed_hours)).and_return(10)
+
+        expect(project.percentage_hours_delivered).to eq 0.5
+      end
+    end
+
+    context 'with zero consumed hours' do
+      it 'returns zero' do
+        project = Fabricate :project, qty_hours: 20
+        allow(project).to(receive(:consumed_hours)).and_return(0)
+
+        expect(project.percentage_hours_delivered).to eq 0
+      end
+    end
+
+    context 'with zero qty hours' do
+      it 'returns zero' do
+        project = Fabricate :project, qty_hours: 0
+        allow(project).to(receive(:consumed_hours)).and_return(10)
+
+        expect(project.percentage_hours_delivered).to eq 0
+      end
+    end
+  end
+
+  describe '#customers_names' do
+    context 'with customers' do
+      it 'returns the names alphabetically separated with common' do
+        customer = Fabricate :customer, name: 'Foo'
+        other_customer = Fabricate :customer, name: 'Bar'
+        project = Fabricate :project, customers: [customer, other_customer]
+
+        expect(project.customers_names).to eq 'Bar, Foo'
+      end
+    end
+
+    context 'with no customers' do
+      it 'returns an empty string' do
+        project = Fabricate :project
+
+        expect(project.customers_names).to eq ''
+      end
     end
   end
 end

@@ -156,7 +156,7 @@ class Company < ApplicationRecord
   end
 
   def total_active_consumed_hours
-    projects.active.sum(&:total_hours_consumed)
+    projects.active.sum(&:consumed_hours)
   end
 
   def role_for_user(user)

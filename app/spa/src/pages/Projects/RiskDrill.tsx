@@ -17,7 +17,7 @@ export const PROJECT_RISK_DRILL_QUERY = gql`
       remainingDays
       running
       weeklyThroughputs
-      workInProgressLimit
+      maxWorkInProgress
       currentWeeksByLittleLaw
       backlogCountFor
       remainingWork
@@ -61,7 +61,7 @@ export const RiskDrill = () => {
     },
     {
       title: "Limite do WiP",
-      value: data?.project.workInProgressLimit,
+      value: data?.project.maxWorkInProgress,
       unity: "demandas",
     },
     {

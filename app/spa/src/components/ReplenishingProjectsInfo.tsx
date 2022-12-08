@@ -89,7 +89,7 @@ const TableRow = ({ project, companySlug }: TableRowProps) => {
         <TableCell />
         <TableCell>{project.flowPressure.toFixed(2)}</TableCell>
         <TableCell />
-        <TableCell>Limite de WiP: {project.workInProgressLimit}</TableCell>
+        <TableCell>Limite de WiP: {project.maxWorkInProgress}</TableCell>
         <TableCell>Idade: {project.aging} dias</TableCell>
         <TableCell>Restante: {project.remainingWeeks} semanas</TableCell>
       </MaterialTableRow>

@@ -48,7 +48,7 @@ export const QUERY = gql`
           qtySelected
           qtyInProgress
           monteCarloP80
-          workInProgressLimit
+          maxWorkInProgress
           weeklyThroughputs
           startDate
           endDate

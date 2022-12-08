@@ -3,6 +3,7 @@
   "charts": "Gráficos",
   "projectsTable": {
     "name": "Projeto",
+    "customers": "Clientes",
     "team": "Time",
     "status": "Status",
     "startDate": "Início",
@@ -17,6 +18,8 @@
     "row_delivered": "entregas",
     "row_total": "totais",
     "row_consumed": "consumidas",
+    "value": "Valor",
+    "maxWorkInProgress": "Limite de WiP",
     "filter": {
       "projectName": "Nome do Projeto",
       "projectNamePlaceholder": "Pesquise por nome de projeto",

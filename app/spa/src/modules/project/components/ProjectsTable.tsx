@@ -1,5 +1,5 @@
 import { gql, useQuery } from "@apollo/client"
-import { useTranslation } from "react-i18next"
+import { TFunction, useTranslation } from "react-i18next"
 import {
   Backdrop,
   CircularProgress,
@@ -13,10 +13,11 @@ import {
 
 import { MeContext } from "../../../contexts/MeContext"
 import { Project } from "../project.types"
-import Table from "../../../components/ui/Table"
+import Table, { RowWithCollapse } from "../../../components/ui/Table"
 import DateLocale from "../../../components/ui/DateLocale"
 import { FieldValues } from "react-hook-form"
 import { useContext } from "react"
+import { formatCurrency } from "../../../lib/currency"
 
 const PROJECT_LIST_QUERY = gql`
   query projectList(
@@ -35,19 +36,23 @@ const PROJECT_LIST_QUERY = gql`
     ) {
       id
       name
-      team {
-        id
-        name
-      }
+      customersNames
       status
       numberOfDemands
       remainingDays
       numberOfDemandsDelivered
       qtyHours
       consumedHours
+      percentageHoursDelivered
       currentRiskToDeadline
       startDate
       endDate
+      value
+      maxWorkInProgress
+      team {
+        id
+        name
+      }
     }
   }
 `
@@ -66,7 +71,6 @@ const ProjectsTable = ({ projectsFilters }: ProjectsTableProps) => {
   const { me } = useContext(MeContext)
   const company = me?.currentCompany
   const companyId = Number(company?.id)
-  const companyUrl = `/companies/${company?.slug}`
 
   const projectsQueryFilters = Object.keys(projectsFilters)
     .filter((key) => {
@@ -92,29 +96,88 @@ const ProjectsTable = ({ projectsFilters }: ProjectsTableProps) => {
       </Backdrop>
     )
 
-  const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
-    height: 10,
-    borderRadius: 5,
-    [`&.${linearProgressClasses.colorPrimary}`]: {
-      backgroundColor:
-        theme.palette.grey[theme.palette.mode === "light" ? 200 : 800],
-    },
-    [`& .${linearProgressClasses.bar}`]: {
+  const projectRowWithCollapse = (project: Project) => {
+    const company = project.company
+    const companyUrl = `/companies/${company?.slug}`
+    const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
+      height: 10,
       borderRadius: 5,
-      backgroundColor: theme.palette.mode === "light" ? "#1a90ff" : "#308fe8",
-    },
-  }))
+      [`&.${linearProgressClasses.colorPrimary}`]: {
+        backgroundColor:
+          theme.palette.grey[theme.palette.mode === "light" ? 200 : 800],
+      },
+      [`& .${linearProgressClasses.bar}`]: {
+        borderRadius: 5,
+        backgroundColor: theme.palette.mode === "light" ? "#1a90ff" : "#308fe8",
+      },
+    }))
 
-  const cosumedHoursInPercentage = (
-    consumedHours: number,
-    qtyHours: number
-  ) => {
-    const result = Math.floor((consumedHours / qtyHours) * 100)
-
-    return result > 100 ? 100 : result
+    return {
+      rowInfo: [
+        <Link
+          maxWidth={250}
+          display="inline-block"
+          href={`${companyUrl}/projects/${project.id}`}
+        >
+          {project.name}
+        </Link>,
+        <Link href={`${companyUrl}/teams/${project.team?.id}`}>
+          {project.team?.name}
+        </Link>,
+        project.status,
+        <DateLocale date={project.startDate} />,
+        <DateLocale date={project.endDate} />,
+        `${project.numberOfDemands} ${t("projectsTable.row_demands")}`,
+        `${project.remainingDays} ${t("projectsTable.row_days")}`,
+        `${project.numberOfDemandsDelivered} ${t(
+          "projectsTable.row_delivered"
+        )}`,
+        <Box>
+          <>
+            {project.qtyHours}h {t("projectsTable.row_total")}
+          </>
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "repeat(2, 1fr)",
+              gap: 1,
+              alignItems: "center",
+            }}
+          >
+            <BorderLinearProgress
+              variant="determinate"
+              value={project.percentageHoursDelivered * 100}
+            />
+            <Typography
+              variant="subtitle2"
+              component="span"
+              sx={{ color: "gray.600" }}
+            >
+              {`${project.consumedHours.toFixed(2)}h ${t(
+                "projectsTable.row_consumed"
+              )}`}
+            </Typography>
+          </Box>
+        </Box>,
+        `${((project.currentRiskToDeadline || 0) * 100).toFixed(2)}%`,
+      ],
+      collapseInfo: {
+        collapseHeader: [
+          t("projectsTable.customers"),
+          t("projectsTable.value"),
+          t("projectsTable.maxWorkInProgress"),
+        ],
+        collapseBody: [
+          project.customersNames,
+          formatCurrency(project.value),
+          project.maxWorkInProgress,
+        ],
+      },
+    }
   }
 
   const projectsListHeaderCells = [
+    "",
     t("projectsTable.name"),
     t("projectsTable.team"),
     t("projectsTable.status"),
@@ -127,58 +190,16 @@ const ProjectsTable = ({ projectsFilters }: ProjectsTableProps) => {
     t("projectsTable.risk"),
   ]
 
-  const projectList =
-    projects.map((project) => [
-      <Link
-        maxWidth={250}
-        display="inline-block"
-        href={`${companyUrl}/projects/${project.id}`}
-      >
-        {project.name}
-      </Link>,
-      <Link href={`${companyUrl}/teams/${project.team?.id}`}>
-        {project.team?.name}
-      </Link>,
-      project.status,
-      <DateLocale date={project.startDate} />,
-      <DateLocale date={project.endDate} />,
-      `${project.numberOfDemands} ${t("projectsTable.row_demands")}`,
-      `${project.remainingDays} ${t("projectsTable.row_days")}`,
-      `${project.numberOfDemandsDelivered} ${t("projectsTable.row_delivered")}`,
-      <Box>
-        <>
-          {project.qtyHours}h {t("projectsTable.row_total")}
-        </>
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: "repeat(2, 1fr)",
-            gap: 1,
-            alignItems: "center",
-          }}
-        >
-          <BorderLinearProgress
-            variant="determinate"
-            value={cosumedHoursInPercentage(
-              project.consumedHours,
-              project.qtyHours
-            )}
-          />
-          <Typography
-            variant="subtitle2"
-            component="span"
-            sx={{ color: "gray.600" }}
-          >
-            {`${project.consumedHours.toFixed(2)}h ${t(
-              "projectsTable.row_consumed"
-            )}`}
-          </Typography>
-        </Box>
-      </Box>,
-      `${((project.currentRiskToDeadline || 0) * 100).toFixed(2)}%`,
-    ]) || []
+  const projectsRows: RowWithCollapse[] =
+    projects.map(projectRowWithCollapse) || []
 
-  return <Table headerCells={projectsListHeaderCells} rows={projectList} />
+  return (
+    <Table
+      headerCells={projectsListHeaderCells}
+      rows={projectsRows}
+      withCollapse={true}
+    />
+  )
 }
 
 export default ProjectsTable

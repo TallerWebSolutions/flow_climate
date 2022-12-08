@@ -22,7 +22,7 @@ type ReplenishmentTeamInfoProps = {
 }
 
 export const getWipLimits = (projects: Project[]): number[] =>
-  projects.map(({ workInProgressLimit }) => workInProgressLimit)
+  projects.map(({ maxWorkInProgress }) => maxWorkInProgress)
 
 export const isTeamWipLimitSurpassed = (
   projects: Project[],

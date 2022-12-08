@@ -17,6 +17,7 @@ module Types
     field :current_team_based_risk, Float, null: true
     field :current_weeks_by_little_law, Int, null: true
     field :customers, [Types::CustomerType], null: true
+    field :customers_names, String, null: true
     field :days_difference_between_first_and_last_deadlines, Int, null: true
     field :deadlines_change_count, Int, null: true
     field :demand_blocks, [Types::DemandType], null: true
@@ -41,6 +42,7 @@ module Types
     field :lead_time_p65, Float, null: false
     field :lead_time_p80, Float, null: false
     field :lead_time_p95, Float, null: false
+    field :max_work_in_progress, Int, null: false
     field :mode_weekly_troughputs, Int, null: false
     field :monte_carlo_p80, Float, null: false
     field :name, String, null: false
@@ -50,6 +52,7 @@ module Types
     field :past_weeks, Int, null: false
     field :percentage_expedite, Float, null: true
     field :percentage_fixed_date, Float, null: true
+    field :percentage_hours_delivered, Float, null: false
     field :percentage_remaining_work, Float, null: true
     field :percentage_standard, Float, null: true
     field :products, [Types::ProductType], null: true
@@ -74,13 +77,12 @@ module Types
     field :team_monte_carlo_weeks_max, Float, null: false
     field :team_monte_carlo_weeks_min, Float, null: false
     field :team_monte_carlo_weeks_std_dev, Float, null: false
-    field :total_hours_consumed, Float, null: true
     field :total_scope, Int, null: false
     field :total_throughput, Int, null: true
     field :unscored_demands, [Types::DemandType], null: true
     field :upstream_demands, [Types::DemandType], null: true
+    field :value, Float, null: false
     field :weekly_throughputs, [Int], null: false
-    field :work_in_progress_limit, Int, null: false
 
     field :cumulative_flow_chart_data, Types::Charts::CumulativeFlowChartType, null: true
     field :demands_burnup, Types::Charts::BurnupType, null: true
@@ -150,10 +152,6 @@ module Types
 
     def lead_time_p95
       object.general_leadtime(95)
-    end
-
-    def work_in_progress_limit
-      object.max_work_in_progress
     end
 
     def weekly_throughputs
