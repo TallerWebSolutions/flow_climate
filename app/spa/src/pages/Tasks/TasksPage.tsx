@@ -2,11 +2,11 @@ import { Box } from "@mui/material"
 import { useState, useContext } from "react"
 import { useTranslation } from "react-i18next"
 
-import TaskList from "./List"
+import TasksTable from "../../modules/task/components/TasksTable"
 import { MeContext } from "../../contexts/MeContext"
-import TasksPage, { TaskFilters } from "../../modules/task/components/TasksPage"
+import TasksList, { TaskFilters } from "../../modules/task/components/TasksList"
 
-const Tasks = () => {
+const TasksPage = () => {
   const { t } = useTranslation(["tasks"])
   const [taskFilters, setTaskFilters] = useState<TaskFilters>({
     page: 0,
@@ -23,16 +23,16 @@ const Tasks = () => {
   ]
 
   return (
-    <TasksPage
+    <TasksList
       filters={taskFilters}
       setFilters={setTaskFilters}
       breadcrumbsLinks={breadcrumbsLinks}
     >
       <Box>
-        <TaskList filters={taskFilters} setFilters={setTaskFilters} />
+        <TasksTable filters={taskFilters} setFilters={setTaskFilters} />
       </Box>
-    </TasksPage>
+    </TasksList>
   )
 }
 
-export default Tasks
+export default TasksPage

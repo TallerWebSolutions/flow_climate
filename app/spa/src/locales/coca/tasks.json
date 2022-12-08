@@ -24,7 +24,7 @@
     "end_date": "End date",
     "status": "Status",
     "status_open": "Open",
-    "status_finished": "Finished",
+    "statusFinished": "Finished",
     "initiative": "Initiative",
     "project": "Project",
     "team": "Team",

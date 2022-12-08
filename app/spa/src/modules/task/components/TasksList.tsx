@@ -31,20 +31,20 @@ export type TaskFilters = {
   taskType?: string
 }
 
-type TaskPageProps = {
+type TasksListProps = {
   children: ReactNode | ReactNode[]
   setFilters: Dispatch<SetStateAction<TaskFilters>>
   filters: TaskFilters
   charts?: boolean
 } & BasicPageProps
 
-const TasksPage = ({
+const TasksList = ({
   children,
   filters,
   setFilters,
   charts = false,
   ...props
-}: TaskPageProps) => {
+}: TasksListProps) => {
   const { t } = useTranslation(["tasks"])
   const { register, handleSubmit } = useForm()
   const { me } = useContext(MeContext)
@@ -148,7 +148,7 @@ const TasksPage = ({
                 <option value="">{t("list.form.common.placeholder")}</option>
                 <option value="all">{t("list.form.status.all")}</option>
                 <option value="not_finished">{t("filter.status_open")}</option>
-                <option value="finished">{t("filter.status_finished")}</option>
+                <option value="finished">{t("filter.statusFinished")}</option>
               </Select>
             </FormElement>
             <FormElement>
@@ -231,4 +231,4 @@ const TasksPage = ({
   )
 }
 
-export default TasksPage
+export default TasksList

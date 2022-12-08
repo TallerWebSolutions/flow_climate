@@ -20,9 +20,9 @@ import RiskDrill from "./pages/Projects/RiskDrill"
 import Statistics from "./pages/Projects/Statistics"
 import StatusReport from "./pages/Projects/StatusReport"
 import CreateProjectAditionalHours from "./pages/Projects/CreateProjectAditionalHours"
-import TasksPage from "./pages/Tasks/Tasks"
+import TasksPage from "./pages/Tasks/TasksPage"
 import DemandsPage from "./pages/Demands/DemandsList"
-import TasksCharts from "./pages/Tasks/TasksCharts"
+import TasksCharts from "./modules/task/components/TasksCharts"
 import CreateTeam from "./pages/Teams/CreateTeam"
 import EditTeam from "./pages/Teams/EditTeam"
 import Teams from "./pages/Teams/Teams"
@@ -32,13 +32,13 @@ import EditTeamMember from "./pages/TeamMembers/EditTeamMember"
 import User from "./modules/user/user.types"
 import InitiativesList from "./pages/Initiatives/InitiativesList"
 import EditInitiative from "./pages/Initiatives/EditInitiative"
-import ProjectList from "./pages/Projects/Projects"
 import ProjectTasksCharts from "./pages/Projects/ProjectTasksCharts"
 import DemandsCharts from "./pages/Demands/DemandsCharts"
 import CreateWorkItemType from "./pages/WorkItemTypes/CreateWorkItemType"
 import ListWorkItemTypes from "./pages/WorkItemTypes/ListWorkItemTypes"
 import TeamDashboard from "./pages/Teams/TeamDashboard"
 import ProductPage from "./pages/Products/ProductPage"
+import ProjectsPage from "./pages/Projects/ProjectsPage"
 
 export const ME_QUERY = gql`
   query Me {
@@ -191,7 +191,7 @@ const App = () => {
             />
             <Route
               path="/companies/:companySlug/projects"
-              element={<ProjectList />}
+              element={<ProjectsPage />}
             />
             <Route
               path="/companies/:companySlug/demands"

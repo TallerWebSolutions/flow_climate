@@ -4,27 +4,27 @@ import { SliceTooltipProps } from "@nivo/line"
 import { useContext, useState } from "react"
 import { useTranslation } from "react-i18next"
 
-import { MeContext } from "../../contexts/MeContext"
-import { BarChart } from "../../components/charts/BarChart"
-import { LineChart } from "../../components/charts/LineChart"
-import { ScatterChart } from "../../components/charts/ScatterChart"
+import { MeContext } from "../../../contexts/MeContext"
+import { BarChart } from "../../../components/charts/BarChart"
+import { LineChart } from "../../../components/charts/LineChart"
+import { ScatterChart } from "../../../components/charts/ScatterChart"
 import BarChartTooltip, {
   BarData,
-} from "../../components/charts/tooltips/BarChartTooltip"
-import { secondsToDays } from "../../lib/date"
-import { openWindow } from "../../lib/func"
-import { Task } from "../../modules/task/task.types"
-import { normalizeTasksFlowChart } from "../../modules/task/normalize"
-import TasksPage, { TaskFilters } from "../../modules/task/components/TasksPage"
-import LineChartTooltip from "../../components/charts/tooltips/LineChartTooltip"
-import { ChartGridItem } from "../../components/charts/ChartGridItem"
+} from "../../../components/charts/tooltips/BarChartTooltip"
+import { secondsToDays } from "../../../lib/date"
+import { openWindow } from "../../../lib/func"
+import { Task } from "../task.types"
+import { normalizeTasksFlowChart } from "../normalize"
+import TasksList, { TaskFilters } from "./TasksList"
+import LineChartTooltip from "../../../components/charts/tooltips/LineChartTooltip"
+import { ChartGridItem } from "../../../components/charts/ChartGridItem"
 import {
   ChartAxisData,
   KeyValueData,
   SimpleChartData,
-} from "../../modules/charts/charts.types"
-import PieChart from "../../components/charts/PieChart"
-import ControlChart from "../../modules/charts/controlChart.types"
+} from "../../charts/charts.types"
+import PieChart from "../../../components/charts/PieChart"
+import ControlChart from "../../charts/controlChart.types"
 
 const TASKS_CHARTS_QUERY = gql`
   query TasksCharts(
@@ -254,7 +254,7 @@ const TaskCharts = () => {
   ]
 
   return (
-    <TasksPage
+    <TasksList
       filters={taskFilters}
       setFilters={setTaskFilters}
       breadcrumbsLinks={breadcrumbsLinks}
@@ -407,7 +407,7 @@ const TaskCharts = () => {
           </ChartGridItem>
         )}
       </Grid>
-    </TasksPage>
+    </TasksList>
   )
 }
 

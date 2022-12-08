@@ -1,14 +1,14 @@
 {
   "projects": "Projects",
   "charts": "Charts",
-  "projects_table": {
+  "projectsTable": {
     "name": "Project",
     "team": "Team",
     "status": "Status",
     "startDate": "Start Date",
     "endDate": "End Date",
     "demands": "Demands",
-    "remaing_days": "Remaining Days",
+    "remaingDays": "Remaining Days",
     "delivered": "Delivered",
     "qty_hours": "Quantity Hours",
     "risk": "Risk",
@@ -16,19 +16,24 @@
     "row_days": "days",
     "row_delivered": "delivered",
     "row_total": "totals",
-    "row_consumed": "consumed"
+    "row_consumed": "consumed",
+    "filter": {
+      "projectName": "Project Name",
+      "projectNamePlaceholder": "Search by the project name",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "status": "Status",
+      "statusWaiting": "Waiting",
+      "statusExecuting": "Executing",
+      "statusMaintenance": "Maintenance",
+      "statusFinished": "Finished",
+      "statusCancelled": "Cancelled",
+      "statusNegotiating": "Negotiating"
+    }
   },
-  "filter": {
-    "search": "Name",
-    "search_helper": "Search by project name",
-    "initial_date": "Initial Date",
-    "end_date": "End Date",
-    "status": "Status",
-    "status_waiting": "Waiting",
-    "status_executing": "Executing",
-    "status_maintenance": "Maintenance",
-    "status_finished": "Finished",
-    "status_cancelled": "Cancelled",
-    "status_negotiating": "Negotiating"
+  "new":{
+    "button": {
+      "title": "New project"
+    }
   }
 }

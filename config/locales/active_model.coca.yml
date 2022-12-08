@@ -53,7 +53,7 @@ coca:
         other: Deliverables
       task:
         one: Task
-        other: Tasks
+        other: TasksList
       demand_block:
         one: Deliverable Block
         other: Acitivity Blocks

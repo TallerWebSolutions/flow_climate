@@ -24,7 +24,7 @@
     "end_date": "Data final",
     "status": "Status",
     "status_open": "Aberta",
-    "status_finished": "Finalizada",
+    "statusFinished": "Finalizada",
     "initiative": "Iniciativa",
     "project": "Projeto",
     "team": "Time",

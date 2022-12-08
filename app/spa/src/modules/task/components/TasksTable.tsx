@@ -15,12 +15,12 @@ import {
 import { ChangeEvent, useContext } from "react"
 import { useTranslation } from "react-i18next"
 
-import { TaskFilters } from "../../modules/task/components/TasksPage"
-import { MeContext } from "../../contexts/MeContext"
-import { secondsToReadbleDate } from "../../lib/date"
-import { Task } from "../../modules/task/task.types"
-import User from "../../modules/user/user.types"
-import DateLocale from "../../components/ui/DateLocale"
+import { TaskFilters } from "./TasksList"
+import { MeContext } from "../../../contexts/MeContext"
+import { secondsToReadbleDate } from "../../../lib/date"
+import { Task } from "../task.types"
+import User from "../../user/user.types"
+import DateLocale from "../../../components/ui/DateLocale"
 
 export const TASKS_LIST_QUERY = gql`
   query TasksPage(
@@ -123,7 +123,7 @@ type TaskListProps = {
   setFilters: React.Dispatch<React.SetStateAction<TaskFilters>>
 }
 
-const TaskList = ({ filters, setFilters }: TaskListProps) => {
+const TasksTable = ({ filters, setFilters }: TaskListProps) => {
   const { t } = useTranslation(["tasks"])
 
   const { data, loading } = useQuery<TasksListDTO>(TASKS_LIST_QUERY, {
@@ -273,4 +273,4 @@ const TaskList = ({ filters, setFilters }: TaskListProps) => {
   )
 }
 
-export default TaskList
+export default TasksTable

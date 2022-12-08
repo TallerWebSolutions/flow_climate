@@ -1,14 +1,14 @@
 {
   "projects": "Projetos",
   "charts": "Gráficos",
-  "projects_table": {
+  "projectsTable": {
     "name": "Projeto",
     "team": "Time",
     "status": "Status",
     "startDate": "Início",
     "endDate": "Fim",
     "demands": "Demandas",
-    "remaing_days": "Dias restantes",
+    "remaingDays": "Dias restantes",
     "delivered": "Entregas",
     "qty_hours": "Quantidade de horas",
     "risk": "Risco",
@@ -16,19 +16,24 @@
     "row_days": "dias",
     "row_delivered": "entregas",
     "row_total": "totais",
-    "row_consumed": "consumidas"
+    "row_consumed": "consumidas",
+    "filter": {
+      "projectName": "Nome do Projeto",
+      "projectNamePlaceholder": "Pesquise por nome de projeto",
+      "startDate": "Data inicial",
+      "endDate": "Data final",
+      "status": "Status",
+      "statusWaiting": "Aguardando",
+      "statusExecuting": "Executando",
+      "statusMaintenance": "Manutenção",
+      "statusFinished": "Finalizado",
+      "statusCancelled": "Cancelado",
+      "statusNegotiating": "Negociando"
+    }
   },
-  "filter": {
-    "search": "Nome",
-    "search_helper": "Pesquise por nome de projeto",
-    "initial_date": "Data inicial",
-    "end_date": "Data final",
-    "status": "Status",
-    "status_waiting": "Aguardando",
-    "status_executing": "Executando",
-    "status_maintenance": "Manutenção",
-    "status_finished": "Finalizado",
-    "status_cancelled": "Cancelado",
-    "status_negotiating": "Negociando"
+  "new":{
+    "button": {
+      "title": "Novo projeto"
+    }
   }
 }

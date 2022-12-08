@@ -1,5 +1,5 @@
 import { BarDatum } from "@nivo/bar"
-import { TasksCharts } from "../../pages/Tasks/List"
+import { TasksCharts } from "./components/TasksTable"
 import { TasksList } from "./task.types"
 
 export const normalizeTasksFlowChart = (tasksList?: TasksList) => {

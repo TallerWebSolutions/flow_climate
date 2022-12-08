@@ -1,6 +1,6 @@
 import { gql, useQuery } from "@apollo/client"
 import { useTranslation } from "react-i18next"
-import { useContext } from "react"
+import { Dispatch, ReactNode, SetStateAction, useContext } from "react"
 import {
   Backdrop,
   CircularProgress,
@@ -12,11 +12,12 @@ import {
   Typography,
 } from "@mui/material"
 
-import { MeContext } from "../../contexts/MeContext"
-import { Project } from "../../modules/project/project.types"
-import Table from "../../components/ui/Table"
-import { ProjectsFilters } from "./Projects"
-import DateLocale from "../../components/ui/DateLocale"
+import { MeContext } from "../../../contexts/MeContext"
+import { Project } from "../project.types"
+import Table from "../../../components/ui/Table"
+import DateLocale from "../../../components/ui/DateLocale"
+import { useSearchParams } from "react-router-dom"
+import { FieldValues } from "react-hook-form"
 
 const PROJECT_LIST_QUERY = gql`
   query projectList(
@@ -56,12 +57,11 @@ type ProjectListDTO = {
   projects: Project[]
 }
 
-type ProjectsListProps = {
-  filters: ProjectsFilters
-  setFilters: React.Dispatch<React.SetStateAction<ProjectsFilters>>
+type ProjectsTableProps = {
+  projectsFilters: FieldValues
 }
 
-const ProjectsList = ({ filters, setFilters }: ProjectsListProps) => {
+const ProjectsTable = ({ projectsFilters }: ProjectsTableProps) => {
   const { t } = useTranslation("projects")
 
   const { me } = useContext(MeContext)
@@ -69,12 +69,23 @@ const ProjectsList = ({ filters, setFilters }: ProjectsListProps) => {
   const companyId = Number(company?.id)
   const companyUrl = `/companies/${company?.slug}`
 
-  const { data, loading } = useQuery<ProjectListDTO>(PROJECT_LIST_QUERY, {
-    variables: {
-      companyId,
-      ...filters,
-    },
-  })
+  const projectsQueryFilters = Object.keys(projectsFilters)
+    .filter((key) => {
+      return String(projectsFilters[key]).length > 0
+    })
+    .reduce<Record<string, string>>((acc, el) => {
+      return { ...acc, [el]: projectsFilters[el] }
+    }, {})
+
+  const { data, loading, error } = useQuery<ProjectListDTO>(
+    PROJECT_LIST_QUERY,
+    {
+      variables: {
+        companyId,
+        ...projectsQueryFilters,
+      },
+    }
+  )
 
   const projects = data?.projects || []
 
@@ -108,16 +119,16 @@ const ProjectsList = ({ filters, setFilters }: ProjectsListProps) => {
   }
 
   const projectsListHeaderCells = [
-    t("projects_table.name"),
-    t("projects_table.team"),
-    t("projects_table.status"),
-    t("projects_table.startDate"),
-    t("projects_table.endDate"),
-    t("projects_table.demands"),
-    t("projects_table.remaing_days"),
-    t("projects_table.delivered"),
-    t("projects_table.qty_hours"),
-    t("projects_table.risk"),
+    t("projectsTable.name"),
+    t("projectsTable.team"),
+    t("projectsTable.status"),
+    t("projectsTable.startDate"),
+    t("projectsTable.endDate"),
+    t("projectsTable.demands"),
+    t("projectsTable.remaingDays"),
+    t("projectsTable.delivered"),
+    t("projectsTable.qty_hours"),
+    t("projectsTable.risk"),
   ]
 
   const projectList =
@@ -135,14 +146,12 @@ const ProjectsList = ({ filters, setFilters }: ProjectsListProps) => {
       project.status,
       <DateLocale date={project.startDate} />,
       <DateLocale date={project.endDate} />,
-      `${project.numberOfDemands} ${t("projects_table.row_demands")}`,
-      `${project.remainingDays} ${t("projects_table.row_days")}`,
-      `${project.numberOfDemandsDelivered} ${t(
-        "projects_table.row_delivered"
-      )}`,
+      `${project.numberOfDemands} ${t("projectsTable.row_demands")}`,
+      `${project.remainingDays} ${t("projectsTable.row_days")}`,
+      `${project.numberOfDemandsDelivered} ${t("projectsTable.row_delivered")}`,
       <Box>
         <>
-          {project.qtyHours}h {t("projects_table.row_total")}
+          {project.qtyHours}h {t("projectsTable.row_total")}
         </>
         <Box
           sx={{
@@ -165,7 +174,7 @@ const ProjectsList = ({ filters, setFilters }: ProjectsListProps) => {
             sx={{ color: "gray.600" }}
           >
             {`${project.consumedHours.toFixed(2)}h ${t(
-              "projects_table.row_consumed"
+              "projectsTable.row_consumed"
             )}`}
           </Typography>
         </Box>
@@ -176,4 +185,4 @@ const ProjectsList = ({ filters, setFilters }: ProjectsListProps) => {
   return <Table headerCells={projectsListHeaderCells} rows={projectList} />
 }
 
-export default ProjectsList
+export default ProjectsTable

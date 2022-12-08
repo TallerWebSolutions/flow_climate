@@ -728,7 +728,7 @@ coca:
       memberships:
         blank: "No role in the team %{team_name}"
       efforts_tab: "Efforts"
-      tasks_tab: "Tasks"
+      tasks_tab: "TasksList"
     sync:
       enqueued: "Your request was enqueued. It will be processed soon."
       done: "The sync is done."
@@ -855,7 +855,7 @@ coca:
     service_delivery_reviews: "Service Delivery Review"
     azure: "Azure"
     initiatives_list: "Initiatives"
-    tasks: "Tasks"
+    tasks: "TasksList"
   charts:
     xlabel:
       months: "Months"
@@ -980,7 +980,7 @@ coca:
       ytitle: "Risk (%)"
     in_week: "In Week"
     initiatives_completed:
-      title: "Tasks Completed"
+      title: "TasksList Completed"
     hours_per_stage:
       title: "Hours Per Stage"
   finances_params:
@@ -1485,8 +1485,8 @@ coca:
       failure: "Problems were found while saving the account. Check the fields."
   tasks:
     index:
-      title: "Tasks"
-      count: "%{count} Tasks"
+      title: "TasksList"
+      count: "%{count} TasksList"
       search:
         placeholder: "search by task name"
         helpers:
@@ -1504,12 +1504,12 @@ coca:
         ytitle: "Operational Risk (%)"
         title: "Operational Risk Evolution"
       scope:
-        ytitle: "Tasks"
+        ytitle: "TasksList"
       throughput:
         title: "Throughput"
-      tasks: "Tasks"
+      tasks: "TasksList"
       wip_completion_control_chart:
-        title: "Current Partial Times to Tasks in Progress"
+        title: "Current Partial Times to TasksList in Progress"
   initiatives:
     index:
       title: "Initiatives"
