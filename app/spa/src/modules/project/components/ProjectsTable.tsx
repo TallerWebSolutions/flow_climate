@@ -1,5 +1,5 @@
 import { gql, useQuery } from "@apollo/client"
-import { TFunction, useTranslation } from "react-i18next"
+import { useTranslation } from "react-i18next"
 import {
   Backdrop,
   CircularProgress,
