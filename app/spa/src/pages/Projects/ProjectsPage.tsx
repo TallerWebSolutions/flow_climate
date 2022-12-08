@@ -1,10 +1,7 @@
-import { useContext, useState } from "react"
+import { useContext } from "react"
 import { useTranslation } from "react-i18next"
-import { FieldValues } from "react-hook-form"
 import { MeContext } from "../../contexts/MeContext"
 import ProjectsList from "../../modules/project/components/ProjectsList"
-import ProjectsTable from "../../modules/project/components/ProjectsTable"
-import { useSearchParams } from "react-router-dom"
 
 const ProjectsPage = () => {
   const { t } = useTranslation(["projects"])

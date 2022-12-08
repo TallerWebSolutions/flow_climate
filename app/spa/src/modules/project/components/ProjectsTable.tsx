@@ -1,6 +1,5 @@
 import { gql, useQuery } from "@apollo/client"
 import { useTranslation } from "react-i18next"
-import { Dispatch, ReactNode, SetStateAction, useContext } from "react"
 import {
   Backdrop,
   CircularProgress,
@@ -16,8 +15,8 @@ import { MeContext } from "../../../contexts/MeContext"
 import { Project } from "../project.types"
 import Table from "../../../components/ui/Table"
 import DateLocale from "../../../components/ui/DateLocale"
-import { useSearchParams } from "react-router-dom"
 import { FieldValues } from "react-hook-form"
+import { useContext } from "react"
 
 const PROJECT_LIST_QUERY = gql`
   query projectList(
@@ -77,15 +76,12 @@ const ProjectsTable = ({ projectsFilters }: ProjectsTableProps) => {
       return { ...acc, [el]: projectsFilters[el] }
     }, {})
 
-  const { data, loading, error } = useQuery<ProjectListDTO>(
-    PROJECT_LIST_QUERY,
-    {
-      variables: {
-        companyId,
-        ...projectsQueryFilters,
-      },
-    }
-  )
+  const { data, loading } = useQuery<ProjectListDTO>(PROJECT_LIST_QUERY, {
+    variables: {
+      companyId,
+      ...projectsQueryFilters,
+    },
+  })
 
   const projects = data?.projects || []
 
