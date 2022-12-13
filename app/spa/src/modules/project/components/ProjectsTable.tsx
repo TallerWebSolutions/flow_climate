@@ -97,7 +97,6 @@ const ProjectsTable = ({ projectsFilters }: ProjectsTableProps) => {
     )
 
   const projectRowWithCollapse = (project: Project) => {
-    const company = project.company
     const companyUrl = `/companies/${company?.slug}`
     const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
       height: 10,
