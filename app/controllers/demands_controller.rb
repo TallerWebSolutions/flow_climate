@@ -190,7 +190,7 @@ class DemandsController < DemandsListController
   end
 
   def demand_params
-    params.require(:demand).permit(:team_id, :product_id, :customer_id, :external_id, :downstream, :manual_effort, :effort_upstream, :effort_downstream, :created_date, :commitment_date, :end_date, :demand_score, :external_url, :object_type, :flow_object_id, :demand_state, :demand_fitness)
+    params.require(:demand).permit(:team_id, :product_id, :customer_id, :external_id, :downstream, :effort_upstream, :effort_downstream, :created_date, :commitment_date, :end_date, :demand_score, :external_url, :object_type, :flow_object_id, :demand_state, :demand_fitness)
   end
 
   def assign_demand

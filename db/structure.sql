@@ -1469,7 +1469,6 @@ CREATE TABLE public.demands (
     effort_downstream numeric DEFAULT 0,
     effort_upstream numeric DEFAULT 0,
     leadtime numeric,
-    manual_effort boolean DEFAULT false,
     total_queue_time integer DEFAULT 0,
     total_touch_time integer DEFAULT 0,
     demand_title character varying,
@@ -7496,6 +7495,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220804162133'),
 ('20220914141949'),
 ('20221130114226'),
-('20221205155616');
+('20221205155616'),
+('20221214225751');
 
 

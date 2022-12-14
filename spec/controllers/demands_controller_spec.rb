@@ -215,14 +215,13 @@ RSpec.describe DemandsController do
 
       context 'passing valid parameters' do
         it 'updates the demand and redirects to demand' do
-          put :update, params: { company_id: company, project_id: project, id: demand, demands_ids: Demand.all.map(&:id), demand: { product_id: product.id, customer_id: customer, team_id: team, external_id: 'xpto', manual_effort: true, effort_upstream: 5, effort_downstream: 2, created_date: created_date, commitment_date: created_date, end_date: end_date, demand_score: 10.5 } }, xhr: true
+          put :update, params: { company_id: company, project_id: project, id: demand, demands_ids: Demand.all.map(&:id), demand: { product_id: product.id, customer_id: customer, team_id: team, external_id: 'xpto', effort_upstream: 5, effort_downstream: 2, created_date: created_date, commitment_date: created_date, end_date: end_date, demand_score: 10.5 } }, xhr: true
           updated_demand = Demand.last
           expect(updated_demand.customer).to eq customer
           expect(updated_demand.product).to eq product
           expect(updated_demand.team).to eq team
           expect(updated_demand.external_id).to eq 'xpto'
           expect(updated_demand.downstream_demand?).to be true
-          expect(updated_demand.manual_effort).to be true
           expect(updated_demand.demand_score).to eq 10.5
           expect(updated_demand.effort_upstream.to_f).to eq 5
           expect(updated_demand.effort_downstream.to_f).to eq 2

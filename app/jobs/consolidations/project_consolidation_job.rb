@@ -15,11 +15,7 @@ module Consolidations
       demands_lead_time = demands_finished.map(&:leadtime).flatten.compact
       demands_lead_time_in_month = demands_finished_in_month.map(&:leadtime).flatten.compact
 
-      demand_efforts_manual = demands.where(manual_effort: true)
-      demand_efforts_manual_upstream = demand_efforts_manual.sum(&:effort_upstream)
-      demand_efforts_manual_downstream = demand_efforts_manual.sum(&:effort_downstream)
-
-      demands_ids_to_efforts = ((demands.map(&:id) + demands_discarded.map(&:id)) - demand_efforts_manual.map(&:id)).uniq
+      demands_ids_to_efforts = ((demands.map(&:id) + demands_discarded.map(&:id))).uniq
       demand_efforts = DemandEffort.where(demand_id: demands_ids_to_efforts).to_dates(start_date, end_of_day)
       demand_efforts_accumulated = DemandEffort.where(demand_id: demands_ids_to_efforts).until_date(end_of_day)
 
@@ -120,9 +116,9 @@ module Consolidations
                            code_needed_blocks_count: code_needed_blocks_count,
                            code_needed_blocks_per_demand: code_needed_blocks_per_demand,
                            project_scope_hours: project.qty_hours,
-                           project_throughput_hours: demand_efforts_accumulated.sum(&:effort_value) + demand_efforts_manual_upstream + demand_efforts_manual_downstream,
-                           project_throughput_hours_upstream: demand_efforts_accumulated.upstream_efforts.sum(&:effort_value) + demand_efforts_manual_upstream,
-                           project_throughput_hours_downstream: demand_efforts_accumulated.downstream_efforts.sum(&:effort_value) + demand_efforts_manual_downstream,
+                           project_throughput_hours: demand_efforts_accumulated.sum(&:effort_value),
+                           project_throughput_hours_upstream: demand_efforts_accumulated.upstream_efforts.sum(&:effort_value),
+                           project_throughput_hours_downstream: demand_efforts_accumulated.downstream_efforts.sum(&:effort_value),
                            project_throughput_hours_in_month: demand_efforts.sum(&:effort_value),
                            project_throughput_hours_upstream_in_month: demand_efforts.upstream_efforts.sum(&:effort_value) + demands_finished_in_month.sum(&:effort_upstream),
                            project_throughput_hours_downstream_in_month: demand_efforts.downstream_efforts.sum(&:effort_value) + demands_finished_in_month.sum(&:effort_downstream),

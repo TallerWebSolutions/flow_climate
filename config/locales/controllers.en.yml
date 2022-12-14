@@ -1472,6 +1472,8 @@ en:
   demand_efforts:
     index:
       title: "Efforts"
+    edit:
+      title: "Edit Effort"
   azure_accounts:
     update:
       title: "Sync company with Azure Devops"

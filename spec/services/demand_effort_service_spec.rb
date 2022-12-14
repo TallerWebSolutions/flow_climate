@@ -199,7 +199,7 @@ RSpec.describe DemandEffortService, type: :service do
       end
     end
 
-    context 'with manual effort in demand' do
+    context 'with automatic update disabled in effort' do
       it 'builds the demand efforts but keeps the manual effort pre-defined' do
         dev_membership = Fabricate :membership, member_role: :developer
 
@@ -210,16 +210,21 @@ RSpec.describe DemandEffortService, type: :service do
         Fabricate :demand_transition, demand: demand, stage: other_stage, last_time_in: Time.zone.parse('2021-05-24 12:51'), last_time_out: Time.zone.parse('2021-05-24 15:51')
         Fabricate :item_assignment, demand: demand, membership: dev_membership, start_time: Time.zone.parse('2021-05-24 10:51'), finish_time: Time.zone.parse('2021-05-24 15:51')
 
-        previous_effort_upstream = demand.effort_upstream
-        previous_effort_downstream = demand.effort_downstream
-        demand.update(manual_effort: true)
-
         described_class.instance.build_efforts_to_demand(demand)
 
         expect(DemandEffort.all.count).to eq 2
         expect(DemandEffort.all.sum(&:effort_value)).to be_within(0.1).of(5.9)
-        expect(demand.reload.effort_upstream).to eq previous_effort_upstream
-        expect(demand.reload.effort_downstream).to eq previous_effort_downstream
+        expect(demand.reload.effort_upstream).to be_within(0.1).of(2.4)
+        expect(demand.reload.effort_downstream).to be_within(0.1).of(3.6)
+
+        DemandEffort.first.update(automatic_update: false, effort_value: 1)
+        described_class.instance.build_efforts_to_demand(demand)
+
+        demand_updated = demand.reload
+        expect(DemandEffort.all.count).to eq 2
+        expect(DemandEffort.all.sum(&:effort_value)).to be_within(0.1).of(4.6)
+        expect(demand_updated.effort_upstream).to eq 1.0
+        expect(demand_updated.effort_downstream).to be_within(0.1).of(3.6)
       end
     end
 

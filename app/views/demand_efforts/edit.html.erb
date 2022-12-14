@@ -1,0 +1,7 @@
+<div class="container">
+  <h1><%= I18n.t('demand_efforts.edit.title') %></h1>
+  <%= form_for @demand_effort, url: company_demand_demand_effort_path(@company, @demand, @demand_effort), method: :patch, class: 'form' do |f| %>
+    <%= render 'demand_efforts/form', company: @company, demand: @demand, demand_effort: @demand_effort, form: f %>
+  <% end %>
+</div>
+    

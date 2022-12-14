@@ -28,8 +28,6 @@ class DemandEffortService
     end
     demand.demand_efforts.where.not(id: demand_effort_ids).map(&:destroy)
 
-    return if demand.manual_effort?
-
     update_demand_effort_caches(demand)
   end
   # rubocop:enable Metrics/AbcSize
@@ -63,7 +61,7 @@ class DemandEffortService
     return if days_off.compact.uniq.include?(true)
 
     demand_effort = demand.demand_efforts.where(demand_transition: transition, item_assignment: assignment, start_time_to_computation: effort_start_date).first_or_initialize
-    return unless demand_effort.automatic_update?
+    return demand_effort.id unless demand_effort.automatic_update?
 
     hours_in_assignment = (end_date - effort_start_date) / 1.hour
 

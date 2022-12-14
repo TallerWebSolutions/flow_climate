@@ -1,0 +1,16 @@
+<div class="standard-form">
+  <div class="row">
+    <div class='col-xs-4 form-group <%= 'has-error' if demand_effort.errors[:effort_value].present? %>'>
+      <%= form.label :effort_value, class: 'control-label' %>
+      <%= form.number_field :effort_value, class: 'form-control', inputmode: "numeric", step: "any" %>
+      <span class="help-block"><%= demand_effort.errors[:effort_value].join(', ') %></span>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <button type="button" class="btn btn-danger" data-dismiss="modal"><%= I18n.t('general.buttons.cancel') %></button>
+      <%= form.submit class: 'btn btn-success' %>
+    </div>
+  </div>
+</div>

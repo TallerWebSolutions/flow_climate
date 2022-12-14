@@ -56,6 +56,11 @@
             <i class="fa fa-check" aria-hidden="true"></i>
           <% end %>
         </td>
+        <td>
+          <%= link_to edit_company_demand_demand_effort_path(company, demand, effort) do %>
+            <i class="fas fa-edit"></i>
+          <% end %>
+        </td>
       </tr>
     <% end %>
     </tbody>
