@@ -4,7 +4,6 @@ class DemandEffortService
   include Singleton
 
   # rubocop:disable Metrics/AbcSize
-  # rubocop:disable Metrics/CyclomaticComplexity
   # rubocop:disable Metrics/MethodLength
   def build_efforts_to_demand(demand)
     demand_effort_ids = []
@@ -31,7 +30,6 @@ class DemandEffortService
     update_demand_effort_caches(demand)
   end
   # rubocop:enable Metrics/AbcSize
-  # rubocop:enable Metrics/CyclomaticComplexity
   # rubocop:enable Metrics/MethodLength
 
   private

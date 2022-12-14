@@ -23,7 +23,6 @@
 #  external_url                         :string
 #  lead_time_percentile_project_ranking :float
 #  leadtime                             :decimal(, )
-#  manual_effort                        :boolean          default(FALSE)
 #  slug                                 :string
 #  total_bloked_working_time            :decimal(, )      default(0.0)
 #  total_queue_time                     :integer          default(0)

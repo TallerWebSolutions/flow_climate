@@ -15,7 +15,7 @@ RSpec.describe DemandEffortsController do
     end
 
     describe '#update' do
-      before { patch :update, params: {company_id: 'foo', demand_id: 'bar', id: 'meow' } }
+      before { patch :update, params: { company_id: 'foo', demand_id: 'bar', id: 'meow' } }
 
       it { expect(response).to redirect_to new_user_session_path }
     end
