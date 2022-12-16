@@ -12,4 +12,22 @@ class DemandEffortsController < AuthenticatedController
     end
     respond_to { |format| format.csv { send_data efforts_csv, filename: "demand-#{@demand.external_id}-efforts-#{Time.zone.now}.csv" } }
   end
+
+  def edit
+    @demand_effort = DemandEffort.find(params[:id])
+  end
+
+  def update
+    @demand_effort = DemandEffort.find(params[:id])
+
+    @demand_effort.update(demand_effort_params)
+
+    redirect_to company_demand_path(@company, @demand)
+  end
+
+  private
+
+  def demand_effort_params
+    params.require(:demand_effort).permit(:effort_value)
+  end
 end

@@ -7,6 +7,18 @@ RSpec.describe DemandEffortsController do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe '#edit' do
+      before { get :edit, params: { company_id: 'foo', demand_id: 'bar', id: 'xpto' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
+
+    describe '#patch' do
+      before { patch :update, params: { company_id: 'foo', demand_id: 'bar', id: 'xpto' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -61,6 +73,107 @@ RSpec.describe DemandEffortsController do
 
           context 'not permitted' do
             before { get :index, params: { company_id: demand.company, demand_id: demand } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
+
+    describe '#edit' do
+      context 'with valid params' do
+        context 'with data' do
+          it 'assigns the instance variable and renders the template' do
+            demand = Fabricate :demand, company: company
+            effort = Fabricate :demand_effort, demand: demand
+
+            get :edit, params: { company_id: company, demand_id: demand, id: effort }
+
+            expect(assigns(:company)).to eq company
+            expect(assigns(:demand)).to eq demand
+            expect(assigns(:demand_effort)).to eq effort
+          end
+        end
+      end
+
+      context 'with invalid params' do
+        let(:demand) { Fabricate :demand, company: company }
+        let(:effort) { Fabricate :demand_effort, demand: demand }
+
+        context 'demand' do
+          before { get :edit, params: { company_id: company, demand_id: 'foo', id: effort } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'effort' do
+          before { get :edit, params: { company_id: company, demand_id: demand, id: 'foo' } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'company' do
+          let(:demand) { Fabricate :demand }
+
+          context 'not found' do
+            before { get :index, params: { company_id: 'foo', demand_id: demand, id: effort } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'not permitted' do
+            before { get :index, params: { company_id: demand.company, demand_id: demand, id: effort } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+        end
+      end
+    end
+
+    describe '#update' do
+      context 'with valid params' do
+        context 'with data' do
+          it 'updates the effort and redirects' do
+            demand = Fabricate :demand, company: company
+            effort = Fabricate :demand_effort, demand: demand, effort_value: 10
+
+            patch :update, params: { company_id: company, demand_id: demand, id: effort, demand_effort: { effort_value: 30 } }
+
+            expect(assigns(:company)).to eq company
+            expect(assigns(:demand)).to eq demand
+            expect(assigns(:demand_effort)).to eq effort
+            expect(effort.reload.effort_value).to eq 30
+          end
+        end
+      end
+
+      context 'with invalid params' do
+        let(:demand) { Fabricate :demand, company: company }
+        let(:effort) { Fabricate :demand_effort, demand: demand }
+
+        context 'demand' do
+          before { get :edit, params: { company_id: company, demand_id: 'foo', id: effort } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'effort' do
+          before { get :edit, params: { company_id: company, demand_id: demand, id: 'foo' } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'company' do
+          let(:demand) { Fabricate :demand }
+
+          context 'not found' do
+            before { get :index, params: { company_id: 'foo', demand_id: demand, id: effort } }
+
+            it { expect(response).to have_http_status :not_found }
+          end
+
+          context 'not permitted' do
+            before { get :index, params: { company_id: demand.company, demand_id: demand, id: effort } }
 
             it { expect(response).to have_http_status :not_found }
           end
