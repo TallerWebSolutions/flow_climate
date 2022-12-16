@@ -57,15 +57,15 @@ class DemandEffortService
   # rubocop:disable Metrics/CyclomaticComplexity
   # rubocop:disable Metrics/PerceivedComplexity
   def compute_and_save_effort(day_to_effort, assignment, top_effort_assignment, transition)
+    demand = assignment.demand
     start_time = [assignment.start_time, transition.last_time_in].compact.max
     # define as the beginning of charge windows
     effort_start_date = [start_time, start_time.change(hour: 8, minute: 0, second: 0)].max
 
-    end_time = [assignment.finish_time, transition.last_time_out, Time.zone.now].compact.min
+    end_time = [assignment.finish_time, transition.last_time_out, demand.discarded_at, Time.zone.now].compact.min
     # define as the end of charge windows
     end_date = [end_time, end_time.change(hour: 20, minute: 0, second: 0)].min
 
-    demand = assignment.demand
     membership = assignment.membership
     return if membership.client?
 
