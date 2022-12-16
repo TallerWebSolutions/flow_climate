@@ -23,14 +23,14 @@ RSpec.describe TimeService, type: :service do
         let(:start_date) { Time.zone.local(2018, 2, 13, 14, 0, 0) }
         let(:end_date) { Time.zone.local(2018, 2, 15, 16, 0, 0) }
 
-        it { expect(described_class.instance.compute_working_hours_for_dates(start_date, end_date)).to eq 14 }
+        it { expect(described_class.instance.compute_working_hours_for_dates(start_date, end_date)).to eq 18 }
       end
 
       context 'and there is weekend between the dates' do
         let(:start_date) { Time.zone.local(2018, 2, 9, 14, 0, 0) }
         let(:end_date) { Time.zone.local(2018, 2, 13, 16, 0, 0) }
 
-        it { expect(described_class.instance.compute_working_hours_for_dates(start_date, end_date)).to eq 14 }
+        it { expect(described_class.instance.compute_working_hours_for_dates(start_date, end_date)).to eq 18 }
       end
 
       context 'and there is less than one minute apart' do

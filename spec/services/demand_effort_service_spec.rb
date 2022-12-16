@@ -268,10 +268,10 @@ RSpec.describe DemandEffortService, type: :service do
         described_class.instance.build_efforts_to_demand(demand)
 
         expect(DemandEffort.all.count).to eq 1
-        expect(DemandEffort.all.sum(&:effort_value)).to be_within(0.1).of(28.7)
-        expect(DemandEffort.all.sum(&:effort_with_blocks)).to be_within(0.1).of(28.7)
+        expect(DemandEffort.all.sum(&:effort_value)).to be_within(0.1).of(32.4)
+        expect(DemandEffort.all.sum(&:effort_with_blocks)).to be_within(0.1).of(32.4)
         expect(DemandEffort.all.sum(&:total_blocked)).to eq 0
-        expect(demand.reload.effort_development).to be_within(0.1).of(28.7)
+        expect(demand.reload.effort_development).to be_within(0.1).of(32.4)
         expect(demand.reload.effort_design).to eq 0
         expect(demand.reload.effort_management).to eq 0
       end
@@ -288,6 +288,20 @@ RSpec.describe DemandEffortService, type: :service do
         described_class.instance.build_efforts_to_demand(demand)
         expect(DemandEffort.all.count).to eq 1
         expect(DemandEffort.all.sum(&:effort_value)).to eq 4
+      end
+    end
+
+    context 'with efforts passing the day but not completing 24h' do
+      it 'computes the correct times' do
+        dev_membership = Fabricate :membership, member_role: :developer
+
+        Fabricate :stage_project_config, stage: stage, project: project, compute_effort: true, stage_percentage: 100, management_percentage: 0, pairing_percentage: 0
+        Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: Time.zone.local(2022, 12, 5, 11, 29), last_time_out: Time.zone.local(2022, 12, 6, 10, 45)
+        Fabricate :item_assignment, demand: demand, membership: dev_membership, start_time: Time.zone.local(2022, 12, 5, 11, 30), finish_time: Time.zone.local(2022, 12, 6, 10, 46)
+
+        described_class.instance.build_efforts_to_demand(demand)
+        expect(DemandEffort.all.count).to eq 1
+        expect(DemandEffort.all.sum(&:effort_value)).to eq 8
       end
     end
   end
