@@ -56,6 +56,11 @@
             <i class="fa fa-check" aria-hidden="true"></i>
           <% end %>
         </td>
+        <td>
+          <%= link_to company_demand_demand_efforts_path(company, demand, format: :csv) do %>
+            <i class="fa fa-pen" aria-hidden="true"></i>
+          <% end %>
+        </td>
       </tr>
     <% end %>
     </tbody>
