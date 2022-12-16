@@ -1,0 +1,22 @@
+<div class="container">
+  <h1><%= I18n.t('demand_efforts.edit.title') %></h1>
+  <%= form_for @demand_effort, url: company_demand_demand_effort_path, method: :patch, class: 'form' do |f| %>
+    <div class="standard-form">
+      <div class="row">
+        <div class='col-xs-6 form-group <%= 'has-error' if @demand_effort.errors[:effort_value].present? %>'>
+          <%= f.label :effort_value, class: 'control-label' %>
+          <%= f.number_field :effort_value, class: 'form-control', step: 0.01 %>
+          <span class="help-block"><%= @demand_effort.errors[:effort_value].join(', ') %></span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <%= link_to company_demand_path(id: @demand) do %>
+            <button type="button" class="btn btn-danger"><%= I18n.t('general.buttons.cancel') %></button>
+          <% end %>
+          <%= f.submit class: 'btn btn-success' %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
