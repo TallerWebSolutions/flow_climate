@@ -22,6 +22,8 @@ class DemandEffortsController < AuthenticatedController
 
     @demand_effort.update(demand_effort_params)
 
+    call_cache_consolidations
+
     redirect_to company_demand_path(@company, @demand)
   end
 
@@ -29,5 +31,19 @@ class DemandEffortsController < AuthenticatedController
 
   def demand_effort_params
     params.require(:demand_effort).permit(:effort_value)
+  end
+
+  def call_cache_consolidations
+    project = @demand.project
+    team = @demand.team
+    customer = @demand.customer || project.customers.first
+    contract = @demand.contract || customer.contracts.active(@demand_effort.start_time_to_computation).first
+
+    Consolidations::ProjectConsolidationJob.perform_later(project)
+    Consolidations::TeamConsolidationJob.perform_later(team)
+    Consolidations::CustomerConsolidationJob.perform_later(customer) if customer.present?
+    Consolidations::ContractConsolidationJob.perform_later(contract) if contract.present?
+
+    DemandEffortService.instance.update_demand_effort_caches(@demand)
   end
 end

@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
 RSpec.describe DemandEffortService, type: :service do
-  describe '#build_efforts_to_demand' do
-    let(:company) { Fabricate :company }
-    let(:project) { Fabricate :project, company: company }
-    let(:other_project) { Fabricate :project, company: company }
-    let(:team) { Fabricate :team, company: company }
-    let(:demand) { Fabricate :demand, team: team, project: project }
-    let(:stage) { Fabricate :stage, company: company, stage_stream: :upstream }
-    let(:other_stage) { Fabricate :stage, company: company, stage_stream: :downstream }
+  let(:company) { Fabricate :company }
+  let(:project) { Fabricate :project, company: company }
+  let(:other_project) { Fabricate :project, company: company }
+  let(:team) { Fabricate :team, company: company }
+  let(:demand) { Fabricate :demand, team: team, project: project }
+  let(:stage) { Fabricate :stage, company: company, stage_stream: :upstream }
+  let(:other_stage) { Fabricate :stage, company: company, stage_stream: :downstream }
 
+  describe '#build_efforts_to_demand' do
     context 'with one assignment matching the transition' do
       it 'builds a demand_effort to the demand' do
         travel_to Time.zone.local(2022, 3, 14, 10, 0, 0) do
@@ -260,6 +260,29 @@ RSpec.describe DemandEffortService, type: :service do
         expect(DemandEffort.all.count).to eq 1
         expect(DemandEffort.all.sum(&:effort_value)).to eq 4
       end
+    end
+  end
+
+  describe '#update_demand_effort_caches' do
+    it 'computes the effort cached based on the demand efforts' do
+      dev_membership = Fabricate :membership, member_role: :developer
+      other_dev_membership = Fabricate :membership, member_role: :developer
+
+      first_transition = Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: Time.zone.parse('2021-05-24 10:51'), last_time_out: Time.zone.parse('2021-05-24 12:51')
+      second_transition = Fabricate :demand_transition, demand: demand, stage: other_stage, last_time_in: Time.zone.parse('2021-05-24 10:51'), last_time_out: Time.zone.parse('2021-05-24 12:51')
+      first_assignment = Fabricate :item_assignment, demand: demand, membership: dev_membership, start_time: Time.zone.parse('2021-05-24 10:51'), finish_time: Time.zone.parse('2021-05-24 12:51')
+      second_assignment = Fabricate :item_assignment, demand: demand, membership: other_dev_membership, start_time: Time.zone.parse('2021-05-24 10:51'), finish_time: Time.zone.parse('2021-05-24 11:11')
+
+      Fabricate :demand_effort, demand: demand, item_assignment: first_assignment, effort_value: 10, demand_transition: first_transition
+      Fabricate :demand_effort, demand: demand, item_assignment: second_assignment, effort_value: 20, demand_transition: second_transition
+
+      described_class.instance.update_demand_effort_caches(demand)
+
+      expect(demand.reload.effort_upstream).to eq 10
+      expect(demand.reload.effort_downstream).to eq 20
+      expect(demand.reload.effort_development).to eq 30
+      expect(demand.reload.effort_design).to eq 0
+      expect(demand.reload.effort_management).to eq 0
     end
   end
 end

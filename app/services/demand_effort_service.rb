@@ -36,6 +36,20 @@ class DemandEffortService
   # rubocop:enable Metrics/CyclomaticComplexity
   # rubocop:enable Metrics/MethodLength
 
+  def update_demand_effort_caches(demand)
+    effort_upstream = demand.demand_efforts.upstream_efforts.sum(&:effort_value)
+    effort_downstream = demand.demand_efforts.downstream_efforts.sum(&:effort_value)
+    effort_development = demand.demand_efforts.developer_efforts.sum(&:effort_value)
+    effort_design = demand.demand_efforts.designer_efforts.sum(&:effort_value)
+    effort_management = demand.demand_efforts.manager_efforts.sum(&:effort_value)
+
+    demand.update(effort_upstream: effort_upstream,
+                  effort_downstream: effort_downstream,
+                  effort_development: effort_development,
+                  effort_design: effort_design,
+                  effort_management: effort_management)
+  end
+
   private
 
   # rubocop:disable Metrics/AbcSize
@@ -134,19 +148,5 @@ class DemandEffortService
 
       TimeService.instance.compute_working_hours_for_dates(start_block, end_block)
     end
-  end
-
-  def update_demand_effort_caches(demand)
-    effort_upstream = demand.demand_efforts.upstream_efforts.sum(&:effort_value)
-    effort_downstream = demand.demand_efforts.downstream_efforts.sum(&:effort_value)
-    effort_development = demand.demand_efforts.developer_efforts.sum(&:effort_value)
-    effort_design = demand.demand_efforts.designer_efforts.sum(&:effort_value)
-    effort_management = demand.demand_efforts.manager_efforts.sum(&:effort_value)
-
-    demand.update(effort_upstream: effort_upstream,
-                  effort_downstream: effort_downstream,
-                  effort_development: effort_development,
-                  effort_design: effort_design,
-                  effort_management: effort_management)
   end
 end
