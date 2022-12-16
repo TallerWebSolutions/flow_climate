@@ -34,6 +34,8 @@ class DemandEffortsController < AuthenticatedController
   end
 
   def call_cache_consolidations
+    DemandEffortService.instance.update_demand_effort_caches(@demand)
+
     project = @demand.project
     team = @demand.team
     customer = @demand.customer || project.customers.first
@@ -44,6 +46,16 @@ class DemandEffortsController < AuthenticatedController
     Consolidations::CustomerConsolidationJob.perform_later(customer) if customer.present?
     Consolidations::ContractConsolidationJob.perform_later(contract) if contract.present?
 
-    DemandEffortService.instance.update_demand_effort_caches(@demand)
+    update_operations_dashboard_cache
+  end
+
+  def update_operations_dashboard_cache
+    @demand.item_assignments.each do |assignment|
+      member = assignment.membership.team_member
+      start_date = @demand.demand_transitions.map(&:last_time_in).min
+      end_date = @demand.demand_transitions.map(&:last_time_in).max
+
+      Dashboards::OperationsDashboardCacheJob.perform_later(member, start_date, end_date)
+    end
   end
 end

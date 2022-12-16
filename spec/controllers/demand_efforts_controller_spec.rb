@@ -154,6 +154,7 @@ RSpec.describe DemandEffortsController do
             expect(Consolidations::ContractConsolidationJob).to(receive(:perform_later).with(contract)).once
             expect(Consolidations::TeamConsolidationJob).to(receive(:perform_later).with(team)).once
             expect(DemandEffortService.instance).to(receive(:update_demand_effort_caches).with(demand)).once
+            expect(Dashboards::OperationsDashboardCacheJob).to(receive(:perform_later)).once
 
             patch :update, params: { company_id: company, demand_id: demand, id: effort, demand_effort: { effort_value: 30 } }
 
