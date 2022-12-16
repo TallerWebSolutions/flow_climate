@@ -2,19 +2,19 @@
 
 RSpec.describe DemandEffortsController do
   context 'unauthenticated' do
-    describe '#index' do
+    describe 'GET #index' do
       before { get :index, params: { company_id: 'foo', demand_id: 'bar' } }
 
       it { expect(response).to redirect_to new_user_session_path }
     end
 
-    describe '#edit' do
+    describe 'GET #edit' do
       before { get :edit, params: { company_id: 'foo', demand_id: 'bar', id: 'xpto' } }
 
       it { expect(response).to redirect_to new_user_session_path }
     end
 
-    describe '#patch' do
+    describe 'PATCH #update' do
       before { patch :update, params: { company_id: 'foo', demand_id: 'bar', id: 'xpto' } }
 
       it { expect(response).to redirect_to new_user_session_path }
@@ -27,7 +27,7 @@ RSpec.describe DemandEffortsController do
 
     before { sign_in user }
 
-    describe '#index' do
+    describe 'GET #index' do
       context 'with valid params' do
         context 'with data' do
           it 'downloads the csv file' do
@@ -80,7 +80,7 @@ RSpec.describe DemandEffortsController do
       end
     end
 
-    describe '#edit' do
+    describe 'GET #edit' do
       context 'with valid params' do
         context 'with data' do
           it 'assigns the instance variable and renders the template' do
@@ -130,7 +130,7 @@ RSpec.describe DemandEffortsController do
       end
     end
 
-    describe '#update' do
+    describe 'PATCH #update' do
       context 'with valid params' do
         context 'with data' do
           it 'updates the effort and redirects' do
@@ -152,13 +152,13 @@ RSpec.describe DemandEffortsController do
         let(:effort) { Fabricate :demand_effort, demand: demand }
 
         context 'demand' do
-          before { get :edit, params: { company_id: company, demand_id: 'foo', id: effort } }
+          before { patch :update, params: { company_id: company, demand_id: 'foo', id: effort } }
 
           it { expect(response).to have_http_status :not_found }
         end
 
         context 'effort' do
-          before { get :edit, params: { company_id: company, demand_id: demand, id: 'foo' } }
+          before { patch :update, params: { company_id: company, demand_id: demand, id: 'foo' } }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -167,13 +167,13 @@ RSpec.describe DemandEffortsController do
           let(:demand) { Fabricate :demand }
 
           context 'not found' do
-            before { get :index, params: { company_id: 'foo', demand_id: demand, id: effort } }
+            before { patch :update, params: { company_id: 'foo', demand_id: demand, id: effort } }
 
             it { expect(response).to have_http_status :not_found }
           end
 
           context 'not permitted' do
-            before { get :index, params: { company_id: demand.company, demand_id: demand, id: effort } }
+            before { patch :update, params: { company_id: demand.company, demand_id: demand, id: effort } }
 
             it { expect(response).to have_http_status :not_found }
           end
