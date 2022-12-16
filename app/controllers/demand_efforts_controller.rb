@@ -20,7 +20,7 @@ class DemandEffortsController < AuthenticatedController
   def update
     @demand_effort = DemandEffort.find(params[:id])
 
-    @demand_effort.update(demand_effort_params)
+    @demand_effort.update(demand_effort_params.merge(automatic_update: false))
 
     call_cache_consolidations
 

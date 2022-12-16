@@ -147,7 +147,7 @@ RSpec.describe DemandEffortsController do
 
             contract = Fabricate :contract, customer: customer, start_date: 2.months.ago, end_date: 1.month.from_now
 
-            effort = Fabricate :demand_effort, demand: demand, item_assignment: assignment, demand_transition: transition, start_time_to_computation: 28.days.ago, effort_value: 10
+            effort = Fabricate :demand_effort, demand: demand, item_assignment: assignment, demand_transition: transition, automatic_update: true, start_time_to_computation: 28.days.ago, effort_value: 10
 
             expect(Consolidations::ProjectConsolidationJob).to(receive(:perform_later).with(project)).once
             expect(Consolidations::CustomerConsolidationJob).to(receive(:perform_later).with(customer)).once
@@ -161,7 +161,9 @@ RSpec.describe DemandEffortsController do
             expect(assigns(:company)).to eq company
             expect(assigns(:demand)).to eq demand
             expect(assigns(:demand_effort)).to eq effort
-            expect(effort.reload.effort_value).to eq 30
+            demand_reloaded = effort.reload
+            expect(demand_reloaded.effort_value).to eq 30
+            expect(demand_reloaded).not_to be_automatic_update
           end
         end
       end
