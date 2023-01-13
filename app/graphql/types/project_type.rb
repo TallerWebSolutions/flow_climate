@@ -81,7 +81,7 @@ module Types
     field :total_throughput, Int, null: true
     field :unscored_demands, [Types::DemandType], null: true
     field :upstream_demands, [Types::DemandType], null: true
-    field :value, Float, null: false
+    field :value, Float, null: true
     field :weekly_throughputs, [Int], null: false
 
     field :cumulative_flow_chart_data, Types::Charts::CumulativeFlowChartType, null: true
