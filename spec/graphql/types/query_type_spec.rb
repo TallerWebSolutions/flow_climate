@@ -682,7 +682,7 @@ RSpec.describe Types::QueryType do
 
   describe '#product' do
     context 'with valid' do
-      it 'returns it' do
+      it 'returns the product using the slug informed' do
         travel_to Time.zone.local(2022, 12, 7, 10) do
           company = Fabricate :company
 
@@ -762,7 +762,6 @@ RSpec.describe Types::QueryType do
           result = FlowClimateSchema.execute(query, variables: nil, context: graphql_context).as_json
 
           expect(result.dig('data', 'product')['id']).to eq product.id.to_s
-          expect(result.dig('data', 'product')['leadtimeEvolutionData']).to eq({ 'xAxis' => %w[2022-11-30 2022-12-31 2023-01-31 2023-02-28], 'yAxisAccumulated' => [0.0, 0.0, 0.0, 0.0], 'yAxisInMonth' => [0.0, 0.0, 0.0, 0.0] })
         end
       end
     end

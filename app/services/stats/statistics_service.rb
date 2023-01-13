@@ -79,7 +79,7 @@ module Stats
 
       std_dev = standard_deviation(population_array)
       mean = mean(population_array)
-      mean + (4 * std_dev)
+      mean + (std_dev * 4)
     end
 
     def compute_percentage_variation(initial_value, last_value)

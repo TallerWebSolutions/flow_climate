@@ -106,7 +106,7 @@ class DemandEffortService
 
     management_percentage = transition.stage_management_percentage_to_project
 
-    effort_total = demand_effort_in_transition * (1 + management_percentage) * stage_percentage
+    effort_total = demand_effort_in_transition * (management_percentage + 1) * stage_percentage
     effort_value_blocked_in_transition = compute_effort_blocked(demand, effort_start_date, end_date, management_percentage, stage_percentage)
 
     # if there were many blocks into the effort time, the algorithm will compute each one, creating sometimes a negative effort
@@ -134,7 +134,7 @@ class DemandEffortService
 
   def compute_effort_blocked(demand, effort_start_date, end_date, management_percentage, stage_percentage)
     effort_blocked_in_transition = effort_blocked_into_time(demand, effort_start_date, end_date)
-    effort_blocked_in_transition * (1 + management_percentage) * stage_percentage
+    effort_blocked_in_transition * (management_percentage + 1) * stage_percentage
   end
 
   def effort_blocked_into_time(demand, start_date, end_date)

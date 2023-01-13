@@ -19,7 +19,7 @@ class PortfolioUnitsController < AuthenticatedController
     assign_portfolio_units_list
     assign_parent_portfolio_units_list
 
-    respond_to { |format| format.js { render 'portfolio_units/new' } }
+    render :new
   end
 
   def edit
