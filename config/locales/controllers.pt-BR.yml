@@ -1288,6 +1288,15 @@ pt-BR:
       navbar:
         demands: 'Demandas'
         structure: 'Estrutura'
+    destroy:
+      tooltip: "Apagar unidade"
+      success: "Unidade excluída."
+    edit:
+      title: "Editar unidade"
+    update:
+      success: "Unidade atualizada."
+    create:
+      success: "Unidade criada."
   jira_product_configs:
     new:
       button: 'Nova Config de Produto'

@@ -166,6 +166,7 @@ RSpec.describe PortfolioUnitsController do
           created_jira_config = Jira::JiraPortfolioUnitConfig.last
           expect(created_jira_config.jira_field_name).to eq 'foo'
 
+          expect(flash[:notice]).to eq I18n.t('portfolio_units.create.success')
           expect(response).to redirect_to company_product_portfolio_units_path(company, product)
         end
       end
@@ -173,7 +174,7 @@ RSpec.describe PortfolioUnitsController do
       context 'with invalid' do
         context 'parameters' do
           it 'adds errors to the model and to flash' do
-            post :create, params: { company_id: company, product_id: product, portfolio_unit: { name: '', portfolio_unit_type: nil, jira_portfolio_unit_config_attributes: { jira_field_name: '' } } }, xhr: true
+            post :create, params: { company_id: company, product_id: product, portfolio_unit: { name: '', portfolio_unit_type: nil, jira_portfolio_unit_config_attributes: { jira_field_name: '' } } }
 
             expect(assigns(:portfolio_unit).errors.full_messages).to eq ['Tipo da Unidade não pode ficar em branco', 'Nome não pode ficar em branco']
             expect(flash[:error]).to eq 'Tipo da Unidade não pode ficar em branco, Nome não pode ficar em branco'
@@ -181,7 +182,7 @@ RSpec.describe PortfolioUnitsController do
         end
 
         context 'product' do
-          before { post :create, params: { company_id: company, product_id: 'foo' }, xhr: true }
+          before { post :create, params: { company_id: company, product_id: 'foo' } }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -189,13 +190,13 @@ RSpec.describe PortfolioUnitsController do
         context 'product in other company' do
           let(:other_product) { Fabricate :product }
 
-          before { post :create, params: { company_id: company, product_id: other_product }, xhr: true }
+          before { post :create, params: { company_id: company, product_id: other_product } }
 
           it { expect(response).to have_http_status :not_found }
         end
 
         context 'company' do
-          before { post :create, params: { company_id: 'foo', product_id: product }, xhr: true }
+          before { post :create, params: { company_id: 'foo', product_id: product } }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -203,7 +204,7 @@ RSpec.describe PortfolioUnitsController do
         context 'unpermitted company' do
           let(:other_company) { Fabricate :company }
 
-          before { post :create, params: { company_id: other_company, product_id: product }, xhr: true }
+          before { post :create, params: { company_id: other_company, product_id: product } }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -214,29 +215,30 @@ RSpec.describe PortfolioUnitsController do
       let!(:portfolio_unit) { Fabricate :portfolio_unit, product: product }
 
       context 'valid parameters' do
-        before { delete :destroy, params: { company_id: company, product_id: product, id: portfolio_unit }, xhr: true }
+        before { delete :destroy, params: { company_id: company, product_id: product, id: portfolio_unit } }
 
-        it 'deletes the portfolio unit' do
-          expect(response).to render_template 'portfolio_units/destroy'
+        it 'deletes the portfolio unit and redirects to the list' do
           expect(PortfolioUnit.last).to be_nil
+          expect(flash[:notice]).to eq I18n.t('portfolio_units.destroy.success')
+          expect(response).to redirect_to company_product_portfolio_units_path(company, product)
         end
       end
 
       context 'invalid parameters' do
         context 'non-existent product jira config' do
-          before { delete :destroy, params: { company_id: company, product_id: product, id: 'foo' }, xhr: true }
+          before { delete :destroy, params: { company_id: company, product_id: product, id: 'foo' } }
 
           it { expect(response).to have_http_status :not_found }
         end
 
         context 'non-existent product' do
-          before { delete :destroy, params: { company_id: company, product_id: 'foo', id: portfolio_unit }, xhr: true }
+          before { delete :destroy, params: { company_id: company, product_id: 'foo', id: portfolio_unit } }
 
           it { expect(response).to have_http_status :not_found }
         end
 
         context 'non-existent company' do
-          before { delete :destroy, params: { company_id: 'foo', product_id: product, id: portfolio_unit }, xhr: true }
+          before { delete :destroy, params: { company_id: 'foo', product_id: product, id: portfolio_unit } }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -244,7 +246,7 @@ RSpec.describe PortfolioUnitsController do
         context 'not-permitted company' do
           let(:company) { Fabricate :company, users: [] }
 
-          before { delete :destroy, params: { company_id: company, product_id: product, id: portfolio_unit }, xhr: true }
+          before { delete :destroy, params: { company_id: company, product_id: product, id: portfolio_unit } }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -261,20 +263,20 @@ RSpec.describe PortfolioUnitsController do
           demand = Fabricate :demand, portfolio_unit: portfolio_unit, commitment_date: 3.days.ago, end_date: 2.days.ago
           other_demand = Fabricate :demand, portfolio_unit: portfolio_unit, commitment_date: 3.days.ago, end_date: 1.day.ago
 
-          get :show, params: { company_id: company, product_id: product, id: portfolio_unit }, xhr: true
+          get :show, params: { company_id: company, product_id: product, id: portfolio_unit }
 
           expect(assigns(:company)).to eq company
           expect(assigns(:product)).to eq product
           expect(assigns(:portfolio_unit)).to eq portfolio_unit
           expect(assigns(:demands)).to eq [other_demand, demand]
           expect(assigns(:demands_chart_adapter)).to be_a Highchart::DemandsChartsAdapter
-          expect(response).to render_template 'portfolio_units/show'
+          expect(response).to render_template :show
         end
       end
 
       context 'with invalid' do
         context 'portfolio_unit' do
-          before { get :show, params: { company_id: company, product_id: product, id: 'foo' }, xhr: true }
+          before { get :show, params: { company_id: company, product_id: product, id: 'foo' } }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -282,7 +284,7 @@ RSpec.describe PortfolioUnitsController do
         context 'product' do
           let(:portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'zzz' }
 
-          before { get :show, params: { company_id: company, product_id: 'foo', id: portfolio_unit }, xhr: true }
+          before { get :show, params: { company_id: company, product_id: 'foo', id: portfolio_unit } }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -292,7 +294,7 @@ RSpec.describe PortfolioUnitsController do
 
           let(:other_product) { Fabricate :product }
 
-          before { get :show, params: { company_id: company, product_id: other_product, id: portfolio_unit }, xhr: true }
+          before { get :show, params: { company_id: company, product_id: other_product, id: portfolio_unit } }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -300,7 +302,7 @@ RSpec.describe PortfolioUnitsController do
         context 'company' do
           let(:portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'zzz' }
 
-          before { get :show, params: { company_id: 'foo', product_id: product, id: portfolio_unit }, xhr: true }
+          before { get :show, params: { company_id: 'foo', product_id: product, id: portfolio_unit } }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -308,7 +310,7 @@ RSpec.describe PortfolioUnitsController do
         context 'unpermitted company' do
           let(:other_company) { Fabricate :company }
 
-          before { get :new, params: { company_id: other_company, product_id: product }, xhr: true }
+          before { get :new, params: { company_id: other_company, product_id: product } }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -323,7 +325,7 @@ RSpec.describe PortfolioUnitsController do
 
       context 'with valid data' do
         it 'assigns the instance variables and render the template' do
-          get :edit, params: { company_id: company, product_id: product, id: portfolio_unit }, xhr: true
+          get :edit, params: { company_id: company, product_id: product, id: portfolio_unit }
           expect(assigns(:company)).to eq company
           expect(assigns(:product)).to eq product
           expect(assigns(:portfolio_unit)).to eq portfolio_unit
@@ -335,13 +337,13 @@ RSpec.describe PortfolioUnitsController do
 
       context 'with invalid' do
         context 'portfolio unit' do
-          before { get :edit, params: { company_id: company, product_id: product, id: 'foo' }, xhr: true }
+          before { get :edit, params: { company_id: company, product_id: product, id: 'foo' } }
 
           it { expect(response).to have_http_status :not_found }
         end
 
         context 'product' do
-          before { get :edit, params: { company_id: company, product_id: 'foo', id: portfolio_unit }, xhr: true }
+          before { get :edit, params: { company_id: company, product_id: 'foo', id: portfolio_unit } }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -349,13 +351,13 @@ RSpec.describe PortfolioUnitsController do
         context 'product in other company' do
           let(:other_product) { Fabricate :product }
 
-          before { get :edit, params: { company_id: company, product_id: other_product, id: portfolio_unit }, xhr: true }
+          before { get :edit, params: { company_id: company, product_id: other_product, id: portfolio_unit } }
 
           it { expect(response).to have_http_status :not_found }
         end
 
         context 'company' do
-          before { get :edit, params: { company_id: 'foo', product_id: product, id: portfolio_unit }, xhr: true }
+          before { get :edit, params: { company_id: 'foo', product_id: product, id: portfolio_unit } }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -363,7 +365,7 @@ RSpec.describe PortfolioUnitsController do
         context 'unpermitted company' do
           let(:other_company) { Fabricate :company }
 
-          before { get :edit, params: { company_id: other_company, product_id: product, id: portfolio_unit }, xhr: true }
+          before { get :edit, params: { company_id: other_company, product_id: product, id: portfolio_unit } }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -376,7 +378,7 @@ RSpec.describe PortfolioUnitsController do
 
       context 'with valid data' do
         it 'updates the portfolio unit and renders the template' do
-          put :update, params: { company_id: company, product_id: product, id: portfolio_unit, portfolio_unit: { parent_id: parent_portfolio_unit.id, name: 'bla', portfolio_unit_type: :product_module, jira_portfolio_unit_config_attributes: { jira_field_name: 'foo' } } }, xhr: true
+          put :update, params: { company_id: company, product_id: product, id: portfolio_unit, portfolio_unit: { parent_id: parent_portfolio_unit.id, name: 'bla', portfolio_unit_type: :product_module, jira_portfolio_unit_config_attributes: { jira_field_name: 'foo' } } }
           updated_unit = PortfolioUnit.last
           expect(updated_unit.name).to eq 'bla'
           expect(updated_unit.product_module?).to be true
@@ -387,14 +389,15 @@ RSpec.describe PortfolioUnitsController do
           expect(assigns(:portfolio_units)).to eq [parent_portfolio_unit, portfolio_unit]
           expect(assigns(:parent_portfolio_units)).to be_nil
 
-          expect(response).to render_template 'portfolio_units/update'
+          expect(flash[:notice]).to eq I18n.t('portfolio_units.update.success')
+          expect(response).to redirect_to company_product_portfolio_units_path(company, product)
         end
       end
 
       context 'with invalid' do
         context 'parameters' do
           it 'adds errors to the model and to flash' do
-            put :update, params: { company_id: company, product_id: product, id: portfolio_unit, portfolio_unit: { name: '', portfolio_unit_type: nil, jira_portfolio_unit_config_attributes: { jira_field_name: '' } } }, xhr: true
+            put :update, params: { company_id: company, product_id: product, id: portfolio_unit, portfolio_unit: { name: '', portfolio_unit_type: nil, jira_portfolio_unit_config_attributes: { jira_field_name: '' } } }
 
             expect(assigns(:portfolio_units)).to eq [parent_portfolio_unit, portfolio_unit]
             expect(assigns(:parent_portfolio_units)).to eq [parent_portfolio_unit]
@@ -405,13 +408,13 @@ RSpec.describe PortfolioUnitsController do
         end
 
         context 'portfolio unit' do
-          before { put :update, params: { company_id: company, product_id: product, id: 'foo' }, xhr: true }
+          before { put :update, params: { company_id: company, product_id: product, id: 'foo' } }
 
           it { expect(response).to have_http_status :not_found }
         end
 
         context 'product' do
-          before { put :update, params: { company_id: company, product_id: 'foo', id: portfolio_unit }, xhr: true }
+          before { put :update, params: { company_id: company, product_id: 'foo', id: portfolio_unit } }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -419,13 +422,13 @@ RSpec.describe PortfolioUnitsController do
         context 'product in other company' do
           let(:other_product) { Fabricate :product }
 
-          before { put :update, params: { company_id: company, product_id: other_product, id: portfolio_unit }, xhr: true }
+          before { put :update, params: { company_id: company, product_id: other_product, id: portfolio_unit } }
 
           it { expect(response).to have_http_status :not_found }
         end
 
         context 'company' do
-          before { put :update, params: { company_id: 'foo', product_id: product, id: portfolio_unit }, xhr: true }
+          before { put :update, params: { company_id: 'foo', product_id: product, id: portfolio_unit } }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -433,7 +436,7 @@ RSpec.describe PortfolioUnitsController do
         context 'unpermitted company' do
           let(:other_company) { Fabricate :company }
 
-          before { put :update, params: { company_id: other_company, product_id: product, id: portfolio_unit }, xhr: true }
+          before { put :update, params: { company_id: other_company, product_id: product, id: portfolio_unit } }
 
           it { expect(response).to have_http_status :not_found }
         end

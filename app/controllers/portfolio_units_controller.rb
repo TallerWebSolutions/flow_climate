@@ -35,7 +35,7 @@ class PortfolioUnitsController < AuthenticatedController
     @portfolio_unit = PortfolioUnit.new(portfolio_unit_params.merge(product: @product))
 
     if @portfolio_unit.save
-      flash[:notice] = I18n.t('general.messages.saved')
+      flash[:notice] = I18n.t('portfolio_units.create.success')
     else
       flash[:error] = @portfolio_unit.errors.full_messages.join(', ')
       assign_portfolio_units_list
@@ -48,19 +48,20 @@ class PortfolioUnitsController < AuthenticatedController
   def update
     @portfolio_unit.update(portfolio_unit_params)
     if @portfolio_unit.valid?
+      flash[:notice] = I18n.t('portfolio_units.update.success')
       assign_portfolio_units_list
     else
       flash[:error] = @portfolio_unit.errors.full_messages.join(', ')
       assign_parent_portfolio_units_list
     end
 
-    respond_to { |format| format.js { render 'portfolio_units/update' } }
+    redirect_to company_product_portfolio_units_path(@company, @product)
   end
 
   def destroy
     @portfolio_unit.destroy
-    @portfolio_units = @product.portfolio_units.order(:name)
-    render 'portfolio_units/destroy'
+    flash[:notice] = I18n.t('portfolio_units.destroy.success')
+    redirect_to company_product_portfolio_units_path(@company, @product)
   end
 
   private

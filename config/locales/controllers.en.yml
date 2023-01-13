@@ -1305,6 +1305,15 @@ en:
       navbar:
         demands: "Demands"
         structure: "Structure"
+    destroy:
+      tooltip: "Delete unit"
+      success: "Unit deleted."
+    edit:
+      title: "Edit unit"
+    update:
+      success: "Unit updated."
+    create:
+      success: "Unit created."
   jira_product_configs:
     new:
       button: "New Jira Product Config"

@@ -20,6 +20,7 @@
     <tr>
       <th><%= PortfolioUnit.human_attribute_name :parent %></th>
       <th><%= PortfolioUnit.human_attribute_name :name %></th>
+      <th></th>
     </tr>
   </thead>
 
@@ -27,7 +28,16 @@
     <% @portfolio_units.each do |portfolio_unit| %>
       <tr>
         <td><%= portfolio_unit.parent_name %></td>
-        <td><%= portfolio_unit.name %></td>
+        <td><%= link_to portfolio_unit.name, company_product_portfolio_unit_path(@company, @product, portfolio_unit) %></td>
+        <td>
+          <%= link_to company_product_portfolio_unit_path(@company, @product, portfolio_unit), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') } do %>
+            <i class="fa fa-times" title='<%= I18n.t('portfolio_units.destroy.tooltip') %>'></i>
+          <% end %>
+
+          <%= link_to edit_company_product_portfolio_unit_path(@company, @product, portfolio_unit) do %>
+            <i class="fa fa-pen" aria-hidden="true"></i>
+          <% end %>
+        </td>
       </tr>
     <% end %>
   </tbody>
