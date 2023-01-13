@@ -15,6 +15,7 @@ const PRODUCT_QUERY = gql`
       discardedDemandsCount
       unscoredDemandsCount
       demandsBlocksCount
+      portfolioUnitsCount
       averageSpeed
       averageQueueTime
       averageTouchTime

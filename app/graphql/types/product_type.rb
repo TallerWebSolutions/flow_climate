@@ -19,6 +19,7 @@ module Types
     field :leadtime_p65, Integer, null: true
     field :leadtime_p80, Integer, null: true
     field :leadtime_p95, Integer, null: true
+    field :portfolio_units_count, Integer, null: true
     field :remaining_backlog_count, Integer, null: true
     field :unscored_demands_count, Integer, null: true
     field :upstream_demands_count, Integer, null: true
@@ -55,6 +56,10 @@ module Types
 
     def demands_blocks_count
       object.demand_blocks.kept.count
+    end
+
+    def portfolio_units_count
+      object.portfolio_units.count
     end
 
     def average_speed

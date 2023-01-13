@@ -52,7 +52,7 @@
       "leadTimeControlMarkerP65": "Lead time p65 ({{days}} days)",
       "leadTimeControlChart": "Lead time control chart"
     },
-    "deliverablesTable": {
+    "demandsTable": {
       "latestDeliveries": "Latest Deliveries",
       "product": "Product",
       "project": "Project",
@@ -77,7 +77,8 @@
       "averageWorkTime": "Average Work Time: {{time}} hours",
       "leadTimeP65": "Lead Time p65: {{days}} days",
       "leadTimeP80": "Lead Time p80: {{days}} days",
-      "leadTimeP95": "Lead Time p95: {{days}} days"
+      "leadTimeP95": "Lead Time p95: {{days}} days",
+      "portfolioUnits": "Portfolio units"
     }
   },
   "charts": {

@@ -546,7 +546,7 @@ pt-BR:
             thursday: Quinta
             friday: Sexta
       portfolio_unit:
-        parent: Pai
+        parent: Ancestral
         name: Nome
         portfolio_unit_type: Tipo da Unidade
         jira_portfolio_unit_config: Config do Jira

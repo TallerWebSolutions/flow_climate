@@ -1,5 +1,0 @@
-$('#portfolio-units-table').html("<%= escape_javascript(render('portfolio_units/new', company: @company, product: @product, portfolio_unit: @portfolio_unit, parent_portfolio_units: @parent_portfolio_units)) %>")
-
-$('#cancel-form-portfolio-unit').on('click', function() {
-    $('#portfolio-units-table').html("<%= escape_javascript(render('portfolio_units/portfolio_units_table', company: @company, product: @product, portfolio_units: @portfolio_units)) %>")
-});

@@ -4,6 +4,10 @@ class PortfolioUnitsController < AuthenticatedController
   before_action :assign_product
   before_action :assign_portfolio_unit, only: %i[show destroy edit update]
 
+  def index
+    @portfolio_units = @product.portfolio_units.order('parent_id DESC, name ASC')
+  end
+
   def show
     @demands = @portfolio_unit.total_portfolio_demands.kept.order(end_date: :desc)
     @portfolio_data = Highchart::PortfolioChartsAdapter.new(@projects, @start_date, @end_date, '') if @projects.present?
@@ -34,11 +38,11 @@ class PortfolioUnitsController < AuthenticatedController
       flash[:notice] = I18n.t('general.messages.saved')
     else
       flash[:error] = @portfolio_unit.errors.full_messages.join(', ')
+      assign_portfolio_units_list
+      assign_parent_portfolio_units_list
     end
-    assign_parent_portfolio_units_list
-    assign_portfolio_units_list
 
-    respond_to { |format| format.js { render 'portfolio_units/create' } }
+    redirect_to company_product_portfolio_units_path(@company, @product)
   end
 
   def update

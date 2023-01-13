@@ -688,6 +688,9 @@ RSpec.describe Types::QueryType do
 
           customer = Fabricate :customer, company: company
           product = Fabricate :product, company: company, customer: customer
+          Fabricate :portfolio_unit, product: product
+          Fabricate :portfolio_unit, product: product
+
           user = Fabricate :user, last_company: company
           project = Fabricate :project, products: [product], start_date: 1.month.ago
 
@@ -715,6 +718,7 @@ RSpec.describe Types::QueryType do
               discardedDemandsCount
               unscoredDemandsCount
               demandsBlocksCount
+              portfolioUnitsCount
               averageSpeed
               averageQueueTime
               averageTouchTime
@@ -762,6 +766,7 @@ RSpec.describe Types::QueryType do
           result = FlowClimateSchema.execute(query, variables: nil, context: graphql_context).as_json
 
           expect(result.dig('data', 'product')['id']).to eq product.id.to_s
+          expect(result.dig('data', 'product')['portfolioUnitsCount']).to eq 2
         end
       end
     end

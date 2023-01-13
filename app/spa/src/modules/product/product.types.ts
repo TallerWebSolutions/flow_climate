@@ -16,6 +16,7 @@ export type Product = {
   discardedDemandsCount: number
   unscoredDemandsCount: number
   demandsBlocksCount: number
+  portfolioUnitsCount: number
   averageSpeed: number
   averageQueueTime: number
   averageTouchTime: number

@@ -1,0 +1,15 @@
+<div class="row">
+  <div class="col-xs-12">
+    <ul class="breadcrumb">
+      <li><%= link_to I18n.t('general.home.title'), root_path %></li>
+      <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
+      <li><%= link_to @product.name.upcase, company_product_path(@company, @product) %></li>
+      <li><%= link_to I18n.t('portfolio_units.index.title').upcase, company_product_portfolio_units_path(@company, @product) %></li>
+      <li><%= I18n.t('portfolio_units.new.button') %></li>
+    </ul>
+  </div>
+</div>
+
+<%= form_for [@company, @product, @portfolio_unit], url: company_product_portfolio_units_url(@company, @product, @portfolio_unit), class: 'form' do |f| %>
+  <%= render 'portfolio_units/form', f: f, portfolio_unit: @portfolio_unit, parent_portfolio_units: @parent_portfolio_units %>
+<% end %>

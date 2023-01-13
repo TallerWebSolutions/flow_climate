@@ -215,7 +215,7 @@ export const ProjectChartsTable = () => {
               <Row>
                 <Cell>
                   <Box component="span">
-                    {tDemands("list.deliverablesTable.createdDemands")}
+                    {tDemands("list.demandsTable.createdDemands")}
                   </Box>
                 </Cell>
                 <Cell align="right">
@@ -232,9 +232,7 @@ export const ProjectChartsTable = () => {
                 </Cell>
               </Row>
               <Row>
-                <Cell>
-                  {tDemands("list.deliverablesTable.deliveredDemands")}
-                </Cell>
+                <Cell>{tDemands("list.demandsTable.deliveredDemands")}</Cell>
                 <Cell align="right">
                   <Link
                     href={mountDemandsSearchLink({
@@ -251,7 +249,7 @@ export const ProjectChartsTable = () => {
               <Row>
                 <Cell>
                   <Box component="span">
-                    {tDemands("list.deliverablesTable.backlog")}
+                    {tDemands("list.demandsTable.backlog")}
                   </Box>
                 </Cell>
                 <Cell align="right">
@@ -270,7 +268,7 @@ export const ProjectChartsTable = () => {
               <Row>
                 <Cell>
                   <Box component="span">
-                    {tDemands("list.deliverablesTable.upstreamDemands")}
+                    {tDemands("list.demandsTable.upstreamDemands")}
                   </Box>
                 </Cell>
                 <Cell align="right">
@@ -289,7 +287,7 @@ export const ProjectChartsTable = () => {
               <Row>
                 <Cell>
                   <Box component="span">
-                    {tDemands("list.deliverablesTable.downstreamDemands")}
+                    {tDemands("list.demandsTable.downstreamDemands")}
                   </Box>
                 </Cell>
                 <Cell align="right">
@@ -306,9 +304,7 @@ export const ProjectChartsTable = () => {
                 </Cell>
               </Row>
               <Row>
-                <Cell>
-                  {tDemands("list.deliverablesTable.discardedDemands")}
-                </Cell>
+                <Cell>{tDemands("list.demandsTable.discardedDemands")}</Cell>
                 <Cell align="right">
                   <Link
                     href={mountDemandsSearchLink({
@@ -323,9 +319,7 @@ export const ProjectChartsTable = () => {
                 </Cell>
               </Row>
               <Row>
-                <Cell>
-                  {tDemands("list.deliverablesTable.unscoredDemands")}
-                </Cell>
+                <Cell>{tDemands("list.demandsTable.unscoredDemands")}</Cell>
                 <Cell align="right">
                   <Link
                     href={mountDemandsSearchLink({
@@ -340,7 +334,7 @@ export const ProjectChartsTable = () => {
                 </Cell>
               </Row>
               <Row>
-                <Cell>{tDemands("list.deliverablesTable.demandBlocks")}</Cell>
+                <Cell>{tDemands("list.demandsTable.demandBlocks")}</Cell>
                 <Cell align="right">
                   <Link
                     href={`/companies/${companySlug}/demand_blocks/search?demand_blocks_ids=${project.demandBlocks
@@ -358,42 +352,42 @@ export const ProjectChartsTable = () => {
               </Row>
               <Row>
                 <Cell>
-                  {tDemands("list.deliverablesTable.averageSpeed", {
+                  {tDemands("list.demandsTable.averageSpeed", {
                     numberOfDemandsPerDay: project.averageSpeed.toFixed(2),
                   })}
                 </Cell>
               </Row>
               <Row>
                 <Cell>
-                  {tDemands("list.deliverablesTable.averageQueueTime", {
+                  {tDemands("list.demandsTable.averageQueueTime", {
                     time: secondsToDays(project.averageQueueTime).toFixed(2),
                   })}
                 </Cell>
               </Row>
               <Row>
                 <Cell>
-                  {tDemands("list.deliverablesTable.averageWorkTime", {
+                  {tDemands("list.demandsTable.averageWorkTime", {
                     time: secondsToDays(project.averageTouchTime).toFixed(2),
                   })}
                 </Cell>
               </Row>
               <Row>
                 <Cell>
-                  {tDemands("list.deliverablesTable.leadTimeP95", {
+                  {tDemands("list.demandsTable.leadTimeP95", {
                     days: secondsToDays(project.leadTimeP95).toFixed(2),
                   })}
                 </Cell>
               </Row>
               <Row>
                 <Cell>
-                  {tDemands("list.deliverablesTable.leadTimeP80", {
+                  {tDemands("list.demandsTable.leadTimeP80", {
                     days: secondsToDays(project.leadTimeP80).toFixed(2),
                   })}
                 </Cell>
               </Row>
               <Row>
                 <Cell>
-                  {tDemands("list.deliverablesTable.leadTimeP65", {
+                  {tDemands("list.demandsTable.leadTimeP65", {
                     days: secondsToDays(project.leadTimeP65).toFixed(2),
                   })}
                 </Cell>

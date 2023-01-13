@@ -46,7 +46,7 @@
     "table": {
       "title": "{{demandsCount}} Demands - {{totalEffort}} Hours"
     },
-    "deliverablesTable": {
+    "demandsTable": {
       "latestDeliveries": "Latest Deliveries",
       "client": "Client",
       "product": "Product",
@@ -72,7 +72,8 @@
       "averageWorkTime": "Average Work Time: {{time}} hours",
       "leadTimeP65": "Lead Time p65: {{days}} days",
       "leadTimeP80": "Lead Time p80: {{days}} days",
-      "leadTimeP95": "Lead Time p95: {{days}} days"
+      "leadTimeP95": "Lead Time p95: {{days}} days",
+      "portfolioUnits": "Portfolio units"
     },
     "infoTables": {
       "createdDemands": "Created Demands"

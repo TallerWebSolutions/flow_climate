@@ -180,7 +180,7 @@ Rails.application.routes.draw do
 
       get 'products_for_customer/(:customer_id)', action: :products_for_customer, on: :collection
 
-      resources :portfolio_units, except: :index
+      resources :portfolio_units
 
       resources :risk_reviews, except: :index do
         resources :risk_review_action_items, only: %w[new create destroy]

@@ -54,7 +54,7 @@ const ProductGeneralInfoTable = ({ product }: ProductGeneralInfoTableProps) => {
         component="h6"
         sx={{ padding: "16px " }}
       >
-        {tDemands("list.deliverablesTable.generalInfo")}
+        {tDemands("list.demandsTable.generalInfo")}
       </Typography>
       <Box
         sx={{
@@ -67,7 +67,7 @@ const ProductGeneralInfoTable = ({ product }: ProductGeneralInfoTableProps) => {
           <Row>
             <Cell>
               <Typography component="span">
-                {tDemands("list.deliverablesTable.createdDemands")}
+                {tDemands("list.demandsTable.createdDemands")}
               </Typography>
             </Cell>
             <Cell align="right">
@@ -85,7 +85,7 @@ const ProductGeneralInfoTable = ({ product }: ProductGeneralInfoTableProps) => {
           <Row>
             <Cell>
               <Typography component="span">
-                {tDemands("list.deliverablesTable.deliveredDemands")}
+                {tDemands("list.demandsTable.deliveredDemands")}
               </Typography>
             </Cell>
             <Cell align="right">
@@ -103,7 +103,7 @@ const ProductGeneralInfoTable = ({ product }: ProductGeneralInfoTableProps) => {
           <Row>
             <Cell>
               <Box component="span">
-                {tDemands("list.deliverablesTable.backlog")}
+                {tDemands("list.demandsTable.backlog")}
               </Box>
             </Cell>
             <Cell align="right">
@@ -121,7 +121,7 @@ const ProductGeneralInfoTable = ({ product }: ProductGeneralInfoTableProps) => {
           <Row>
             <Cell>
               <Box component="span">
-                {tDemands("list.deliverablesTable.upstreamDemands")}
+                {tDemands("list.demandsTable.upstreamDemands")}
               </Box>
             </Cell>
             <Cell align="right">
@@ -139,7 +139,7 @@ const ProductGeneralInfoTable = ({ product }: ProductGeneralInfoTableProps) => {
           <Row>
             <Cell>
               <Box component="span">
-                {tDemands("list.deliverablesTable.downstreamDemands")}
+                {tDemands("list.demandsTable.downstreamDemands")}
               </Box>
             </Cell>
             <Cell align="right">
@@ -155,7 +155,7 @@ const ProductGeneralInfoTable = ({ product }: ProductGeneralInfoTableProps) => {
             </Cell>
           </Row>
           <Row>
-            <Cell>{tDemands("list.deliverablesTable.discardedDemands")}</Cell>
+            <Cell>{tDemands("list.demandsTable.discardedDemands")}</Cell>
             <Cell align="right">
               <Link
                 href={
@@ -169,7 +169,7 @@ const ProductGeneralInfoTable = ({ product }: ProductGeneralInfoTableProps) => {
             </Cell>
           </Row>
           <Row>
-            <Cell>{tDemands("list.deliverablesTable.unscoredDemands")}</Cell>
+            <Cell>{tDemands("list.demandsTable.unscoredDemands")}</Cell>
             <Cell align="right">
               <Link
                 href={
@@ -183,7 +183,7 @@ const ProductGeneralInfoTable = ({ product }: ProductGeneralInfoTableProps) => {
             </Cell>
           </Row>
           <Row>
-            <Cell>{tDemands("list.deliverablesTable.demandBlocks")}</Cell>
+            <Cell>{tDemands("list.demandsTable.demandBlocks")}</Cell>
             <Cell align="right">
               <Typography sx={{ color: "info.dark", textDecoration: "none" }}>
                 {product.demandsBlocksCount}
@@ -191,43 +191,54 @@ const ProductGeneralInfoTable = ({ product }: ProductGeneralInfoTableProps) => {
             </Cell>
           </Row>
           <Row>
+            <Cell>{tDemands("list.demandsTable.portfolioUnits")}</Cell>
+            <Cell align="right">
+              <Link
+                href={`/companies/${companySlug}/products/${productId}/portfolio_units`}
+                sx={{ color: "info.dark", textDecoration: "none" }}
+              >
+                {product.portfolioUnitsCount}
+              </Link>
+            </Cell>
+          </Row>
+          <Row>
             <Cell>
-              {tDemands("list.deliverablesTable.averageSpeed", {
+              {tDemands("list.demandsTable.averageSpeed", {
                 numberOfDemandsPerDay: product.averageSpeed.toFixed(2),
               })}
             </Cell>
           </Row>
           <Row>
             <Cell>
-              {tDemands("list.deliverablesTable.averageQueueTime", {
+              {tDemands("list.demandsTable.averageQueueTime", {
                 time: secondsToDays(product.averageQueueTime).toFixed(2),
               })}
             </Cell>
           </Row>
           <Row>
             <Cell>
-              {tDemands("list.deliverablesTable.averageWorkTime", {
+              {tDemands("list.demandsTable.averageWorkTime", {
                 time: secondsToDays(product.averageTouchTime).toFixed(2),
               })}
             </Cell>
           </Row>
           <Row>
             <Cell>
-              {tDemands("list.deliverablesTable.leadTimeP95", {
+              {tDemands("list.demandsTable.leadTimeP95", {
                 days: secondsToDays(product.leadtimeP95).toFixed(2),
               })}
             </Cell>
           </Row>
           <Row>
             <Cell>
-              {tDemands("list.deliverablesTable.leadTimeP80", {
+              {tDemands("list.demandsTable.leadTimeP80", {
                 days: secondsToDays(product.leadtimeP80).toFixed(2),
               })}
             </Cell>
           </Row>
           <Row>
             <Cell>
-              {tDemands("list.deliverablesTable.leadTimeP65", {
+              {tDemands("list.demandsTable.leadTimeP65", {
                 days: secondsToDays(product.leadtimeP65).toFixed(2),
               })}
             </Cell>

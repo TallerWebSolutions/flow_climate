@@ -2,6 +2,12 @@
 
 RSpec.describe PortfolioUnitsController do
   context 'unauthenticated' do
+    describe 'GET #index' do
+      before { get :index, params: { company_id: 'bar', product_id: 'foo' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
+
     describe 'GET #new' do
       before { get :new, params: { company_id: 'bar', product_id: 'foo' } }
 
@@ -50,6 +56,53 @@ RSpec.describe PortfolioUnitsController do
     let(:customer) { Fabricate :customer, company: company }
     let(:product) { Fabricate :product, company: company, customer: customer }
 
+    describe 'GET #index' do
+      context 'with valid data' do
+        it "returns the product's units" do
+          parent_unit = Fabricate :portfolio_unit, product: product, name: 'zzz', parent: nil
+          unit = Fabricate :portfolio_unit, product: product, name: 'bbb', parent: parent_unit
+          other_unit = Fabricate :portfolio_unit, product: product, name: 'aaa', parent: parent_unit
+
+          Fabricate :portfolio_unit, name: 'aaa'
+
+          get :index, params: { company_id: company, product_id: product }
+
+          expect(response).to render_template :index
+          expect(assigns(:portfolio_units)).to eq [parent_unit, other_unit, unit]
+        end
+      end
+
+      context 'with invalid' do
+        context 'product' do
+          before { get :index, params: { company_id: company, product_id: 'foo' } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'product in other company' do
+          let(:other_product) { Fabricate :product }
+
+          before { get :index, params: { company_id: company, product_id: other_product } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'company' do
+          before { get :index, params: { company_id: 'foo', product_id: product } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'unpermitted company' do
+          let(:other_company) { Fabricate :company }
+
+          before { get :index, params: { company_id: other_company, product_id: product } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
     describe 'GET #new' do
       let!(:portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'zzz' }
       let!(:other_portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'aaa' }
@@ -58,19 +111,19 @@ RSpec.describe PortfolioUnitsController do
 
       context 'with valid data' do
         it 'assigns the instance variables and render the template' do
-          get :new, params: { company_id: company, product_id: product }, xhr: true
+          get :new, params: { company_id: company, product_id: product }
           expect(assigns(:company)).to eq company
           expect(assigns(:product)).to eq product
           expect(assigns(:portfolio_unit)).to be_a_new PortfolioUnit
           expect(assigns(:portfolio_units)).to eq [other_portfolio_unit, portfolio_unit]
           expect(assigns(:parent_portfolio_units)).to eq [other_portfolio_unit, portfolio_unit]
-          expect(response).to render_template 'portfolio_units/new'
+          expect(response).to render_template :new
         end
       end
 
       context 'with invalid' do
         context 'product' do
-          before { get :new, params: { company_id: company, product_id: 'foo' }, xhr: true }
+          before { get :new, params: { company_id: company, product_id: 'foo' } }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -78,13 +131,13 @@ RSpec.describe PortfolioUnitsController do
         context 'product in other company' do
           let(:other_product) { Fabricate :product }
 
-          before { get :new, params: { company_id: company, product_id: other_product }, xhr: true }
+          before { get :new, params: { company_id: company, product_id: other_product } }
 
           it { expect(response).to have_http_status :not_found }
         end
 
         context 'company' do
-          before { get :new, params: { company_id: 'foo', product_id: product }, xhr: true }
+          before { get :new, params: { company_id: 'foo', product_id: product } }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -92,7 +145,7 @@ RSpec.describe PortfolioUnitsController do
         context 'unpermitted company' do
           let(:other_company) { Fabricate :company }
 
-          before { get :new, params: { company_id: other_company, product_id: product }, xhr: true }
+          before { get :new, params: { company_id: other_company, product_id: product } }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -104,7 +157,7 @@ RSpec.describe PortfolioUnitsController do
 
       context 'with valid data' do
         it 'creates the portfolio unit and renders the template' do
-          post :create, params: { company_id: company, product_id: product, portfolio_unit: { parent_id: portfolio_unit.id, name: 'bla', portfolio_unit_type: :product_module, jira_portfolio_unit_config_attributes: { jira_field_name: 'foo' } } }, xhr: true
+          post :create, params: { company_id: company, product_id: product, portfolio_unit: { parent_id: portfolio_unit.id, name: 'bla', portfolio_unit_type: :product_module, jira_portfolio_unit_config_attributes: { jira_field_name: 'foo' } } }
           created_unit = PortfolioUnit.last
           expect(created_unit.name).to eq 'bla'
           expect(created_unit.product_module?).to be true
@@ -112,10 +165,8 @@ RSpec.describe PortfolioUnitsController do
 
           created_jira_config = Jira::JiraPortfolioUnitConfig.last
           expect(created_jira_config.jira_field_name).to eq 'foo'
-          expect(assigns(:portfolio_units)).to eq [created_unit, portfolio_unit]
-          expect(assigns(:parent_portfolio_units)).to eq [portfolio_unit]
 
-          expect(response).to render_template 'portfolio_units/create'
+          expect(response).to redirect_to company_product_portfolio_units_path(company, product)
         end
       end
 

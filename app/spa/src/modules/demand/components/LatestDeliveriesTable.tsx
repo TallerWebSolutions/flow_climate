@@ -19,12 +19,12 @@ const LatestDeliveriesTable = ({
   const [readMore, setReadMore] = useState(true)
 
   const latestDeliveriesHeaderCells = [
-    t("list.deliverablesTable.demandId"),
-    t("list.deliverablesTable.project"),
-    t("list.deliverablesTable.product"),
-    t("list.deliverablesTable.deliveryDate"),
-    t("list.deliverablesTable.leadtime"),
-    t("list.deliverablesTable.demandBlocks"),
+    t("list.demandsTable.demandId"),
+    t("list.demandsTable.project"),
+    t("list.demandsTable.product"),
+    t("list.demandsTable.deliveryDate"),
+    t("list.demandsTable.leadtime"),
+    t("list.demandsTable.demandBlocks"),
   ]
 
   const latestDeliveriesRows = demands.map((demand) => {
@@ -67,7 +67,7 @@ const LatestDeliveriesTable = ({
       }}
     >
       <Table
-        title={t("list.deliverablesTable.latestDeliveries")}
+        title={t("list.demandsTable.latestDeliveries")}
         headerCells={latestDeliveriesHeaderCells}
         rows={latestDeliveriesRows}
       />
