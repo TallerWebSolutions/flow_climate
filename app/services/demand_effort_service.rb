@@ -62,9 +62,7 @@ class DemandEffortService
     # define as the beginning of charge windows
     effort_start_date = [start_time, start_time.change(hour: 8, minute: 0, second: 0)].max
 
-    end_time = [assignment.finish_time, transition.last_time_out, demand.discarded_at, Time.zone.now].compact.min
-    # define as the end of charge windows
-    end_date = [end_time, end_time.change(hour: 20, minute: 0, second: 0)].min
+    end_date = [assignment.finish_time, transition.last_time_out, demand.discarded_at, Time.zone.now].compact.min
 
     membership = assignment.membership
     return if membership.client?
