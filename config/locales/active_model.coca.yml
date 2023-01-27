@@ -120,7 +120,7 @@ coca:
             developer: Developer
             manager: Manager
             client: Client
-            designer: Client
+            designer: Designer
       company_settings:
         max_flow_pressure: Maximum Total Flow Pressure
         max_active_parallel_projects: Maximum Parallel Active Projects
