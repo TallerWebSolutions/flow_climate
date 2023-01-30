@@ -23,7 +23,8 @@ Have the ultimate management tools in your hands!
 - Install ImageMagick `brew install imagemagick` or `apt install imagemagick`
 - Configure pgsql
   - Start postgresql
-    - Example on macOS (brew instalation): `pg_ctl -D /usr/local/var/postgres start`
+    - Example on macOS intel (brew instalation): `pg_ctl -D /usr/local/var/postgres start`
+    - Example on macOS M1 (brew instalation): pg_ctl -D /opt/homebrew/var/postgresql@13 start
   - psql postgres
   - run `CREATE USER postgres SUPERUSER;`
   - run `CREATE DATABASE postgres WITH OWNER postgres;`
