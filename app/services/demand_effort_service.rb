@@ -82,7 +82,7 @@ class DemandEffortService
     start_time = [assignment.start_time, transition.last_time_in].compact.max
 
     effort_start_time = [start_time, day_to_effort.beginning_of_day.change(hour: 8, minute: 0, second: 0)].max
-    effort_end_time = [assignment.finish_time, transition.last_time_out, demand.discarded_at, day_to_effort.end_of_day.change(hour: 20, minute: 0, second: 0)].compact.min
+    effort_end_time = [assignment.finish_time, transition.last_time_out, demand.discarded_at, day_to_effort.end_of_day.change(hour: 20, minute: 0, second: 0), Time.zone.now].compact.min
 
     demand_effort = demand
                     .demand_efforts
