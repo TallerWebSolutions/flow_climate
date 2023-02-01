@@ -23,7 +23,6 @@
       <th><%= DemandEffort.human_attribute_name :stage_percentage %></th>
       <th><%= DemandEffort.human_attribute_name :pairing_percentage %></th>
       <th><%= DemandEffort.human_attribute_name :management_percentage %></th>
-      <th><%= DemandEffort.human_attribute_name :effort_with_blocks %></th>
       <th><%= DemandEffort.human_attribute_name :total_blocked %></th>
       <th><%= DemandEffort.human_attribute_name :automatic_update %></th>
       <th><%= DemandEffort.human_attribute_name :main_effort_in_transition %></th>
@@ -44,7 +43,6 @@
         <td><%= number_with_precision(100 * effort.stage_percentage, precision: 2) %></td>
         <td><%= number_with_precision(100 * effort.pairing_percentage, precision: 2) %></td>
         <td><%= number_with_precision(100 * effort.management_percentage, precision: 2) %></td>
-        <td><%= "#{number_with_precision(effort.effort_with_blocks, precision: 2)} h" %></td>
         <td><%= "#{number_with_precision(effort.total_blocked, precision: 2)} h" %></td>
         <td>
           <% if effort.automatic_update? %>

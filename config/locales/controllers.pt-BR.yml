@@ -1473,6 +1473,8 @@ pt-BR:
   demand_efforts:
     index:
       title: 'Esforços'
+    edit:
+      title: "Editar Esforço"
   azure_accounts:
     update:
       title: 'Sincronizar empresa com o Azure Devops'

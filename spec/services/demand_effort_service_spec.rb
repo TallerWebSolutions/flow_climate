@@ -28,7 +28,6 @@ RSpec.describe DemandEffortService, type: :service do
 
             expect(DemandEffort.all.count).to eq 2
             expect(DemandEffort.all.sum(&:effort_value)).to be_within(0.1).of(2.5)
-            expect(DemandEffort.all.sum(&:effort_with_blocks)).to be_within(0.1).of(2.5)
             expect(DemandEffort.all.sum(&:total_blocked)).to eq 0
             expect(demand.reload.effort_development).to be_within(0.1).of(2.5)
             expect(demand.reload.effort_design).to eq 0
@@ -55,7 +54,6 @@ RSpec.describe DemandEffortService, type: :service do
 
             expect(DemandEffort.all.count).to eq 2
             expect(DemandEffort.all.sum(&:effort_value)).to be_within(0.1).of(1.3)
-            expect(DemandEffort.all.sum(&:effort_with_blocks)).to be_within(0.1).of(1.3)
             expect(DemandEffort.all.sum(&:total_blocked)).to eq 0
             expect(demand.reload.effort_development).to be_within(0.1).of(1.3)
             expect(demand.reload.effort_design).to eq 0
@@ -77,6 +75,24 @@ RSpec.describe DemandEffortService, type: :service do
         expect(DemandEffort.all.count).to eq 1
         expect(DemandEffort.all.sum(&:effort_value)).to eq 2.4
         expect(demand.reload.effort_development).to eq 2.4
+        expect(demand.reload.effort_design).to eq 0
+        expect(demand.reload.effort_management).to eq 0
+      end
+    end
+
+    context 'with one previous effort with 8h' do
+      it 'builds a zero value effort' do
+        dev_membership = Fabricate :membership, member_role: :developer
+        Fabricate :stage_project_config, stage: stage, project: project, compute_effort: true, stage_percentage: 100, management_percentage: 50, pairing_percentage: 50
+        Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: Time.zone.parse('2021-05-24 08:00'), last_time_out: Time.zone.parse('2021-05-24 20:51')
+        Fabricate :item_assignment, demand: demand, membership: dev_membership, start_time: Time.zone.parse('2021-05-24 08:00'), finish_time: Time.zone.parse('2021-05-24 16:30')
+        Fabricate :item_assignment, demand: demand, membership: dev_membership, start_time: Time.zone.parse('2021-05-24 14:01'), finish_time: Time.zone.parse('2021-05-24 18:00')
+
+        described_class.instance.build_efforts_to_demand(demand)
+
+        expect(DemandEffort.all.count).to eq 2
+        expect(DemandEffort.all.sum(&:effort_value)).to eq 9
+        expect(demand.reload.effort_development).to eq 9
         expect(demand.reload.effort_design).to eq 0
         expect(demand.reload.effort_management).to eq 0
       end
@@ -149,10 +165,10 @@ RSpec.describe DemandEffortService, type: :service do
         described_class.instance.build_efforts_to_demand(demand)
 
         expect(DemandEffort.all.count).to eq 2
-        expect(DemandEffort.all.sum(&:effort_value)).to be_within(0.1).of(7.1)
-        expect(demand.reload.effort_upstream).to be_within(0.1).of(7.1)
+        expect(DemandEffort.all.sum(&:effort_value)).to be_within(0.1).of(9.5)
+        expect(demand.reload.effort_upstream).to be_within(0.1).of(9.5)
         expect(demand.reload.effort_downstream).to eq 0
-        expect(demand.reload.effort_development).to be_within(0.1).of(7.1)
+        expect(demand.reload.effort_development).to be_within(0.1).of(9.5)
         expect(demand.reload.effort_design).to eq 0
         expect(demand.reload.effort_management).to eq 0
       end
@@ -177,12 +193,11 @@ RSpec.describe DemandEffortService, type: :service do
         described_class.instance.build_efforts_to_demand(demand)
 
         expect(DemandEffort.all.count).to eq 2
-        expect(DemandEffort.all.map(&:effort_value).map(&:to_f)).to eq [0.0, 4.8]
-        expect(DemandEffort.all.map(&:total_blocked).map(&:to_f)).to eq [7.199999999999999, 1.2]
-        expect(DemandEffort.all.map(&:effort_with_blocks).map(&:to_f)).to eq [7.199999999999999, 6.0]
-        expect(demand.reload.effort_upstream.to_f).to eq 4.8
+        expect(DemandEffort.all.map(&:effort_value).map(&:to_f)).to eq [2.56, 4.819999999999999]
+        expect(DemandEffort.all.map(&:total_blocked).map(&:to_f)).to eq [7.016666666666667, 0.9833333333333333]
+        expect(demand.reload.effort_upstream.to_f).to eq 7.379999999999999
         expect(demand.reload.effort_downstream.to_f).to eq 0
-        expect(demand.reload.effort_development.to_f).to eq 4.8
+        expect(demand.reload.effort_development.to_f).to eq 7.379999999999999
         expect(demand.reload.effort_design.to_f).to eq 0
         expect(demand.reload.effort_management.to_f).to eq 0
       end
@@ -195,7 +210,7 @@ RSpec.describe DemandEffortService, type: :service do
 
         other_project_demand = Fabricate :demand, team: team, project: other_project
 
-        Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: Time.zone.parse('2021-05-24 10:51'), last_time_out: Time.zone.parse('2021-05-28 12:51')
+        Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: Time.zone.parse('2021-05-24 10:51'), last_time_out: Time.zone.parse('2021-05-28 17:51')
         Fabricate :demand_transition, demand: other_project_demand, stage: stage, last_time_in: Time.zone.parse('2021-05-24 10:51'), last_time_out: Time.zone.parse('2021-05-28 12:51')
 
         team_member = Fabricate :team_member, company: company, jira_account_user_email: 'foo', jira_account_id: 'bar', name: 'team_member'
@@ -220,8 +235,8 @@ RSpec.describe DemandEffortService, type: :service do
         described_class.instance.build_efforts_to_demand(demand)
         described_class.instance.build_efforts_to_demand(other_project_demand)
 
-        expect(demand.demand_efforts.all.map(&:effort_value).map(&:to_f)).to eq [6.88, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 6.0, 0.0]
-        expect(demand.demand_efforts.sum(&:effort_value).to_f).to eq 16.48
+        expect(demand.demand_efforts.all.map(&:effort_value).map(&:to_f)).to eq [6.88, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 3.659999999999999, 3.54, 2.5]
+        expect(demand.demand_efforts.sum(&:effort_value).to_f).to eq 20.18
 
         expect(other_project_demand.demand_efforts.all.map(&:effort_value).map(&:to_f)).to eq [1.96, 1.96]
         expect(other_project_demand.demand_efforts.sum(&:effort_value).to_f).to eq 3.92
@@ -267,11 +282,10 @@ RSpec.describe DemandEffortService, type: :service do
 
         described_class.instance.build_efforts_to_demand(demand)
 
-        expect(DemandEffort.all.count).to eq 1
-        expect(DemandEffort.all.sum(&:effort_value)).to be_within(0.1).of(32.4)
-        expect(DemandEffort.all.sum(&:effort_with_blocks)).to be_within(0.1).of(32.4)
+        expect(DemandEffort.all.count).to eq 3
+        expect(DemandEffort.all.sum(&:effort_value)).to be_within(0.1).of(18.21)
         expect(DemandEffort.all.sum(&:total_blocked)).to eq 0
-        expect(demand.reload.effort_development).to be_within(0.1).of(32.4)
+        expect(demand.reload.effort_development).to be_within(0.1).of(18.21)
         expect(demand.reload.effort_design).to eq 0
         expect(demand.reload.effort_management).to eq 0
       end
@@ -286,8 +300,8 @@ RSpec.describe DemandEffortService, type: :service do
         Fabricate :item_assignment, demand: demand, membership: dev_membership, start_time: Time.zone.local(2022, 12, 5, 18, 30), finish_time: Time.zone.local(2022, 12, 6, 10, 46)
 
         described_class.instance.build_efforts_to_demand(demand)
-        expect(DemandEffort.all.count).to eq 1
-        expect(DemandEffort.all.sum(&:effort_value)).to eq 4
+        expect(DemandEffort.all.count).to eq 2
+        expect(DemandEffort.all.sum(&:effort_value)).to eq 4.25
       end
     end
 
@@ -300,8 +314,8 @@ RSpec.describe DemandEffortService, type: :service do
         Fabricate :item_assignment, demand: demand, membership: dev_membership, start_time: Time.zone.local(2022, 12, 5, 11, 30), finish_time: Time.zone.local(2022, 12, 6, 10, 46)
 
         described_class.instance.build_efforts_to_demand(demand)
-        expect(DemandEffort.all.count).to eq 1
-        expect(DemandEffort.all.sum(&:effort_value)).to eq 8
+        expect(DemandEffort.all.count).to eq 2
+        expect(DemandEffort.all.sum(&:effort_value)).to eq 8.75
       end
     end
   end

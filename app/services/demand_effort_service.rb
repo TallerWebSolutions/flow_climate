@@ -3,9 +3,10 @@
 class DemandEffortService
   include Singleton
 
+  LIMIT_EFFORT_WHEN_IT_HAS_DROPS = 8
+  NORMAL_EFFORT_LIMIT = 6
+
   # rubocop:disable Metrics/AbcSize
-  # rubocop:disable Metrics/CyclomaticComplexity
-  # rubocop:disable Metrics/MethodLength
   def build_efforts_to_demand(demand)
     demand_effort_ids = []
 
@@ -18,14 +19,10 @@ class DemandEffortService
       top_effort_assignment = assignments_in_dates.max_by { |assign_in_date| assign_in_date.working_hours_until(transition.last_time_in, transition.last_time_out) }
 
       assignments_in_dates.each do |assignment|
-        start_day = [assignment.start_time.to_date, transition.last_time_in].max.to_date
-        end_day = [assignment.finish_time, transition.last_time_out, demand.discarded_at, Time.zone.now].compact.min.to_date
-
-        (start_day..end_day).map do |day_to_effort|
-          demand_effort_ids << compute_and_save_effort(day_to_effort, assignment, top_effort_assignment, transition)
-        end
+        process_assignment(assignment, demand, demand_effort_ids, top_effort_assignment, transition)
       end
     end
+
     demand.demand_efforts.where.not(id: demand_effort_ids).map(&:destroy)
 
     return if demand.manual_effort?
@@ -33,8 +30,6 @@ class DemandEffortService
     update_demand_effort_caches(demand)
   end
   # rubocop:enable Metrics/AbcSize
-  # rubocop:enable Metrics/CyclomaticComplexity
-  # rubocop:enable Metrics/MethodLength
 
   def update_demand_effort_caches(demand)
     effort_upstream = demand.demand_efforts.upstream_efforts.sum(&:effort_value)
@@ -52,50 +47,53 @@ class DemandEffortService
 
   private
 
+  def process_assignment(assignment, demand, demand_effort_ids, top_effort_assignment, transition)
+    start_time = define_start(assignment, transition)
+    end_time = define_end(assignment, demand, transition)
+
+    (start_time..end_time).map do |day_to_effort|
+      next if weekend?(day_to_effort)
+
+      demand_effort_ids << compute_and_save_effort(day_to_effort, assignment, top_effort_assignment, transition)
+    end
+  end
+
+  def define_end(assignment, demand, transition)
+    [assignment.finish_time, transition.last_time_out, demand.discarded_at, Time.zone.now].compact.min.to_date
+  end
+
+  def define_start(assignment, transition)
+    [assignment.start_time.to_date, transition.last_time_in].max.to_date
+  end
+
+  def weekend?(day_to_effort)
+    day_to_effort.saturday? || day_to_effort.sunday?
+  end
+
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
-  # rubocop:disable Metrics/CyclomaticComplexity
-  # rubocop:disable Metrics/PerceivedComplexity
   def compute_and_save_effort(day_to_effort, assignment, top_effort_assignment, transition)
     demand = assignment.demand
-    start_time = [assignment.start_time, transition.last_time_in].compact.max
-    # define as the beginning of charge windows
-    effort_start_date = [start_time, start_time.change(hour: 8, minute: 0, second: 0)].max
-
-    end_date = [assignment.finish_time, transition.last_time_out, demand.discarded_at, Time.zone.now].compact.min
+    return if day_off?(day_to_effort, demand)
 
     membership = assignment.membership
     return if membership.client?
 
-    team = demand.team
-    company = team.company
-    flow_events = team.flow_events.day_off + company.flow_events.day_off
+    start_time = [assignment.start_time, transition.last_time_in].compact.max
 
-    days_off = flow_events.map { |event| (event.event_date..event.event_end_date).cover?(day_to_effort) }
-    return if days_off.compact.uniq.include?(true)
+    effort_start_time = [start_time, day_to_effort.beginning_of_day.change(hour: 8, minute: 0, second: 0)].max
+    effort_end_time = [assignment.finish_time, transition.last_time_out, demand.discarded_at, day_to_effort.end_of_day.change(hour: 20, minute: 0, second: 0)].compact.min
 
-    demand_effort = demand.demand_efforts.where(demand_transition: transition, item_assignment: assignment, start_time_to_computation: effort_start_date).first_or_initialize
-    return unless demand_effort.automatic_update?
+    demand_effort = demand
+                    .demand_efforts
+                    .where(demand_transition: transition, item_assignment: assignment)
+                    .where('start_time_to_computation BETWEEN :start_time AND :end_time',
+                           start_time: effort_start_time.beginning_of_day,
+                           end_time: start_time.end_of_day).first_or_initialize
 
-    hours_in_assignment = (end_date - effort_start_date) / 1.hour
+    return demand_effort.id unless demand_effort.automatic_update?
 
-    previous_efforts_to_day = demand
-                              .demand_efforts
-                              .joins(item_assignment: :membership)
-                              .where(item_assignment: { membership: assignment.membership })
-                              .for_day(day_to_effort)
-
-    previous_efforts_to_day -= [demand_effort]
-
-    previous_efforts_value_to_day = previous_efforts_to_day.sum(&:effort_value)
-
-    demand_effort_in_transition = if previous_efforts_value_to_day >= 6
-                                    0
-                                  elsif hours_in_assignment > 6
-                                    TimeService.instance.compute_working_hours_for_dates(effort_start_date, end_date)
-                                  else
-                                    hours_in_assignment
-                                  end
+    effort_by_dates = effort_by_dates(demand, demand_effort, effort_start_time, effort_end_time)
 
     main_assignment = (assignment == top_effort_assignment) || !top_effort_assignment.pairing_assignment?(assignment)
 
@@ -104,47 +102,77 @@ class DemandEffortService
 
     management_percentage = transition.stage_management_percentage_to_project
 
-    effort_total = demand_effort_in_transition * (management_percentage + 1) * stage_percentage
-    effort_value_blocked_in_transition = compute_effort_blocked(demand, effort_start_date, end_date, management_percentage, stage_percentage)
+    effort_total = effort_by_dates * (management_percentage + 1) * stage_percentage
 
-    # if there were many blocks into the effort time, the algorithm will compute each one, creating sometimes a negative effort
-    # here we remove the exceding blocked value, comparing with the computed effort
-    # the real effort is the intersection between effort time and the time blocked into the effort time, no matter how many blocks are
-    effort_real_blocked_in_transition = [effort_value_blocked_in_transition, effort_total].min
+    effort_total *= pairing_percentage unless main_assignment
 
-    unless main_assignment
-      effort_total *= pairing_percentage
-      effort_real_blocked_in_transition *= pairing_percentage
-    end
+    effort_total = remove_member_previous_efforts_in_demand(assignment, demand, demand_effort, effort_start_time, effort_total)
 
-    effort_without_blocks = effort_total - effort_real_blocked_in_transition
-
-    demand_effort.update(effort_value: effort_without_blocks, effort_with_blocks: effort_total, total_blocked: effort_real_blocked_in_transition, stage_percentage: stage_percentage,
+    demand_effort.update(effort_value: effort_total, stage_percentage: stage_percentage,
                          management_percentage: management_percentage, pairing_percentage: pairing_percentage, main_effort_in_transition: main_assignment,
-                         start_time_to_computation: effort_start_date, finish_time_to_computation: end_date)
+                         start_time_to_computation: effort_start_time, finish_time_to_computation: effort_end_time)
 
     demand_effort.id
   end
-  # rubocop:enable Metrics/AbcSize
-  # rubocop:enable Metrics/MethodLength
-  # rubocop:enable Metrics/CyclomaticComplexity
-  # rubocop:enable Metrics/PerceivedComplexity
 
-  def compute_effort_blocked(demand, effort_start_date, end_date, management_percentage, stage_percentage)
-    effort_blocked_in_transition = effort_blocked_into_time(demand, effort_start_date, end_date)
-    effort_blocked_in_transition * (management_percentage + 1) * stage_percentage
+  def remove_member_previous_efforts_in_demand(assignment, demand, demand_effort, effort_start_time, effort_total)
+    previous_efforts_to_day = demand
+                              .demand_efforts
+                              .joins(item_assignment: :membership)
+                              .where(item_assignment: { membership: assignment.membership })
+                              .previous_in_day(effort_start_time)
+
+    previous_efforts_to_day -= [demand_effort]
+    previous_efforts_value_to_day = previous_efforts_to_day.sum(&:effort_value)
+
+    if previous_efforts_value_to_day >= LIMIT_EFFORT_WHEN_IT_HAS_DROPS
+      [effort_total - previous_efforts_value_to_day, 0].max
+    else
+      effort_total
+    end
   end
 
-  def effort_blocked_into_time(demand, start_date, end_date)
-    demand_blocks_into_effort_time = demand.demand_blocks.active.for_date_interval(start_date, end_date)
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 
-    return 0 if demand_blocks_into_effort_time.blank?
+  # rubocop:disable Metrics/MethodLength
+  def effort_by_dates(demand, demand_effort, effort_start_time, end_time)
+    effort_in_minutes = 0
+    blocked_effort_in_minutes = 0
+    initial_time = effort_start_time
+    while initial_time < end_time
+      if blocked?(demand, initial_time)
+        blocked_effort_in_minutes += 1
+      else
+        effort_in_minutes += 1
+      end
 
-    demand_blocks_into_effort_time.sum do |block|
-      start_block = [block.block_time, start_date].max
-      end_block = [block.unblock_time, end_date].compact.min
+      initial_time += 1.minute
 
-      TimeService.instance.compute_working_hours_for_dates(start_block, end_block)
+      break if effort_in_minutes >= NORMAL_EFFORT_LIMIT * 60
     end
+
+    effort_in_hours = effort_in_minutes.to_f / 60
+    effort_blocked_in_hours = blocked_effort_in_minutes.to_f / 60
+    demand_effort.total_blocked = effort_blocked_in_hours
+
+    effort_in_hours
+  end
+  # rubocop:enable Metrics/MethodLength
+
+  def day_off?(day_to_effort, demand)
+    team = demand.team
+    company = team.company
+    flow_events = team.flow_events.day_off + company.flow_events.day_off
+    days_off = flow_events.map { |event| (event.event_date..event.event_end_date).cover?(day_to_effort) }
+    days_off.compact.uniq.include?(true)
+  end
+
+  def blocked?(demand, effort_time)
+    blocks = demand.demand_blocks.where(':effort_time BETWEEN block_time AND unblock_time', effort_time: effort_time)
+
+    return true if blocks.present?
+
+    false
   end
 end

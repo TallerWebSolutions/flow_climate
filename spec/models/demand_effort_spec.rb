@@ -52,6 +52,7 @@ RSpec.describe DemandEffort do
     let(:other_designer_assignment) { Fabricate :item_assignment, demand: demand, membership: other_designer_membership, start_time: Time.zone.parse('2021-05-24 10:51'), finish_time: Time.zone.parse('2021-05-24 15:51') }
     let(:management_assignment) { Fabricate :item_assignment, demand: demand, membership: management_membership, start_time: Time.zone.parse('2021-05-24 10:51'), finish_time: Time.zone.parse('2021-05-24 15:51') }
 
+    let!(:first_upstream_demand_effort) { Fabricate :demand_effort, demand: demand, demand_transition: upstream_transition, item_assignment: development_assignment, start_time_to_computation: Time.zone.parse('2021-05-24 14:51') }
     let!(:upstream_demand_effort) { Fabricate :demand_effort, demand: demand, demand_transition: upstream_transition, item_assignment: development_assignment, start_time_to_computation: Time.zone.parse('2021-05-24 15:51') }
     let!(:other_upstream_demand_effort) { Fabricate :demand_effort, demand: demand, demand_transition: upstream_transition, item_assignment: other_development_assignment, start_time_to_computation: Time.zone.parse('2021-05-23 15:51') }
 
@@ -59,7 +60,7 @@ RSpec.describe DemandEffort do
     let!(:other_downstream_demand_effort) { Fabricate :demand_effort, demand: demand, demand_transition: downstream_transition, item_assignment: other_designer_assignment, start_time_to_computation: Time.zone.parse('2021-05-21 15:51') }
 
     describe '.upstream_efforts' do
-      it { expect(described_class.upstream_efforts).to match_array [upstream_demand_effort, other_upstream_demand_effort] }
+      it { expect(described_class.upstream_efforts).to match_array [upstream_demand_effort, other_upstream_demand_effort, first_upstream_demand_effort] }
     end
 
     describe '.downstream_efforts' do
@@ -67,15 +68,15 @@ RSpec.describe DemandEffort do
     end
 
     describe '.developer_efforts' do
-      it { expect(described_class.developer_efforts).to match_array [upstream_demand_effort, other_upstream_demand_effort] }
+      it { expect(described_class.developer_efforts).to match_array [upstream_demand_effort, other_upstream_demand_effort, first_upstream_demand_effort] }
     end
 
-    describe '.for_day' do
-      it { expect(described_class.for_day(Date.new(2021, 5, 24))).to eq [upstream_demand_effort] }
+    describe '.previous_in_day' do
+      it { expect(described_class.previous_in_day(Time.zone.local(2021, 5, 24, 15, 50))).to eq [first_upstream_demand_effort] }
     end
 
     describe '.to_dates' do
-      it { expect(described_class.to_dates(Date.new(2021, 5, 22).beginning_of_day, Date.new(2021, 5, 24).end_of_day)).to match_array [downstream_demand_effort, other_upstream_demand_effort, upstream_demand_effort] }
+      it { expect(described_class.to_dates(Date.new(2021, 5, 22).beginning_of_day, Date.new(2021, 5, 24).end_of_day)).to match_array [downstream_demand_effort, other_upstream_demand_effort, upstream_demand_effort, first_upstream_demand_effort] }
     end
   end
 
@@ -89,7 +90,6 @@ RSpec.describe DemandEffort do
                                                demand_effort.start_time_to_computation&.iso8601,
                                                demand_effort.finish_time_to_computation&.iso8601,
                                                demand_effort.effort_value.to_f,
-                                               demand_effort.effort_with_blocks.to_f,
                                                demand_effort.total_blocked.to_f,
                                                demand_effort.management_percentage,
                                                demand_effort.pairing_percentage,

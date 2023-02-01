@@ -7,7 +7,6 @@
 #  id                         :bigint           not null, primary key
 #  automatic_update           :boolean          default(TRUE), not null
 #  effort_value               :decimal(, )      default(0.0), not null
-#  effort_with_blocks         :decimal(, )      default(0.0)
 #  finish_time_to_computation :datetime         not null
 #  lock_version               :integer
 #  main_effort_in_transition  :boolean          default(FALSE), not null
@@ -52,7 +51,7 @@ class DemandEffort < ApplicationRecord
   scope :designer_efforts, -> { joins(item_assignment: :membership).where(memberships: { member_role: :designer }) }
   scope :manager_efforts, -> { joins(item_assignment: :membership).where(memberships: { member_role: :manager }) }
 
-  scope :for_day, ->(day) { where('start_time_to_computation BETWEEN :bottom_limit AND :upper_limit', bottom_limit: day.beginning_of_day, upper_limit: day.end_of_day) }
+  scope :previous_in_day, ->(limit_time) { where('start_time_to_computation BETWEEN :start_time AND :end_time', start_time: limit_time.beginning_of_day, end_time: limit_time) }
   scope :to_dates, ->(start_date, end_date) { where('start_time_to_computation BETWEEN :start_date AND :end_date', start_date: start_date, end_date: end_date) }
   scope :until_date, ->(limit_date) { where('start_time_to_computation <= :limit_date', limit_date: limit_date) }
 
@@ -62,7 +61,6 @@ class DemandEffort < ApplicationRecord
       start_time_to_computation&.iso8601,
       finish_time_to_computation&.iso8601,
       effort_value.to_f,
-      effort_with_blocks.to_f,
       total_blocked.to_f,
       management_percentage_value,
       pairing_percentage_value,
