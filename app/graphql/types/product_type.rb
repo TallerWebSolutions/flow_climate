@@ -83,6 +83,8 @@ module Types
 
       leadtime_evolution = demands_charts_adapter.leadtime_percentiles_on_time_chart_data
 
+      return { x_axis: [], y_axis_in_month: [], y_axis_accumulated: [] } if leadtime_evolution.blank?
+
       { x_axis: demands_charts_adapter.x_axis.map(&:to_s), y_axis_in_month: leadtime_evolution[:y_axis][0][:data], y_axis_accumulated: leadtime_evolution[:y_axis][1][:data] }
     end
 

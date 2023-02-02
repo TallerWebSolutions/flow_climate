@@ -100,101 +100,102 @@ RSpec.describe Types::QueryType do
 
             query =
               %(query {
-        me {
-          id
-          fullName
-          language
-          currentCompany {
-            name
-          }
-          avatar {
-            imageSource
-          }
-        }
-        team(id: #{team.id}) {
-          id
-          name
-          throughputData
-          averageThroughput
-          increasedAvgThroughtput
-          leadTime
-          increasedLeadtime80
-          workInProgress
-          company {
-            id
-            name
-          }
-          latestDeliveries { id }
-          leadTimeP65
-          leadTimeP80
-          leadTimeP95
-          numberOfDemandsDelivered
-          cumulativeFlowChartData {
-            xAxis
-            yAxis {
-              name
-              data
-            }
-          }
-          demandsFlowChartData {
-            creationChartData
-            committedChartData
-            pullTransactionRate
-            throughputChartData
-            xAxis
-          }
-          leadTimeHistogramData {
-            keys
-            values
-          }
-          teamConsolidationsWeekly {
-            leadTimeP80
-            consolidationDate
-          }
-          lastReplenishingConsolidations {
-            id
-            customerHappiness
-            createdAt
-            project {
-              id
-              name
-              startDate
-              endDate
-              aging
-              remainingWeeks
-              backlogCountFor
-              remainingBacklog
-              flowPressure
-              flowPressurePercentage
-              leadTimeP80
-              qtySelected
-              qtyInProgress
-              monteCarloP80
-              maxWorkInProgress
-              weeklyThroughputs
-              modeWeeklyTroughputs
-              stdDevWeeklyTroughputs
-              teamMonteCarloP80
-              teamMonteCarloWeeksMax
-              teamMonteCarloWeeksMin
-              teamMonteCarloWeeksStdDev
-              teamBasedOddsToDeadline
-              customers {
-                name
+              me {
+                id
+                fullName
+                language
+                currentCompany {
+                  name
+                }
+                avatar {
+                  imageSource
+                }
               }
-              products {
+              team(id: #{team.id}) {
+                id
                 name
+                throughputData
+                averageThroughput
+                increasedAvgThroughtput
+                leadTime
+                increasedLeadtime80
+                workInProgress
+                company {
+                  id
+                  name
+                }
+                latestDeliveries { id }
+                leadTimeP65
+                leadTimeP80
+                leadTimeP95
+                numberOfDemandsDelivered
+                cumulativeFlowChartData {
+                  xAxis
+                  yAxis {
+                    name
+                    data
+                  }
+                }
+                demandsFlowChartData {
+                  creationChartData
+                  committedChartData
+                  pullTransactionRate
+                  throughputChartData
+                  xAxis
+                }
+                leadTimeHistogramData {
+                  keys
+                  values
+                }
+                teamConsolidationsWeekly {
+                  leadTimeP80
+                  consolidationDate
+                }
+                lastReplenishingConsolidations {
+                  id
+                  customerHappiness
+                  createdAt
+                  project {
+                    id
+                    name
+                    startDate
+                    endDate
+                    aging
+                    remainingWeeks
+                    backlogCountFor
+                    remainingBacklog
+                    flowPressure
+                    flowPressurePercentage
+                    leadTimeP80
+                    qtySelected
+                    qtyInProgress
+                    monteCarloP80
+                    maxWorkInProgress
+                    weeklyThroughputs
+                    modeWeeklyTroughputs
+                    stdDevWeeklyTroughputs
+                    teamMonteCarloP80
+                    teamMonteCarloWeeksMax
+                    teamMonteCarloWeeksMin
+                    teamMonteCarloWeeksStdDev
+                    teamBasedOddsToDeadline
+                    customers {
+                      name
+                    }
+                    products {
+                      name
+                      leadtimeEvolutionData {
+                        xAxis
+                      }
+                    }
+                  }
+                }
               }
-            }
-          }
-        }
-      })
+            })
 
             user = Fabricate :user, companies: [company], last_company_id: company.id
 
-            context = {
-              current_user: user
-            }
+            context = { current_user: user }
 
             result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
             expect(result.dig('data', 'me')).to eq({
@@ -261,7 +262,7 @@ RSpec.describe Types::QueryType do
                                                              'teamMonteCarloWeeksStdDev' => 4.1,
                                                              'teamBasedOddsToDeadline' => 0.7,
                                                              'customers' => [{ 'name' => customer.name }],
-                                                             'products' => [{ 'name' => product.name }]
+                                                             'products' => [{ 'name' => product.name, 'leadtimeEvolutionData' => { 'xAxis' => [] } }]
                                                            }
                                                          },
                                                          {
@@ -309,18 +310,18 @@ RSpec.describe Types::QueryType do
 
             query =
               %(query {
-        team(id: #{team.id}) {
-          id
-          name
-          throughputData
-          averageThroughput
-          leadTime
-          workInProgress,
-          lastReplenishingConsolidations {
-            id
-          }
-        }
-      })
+                team(id: #{team.id}) {
+                  id
+                  name
+                  throughputData
+                  averageThroughput
+                  leadTime
+                  workInProgress,
+                  lastReplenishingConsolidations {
+                    id
+                  }
+                }
+              })
 
             result = FlowClimateSchema.execute(query).as_json
             expect(result.dig('data', 'team')).to eq({
