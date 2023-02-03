@@ -39,6 +39,7 @@ import ListWorkItemTypes from "./pages/WorkItemTypes/ListWorkItemTypes"
 import TeamDashboard from "./pages/Teams/TeamDashboard"
 import ProductPage from "./pages/Products/ProductPage"
 import ProjectsPage from "./pages/Projects/ProjectsPage"
+import CustomerDemand from "./pages/Customer/CustomerDemand"
 
 export const ME_QUERY = gql`
   query Me {
@@ -209,6 +210,10 @@ const App = () => {
               path="/companies/:companySlug/work_item_types/new"
               element={<CreateWorkItemType />}
             />
+            <Route
+              path="/devise_customers/customer_demands/:demand"
+              element={<CustomerDemand />}
+            />
           </Routes>
         </BrowserRouter>
       </MeContext.Provider>
@@ -218,9 +223,12 @@ const App = () => {
 
 const AppWithProviders = () => {
   const [messages, pushMessage] = useMessages()
+  const userProfile = window?.location?.pathname?.includes("devise_customers")
+    ? "customer"
+    : "user"
 
   return (
-    <ApiProvider>
+    <ApiProvider userProfile={userProfile}>
       <ThemeProvider>
         <ConfirmProvider>
           <MessagesContext.Provider value={{ messages, pushMessage }}>

@@ -16,5 +16,9 @@ module Types
     def avatar
       { image_source: object.avatar.url }
     end
+
+    def current_company
+      object.current_company unless object.instance_of?(DeviseCustomer)
+    end
   end
 end

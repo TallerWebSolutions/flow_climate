@@ -5,7 +5,7 @@ module DeviseCustomers
     before_action :authenticate_devise_customer!
 
     def home
-      @customer = current_devise_customer.customers.first
+      @customer = current_devise_customer.customers.last
 
       return not_found if @customer.blank?
 

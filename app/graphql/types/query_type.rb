@@ -44,6 +44,10 @@ module Types
       argument :search_options, Types::DemandsQueryAttributes, required: true
     end
 
+    field :demand, Types::DemandType, null: true, description: 'A single demand by external ID' do
+      argument :external_id, String, required: true
+    end
+
     field :team_members, [Types::TeamMemberType], null: true, description: 'Team Members of a Company' do
       argument :active, Boolean, required: false
       argument :company_id, Int, required: true
@@ -118,6 +122,10 @@ module Types
       else
         { 'total_count' => demands.count, 'last_page' => true, 'total_pages' => 1, 'demands' => demands, 'total_effort' => total_effort }
       end
+    end
+
+    def demand(external_id:)
+      Demand.find_by(external_id: external_id)
     end
 
     def team_members(company_id:, active: nil)

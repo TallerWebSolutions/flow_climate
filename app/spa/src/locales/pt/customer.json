@@ -1,0 +1,11 @@
+{
+  "dashboard": {
+    "title": "Dashboard"
+  },
+  "customerDemands": {
+    "externalId": "ID Externo",
+    "effortUpstream": "Esforço Upstream",
+    "effortDownstream": "Esforço Downstream",
+    "costToProject": "Custo para o projeto"
+  }
+}
