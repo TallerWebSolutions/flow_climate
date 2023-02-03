@@ -1,5 +1,6 @@
 import { gql, useQuery } from "@apollo/client"
 import { useTranslation } from "react-i18next"
+import { useParams } from "react-router-dom"
 
 import BasicPage from "../../components/BasicPage"
 import Table from "../../components/ui/Table"
@@ -25,8 +26,9 @@ type CustomerDemandDTO = {
 
 const CustomerDemand = () => {
   const { t } = useTranslation("customer")
+  const params = useParams()
   const { data, loading } = useQuery<CustomerDemandDTO>(CUSTOMER_DEMAND_QUERY, {
-    variables: { externalId: "A10-697" },
+    variables: { externalId: params?.demand },
   })
   const demand = data?.demand
 
