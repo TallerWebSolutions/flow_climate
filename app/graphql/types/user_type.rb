@@ -18,7 +18,7 @@ module Types
     end
 
     def current_company
-      object.current_company unless object.instance_of?(DeviseCustomer)
+      object.last_company unless object.instance_of?(DeviseCustomer)
     end
   end
 end
