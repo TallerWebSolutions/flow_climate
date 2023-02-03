@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom"
 import useProductQuery from "../../hooks/useProductQuery"
 import ProductDetails from "../../modules/product/components/ProductDetails"
+import React from "react"
 
 const ProductPage = () => {
   const params = useParams()

@@ -1125,6 +1125,8 @@ en:
         zero: "%{count} Jira Settings"
         one: "%{count} Jira Setting"
         other: "%{count} Jira Settings"
+    create:
+      success: "Product config created."
   exports:
     request_project_information:
       title: "Receive informations from Jira"

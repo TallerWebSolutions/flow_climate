@@ -10,6 +10,9 @@
         "inMonth": "No mês",
         "axisLeftLegend": "dias"
       }
+    },
+    "show": {
+      "jiraProductConfigs": "Jira configs"
     }
   },
 

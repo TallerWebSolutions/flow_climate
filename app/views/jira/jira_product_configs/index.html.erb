@@ -1,0 +1,18 @@
+<div class="row">
+  <div class="row">
+    <div class="col-xs-12">
+      <ul class="breadcrumb">
+        <li><%= link_to I18n.t('general.home.title'), root_path %></li>
+        <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
+        <li><%= link_to Product.model_name.human(count: 2), company_products_path(@company) %></li>
+        <li><%= link_to @product.name, company_product_path(@company, @product) %></li>
+        <li><%= Jira::JiraProductConfig.model_name.human(count: 2) %></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<%= render 'jira/jira_product_configs/jira_product_configs_table',
+           company: @company,
+           product: @product,
+           jira_product_configs: @jira_product_configs %>

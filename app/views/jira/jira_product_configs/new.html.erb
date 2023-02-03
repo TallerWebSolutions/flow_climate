@@ -1,0 +1,28 @@
+<div class="row">
+  <div class="col-xs-12">
+    <ul class="breadcrumb">
+      <li><%= link_to I18n.t('general.home.title'), root_path %></li>
+      <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
+      <li><%= link_to Product.model_name.human(count: 2), company_products_path(@company) %></li>
+      <li><%= link_to @product.name, company_product_path(@company, @product) %></li>
+      <li><%= link_to Jira::JiraProductConfig.model_name.human(count: 2), company_product_jira_product_configs_path(@product) %></li>
+      <li><%= I18n.t('jira_project_configs.new.title') %></li>
+    </ul>
+  </div>
+</div>
+
+<%= form_for @jira_product_config, url: company_product_jira_product_configs_path(@company, @product) do |form| %>
+  <div class="row">
+    <div class='col-xs-4 col-xs-offset-4 form-group <%= 'has-error' if @jira_product_config.errors[:jira_product_key].present? %>'>
+      <%= form.label :jira_product_key, class: 'control-label required' %>
+      <%= form.text_field :jira_product_key, class: 'form-control' %>
+      <span class="help-block"><%= @jira_product_config.errors[:jira_product_key].join(', ') %></span>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-4 col-xs-offset-4">
+      <%= form.submit I18n.t('general.buttons.save'), class: 'btn btn-success' %>
+    </div>
+  </div>
+<% end %>

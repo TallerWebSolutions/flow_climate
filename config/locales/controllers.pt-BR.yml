@@ -1191,6 +1191,8 @@ pt-BR:
         zero: '%{count} Configuração do Jira'
         one: '%{count} Configuração do Jira'
         other: '%{count} Configurações do Jira'
+    create:
+      success: "Config do produto criado."
   exports:
     request_project_information:
       title: 'Receber Informações do Jira'

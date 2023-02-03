@@ -1,10 +1,11 @@
 import { Product } from "../product.types"
 import { useTranslation } from "react-i18next"
 import { useParams } from "react-router-dom"
-import { Backdrop, CircularProgress } from "@mui/material"
+import { Backdrop, Button, CircularProgress, Link } from "@mui/material"
 import BasicPage from "../../../components/BasicPage"
 import ProductGeneralInfo from "./ProductGeneralInfo"
 import ProductCharts from "./ProductCharts"
+import React from "react"
 
 type ProductDetailsProps = {
   product: Product
@@ -49,6 +50,12 @@ const ProductDetails = ({ product, loading }: ProductDetailsProps) => {
     >
       {product && (
         <>
+          <Button
+            href={`/companies/${company.slug}/jira/products/${product.slug}/jira_product_configs`}
+          >
+            {t("product.show.jiraProductConfigs")}
+          </Button>
+
           <ProductGeneralInfo product={product} />
           <ProductCharts product={product} />
         </>

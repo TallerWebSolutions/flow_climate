@@ -4,25 +4,32 @@ module Jira
   class JiraProductConfigsController < AuthenticatedController
     before_action :assign_product
 
+    def index
+      @jira_product_configs = @product.jira_product_configs
+    end
+
     def new
       @jira_product_config = JiraProductConfig.new
-      respond_to { |format| format.js }
     end
 
     def create
-      @jira_product_config = JiraProductConfig.new(jira_product_config_params.merge(company: @company, product: @product))
-      @jira_product_config.save
-      flash[:error] = @jira_product_config.errors.full_messages.join(', ') unless @jira_product_config.valid?
-      @jira_product_configs = @product.jira_product_configs.order(:jira_product_key)
-
-      render 'jira/jira_product_configs/create'
+      @jira_product_config = JiraProductConfig.create(jira_product_config_params.merge(company: @company, product: @product))
+      if @jira_product_config.valid?
+        flash[:error] = I18n.t('jira_project_configs.create.success')
+        redirect_to company_product_jira_product_configs_path(@company, @product)
+      else
+        flash[:error] = @jira_product_config.errors.full_messages.join(', ')
+        @jira_product_configs = @product.jira_product_configs.order(:jira_product_key)
+        render :new
+      end
     end
 
     def destroy
       @jira_product_config = JiraProductConfig.find(params[:id])
       @jira_product_config.destroy
       @jira_product_configs = @product.jira_product_configs.order(:jira_product_key)
-      render 'jira/jira_product_configs/destroy'
+
+      redirect_to company_product_jira_product_configs_path(@company, @product)
     end
 
     private
