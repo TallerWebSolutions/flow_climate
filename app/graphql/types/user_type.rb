@@ -4,8 +4,7 @@ module Types
   class UserType < Types::BaseObject
     field :admin, Boolean, null: false
     field :companies, [Types::CompaniesType], null: false
-    field :current_company, CompanyType, null: true, method: :last_company
-    field :first_name, String, null: true
+    field :current_company, CompanyType, null: true
     field :full_name, String, null: false
     field :id, ID, null: false
     field :language, String, null: false
