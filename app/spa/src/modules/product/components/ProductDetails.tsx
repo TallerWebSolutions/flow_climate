@@ -1,7 +1,7 @@
 import { Product } from "../product.types"
 import { useTranslation } from "react-i18next"
 import { useParams } from "react-router-dom"
-import { Backdrop, Button, CircularProgress, Link } from "@mui/material"
+import { Backdrop, Button, CircularProgress } from "@mui/material"
 import BasicPage from "../../../components/BasicPage"
 import ProductGeneralInfo from "./ProductGeneralInfo"
 import ProductCharts from "./ProductCharts"
