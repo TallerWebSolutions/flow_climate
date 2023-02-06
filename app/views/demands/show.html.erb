@@ -40,7 +40,9 @@
       <button class="tablinks demand-tab" id="demand-structure-tab" onclick="openTab(event, 'demand-structure', 'tablinks', 'tabcontent')"><%= I18n.t('demands.show.structure_tab') %></button>
       <button class="tablinks demand-tab" onclick="openTab(event, 'content-flow-efficiency', 'tablinks', 'tabcontent')"><%= I18n.t('demands.show.flow_efficiency_tab') %></button>
       <button class="tablinks demand-tab" onclick="openTab(event, 'content-transitions', 'tablinks', 'tabcontent')"><%= I18n.t('demands.show.transitions_tab') %></button>
-      <button class="tablinks demand-tab" onclick="openTab(event, 'content-demand-efforts', 'tablinks', 'tabcontent')"><%= I18n.t('demands.show.efforts_tab') %></button>
+      <%= link_to demand_efforts_company_demand_path(@company, @demand) do %>
+        <button><%= I18n.t('demands.show.efforts_tab') %></button>
+      <% end %>
       <% if @demand.tasks.count.positive? %>
         <button class="tablinks demand-tab" onclick="openTab(event, 'content-demand-tasks', 'tablinks', 'tabcontent')"><%= I18n.t('demands.show.tasks_tab') %></button>
       <% end %>

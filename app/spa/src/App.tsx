@@ -21,7 +21,7 @@ import Statistics from "./pages/Projects/Statistics"
 import StatusReport from "./pages/Projects/StatusReport"
 import CreateProjectAditionalHours from "./pages/Projects/CreateProjectAditionalHours"
 import TasksPage from "./pages/Tasks/TasksPage"
-import DemandsPage from "./pages/Demands/DemandsList"
+import DemandsPage from "./pages/Demand/DemandsList"
 import TasksCharts from "./modules/task/components/TasksCharts"
 import CreateTeam from "./pages/Teams/CreateTeam"
 import EditTeam from "./pages/Teams/EditTeam"
@@ -33,13 +33,14 @@ import User from "./modules/user/user.types"
 import InitiativesList from "./pages/Initiatives/InitiativesList"
 import EditInitiative from "./pages/Initiatives/EditInitiative"
 import ProjectTasksCharts from "./pages/Projects/ProjectTasksCharts"
-import DemandsCharts from "./pages/Demands/DemandsCharts"
+import DemandsCharts from "./pages/Demand/DemandsCharts"
 import CreateWorkItemType from "./pages/WorkItemTypes/CreateWorkItemType"
 import ListWorkItemTypes from "./pages/WorkItemTypes/ListWorkItemTypes"
 import TeamDashboard from "./pages/Teams/TeamDashboard"
 import ProductPage from "./pages/Products/ProductPage"
 import ProjectsPage from "./pages/Projects/ProjectsPage"
 import CustomerDemand from "./pages/Customer/CustomerDemand"
+import Demand from "./pages/Demand/Demand"
 
 export const ME_QUERY = gql`
   query Me {
@@ -201,6 +202,10 @@ const App = () => {
             <Route
               path="/companies/:companySlug/demands/demands_charts"
               element={<DemandsCharts />}
+            />
+            <Route
+              path="/companies/:company/demands/:demand/demand_efforts"
+              element={<Demand />}
             />
             <Route
               path="/companies/:companySlug/work_item_types"

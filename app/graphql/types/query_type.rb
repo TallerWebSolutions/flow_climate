@@ -125,7 +125,7 @@ module Types
     end
 
     def demand(external_id:)
-      Demand.find_by(external_id: external_id)
+      Demand.where('lower(external_id) = ?', external_id.downcase).first 
     end
 
     def team_members(company_id:, active: nil)

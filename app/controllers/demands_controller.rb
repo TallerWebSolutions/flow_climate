@@ -102,6 +102,11 @@ class DemandsController < DemandsListController
     prepend_view_path Rails.public_path
     render 'spa-build/index'
   end
+  
+  def demand_efforts
+    prepend_view_path Rails.public_path
+    render 'spa-build/index'
+  end
 
   private
 

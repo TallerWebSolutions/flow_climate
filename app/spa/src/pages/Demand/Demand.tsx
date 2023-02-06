@@ -2,10 +2,10 @@ import { gql, useQuery } from "@apollo/client"
 import { useParams } from "react-router-dom"
 
 import DemandBasicPage from "../../modules/demand/components/DemandBasicPage"
-import { Demand } from "../../modules/demand/demand.types"
+import { Demand as DemandType } from "../../modules/demand/demand.types"
 
-const CUSTOMER_DEMAND_QUERY = gql`
-  query CustomerDemand($externalId: String!) {
+const DEMAND_QUERY = gql`
+  query Demand($externalId: String!) {
     demand(externalId: $externalId) {
       id
       demandTitle
@@ -17,13 +17,13 @@ const CUSTOMER_DEMAND_QUERY = gql`
   }
 `
 
-type CustomerDemandDTO = {
-  demand?: Demand
+type DemandDTO = {
+  demand?: DemandType
 }
 
-const CustomerDemand = () => {
+const Demand = () => {
   const params = useParams()
-  const { data, loading } = useQuery<CustomerDemandDTO>(CUSTOMER_DEMAND_QUERY, {
+  const { data, loading } = useQuery<DemandDTO>(DEMAND_QUERY, {
     variables: { externalId: params?.demand },
   })
 
@@ -32,4 +32,4 @@ const CustomerDemand = () => {
   return demand ? <DemandBasicPage demand={demand} loading={loading} /> : null
 }
 
-export default CustomerDemand
+export default Demand

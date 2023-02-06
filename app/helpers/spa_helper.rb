@@ -25,6 +25,7 @@ module SpaHelper
       { controller: 'initiatives', action: 'edit' },
       { controller: 'demands', action: 'index' },
       { controller: 'demands', action: 'demands_charts' },
+      { controller: 'demands', action: 'demand_efforts' },
       { controller: 'work_item_types', action: 'new' },
       { controller: 'work_item_types', action: 'index' },
       { controller: 'devise_customers/customer_demands', action: 'show' }
