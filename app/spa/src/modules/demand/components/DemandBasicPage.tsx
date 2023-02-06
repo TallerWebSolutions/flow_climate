@@ -1,5 +1,9 @@
+import { ReactElement } from "react"
 import { useTranslation } from "react-i18next"
+import { useLocation, useParams } from "react-router-dom"
+
 import BasicPage from "../../../components/BasicPage"
+import { Tabs } from "../../../components/Tabs"
 import Table from "../../../components/ui/Table"
 import { formatCurrency } from "../../../lib/currency"
 import { Demand } from "../demand.types"
@@ -7,10 +11,17 @@ import { Demand } from "../demand.types"
 type DemandBasicPageProps = {
   demand: Demand
   loading: boolean
+  children?: ReactElement
 }
 
-const DemandBasicPage = ({ demand, loading }: DemandBasicPageProps) => {
-  const { t } = useTranslation("customer")
+const DemandBasicPage = ({
+  demand,
+  loading,
+  children,
+}: DemandBasicPageProps) => {
+  const { t } = useTranslation("demand")
+  const { pathname } = useLocation()
+  const params = useParams()
 
   const breadcrumbsLinks = [
     { name: t("dashboard.title") || "", url: "/" },
@@ -20,10 +31,10 @@ const DemandBasicPage = ({ demand, loading }: DemandBasicPageProps) => {
   ]
 
   const headerCells = [
-    t("customerDemands.externalId"),
-    t("customerDemands.effortUpstream"),
-    t("customerDemands.effortDownstream"),
-    t("customerDemands.costToProject"),
+    t("table.header.id"),
+    t("table.header.effortUpstream"),
+    t("table.header.effortDownstream"),
+    t("table.header.costToProject"),
   ]
 
   const rows = [
@@ -35,6 +46,38 @@ const DemandBasicPage = ({ demand, loading }: DemandBasicPageProps) => {
     ],
   ]
 
+  const demandPath = `/companies/${params.company}/demands/${params.demand}`
+  const tabs = [
+    {
+      label: t("tabs.blocks"),
+      to: demandPath,
+    },
+    {
+      label: t("tabs.responsibles"),
+      to: demandPath,
+    },
+    {
+      label: t("tabs.comments"),
+      to: demandPath,
+    },
+    {
+      label: t("tabs.structure"),
+      to: demandPath,
+    },
+    {
+      label: t("tabs.flowEfficiency"),
+      to: demandPath,
+    },
+    {
+      label: t("tabs.transitions"),
+      to: demandPath,
+    },
+    {
+      label: t("tabs.efforts"),
+      to: `${demandPath}/demand_efforts`,
+    },
+  ]
+
   return (
     <BasicPage
       breadcrumbsLinks={breadcrumbsLinks}
@@ -42,6 +85,8 @@ const DemandBasicPage = ({ demand, loading }: DemandBasicPageProps) => {
       loading={loading}
     >
       <Table headerCells={headerCells} rows={rows} />
+      <Tabs currentPath={pathname} tabs={tabs} />
+      {children}
     </BasicPage>
   )
 }

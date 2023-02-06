@@ -5,6 +5,7 @@ import { TeamMember } from "../teamMember/teamMember.types"
 import { DemandsFlowChartData, NumberChartData } from "../charts/charts.types"
 import { Product } from "../product/product.types"
 import { Customer } from "../customer/customer.types"
+import { DemandEffort } from "../demandEffort/demandEffort.types"
 
 export type Demand = {
   id: string
@@ -27,6 +28,7 @@ export type Demand = {
   projectName: string
   productName: string
   demandBlocksCount: number
+  demandEfforts?: DemandEffort[]
 }
 
 type PortfolioUnit = {

@@ -79,7 +79,9 @@
       "createdDemands": "Created Demands"
     }
   },
-
+  "dashboard": {
+    "title": "Início"
+  },
   "demandsCharts": {
     "leadTimeControlMarkerP95": "Lead time p95 ({{days}} days)",
     "leadTimeControlMarkerP80": "Lead time p80 ({{days}} days)",
@@ -115,5 +117,14 @@
       "xLabel": "weeks"
     }
   },
-  "hours": "horas"
+  "hours": "horas",
+  "tabs": {
+    "blocks": "Bloqueios",
+    "responsibles": "Responsáveis",
+    "comments": "Comentários",
+    "structure": "Estrutura",
+    "flowEfficiency": "Eficiência de Fluxo",
+    "transitions": "Transições",
+    "efforts": "Esforços"
+  }
 }

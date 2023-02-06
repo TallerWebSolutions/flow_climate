@@ -9,6 +9,7 @@ module Types
     field :customer, Types::CustomerType, null: true
     field :customer_name, String, null: true
     field :demand_blocks_count, Int, null: false
+    field :demand_efforts, [Types::DemandEffortType], null: true
     field :demand_title, String, null: true
     field :demand_type, String, null: false
     field :effort_downstream, Float, null: true

@@ -40,7 +40,7 @@ import TeamDashboard from "./pages/Teams/TeamDashboard"
 import ProductPage from "./pages/Products/ProductPage"
 import ProjectsPage from "./pages/Projects/ProjectsPage"
 import CustomerDemand from "./pages/Customer/CustomerDemand"
-import Demand from "./pages/Demand/Demand"
+import DemandEfforts from "./pages/Demand/DemandEfforts"
 
 export const ME_QUERY = gql`
   query Me {
@@ -205,7 +205,7 @@ const App = () => {
             />
             <Route
               path="/companies/:company/demands/:demand/demand_efforts"
-              element={<Demand />}
+              element={<DemandEfforts />}
             />
             <Route
               path="/companies/:companySlug/work_item_types"

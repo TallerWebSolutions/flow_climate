@@ -34,7 +34,7 @@ const DemandsPage = ({
   breadcrumbsLinks,
   filters,
 }: DemandPageProps) => {
-  const { t } = useTranslation("demands")
+  const { t } = useTranslation("demand")
   const { register } = useForm()
   const { me } = useContext(MeContext)
   const company = me?.currentCompany

@@ -18,7 +18,7 @@
     }
   },
   "list": {
-    "title": "Demands",
+    "title": "Deliverables",
     "form": {
       "demandType": "Type",
       "common": {
@@ -44,11 +44,16 @@
       "downloadCsv": "Download CSV"
     },
     "table": {
-      "title": "{{demandsCount}} Demands - {{totalEffort}} Hours"
+      "title": "{{demandsCount}} Deliverables - {{totalEffort}} Hours"
+    },
+    "demandsCharts": {
+      "leadTimeControlMarkerP95": "Lead time p95 ({{days}} days)",
+      "leadTimeControlMarkerP80": "Lead time p80 ({{days}} days)",
+      "leadTimeControlMarkerP65": "Lead time p65 ({{days}} days)",
+      "leadTimeControlChart": "Lead time control chart"
     },
     "demandsTable": {
       "latestDeliveries": "Latest Deliveries",
-      "client": "Client",
       "product": "Product",
       "project": "Project",
       "demandId": "Deliverable ID",
@@ -74,16 +79,10 @@
       "leadTimeP80": "Lead Time p80: {{days}} days",
       "leadTimeP95": "Lead Time p95: {{days}} days",
       "portfolioUnits": "Portfolio units"
-    },
-    "infoTables": {
-      "createdDemands": "Created Demands"
     }
   },
-  "demandsCharts": {
-    "leadTimeControlMarkerP95": "Lead time p95 ({{days}} days)",
-    "leadTimeControlMarkerP80": "Lead time p80 ({{days}} days)",
-    "leadTimeControlMarkerP65": "Lead time p65 ({{days}} days)",
-    "leadTimeControlChart": "Lead time control chart"
+  "dashboard": {
+    "title": "Home"
   },
   "charts": {
     "title": "Charts",
@@ -93,16 +92,17 @@
     },
     "flowData": {
       "title": "Flow data",
-      "yLabel": "demands",
+      "yLabel": "deliverables",
       "xLabel": "weeks",
       "created": "Created",
       "committed": "Committed",
       "pulled": "Pulled",
       "delivered": "Delivered"
     },
-    "leadTimeEvolutionP80": {
-      "title": "Lead time evolution p80",
-      "yLabel": "days",
+    "flowEfficiency": {
+      "title": "Flow Efficiency",
+      "queue": "Queue",
+      "touch": "Touch",
       "xLabel": "weeks"
     },
     "shared": {
@@ -112,7 +112,21 @@
       "oneYearChart": {
         "chartTip": "This chart is limited to one year due to performance issues"
       }
+    },
+    "leadTimeEvolutionP80": {
+      "title": "Lead time evolution p80",
+      "yLabel": "days",
+      "xLabel": "weeks"
     }
   },
-  "hours": "hours"
+  "hours": "hours",
+  "tabs": {
+    "blocks": "Blocks",
+    "responsibles": "Responsibles",
+    "comments": "Comments",
+    "structure": "Structure",
+    "flowEfficiency": "Flow Efficiency",
+    "transitions": "Transitions",
+    "efforts": "Efforts"
+  }
 }

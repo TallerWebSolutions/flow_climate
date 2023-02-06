@@ -1,0 +1,19 @@
+{
+  "table": {
+    "header": {
+      "id": "ID",
+      "effortValue": "Valor",
+      "startTimeToComputation": "Início dos Dados",
+      "finishTimeToComputation": "Fim dos Dados",
+      "stagePercentage": "% Etapa",
+      "pairingPercentage": "% Par",
+      "managementPercentage": "% Gestão",
+      "totalBlocked": "Tempo Bloqueado",
+      "mainEffortInTransition": "Principal?",
+      "who": "Responsável",
+      "memberRole": "Papel",
+      "automaticUpdate": "Automatico?",
+      "stage": "Etapa"
+    }
+  }
+}

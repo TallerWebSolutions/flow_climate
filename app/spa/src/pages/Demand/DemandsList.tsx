@@ -136,7 +136,7 @@ type DemandsCSVDTO = {
 }
 
 const DemandsListPage = () => {
-  const { t } = useTranslation("demands")
+  const { t } = useTranslation("demand")
   const { me } = useContext(MeContext)
   const companySlug = me?.currentCompany?.slug
   const [searchParams, setSearchParams] = useSearchParams()
@@ -227,9 +227,9 @@ const DemandsListPage = () => {
               </RouterLink>
             ))}
         </AvatarGroup>,
-        demand.createdDate ? <DateLocale time date={demand.createdDate} /> : "",
+        demand.createdDate ? <DateLocale date={demand.createdDate} /> : "",
         demand.commitmentDate ? (
-          <DateLocale time date={demand.commitmentDate} />
+          <DateLocale date={demand.commitmentDate} />
         ) : (
           ""
         ),
