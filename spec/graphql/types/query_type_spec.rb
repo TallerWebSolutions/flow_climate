@@ -809,6 +809,7 @@ RSpec.describe Types::QueryType do
         demand = Fabricate :demand, company: company, project: project, team: team, end_date: 1.day.ago
         Fabricate :demand_block, demand: demand
         Fabricate :demand, company: company, project: other_project, team: team
+        Fabricate :demand_effort, demand: demand, effort_value: 90
 
         query =
           %(
