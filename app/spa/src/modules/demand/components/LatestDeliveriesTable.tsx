@@ -15,7 +15,7 @@ const LatestDeliveriesTable = ({
   baseLink,
   demands,
 }: LatestDeliveriesTableProps) => {
-  const { t } = useTranslation(["demands"])
+  const { t } = useTranslation(["demand"])
   const [readMore, setReadMore] = useState(true)
 
   const latestDeliveriesHeaderCells = [

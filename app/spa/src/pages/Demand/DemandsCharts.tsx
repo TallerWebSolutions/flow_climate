@@ -78,7 +78,7 @@ const DEMANDS_CHART_QUERY = gql`
 
 const DemandsCharts = () => {
   const { me } = useContext(MeContext)
-  const { t } = useTranslation(["demands"])
+  const { t } = useTranslation(["demand"])
   const [searchParams] = useSearchParams()
 
   const [filters, setFilters] = useState<FieldValues>({

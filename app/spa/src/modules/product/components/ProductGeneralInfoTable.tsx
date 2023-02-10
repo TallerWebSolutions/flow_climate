@@ -40,7 +40,7 @@ type ProductGeneralInfoTableProps = {
 }
 
 const ProductGeneralInfoTable = ({ product }: ProductGeneralInfoTableProps) => {
-  const { t: tDemands } = useTranslation(["demands"])
+  const { t: tDemands } = useTranslation(["demand"])
   const [readMore, setReadMore] = useState(true)
   const company = product?.company
   const companySlug = company?.slug || ""
