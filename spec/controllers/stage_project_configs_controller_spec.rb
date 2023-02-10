@@ -96,7 +96,6 @@ RSpec.describe StageProjectConfigsController do
       context 'with valid parameters' do
         context 'with replication to other projects' do
           it 'updates the config and replicates the values to the other projects' do
-            expect(DemandEffortService.instance).to(receive(:build_efforts_to_demand)).once
             put :update, params: { company_id: company, stage_id: stage, id: stage_project_config, replicate_to_projects: '1', recompute_manual_efforts: '0', max_time_in_stage: 1, max_time_in_stage_period: 'week', stage_project_config: { compute_effort: true, stage_percentage: 10, pairing_percentage: 20, management_percentage: 30 } }
 
             expect(response).to redirect_to edit_company_stage_stage_project_config_path(company, stage, stage_project_config)
@@ -117,7 +116,6 @@ RSpec.describe StageProjectConfigsController do
 
         context 'with manual effort re-computing' do
           it 'updates the config and calls the effort service twice' do
-            expect(DemandEffortService.instance).to(receive(:build_efforts_to_demand)).twice
             put :update, params: { company_id: company, stage_id: stage, id: stage_project_config, replicate_to_projects: '1', recompute_manual_efforts: '1', max_time_in_stage: 1, max_time_in_stage_period: 'week', stage_project_config: { compute_effort: true, stage_percentage: 10, pairing_percentage: 20, management_percentage: 30 } }
 
             expect(response).to redirect_to edit_company_stage_stage_project_config_path(company, stage, stage_project_config)

@@ -112,7 +112,7 @@ RSpec.describe Team do
         Fabricate :demand_effort, demand: second_demand, start_time_to_computation: 15.days.ago, effort_value: 10
         Fabricate :demand_effort, demand: third_demand, start_time_to_computation: 15.days.ago, effort_value: 30
 
-        expect(team.avg_hours_per_demand.to_f).to eq 73.33333333333333
+        expect(team.avg_hours_per_demand.to_f).to eq 46.666666666666664
       end
     end
   end

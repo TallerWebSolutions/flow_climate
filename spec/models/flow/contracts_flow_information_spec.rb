@@ -39,7 +39,7 @@ RSpec.describe Flow::ContractsFlowInformation do
           expect(contract_flow.dates_array).to eq [Date.new(2020, 3, 31), Date.new(2020, 4, 30), Date.new(2020, 5, 31), Date.new(2020, 6, 30), Date.new(2020, 7, 31)]
           expect(contract_flow.dates_limit_now_array).to eq [Date.new(2020, 3, 31), Date.new(2020, 4, 30), Date.new(2020, 5, 31), Date.new(2020, 6, 30)]
 
-          expect(contract_flow.build_financial_burnup).to eq([{ name: I18n.t('charts.burnup.scope'), data: [1_000_000, 1_000_000, 1_000_000, 1_000_000, 1_000_000] }, { name: I18n.t('charts.burnup.current'), data: [0.0, 0.0, 0.0, 2000.0] }, { name: I18n.t('charts.burnup.ideal'), data: [200_000, 400_000, 600_000, 800_000, 1_000_000] }])
+          expect(contract_flow.build_financial_burnup).to eq([{ name: I18n.t('charts.burnup.scope'), data: [1_000_000, 1_000_000, 1_000_000, 1_000_000, 1_000_000] }, { name: I18n.t('charts.burnup.current'), data: [0.0, 0.0, 0.0, 7_500.0] }, { name: I18n.t('charts.burnup.ideal'), data: [200_000, 400_000, 600_000, 800_000, 1_000_000] }])
 
           expect(contract_flow.delivered_demands_count).to eq 1
           expect(contract_flow.remaining_backlog_count).to eq 665
@@ -77,7 +77,7 @@ RSpec.describe Flow::ContractsFlowInformation do
 
           contract_flow = described_class.new(contract)
 
-          expect(contract_flow.build_hours_burnup).to eq([{ name: I18n.t('charts.burnup.scope'), data: [2000, 2000, 2000, 2000, 2000] }, { name: I18n.t('charts.burnup.current'), data: [0.0, 0.0, 0.0, 40.0] }, { name: I18n.t('charts.burnup.ideal'), data: [400, 800, 1200, 1600, 2000] }])
+          expect(contract_flow.build_hours_burnup).to eq([{ name: I18n.t('charts.burnup.scope'), data: [2000, 2000, 2000, 2000, 2000] }, { name: I18n.t('charts.burnup.current'), data: [0.0, 0.0, 0.0, 150.0] }, { name: I18n.t('charts.burnup.ideal'), data: [400, 800, 1200, 1600, 2000] }])
         end
       end
     end

@@ -24,10 +24,6 @@ class DemandEffortService
     end
 
     demand.demand_efforts.where.not(id: demand_effort_ids).map(&:destroy)
-
-    return if demand.manual_effort?
-
-    update_demand_effort_caches(demand)
   end
   # rubocop:enable Metrics/AbcSize
 

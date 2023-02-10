@@ -20,7 +20,6 @@ class StageProjectConfigsController < AuthenticatedController
                                                                    pairing_percentage: not_null_parameter('pairing_percentage'),
                                                                    management_percentage: not_null_parameter('management_percentage')))
 
-    recompute_manual_efforts_to_transitions_in_stage
     replicate_to_other_projects if params['replicate_to_projects'] == '1'
 
     redirect_to edit_company_stage_stage_project_config_path(@company, @stage, @stage_project_config)
@@ -49,14 +48,6 @@ class StageProjectConfigsController < AuthenticatedController
 
   def time_in_stage_param
     params[:max_time_in_stage]&.to_i || 0
-  end
-
-  def recompute_manual_efforts_to_transitions_in_stage
-    project = @stage_project_config.project
-    stage = @stage_project_config.stage
-    transitions = stage.demand_transitions.joins(demand: :project).where('demands.project_id' => project.id)
-    demands = transitions.map(&:demand).flatten.uniq
-    demands.map { |demand| DemandEffortService.instance.build_efforts_to_demand(demand) if !demand.manual_effort? || params['recompute_manual_efforts'] == '1' }
   end
 
   def replicate_to_other_projects

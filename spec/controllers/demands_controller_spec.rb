@@ -267,6 +267,9 @@ RSpec.describe DemandsController do
 
       context 'passing a valid ID' do
         context 'with data' do
+          let(:stage) { Fabricate :stage, stage_stream: :downstream }
+          let(:transition) { Fabricate :demand_transition, stage: stage, last_time_in: 3.days.ago, last_time_out: 1.hour.from_now, demand: first_demand }
+
           let!(:demand_comment) { Fabricate :demand_comment, demand: first_demand, comment_date: 1.day.ago }
           let!(:other_demand_comment) { Fabricate :demand_comment, demand: first_demand, comment_date: 2.days.ago }
 
@@ -274,8 +277,8 @@ RSpec.describe DemandsController do
           let!(:second_block) { Fabricate :demand_block, demand: first_demand, block_time: 2.days.ago }
           let!(:out_block) { Fabricate :demand_block, demand: second_demand }
 
-          let!(:demand_effort) { Fabricate :demand_effort, demand: first_demand, start_time_to_computation: 1.day.ago }
-          let!(:other_demand_effort) { Fabricate :demand_effort, demand: first_demand, start_time_to_computation: 2.days.ago }
+          let!(:demand_effort) { Fabricate :demand_effort, demand_transition: transition, demand: first_demand, start_time_to_computation: 1.day.ago }
+          let!(:other_demand_effort) { Fabricate :demand_effort, demand_transition: transition, demand: first_demand, start_time_to_computation: 2.days.ago }
           let!(:out_demand_effort) { Fabricate :demand_effort, start_time_to_computation: 2.days.ago }
 
           let!(:task) { Fabricate :task, demand: first_demand, created_date: 1.day.ago }
@@ -291,13 +294,13 @@ RSpec.describe DemandsController do
             expect(assigns(:demand_blocks)).to eq [second_block, first_block]
             expect(assigns(:queue_percentage)).to eq 0
             expect(assigns(:touch_percentage)).to eq 100
-            expect(assigns(:upstream_percentage)).to eq 42.857142857142854
-            expect(assigns(:downstream_percentage)).to eq 57.142857142857146
+            expect(assigns(:upstream_percentage)).to eq 0
+            expect(assigns(:downstream_percentage)).to eq 100
             expect(assigns(:demand_comments)).to eq [other_demand_comment, demand_comment]
             expect(assigns(:demand_efforts)).to eq [other_demand_effort, demand_effort]
             expect(assigns(:tasks_list)).to eq [other_task, task]
             expect(assigns(:paged_tasks)).to eq [other_task, task]
-            expect(assigns(:lead_time_breakdown)).to eq({})
+            expect(assigns(:lead_time_breakdown)).to eq({ stage.name => [transition] })
           end
         end
 

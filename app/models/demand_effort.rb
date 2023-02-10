@@ -55,6 +55,8 @@ class DemandEffort < ApplicationRecord
   scope :to_dates, ->(start_date, end_date) { where('start_time_to_computation BETWEEN :start_date AND :end_date', start_date: start_date, end_date: end_date) }
   scope :until_date, ->(limit_date) { where('start_time_to_computation <= :limit_date', limit_date: limit_date) }
 
+  after_save :update_demand_caches
+
   def csv_array
     [
       demand.external_id,
@@ -93,5 +95,9 @@ class DemandEffort < ApplicationRecord
 
   def management_percentage_value
     management_percentage.to_f * 100
+  end
+
+  def update_demand_caches
+    DemandEffortService.instance.update_demand_effort_caches(demand)
   end
 end

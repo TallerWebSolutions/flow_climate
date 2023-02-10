@@ -34,8 +34,6 @@ class DemandEffortsController < AuthenticatedController
   end
 
   def call_cache_consolidations
-    DemandEffortService.instance.update_demand_effort_caches(@demand)
-
     project = @demand.project
     team = @demand.team
     customer = @demand.customer || project.customers.first
