@@ -139,7 +139,7 @@ const Cell = (props: TableCellProps) => (
 
 export const ProjectChartsTable = () => {
   const { t } = useTranslation(["projectChart"])
-  const { t: tDemands } = useTranslation(["demands"])
+  const { t: tDemands } = useTranslation(["demand"])
   const [readMore, setReadMore] = useState(true)
   const { projectId } = useParams()
   const { data, loading } = useQuery<ProjectChartDTO>(PROJECT_CHART_QUERY, {
