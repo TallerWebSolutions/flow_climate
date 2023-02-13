@@ -9,7 +9,7 @@ RSpec.describe GraphqlController do
     end
   end
 
-  context 'authenticated' do
+  context 'authenticated as manager' do
     let(:user) { Fabricate :user }
 
     before { sign_in user }
@@ -21,10 +21,10 @@ RSpec.describe GraphqlController do
 
           query =
             %(query {
-        team(id: #{team.id}) {
-          id
-        }
-      })
+              team(id: #{team.id}) {
+                id
+              }
+            })
 
           post :execute, params: { format: :json, query: query }
 
@@ -37,16 +37,44 @@ RSpec.describe GraphqlController do
         it 'returns 404 with the correct message' do
           query =
             %(query {
-        team(id: 43) {
-          id
-        }
-      })
+              team(id: 43) {
+                id
+              }
+            })
 
           post :execute, params: { format: :json, query: query }
 
           expect(response).to have_http_status :not_found
           expect(response.message).to eq('Not Found')
         end
+      end
+    end
+  end
+
+  context 'authenticated as customer' do
+    let(:customer) { Fabricate :devise_customer }
+
+    before { sign_in customer }
+
+    describe 'POST #execute' do
+      it 'returns the query result' do
+        demand = Fabricate :demand
+
+        query =
+          %(
+            query {
+              demand(externalId: "#{demand.external_id}") {
+                id
+              }
+            }
+          )
+
+        request.headers.merge(userprofile: 'customer')
+
+        post :execute, params: { format: :json, query: query }
+
+        expect(response).to have_http_status :ok
+        expect(JSON.parse(response.body).dig('data', 'demand', 'id')).to eq demand.id.to_s
       end
     end
   end

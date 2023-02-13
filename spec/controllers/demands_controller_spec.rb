@@ -73,6 +73,12 @@ RSpec.describe DemandsController do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'GET #demand_efforts' do
+      before { get :demand_efforts, params: { company_id: 'foo' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated as gold' do
@@ -882,6 +888,33 @@ RSpec.describe DemandsController do
       context 'with invalid' do
         context 'company' do
           before { get :demands_charts, params: { company_id: 'foo', session_demands_key: 'bar', demands_ids: '' } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+      end
+    end
+
+    describe 'GET #demand_efforts' do
+      context 'passing a valid ID' do
+        it 'renders the SPA template' do
+          get :demand_efforts, params: { company_id: company }
+
+          expect(response).to render_template 'spa-build/index'
+          expect(assigns(:company)).to eq company
+        end
+      end
+
+      context 'passing invalid parameters' do
+        context 'non-existent company' do
+          before { get :demand_efforts, params: { company_id: 'foo' } }
+
+          it { expect(response).to have_http_status :not_found }
+        end
+
+        context 'not permitted' do
+          let(:company) { Fabricate :company, users: [] }
+
+          before { get :demand_efforts, params: { company_id: company } }
 
           it { expect(response).to have_http_status :not_found }
         end

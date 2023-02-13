@@ -271,7 +271,6 @@ Rails.application.routes.draw do
       member do
         delete :destroy_physically
         get :score_research
-        get :demand_efforts
         put :synchronize_jira
         put :synchronize_azure
       end
@@ -280,6 +279,7 @@ Rails.application.routes.draw do
         post 'demands_csv/(:demands_ids)', action: :demands_csv, as: 'demands_csv'
         get 'demands_list_by_ids', action: :demands_list_by_ids, as: :demands_list_by_ids
         get 'demands_charts'
+        get :demand_efforts
       end
 
       resources :demand_transitions, except: %i[destroy index]
