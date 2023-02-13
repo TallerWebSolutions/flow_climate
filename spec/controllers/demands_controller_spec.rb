@@ -75,7 +75,7 @@ RSpec.describe DemandsController do
     end
 
     describe 'GET #demand_efforts' do
-      before { get :demand_efforts, params: { company_id: 'foo' } }
+      before { get :demand_efforts, params: { company_id: 'foo', id: 'bar' } }
 
       it { expect(response).to redirect_to new_user_session_path }
     end
@@ -896,8 +896,9 @@ RSpec.describe DemandsController do
 
     describe 'GET #demand_efforts' do
       context 'passing a valid ID' do
+        let!(:demand) { Fabricate :demand }
         it 'renders the SPA template' do
-          get :demand_efforts, params: { company_id: company }
+          get :demand_efforts, params: { company_id: company, id: demand }
 
           expect(response).to render_template 'spa-build/index'
           expect(assigns(:company)).to eq company
@@ -906,15 +907,16 @@ RSpec.describe DemandsController do
 
       context 'passing invalid parameters' do
         context 'non-existent company' do
-          before { get :demand_efforts, params: { company_id: 'foo' } }
+          before { get :demand_efforts, params: { company_id: 'foo', id: 'bar' } }
 
           it { expect(response).to have_http_status :not_found }
         end
 
         context 'not permitted' do
           let(:company) { Fabricate :company, users: [] }
+          let!(:demand) { Fabricate :demand }
 
-          before { get :demand_efforts, params: { company_id: company } }
+          before { get :demand_efforts, params: { company_id: company, id: demand } }
 
           it { expect(response).to have_http_status :not_found }
         end
