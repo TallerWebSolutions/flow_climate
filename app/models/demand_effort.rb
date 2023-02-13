@@ -83,6 +83,10 @@ class DemandEffort < ApplicationRecord
     item_assignment.membership.member_role
   end
 
+  def effort_money
+    effort_value * demand.project.hour_value
+  end
+
   private
 
   def stage_percentage_value

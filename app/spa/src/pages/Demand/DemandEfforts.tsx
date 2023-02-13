@@ -22,6 +22,7 @@ const DEMAND_QUERY = gql`
       demandEfforts {
         id
         effortValue
+        effortMoney
         startTimeToComputation
         finishTimeToComputation
         stagePercentage
@@ -57,6 +58,7 @@ const DemandEfforts = () => {
     t("table.header.memberRole"),
     t("table.header.stage"),
     t("table.header.effortValue"),
+    t("table.header.effortMoney"),
     t("table.header.startTimeToComputation"),
     t("table.header.finishTimeToComputation"),
     t("table.header.stagePercentage"),
@@ -74,6 +76,7 @@ const DemandEfforts = () => {
       effort.memberRole || "",
       effort.stage || "",
       effort.effortValue?.toFixed(2) || 0,
+      effort.effortMoney?.toFixed(2) || 0,
       effort.startTimeToComputation ? (
         <DateLocale time date={effort.startTimeToComputation} />
       ) : (

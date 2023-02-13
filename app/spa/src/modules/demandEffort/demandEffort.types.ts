@@ -1,6 +1,7 @@
 export type DemandEffort = {
   id?: string
   effortValue?: number
+  effortMoney?: number
   startTimeToComputation?: string
   finishTimeToComputation?: string
   stagePercentage?: number

@@ -98,4 +98,25 @@ RSpec.describe DemandEffort do
       end
     end
   end
+
+  describe '#effort_money' do
+    it 'returns the effort value times the project hour value' do
+      project = Fabricate :project, hour_value: 100
+      demand = Fabricate :demand, project: project
+      effort = Fabricate :demand_effort, demand: demand, effort_value: 7
+
+      expect(effort.effort_money).to eq 700
+    end
+  end
+
+  describe '#who' do
+    it 'returns the person assigned' do
+      team_member = Fabricate :team_member, name: 'foo do bar'
+      membership = Fabricate :membership, team_member: team_member
+      item_assignment = Fabricate :item_assignment, membership: membership
+      effort = Fabricate :demand_effort, item_assignment: item_assignment
+
+      expect(effort.who).to eq 'foo do bar'
+    end
+  end
 end

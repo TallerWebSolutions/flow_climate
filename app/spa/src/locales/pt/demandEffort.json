@@ -3,6 +3,7 @@
     "header": {
       "id": "ID",
       "effortValue": "Valor",
+      "effortMoney": "R$",
       "startTimeToComputation": "Início dos Dados",
       "finishTimeToComputation": "Fim dos Dados",
       "stagePercentage": "% Etapa",

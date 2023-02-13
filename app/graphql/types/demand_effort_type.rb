@@ -4,6 +4,7 @@ module Types
   class DemandEffortType < Types::BaseObject
     field :automatic_update, Boolean, null: false
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
+    field :effort_money, String, null: true
     field :effort_value, Float, null: false
     field :finish_time_to_computation, GraphQL::Types::ISO8601DateTime, null: false
     field :id, ID, null: false

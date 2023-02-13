@@ -36,6 +36,7 @@ module Slack
         ">:busts_in_silhouette: Tamanho do time: *#{team.size_at} pessoas -- #{number_with_precision(team.size_using_available_hours, precision: 2)} pessoas faturáveis*",
         ">:moneybag: Investimento mensal: *#{number_to_currency(team.monthly_investment)}* -- *#{team.available_hours_in_month_for}* horas",
         ">:chart_with_downwards_trend: Perda operacional no mês: *#{number_to_percentage(team.loss_at * 100)}* #{number_with_precision(team.consumed_hours_in_month(Time.zone.today), precision: 2)}h realizadas de *#{number_to_percentage(team.expected_loss_at * 100)}* - #{number_with_precision(team.expected_consumption, precision: 2)}h esperadas",
+        ">:moneybag: Realizado no mês: *#{number_to_currency(team.realized_money_in_month(Time.zone.today))}*",
         ">*Dias úteis no mês: #{business_days_in_month}*\n>",
         ">Média de horas por pessoa faturável no mês: *#{number_with_precision(team.average_consumed_hours_per_person_per_day, precision: 2)}*"
       ].join("\n") } }
