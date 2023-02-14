@@ -75,8 +75,8 @@ const DemandEfforts = () => {
       effort.who || "",
       effort.memberRole || "",
       effort.stage || "",
-      effort.effortValue?.toFixed(2) || 0,
-      effort.effortMoney?.toFixed(2) || 0,
+      effort.effortValue ? Number(effort.effortValue).toFixed(2) : 0,
+      effort.effortMoney ? Number(effort.effortMoney).toFixed(2) : 0,
       effort.startTimeToComputation ? (
         <DateLocale time date={effort.startTimeToComputation} />
       ) : (
