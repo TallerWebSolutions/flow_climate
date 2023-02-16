@@ -535,56 +535,12 @@ RSpec.describe ProductsController do
     end
 
     describe 'GET #risk_reviews_tab' do
-      let(:customer) { Fabricate :customer, company: company }
+      let!(:product) { Fabricate :product, company: company }
 
-      let!(:first_product) { Fabricate :product, company: company, customer: customer }
-      let!(:second_product) { Fabricate :product, company: company, customer: customer }
+      it 'renders project spa page' do
+        get :risk_reviews_tab, params: { company_id: company, id: product }
 
-      context 'with valid parameters' do
-        context 'having data' do
-          let!(:first_risk) { Fabricate :risk_review, product: first_product, meeting_date: 1.day.ago }
-          let!(:second_risk) { Fabricate :risk_review, product: first_product, meeting_date: Time.zone.today }
-
-          let!(:other_risk) { Fabricate :risk_review, product: second_product }
-
-          it 'creates the objects and renders the tab' do
-            get :risk_reviews_tab, params: { company_id: company, id: first_product }, xhr: true
-            expect(response).to render_template 'risk_reviews/risk_reviews_tab'
-            expect(assigns(:risk_reviews)).to eq [second_risk, first_risk]
-          end
-        end
-      end
-
-      context 'with no data' do
-        it 'render the template with empty data' do
-          get :risk_reviews_tab, params: { company_id: company, id: first_product }, xhr: true
-          expect(assigns(:risk_reviews)).to eq []
-          expect(response).to render_template 'risk_reviews/risk_reviews_tab'
-        end
-      end
-
-      context 'with invalid' do
-        context 'product' do
-          before { get :risk_reviews_tab, params: { company_id: company, id: 'foo' }, xhr: true }
-
-          it { expect(response).to have_http_status :not_found }
-        end
-
-        context 'company' do
-          context 'no existent' do
-            before { get :risk_reviews_tab, params: { company_id: 'foo', id: first_product } }
-
-            it { expect(response).to have_http_status :not_found }
-          end
-
-          context 'not permitted' do
-            let(:company) { Fabricate :company, users: [] }
-
-            before { get :risk_reviews_tab, params: { company_id: company, id: first_product } }
-
-            it { expect(response).to have_http_status :not_found }
-          end
-        end
+        expect(response).to render_template 'spa-build/index'
       end
     end
 

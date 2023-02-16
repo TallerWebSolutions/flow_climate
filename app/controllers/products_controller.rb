@@ -3,7 +3,7 @@
 class ProductsController < AuthenticatedController
   before_action :user_gold_check
 
-  before_action :assign_product, only: %i[edit update destroy portfolio_units_tab projects_tab portfolio_charts_tab risk_reviews_tab service_delivery_reviews_tab]
+  before_action :assign_product, only: %i[edit update destroy portfolio_units_tab projects_tab portfolio_charts_tab service_delivery_reviews_tab]
   before_action :assign_demands, only: :portfolio_charts_tab
 
   def index
@@ -82,8 +82,8 @@ class ProductsController < AuthenticatedController
   end
 
   def risk_reviews_tab
-    @risk_reviews = @product.risk_reviews.order(meeting_date: :desc)
-    respond_to { |format| format.js { render 'risk_reviews/risk_reviews_tab' } }
+    prepend_view_path Rails.public_path
+    render 'spa-build/index'
   end
 
   def service_delivery_reviews_tab
