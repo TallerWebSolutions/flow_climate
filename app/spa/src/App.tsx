@@ -41,6 +41,7 @@ import ProductPage from "./pages/Products/ProductPage"
 import ProjectsPage from "./pages/Projects/ProjectsPage"
 import CustomerDemand from "./pages/Customer/CustomerDemand"
 import DemandEfforts from "./pages/Demand/DemandEfforts"
+import ProductsRiskReviews from "./pages/Products/ProductsRiskReviews"
 
 export const ME_QUERY = gql`
   query Me {
@@ -129,6 +130,10 @@ const App = () => {
             <Route
               path="/companies/:companySlug/products/:productSlug"
               element={<ProductPage />}
+            />
+            <Route
+              path="/companies/:companySlug/products/:productSlug/risk_reviews_tab"
+              element={<ProductsRiskReviews />}
             />
             <Route
               path="/companies/:companySlug/projects/:projectId/tasks_tab"

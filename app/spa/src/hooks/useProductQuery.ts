@@ -23,6 +23,15 @@ const PRODUCT_QUERY = gql`
       leadtimeP80
       leadtimeP65
 
+      riskReviews {
+        id
+        leadTimeOutlierLimit
+        meetingDate
+        monthlyAvgBlockedTime
+        weeklyAvgBlockedTime
+        createdAt
+      }
+
       latestDeliveries {
         id
         externalId

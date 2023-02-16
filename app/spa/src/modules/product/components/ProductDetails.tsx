@@ -4,15 +4,19 @@ import { useParams } from "react-router-dom"
 import { Backdrop, Button, CircularProgress } from "@mui/material"
 import BasicPage from "../../../components/BasicPage"
 import ProductGeneralInfo from "./ProductGeneralInfo"
-import ProductCharts from "./ProductCharts"
-import React from "react"
+import React, { ReactNode } from "react"
 
 type ProductDetailsProps = {
   product: Product
   loading: boolean
+  children?: ReactNode
 }
 
-const ProductDetails = ({ product, loading }: ProductDetailsProps) => {
+const ProductDetails = ({
+  product,
+  loading,
+  children,
+}: ProductDetailsProps) => {
   const { t } = useTranslation(["products"])
   const params = useParams()
 
@@ -55,11 +59,10 @@ const ProductDetails = ({ product, loading }: ProductDetailsProps) => {
           >
             {t("product.show.jiraProductConfigs")}
           </Button>
-
           <ProductGeneralInfo product={product} />
-          <ProductCharts product={product} />
         </>
       )}
+      {children}
     </BasicPage>
   )
 }

@@ -2,12 +2,22 @@ import { Company } from "../company/company.types"
 import { Demand } from "../demand/demand.types"
 import { LeadtimeEvolutionChart } from "../charts/charts.types"
 
+type RiskReview = {
+  id: string
+  leadTimeOutlierLimit: number
+  meetingDate: dateFns
+  monthlyAvgBlockedTime: number
+  weeklyAvgBlockedTime: number
+  createdAt: dateFns
+}
+
 export type Product = {
   company: Company
   id: string
   name: string
   slug: string
   latestDeliveries: Demand[]
+  riskReviews: RiskReview[]
   remainingBacklogCount: number
   createdDemandsCount: number
   deliveredDemandsCount: number
