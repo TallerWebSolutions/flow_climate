@@ -31,6 +31,13 @@ CREATE SCHEMA heroku_ext;
 
 
 --
+-- Name: public; Type: SCHEMA; Schema: -; Owner: -
+--
+
+-- *not* creating schema, since initdb creates it
+
+
+--
 -- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -677,8 +684,8 @@ ALTER SEQUENCE hdb_catalog.remote_schemas_id_seq OWNED BY hdb_catalog.remote_sch
 CREATE TABLE public.ar_internal_metadata (
     key character varying NOT NULL,
     value character varying,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -1465,8 +1472,8 @@ CREATE TABLE public.demands (
     external_url character varying,
     class_of_service integer DEFAULT 0 NOT NULL,
     project_id integer,
-    effort_downstream numeric DEFAULT 0.0,
-    effort_upstream numeric DEFAULT 0.0,
+    effort_downstream numeric DEFAULT 0,
+    effort_upstream numeric DEFAULT 0,
     leadtime numeric,
     manual_effort boolean DEFAULT false,
     total_queue_time integer DEFAULT 0,
@@ -1478,9 +1485,9 @@ CREATE TABLE public.demands (
     portfolio_unit_id integer,
     product_id integer,
     team_id integer NOT NULL,
-    cost_to_project numeric DEFAULT 0.0,
-    total_bloked_working_time numeric DEFAULT 0.0,
-    total_touch_blocked_time numeric DEFAULT 0.0,
+    cost_to_project numeric DEFAULT 0,
+    total_bloked_working_time numeric DEFAULT 0,
+    total_touch_blocked_time numeric DEFAULT 0,
     risk_review_id integer,
     demand_score numeric DEFAULT 0.0,
     service_delivery_review_id integer,
@@ -1643,7 +1650,7 @@ CREATE TABLE public.friendly_id_slugs (
     sluggable_id integer NOT NULL,
     sluggable_type character varying(50),
     scope character varying,
-    created_at timestamp(6) without time zone
+    created_at timestamp without time zone
 );
 
 
@@ -3429,7 +3436,7 @@ CREATE TABLE public.user_plans (
     user_id integer NOT NULL,
     plan_id integer NOT NULL,
     plan_billing_period integer DEFAULT 0 NOT NULL,
-    plan_value numeric DEFAULT 0.0 NOT NULL,
+    plan_value numeric DEFAULT 0 NOT NULL,
     start_at timestamp without time zone NOT NULL,
     finish_at timestamp without time zone NOT NULL,
     active boolean DEFAULT false NOT NULL,
@@ -3514,7 +3521,7 @@ CREATE TABLE public.users (
     admin boolean DEFAULT false NOT NULL,
     last_company_id integer,
     email_notifications boolean DEFAULT false NOT NULL,
-    user_money_credits numeric DEFAULT 0.0 NOT NULL,
+    user_money_credits numeric DEFAULT 0 NOT NULL,
     avatar character varying,
     language character varying DEFAULT 'pt-BR'::character varying NOT NULL
 );
@@ -3572,6 +3579,13 @@ CREATE SEQUENCE public.work_item_types_id_seq
 --
 
 ALTER SEQUENCE public.work_item_types_id_seq OWNED BY public.work_item_types.id;
+
+
+--
+-- Name: remote_schemas id; Type: DEFAULT; Schema: hdb_catalog; Owner: -
+--
+
+ALTER TABLE ONLY hdb_catalog.remote_schemas ALTER COLUMN id SET DEFAULT nextval('hdb_catalog.remote_schemas_id_seq'::regclass);
 
 
 --
@@ -4097,6 +4111,134 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 --
 
 ALTER TABLE ONLY public.work_item_types ALTER COLUMN id SET DEFAULT nextval('public.work_item_types_id_seq'::regclass);
+
+
+--
+-- Name: event_invocation_logs event_invocation_logs_pkey; Type: CONSTRAINT; Schema: hdb_catalog; Owner: -
+--
+
+ALTER TABLE ONLY hdb_catalog.event_invocation_logs
+    ADD CONSTRAINT event_invocation_logs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: event_log event_log_pkey; Type: CONSTRAINT; Schema: hdb_catalog; Owner: -
+--
+
+ALTER TABLE ONLY hdb_catalog.event_log
+    ADD CONSTRAINT event_log_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: event_triggers event_triggers_pkey; Type: CONSTRAINT; Schema: hdb_catalog; Owner: -
+--
+
+ALTER TABLE ONLY hdb_catalog.event_triggers
+    ADD CONSTRAINT event_triggers_pkey PRIMARY KEY (name);
+
+
+--
+-- Name: hdb_action_log hdb_action_log_pkey; Type: CONSTRAINT; Schema: hdb_catalog; Owner: -
+--
+
+ALTER TABLE ONLY hdb_catalog.hdb_action_log
+    ADD CONSTRAINT hdb_action_log_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: hdb_action_permission hdb_action_permission_pkey; Type: CONSTRAINT; Schema: hdb_catalog; Owner: -
+--
+
+ALTER TABLE ONLY hdb_catalog.hdb_action_permission
+    ADD CONSTRAINT hdb_action_permission_pkey PRIMARY KEY (action_name, role_name);
+
+
+--
+-- Name: hdb_action hdb_action_pkey; Type: CONSTRAINT; Schema: hdb_catalog; Owner: -
+--
+
+ALTER TABLE ONLY hdb_catalog.hdb_action
+    ADD CONSTRAINT hdb_action_pkey PRIMARY KEY (action_name);
+
+
+--
+-- Name: hdb_allowlist hdb_allowlist_collection_name_key; Type: CONSTRAINT; Schema: hdb_catalog; Owner: -
+--
+
+ALTER TABLE ONLY hdb_catalog.hdb_allowlist
+    ADD CONSTRAINT hdb_allowlist_collection_name_key UNIQUE (collection_name);
+
+
+--
+-- Name: hdb_computed_field hdb_computed_field_pkey; Type: CONSTRAINT; Schema: hdb_catalog; Owner: -
+--
+
+ALTER TABLE ONLY hdb_catalog.hdb_computed_field
+    ADD CONSTRAINT hdb_computed_field_pkey PRIMARY KEY (table_schema, table_name, computed_field_name);
+
+
+--
+-- Name: hdb_function hdb_function_pkey; Type: CONSTRAINT; Schema: hdb_catalog; Owner: -
+--
+
+ALTER TABLE ONLY hdb_catalog.hdb_function
+    ADD CONSTRAINT hdb_function_pkey PRIMARY KEY (function_schema, function_name);
+
+
+--
+-- Name: hdb_permission hdb_permission_pkey; Type: CONSTRAINT; Schema: hdb_catalog; Owner: -
+--
+
+ALTER TABLE ONLY hdb_catalog.hdb_permission
+    ADD CONSTRAINT hdb_permission_pkey PRIMARY KEY (table_schema, table_name, role_name, perm_type);
+
+
+--
+-- Name: hdb_query_collection hdb_query_collection_pkey; Type: CONSTRAINT; Schema: hdb_catalog; Owner: -
+--
+
+ALTER TABLE ONLY hdb_catalog.hdb_query_collection
+    ADD CONSTRAINT hdb_query_collection_pkey PRIMARY KEY (collection_name);
+
+
+--
+-- Name: hdb_relationship hdb_relationship_pkey; Type: CONSTRAINT; Schema: hdb_catalog; Owner: -
+--
+
+ALTER TABLE ONLY hdb_catalog.hdb_relationship
+    ADD CONSTRAINT hdb_relationship_pkey PRIMARY KEY (table_schema, table_name, rel_name);
+
+
+--
+-- Name: hdb_table hdb_table_pkey; Type: CONSTRAINT; Schema: hdb_catalog; Owner: -
+--
+
+ALTER TABLE ONLY hdb_catalog.hdb_table
+    ADD CONSTRAINT hdb_table_pkey PRIMARY KEY (table_schema, table_name);
+
+
+--
+-- Name: hdb_version hdb_version_pkey; Type: CONSTRAINT; Schema: hdb_catalog; Owner: -
+--
+
+ALTER TABLE ONLY hdb_catalog.hdb_version
+    ADD CONSTRAINT hdb_version_pkey PRIMARY KEY (hasura_uuid);
+
+
+--
+-- Name: remote_schemas remote_schemas_name_key; Type: CONSTRAINT; Schema: hdb_catalog; Owner: -
+--
+
+ALTER TABLE ONLY hdb_catalog.remote_schemas
+    ADD CONSTRAINT remote_schemas_name_key UNIQUE (name);
+
+
+--
+-- Name: remote_schemas remote_schemas_pkey; Type: CONSTRAINT; Schema: hdb_catalog; Owner: -
+--
+
+ALTER TABLE ONLY hdb_catalog.remote_schemas
+    ADD CONSTRAINT remote_schemas_pkey PRIMARY KEY (id);
 
 
 --
@@ -4716,6 +4858,55 @@ ALTER TABLE ONLY public.work_item_types
 
 
 --
+-- Name: event_invocation_logs_event_id_idx; Type: INDEX; Schema: hdb_catalog; Owner: -
+--
+
+CREATE INDEX event_invocation_logs_event_id_idx ON hdb_catalog.event_invocation_logs USING btree (event_id);
+
+
+--
+-- Name: event_log_created_at_idx; Type: INDEX; Schema: hdb_catalog; Owner: -
+--
+
+CREATE INDEX event_log_created_at_idx ON hdb_catalog.event_log USING btree (created_at);
+
+
+--
+-- Name: event_log_delivered_idx; Type: INDEX; Schema: hdb_catalog; Owner: -
+--
+
+CREATE INDEX event_log_delivered_idx ON hdb_catalog.event_log USING btree (delivered);
+
+
+--
+-- Name: event_log_locked_idx; Type: INDEX; Schema: hdb_catalog; Owner: -
+--
+
+CREATE INDEX event_log_locked_idx ON hdb_catalog.event_log USING btree (locked);
+
+
+--
+-- Name: event_log_trigger_name_idx; Type: INDEX; Schema: hdb_catalog; Owner: -
+--
+
+CREATE INDEX event_log_trigger_name_idx ON hdb_catalog.event_log USING btree (trigger_name);
+
+
+--
+-- Name: hdb_schema_update_event_one_row; Type: INDEX; Schema: hdb_catalog; Owner: -
+--
+
+CREATE UNIQUE INDEX hdb_schema_update_event_one_row ON hdb_catalog.hdb_schema_update_event USING btree (((occurred_at IS NOT NULL)));
+
+
+--
+-- Name: hdb_version_one_row; Type: INDEX; Schema: hdb_catalog; Owner: -
+--
+
+CREATE UNIQUE INDEX hdb_version_one_row ON hdb_catalog.hdb_version USING btree (((version IS NOT NULL)));
+
+
+--
 -- Name: cos_history_unique; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4940,13 +5131,6 @@ CREATE UNIQUE INDEX index_customers_on_company_id_and_name ON public.customers U
 
 
 --
--- Name: index_customers_on_customer_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_customers_on_customer_id ON public.customers USING btree (customer_id);
-
-
---
 -- Name: index_customers_projects_on_customer_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4982,13 +5166,6 @@ CREATE INDEX index_demand_block_notifications_on_demand_block_id ON public.deman
 
 
 --
--- Name: index_demand_blocks_on_blocker_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_demand_blocks_on_blocker_id ON public.demand_blocks USING btree (blocker_id);
-
-
---
 -- Name: index_demand_blocks_on_demand_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4996,52 +5173,10 @@ CREATE INDEX index_demand_blocks_on_demand_id ON public.demand_blocks USING btre
 
 
 --
--- Name: index_demand_blocks_on_discarded_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_demand_blocks_on_discarded_at ON public.demand_blocks USING btree (discarded_at);
-
-
---
--- Name: index_demand_blocks_on_risk_review_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_demand_blocks_on_risk_review_id ON public.demand_blocks USING btree (risk_review_id);
-
-
---
--- Name: index_demand_blocks_on_stage_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_demand_blocks_on_stage_id ON public.demand_blocks USING btree (stage_id);
-
-
---
--- Name: index_demand_blocks_on_unblocker_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_demand_blocks_on_unblocker_id ON public.demand_blocks USING btree (unblocker_id);
-
-
---
 -- Name: index_demand_comments_on_demand_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_demand_comments_on_demand_id ON public.demand_comments USING btree (demand_id);
-
-
---
--- Name: index_demand_comments_on_discarded_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_demand_comments_on_discarded_at ON public.demand_comments USING btree (discarded_at);
-
-
---
--- Name: index_demand_comments_on_team_member_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_demand_comments_on_team_member_id ON public.demand_comments USING btree (team_member_id);
 
 
 --
@@ -5122,20 +5257,6 @@ CREATE INDEX index_demand_transitions_on_transition_notified ON public.demand_tr
 
 
 --
--- Name: index_demands_on_class_of_service; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_demands_on_class_of_service ON public.demands USING btree (class_of_service);
-
-
---
--- Name: index_demands_on_company_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_demands_on_company_id ON public.demands USING btree (company_id);
-
-
---
 -- Name: index_demands_on_contract_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5147,13 +5268,6 @@ CREATE INDEX index_demands_on_contract_id ON public.demands USING btree (contrac
 --
 
 CREATE INDEX index_demands_on_current_stage_id ON public.demands USING btree (current_stage_id);
-
-
---
--- Name: index_demands_on_customer_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_demands_on_customer_id ON public.demands USING btree (customer_id);
 
 
 --
@@ -5171,52 +5285,10 @@ CREATE UNIQUE INDEX index_demands_on_external_id_and_company_id ON public.demand
 
 
 --
--- Name: index_demands_on_portfolio_unit_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_demands_on_portfolio_unit_id ON public.demands USING btree (portfolio_unit_id);
-
-
---
--- Name: index_demands_on_product_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_demands_on_product_id ON public.demands USING btree (product_id);
-
-
---
--- Name: index_demands_on_project_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_demands_on_project_id ON public.demands USING btree (project_id);
-
-
---
--- Name: index_demands_on_risk_review_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_demands_on_risk_review_id ON public.demands USING btree (risk_review_id);
-
-
---
--- Name: index_demands_on_service_delivery_review_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_demands_on_service_delivery_review_id ON public.demands USING btree (service_delivery_review_id);
-
-
---
 -- Name: index_demands_on_slug; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX index_demands_on_slug ON public.demands USING btree (slug);
-
-
---
--- Name: index_demands_on_team_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_demands_on_team_id ON public.demands USING btree (team_id);
 
 
 --
@@ -5248,13 +5320,6 @@ CREATE INDEX index_financial_informations_on_company_id ON public.financial_info
 
 
 --
--- Name: index_flow_events_on_discarded_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_flow_events_on_discarded_at ON public.flow_events USING btree (discarded_at);
-
-
---
 -- Name: index_flow_events_on_event_size; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5273,13 +5338,6 @@ CREATE INDEX index_flow_events_on_event_type ON public.flow_events USING btree (
 --
 
 CREATE INDEX index_flow_events_on_project_id ON public.flow_events USING btree (project_id);
-
-
---
--- Name: index_flow_events_on_risk_review_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_flow_events_on_risk_review_id ON public.flow_events USING btree (risk_review_id);
 
 
 --
@@ -5367,13 +5425,6 @@ CREATE INDEX index_integration_errors_on_company_id ON public.integration_errors
 
 
 --
--- Name: index_integration_errors_on_integratable_model_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_integration_errors_on_integratable_model_name ON public.integration_errors USING btree (integratable_model_name);
-
-
---
 -- Name: index_integration_errors_on_integration_type; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5381,24 +5432,10 @@ CREATE INDEX index_integration_errors_on_integration_type ON public.integration_
 
 
 --
--- Name: index_integration_errors_on_project_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_integration_errors_on_project_id ON public.integration_errors USING btree (project_id);
-
-
---
 -- Name: index_item_assignments_on_demand_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_item_assignments_on_demand_id ON public.item_assignments USING btree (demand_id);
-
-
---
--- Name: index_item_assignments_on_discarded_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_item_assignments_on_discarded_at ON public.item_assignments USING btree (discarded_at);
 
 
 --
@@ -5469,20 +5506,6 @@ CREATE UNIQUE INDEX index_jira_product_configs_on_company_id_and_jira_product_ke
 --
 
 CREATE INDEX index_jira_product_configs_on_product_id ON public.jira_product_configs USING btree (product_id);
-
-
---
--- Name: index_jira_project_configs_on_fix_version_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_jira_project_configs_on_fix_version_name ON public.jira_project_configs USING btree (fix_version_name);
-
-
---
--- Name: index_jira_project_configs_on_jira_product_config_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_jira_project_configs_on_jira_product_config_id ON public.jira_project_configs USING btree (jira_product_config_id);
 
 
 --
@@ -5668,31 +5691,10 @@ CREATE INDEX index_project_risk_alerts_on_project_risk_config_id ON public.proje
 
 
 --
--- Name: index_project_risk_configs_on_project_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_project_risk_configs_on_project_id ON public.project_risk_configs USING btree (project_id);
-
-
---
--- Name: index_projects_on_company_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_projects_on_company_id ON public.projects USING btree (company_id);
-
-
---
 -- Name: index_projects_on_company_id_and_name; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX index_projects_on_company_id_and_name ON public.projects USING btree (company_id, name);
-
-
---
--- Name: index_projects_on_team_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_projects_on_team_id ON public.projects USING btree (team_id);
 
 
 --
@@ -5836,13 +5838,6 @@ CREATE INDEX index_slack_configurations_on_customer_id ON public.slack_configura
 
 
 --
--- Name: index_slack_configurations_on_info_type; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_slack_configurations_on_info_type ON public.slack_configurations USING btree (info_type);
-
-
---
 -- Name: index_slack_configurations_on_team_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5868,13 +5863,6 @@ CREATE UNIQUE INDEX index_stage_project_configs_on_project_id_and_stage_id ON pu
 --
 
 CREATE INDEX index_stage_project_configs_on_stage_id ON public.stage_project_configs USING btree (stage_id);
-
-
---
--- Name: index_stages_on_company_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_stages_on_company_id ON public.stages USING btree (company_id);
 
 
 --
@@ -5976,38 +5964,10 @@ CREATE INDEX index_team_consolidations_on_team_id ON public.team_consolidations 
 
 
 --
--- Name: index_team_members_on_company_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_team_members_on_company_id ON public.team_members USING btree (company_id);
-
-
---
 -- Name: index_team_members_on_company_id_and_name_and_jira_account_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX index_team_members_on_company_id_and_name_and_jira_account_id ON public.team_members USING btree (company_id, name, jira_account_id);
-
-
---
--- Name: index_team_members_on_jira_account_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_team_members_on_jira_account_id ON public.team_members USING btree (jira_account_id);
-
-
---
--- Name: index_team_members_on_jira_account_user_email; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_team_members_on_jira_account_user_email ON public.team_members USING btree (jira_account_user_email);
-
-
---
--- Name: index_team_members_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_team_members_on_user_id ON public.team_members USING btree (user_id);
 
 
 --
@@ -6172,13 +6132,6 @@ CREATE UNIQUE INDEX index_users_on_email ON public.users USING btree (email);
 
 
 --
--- Name: index_users_on_last_company_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_users_on_last_company_id ON public.users USING btree (last_company_id);
-
-
---
 -- Name: index_users_on_reset_password_token; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6267,6 +6220,69 @@ CREATE UNIQUE INDEX unique_custom_field_to_jira_account ON public.jira_custom_fi
 --
 
 CREATE UNIQUE INDEX unique_fix_version_to_jira_product ON public.jira_project_configs USING btree (jira_product_config_id, fix_version_name);
+
+
+--
+-- Name: hdb_schema_update_event hdb_schema_update_event_notifier; Type: TRIGGER; Schema: hdb_catalog; Owner: -
+--
+
+CREATE TRIGGER hdb_schema_update_event_notifier AFTER INSERT OR UPDATE ON hdb_catalog.hdb_schema_update_event FOR EACH ROW EXECUTE FUNCTION hdb_catalog.hdb_schema_update_event_notifier();
+
+
+--
+-- Name: event_invocation_logs event_invocation_logs_event_id_fkey; Type: FK CONSTRAINT; Schema: hdb_catalog; Owner: -
+--
+
+ALTER TABLE ONLY hdb_catalog.event_invocation_logs
+    ADD CONSTRAINT event_invocation_logs_event_id_fkey FOREIGN KEY (event_id) REFERENCES hdb_catalog.event_log(id);
+
+
+--
+-- Name: event_triggers event_triggers_schema_name_fkey; Type: FK CONSTRAINT; Schema: hdb_catalog; Owner: -
+--
+
+ALTER TABLE ONLY hdb_catalog.event_triggers
+    ADD CONSTRAINT event_triggers_schema_name_fkey FOREIGN KEY (schema_name, table_name) REFERENCES hdb_catalog.hdb_table(table_schema, table_name) ON UPDATE CASCADE;
+
+
+--
+-- Name: hdb_action_permission hdb_action_permission_action_name_fkey; Type: FK CONSTRAINT; Schema: hdb_catalog; Owner: -
+--
+
+ALTER TABLE ONLY hdb_catalog.hdb_action_permission
+    ADD CONSTRAINT hdb_action_permission_action_name_fkey FOREIGN KEY (action_name) REFERENCES hdb_catalog.hdb_action(action_name) ON UPDATE CASCADE;
+
+
+--
+-- Name: hdb_allowlist hdb_allowlist_collection_name_fkey; Type: FK CONSTRAINT; Schema: hdb_catalog; Owner: -
+--
+
+ALTER TABLE ONLY hdb_catalog.hdb_allowlist
+    ADD CONSTRAINT hdb_allowlist_collection_name_fkey FOREIGN KEY (collection_name) REFERENCES hdb_catalog.hdb_query_collection(collection_name);
+
+
+--
+-- Name: hdb_computed_field hdb_computed_field_table_schema_fkey; Type: FK CONSTRAINT; Schema: hdb_catalog; Owner: -
+--
+
+ALTER TABLE ONLY hdb_catalog.hdb_computed_field
+    ADD CONSTRAINT hdb_computed_field_table_schema_fkey FOREIGN KEY (table_schema, table_name) REFERENCES hdb_catalog.hdb_table(table_schema, table_name) ON UPDATE CASCADE;
+
+
+--
+-- Name: hdb_permission hdb_permission_table_schema_fkey; Type: FK CONSTRAINT; Schema: hdb_catalog; Owner: -
+--
+
+ALTER TABLE ONLY hdb_catalog.hdb_permission
+    ADD CONSTRAINT hdb_permission_table_schema_fkey FOREIGN KEY (table_schema, table_name) REFERENCES hdb_catalog.hdb_table(table_schema, table_name) ON UPDATE CASCADE;
+
+
+--
+-- Name: hdb_relationship hdb_relationship_table_schema_fkey; Type: FK CONSTRAINT; Schema: hdb_catalog; Owner: -
+--
+
+ALTER TABLE ONLY hdb_catalog.hdb_relationship
+    ADD CONSTRAINT hdb_relationship_table_schema_fkey FOREIGN KEY (table_schema, table_name) REFERENCES hdb_catalog.hdb_table(table_schema, table_name) ON UPDATE CASCADE;
 
 
 --

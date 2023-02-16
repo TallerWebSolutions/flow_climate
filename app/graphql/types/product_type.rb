@@ -21,6 +21,7 @@ module Types
     field :leadtime_p95, Integer, null: true
     field :portfolio_units_count, Integer, null: true
     field :remaining_backlog_count, Integer, null: true
+    field :risk_reviews, [Types::RiskReviewType], null: true
     field :unscored_demands_count, Integer, null: true
     field :upstream_demands_count, Integer, null: true
 

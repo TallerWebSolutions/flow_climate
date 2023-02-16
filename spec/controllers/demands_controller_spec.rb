@@ -897,6 +897,7 @@ RSpec.describe DemandsController do
     describe 'GET #demand_efforts' do
       context 'passing a valid ID' do
         let!(:demand) { Fabricate :demand }
+
         it 'renders the SPA template' do
           get :demand_efforts, params: { company_id: company, id: demand }
 
