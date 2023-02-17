@@ -62,13 +62,14 @@ Have the ultimate management tools in your hands!
 \*\* Local debugging for Visual Studio Code
 [See this article](https://rahul-arora.medium.com/debugging-ruby-on-rails-server-in-vs-code-819b45113e78)
 
-## Storybook
 
-Always check storybook before creating new components for the spa.
+## Build frontend environment
+
+Always run build for spa components.
 
 ```
 cd app/spa
-npm run storybook
+npm run build 
 ```
 
 ## Troubleshoot
