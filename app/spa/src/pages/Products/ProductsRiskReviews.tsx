@@ -11,6 +11,7 @@ import {
   Paper,
   Typography,
   Box,
+  Link,
 } from "@mui/material"
 import { useTranslation } from "react-i18next"
 import { formatDate, secondsToHours } from "../../lib/date"
@@ -18,6 +19,7 @@ import { formatDate, secondsToHours } from "../../lib/date"
 const ProductsRiskReviews = () => {
   const params = useParams()
   const productSlug = params.productSlug || ""
+  const companySlug = params.companySlug || ""
   const { product, loading: queryLoading } = useProductQuery(productSlug)
 
   const { t: tRiskReview } = useTranslation(["riskReviews"])
@@ -45,6 +47,9 @@ const ProductsRiskReviews = () => {
                     }}
                   >
                     <TableCell>
+                      {tRiskReview("riskReviews.riskReviewID")}
+                    </TableCell>
+                    <TableCell>
                       {tRiskReview("riskReviews.leadTimeOutlierLimit")}
                     </TableCell>
                     <TableCell>
@@ -71,6 +76,13 @@ const ProductsRiskReviews = () => {
                             borderBottomColor: "grey.200",
                           }}
                         >
+                          <TableCell>
+                            <Link
+                              href={`/companies/${companySlug}/products/${productSlug}/risk_reviews/${riskReview.id}`}
+                            >
+                              {riskReview.id}
+                            </Link>
+                          </TableCell>
                           <TableCell>
                             {riskReview.leadTimeOutlierLimit}
                           </TableCell>

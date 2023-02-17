@@ -1,0 +1,10 @@
+{
+  "riskReviews": {
+    "riskReviewID": "Risk review ID",
+    "leadTimeOutlierLimit": "Lead Time Outlier Limit",
+    "meetingDate": "Meeting date",
+    "monthlyAvgBlockedTime": "Monthly avg blocked time",
+    "weeklyAvgBlockedTime": "Weekly avg blocked time",
+    "createdAt": "Created at"
+  }
+}
