@@ -16,6 +16,8 @@
     }
   },
   "products": {
-    "title": "Products"
+    "title": "Products",
+    "product": "Produto",
+    "riskReview": "Revisão de risco"
   }
 }

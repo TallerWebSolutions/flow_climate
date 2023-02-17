@@ -7,9 +7,9 @@ module Types
     field :id, ID, null: false
     field :lead_time_outlier_limit, Float, null: false
     field :meeting_date, GraphQL::Types::ISO8601Date, null: false
-    field :monthly_avg_blocked_time, Float
+    field :monthly_avg_blocked_time, [Float]
     field :product, Types::ProductType, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
-    field :weekly_avg_blocked_time, Float
+    field :weekly_avg_blocked_time, [Float]
   end
 end

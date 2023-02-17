@@ -2,13 +2,13 @@ import { Company } from "../company/company.types"
 import { Demand } from "../demand/demand.types"
 import { LeadtimeEvolutionChart } from "../charts/charts.types"
 
-type RiskReview = {
+export type RiskReview = {
   id: string
   leadTimeOutlierLimit: number
-  meetingDate: dateFns
-  monthlyAvgBlockedTime: number
-  weeklyAvgBlockedTime: number
-  createdAt: dateFns
+  meetingDate: string
+  monthlyAvgBlockedTime: number[]
+  weeklyAvgBlockedTime: number[]
+  createdAt: string
 }
 
 export type Product = {

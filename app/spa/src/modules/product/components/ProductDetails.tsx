@@ -1,7 +1,8 @@
 import { Product } from "../product.types"
 import { useTranslation } from "react-i18next"
-import { useParams } from "react-router-dom"
-import { Backdrop, Button, CircularProgress } from "@mui/material"
+import { useLocation, useParams } from "react-router-dom"
+import { Backdrop, Box, Button, CircularProgress } from "@mui/material"
+import { Tabs } from "../../../components/Tabs"
 import BasicPage from "../../../components/BasicPage"
 import ProductGeneralInfo from "./ProductGeneralInfo"
 import React, { ReactNode } from "react"
@@ -17,6 +18,7 @@ const ProductDetails = ({
   loading,
   children,
 }: ProductDetailsProps) => {
+  const { pathname } = useLocation()
   const { t } = useTranslation(["products"])
   const params = useParams()
 
@@ -46,6 +48,17 @@ const ProductDetails = ({
     },
   ]
 
+  const productTabs = [
+    {
+      label: t("products.product"),
+      to: `/companies/${companySlug}/products/${productSlug}`,
+    },
+    {
+      label: t("products.riskReview"),
+      to: `/companies/${companySlug}/products/${productSlug}/risk_reviews_tab`,
+    },
+  ]
+
   return (
     <BasicPage
       title={productName}
@@ -62,6 +75,15 @@ const ProductDetails = ({
           <ProductGeneralInfo product={product} />
         </>
       )}
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Tabs tabs={productTabs} currentPath={pathname} />
+      </Box>
       {children}
     </BasicPage>
   )

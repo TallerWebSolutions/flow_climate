@@ -60,3 +60,13 @@ export const toISOFormat = (date: string): string => {
 export const secondsToDays = (seconds: number | string): number => {
   return Number((Number(seconds) / ONE_DAY_IN_SECONDS).toFixed(2))
 }
+
+export const secondsToHours = (seconds: number | string): string => {
+  const h = Math.floor(Number(seconds) / 3600)
+  const m = Math.floor(Number(seconds) % (3600 / 60))
+
+  const hourDisplay = h > 0 ? h + (h === 1 ? " hora" : " horas") : h + " horas"
+  const minDisplay = m + " min"
+
+  return `${hourDisplay} e ${minDisplay}`
+}

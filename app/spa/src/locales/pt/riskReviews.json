@@ -1,0 +1,9 @@
+{
+  "riskReviews": {
+    "leadTimeOutlierLimit": "Outlier no lead time",
+    "meetingDate": "Data da Reunião",
+    "monthlyAvgBlockedTime": "Tempo médio de bloqueio mensal",
+    "weeklyAvgBlockedTime": "Tempo médio de bloqueio semanal",
+    "createdAt": "Criado em"
+  }
+}
