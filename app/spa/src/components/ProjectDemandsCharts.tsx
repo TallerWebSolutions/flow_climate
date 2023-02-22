@@ -11,11 +11,11 @@ import LineChartTooltip from "./charts/tooltips/LineChartTooltip"
 import { secondsToDays } from "../lib/date"
 import { Burnup, Project } from "../modules/project/project.types"
 import { Grid } from "@mui/material"
-import { openWindow } from "../lib/func"
 import { useContext } from "react"
 import { MeContext } from "../contexts/MeContext"
 import { ChartAxisData } from "../modules/charts/charts.types"
 import { cfdChartData } from "../lib/charts"
+import { useNavigate } from "react-router-dom"
 
 type ProjectDemandsChartsProps = {
   project: Project
@@ -60,6 +60,7 @@ const ProjectDemandsCharts = ({
 }: ProjectDemandsChartsProps) => {
   const { t } = useTranslation(["projectChart"])
   const { me } = useContext(MeContext)
+  const navigate = useNavigate()
   const projectConsolidationsWeekly = project.projectConsolidationsWeekly
   const projectConsolidationsLastMonth = project.projectConsolidationsLastMonth
   const demandsFinishedWithLeadtime = project.demandsFinishedWithLeadtime
@@ -560,7 +561,7 @@ const ProjectDemandsCharts = ({
             leadTimeControlP95Marker,
           ]}
           onClick={(props) => {
-            openWindow(
+            navigate(
               `/companies/${me?.currentCompany?.slug}/demands/${props.data.x}`
             )
           }}

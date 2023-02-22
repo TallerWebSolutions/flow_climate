@@ -4,11 +4,11 @@ import { LeadtimeEvolutionChart } from "../charts/charts.types"
 
 export type RiskReview = {
   id: string
-  leadTimeOutlierLimit: number
-  meetingDate: string
-  monthlyAvgBlockedTime: number[]
-  weeklyAvgBlockedTime: number[]
-  createdAt: string
+  leadTimeOutlierLimit?: number
+  meetingDate?: string
+  monthlyAvgBlockedTime?: number[]
+  weeklyAvgBlockedTime?: number[]
+  createdAt?: string
 }
 
 export type Product = {

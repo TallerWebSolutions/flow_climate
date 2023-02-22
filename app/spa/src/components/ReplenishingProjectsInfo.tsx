@@ -12,8 +12,8 @@ import {
 import { KeyboardArrowUp, KeyboardArrowDown } from "@material-ui/icons"
 import { Box } from "@mui/system"
 import { Fragment, useState } from "react"
-import { formatLeadtime } from "../lib/func"
 import { Project } from "../modules/project/project.types"
+import { secondsToReadbleDate } from "../lib/date"
 
 type ReplenishingProjectsInfoProps = {
   projects: Project[]
@@ -70,7 +70,7 @@ const TableRow = ({ project, companySlug }: TableRowProps) => {
         </TableCell>
         <TableCell>{project.remainingBacklog} demandas</TableCell>
         <TableCell>{project.flowPressurePercentage.toFixed(2)}%</TableCell>
-        <TableCell>{formatLeadtime(project.leadTimeP80)}</TableCell>
+        <TableCell>{secondsToReadbleDate(project.leadTimeP80)}</TableCell>
         <TableCell>{project.qtyInProgress} demandas</TableCell>
         <TableCell>{project.startDate}</TableCell>
         <TableCell>{project.endDate}</TableCell>

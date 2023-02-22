@@ -6,9 +6,9 @@ import {
 } from "@apollo/client"
 import { ReactElement } from "react"
 
-const csrfToken = document
-  .querySelector("meta[name='csrf-token']")
-  ?.getAttribute("content")
+const csrfToken =
+  document.querySelector("meta[name='csrf-token']")?.getAttribute("content") ||
+  ""
 
 const httpLink = (userProfile: string) =>
   createHttpLink({

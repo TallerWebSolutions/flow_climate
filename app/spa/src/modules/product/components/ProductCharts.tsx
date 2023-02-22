@@ -1,5 +1,6 @@
 import { Typography } from "@mui/material"
 import { useTranslation } from "react-i18next"
+
 import { Product } from "../product.types"
 import LeadtimeEvolutionChart from "../../charts/components/LeadtimeEvolutionChart"
 

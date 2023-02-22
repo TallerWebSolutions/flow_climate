@@ -12,7 +12,6 @@ import BarChartTooltip, {
   BarData,
 } from "../../../components/charts/tooltips/BarChartTooltip"
 import { secondsToDays } from "../../../lib/date"
-import { openWindow } from "../../../lib/func"
 import { Task } from "../task.types"
 import { normalizeTasksFlowChart } from "../normalize"
 import TasksList, { TaskFilters } from "./TasksList"
@@ -25,6 +24,7 @@ import {
 } from "../../charts/charts.types"
 import PieChart from "../../../components/charts/PieChart"
 import ControlChart from "../../charts/controlChart.types"
+import { useNavigate } from "react-router-dom"
 
 const TASKS_CHARTS_QUERY = gql`
   query TasksCharts(
@@ -137,6 +137,7 @@ const TaskCharts = () => {
     },
   })
   const { me } = useContext(MeContext)
+  const navigate = useNavigate()
 
   const taskList = data?.tasksList
   const companySlug = String(me?.currentCompany?.slug)
@@ -278,7 +279,7 @@ const TaskCharts = () => {
               onClick={({ xValue }) => {
                 const taskExternalID = Number(xValue)
                 const taskID = getTaskIDByExternalID(taskExternalID)
-                openWindow(`/companies/${companySlug}/tasks/${taskID?.id}`)
+                navigate(`/companies/${companySlug}/tasks/${taskID?.id}`)
               }}
             />
           </ChartGridItem>
@@ -299,7 +300,7 @@ const TaskCharts = () => {
             onClick={({ xValue }) => {
               const taskExternalID = Number(xValue)
               const taskID = getTaskIDByExternalID(taskExternalID)
-              openWindow(`/companies/${companySlug}/tasks/${taskID?.id}`)
+              navigate(`/companies/${companySlug}/tasks/${taskID?.id}`)
             }}
           />
         </ChartGridItem>

@@ -6,5 +6,12 @@
     "monthlyAvgBlockedTime": "Monthly avg blocked time",
     "weeklyAvgBlockedTime": "Weekly avg blocked time",
     "createdAt": "Created at"
+  },
+  "new": {
+    "products": "Products",
+    "title": "New Risk Review",
+    "leadTimeOutlierLimit": "Lead Time Outlier Limit",
+    "meetingDate": "Meeting Date",
+    "create": "Create Risk Review"
   }
 }

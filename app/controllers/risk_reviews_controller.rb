@@ -12,10 +12,8 @@ class RiskReviewsController < AuthenticatedController
   end
 
   def new
-    @risk_review = RiskReview.new(product: @product)
-    risk_reviews
-
-    respond_to { |format| format.js { render 'risk_reviews/new' } }
+    prepend_view_path Rails.public_path
+    render 'spa-build/index'
   end
 
   def edit

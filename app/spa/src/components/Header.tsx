@@ -14,7 +14,6 @@ import { gql, useMutation } from "@apollo/client"
 import { Company } from "../modules/company/company.types"
 import { MessagesContext } from "../contexts/MessageContext"
 import { MeContext } from "../contexts/MeContext"
-import { capitalizeFirstLetter } from "../lib/func"
 import { useTranslation } from "react-i18next"
 import User from "../modules/user/user.types"
 
@@ -63,7 +62,7 @@ const Header = () => {
 
   const buildLinks = (companySlug: string) => [
     {
-      name: capitalizeFirstLetter(companySlug),
+      name: company?.name,
       href: `/companies/${companySlug}`,
     },
     { name: t("teams"), href: `/companies/${companySlug}/teams` },
@@ -102,7 +101,7 @@ const Header = () => {
               <Link
                 sx={{ textDecoration: "none" }}
                 px={2}
-                key={link.name + index}
+                key={`${link.name}--${index}`}
                 href={link.href}
                 color="secondary.contrastText"
               >

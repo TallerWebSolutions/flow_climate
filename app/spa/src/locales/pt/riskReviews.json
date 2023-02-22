@@ -6,5 +6,12 @@
     "monthlyAvgBlockedTime": "Tempo médio de bloqueio mensal",
     "weeklyAvgBlockedTime": "Tempo médio de bloqueio semanal",
     "createdAt": "Criado em"
+  },
+  "new": {
+    "products": "Produtos",
+    "title": "Nova Revisão de Risco",
+    "leadTimeOutlierLimit": "Limite de Outlier do Lead Time",
+    "meetingDate": "Data da Reunião",
+    "create": "Criar Revisão de Risco"
   }
 }

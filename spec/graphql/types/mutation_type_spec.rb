@@ -409,4 +409,62 @@ RSpec.describe Types::MutationType do
       end
     end
   end
+
+  describe 'create_product_risk_review' do
+    let(:company) { Fabricate :company }
+    let(:user) { Fabricate :user, companies: [company], last_company_id: company.id }
+    let(:context) { { current_user: user } }
+    let(:product) { Fabricate :product, company: company }
+
+    describe '#resolve' do
+      context 'with valid input' do
+        it 'creates a new risk review for a product' do
+          mutation = %(
+            mutation {
+              createProductRiskReview(
+                companyId: #{company.id}
+                productId: #{product.id}
+                leadTimeOutlierLimit: 10
+                meetingDate: "2022-03-07"
+              ) {
+                riskReview {
+                  company {
+                    id
+                  }
+                  product {
+                    id
+                  }
+                }
+              }
+            }
+          )
+
+          FlowClimateSchema.execute(mutation, variables: nil, context: context).as_json
+          created_risk_review = RiskReview.last
+          expect(created_risk_review.product.id).to eq product.id
+          expect(created_risk_review.company.id).to eq company.id
+        end
+      end
+
+      context 'with invalid product id' do
+        it 'returns an error state' do
+          mutation = %(
+            mutation {
+              createProductRiskReview(
+                companyId: #{company.id}
+                productId: "invalid_product_id"
+                leadTimeOutlierLimit: 10
+                meetingDate: "2022-03-07"
+              ) {
+                statusMessage
+              }
+            }
+          )
+
+          result = FlowClimateSchema.execute(mutation, variables: nil, context: context).as_json
+          expect(result.dig('data', 'createProductRiskReview', 'statusMessage')).to be 'FAIL'
+        end
+      end
+    end
+  end
 end

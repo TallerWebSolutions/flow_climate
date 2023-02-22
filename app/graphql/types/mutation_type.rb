@@ -2,6 +2,8 @@
 
 module Types
   class MutationType < Types::BaseObject
+    field :create_product_risk_review, mutation: Mutations::CreateProductRiskReview
+
     field :create_project_additional_hours, mutation: Mutations::CreateProjectAdditionalHoursMutation
 
     field :create_team, mutation: Mutations::CreateTeamMutation

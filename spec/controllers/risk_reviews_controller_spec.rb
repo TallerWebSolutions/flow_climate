@@ -52,27 +52,10 @@ RSpec.describe RiskReviewsController do
 
     describe 'GET #new' do
       context 'valid parameters' do
-        before { get :new, params: { company_id: company, product_id: product }, xhr: true }
+        it 'renders project spa page' do
+          get :new, params: { company_id: company, product_id: product }
 
-        it 'instantiates a new risk review and renders the template' do
-          expect(response).to render_template 'risk_reviews/new'
-          expect(assigns(:risk_review)).to be_a_new RiskReview
-        end
-      end
-
-      context 'invalid parameters' do
-        context 'non-existent company' do
-          before { get :new, params: { company_id: 'foo', product_id: product }, xhr: true }
-
-          it { expect(response).to have_http_status :not_found }
-        end
-
-        context 'not-permitted company' do
-          let(:company) { Fabricate :company, users: [] }
-
-          before { get :new, params: { company_id: company, product_id: product }, xhr: true }
-
-          it { expect(response).to have_http_status :not_found }
+          expect(response).to render_template 'spa-build/index'
         end
       end
     end

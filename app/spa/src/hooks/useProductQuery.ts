@@ -73,6 +73,7 @@ type ProductDTO = {
 const useProductQuery = (slug: string) => {
   const { data, loading, error } = useQuery<ProductDTO>(PRODUCT_QUERY, {
     variables: { slug },
+    notifyOnNetworkStatusChange: true,
   })
 
   return { product: data?.product, loading, error }

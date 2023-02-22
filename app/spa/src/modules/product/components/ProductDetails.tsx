@@ -1,11 +1,12 @@
-import { Product } from "../product.types"
 import { useTranslation } from "react-i18next"
 import { useLocation, useParams } from "react-router-dom"
-import { Backdrop, Box, Button, CircularProgress } from "@mui/material"
+import { Box, Button } from "@mui/material"
+import { ReactNode } from "react"
+
+import { Product } from "../product.types"
 import { Tabs } from "../../../components/Tabs"
 import BasicPage from "../../../components/BasicPage"
 import ProductGeneralInfo from "./ProductGeneralInfo"
-import React, { ReactNode } from "react"
 
 type ProductDetailsProps = {
   product: Product
@@ -21,13 +22,6 @@ const ProductDetails = ({
   const { pathname } = useLocation()
   const { t } = useTranslation(["products"])
   const params = useParams()
-
-  if (loading)
-    return (
-      <Backdrop open>
-        <CircularProgress color="secondary" />
-      </Backdrop>
-    )
 
   if (!product && !loading) return <strong>{t("products.notFound")}</strong>
 

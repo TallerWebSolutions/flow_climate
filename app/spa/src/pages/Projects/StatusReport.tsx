@@ -4,13 +4,13 @@ import { useParams } from "react-router-dom"
 import { ResponsiveBar } from "@nivo/bar"
 import { ResponsivePie } from "@nivo/pie"
 import TicketGroup from "../../components/TicketGroup"
-import { formatLeadtime } from "../../lib/func"
 import { formatCurrency } from "../../lib/currency"
 import {
   ProjectPage,
   PROJECT_STANDARD_FRAGMENT,
 } from "../../components/ProjectPage"
 import { Project } from "../../modules/project/project.types"
+import { secondsToReadbleDate } from "../../lib/date"
 
 export const QUERY = gql`
   query ProjectStatusReport($id: ID!) {
@@ -102,7 +102,7 @@ const StatusReport = () => {
     },
     {
       title: "Leadtime (80%)",
-      value: leadtime && formatLeadtime(leadtime),
+      value: leadtime && secondsToReadbleDate(leadtime),
       unity: "dias",
     },
   ]

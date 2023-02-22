@@ -9,11 +9,10 @@ import {
 import { useContext } from "react"
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import BasicPage from "../../components/BasicPage"
 import { MessagesContext } from "../../contexts/MessageContext"
 import { MeContext } from "../../contexts/MeContext"
-import { redirectTo } from "../../lib/func"
 import { Team } from "../../modules/team/team.types"
 import User from "../../modules/user/user.types"
 
@@ -58,6 +57,7 @@ const EditTeam = () => {
   const { t } = useTranslation(["teams"])
   const { teamId } = useParams()
   const { pushMessage } = useContext(MessagesContext)
+  const navigate = useNavigate()
   const { data, loading } = useQuery<TeamDTO>(TEAM_QUERY, {
     variables: {
       teamId: Number(teamId),
@@ -76,9 +76,7 @@ const EditTeam = () => {
         severity: mutationResult ? "success" : "error",
       })
 
-      setTimeout(function () {
-        redirectTo(`/companies/${companySlug}/teams/${newTeamID}`)
-      }, 2000)
+      navigate(`/companies/${companySlug}/teams/${newTeamID}`)
     },
   })
 

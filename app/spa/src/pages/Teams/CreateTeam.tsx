@@ -12,7 +12,7 @@ import { useTranslation } from "react-i18next"
 import BasicPage from "../../components/BasicPage"
 import { MessagesContext } from "../../contexts/MessageContext"
 import { MeContext } from "../../contexts/MeContext"
-import { redirectTo } from "../../lib/func"
+import { useNavigate } from "react-router-dom"
 
 type CreateTeamDTO = {
   createTeam: {
@@ -40,6 +40,7 @@ const CreateTeam = () => {
   const { t } = useTranslation(["teams"])
   const { pushMessage } = useContext(MessagesContext)
   const { me } = useContext(MeContext)
+  const navigate = useNavigate()
   const [createTeam] = useMutation<CreateTeamDTO>(CREATE_TEAM_MUTATION, {
     update: (_, { data }) => {
       const newTeamID = data?.createTeam.id
@@ -53,9 +54,7 @@ const CreateTeam = () => {
         severity: mutationResult ? "success" : "error",
       })
 
-      setTimeout(function () {
-        redirectTo(`/companies/${companySlug}/teams/${newTeamID}`)
-      }, 2000)
+      navigate(`/companies/${companySlug}/teams/${newTeamID}`)
     },
   })
 
