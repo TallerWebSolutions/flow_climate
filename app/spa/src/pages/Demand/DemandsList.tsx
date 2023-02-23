@@ -135,6 +135,15 @@ type DemandsCSVDTO = {
   demandsCsvData: DemandsList
 }
 
+const normalizeQueryStringFilters = (filters: FieldValues) =>
+  Object.keys(filters)
+    .filter((key) => {
+      return String(filters[key]).length > 0 && filters[key] !== "null"
+    })
+    .reduce<Record<string, string>>((acc, el) => {
+      return { ...acc, [el]: filters[el] }
+    }, {})
+
 const DemandsListPage = () => {
   const { t } = useTranslation("demand")
   const { me } = useContext(MeContext)
@@ -145,7 +154,7 @@ const DemandsListPage = () => {
     team: searchParams.get("team"),
     project: searchParams.get("project"),
     searchText: searchParams.get("searchText") || "",
-    demandStatus: searchParams.get("demandStatus"),
+    demandStatus: searchParams.get("demandStatus") || "ALL_DEMANDS",
     sortDirection: "DESC",
     orderField: "end_date",
     startDate: searchParams.get("startDate"),
@@ -154,13 +163,7 @@ const DemandsListPage = () => {
     perPage: 20,
     demandType: searchParams.get("demandType"),
   }
-  const demandsQueryFilters = Object.keys(filters)
-    .filter((key) => {
-      return String(filters[key]).length > 0
-    })
-    .reduce<Record<string, string>>((acc, el) => {
-      return { ...acc, [el]: filters[el] }
-    }, {})
+  const demandsQueryFilters = normalizeQueryStringFilters(filters)
 
   const { data, loading, variables } = useQuery<DemandsSearchDTO>(
     DEMANDS_QUERY,
@@ -341,6 +344,13 @@ const DemandsListPage = () => {
     </>
   )
 
+  // eslint-disable-next-line
+  console.log(
+    variables,
+    normalizeQueryStringFilters(variables || {}),
+    searchParams
+  )
+
   return (
     <DemandsPage
       breadcrumbsLinks={breadcrumbsLinks}
@@ -358,7 +368,7 @@ const DemandsListPage = () => {
           page: filters.pageNumber - 1,
           onPageChange: (_, newPage: number) =>
             setSearchParams({
-              ...variables,
+              ...normalizeQueryStringFilters(variables || {}),
               pageNumber: String(newPage + 1),
             }),
         }}
