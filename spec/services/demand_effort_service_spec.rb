@@ -86,7 +86,7 @@ RSpec.describe DemandEffortService, type: :service do
         Fabricate :stage_project_config, stage: stage, project: project, compute_effort: true, stage_percentage: 100, management_percentage: 50, pairing_percentage: 50
         Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: Time.zone.parse('2021-05-24 08:00'), last_time_out: Time.zone.parse('2021-05-24 20:51')
         Fabricate :item_assignment, demand: demand, membership: dev_membership, start_time: Time.zone.parse('2021-05-24 08:00'), finish_time: Time.zone.parse('2021-05-24 16:30')
-        Fabricate :item_assignment, demand: demand, membership: dev_membership, start_time: Time.zone.parse('2021-05-24 14:01'), finish_time: Time.zone.parse('2021-05-24 18:00')
+        Fabricate :item_assignment, demand: demand, membership: dev_membership, start_time: Time.zone.parse('2021-05-24 17:01'), finish_time: Time.zone.parse('2021-05-24 18:00')
 
         described_class.instance.build_efforts_to_demand(demand)
 

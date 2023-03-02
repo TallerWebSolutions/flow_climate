@@ -18,9 +18,12 @@ class DemandEffortService
       assignments_in_dates = demand.item_assignments.for_dates(transition.last_time_in, end_date_for_assignment).order(:start_time)
       top_effort_assignment = assignments_in_dates.max_by { |assign_in_date| assign_in_date.working_hours_until(transition.last_time_in, transition.last_time_out) }
 
+      efforts_processed = []
       assignments_in_dates.each do |assignment|
-        process_assignment(assignment, demand, demand_effort_ids, top_effort_assignment, transition)
+        efforts_processed += process_assignment(assignment, demand, top_effort_assignment, transition)
       end
+
+      demand_effort_ids += efforts_processed
     end
 
     demand.demand_efforts.where.not(id: demand_effort_ids).map(&:destroy)
@@ -43,15 +46,18 @@ class DemandEffortService
 
   private
 
-  def process_assignment(assignment, demand, demand_effort_ids, top_effort_assignment, transition)
+  def process_assignment(assignment, demand, top_effort_assignment, transition)
     start_time = define_start(assignment, transition)
     end_time = define_end(assignment, demand, transition)
 
+    demand_effort_ids = []
     (start_time..end_time).map do |day_to_effort|
       next if weekend?(day_to_effort)
 
       demand_effort_ids << compute_and_save_effort(day_to_effort, assignment, top_effort_assignment, transition)
     end
+
+    demand_effort_ids
   end
 
   def define_end(assignment, demand, transition)
@@ -85,7 +91,7 @@ class DemandEffortService
                     .where(demand_transition: transition, item_assignment: assignment)
                     .where('start_time_to_computation BETWEEN :start_time AND :end_time',
                            start_time: effort_start_time.beginning_of_day,
-                           end_time: start_time.end_of_day).first_or_initialize
+                           end_time: effort_start_time.end_of_day).first_or_initialize
 
     return demand_effort.id unless demand_effort.automatic_update?
 
