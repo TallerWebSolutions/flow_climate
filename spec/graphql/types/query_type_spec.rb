@@ -151,6 +151,10 @@ RSpec.describe Types::QueryType do
                   leadTimeP80
                   consolidationDate
                 }
+                teamMonthlyInvestment {
+                  xAxis
+                  yAxis
+                }
                 lastReplenishingConsolidations {
                   id
                   customerHappiness
@@ -209,7 +213,6 @@ RSpec.describe Types::QueryType do
                                                        'imageSource' => user.avatar.url
                                                      }
                                                    })
-
             expect(result.dig('data', 'team')).to eq({
                                                        'id' => team.id.to_s,
                                                        'name' => team.name,
@@ -232,6 +235,7 @@ RSpec.describe Types::QueryType do
                                                        'leadTimeP95' => 0.0,
                                                        'numberOfDemandsDelivered' => 0,
                                                        'teamConsolidationsWeekly' => [],
+                                                       'teamMonthlyInvestment' => { 'xAxis' => ['2022-09-30'], 'yAxis' => [0.0] },
                                                        'lastReplenishingConsolidations' => [
                                                          {
                                                            'id' => replenishing_consolidation.id.to_s,

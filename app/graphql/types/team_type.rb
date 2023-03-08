@@ -143,10 +143,9 @@ module Types
       array_of_months = TimeService.instance.months_between_of(start_date, end_date)
       total_cost_per_week = []
 
-      array_of_months.each do | date | 
+      array_of_months.each do |date|
         total_cost_per_week.append(object.realized_money_in_month(date).round(2) - object.monthly_investment(date).round(2))
       end
-      
       {
         x_axis: array_of_months,
         y_axis: total_cost_per_week
