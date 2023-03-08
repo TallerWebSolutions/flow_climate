@@ -35,6 +35,7 @@ export const LineChart = ({
         data={data}
         colors={{ scheme: "category10" }}
         margin={{ left: 80, right: 20, top: 25, bottom: 80 }}
+        yScale={{ type: "linear", min: "auto", max: "auto" }}
         axisLeft={{
           legend: axisLeftLegend,
           legendOffset: -50,

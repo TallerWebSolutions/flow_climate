@@ -61,7 +61,9 @@
     "leadTimeHistogramChartXLabel": "Days",
     "leadTimeHistogramChartYLabel": "hits",
     "leadTimeP80Chart": "Lead Time P80 Evolution",
-    "leadTimeP80YLabel": "Days"
+    "leadTimeP80YLabel": "Days",
+    "financialPerformance": "Financial Performance",
+    "financialPerformanceYLabel": "Amount"
   },
   "actions": {
     "edit": "Editar Time",

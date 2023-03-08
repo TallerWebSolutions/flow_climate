@@ -77,6 +77,10 @@ const TEAM_DASHBOARD_QUERY = gql`
         leadTimeP80
         consolidationDate
       }
+      teamMonthlyInvestment(startDate: $startDate, endDate: $endDate) {
+        xAxis
+        yAxis
+      }
     }
   }
 
@@ -143,29 +147,29 @@ const TeamDashboard = () => {
 
   const teamInfoRows = team
     ? [
-        [t("dashboard.name"), team.name],
-        [
-          t("dashboard.startDate"),
-          team.startDate ? <DateLocale date={team.startDate} /> : "",
-        ],
-        [
-          t("dashboard.endDate"),
-          team.endDate ? <DateLocale date={team.endDate} /> : "",
-        ],
-        [t("dashboard.delivered"), team.numberOfDemandsDelivered || 0],
-        [
-          t("dashboard.leadTimeP65"),
-          `${secondsToDays(team.leadTimeP65 || 0)} ${t("dashboard.days")}`,
-        ],
-        [
-          t("dashboard.leadTimeP80"),
-          `${secondsToDays(team.leadTimeP80 || 0)} ${t("dashboard.days")}`,
-        ],
-        [
-          t("dashboard.leadTimeP95"),
-          `${secondsToDays(team.leadTimeP95 || 0)} ${t("dashboard.days")}`,
-        ],
-      ]
+      [t("dashboard.name"), team.name],
+      [
+        t("dashboard.startDate"),
+        team.startDate ? <DateLocale date={team.startDate} /> : "",
+      ],
+      [
+        t("dashboard.endDate"),
+        team.endDate ? <DateLocale date={team.endDate} /> : "",
+      ],
+      [t("dashboard.delivered"), team.numberOfDemandsDelivered || 0],
+      [
+        t("dashboard.leadTimeP65"),
+        `${secondsToDays(team.leadTimeP65 || 0)} ${t("dashboard.days")}`,
+      ],
+      [
+        t("dashboard.leadTimeP80"),
+        `${secondsToDays(team.leadTimeP80 || 0)} ${t("dashboard.days")}`,
+      ],
+      [
+        t("dashboard.leadTimeP95"),
+        `${secondsToDays(team.leadTimeP95 || 0)} ${t("dashboard.days")}`,
+      ],
+    ]
     : []
 
   const biggestFiveLeadTimesRows = deliveriesRows(
@@ -181,38 +185,38 @@ const TeamDashboard = () => {
   const committedChartData = demandsFlowChartData?.committedChartData
   const teamFlowChartData: BarDatum[] = committedChartData
     ? committedChartData?.map((_, index) => {
-        const creationChartData = demandsFlowChartData.creationChartData || []
+      const creationChartData = demandsFlowChartData.creationChartData || []
 
-        const pullTransactionRate =
-          demandsFlowChartData.pullTransactionRate || []
+      const pullTransactionRate =
+        demandsFlowChartData.pullTransactionRate || []
 
-        const throughputChartData =
-          demandsFlowChartData.throughputChartData || []
+      const throughputChartData =
+        demandsFlowChartData.throughputChartData || []
 
-        return {
-          index: demandsFlowChartData.xAxis?.[index] || index,
-          [t("charts.flow_data_created")]: creationChartData[index],
-          [t("charts.flow_data_committed_to")]: committedChartData[index],
-          [t("charts.flow_data_pull_transactions")]: pullTransactionRate[index],
-          [t("charts.flow_data_delivered")]: throughputChartData[index],
-        }
-      })
+      return {
+        index: demandsFlowChartData.xAxis?.[index] || index,
+        [t("charts.flow_data_created")]: creationChartData[index],
+        [t("charts.flow_data_committed_to")]: committedChartData[index],
+        [t("charts.flow_data_pull_transactions")]: pullTransactionRate[index],
+        [t("charts.flow_data_delivered")]: throughputChartData[index],
+      }
+    })
     : []
 
   const leadTimeHistogramData = team?.leadTimeHistogramData
   const teamLeadTimeHistogramData: BarDatum[] = leadTimeHistogramData
     ? leadTimeHistogramData.keys.map((el, index) => {
-        const projectLeadTimeHistogramDataKeysInDays =
-          secondsToDays(el).toFixed(2)
+      const projectLeadTimeHistogramDataKeysInDays =
+        secondsToDays(el).toFixed(2)
 
-        return {
-          index,
-          [t("charts.lead_time_histogram_chart_x_label")]:
-            projectLeadTimeHistogramDataKeysInDays,
-          [t("charts.lead_time_histogram_chart_y_label")]:
-            leadTimeHistogramData.values[index],
-        }
-      })
+      return {
+        index,
+        [t("charts.lead_time_histogram_chart_x_label")]:
+          projectLeadTimeHistogramDataKeysInDays,
+        [t("charts.lead_time_histogram_chart_y_label")]:
+          leadTimeHistogramData.values[index],
+      }
+    })
     : []
 
   const teamConsolidationsWeekly = team?.teamConsolidationsWeekly
@@ -230,6 +234,10 @@ const TeamDashboard = () => {
         }) || [],
     },
   ]
+
+  const teamMonthlyInvestment = team?.teamMonthlyInvestment
+  const financialPerformanceChartData =
+    normalizeFinancialPerformanceData(team?.name!, teamMonthlyInvestment?.xAxis!, teamMonthlyInvestment?.yAxis!)
 
   return (
     <TeamBasicPage
@@ -358,6 +366,18 @@ const TeamDashboard = () => {
             }}
           />
         </ChartGridItem>
+        <ChartGridItem title={t("charts.financialPerformance")}>
+          <LineChart
+            data={financialPerformanceChartData}
+            axisLeftLegend={t("charts.financialPerformanceYLabel")}
+            props={{
+              enableSlices: "x",
+              sliceTooltip: ({ slice }: SliceTooltipProps) => (
+                <LineChartTooltip slice={slice} />
+              ),
+            }}
+          />
+        </ChartGridItem>
       </Grid>
     </TeamBasicPage>
   )
@@ -388,11 +408,37 @@ const deliveriesRows = (demands: Demand[] = [], companyUrl: string) =>
       </Link>,
       demand.endDate
         ? formatDate({
-            date: demand.endDate,
-            format: "dd/MM/yyyy' 'HH:mm:ss",
-          })
+          date: demand.endDate,
+          format: "dd/MM/yyyy' 'HH:mm:ss",
+        })
         : "",
       secondsToReadbleDate(demand.leadtime),
       demand.demandBlocksCount,
     ]
   })
+
+const normalizeFinancialPerformanceData = (teamName: string, xAxisData: string[], yAxisData: number[]) => {
+  const financialPerformanceData = xAxisData.map((item: string, idx: number) => {
+    return {
+      xAxis: item,
+      yAxis: yAxisData[idx]
+    }
+  })
+
+  return [{
+    id: teamName || "",
+    data: mountFinancialPerformanceChartData(financialPerformanceData)
+  }]
+}
+
+const mountFinancialPerformanceChartData = (data: Array<{
+  xAxis: string
+  yAxis: number
+}>) => {
+  return data?.map(({ xAxis, yAxis }) => {
+    return {
+      x: xAxis,
+      y: yAxis
+    }
+  }) || []
+}

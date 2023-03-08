@@ -37,4 +37,8 @@ export type Team = {
   demandsFlowChartData?: DemandsFlowChartData
   leadTimeHistogramData?: KeyValueData
   teamConsolidationsWeekly?: ProjectConsolidation[]
+  teamMonthlyInvestment?: {
+    xAxis: string[]
+    yAxis: number[]
+  }
 }

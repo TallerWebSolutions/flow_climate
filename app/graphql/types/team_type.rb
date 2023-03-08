@@ -41,6 +41,10 @@ module Types
       argument :end_date, GraphQL::Types::ISO8601Date, required: false, description: 'End Date for the search range'
       argument :start_date, GraphQL::Types::ISO8601Date, required: false, description: 'Start Date for the search range'
     end
+    field :team_monthly_investment, Types::MonthlyInvestmentType, null: true do
+      argument :end_date, GraphQL::Types::ISO8601Date, required: false, description: 'End Date for the search range'
+      argument :start_date, GraphQL::Types::ISO8601Date, required: false, description: 'Start Date for the search range'
+    end
     field :throughput_data, [Int], null: true
     field :work_in_progress, Int, null: true
 
@@ -130,8 +134,23 @@ module Types
                        .where(id: weekly_team_consolidations.map(&:id) + [last_consolidation&.id])
       consolidations = consolidations.where('consolidation_date >= :limit_date', limit_date: start_date) if start_date.present?
       consolidations = consolidations.where('consolidation_date <= :limit_date', limit_date: end_date) if end_date.present?
-
       consolidations.order(:consolidation_date)
+    end
+
+    def team_monthly_investment(start_date: 6.months.ago, end_date: Time.zone.today)
+      start_date = [object.start_date, start_date].max
+      end_date = [object.end_date, end_date].min
+      array_of_months = TimeService.instance.months_between_of(start_date, end_date)
+      total_cost_per_week = []
+
+      array_of_months.each do | date | 
+        total_cost_per_week.append(object.realized_money_in_month(date).round(2) - object.monthly_investment(date).round(2))
+      end
+      
+      {
+        x_axis: array_of_months,
+        y_axis: total_cost_per_week
+      }
     end
 
     private
