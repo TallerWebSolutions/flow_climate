@@ -92,10 +92,6 @@ class Team < ApplicationRecord
     demand_efforts.to_dates(date.beginning_of_month, date).sum(&:effort_money)
   end
 
-  def realized_money_in_weekly(date)
-    demand_efforts.to_dates(date.beginning_of_week, date).sum(&:effort_money)
-  end
-
   def average_consumed_hours_per_person_per_day(date = Time.zone.today)
     consumed = consumed_hours_in_month(date).to_f
     past_days_in_month = TimeService.instance.business_days_between(date.beginning_of_month, date)
