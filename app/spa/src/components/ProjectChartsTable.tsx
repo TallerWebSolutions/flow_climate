@@ -337,9 +337,7 @@ export const ProjectChartsTable = () => {
                 <Cell>{tDemands("list.demandsTable.demandBlocks")}</Cell>
                 <Cell align="right">
                   <Link
-                    href={`/companies/${companySlug}/demand_blocks/search?demand_blocks_ids=${project.demandBlocks
-                      .map((el) => el.id)
-                      .join()}`}
+                    href={`/companies/${companySlug}/demand_blocks`}
                     sx={{ color: "info.dark", textDecoration: "none" }}
                   >
                     {project.demandBlocks.length}
