@@ -40,7 +40,7 @@ module Consolidations
         team_work_item_flow_information.work_items_flow_behaviour(consolidation_period_for_montecarlo.first, analysed_date, distribution_index, true)
       end
 
-      project_based_montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(project.remaining_work(end_of_day), project_work_item_flow_information.throughput_array_for_monte_carlo.last(12), 500)
+      project_based_montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(project.remaining_work(end_of_day), project_work_item_flow_information.throughput_per_period.last(12), 500)
       team_based_montecarlo_durations = compute_team_monte_carlo_weeks(end_of_day, project, team_work_item_flow_information.throughput_per_period.last(12))
 
       weeks_by_little_law = 0

@@ -96,7 +96,7 @@ RSpec.describe Flow::WorkItemFlowInformation do
           expect(item_flow_info.upstream_delivered_per_period).to eq [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
           expect(item_flow_info.downstream_total_delivered).to eq [0, 0, 0, 0, 0, 0, 0, 1, 1, 3, 3, 3, 3, 3, 3, 3]
           expect(item_flow_info.downstream_delivered_per_period).to eq [0, 0, 0, 0, 0, 0, 0, 1, 0, 2, 0, 0, 0, 0, 0, 0]
-          expect(item_flow_info.throughput_array_for_monte_carlo).to eq [0, 1, 0, 2, 0, 0, 0, 0, 0, 0]
+          expect(item_flow_info.throughput_array_for_monte_carlo).to eq [0, 1, 0, 1, 0, 2, 0, 0, 0, 0, 0, 0]
 
           expect(item_flow_info.demands_stages_count_hash[first_stage.name]).to be_nil
           expect(item_flow_info.demands_stages_count_hash[second_stage.name]).to eq [0, 0, 1, 1, 3, 3, 3, 3, 6, 6, 6, 6, 6, 6, 6]
