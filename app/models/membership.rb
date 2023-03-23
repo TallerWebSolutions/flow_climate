@@ -32,6 +32,7 @@ class Membership < ApplicationRecord
   belongs_to :team_member
   has_many :item_assignments, dependent: :destroy
   has_many :demands, through: :item_assignments
+  has_many :demand_efforts, -> { distinct }, through: :item_assignments
 
   validates :start_date, :member_role, presence: true
   validate :active_team_member_unique
@@ -109,6 +110,14 @@ class Membership < ApplicationRecord
                        end
 
     team_member.monthly_payment * membership_share
+  end
+
+  def effort_in_period(start_date, end_date)
+    demand_efforts.to_dates(start_date, end_date).sum(:effort_value)
+  end
+
+  def realized_money_in_period(start_date, end_date)
+    demand_efforts.to_dates(start_date, end_date).sum(&:effort_money)
   end
 
   private

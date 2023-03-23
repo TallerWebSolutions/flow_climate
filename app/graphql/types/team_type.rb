@@ -154,19 +154,18 @@ module Types
     end
 
     def hours_and_money_by_each_member
-      members = object.team_members.all.joins(:memberships).where('(team_members.billable = true AND memberships.end_date IS NULL)').active.pluck('team_members.name', 'memberships.id')
+      memberships = object.memberships
 
-      projects_per_member = projects.active
-      hourly_value = (projects_per_member.sum(&:hour_value) / projects_per_member.count).to_i
+      start_date = Time.zone.now.beginning_of_month
+      end_date = Time.zone.now.end_of_month
 
-      all_members_calc = members.uniq.map do |member|
-        membership = ItemAssignment.all.where(membership_id: member[1]).map do |item|
-          DemandEffort.all.where('(item_assignment_id = :item_assignment_id AND start_time_to_computation >= TIMESTAMP WITH TIME ZONE :start_date AND finish_time_to_computation <= TIMESTAMP WITH TIME ZONE :end_date)', item_assignment_id: item['id'], start_date: Time.zone.today.beginning_of_month, end_date: Time.zone.today.end_of_month).pluck('effort_value')
-        end
-        hours = membership.flatten.sum.to_f
-        { member_name: member[0], hourly_value: hourly_value, hours: hours, produced_value: (hours * hourly_value).to_f }
+      memberships.map do |membership|
+        {
+          membership: membership,
+          effort_in_month: membership.effort_in_period(start_date, end_date),
+          realized_money_in_month: membership.realized_money_in_period(start_date, end_date)
+        }
       end
-      all_members_calc.uniq
     end
 
     private

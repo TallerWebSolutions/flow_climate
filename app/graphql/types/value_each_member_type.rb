@@ -2,9 +2,8 @@
 
 module Types
   class ValueEachMemberType < Types::BaseObject
-    field :hourly_value, Int, null: true
-    field :hours, Float, null: true
-    field :member_name, String, null: true
-    field :produced_value, Float, null: true
+    field :effort_in_month, Float, null: true
+    field :membership, Types::MembershipType, null: true
+    field :realized_money_in_month, Float, null: true
   end
 end

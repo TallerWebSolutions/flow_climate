@@ -236,4 +236,91 @@ RSpec.describe Membership do
       end
     end
   end
+
+  describe '#effort_in_period' do
+    context 'with efforts' do
+      it 'returns the sum of efforts value in the period' do
+        travel_to Time.zone.local(2023, 3, 23, 15) do
+          first_demand = Fabricate :demand
+          second_demand = Fabricate :demand
+          third_demand = Fabricate :demand
+          membership = Fabricate :membership
+
+          first_assignment = Fabricate :item_assignment, demand: first_demand, membership: membership
+          second_assignment = Fabricate :item_assignment, demand: second_demand, membership: membership
+          third_assignment = Fabricate :item_assignment, demand: third_demand, membership: membership
+
+          Fabricate :demand_effort, demand: first_demand, item_assignment: first_assignment, effort_value: 100, start_time_to_computation: 72.hours.ago, finish_time_to_computation: 70.hours.ago
+          Fabricate :demand_effort, demand: second_demand, item_assignment: second_assignment, effort_value: 200, start_time_to_computation: 72.hours.ago, finish_time_to_computation: 70.hours.ago
+          Fabricate :demand_effort, demand: third_demand, item_assignment: third_assignment, effort_value: 50, start_time_to_computation: 2.months.ago, finish_time_to_computation: 2.months.ago
+          start_date = Time.zone.now.beginning_of_month
+          end_date = Time.zone.now.end_of_month
+
+          expect(membership.effort_in_period(start_date, end_date)).to eq 300
+        end
+      end
+    end
+
+    context 'without efforts' do
+      it 'returns zero' do
+        first_demand = Fabricate :demand
+        second_demand = Fabricate :demand
+        third_demand = Fabricate :demand
+        membership = Fabricate :membership
+        Fabricate :item_assignment, demand: first_demand, membership: membership
+        Fabricate :item_assignment, demand: second_demand, membership: membership
+        Fabricate :item_assignment, demand: third_demand, membership: membership
+
+        start_date = Time.zone.now.beginning_of_month
+        end_date = Time.zone.now.end_of_month
+
+        expect(membership.effort_in_period(start_date, end_date)).to eq 0
+      end
+    end
+  end
+
+  describe '#realized_money_in_period' do
+    context 'with efforts' do
+      it 'returns the amount of money realized in the period' do
+        travel_to Time.zone.local(2023, 3, 23, 15) do
+          project = Fabricate :project, hour_value: 180
+          other_project = Fabricate :project, hour_value: 163
+
+          first_demand = Fabricate :demand, project: project
+          second_demand = Fabricate :demand, project: other_project
+          third_demand = Fabricate :demand, project: project
+          membership = Fabricate :membership
+
+          first_assignment = Fabricate :item_assignment, demand: first_demand, membership: membership
+          second_assignment = Fabricate :item_assignment, demand: second_demand, membership: membership
+          third_assignment = Fabricate :item_assignment, demand: third_demand, membership: membership
+
+          Fabricate :demand_effort, demand: first_demand, item_assignment: first_assignment, effort_value: 100, start_time_to_computation: 72.hours.ago, finish_time_to_computation: 70.hours.ago
+          Fabricate :demand_effort, demand: second_demand, item_assignment: second_assignment, effort_value: 200, start_time_to_computation: 72.hours.ago, finish_time_to_computation: 70.hours.ago
+          Fabricate :demand_effort, demand: third_demand, item_assignment: third_assignment, effort_value: 50, start_time_to_computation: 2.months.ago, finish_time_to_computation: 2.months.ago
+          start_date = Time.zone.now.beginning_of_month
+          end_date = Time.zone.now.end_of_month
+
+          expect(membership.realized_money_in_period(start_date, end_date).to_f).to eq 50_600
+        end
+      end
+    end
+
+    context 'without efforts' do
+      it 'returns zero' do
+        first_demand = Fabricate :demand
+        second_demand = Fabricate :demand
+        third_demand = Fabricate :demand
+        membership = Fabricate :membership
+        Fabricate :item_assignment, demand: first_demand, membership: membership
+        Fabricate :item_assignment, demand: second_demand, membership: membership
+        Fabricate :item_assignment, demand: third_demand, membership: membership
+
+        start_date = Time.zone.now.beginning_of_month
+        end_date = Time.zone.now.end_of_month
+
+        expect(membership.effort_in_period(start_date, end_date)).to eq 0
+      end
+    end
+  end
 end
