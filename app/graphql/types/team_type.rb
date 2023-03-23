@@ -161,7 +161,7 @@ module Types
 
       memberships.map do |membership|
         {
-          membership: membership,
+          membership: membership.member_name,
           effort_in_month: membership.effort_in_period(start_date, end_date),
           realized_money_in_month: membership.realized_money_in_period(start_date, end_date)
         }

@@ -6,6 +6,7 @@ module Types
     field :end_date, GraphQL::Types::ISO8601Date
     field :hours_per_month, Integer
     field :id, ID, null: false
+    field :member_name, String, null: false
     field :member_role, Integer, null: false
     field :start_date, GraphQL::Types::ISO8601Date, null: false
     field :team_id, Integer, null: false

@@ -42,9 +42,10 @@ export type Team = {
     yAxis: number[]
   }
   hoursAndMoneyByEachMember: Array<{
-    memberName: string
-    hourlyValue: number
-    hours: number
-    producedValue: number
+    membership: {
+      memberName: string
+    }
+    effortInMonth: number
+    realizedMoneyInMonth: number
   }>
 }

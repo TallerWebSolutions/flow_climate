@@ -50,6 +50,10 @@ class Membership < ApplicationRecord
     { member_name: team_member_name, jira_account_id: team_member.jira_account_id }
   end
 
+  def member_name
+    { member_name: team_member_name }
+  end
+
   def hours_per_day
     hours_per_month.to_f / 30.0
   end

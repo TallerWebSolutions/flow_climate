@@ -158,7 +158,7 @@ RSpec.describe Types::QueryType do
                 }
                 hoursAndMoneyByEachMember {
                   membership {
-                    id
+                    memberName
                   }
                   effortInMonth
                   realizedMoneyInMonth
@@ -244,7 +244,7 @@ RSpec.describe Types::QueryType do
                                                        'numberOfDemandsDelivered' => 0,
                                                        'teamConsolidationsWeekly' => [],
                                                        'teamMonthlyInvestment' => { 'xAxis' => ['2022-09-30'], 'yAxis' => [0.0] },
-                                                       'hoursAndMoneyByEachMember' => [{ 'effortInMonth' => 0.0, 'membership' => { 'id' => membership.id.to_s }, 'realizedMoneyInMonth' => 0.0 }],
+                                                       'hoursAndMoneyByEachMember' => [{ 'effortInMonth' => 0.0, 'membership' => { 'memberName' => membership.member_name[:member_name] }, 'realizedMoneyInMonth' => 0.0 }],
                                                        'lastReplenishingConsolidations' => [
                                                          {
                                                            'id' => replenishing_consolidation.id.to_s,

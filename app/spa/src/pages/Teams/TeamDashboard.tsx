@@ -82,10 +82,11 @@ const TEAM_DASHBOARD_QUERY = gql`
         yAxis
       }
       hoursAndMoneyByEachMember {
-        memberName
-        hourlyValue
-        hours
-        producedValue
+        membership {
+          memberName
+        }
+        effortInMonth
+        realizedMoneyInMonth
       }
     }
   }
@@ -158,12 +159,13 @@ const TeamDashboard = () => {
   ]
 
   let averageHourlyRateCalc = 0 
-  const valuePerMemberRow = team?.hoursAndMoneyByEachMember.map(({ memberName, hours, producedValue }) => {
-    averageHourlyRateCalc += hours
+  const valuePerMemberRow = team?.hoursAndMoneyByEachMember.map(
+    ({ membership, effortInMonth, realizedMoneyInMonth }) => {
+    averageHourlyRateCalc += effortInMonth
     return [
-      memberName,
-      hours.toFixed(2),
-      producedValue.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})
+      membership.memberName,
+      effortInMonth.toFixed(2),
+      realizedMoneyInMonth.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})
     ]
   })
 
