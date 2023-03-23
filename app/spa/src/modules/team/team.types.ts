@@ -41,4 +41,10 @@ export type Team = {
     xAxis: string[]
     yAxis: number[]
   }
+  hoursAndMoneyByEachMember: Array<{
+    memberName: string
+    hourlyValue: number
+    hours: number
+    producedValue: number
+  }>
 }

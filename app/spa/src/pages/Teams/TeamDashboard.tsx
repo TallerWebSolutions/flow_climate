@@ -81,6 +81,12 @@ const TEAM_DASHBOARD_QUERY = gql`
         xAxis
         yAxis
       }
+      hoursAndMoneyByEachMember {
+        memberName
+        hourlyValue
+        hours
+        producedValue
+      }
     }
   }
 
@@ -144,6 +150,24 @@ const TeamDashboard = () => {
     cfdXaxis,
     cfdYaxis
   )
+
+  const valuePerMemberColumns = [
+    " ",
+    t("dashboard.hours"),
+    t("dashboard.producedValue")
+  ]
+
+  let averageHourlyRateCalc = 0 
+  const valuePerMemberRow = team?.hoursAndMoneyByEachMember.map(({ memberName, hours, producedValue }) => {
+    averageHourlyRateCalc += hours
+    return [
+      memberName,
+      hours.toFixed(2),
+      producedValue.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})
+    ]
+  })
+
+  const averageHourlyRate = (averageHourlyRateCalc / team?.hoursAndMoneyByEachMember?.length!).toFixed()
 
   const teamInfoRows = team
     ? [
@@ -261,6 +285,13 @@ const TeamDashboard = () => {
             rows={biggestFiveLeadTimesInFourWeeksRows}
           />
         </Grid>
+      </Grid>
+      <Grid>
+        <Table 
+          title={`${t("dashboard.averageValueOfHours")} - ${averageHourlyRate}`} 
+          headerCells={valuePerMemberColumns} 
+          rows={valuePerMemberRow!} 
+        />
       </Grid>
       <Typography component="h2" variant="h5" marginBottom={4}>
         {t("charts.title")}

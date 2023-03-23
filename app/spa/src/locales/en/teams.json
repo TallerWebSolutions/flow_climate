@@ -33,7 +33,10 @@
     "leadTimeP95": "Lead Time P95",
     "infoTable": "Team Info",
     "biggestFiveLeadTimes": "5 biggest lead times",
-    "biggestFiveLeadTimesInFourWeeks": "5 biggest lead times in last 4 weeks"
+    "biggestFiveLeadTimesInFourWeeks": "5 biggest lead times in last 4 weeks",
+    "hours": "Hours",
+    "producedValue": "Produced value",
+    "averageValueOfHours": "Average value of hours"
   },
   "tabs": {
     "dashboard": "Dashboard",

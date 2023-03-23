@@ -155,6 +155,12 @@ RSpec.describe Types::QueryType do
                   xAxis
                   yAxis
                 }
+                hoursAndMoneyByEachMember {
+                  memberName
+                  hourlyValue
+                  hours
+                  producedValue
+                }
                 lastReplenishingConsolidations {
                   id
                   customerHappiness
@@ -236,6 +242,7 @@ RSpec.describe Types::QueryType do
                                                        'numberOfDemandsDelivered' => 0,
                                                        'teamConsolidationsWeekly' => [],
                                                        'teamMonthlyInvestment' => { 'xAxis' => ['2022-09-30'], 'yAxis' => [0.0] },
+                                                       'hoursAndMoneyByEachMember' => [],
                                                        'lastReplenishingConsolidations' => [
                                                          {
                                                            'id' => replenishing_consolidation.id.to_s,
