@@ -87,7 +87,9 @@ const TEAM_DASHBOARD_QUERY = gql`
         }
         effortInMonth
         realizedMoneyInMonth
+        memberCapacityValue
       }
+      teamCapacityHours
     }
   }
 
@@ -155,21 +157,24 @@ const TeamDashboard = () => {
   const valuePerMemberColumns = [
     " ",
     t("dashboard.hours"),
-    t("dashboard.producedValue")
+    t("dashboard.producedValue"),
+    t("dashboard.capacity")
   ]
 
-  let averageHourlyRateCalc = 0 
+  let averageHourlyRateMembersCalc = 0
   const valuePerMemberRow = team?.hoursAndMoneyByEachMember.map(
-    ({ membership, effortInMonth, realizedMoneyInMonth }) => {
-    averageHourlyRateCalc += effortInMonth
+    ({ membership, effortInMonth, realizedMoneyInMonth, memberCapacityValue }) => {
+    averageHourlyRateMembersCalc += effortInMonth
     return [
       membership.memberName,
       effortInMonth.toFixed(2),
-      realizedMoneyInMonth.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})
+      realizedMoneyInMonth.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}),
+      memberCapacityValue
     ]
   })
 
-  const averageHourlyRate = (averageHourlyRateCalc / team?.hoursAndMoneyByEachMember?.length!).toFixed()
+  const averageHourlyRate = 
+  mountAverageHourlyRate(averageHourlyRateMembersCalc, team?.hoursAndMoneyByEachMember?.length!) 
 
   const teamInfoRows = team
     ? [
@@ -195,6 +200,10 @@ const TeamDashboard = () => {
         t("dashboard.leadTimeP95"),
         `${secondsToDays(team.leadTimeP95 || 0)} ${t("dashboard.days")}`,
       ],
+      [
+        t("dashboard.capacityOfHours"),
+        `${team.teamCapacityHours}h` 
+      ]
     ]
     : []
 
@@ -474,4 +483,12 @@ const mountFinancialPerformanceChartData = (data: Array<{
       y: yAxis
     }
   }) || []
+}
+
+const mountAverageHourlyRate = (average: number, length: number) => {
+  if (average === 0 || length === 0) {
+    return 0
+  }
+
+  return (average / length).toFixed()
 }

@@ -35,8 +35,10 @@
     "biggestFiveLeadTimes": "5 biggest lead times",
     "biggestFiveLeadTimesInFourWeeks": "5 biggest lead times in last 4 weeks",
     "hours": "Horas",
+    "capacityOfHours": "Capacide de horas",
     "producedValue": "Valor produzido",
-    "averageValueOfHours": "Valor médio de horas"
+    "averageValueOfHours": "Valor médio de horas",
+    "capacity": "Capacidade"
   },
   "tabs": {
     "dashboard": "Dashboard",

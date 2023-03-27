@@ -46,6 +46,7 @@ module Types
       argument :start_date, GraphQL::Types::ISO8601Date, required: false, description: 'Start Date for the search range'
     end
     field :hours_and_money_by_each_member, [Types::ValueEachMemberType], null: true
+    field :team_capacity_hours, Int, null: true
     field :throughput_data, [Int], null: true
     field :work_in_progress, Int, null: true
 
@@ -154,7 +155,7 @@ module Types
     end
 
     def hours_and_money_by_each_member
-      memberships = object.memberships
+      memberships = object.memberships.active.billable_member
 
       start_date = Time.zone.now.beginning_of_month
       end_date = Time.zone.now.end_of_month
@@ -163,9 +164,20 @@ module Types
         {
           membership: membership.member_name,
           effort_in_month: membership.effort_in_period(start_date, end_date),
-          realized_money_in_month: membership.realized_money_in_period(start_date, end_date)
+          realized_money_in_month: membership.realized_money_in_period(start_date, end_date),
+          member_capacity_value: membership[:hours_per_month]
         }
       end
+    end
+
+    def team_capacity_hours
+      memberships = object.memberships.active.billable_member
+
+      capacity_value = 0
+      memberships.each do |membership|
+        capacity_value += membership[:hours_per_month]
+      end
+      capacity_value
     end
 
     private

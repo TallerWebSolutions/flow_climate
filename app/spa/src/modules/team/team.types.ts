@@ -47,5 +47,7 @@ export type Team = {
     }
     effortInMonth: number
     realizedMoneyInMonth: number
+    memberCapacityValue: number
   }>
+  teamCapacityHours: number
 }
