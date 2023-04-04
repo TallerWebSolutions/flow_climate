@@ -24,13 +24,15 @@ const MembershipTable = () => {
   const { register } = useForm()
   const [searchParams] = useSearchParams()
   const { teamId, companySlug } = useParams()
+  const currentMonth = new Date().getMonth()
+  const currentYear = new Date().getFullYear()
   const { data, loading } = useQuery<MembershipTableDTO>(
     MEMBERSHIP_TABLE_QUERY,
     {
       variables: {
         teamId: Number(teamId),
-        month: Number(searchParams.get("month")),
-        year: Number(searchParams.get("year")),
+        month: Number(searchParams.get("month") || currentMonth),
+        year: Number(searchParams.get("year") || currentYear),
       },
     }
   )
@@ -92,7 +94,7 @@ const MembershipTable = () => {
                   <Select
                     native
                     {...register("month")}
-                    defaultValue={searchParams?.get("month")}
+                    defaultValue={searchParams?.get("month") || currentMonth}
                   >
                     <option value="1">{t("list.search.january")}</option>
                     <option value="2">{t("list.search.february")}</option>
@@ -115,7 +117,7 @@ const MembershipTable = () => {
                   <Input
                     {...register("year")}
                     type="number"
-                    defaultValue={searchParams.get("year")}
+                    defaultValue={searchParams.get("year") || currentYear}
                   />
                 </FormElement>
                 <FormElement>
