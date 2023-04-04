@@ -23,8 +23,8 @@ module Types
     field :product_name, String, null: true
     field :project, Types::ProjectType, null: false
     field :project_name, String, null: true
-    field :responsibles, [Types::TeamMemberType], null: true
-    field :team, Types::TeamType, null: false
+    field :responsibles, [Types::Teams::TeamMemberType], null: true
+    field :team, Types::Teams::TeamType, null: false
 
     def responsibles
       object.memberships.map(&:team_member).uniq

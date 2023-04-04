@@ -22,10 +22,15 @@
     "edit_team_message_success": "Team updated with success!",
     "edit_team_message_fail": "Unable to update team at this time!"
   },
+  "team": {
+    "membershipsTable": {
+      "title": "Members of {{ teamName }}"
+    }
+  },
   "dashboard": {
     "name": "Name",
     "startDate": "Start Date",
-    "endDate": "End Date",
+    "activeMembersCount": "Active Members",
     "delivered": "Delivered",
     "days": "Days",
     "leadTimeP65": "Lead Time P65",
@@ -33,7 +38,13 @@
     "leadTimeP95": "Lead Time P95",
     "infoTable": "Team Info",
     "biggestFiveLeadTimes": "5 biggest lead times",
-    "biggestFiveLeadTimesInFourWeeks": "5 biggest lead times in last 4 weeks"
+    "biggestFiveLeadTimesInFourWeeks": "5 biggest lead times in last 4 weeks",
+    "hours": "Hours",
+    "capacityOfHours": "Capacity of hours",
+    "producedValue": "Produced value",
+    "averageHoursPerMember": "Avg per member: {{ hours }}h",
+    "capacity": "Capacity",
+    "membersCount": "{{ membersCount } people}"
   },
   "tabs": {
     "dashboard": "Dashboard",

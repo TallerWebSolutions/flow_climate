@@ -14,7 +14,7 @@ module Types
     field :project, Types::ProjectType, null: false
     field :seconds_to_complete, Float, null: true
     field :task_type, String, null: false
-    field :team, Types::TeamType, null: false
+    field :team, Types::Teams::TeamType, null: false
     field :title, String, null: false
 
     def delivered

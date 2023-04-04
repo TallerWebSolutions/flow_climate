@@ -66,17 +66,28 @@ class TeamService
   def compute_memberships_produced_hours(team, start_date, end_date)
     memberships = team.memberships.active.billable_member
 
-    memberships.map do |membership|
-      {
-        membership: membership.member_name,
-        effort_in_month: membership.effort_in_period(start_date, end_date),
-        realized_money_in_month: membership.realized_money_in_period(start_date, end_date),
-        member_capacity_value: membership[:hours_per_month]
-      }
+    efficiency_data = memberships.map do |membership|
+      { membership: membership.member_name, effort_in_month: membership.effort_in_period(start_date, end_date),
+        avg_hours_per_demand: membership.avg_hours_per_demand(start_date, end_date),
+        realized_money_in_month: membership.realized_money_in_period(start_date, end_date), member_capacity_value: membership.hours_per_month || 0 }
     end
+    efficiency_data = efficiency_data.sort_by { |member_ef| member_ef[:effort_in_month] }.reverse
+
+    build_members_efficiency(efficiency_data)
   end
 
   private
+
+  def build_members_efficiency(efficiency_data)
+    total_hours_produced = efficiency_data.pluck(:effort_in_month).sum
+    avg_hours_per_member = efficiency_data.count.positive? ? total_hours_produced / efficiency_data.count : 0
+    total_money_produced = efficiency_data.pluck(:realized_money_in_month).sum
+    avg_money_per_member = efficiency_data.count.positive? ? total_money_produced / efficiency_data.count : 0
+    team_capacity_hours = efficiency_data.pluck(:member_capacity_value).sum
+
+    { members_efficiency: efficiency_data, total_hours_produced: total_hours_produced, total_money_produced: total_money_produced,
+      avg_hours_per_member: avg_hours_per_member, avg_money_per_member: avg_money_per_member, team_capacity_hours: team_capacity_hours }
+  end
 
   def compute_average_demand_cost_to_all_costs(team, demands, start_date_to_cmd, end_date_to_cmd, grouping_period)
     demands_count = DemandsRepository.instance.throughput_to_period(demands, start_date_to_cmd, end_date_to_cmd).count

@@ -2,9 +2,9 @@
 
 module Types
   class QueryType < Types::BaseObject
-    field :teams, [Types::TeamType], null: true, description: 'Set of teams'
+    field :teams, [Types::Teams::TeamType], null: true, description: 'Set of teams'
 
-    field :team, Types::TeamType, null: true, description: 'A team with consolidations' do
+    field :team, Types::Teams::TeamType, null: true, description: 'A team with consolidations' do
       argument :id, Int
     end
 
@@ -16,7 +16,7 @@ module Types
       argument :slug, String
     end
 
-    field :team_member, Types::TeamMemberType, null: true, description: 'A plain team_member' do
+    field :team_member, Types::Teams::TeamMemberType, null: true, description: 'A plain team_member' do
       argument :id, Int
     end
 
@@ -48,7 +48,7 @@ module Types
       argument :external_id, String, required: true
     end
 
-    field :team_members, [Types::TeamMemberType], null: true, description: 'Team Members of a Company' do
+    field :team_members, [Types::Teams::TeamMemberType], null: true, description: 'Team Members of a Company' do
       argument :active, Boolean, required: false
       argument :company_id, Int, required: true
     end

@@ -71,7 +71,7 @@ module Types
     field :start_date, GraphQL::Types::ISO8601Date, null: false
     field :status, String, null: false
     field :std_dev_weekly_troughputs, Float, null: false
-    field :team, Types::TeamType, null: false
+    field :team, Types::Teams::TeamType, null: false
     field :team_based_odds_to_deadline, Float, null: false
     field :team_monte_carlo_p80, Float, null: false
     field :team_monte_carlo_weeks_max, Float, null: false

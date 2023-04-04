@@ -687,6 +687,20 @@ RSpec.describe Team do
     end
   end
 
+  describe '#active_billable_count' do
+    it 'returns the active billable members count' do
+      travel_to Time.zone.local(2022, 11, 8, 10) do
+        team = Fabricate :team
+
+        Fabricate :membership, team: team, hours_per_month: 100, start_date: 30.days.ago, end_date: nil
+        Fabricate :membership, team: team, hours_per_month: 200, start_date: 30.days.ago, end_date: nil
+        Fabricate :membership, team: team, hours_per_month: 200, start_date: 30.days.ago, end_date: 1.day.ago
+
+        expect(team.active_billable_count).to eq 2
+      end
+    end
+  end
+
   describe '#expected_consumption' do
     context 'with memberships' do
       it 'returns the expetected value' do

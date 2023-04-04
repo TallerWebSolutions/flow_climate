@@ -236,30 +236,13 @@ RSpec.describe MembershipsController do
     end
 
     describe 'GET #index' do
-      context 'valid parameters' do
-        before { get :index, params: { company_id: company, team_id: team } }
+      let!(:product) { Fabricate :product, company: company }
+      let!(:team) { Fabricate :team, company: company }
 
-        it 'assigns the memberships variable and renders the template' do
-          expect(response).to render_template 'memberships/index'
-          expect(response).to render_template 'memberships/_memberships_table'
-          expect(assigns(:memberships)).to eq [other_membership, membership]
-        end
-      end
+      it 'renders project spa page' do
+        get :index, params: { company_id: company, team_id: team }
 
-      context 'invalid parameters' do
-        context 'non-existent company' do
-          before { get :index, params: { company_id: 'foo', team_id: team }, xhr: true }
-
-          it { expect(response).to have_http_status :not_found }
-        end
-
-        context 'not-permitted company' do
-          let(:company) { Fabricate :company, users: [] }
-
-          before { get :index, params: { company_id: company, team_id: team }, xhr: true }
-
-          it { expect(response).to have_http_status :not_found }
-        end
+        expect(response).to render_template 'spa-build/index'
       end
     end
 

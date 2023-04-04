@@ -58,6 +58,10 @@ class Team < ApplicationRecord
     memberships.active_for_date(date).filter_map(&:hours_per_month).sum
   end
 
+  def active_billable_count
+    memberships.active.billable_member.count
+  end
+
   def loss_at(date = Time.zone.today)
     efforts_value = demand_efforts.to_dates(date.beginning_of_month, date.end_of_month).sum(&:effort_value)
 

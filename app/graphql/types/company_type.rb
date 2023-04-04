@@ -7,7 +7,7 @@ module Types
     field :name, String, null: false
     field :projects, [Types::ProjectType], null: false
     field :slug, String, null: false
-    field :teams, [Types::TeamType], null: false
+    field :teams, [Types::Teams::TeamType], null: false
     field :work_item_types, [Types::WorkItemTypeType], null: true
 
     def work_item_types

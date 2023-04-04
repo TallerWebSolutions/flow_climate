@@ -22,10 +22,15 @@
     "edit_team_message_success": "Time criado com sucesso!",
     "edit_team_message_fail": "Não foi possível criar o time!"
   },
+  "team": {
+    "membershipsTable": {
+      "title": "Membros do Time {{ teamName }}"
+    }
+  },
   "dashboard": {
     "name": "Nome",
     "startDate": "Data Inicial",
-    "endDate": "Data Final",
+    "activeMembersCount": "Membros Ativos",
     "delivered": "Enregues",
     "days": "Dias",
     "leadTimeP65": "Lead Time P65",
@@ -37,8 +42,9 @@
     "hours": "Horas",
     "capacityOfHours": "Capacide de horas",
     "producedValue": "Valor produzido",
-    "averageValueOfHours": "Valor médio de horas",
-    "capacity": "Capacidade"
+    "averageHoursPerMember": "Média por pessoa: {{ hours }}h",
+    "capacity": "Capacidade",
+    "membersCount": "{{ membersCount } pessoas}"
   },
   "tabs": {
     "dashboard": "Dashboard",

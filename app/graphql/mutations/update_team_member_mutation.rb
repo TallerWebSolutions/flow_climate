@@ -12,7 +12,7 @@ module Mutations
     argument :start_date, GraphQL::Types::ISO8601Date, required: true
     argument :team_member_id, Int, required: true
 
-    field :updated_team_member, Types::TeamMemberType, null: false
+    field :updated_team_member, Types::Teams::TeamMemberType, null: false
 
     def resolve(team_member_id:, name:, start_date:, end_date:, jira_account_user_email:, jira_account_id:, hours_per_month:, monthly_payment:, billable:)
       team_member = TeamMember.find(team_member_id)

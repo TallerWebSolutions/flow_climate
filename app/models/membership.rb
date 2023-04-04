@@ -123,6 +123,16 @@ class Membership < ApplicationRecord
     member_effort
   end
 
+  def avg_hours_per_demand(start_date, end_date)
+    hours = effort_in_period(start_date, end_date)
+
+    demands_count = demand_efforts.to_dates(start_date, end_date).map(&:demand).uniq.count
+
+    return hours / demands_count if demands_count.positive?
+
+    0
+  end
+
   def realized_money_in_period(start_date, end_date)
     demand_efforts.to_dates(start_date, end_date).sum(&:effort_money)
   end

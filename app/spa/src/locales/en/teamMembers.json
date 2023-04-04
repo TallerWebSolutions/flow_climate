@@ -17,8 +17,30 @@
     }
   },
   "list": {
-    "title": "Employees",
-    "statusSelectLabel": "Member Status"
+    "title": "People",
+    "statusSelectLabel": "Member Status",
+    "hours": "Hours",
+    "producedValue": "Value",
+    "capacity": "Capacity",
+    "avgHoursPerDemand": "Hs / Demand",
+    "averageHoursPerMember": "Avg per member: {{ hours }}h",
+    "search": {
+      "month": "Month",
+      "year": "Year",
+      "january": "January",
+      "february": "February",
+      "march": "March",
+      "april": "April",
+      "may": "May",
+      "june": "June",
+      "july": "July",
+      "august": "August",
+      "september": "September",
+      "october": "October",
+      "november": "November",
+      "december": "December"
+
+    }
   },
   "edit": {
     "title": "Employee",

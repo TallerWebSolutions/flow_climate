@@ -83,28 +83,60 @@ RSpec.describe TeamService, type: :service do
     context 'without data' do
       it { expect(described_class.instance.average_demand_cost_stats_info_hash(team)).to eq(cmd_difference_to_avg_last_four_weeks: 0, current_week: 0, four_weeks_cmd_average: 0, last_week: 0, team_name: team.name) }
     end
+  end
 
-    describe '#compute_available_hours_to_team' do
-      let(:company) { Fabricate :company }
-      let!(:team) { Fabricate :team, company: company }
+  describe '#compute_memberships_produced_hours' do
+    let(:company) { Fabricate :company }
+    let!(:team) { Fabricate :team, company: company }
 
-      context 'with data' do
-        let!(:team_member) { Fabricate :team_member, billable_type: :outsourcing, billable: true, monthly_payment: 10_000, start_date: 1.month.ago, end_date: nil }
-        let!(:other_team_member) { Fabricate :team_member, billable_type: :outsourcing, billable: true, monthly_payment: 10_000, start_date: 2.months.ago, end_date: 1.month.ago }
-        let!(:null_payment_team_member) { Fabricate :team_member, billable_type: :outsourcing, billable: true, monthly_payment: nil, start_date: 2.months.ago, end_date: nil }
+    context 'with data' do
+      it 'returns the average demand cost informations in a hash' do
+        team_member = Fabricate :team_member, billable_type: :outsourcing, monthly_payment: 10_000, start_date: 1.month.ago, end_date: nil
+        other_team_member = Fabricate :team_member, billable_type: :outsourcing, monthly_payment: 10_000, start_date: 2.months.ago, end_date: nil
+        inactive_team_member = Fabricate :team_member, billable_type: :outsourcing, monthly_payment: 10_000, start_date: 2.months.ago, end_date: 1.month.ago
+        Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil
+        Fabricate :membership, team: team, team_member: other_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: nil
+        Fabricate :membership, team: team, team_member: inactive_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.day.ago
+        Fabricate :demand, team: team, end_date: 1.week.ago
+        Fabricate :demand, team: team, end_date: 1.week.ago
+        Fabricate :demand, team: team, end_date: Time.zone.now
 
-        let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
-        let!(:other_membership) { Fabricate :membership, team: team, team_member: other_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
-        let!(:null_payment_membership) { Fabricate :membership, team: team, team_member: null_payment_team_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
-
-        it 'returns the average demand cost informations in a hash' do
-          expect(described_class.instance.compute_available_hours_to_team([team], 3.months.ago.to_date, Time.zone.today, :monthly)).to eq(Date.new(2018, 3, 31) => 0.0, Date.new(2018, 4, 30) => 58.666666666666664, Date.new(2018, 5, 31) => 198.66666666666666, Date.new(2018, 6, 30) => 240.0)
-        end
+        start_date = Time.zone.today.beginning_of_month
+        end_date = Time.zone.today.end_of_month
+        expect(described_class.instance.compute_memberships_produced_hours(team, start_date, end_date)[:members_efficiency]).to contain_exactly({ membership: { member_name: team_member.name }, avg_hours_per_demand: 0, effort_in_month: 0, realized_money_in_month: 0, member_capacity_value: 120 }, { membership: { member_name: other_team_member.name }, avg_hours_per_demand: 0, effort_in_month: 0, realized_money_in_month: 0, member_capacity_value: 40 })
+        expect(described_class.instance.compute_memberships_produced_hours(team, start_date, end_date)[:total_hours_produced]).to eq 0
+        expect(described_class.instance.compute_memberships_produced_hours(team, start_date, end_date)[:total_money_produced]).to eq 0
+        expect(described_class.instance.compute_memberships_produced_hours(team, start_date, end_date)[:avg_hours_per_member]).to eq 0
+        expect(described_class.instance.compute_memberships_produced_hours(team, start_date, end_date)[:avg_money_per_member]).to eq 0
+        expect(described_class.instance.compute_memberships_produced_hours(team, start_date, end_date)[:team_capacity_hours]).to eq 160
       end
+    end
 
-      context 'without data' do
-        it { expect(described_class.instance.compute_available_hours_to_team([team], 3.months.ago.to_date, Time.zone.today, :monthly)).to eq(Date.new(2018, 3, 31) => 0.0, Date.new(2018, 4, 30) => 0.0, Date.new(2018, 5, 31) => 0.0, Date.new(2018, 6, 30) => 0.0) }
+    context 'without data' do
+      it { expect(described_class.instance.compute_memberships_produced_hours(team, Time.zone.today.beginning_of_month, Time.zone.today.end_of_month)).to eq({ avg_hours_per_member: 0, avg_money_per_member: 0, members_efficiency: [], team_capacity_hours: 0, total_hours_produced: 0, total_money_produced: 0 }) }
+    end
+  end
+
+  describe '#compute_available_hours_to_team' do
+    let(:company) { Fabricate :company }
+    let!(:team) { Fabricate :team, company: company }
+
+    context 'with data' do
+      let!(:team_member) { Fabricate :team_member, billable_type: :outsourcing, billable: true, monthly_payment: 10_000, start_date: 1.month.ago, end_date: nil }
+      let!(:other_team_member) { Fabricate :team_member, billable_type: :outsourcing, billable: true, monthly_payment: 10_000, start_date: 2.months.ago, end_date: 1.month.ago }
+      let!(:null_payment_team_member) { Fabricate :team_member, billable_type: :outsourcing, billable: true, monthly_payment: nil, start_date: 2.months.ago, end_date: nil }
+
+      let!(:membership) { Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil }
+      let!(:other_membership) { Fabricate :membership, team: team, team_member: other_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.month.ago }
+      let!(:null_payment_membership) { Fabricate :membership, team: team, team_member: null_payment_team_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil }
+
+      it 'returns the average demand cost informations in a hash' do
+        expect(described_class.instance.compute_available_hours_to_team([team], 3.months.ago.to_date, Time.zone.today, :monthly)).to eq(Date.new(2018, 3, 31) => 0.0, Date.new(2018, 4, 30) => 58.666666666666664, Date.new(2018, 5, 31) => 198.66666666666666, Date.new(2018, 6, 30) => 240.0)
       end
+    end
+
+    context 'without data' do
+      it { expect(described_class.instance.compute_available_hours_to_team([team], 3.months.ago.to_date, Time.zone.today, :monthly)).to eq(Date.new(2018, 3, 31) => 0.0, Date.new(2018, 4, 30) => 0.0, Date.new(2018, 5, 31) => 0.0, Date.new(2018, 6, 30) => 0.0) }
     end
   end
 end

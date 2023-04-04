@@ -157,14 +157,15 @@ RSpec.describe Types::QueryType do
                   xAxis
                   yAxis
                 }
-                hoursAndMoneyByEachMember {
-                  membership {
-                    memberName
+                teamMemberEfficiency {
+                  membersEfficiency {
+                    membership {
+                      memberName
+                    }
+                    effortInMonth
+                    realizedMoneyInMonth
                   }
-                  effortInMonth
-                  realizedMoneyInMonth
                 }
-                teamCapacityHours
                 lastReplenishingConsolidations {
                   id
                   customerHappiness
@@ -246,8 +247,7 @@ RSpec.describe Types::QueryType do
                                                        'numberOfDemandsDelivered' => 0,
                                                        'teamConsolidationsWeekly' => [],
                                                        'teamMonthlyInvestment' => { 'xAxis' => ['2022-09-30'], 'yAxis' => [-2500.0] },
-                                                       'hoursAndMoneyByEachMember' => [{ 'effortInMonth' => 0.0, 'membership' => { 'memberName' => 'ddd' }, 'realizedMoneyInMonth' => 0.0 }],
-                                                       'teamCapacityHours' => 160,
+                                                       'teamMemberEfficiency' => { 'membersEfficiency' => [{ 'effortInMonth' => 0.0, 'membership' => { 'memberName' => 'ddd' }, 'realizedMoneyInMonth' => 0.0 }] },
                                                        'lastReplenishingConsolidations' => [
                                                          {
                                                            'id' => replenishing_consolidation.id.to_s,

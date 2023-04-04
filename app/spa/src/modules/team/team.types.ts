@@ -1,6 +1,7 @@
 import {
   DemandsFlowChartData,
   KeyValueData,
+  NumberChartData,
   SimpleListChartData,
 } from "../charts/charts.types"
 import { Company } from "../company/company.types"
@@ -28,6 +29,7 @@ export type Team = {
   numberOfDemands?: number
   numberOfDemandsDelivered?: number
   numberOfRemainingBacklog?: number
+  activeBillableCount?: number
   cumulativeFlowChartData?: {
     xAxis: string[]
     yAxis: SimpleListChartData[]
@@ -37,17 +39,27 @@ export type Team = {
   demandsFlowChartData?: DemandsFlowChartData
   leadTimeHistogramData?: KeyValueData
   teamConsolidationsWeekly?: ProjectConsolidation[]
-  teamMonthlyInvestment?: {
-    xAxis: string[]
-    yAxis: number[]
-  }
-  hoursAndMoneyByEachMember: Array<{
-    membership: {
-      memberName: string
-    }
-    effortInMonth: number
-    realizedMoneyInMonth: number
-    memberCapacityValue: number
-  }>
-  teamCapacityHours: number
+  teamMonthlyInvestment?: NumberChartData
+  teamMemberEfficiency?: MembershipEfficiencyList
+  teamCapacityHours?: number
+}
+
+export type MembershipEfficiencyList = {
+  membersEfficiency: MembershipEfficiencyData[]
+  avgHoursPerMember: number
+  avgMoneyPerMember: number
+  totalHoursProduced: number
+  totalMoneyProduced: number
+}
+
+export type MembershipEfficiencyData = {
+  membership: Membership
+  effortInMonth: number
+  memberCapacityValue: number
+  realizedMoneyInMonth: number
+  avgHoursPerDemand: number
+}
+
+export type Membership = {
+  memberName: string
 }
