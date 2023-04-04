@@ -24,7 +24,7 @@ const MembershipTable = () => {
   const { register } = useForm()
   const [searchParams] = useSearchParams()
   const { teamId, companySlug } = useParams()
-  const currentMonth = new Date().getMonth()
+  const currentMonth = new Date().getMonth() + 1
   const currentYear = new Date().getFullYear()
   const { data, loading } = useQuery<MembershipTableDTO>(
     MEMBERSHIP_TABLE_QUERY,
