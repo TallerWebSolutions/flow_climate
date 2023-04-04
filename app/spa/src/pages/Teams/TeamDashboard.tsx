@@ -8,7 +8,6 @@ import {
   Input,
   InputLabel,
   Link,
-  TextField,
   Typography,
 } from "@mui/material"
 import { BarDatum } from "@nivo/bar"
@@ -33,7 +32,6 @@ import { formatDate, secondsToDays, secondsToReadbleDate } from "../../lib/date"
 import { Demand } from "../../modules/demand/demand.types"
 import TeamBasicPage from "../../modules/team/components/TeamBasicPage"
 import { Team } from "../../modules/team/team.types"
-import { DatePicker } from "@mui/lab"
 
 const TEAM_DASHBOARD_QUERY = gql`
   query TeamDashboard($teamId: Int!, $startDate: ISO8601Date, $endDate: ISO8601Date) {
