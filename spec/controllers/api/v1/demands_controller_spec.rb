@@ -13,8 +13,8 @@ RSpec.describe Api::V1::DemandsController do
           request.headers.merge! headers
           get :show, params: { id: 'abc-302' }
 
-          expect(JSON.parse(response.body)['data']['id']).to eq demand.id
-          expect(JSON.parse(response.body)['data']['demand_score']).to eq demand.demand_score.to_s
+          expect(response.parsed_body['data']['id']).to eq demand.id
+          expect(response.parsed_body['data']['demand_score']).to eq demand.demand_score.to_s
         end
       end
     end

@@ -9,6 +9,7 @@ module Types
     field :average_touch_time, Float, null: true
     field :backlog_count_for, Int, null: true
     field :company, Types::CompanyType, null: false
+    field :consumed_hours, Float, null: false
     field :current_cost, Float, null: true
     field :current_monte_carlo_weeks_max, Int, null: true
     field :current_monte_carlo_weeks_min, Int, null: true
@@ -33,7 +34,6 @@ module Types
     field :hours_per_stage_chart_data, Types::Charts::HoursPerStageChartType, null: true do
       argument :stage_level, String, required: false
     end
-    field :consumed_hours, Float, null: false
     field :id, ID, null: false
     field :initial_scope, Int, null: false
     field :initiative, Types::InitiativeType, null: true

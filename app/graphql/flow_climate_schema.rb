@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class FlowClimateSchema < GraphQL::Schema
+  max_complexity 1000
+  max_depth 13
+
   mutation(Types::MutationType)
   query(Types::QueryType)
 

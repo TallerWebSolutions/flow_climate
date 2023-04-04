@@ -63,6 +63,19 @@ class TeamService
     hours_consumed_hash
   end
 
+  def compute_memberships_produced_hours(team, start_date, end_date)
+    memberships = team.memberships.active.billable_member
+
+    memberships.map do |membership|
+      {
+        membership: membership.member_name,
+        effort_in_month: membership.effort_in_period(start_date, end_date),
+        realized_money_in_month: membership.realized_money_in_period(start_date, end_date),
+        member_capacity_value: membership[:hours_per_month]
+      }
+    end
+  end
+
   private
 
   def compute_average_demand_cost_to_all_costs(team, demands, start_date_to_cmd, end_date_to_cmd, grouping_period)

@@ -59,8 +59,8 @@ RSpec.describe Api::V1::TeamsController do
           get :items_in_wip, params: { id: team.id }
 
           expect(response).to have_http_status :ok
-          expect(JSON.parse(response.body)['data'][0]['id']).to eq demand.id
-          expect(JSON.parse(response.body)['data'][0]['external_id']).to eq demand.external_id
+          expect(response.parsed_body['data'][0]['id']).to eq demand.id
+          expect(response.parsed_body['data'][0]['external_id']).to eq demand.external_id
         end
       end
     end
@@ -117,8 +117,8 @@ RSpec.describe Api::V1::TeamsController do
             get :items_delivered_last_week, params: { id: team.id }
 
             expect(response).to have_http_status :ok
-            expect(JSON.parse(response.body)['data'].pluck('id')).to match_array [first_demand.id, third_demand.id]
-            expect(JSON.parse(response.body)['data'].pluck('external_id')).to match_array [first_demand.external_id, third_demand.external_id]
+            expect(response.parsed_body['data'].pluck('id')).to match_array [first_demand.id, third_demand.id]
+            expect(response.parsed_body['data'].pluck('external_id')).to match_array [first_demand.external_id, third_demand.external_id]
           end
         end
 
@@ -128,7 +128,7 @@ RSpec.describe Api::V1::TeamsController do
             get :items_delivered_last_week, params: { id: team.id }
 
             expect(response).to have_http_status :ok
-            expect(JSON.parse(response.body)['data'].count).to eq 0
+            expect(response.parsed_body['data'].count).to eq 0
           end
         end
       end

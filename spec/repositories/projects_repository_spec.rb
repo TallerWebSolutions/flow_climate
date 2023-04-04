@@ -19,12 +19,12 @@ RSpec.describe ProjectsRepository, type: :repository do
         project_search = described_class.instance.search(company.id)
 
         expect(project_search.count).to eq 4
-        expect((described_class.instance.search(company.id, project_status: 'waiting'))).to match_array [first_project, fourth_project]
-        expect((described_class.instance.search(company.id, project_status: 'finished'))).to eq [third_project]
-        expect((described_class.instance.search(company.id, project_name: 'Foo,Bar'))).to eq [fourth_project, first_project, second_project]
-        expect((described_class.instance.search(company.id, start_date: 1.day.ago, end_date: 4.days.ago))).to eq [second_project]
-        expect((described_class.instance.search(company.id, end_date: 7.days.ago))).to eq [second_project]
-        expect((described_class.instance.search(company.id, project_name: 'Bar Foo', project_status: 'executing', start_date: 1.day.ago))).to eq [second_project]
+        expect(described_class.instance.search(company.id, project_status: 'waiting')).to match_array [first_project, fourth_project]
+        expect(described_class.instance.search(company.id, project_status: 'finished')).to eq [third_project]
+        expect(described_class.instance.search(company.id, project_name: 'Foo,Bar')).to eq [fourth_project, first_project, second_project]
+        expect(described_class.instance.search(company.id, start_date: 1.day.ago, end_date: 4.days.ago)).to eq [second_project]
+        expect(described_class.instance.search(company.id, end_date: 7.days.ago)).to eq [second_project]
+        expect(described_class.instance.search(company.id, project_name: 'Bar Foo', project_status: 'executing', start_date: 1.day.ago)).to eq [second_project]
       end
     end
   end

@@ -2,28 +2,29 @@
 
 module Types
   class TeamType < Types::BaseObject
+    field :active_projects, [Types::ProjectType], null: true
     field :average_throughput, Float, null: true
     field :company, Types::CompanyType, null: false
     field :cumulative_flow_chart_data, Types::Charts::CumulativeFlowChartType, null: true do
       argument :end_date, GraphQL::Types::ISO8601Date, required: false, description: 'End Date for the search range'
       argument :start_date, GraphQL::Types::ISO8601Date, required: false, description: 'Start Date for the search range'
     end
+    field :demands_flow_chart_data, Types::Charts::DemandsFlowChartDataType, null: true do
+      argument :end_date, GraphQL::Types::ISO8601Date, required: false, description: 'End Date for the search range'
+      argument :start_date, GraphQL::Types::ISO8601Date, required: false, description: 'Start Date for the search range'
+    end
     field :end_date, GraphQL::Types::ISO8601Date, null: true
+    field :hours_and_money_by_each_member, [Types::ValueEachMemberType], null: true
     field :id, ID, null: false
     field :increased_avg_throughtput, Boolean, null: true
     field :increased_leadtime_80, Boolean, null: true
+    field :last_replenishing_consolidations, [Types::ReplenishingConsolidationType], null: false
     field :latest_deliveries, [Types::DemandType], null: true do
       argument :limit, Int, required: false
       argument :order_field, String, required: false
       argument :sort_direction, Types::Enums::SortDirection, required: false
       argument :start_date, GraphQL::Types::ISO8601Date, required: false, description: 'Start Date for the search range, will only bring demands finished after this date'
     end
-    field :active_projects, [Types::ProjectType], null: true
-    field :demands_flow_chart_data, Types::Charts::DemandsFlowChartDataType, null: true do
-      argument :end_date, GraphQL::Types::ISO8601Date, required: false, description: 'End Date for the search range'
-      argument :start_date, GraphQL::Types::ISO8601Date, required: false, description: 'Start Date for the search range'
-    end
-    field :last_replenishing_consolidations, [Types::ReplenishingConsolidationType], null: false
     field :lead_time, Float, null: true
     field :lead_time_histogram_data, Types::Charts::LeadTimeHistogramDataType, null: true do
       argument :end_date, GraphQL::Types::ISO8601Date, required: false, description: 'End Date for the search range'
@@ -37,6 +38,7 @@ module Types
     field :number_of_demands_delivered, Int, null: true
     field :projects, [Types::ProjectType], null: true
     field :start_date, GraphQL::Types::ISO8601Date, null: true
+    field :team_capacity_hours, Int, null: true
     field :team_consolidations_weekly, [Types::ProjectConsolidationType], null: true do
       argument :end_date, GraphQL::Types::ISO8601Date, required: false, description: 'End Date for the search range'
       argument :start_date, GraphQL::Types::ISO8601Date, required: false, description: 'Start Date for the search range'
@@ -45,8 +47,6 @@ module Types
       argument :end_date, GraphQL::Types::ISO8601Date, required: false, description: 'End Date for the search range'
       argument :start_date, GraphQL::Types::ISO8601Date, required: false, description: 'Start Date for the search range'
     end
-    field :hours_and_money_by_each_member, [Types::ValueEachMemberType], null: true
-    field :team_capacity_hours, Int, null: true
     field :throughput_data, [Int], null: true
     field :work_in_progress, Int, null: true
 
@@ -155,19 +155,10 @@ module Types
     end
 
     def hours_and_money_by_each_member
-      memberships = object.memberships.active.billable_member
-
       start_date = Time.zone.now.beginning_of_month
       end_date = Time.zone.now.end_of_month
 
-      memberships.map do |membership|
-        {
-          membership: membership.member_name,
-          effort_in_month: membership.effort_in_period(start_date, end_date),
-          realized_money_in_month: membership.realized_money_in_period(start_date, end_date),
-          member_capacity_value: membership[:hours_per_month]
-        }
-      end
+      TeamService.instance.compute_memberships_produced_hours(object, start_date, end_date)
     end
 
     def team_capacity_hours

@@ -11,7 +11,7 @@ RSpec.describe Api::V1::CompaniesController do
           request.headers.merge! headers
           get :show, params: { id: company.id }
 
-          expect(JSON.parse(response.body)['data']['id']).to eq company.id
+          expect(response.parsed_body['data']['id']).to eq company.id
         end
       end
     end
@@ -52,7 +52,7 @@ RSpec.describe Api::V1::CompaniesController do
           request.headers.merge! headers
           get :active_projects, params: { id: company.id }
 
-          expect(JSON.parse(response.body)['data']['projects_ids']).to eq [other_project.id, project.id]
+          expect(response.parsed_body['data']['projects_ids']).to eq [other_project.id, project.id]
         end
       end
     end

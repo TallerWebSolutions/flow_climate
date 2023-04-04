@@ -29,7 +29,7 @@ RSpec.describe GraphqlController do
           post :execute, params: { format: :json, query: query }
 
           expect(response).to have_http_status :ok
-          expect(JSON.parse(response.body)).to eq({ 'data' => { 'team' => { 'id' => team.id.to_s } } })
+          expect(response.parsed_body).to eq({ 'data' => { 'team' => { 'id' => team.id.to_s } } })
         end
       end
 
@@ -74,7 +74,7 @@ RSpec.describe GraphqlController do
         post :execute, params: { format: :json, query: query }
 
         expect(response).to have_http_status :ok
-        expect(JSON.parse(response.body).dig('data', 'demand', 'id')).to eq demand.id.to_s
+        expect(response.parsed_body.dig('data', 'demand', 'id')).to eq demand.id.to_s
       end
     end
   end

@@ -12,7 +12,7 @@ RSpec.describe Api::V1::ProjectsController do
           request.headers.merge! headers
           get :show, params: { id: project.id }
 
-          expect(JSON.parse(response.body)['data']['id']).to eq project.id
+          expect(response.parsed_body['data']['id']).to eq project.id
         end
       end
     end
