@@ -44,7 +44,7 @@
     "producedValue": "Produced value",
     "averageHoursPerMember": "Avg per member: {{ hours }}h",
     "capacity": "Capacity",
-    "membersCount": "{{ membersCount } people}"
+    "membersCount": "{{ membersCount }} people"
   },
   "tabs": {
     "dashboard": "Dashboard",

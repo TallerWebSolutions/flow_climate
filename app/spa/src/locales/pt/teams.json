@@ -44,7 +44,7 @@
     "producedValue": "Valor produzido",
     "averageHoursPerMember": "Média por pessoa: {{ hours }}h",
     "capacity": "Capacidade",
-    "membersCount": "{{ membersCount } pessoas}"
+    "membersCount": "{{ membersCount }} pessoas"
   },
   "tabs": {
     "dashboard": "Dashboard",
