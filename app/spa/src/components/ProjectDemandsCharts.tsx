@@ -116,38 +116,36 @@ const ProjectDemandsCharts = ({
   )
 
   const committedChartData = demandsFlowChartData?.committedChartData
-  const projectFlowChartData: BarDatum[] = committedChartData
-    ? committedChartData?.map((_, index) => {
-        const creationChartData = demandsFlowChartData.creationChartData
-          ? demandsFlowChartData.creationChartData
-          : []
+  const projectFlowChartData: BarDatum[] =
+    committedChartData?.map((_, index) => {
+      const creationChartData = demandsFlowChartData.creationChartData
+        ? demandsFlowChartData.creationChartData
+        : []
 
-        const pullTransactionRate = demandsFlowChartData.pullTransactionRate
-          ? demandsFlowChartData.pullTransactionRate
-          : []
+      const pullTransactionRate = demandsFlowChartData.pullTransactionRate
+        ? demandsFlowChartData.pullTransactionRate
+        : []
 
-        const throughputChartData = demandsFlowChartData.throughputChartData
-          ? demandsFlowChartData.throughputChartData
-          : []
+      const throughputChartData = demandsFlowChartData.throughputChartData
+        ? demandsFlowChartData.throughputChartData
+        : []
 
-        return {
-          index: demandsFlowChartData.xAxis?.[index] || index,
-          [t("charts_tab.project_charts.flow_data_created")]:
-            creationChartData[index],
-          [t("charts_tab.project_charts.flow_data_committed_to")]:
-            committedChartData[index],
-          [t("charts_tab.project_charts.flow_data_pull_transactions")]:
-            pullTransactionRate[index],
-          [t("charts_tab.project_charts.flow_data_delivered")]:
-            throughputChartData[index],
-        }
-      })
-    : []
+      return {
+        index: demandsFlowChartData.xAxis?.[index] || index,
+        [t("charts_tab.project_charts.flow_data_created")]:
+          creationChartData[index],
+        [t("charts_tab.project_charts.flow_data_committed_to")]:
+          committedChartData[index],
+        [t("charts_tab.project_charts.flow_data_pull_transactions")]:
+          pullTransactionRate[index],
+        [t("charts_tab.project_charts.flow_data_delivered")]:
+          throughputChartData[index],
+      }
+    }) || []
 
   const projectLeadTimeHistogramData: BarDatum[] = leadTimeHistogramData
     ? leadTimeHistogramData.keys.map((el, index) => {
-        const projectLeadTimeHistogramDataKeysInDays =
-          secondsToDays(el).toFixed(2)
+        const projectLeadTimeHistogramDataKeysInDays = secondsToDays(el)
 
         return {
           index,
@@ -217,13 +215,13 @@ const ProjectDemandsCharts = ({
   ]
 
   const leadTimeP65InDays = secondsToDays(
-    Number(lastProjectConsolidationsWeekly?.leadTimeP65)
+    lastProjectConsolidationsWeekly?.leadTimeP65
   )
   const leadTimeP80InDays = secondsToDays(
-    Number(lastProjectConsolidationsWeekly?.leadTimeP80)
+    lastProjectConsolidationsWeekly?.leadTimeP80
   )
   const leadTimeP95InDays = secondsToDays(
-    Number(lastProjectConsolidationsWeekly?.leadTimeP95)
+    lastProjectConsolidationsWeekly?.leadTimeP95
   )
 
   const leadTimeControlP65Marker = {
@@ -373,14 +371,14 @@ const ProjectDemandsCharts = ({
       }
     ) || []
 
-  const projectHoursPerStage = hoursPerStageChartData
-    ? hoursPerStageChartData.xAxis.map((xValue, index: number) => {
-        return {
-          index: index,
-          [xValue]: hoursPerStageChartData.yAxis[index],
-        }
-      })
-    : []
+  const projectHoursPerStage = hoursPerStageChartData.xAxis.map(
+    (xValue, index: number) => {
+      return {
+        index: index,
+        [xValue]: hoursPerStageChartData.yAxis[index],
+      }
+    }
+  )
 
   const projectLeadTimeBreakdown = leadTimeBreakdownData
     ? leadTimeBreakdownData.xAxis.map((xValue, index: number) => {

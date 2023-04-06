@@ -71,7 +71,7 @@ const DemandEfforts = () => {
   ]
   const tableRows =
     demand?.demandEfforts?.map((effort) => [
-      effort.id || "",
+      effort.id,
       effort.who || "",
       effort.memberRole || "",
       effort.stage || "",
