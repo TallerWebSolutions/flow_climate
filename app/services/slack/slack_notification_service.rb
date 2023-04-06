@@ -170,8 +170,9 @@ module Slack
       change_state_notify += ":alarm_clock: *Lead time (p80) de demandas similares* | *No Projeto*: #{time_distance_in_words(DemandService.instance.similar_p80_project(demand))} | *No Time:* #{time_distance_in_words(DemandService.instance.similar_p80_team(demand))}\n" if stage.commitment_point?
 
       if stage.end_point?
-        change_state_notify += "> :alarm_clock: #{time_distance_in_words(demand.reload.leadtime)} | :moneybag: #{number_to_currency(demand.cost_to_project, decimal: 2)}\n"
+        change_state_notify += "> :alarm_clock: Lead Time: #{time_distance_in_words(demand.reload.leadtime)}\n"
         project = demand.project
+        change_state_notify += "> :moneybag: #{number_to_currency(demand.cost_to_project, decimal: 2)} | Upstream: #{number_to_currency(demand.effort_upstream * project.hour_value, decimal: 2)} | Downstream: #{number_to_currency(demand.effort_downstream * project.hour_value, decimal: 2)} \n"
         team = demand.team
 
         change_state_notify += "> Mais rápida do que *#{number_to_percentage(project.lead_time_position_percentage(demand) * 100, precision: 1)}* das demandas no projeto *#{project.name}*.\n"
