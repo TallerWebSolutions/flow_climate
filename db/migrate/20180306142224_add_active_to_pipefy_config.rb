@@ -2,6 +2,6 @@
 
 class AddActiveToPipefyConfig < ActiveRecord::Migration[5.1]
   def change
-    add_column :pipefy_configs, :active, :boolean, default: true
+    add_column :pipefy_configs, :active, :boolean, default: true, null: false
   end
 end

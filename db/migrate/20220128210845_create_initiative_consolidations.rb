@@ -6,9 +6,9 @@ class CreateInitiativeConsolidations < ActiveRecord::Migration[6.1]
       t.integer :initiative_id, null: false, index: true
       t.date :consolidation_date, null: false, index: true
 
-      t.boolean :last_data_in_week, default: false
-      t.boolean :last_data_in_month, default: false
-      t.boolean :last_data_in_year, default: false
+      t.boolean :last_data_in_week, default: false, null: false
+      t.boolean :last_data_in_month, default: false, null: false
+      t.boolean :last_data_in_year, default: false, null: false
 
       t.integer :tasks_delivered
       t.integer :tasks_delivered_in_month

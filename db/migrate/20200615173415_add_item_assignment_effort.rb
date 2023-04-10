@@ -4,7 +4,7 @@ class AddItemAssignmentEffort < ActiveRecord::Migration[6.0]
   def up
     change_table :item_assignments, bulk: true do |t|
       t.decimal :item_assignment_effort, default: 0, null: false
-      t.boolean :assignment_for_role, default: false # maps if an assignment was in a stage related to the role of the team_member
+      t.boolean :assignment_for_role, default: false, null: false # maps if an assignment was in a stage related to the role of the team_member
       t.integer :membership_id, index: true
     end
     add_foreign_key :item_assignments, :memberships, column: :membership_id

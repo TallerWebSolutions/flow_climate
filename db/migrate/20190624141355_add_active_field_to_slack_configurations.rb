@@ -2,6 +2,6 @@
 
 class AddActiveFieldToSlackConfigurations < ActiveRecord::Migration[5.2]
   def change
-    add_column :slack_configurations, :active, :boolean, default: true
+    add_column :slack_configurations, :active, :boolean, default: true, null: false
   end
 end

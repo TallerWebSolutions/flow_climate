@@ -2,6 +2,6 @@
 
 class AddManualEffortBooleanToDemand < ActiveRecord::Migration[5.2]
   def change
-    add_column :demands, :manual_effort, :boolean, default: false
+    add_column :demands, :manual_effort, :boolean, default: false, null: false
   end
 end

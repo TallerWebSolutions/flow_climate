@@ -23,7 +23,7 @@ class DropTableProjectResults < ActiveRecord::Migration[5.2]
 
   def down
     create_table :project_results do |t|
-      t.boolean :active
+      t.boolean :active, null: false, default: true
 
       t.integer :project_id, null: false
       t.integer :team_id, null: false
@@ -55,8 +55,8 @@ class DropTableProjectResults < ActiveRecord::Migration[5.2]
 
       t.decimal :monte_carlo_date
 
-      t.boolean :active
-      t.boolean :manual_input
+      t.boolean :active, null: false, default: true
+      t.boolean :manual_input, null: false, default: false
 
       t.timestamps
     end
@@ -73,7 +73,7 @@ class DropTableProjectResults < ActiveRecord::Migration[5.2]
       t.integer :team_id, null: false
       t.string :pipe_id, null: false
 
-      t.boolean :active
+      t.boolean :active, null: false, default: true
 
       t.timestamps
     end

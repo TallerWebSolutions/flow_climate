@@ -6,7 +6,7 @@ class CreateStageProjectConfigs < ActiveRecord::Migration[5.2]
       t.integer :project_id, null: false, index: true
       t.integer :stage_id, null: false, index: true
 
-      t.boolean :compute_effort, default: false
+      t.boolean :compute_effort, default: false, null: false
 
       t.integer :stage_percentage
       t.integer :management_percentage
@@ -39,7 +39,7 @@ class CreateStageProjectConfigs < ActiveRecord::Migration[5.2]
     execute('INSERT INTO projects_stages(stage_id, project_id, created_at, updated_at) SELECT stage_id, project_id, created_at, updated_at FROM stage_project_configs;')
 
     change_table :stages, bulk: true do |t|
-      t.boolean :compute_effort
+      t.boolean :compute_effort, null: false, default: false
       t.decimal :percentage_effort
     end
 

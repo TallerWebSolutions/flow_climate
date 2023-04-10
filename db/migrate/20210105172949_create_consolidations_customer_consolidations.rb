@@ -6,9 +6,9 @@ class CreateConsolidationsCustomerConsolidations < ActiveRecord::Migration[6.1]
       t.integer :customer_id, null: false, index: true
       t.date :consolidation_date, null: false
 
-      t.boolean :last_data_in_week, default: false, index: true
-      t.boolean :last_data_in_month, default: false, index: true
-      t.boolean :last_data_in_year, default: false, index: true
+      t.boolean :last_data_in_week, default: false, index: true, null: false
+      t.boolean :last_data_in_month, default: false, index: true, null: false
+      t.boolean :last_data_in_year, default: false, index: true, null: false
 
       t.decimal :consumed_hours, default: 0
       t.decimal :consumed_hours_in_month, default: 0

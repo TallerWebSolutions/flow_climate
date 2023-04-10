@@ -7,10 +7,10 @@ class CreateStages < ActiveRecord::Migration[5.1]
       t.string :name, null: false, index: true
       t.integer :stage_type, null: false
       t.integer :stage_stream, null: false
-      t.boolean :commitment_point, default: false
-      t.boolean :end_point, default: false
-      t.boolean :queue, default: false
-      t.boolean :compute_effort, default: false
+      t.boolean :commitment_point, default: false, null: false
+      t.boolean :end_point, default: false, null: false
+      t.boolean :queue, default: false, null: false
+      t.boolean :compute_effort, default: false, null: false
       t.decimal :percentage_effort
 
       t.timestamps

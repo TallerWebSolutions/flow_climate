@@ -11,7 +11,7 @@ class CreateContracts < ActiveRecord::Migration[6.0]
       t.date :end_date
 
       t.integer :renewal_period, null: false, default: 0
-      t.boolean :automatic_renewal, default: false
+      t.boolean :automatic_renewal, default: false, null: false
 
       t.integer :total_hours, null: false
       t.integer :total_value, null: false
