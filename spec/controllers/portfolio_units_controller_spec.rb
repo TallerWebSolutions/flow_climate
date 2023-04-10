@@ -57,49 +57,11 @@ RSpec.describe PortfolioUnitsController do
     let(:product) { Fabricate :product, company: company, customer: customer }
 
     describe 'GET #index' do
-      context 'with valid data' do
-        it "returns the product's units" do
-          parent_unit = Fabricate :portfolio_unit, product: product, name: 'zzz', parent: nil
-          unit = Fabricate :portfolio_unit, product: product, name: 'bbb', parent: parent_unit
-          other_unit = Fabricate :portfolio_unit, product: product, name: 'aaa', parent: parent_unit
+      it 'renders the SPA template' do
+        get :index, params: { company_id: company, product_id: 'foo' }
 
-          Fabricate :portfolio_unit, name: 'aaa'
-
-          get :index, params: { company_id: company, product_id: product }
-
-          expect(response).to render_template :index
-          expect(assigns(:portfolio_units)).to eq [parent_unit, other_unit, unit]
-        end
-      end
-
-      context 'with invalid' do
-        context 'product' do
-          before { get :index, params: { company_id: company, product_id: 'foo' } }
-
-          it { expect(response).to have_http_status :not_found }
-        end
-
-        context 'product in other company' do
-          let(:other_product) { Fabricate :product }
-
-          before { get :index, params: { company_id: company, product_id: other_product } }
-
-          it { expect(response).to have_http_status :not_found }
-        end
-
-        context 'company' do
-          before { get :index, params: { company_id: 'foo', product_id: product } }
-
-          it { expect(response).to have_http_status :not_found }
-        end
-
-        context 'unpermitted company' do
-          let(:other_company) { Fabricate :company }
-
-          before { get :index, params: { company_id: other_company, product_id: product } }
-
-          it { expect(response).to have_http_status :not_found }
-        end
+        expect(response).to render_template 'spa-build/index'
+        expect(assigns(:company)).to eq company
       end
     end
 

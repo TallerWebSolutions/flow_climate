@@ -18,5 +18,13 @@
 
   "products": {
     "title": "Produtos"
+  },
+
+  "portfolioUnits": {
+    "title": "Lista de Unidades de Portfólio",
+    "name": "Nome",
+    "parent": "Ancestral",
+    "totalCost": "Custo total",
+    "totalHours": "Horas totais"
   }
 }

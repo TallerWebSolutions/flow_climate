@@ -17,5 +17,13 @@
   },
   "products": {
     "title": "Products"
+  },
+
+  "portfolioUnits": {
+    "title": "Portfolio Unit List",
+    "name": "Name",
+    "parent": "Parent",
+    "totalCost": "Total Cost",
+    "totalHours": "Total Hours"
   }
 }

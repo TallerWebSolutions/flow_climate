@@ -19,5 +19,13 @@
     "title": "Products",
     "product": "Produto",
     "riskReview": "Revisão de risco"
+  },
+
+  "portfolioUnits": {
+    "title": "Portfolio Unit List",
+    "name": "Name",
+    "parent": "Parent",
+    "totalCost": "Total Cost",
+    "totalHours": "Total Hours"
   }
 }

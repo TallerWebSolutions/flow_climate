@@ -32,6 +32,17 @@ const PRODUCT_QUERY = gql`
         createdAt
       }
 
+      portfolioUnits {
+        id
+        name
+        totalCost
+        totalHours
+        parent {
+          id
+          name
+        }
+      }
+
       latestDeliveries {
         id
         externalId

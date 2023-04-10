@@ -8,22 +8,23 @@ module Types
     field :name, String, null: false
     field :slug, String, null: false
 
-    field :average_queue_time, Integer, null: true
-    field :average_speed, Float, null: true
-    field :average_touch_time, Integer, null: true
-    field :created_demands_count, Integer, null: true
-    field :delivered_demands_count, Integer, null: true
-    field :demands_blocks_count, Integer, null: true
-    field :discarded_demands_count, Integer, null: true
-    field :downstream_demands_count, Integer, null: true
-    field :leadtime_p65, Integer, null: true
-    field :leadtime_p80, Integer, null: true
-    field :leadtime_p95, Integer, null: true
-    field :portfolio_units_count, Integer, null: true
-    field :remaining_backlog_count, Integer, null: true
-    field :risk_reviews, [Types::RiskReviewType], null: true
-    field :unscored_demands_count, Integer, null: true
-    field :upstream_demands_count, Integer, null: true
+    field :average_queue_time, Integer
+    field :average_speed, Float
+    field :average_touch_time, Integer
+    field :created_demands_count, Integer
+    field :delivered_demands_count, Integer
+    field :demands_blocks_count, Integer
+    field :discarded_demands_count, Integer
+    field :downstream_demands_count, Integer
+    field :leadtime_p65, Integer
+    field :leadtime_p80, Integer
+    field :leadtime_p95, Integer
+    field :portfolio_units, [Types::PortfolioUnitType]
+    field :portfolio_units_count, Integer
+    field :remaining_backlog_count, Integer
+    field :risk_reviews, [Types::RiskReviewType]
+    field :unscored_demands_count, Integer
+    field :upstream_demands_count, Integer
 
     field :leadtime_evolution_data, Types::Charts::LeadtimeEvolutionType, null: true
 

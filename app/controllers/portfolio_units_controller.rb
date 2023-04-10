@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 class PortfolioUnitsController < AuthenticatedController
-  before_action :assign_product
+  before_action :assign_product, except: :index
   before_action :assign_portfolio_unit, only: %i[show destroy edit update]
 
   def index
-    @portfolio_units = @product.portfolio_units.order('parent_id DESC, name ASC')
+    prepend_view_path Rails.public_path
+    render 'spa-build/index'
   end
 
   def show

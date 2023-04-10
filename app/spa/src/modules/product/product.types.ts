@@ -1,6 +1,7 @@
 import { Company } from "../company/company.types"
 import { Demand } from "../demand/demand.types"
 import { LeadtimeEvolutionChart } from "../charts/charts.types"
+import { PortfolioUnit } from "./portfolioUnit.types"
 
 export type RiskReview = {
   id: string
@@ -18,6 +19,7 @@ export type Product = {
   slug: string
   latestDeliveries: Demand[]
   riskReviews: RiskReview[]
+  portfolioUnits: PortfolioUnit[]
   remainingBacklogCount: number
   createdDemandsCount: number
   deliveredDemandsCount: number
