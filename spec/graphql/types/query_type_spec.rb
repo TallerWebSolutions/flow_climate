@@ -705,8 +705,9 @@ RSpec.describe Types::QueryType do
 
           customer = Fabricate :customer, company: company
           product = Fabricate :product, company: company, customer: customer
-          Fabricate :portfolio_unit, product: product
-          Fabricate :portfolio_unit, product: product
+          unit = Fabricate :portfolio_unit, product: product, name: 'zzz', parent: nil, portfolio_unit_type: :theme
+          other_unit = Fabricate :portfolio_unit, product: product, parent: unit, portfolio_unit_type: :epic
+          another_unit = Fabricate :portfolio_unit, product: product, parent: nil, name: 'aaa', portfolio_unit_type: :theme
 
           user = Fabricate :user, last_company: company
           project = Fabricate :project, products: [product], start_date: 1.month.ago
@@ -722,50 +723,54 @@ RSpec.describe Types::QueryType do
 
           query =
             %(
-          query ProductQuery {
-            product(slug: "#{product.slug}") {
-              id
-              name
-              slug
-              createdDemandsCount
-              deliveredDemandsCount
-              remainingBacklogCount
-              upstreamDemandsCount
-              downstreamDemandsCount
-              discardedDemandsCount
-              unscoredDemandsCount
-              demandsBlocksCount
-              portfolioUnitsCount
-              averageSpeed
-              averageQueueTime
-              averageTouchTime
-              leadtimeP95
-              leadtimeP80
-              leadtimeP65
+              query ProductQuery {
+                product(slug: "#{product.slug}") {
+                  id
+                  name
+                  slug
+                  createdDemandsCount
+                  deliveredDemandsCount
+                  remainingBacklogCount
+                  upstreamDemandsCount
+                  downstreamDemandsCount
+                  discardedDemandsCount
+                  unscoredDemandsCount
+                  demandsBlocksCount
+                  portfolioUnitsCount
+                  averageSpeed
+                  averageQueueTime
+                  averageTouchTime
+                  leadtimeP95
+                  leadtimeP80
+                  leadtimeP65
 
-              latestDeliveries {
-                id
-                customerName
-                productName
-                endDate
-                leadtime
-                demandBlocksCount
-              }
+                  latestDeliveries {
+                    id
+                    customerName
+                    productName
+                    endDate
+                    leadtime
+                    demandBlocksCount
+                  }
 
-              leadtimeEvolutionData {
-                xAxis
-                yAxisInMonth
-                yAxisAccumulated
-              }
+                  leadtimeEvolutionData {
+                    xAxis
+                    yAxisInMonth
+                    yAxisAccumulated
+                  }
 
-              company {
-                id
-                name
-                slug
+                  portfolioUnits {
+                    id
+                  }
+
+                  company {
+                    id
+                    name
+                    slug
+                  }
+                }
               }
-            }
-          }
-        )
+            )
 
           expect(Demand).to(receive(:unscored_demands)).once.and_return(Demand.all)
           expect(Demand).to(receive(:in_wip)).once.and_return(Demand.all)
@@ -783,7 +788,8 @@ RSpec.describe Types::QueryType do
           result = FlowClimateSchema.execute(query, variables: nil, context: graphql_context).as_json
 
           expect(result.dig('data', 'product')['id']).to eq product.id.to_s
-          expect(result.dig('data', 'product')['portfolioUnitsCount']).to eq 2
+          expect(result.dig('data', 'product')['portfolioUnitsCount']).to eq 3
+          expect(result.dig('data', 'product')['portfolioUnits'].pluck('id')).to eq [another_unit.id.to_s, unit.id.to_s, other_unit.id.to_s]
         end
       end
     end

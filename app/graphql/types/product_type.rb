@@ -64,6 +64,10 @@ module Types
       object.portfolio_units.count
     end
 
+    def portfolio_units
+      object.portfolio_units.order(:portfolio_unit_type, :name)
+    end
+
     def average_speed
       DemandService.instance.average_speed(finished_demands)
     end
