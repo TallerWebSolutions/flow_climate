@@ -67,7 +67,7 @@ class TeamService
     memberships = team.memberships.active.billable_member
 
     efficiency_data = memberships.map do |membership|
-      { membership: membership.member_name, effort_in_month: membership.effort_in_period(start_date, end_date),
+      { membership: membership, effort_in_month: membership.effort_in_period(start_date, end_date),
         avg_hours_per_demand: membership.avg_hours_per_demand(start_date, end_date),
         realized_money_in_month: membership.realized_money_in_period(start_date, end_date), member_capacity_value: membership.hours_per_month || 0 }
     end

@@ -1,0 +1,20 @@
+{
+  "form": {
+    "title": "Alterar Membro",
+    "memberRole": "Papel",
+    "startDate": "Início",
+    "endDate": "Fim",
+    "hoursPerMonth": "Horas por mês",
+    "cancel": "Cancelar",
+    "save": "Salvar",
+    "membershipsTable": "Membros",
+    "options": {
+      "memberRole": {
+        "developer": "Desenvolvedor",
+        "manager": "Gestor",
+        "cliente": "Cliente",
+        "designer": "Designer"
+      }
+    }
+  }
+}

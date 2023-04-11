@@ -344,13 +344,6 @@ const DemandsListPage = () => {
     </>
   )
 
-  // eslint-disable-next-line
-  console.log(
-    variables,
-    normalizeQueryStringFilters(variables || {}),
-    searchParams
-  )
-
   return (
     <DemandsPage
       breadcrumbsLinks={breadcrumbsLinks}

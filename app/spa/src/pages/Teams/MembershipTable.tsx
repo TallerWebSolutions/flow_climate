@@ -25,7 +25,7 @@ const MembershipTable = () => {
   const { teamId, companySlug } = useParams()
   const currentMonth = new Date().getMonth() + 1
   const currentYear = new Date().getFullYear()
-  const { data, loading } = useQuery<MembershipTableDTO>(
+  const { data, loading, error } = useQuery<MembershipTableDTO>(
     MEMBERSHIP_TABLE_QUERY,
     {
       variables: {
@@ -58,7 +58,7 @@ const MembershipTable = () => {
   const valuePerMemberRow = team?.teamMemberEfficiency?.membersEfficiency?.map(
     (membershipEfficency: MembershipEfficiencyData) => {
       return [
-        membershipEfficency.membership?.memberName,
+        membershipEfficency.membership?.teamMemberName,
         membershipEfficency.effortInMonth?.toFixed(2),
         membershipEfficency.realizedMoneyInMonth?.toLocaleString("pt-br", {
           style: "currency",
@@ -144,8 +144,8 @@ type MembershipTableDTO = {
   team: Team
 }
 
-const MEMBERSHIP_TABLE_QUERY = gql`
-  query MembershipTable($teamId: Int!, $month: Int, $year: Int) {
+export const MEMBERSHIP_TABLE_QUERY = gql`
+  query MembershipTable($teamId: ID!, $month: Int, $year: Int) {
     team(id: $teamId) {
       id
       name
@@ -161,7 +161,8 @@ const MEMBERSHIP_TABLE_QUERY = gql`
         teamCapacityHours
         membersEfficiency {
           membership {
-            memberName
+            id
+            teamMemberName
           }
           avgHoursPerDemand
           effortInMonth

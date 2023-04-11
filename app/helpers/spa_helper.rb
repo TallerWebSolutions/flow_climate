@@ -32,6 +32,7 @@ module SpaHelper
       { controller: 'work_item_types', action: 'index' },
       { controller: 'devise_customers/customer_demands', action: 'show' },
       { controller: 'memberships', action: 'index' },
+      { controller: 'memberships', action: 'edit' },
       { controller: 'portfolio_units', action: 'index' }
     ]
   end

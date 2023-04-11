@@ -62,5 +62,10 @@ export type MembershipEfficiencyData = {
 
 export type Membership = {
   id: string
-  memberName?: string
+  team: Team
+  teamMemberName?: string
+  hoursPerMonth?: number
+  startDate?: string
+  endDate?: string
+  memberRole?: number
 }

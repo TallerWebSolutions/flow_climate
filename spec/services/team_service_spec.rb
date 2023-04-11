@@ -94,8 +94,8 @@ RSpec.describe TeamService, type: :service do
         team_member = Fabricate :team_member, billable_type: :outsourcing, monthly_payment: 10_000, start_date: 1.month.ago, end_date: nil
         other_team_member = Fabricate :team_member, billable_type: :outsourcing, monthly_payment: 10_000, start_date: 2.months.ago, end_date: nil
         inactive_team_member = Fabricate :team_member, billable_type: :outsourcing, monthly_payment: 10_000, start_date: 2.months.ago, end_date: 1.month.ago
-        Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil
-        Fabricate :membership, team: team, team_member: other_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: nil
+        membership = Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil
+        other_membership = Fabricate :membership, team: team, team_member: other_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: nil
         Fabricate :membership, team: team, team_member: inactive_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.day.ago
         Fabricate :demand, team: team, end_date: 1.week.ago
         Fabricate :demand, team: team, end_date: 1.week.ago
@@ -103,7 +103,7 @@ RSpec.describe TeamService, type: :service do
 
         start_date = Time.zone.today.beginning_of_month
         end_date = Time.zone.today.end_of_month
-        expect(described_class.instance.compute_memberships_produced_hours(team, start_date, end_date)[:members_efficiency]).to contain_exactly({ membership: { member_name: team_member.name }, avg_hours_per_demand: 0, effort_in_month: 0, realized_money_in_month: 0, member_capacity_value: 120 }, { membership: { member_name: other_team_member.name }, avg_hours_per_demand: 0, effort_in_month: 0, realized_money_in_month: 0, member_capacity_value: 40 })
+        expect(described_class.instance.compute_memberships_produced_hours(team, start_date, end_date)[:members_efficiency]).to contain_exactly({ membership: membership, avg_hours_per_demand: 0, effort_in_month: 0, realized_money_in_month: 0, member_capacity_value: 120 }, { membership: other_membership, avg_hours_per_demand: 0, effort_in_month: 0, realized_money_in_month: 0, member_capacity_value: 40 })
         expect(described_class.instance.compute_memberships_produced_hours(team, start_date, end_date)[:total_hours_produced]).to eq 0
         expect(described_class.instance.compute_memberships_produced_hours(team, start_date, end_date)[:total_money_produced]).to eq 0
         expect(described_class.instance.compute_memberships_produced_hours(team, start_date, end_date)[:avg_hours_per_member]).to eq 0

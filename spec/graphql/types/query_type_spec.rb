@@ -160,7 +160,7 @@ RSpec.describe Types::QueryType do
                 teamMemberEfficiency {
                   membersEfficiency {
                     membership {
-                      memberName
+                      teamMemberName
                     }
                     effortInMonth
                     realizedMoneyInMonth
@@ -247,7 +247,7 @@ RSpec.describe Types::QueryType do
                                                        'numberOfDemandsDelivered' => 0,
                                                        'teamConsolidationsWeekly' => [],
                                                        'teamMonthlyInvestment' => { 'xAxis' => ['2022-09-30'], 'yAxis' => [-2500.0] },
-                                                       'teamMemberEfficiency' => { 'membersEfficiency' => [{ 'effortInMonth' => 0.0, 'membership' => { 'memberName' => 'ddd' }, 'realizedMoneyInMonth' => 0.0 }] },
+                                                       'teamMemberEfficiency' => { 'membersEfficiency' => [{ 'effortInMonth' => 0.0, 'membership' => { 'teamMemberName' => 'ddd' }, 'realizedMoneyInMonth' => 0.0 }] },
                                                        'lastReplenishingConsolidations' => [
                                                          {
                                                            'id' => replenishing_consolidation.id.to_s,
@@ -1922,6 +1922,23 @@ RSpec.describe Types::QueryType do
       expect(result.dig('data', 'me', 'id')).to eq user.id.to_s
       expect(result.dig('data', 'me', 'currentCompany', 'id')).to eq company.id.to_s
       expect(result.dig('data', 'me', 'currentCompany', 'workItemTypes')).to eq [{ 'id' => work_item_type.id.to_s }]
+    end
+  end
+
+  describe '#membership' do
+    it 'retrieves the membership' do
+      membership = Fabricate :membership
+
+      query =
+        %(query {
+            membership(id: #{membership.id}) {
+              id
+            }
+          })
+
+      result = FlowClimateSchema.execute(query, variables: nil).as_json
+
+      expect(result.dig('data', 'membership', 'id')).to eq membership.id.to_s
     end
   end
 end

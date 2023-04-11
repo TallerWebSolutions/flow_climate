@@ -5,7 +5,7 @@ module Types
     field :teams, [Types::Teams::TeamType], null: true, description: 'Set of teams'
 
     field :team, Types::Teams::TeamType, null: true, description: 'A team with consolidations' do
-      argument :id, Int
+      argument :id, ID
     end
 
     field :project, Types::ProjectType, null: true, description: 'A plain project' do
@@ -17,7 +17,11 @@ module Types
     end
 
     field :team_member, Types::Teams::TeamMemberType, null: true, description: 'A plain team_member' do
-      argument :id, Int
+      argument :id, ID
+    end
+
+    field :membership, Types::Teams::MembershipType, null: true, description: 'A plain membership' do
+      argument :id, ID
     end
 
     field :tasks_list, Types::TasksListType, null: true, description: 'A list of tasks using the arguments as search parameters' do
@@ -99,6 +103,10 @@ module Types
 
     def team_member(id:)
       TeamMember.find(id)
+    end
+
+    def membership(id:)
+      Membership.find(id)
     end
 
     def tasks_list(page_number: 1, limit: 0, title: nil, status: nil, initiative_id: nil, project_id: nil, team_id: nil, from_date: nil, until_date: nil, portfolio_unit: nil, task_type: nil)
