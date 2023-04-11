@@ -21,10 +21,8 @@ class MembershipsController < AuthenticatedController
   end
 
   def edit
-    assign_memberships_list
-    assign_team_members_list
-
-    respond_to { |format| format.js { render 'memberships/edit' } }
+    prepend_view_path Rails.public_path
+    render 'spa-build/index'
   end
 
   def create
@@ -34,15 +32,6 @@ class MembershipsController < AuthenticatedController
     assign_team_members_list
 
     respond_to { |format| format.js { render 'memberships/create' } }
-  end
-
-  def update
-    @membership.update(membership_params)
-
-    assign_memberships_list
-    assign_team_members_list
-
-    respond_to { |format| format.js { render 'memberships/update' } }
   end
 
   def destroy

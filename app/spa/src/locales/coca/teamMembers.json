@@ -24,6 +24,7 @@
     "capacity": "Capacity",
     "avgHoursPerDemand": "Hs / Deliverable",
     "averageHoursPerMember": "Avg per member: {{ hours }}h",
+    "actions": "Actions",
     "search": {
       "month": "Month",
       "year": "Year",

@@ -126,83 +126,13 @@ RSpec.describe MembershipsController do
     end
 
     describe 'GET #edit' do
-      let(:team) { Fabricate :team, company: company }
+      let!(:product) { Fabricate :product, company: company }
+      let!(:team) { Fabricate :team, company: company }
 
-      context 'valid parameters' do
-        before { get :edit, params: { company_id: company.id, team_id: team, id: membership }, xhr: true }
+      it 'renders project spa page' do
+        get :edit, params: { company_id: company, team_id: team, id: 'foo' }
 
-        it 'assigns the instance variables and renders the template' do
-          expect(response).to render_template 'memberships/edit'
-          expect(assigns(:company)).to eq company
-          expect(assigns(:membership)).to eq membership
-          expect(assigns(:team_members)).to match_array [team_member, other_team_member]
-          expect(assigns(:memberships)).to eq team.reload.memberships.sort_by(&:team_member_name)
-        end
-      end
-
-      context 'invalid' do
-        context 'membership' do
-          before { get :edit, params: { company_id: company, team_id: team, id: 'foo' }, xhr: true }
-
-          it { expect(response).to have_http_status :not_found }
-        end
-
-        context 'company' do
-          context 'non-existent' do
-            before { get :edit, params: { company_id: 'foo', team_id: team, id: membership }, xhr: true }
-
-            it { expect(response).to have_http_status :not_found }
-          end
-
-          context 'not-permitted' do
-            let(:company) { Fabricate :company, users: [] }
-
-            before { get :edit, params: { company_id: company, team_id: team, id: membership }, xhr: true }
-
-            it { expect(response).to have_http_status :not_found }
-          end
-        end
-      end
-    end
-
-    describe 'PUT #update' do
-      let!(:no_memberships_team_member) { Fabricate :team_member, name: 'ttt', company: company }
-
-      context 'passing valid parameters' do
-        before { put :update, params: { company_id: company, team_id: team, id: membership, membership: { member_role: :manager, team_member_id: no_memberships_team_member.id } }, xhr: true }
-
-        it 'updates the membership and renders the template' do
-          membership_updated = membership.reload
-          expect(membership_updated.member_role).to eq 'manager'
-          expect(membership_updated.team_member).to eq no_memberships_team_member
-          expect(assigns(:memberships)).to eq [other_membership, inactive_membership, membership]
-          expect(response).to render_template 'memberships/update'
-        end
-      end
-
-      context 'passing invalid' do
-        context 'membeership parameters' do
-          before { put :update, params: { company_id: company, team_id: team, id: membership, membership: { member_role: '', start_date: nil } }, xhr: true }
-
-          it 'does not update the membership and re-render the template with the errors' do
-            expect(response).to render_template 'memberships/update'
-            expect(assigns(:membership).errors.full_messages).to eq ['Início não pode ficar em branco', 'Função não pode ficar em branco']
-          end
-        end
-
-        context 'non-existent membership' do
-          before { put :update, params: { company_id: company, team_id: team, id: 'foo', membership: { member_role: :manager, team_member_id: other_team_member.id } }, xhr: true }
-
-          it { expect(response).to have_http_status :not_found }
-        end
-
-        context 'unpermitted company' do
-          let(:company) { Fabricate :company, users: [] }
-
-          before { put :update, params: { company_id: company, team_id: team, id: membership, membership: { member_role: :manager, team_member_id: other_team_member.id } }, xhr: true }
-
-          it { expect(response).to have_http_status :not_found }
-        end
+        expect(response).to render_template 'spa-build/index'
       end
     end
 

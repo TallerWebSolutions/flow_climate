@@ -60,6 +60,7 @@ const MembershipTable = () => {
     t("list.producedValue"),
     t("list.capacity"),
     t("list.avgHoursPerDemand"),
+    t("list.actions"),
   ]
 
   const valuePerMemberRow = team?.teamMemberEfficiency?.membersEfficiency.map(

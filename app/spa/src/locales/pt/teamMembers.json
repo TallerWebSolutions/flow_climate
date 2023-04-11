@@ -24,6 +24,7 @@
     "capacity": "Capacidade",
     "avgHoursPerDemand": "Hs / Demanda",
     "averageHoursPerMember": "Media por pessoa: {{ hours }}h",
+    "actions": "Ações",
     "search": {
       "month": "Mês",
       "year": "Ano",
