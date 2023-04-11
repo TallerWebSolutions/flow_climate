@@ -16,9 +16,9 @@ import {
 } from "@mui/material"
 import { KeyboardArrowUp, KeyboardArrowDown } from "@material-ui/icons"
 
-import { ReactElement, useState } from "react"
+import { ReactElement, ReactNode, useState } from "react"
 
-type Cell = string | number | ReactElement
+type Cell = ReactNode
 
 type Row = Cell[]
 export type RowWithCollapse = {

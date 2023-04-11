@@ -1,6 +1,5 @@
 import { gql, useQuery } from "@apollo/client"
 import { ConfirmProvider } from "material-ui-confirm"
-import { Backdrop, CircularProgress } from "@mui/material"
 import { Fragment, useEffect } from "react"
 import { Helmet } from "react-helmet"
 import { I18nextProvider } from "react-i18next"
@@ -99,13 +98,6 @@ const App = () => {
   useEffect(() => {
     if (!loading) loadLanguage(data?.me.language)
   }, [data, loading])
-
-  if (loading)
-    return (
-      <Backdrop open>
-        <CircularProgress color="secondary" />
-      </Backdrop>
-    )
 
   return (
     <Fragment>

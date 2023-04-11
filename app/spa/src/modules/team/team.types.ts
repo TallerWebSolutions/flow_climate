@@ -45,21 +45,22 @@ export type Team = {
 }
 
 export type MembershipEfficiencyList = {
-  membersEfficiency: MembershipEfficiencyData[]
-  avgHoursPerMember: number
-  avgMoneyPerMember: number
-  totalHoursProduced: number
-  totalMoneyProduced: number
+  membersEfficiency?: MembershipEfficiencyData[]
+  avgHoursPerMember?: number
+  avgMoneyPerMember?: number
+  totalHoursProduced?: number
+  totalMoneyProduced?: number
 }
 
 export type MembershipEfficiencyData = {
-  membership: Membership
-  effortInMonth: number
-  memberCapacityValue: number
-  realizedMoneyInMonth: number
-  avgHoursPerDemand: number
+  membership?: Membership
+  effortInMonth?: number
+  memberCapacityValue?: number
+  realizedMoneyInMonth?: number
+  avgHoursPerDemand?: number
 }
 
 export type Membership = {
-  memberName: string
+  id: string
+  memberName?: string
 }

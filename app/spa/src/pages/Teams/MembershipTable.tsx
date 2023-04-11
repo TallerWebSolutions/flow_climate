@@ -1,14 +1,8 @@
-import BasicPage from "../../components/BasicPage"
 import { useTranslation } from "react-i18next"
-import { MembershipEfficiencyData, Team } from "../../modules/team/team.types"
-import Table from "../../components/ui/Table"
-import React from "react"
-import { useParams, useSearchParams } from "react-router-dom"
+import { Link, useParams, useSearchParams } from "react-router-dom"
 import { gql, useQuery } from "@apollo/client"
 import {
-  Backdrop,
   Button,
-  CircularProgress,
   FormGroup,
   Grid,
   Input,
@@ -16,8 +10,13 @@ import {
   Select,
 } from "@mui/material"
 import { useForm } from "react-hook-form"
-import { FormElement } from "../../components/ui/Form"
 import SearchIcon from "@mui/icons-material/Search"
+import EditIcon from "@mui/icons-material/Edit"
+
+import BasicPage from "../../components/BasicPage"
+import { MembershipEfficiencyData, Team } from "../../modules/team/team.types"
+import Table from "../../components/ui/Table"
+import { FormElement } from "../../components/ui/Form"
 
 const MembershipTable = () => {
   const { t } = useTranslation("teamMembers")
@@ -36,13 +35,6 @@ const MembershipTable = () => {
       },
     }
   )
-
-  if (loading)
-    return (
-      <Backdrop open>
-        <CircularProgress color="secondary" />
-      </Backdrop>
-    )
 
   const team = data?.team
 
@@ -63,17 +55,22 @@ const MembershipTable = () => {
     t("list.actions"),
   ]
 
-  const valuePerMemberRow = team?.teamMemberEfficiency?.membersEfficiency.map(
+  const valuePerMemberRow = team?.teamMemberEfficiency?.membersEfficiency?.map(
     (membershipEfficency: MembershipEfficiencyData) => {
       return [
-        membershipEfficency.membership.memberName,
-        membershipEfficency.effortInMonth.toFixed(2),
-        membershipEfficency.realizedMoneyInMonth.toLocaleString("pt-br", {
+        membershipEfficency.membership?.memberName,
+        membershipEfficency.effortInMonth?.toFixed(2),
+        membershipEfficency.realizedMoneyInMonth?.toLocaleString("pt-br", {
           style: "currency",
           currency: "BRL",
         }),
         membershipEfficency.memberCapacityValue,
-        membershipEfficency.avgHoursPerDemand.toFixed(2),
+        membershipEfficency.avgHoursPerDemand?.toFixed(2),
+        <Link
+          to={`${companyUrl}/teams/${teamId}/memberships/${membershipEfficency.membership?.id}/edit`}
+        >
+          <EditIcon />
+        </Link>,
       ]
     }
   )
@@ -82,6 +79,7 @@ const MembershipTable = () => {
     <BasicPage
       title={t("list.title", { teamName: team?.name || "" })}
       breadcrumbsLinks={breadcrumbsLinks}
+      loading={loading}
     >
       {team && (
         <>
@@ -131,7 +129,7 @@ const MembershipTable = () => {
           </form>
           <Table
             title={`${t("list.averageHoursPerMember", {
-              hours: team.teamMemberEfficiency?.avgHoursPerMember.toFixed(2),
+              hours: team.teamMemberEfficiency?.avgHoursPerMember?.toFixed(2),
             })}`}
             headerCells={valuePerMemberColumns}
             rows={valuePerMemberRow!}

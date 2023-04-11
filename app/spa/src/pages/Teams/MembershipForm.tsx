@@ -1,92 +1,43 @@
-import BasicPage from "../../components/BasicPage"
 import { useParams } from "react-router-dom"
-import { gql } from "@apollo/client"
-import { format, subWeeks } from "date-fns"
-import { Membership, Team } from "../../modules/team/team.types"
+import { gql, useQuery } from "@apollo/client"
+import { useContext } from "react"
+
+import BasicPage from "../../components/BasicPage"
+import { Team } from "../../modules/team/team.types"
+import { MeContext } from "../../contexts/MeContext"
 
 const MembershipForm = () => {
   const params = useParams()
-  const teamId = params.teamId || ""
-  const membershipId = params.membershipId || ""
+  const { me } = useContext(MeContext)
+  const { data, loading } = useQuery<MembershipFormDTO>(MEMBERSHIP_FORM_QUERY)
 
+  const team = data?.team
+  const teamId = params.teamId || ""
+  const company = me?.currentCompany
+  const companyUrl = `/companies/${company?.slug}`
   const breadcrumbsLinks = [
     { name: company?.name || "", url: companyUrl || "" },
     { name: team?.name || "", url: `${companyUrl}/teams/${teamId}` },
-    { name: t("list.title") },
   ]
 
-  return <BasicPage breadcrumbsLinks={breadcrumbsLinks}></BasicPage>
+  return (
+    <BasicPage
+      breadcrumbsLinks={breadcrumbsLinks}
+      loading={loading}
+    ></BasicPage>
+  )
 }
 
-const TEAM_DASHBOARD_QUERY = gql`
-  query TeamDashboard($teamId: Int!, $startDate: ISO8601Date, $endDate: ISO8601Date) {
+const MEMBERSHIP_FORM_QUERY = gql`
+  query MembershipForm($teamId: Int!) {
     team(id: $teamId) {
       id
-      name
-      startDate
-      endDate
-      leadTimeP65
-      leadTimeP80
-      leadTimeP95
-      numberOfDemandsDelivered
-      activeBillableCount
-      cumulativeFlowChartData(startDate: $startDate, endDate: $endDate) {
-        xAxis
-        yAxis {
-          name
-          data
-        }
-      }
-      demandsFlowChartData(startDate: $startDate, endDate: $endDate) {
-        creationChartData
-        committedChartData
-        pullTransactionRate
-        throughputChartData
-        xAxis
-      }
-      leadTimeHistogramData(startDate: $startDate, endDate: $endDate) {
-        keys
-        values
-      }
-      biggestFiveLeadTimes: latestDeliveries(orderField: "leadtime", sortDirection: DESC, limit: 5) {
-        ...demand
-      }
-      biggestFiveLeadTimesInFourWeeks: latestDeliveries(
-        orderField: "leadtime"
-        sortDirection: DESC
-        limit: 5
-        startDate: "${format(subWeeks(new Date(), 4), "yyyy-MM-dd")}"
-      ) {
-        ...demand
-      }
-      teamConsolidationsWeekly(startDate: $startDate, endDate: $endDate) {
-        leadTimeP80
-        consolidationDate
-      }
-      teamMonthlyInvestment(startDate: $startDate, endDate: $endDate) {
-        xAxis
-        yAxis
-      }
-    }
-  }
-
-  fragment demand on Demand {
-    id
-    leadtime
-    endDate
-    product {
-      id
-      name
-    }
-    project {
-      id
-      name
     }
   }
 `
 
 type MembershipFormDTO = {
-  membership: Membership
+  team?: Team
 }
 
 export default MembershipForm
