@@ -3,6 +3,7 @@ export type PortfolioUnit = {
   name?: string
   totalCost?: number
   totalHours?: number
+  portfolioUnitTypeName?: string
 
   parent?: PortfolioUnit
 }

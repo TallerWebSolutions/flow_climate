@@ -761,6 +761,7 @@ RSpec.describe Types::QueryType do
 
                   portfolioUnits {
                     id
+                    portfolioUnitTypeName
                   }
 
                   company {
@@ -790,6 +791,7 @@ RSpec.describe Types::QueryType do
           expect(result.dig('data', 'product')['id']).to eq product.id.to_s
           expect(result.dig('data', 'product')['portfolioUnitsCount']).to eq 3
           expect(result.dig('data', 'product')['portfolioUnits'].pluck('id')).to eq [another_unit.id.to_s, unit.id.to_s, other_unit.id.to_s]
+          expect(result.dig('data', 'product')['portfolioUnits'].pluck('portfolioUnitTypeName')).to eq %w[Tema Tema Épico]
         end
       end
     end

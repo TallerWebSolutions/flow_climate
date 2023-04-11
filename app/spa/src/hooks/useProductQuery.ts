@@ -37,6 +37,7 @@ const PRODUCT_QUERY = gql`
         name
         totalCost
         totalHours
+        portfolioUnitTypeName
         parent {
           id
           name

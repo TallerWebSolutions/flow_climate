@@ -51,6 +51,7 @@ const PortfolioUnitsPage = () => {
         <TableHead>
           <TableRow>
             <TableCell>{t("portfolioUnits.parent")}</TableCell>
+            <TableCell>{t("portfolioUnits.portfolioUnitType")}</TableCell>
             <TableCell>{t("portfolioUnits.name")}</TableCell>
             <TableCell>{t("portfolioUnits.totalCost")}</TableCell>
             <TableCell>{t("portfolioUnits.totalHours")}</TableCell>
@@ -61,6 +62,7 @@ const PortfolioUnitsPage = () => {
             return (
               <TableRow>
                 <TableCell>{unit.parent?.name}</TableCell>
+                <TableCell>{unit.portfolioUnitTypeName}</TableCell>
                 <TableCell>{unit.name}</TableCell>
                 <TableCell>{formatCurrency(unit.totalCost ?? 0)}</TableCell>
                 <TableCell>{unit.totalHours?.toFixed(2)}</TableCell>

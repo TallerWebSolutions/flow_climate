@@ -21,6 +21,7 @@
 
   "portfolioUnits": {
     "title": "Portfolio Unit List",
+    "portfolioUnitType": "Type",
     "name": "Name",
     "parent": "Parent",
     "totalCost": "Total Cost",

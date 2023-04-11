@@ -22,6 +22,7 @@
 
   "portfolioUnits": {
     "title": "Lista de Unidades de Portfólio",
+    "portfolioUnitType": "Tipo",
     "name": "Nome",
     "parent": "Ancestral",
     "totalCost": "Custo total",
