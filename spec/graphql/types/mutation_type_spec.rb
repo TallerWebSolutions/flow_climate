@@ -157,6 +157,42 @@ RSpec.describe Types::MutationType do
     end
   end
 
+  describe '#save_membership' do
+    let(:team) { Fabricate :team }
+    let(:membership) { Fabricate :membership, team: team }
+
+    context 'when the membership exists' do
+      let(:mutation) do
+        %(mutation {
+            saveMembership(membershipId: "#{membership.id}", memberRole: 1, startDate: "#{1.day.ago.to_date.iso8601}", endDate: "#{Time.zone.today.iso8601}", hoursPerMonth: 80) {
+              statusMessage
+            }
+          })
+      end
+
+      it 'succeeds' do
+        result = FlowClimateSchema.execute(mutation).as_json
+        expect(result['data']['saveMembership']['statusMessage']).to eq('SUCCESS')
+        expect(membership.reload).to be_manager
+      end
+    end
+
+    context 'when the object is not valid' do
+      let(:mutation) do
+        %(mutation {
+            saveMembership(membershipId: "foo", memberRole: 1, startDate: "#{1.day.ago.to_date.iso8601}", endDate: "#{Time.zone.today.iso8601}", hoursPerMonth: 80) {
+              statusMessage
+            }
+          })
+      end
+
+      it 'fails' do
+        result = FlowClimateSchema.execute(mutation).as_json
+        expect(result['data']['saveMembership']['statusMessage']).to eq('NOT_FOUND')
+      end
+    end
+  end
+
   describe '#create_team' do
     let(:company) { Fabricate :company }
     let(:user) { Fabricate :user, companies: [company], last_company_id: company.id }

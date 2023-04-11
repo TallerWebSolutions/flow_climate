@@ -129,9 +129,7 @@ Rails.application.routes.draw do
     resources :azure_custom_fields, only: :destroy, module: 'azure'
 
     resources :teams, except: %i[create update destroy] do
-      resources :memberships do
-        get :search_memberships, on: :collection
-      end
+      resources :memberships, except: %i[create update destroy]
 
       resources :team_resource_allocations, only: %i[new create destroy]
 

@@ -77,10 +77,6 @@ class Membership < ApplicationRecord
     DemandBlock.joins(:demand).where(demands: { team: team }).where(blocker: team_member)
   end
 
-  def elapsed_time
-    ((end_date || Time.zone.today) - start_date).to_i
-  end
-
   def pairing_count(date)
     pairing_members(date).flatten.map(&:team_member_name).flatten.group_by(&:itself).map { |key, value| [key, value.count] }.sort_by { |_key, value| value }.reverse.to_h
   end

@@ -22,6 +22,8 @@ module Types
     field :update_initiative, mutation: Mutations::UpdateInitiativeMutation
     field :update_team_member, mutation: Mutations::UpdateTeamMemberMutation
 
+    field :save_membership, mutation: Mutations::SaveMembershipMutation
+
     def me
       context[:current_user]
     end
