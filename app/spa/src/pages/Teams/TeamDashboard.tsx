@@ -16,14 +16,12 @@ import { format, subWeeks } from "date-fns"
 import React, { useContext } from "react"
 import { useForm } from "react-hook-form"
 import SearchIcon from "@mui/icons-material/Search"
-import { TFunction, useTranslation } from "react-i18next"
 import { useParams, useSearchParams } from "react-router-dom"
 import { BarChart } from "../../components/charts/BarChart"
 import { ChartGridItem } from "../../components/charts/ChartGridItem"
 import { LineChart, normalizeCfdData } from "../../components/charts/LineChart"
 import LineChartTooltip from "../../components/charts/tooltips/LineChartTooltip"
 
-import DateLocale from "../../components/ui/DateLocale"
 import { FormElement } from "../../components/ui/Form"
 import Table from "../../components/ui/Table"
 import { MeContext } from "../../contexts/MeContext"
@@ -32,9 +30,11 @@ import { formatDate, secondsToDays, secondsToReadbleDate } from "../../lib/date"
 import { Demand } from "../../modules/demand/demand.types"
 import TeamBasicPage from "../../modules/team/components/TeamBasicPage"
 import { Team } from "../../modules/team/team.types"
+import MemberGeneralInfo from "./MemberGeneralInfo"
+import { useTranslation } from "react-i18next"
 
 const TEAM_DASHBOARD_QUERY = gql`
-  query TeamDashboard($teamId: Int!, $startDate: ISO8601Date, $endDate: ISO8601Date) {
+  query TeamDashboard($teamId: ID!, $startDate: ISO8601Date, $endDate: ISO8601Date) {
     team(id: $teamId) {
       id
       name
@@ -45,6 +45,7 @@ const TEAM_DASHBOARD_QUERY = gql`
       leadTimeP95
       numberOfDemandsDelivered
       activeBillableCount
+      availableHoursInMonthFor
       cumulativeFlowChartData(startDate: $startDate, endDate: $endDate) {
         xAxis
         yAxis {
@@ -102,42 +103,6 @@ const TEAM_DASHBOARD_QUERY = gql`
 
 type TeamDashboardDTO = {
   team: Team
-}
-
-const teamInfoRows = (team?: Team, companySlug?: string, t?: TFunction) => {
-  return team && t
-    ? [
-        [t("dashboard.name"), team.name],
-        [
-          t("dashboard.startDate"),
-          team.startDate ? <DateLocale date={team.startDate} /> : "",
-        ],
-        [
-          t("dashboard.activeMembersCount"),
-          <Link
-            href={`/companies/${companySlug}/teams/${team?.id}/memberships`}
-          >
-            {t("dashboard.membersCount", {
-              membersCount: team?.activeBillableCount ?? 0,
-            })}
-          </Link>,
-        ],
-        [t("dashboard.delivered"), team.numberOfDemandsDelivered || 0],
-        [
-          t("dashboard.leadTimeP65"),
-          `${secondsToDays(team.leadTimeP65 || 0)} ${t("dashboard.days")}`,
-        ],
-        [
-          t("dashboard.leadTimeP80"),
-          `${secondsToDays(team.leadTimeP80 || 0)} ${t("dashboard.days")}`,
-        ],
-        [
-          t("dashboard.leadTimeP95"),
-          `${secondsToDays(team.leadTimeP95 || 0)} ${t("dashboard.days")}`,
-        ],
-        [t("dashboard.capacityOfHours"), `${team.teamCapacityHours}h`],
-      ]
-    : []
 }
 
 const TeamDashboard = () => {
@@ -266,12 +231,12 @@ const TeamDashboard = () => {
       title={team?.name}
     >
       <Grid container columnSpacing={4} marginBottom={4}>
-        <Grid item xs={4}>
-          <Table
-            title={t("dashboard.infoTable")}
-            rows={teamInfoRows(team, companySlug, t)}
-          />
-        </Grid>
+        {team && (
+          <Grid item xs={4}>
+            <MemberGeneralInfo team={team} />
+          </Grid>
+        )}
+
         <Grid item xs={4}>
           <Table
             title={t("dashboard.biggestFiveLeadTimes")}

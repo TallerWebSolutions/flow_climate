@@ -10,16 +10,17 @@ import { ProjectConsolidation } from "../project/projectConsolidation.types"
 import { ReplenishingConsolidation } from "../replenishing/replenishingConsolidation.types"
 
 export type Team = {
-  id: string
-  name: string
+  id?: string
+  name?: string
   company?: Company
-  increasedLeadtime80: boolean
-  throughputData: number[]
-  averageThroughput: number
-  increasedAvgThroughtput: boolean
-  leadTime: number
-  workInProgress: number
-  maxWorkInProgress: number
+  increasedLeadtime80?: boolean
+  throughputData?: number[]
+  averageThroughput?: number
+  increasedAvgThroughtput?: boolean
+  leadTime?: number
+  workInProgress?: number
+  maxWorkInProgress?: number
+  availableHoursInMonthFor?: number
   lastReplenishingConsolidations?: ReplenishingConsolidation[]
   startDate?: string
   endDate?: string
@@ -41,7 +42,7 @@ export type Team = {
   teamConsolidationsWeekly?: ProjectConsolidation[]
   teamMonthlyInvestment?: NumberChartData
   teamMemberEfficiency?: MembershipEfficiencyList
-  teamCapacityHours?: number
+  memberships?: Membership[]
 }
 
 export type MembershipEfficiencyList = {
@@ -68,4 +69,5 @@ export type Membership = {
   startDate?: string
   endDate?: string
   memberRole?: number
+  memberRoleDescription?: string
 }

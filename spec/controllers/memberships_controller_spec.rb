@@ -13,6 +13,12 @@ RSpec.describe MembershipsController do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'GET #efficiency_table' do
+      before { get :efficiency_table, params: { company_id: 'bar', team_id: 'foo' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated' do
@@ -42,6 +48,17 @@ RSpec.describe MembershipsController do
 
       it 'renders project spa page' do
         get :index, params: { company_id: company, team_id: team }
+
+        expect(response).to render_template 'spa-build/index'
+      end
+    end
+
+    describe 'GET #efficiency_table' do
+      let!(:product) { Fabricate :product, company: company }
+      let!(:team) { Fabricate :team, company: company }
+
+      it 'renders project spa page' do
+        get :efficiency_table, params: { company_id: company, team_id: team }
 
         expect(response).to render_template 'spa-build/index'
       end

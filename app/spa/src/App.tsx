@@ -42,9 +42,10 @@ import CustomerDemand from "./pages/Customer/CustomerDemand"
 import DemandEfforts from "./pages/Demand/DemandEfforts"
 import ProductsRiskReviews from "./pages/Products/ProductsRiskReviews"
 import CreateProductRiskReview from "./pages/Products/CreateProductRiskReview"
-import MembershipTable from "./pages/Teams/MembershipTable"
+import MemberEfficiencyTable from "./pages/Teams/MemberEfficiencyTable"
 import PortfolioUnitsPage from "./pages/Products/PortfolioUnitsPage"
 import MembershipForm from "./pages/Teams/MembershipForm"
+import MembershipsTable from "./pages/Teams/MembershipsTable"
 
 export const ME_QUERY = gql`
   query Me {
@@ -178,7 +179,11 @@ const App = () => {
             />
             <Route
               path="/companies/:companySlug/teams/:teamId/memberships"
-              element={<MembershipTable />}
+              element={<MembershipsTable />}
+            />
+            <Route
+              path="/companies/:companySlug/teams/:teamId/memberships/efficiency_table"
+              element={<MemberEfficiencyTable />}
             />
             <Route
               path="/companies/:companySlug/teams/:teamId/memberships/:membershipId/edit"

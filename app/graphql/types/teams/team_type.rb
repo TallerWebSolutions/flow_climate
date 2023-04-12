@@ -5,6 +5,7 @@ module Types
     class TeamType < Types::BaseObject
       field :active_billable_count, Int, null: false
       field :active_projects, [Types::ProjectType], null: true
+      field :available_hours_in_month_for, Integer, null: true
       field :average_throughput, Float, null: true
       field :company, Types::CompanyType, null: false
       field :cumulative_flow_chart_data, Types::Charts::CumulativeFlowChartType, null: true do
@@ -35,6 +36,7 @@ module Types
       field :lead_time_p80, Float, null: true
       field :lead_time_p95, Float, null: true
       field :max_work_in_progress, Int, null: false
+      field :memberships, [Types::Teams::MembershipType]
       field :name, String, null: false
       field :number_of_demands_delivered, Int, null: true
       field :projects, [Types::ProjectType], null: true
@@ -163,6 +165,10 @@ module Types
         end_date = start_date.end_of_month
 
         TeamService.instance.compute_memberships_produced_hours(object, start_date, end_date)
+      end
+
+      def memberships
+        object.memberships.joins(:team_member).order('team_members.name')
       end
 
       private

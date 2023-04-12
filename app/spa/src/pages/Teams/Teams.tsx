@@ -139,9 +139,11 @@ const Teams = () => {
                       </Link>
                     </Box>
 
-                    <Button onClick={() => handleOnDeleteTeam(id)}>
-                      <DeleteOutlineOutlinedIcon color={"primary"} />
-                    </Button>
+                    {id && (
+                      <Button onClick={() => handleOnDeleteTeam(id)}>
+                        <DeleteOutlineOutlinedIcon color={"primary"} />
+                      </Button>
+                    )}
                   </TableCell>
                 </TableRow>
               )

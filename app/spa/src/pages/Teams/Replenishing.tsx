@@ -185,12 +185,12 @@ export const normalizeTeamInfo = (
 ): TeamReplenishment => ({
   throughputData: data?.team.throughputData,
   averageThroughput: data?.team && {
-    value: data?.team.averageThroughput,
-    increased: data?.team.increasedAvgThroughtput,
+    value: data?.team?.averageThroughput || 0,
+    increased: data?.team?.increasedAvgThroughtput ?? false,
   },
   leadTime: data?.team && {
-    value: data?.team.leadTime,
-    increased: data?.team.increasedLeadtime80,
+    value: data?.team?.leadTime ?? 0,
+    increased: data?.team?.increasedLeadtime80 ?? false,
   },
   workInProgress: data?.team.workInProgress,
   projects: data ? getProjects(data.team) : [],

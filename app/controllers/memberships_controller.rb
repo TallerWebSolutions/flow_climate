@@ -10,6 +10,11 @@ class MembershipsController < AuthenticatedController
     render 'spa-build/index'
   end
 
+  def efficiency_table
+    prepend_view_path Rails.public_path
+    render 'spa-build/index'
+  end
+
   def edit
     prepend_view_path Rails.public_path
     render 'spa-build/index'

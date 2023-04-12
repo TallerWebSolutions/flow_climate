@@ -3,7 +3,7 @@ import { gql, useMutation, useQuery } from "@apollo/client"
 import { useContext } from "react"
 
 import BasicPage from "../../components/BasicPage"
-import { Membership, Team } from "../../modules/team/team.types"
+import { Membership } from "../../modules/team/team.types"
 import { MeContext } from "../../contexts/MeContext"
 import {
   Box,
@@ -16,7 +16,6 @@ import {
 } from "@mui/material"
 import { FieldValues, useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
-import { MEMBERSHIP_TABLE_QUERY } from "./MembershipTable"
 
 const MembershipForm = () => {
   const params = useParams()
@@ -43,6 +42,11 @@ const MembershipForm = () => {
       ) {
         membership {
           id
+          teamMemberName
+          hoursPerMonth
+          startDate
+          endDate
+          memberRole
         }
       }
     }
@@ -70,7 +74,6 @@ const MembershipForm = () => {
   const [saveMembership, { loading: mutationLoading }] =
     useMutation<MembershipFormDTO>(MEMBERSHIP_FORM_MUTATION, {
       update: () => navigate(membershipsTableUrl),
-      refetchQueries: [{ query: MEMBERSHIP_TABLE_QUERY }],
     })
 
   const handleMembershipSubmit = (data: FieldValues) =>
@@ -79,7 +82,7 @@ const MembershipForm = () => {
         memberRole: Number(data.memberRole),
         hoursPerMonth: Number(data.hoursPerMonth),
         startDate: data.startDate,
-        endDate: data.endDate || "",
+        endDate: data.endDate,
         membershipId: membershipId,
       },
     })
@@ -94,7 +97,7 @@ const MembershipForm = () => {
           <FormGroup>
             <FormControl sx={{ marginBottom: 4 }}>
               <InputLabel htmlFor="startDate" shrink>
-                {t("form.startDate")}
+                {t("fields.startDate")}
               </InputLabel>
               <Input
                 {...register("startDate", { required: true })}
@@ -104,7 +107,7 @@ const MembershipForm = () => {
             </FormControl>
             <FormControl sx={{ marginBottom: 4 }}>
               <InputLabel htmlFor="endDate" shrink>
-                {t("form.endDate")}
+                {t("fields.endDate")}
               </InputLabel>
               <Input
                 {...register("endDate")}
@@ -114,7 +117,7 @@ const MembershipForm = () => {
             </FormControl>
             <FormControl sx={{ marginBottom: 4 }}>
               <InputLabel htmlFor="hoursPerMonth">
-                {t("form.hoursPerMonth")}
+                {t("fields.hoursPerMonth")}
               </InputLabel>
 
               <Input
@@ -129,7 +132,7 @@ const MembershipForm = () => {
                 sx={{ backgroundColor: "white" }}
                 htmlFor="memberRole"
               >
-                {t("form.memberRole")}
+                {t("fields.memberRole")}
               </InputLabel>
               <Select
                 native
@@ -137,14 +140,16 @@ const MembershipForm = () => {
                 defaultValue={membership?.memberRole}
               >
                 <option value="0">
-                  {t("form.options.memberRole.developer")}
+                  {t("fields.options.memberRole.developer")}
                 </option>
                 <option value="1">
-                  {t("form.options.memberRole.manager")}
+                  {t("fields.options.memberRole.manager")}
                 </option>
-                <option value="2">{t("form.options.memberRole.client")}</option>
+                <option value="2">
+                  {t("fields.options.memberRole.client")}
+                </option>
                 <option value="3">
-                  {t("form.options.memberRole.designer")}
+                  {t("fields.options.memberRole.designer")}
                 </option>
               </Select>
             </FormControl>

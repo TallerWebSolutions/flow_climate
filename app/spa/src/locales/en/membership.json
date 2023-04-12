@@ -1,20 +1,31 @@
 {
-  "form": {
-    "title": "Change Membership",
+  "fields": {
+    "name": "Name",
     "memberRole": "Role",
     "startDate": "Start",
     "endDate": "End",
     "hoursPerMonth": "Hours per Month",
-    "cancel": "Cancel",
-    "save": "Save",
-    "membershipsTable": "Memberships",
     "options": {
       "memberRole": {
         "developer": "Developer",
         "manager": "Manager",
-        "cliente": "Client",
+        "client": "Client",
         "designer": "Designer"
       }
+    }
+  },
+  "form": {
+    "title": "Change Membership",
+    "cancel": "Cancel",
+    "save": "Save",
+    "membershipsTable": "Memberships"
+  },
+  "list": {
+    "title": "People in the team",
+    "breadcrumb": "People",
+    "table": {
+      "name": "Name",
+      "actions": "Actions"
     }
   }
 }

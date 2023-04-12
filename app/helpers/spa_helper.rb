@@ -33,6 +33,7 @@ module SpaHelper
       { controller: 'devise_customers/customer_demands', action: 'show' },
       { controller: 'memberships', action: 'index' },
       { controller: 'memberships', action: 'edit' },
+      { controller: 'memberships', action: 'efficiency_table' },
       { controller: 'portfolio_units', action: 'index' }
     ]
   end

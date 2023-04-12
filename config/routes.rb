@@ -129,7 +129,9 @@ Rails.application.routes.draw do
     resources :azure_custom_fields, only: :destroy, module: 'azure'
 
     resources :teams, except: %i[create update destroy] do
-      resources :memberships, except: %i[create update destroy]
+      resources :memberships, except: %i[new create update destroy] do
+        get :efficiency_table, on: :collection
+      end
 
       resources :team_resource_allocations, only: %i[new create destroy]
 

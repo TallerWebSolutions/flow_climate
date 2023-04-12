@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next"
-import { Link, useParams, useSearchParams } from "react-router-dom"
+import { useParams, useSearchParams } from "react-router-dom"
 import { gql, useQuery } from "@apollo/client"
 import {
   Button,
@@ -11,22 +11,21 @@ import {
 } from "@mui/material"
 import { useForm } from "react-hook-form"
 import SearchIcon from "@mui/icons-material/Search"
-import EditIcon from "@mui/icons-material/Edit"
 
 import BasicPage from "../../components/BasicPage"
 import { MembershipEfficiencyData, Team } from "../../modules/team/team.types"
 import Table from "../../components/ui/Table"
 import { FormElement } from "../../components/ui/Form"
 
-const MembershipTable = () => {
+const MemberEfficiencyTable = () => {
   const { t } = useTranslation("teamMembers")
   const { register } = useForm()
   const [searchParams] = useSearchParams()
   const { teamId, companySlug } = useParams()
   const currentMonth = new Date().getMonth() + 1
   const currentYear = new Date().getFullYear()
-  const { data, loading, error } = useQuery<MembershipTableDTO>(
-    MEMBERSHIP_TABLE_QUERY,
+  const { data, loading } = useQuery<MembershipsEfficiencyTable>(
+    MEMBER_EFFICIENCY_TABLE_QUERY,
     {
       variables: {
         teamId: Number(teamId),
@@ -52,7 +51,6 @@ const MembershipTable = () => {
     t("list.producedValue"),
     t("list.capacity"),
     t("list.avgHoursPerDemand"),
-    t("list.actions"),
   ]
 
   const valuePerMemberRow = team?.teamMemberEfficiency?.membersEfficiency?.map(
@@ -66,11 +64,6 @@ const MembershipTable = () => {
         }),
         membershipEfficency.memberCapacityValue,
         membershipEfficency.avgHoursPerDemand?.toFixed(2),
-        <Link
-          to={`${companyUrl}/teams/${teamId}/memberships/${membershipEfficency.membership?.id}/edit`}
-        >
-          <EditIcon />
-        </Link>,
       ]
     }
   )
@@ -140,12 +133,12 @@ const MembershipTable = () => {
   )
 }
 
-type MembershipTableDTO = {
+type MembershipsEfficiencyTable = {
   team: Team
 }
 
-export const MEMBERSHIP_TABLE_QUERY = gql`
-  query MembershipTable($teamId: ID!, $month: Int, $year: Int) {
+export const MEMBER_EFFICIENCY_TABLE_QUERY = gql`
+  query MemberEfficiencyTable($teamId: ID!, $month: Int, $year: Int) {
     team(id: $teamId) {
       id
       name
@@ -174,4 +167,4 @@ export const MEMBERSHIP_TABLE_QUERY = gql`
   }
 `
 
-export default MembershipTable
+export default MemberEfficiencyTable
