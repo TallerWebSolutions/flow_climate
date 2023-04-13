@@ -110,15 +110,13 @@ class Membership < ApplicationRecord
   end
 
   def effort_in_period(start_date, end_date)
-    member_effort = 0
-    demand_efforts.to_dates(start_date, end_date).each { |effort| member_effort += effort[:effort_value] }
-    member_effort
+    demand_efforts.to_dates(start_date, end_date).sum(:effort_value)
   end
 
   def avg_hours_per_demand(start_date, end_date)
     hours = effort_in_period(start_date, end_date)
 
-    demands_count = demand_efforts.to_dates(start_date, end_date).map(&:demand).uniq.count
+    demands_count = cards_count(start_date, end_date)
 
     return hours / demands_count if demands_count.positive?
 
@@ -127,6 +125,10 @@ class Membership < ApplicationRecord
 
   def realized_money_in_period(start_date, end_date)
     demand_efforts.to_dates(start_date, end_date).sum(&:effort_money)
+  end
+
+  def cards_count(start_date, end_date)
+    demand_efforts.to_dates(start_date, end_date).map(&:demand).uniq.count
   end
 
   private

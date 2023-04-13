@@ -323,4 +323,76 @@ RSpec.describe Membership do
       end
     end
   end
+
+  describe '#cards_count' do
+    context 'with efforts' do
+      it 'returns the amount of cards in the efforts' do
+        travel_to Time.zone.local(2023, 4, 13, 10) do
+          start_date = Time.zone.today.beginning_of_month.to_date
+          end_date = start_date.end_of_month
+
+          team = Fabricate :team
+          demand = Fabricate :demand, team: team
+          other_demand = Fabricate :demand, team: team
+          membership = Fabricate :membership, team: team
+          assignment = Fabricate :item_assignment, membership: membership, demand: demand
+          other_assignment = Fabricate :item_assignment, membership: membership, demand: other_demand
+          Fabricate :demand_effort, demand: demand, item_assignment: assignment, start_time_to_computation: 1.day.ago, finish_time_to_computation: Time.zone.now
+          Fabricate :demand_effort, demand: other_demand, item_assignment: other_assignment, start_time_to_computation: 1.day.ago, finish_time_to_computation: Time.zone.now
+
+          expect(membership.cards_count(start_date, end_date)).to eq 2
+        end
+      end
+    end
+
+    context 'without efforts' do
+      it 'returns zero' do
+        travel_to Time.zone.local(2023, 4, 13, 10) do
+          start_date = Time.zone.today.beginning_of_month.to_date
+          end_date = start_date.end_of_month
+
+          team = Fabricate :team
+          membership = Fabricate :membership, team: team
+
+          expect(membership.cards_count(start_date, end_date)).to eq 0
+        end
+      end
+    end
+  end
+
+  describe '#avg_hours_per_demand' do
+    context 'with efforts' do
+      it 'returns the amount of cards in the efforts' do
+        travel_to Time.zone.local(2023, 4, 13, 10) do
+          start_date = Time.zone.today.beginning_of_month.to_date
+          end_date = start_date.end_of_month
+
+          team = Fabricate :team
+          demand = Fabricate :demand, team: team
+          other_demand = Fabricate :demand, team: team
+          membership = Fabricate :membership, team: team
+          assignment = Fabricate :item_assignment, membership: membership, demand: demand
+          other_assignment = Fabricate :item_assignment, membership: membership, demand: other_demand
+          Fabricate :demand_effort, demand: demand, item_assignment: assignment, start_time_to_computation: 1.day.ago, finish_time_to_computation: Time.zone.now, effort_value: 100
+          Fabricate :demand_effort, demand: other_demand, item_assignment: other_assignment, start_time_to_computation: 1.day.ago, finish_time_to_computation: Time.zone.now, effort_value: 100
+
+          expect(membership.avg_hours_per_demand(start_date, end_date).to_f).to eq 50
+        end
+      end
+    end
+
+    context 'without efforts' do
+      it 'returns zero' do
+        travel_to Time.zone.local(2023, 4, 13, 10) do
+          start_date = Time.zone.today.beginning_of_month.to_date
+          end_date = start_date.end_of_month
+
+          team = Fabricate :team
+          membership = Fabricate :membership, team: team
+
+          expect(membership.avg_hours_per_demand(start_date, end_date)).to eq 0
+        end
+      end
+    end
+  end
 end

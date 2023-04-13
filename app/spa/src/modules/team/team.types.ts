@@ -59,6 +59,7 @@ export type MembershipEfficiencyData = {
   memberCapacityValue?: number
   realizedMoneyInMonth?: number
   avgHoursPerDemand?: number
+  cardsCount?: number
 }
 
 export type Membership = {

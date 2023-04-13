@@ -69,6 +69,7 @@ class TeamService
     efficiency_data = memberships.map do |membership|
       { membership: membership, effort_in_month: membership.effort_in_period(start_date, end_date),
         avg_hours_per_demand: membership.avg_hours_per_demand(start_date, end_date),
+        cards_count: membership.cards_count(start_date, end_date),
         realized_money_in_month: membership.realized_money_in_period(start_date, end_date), member_capacity_value: membership.hours_per_month || 0 }
     end
     efficiency_data = efficiency_data.sort_by { |member_ef| member_ef[:effort_in_month] }.reverse

@@ -47,22 +47,24 @@ const MemberEfficiencyTable = () => {
   ]
   const valuePerMemberColumns = [
     " ",
+    t("list.capacity"),
     t("list.hours"),
     t("list.producedValue"),
-    t("list.capacity"),
+    t("list.cardsCount"),
     t("list.avgHoursPerDemand"),
   ]
 
   const valuePerMemberRow = team?.teamMemberEfficiency?.membersEfficiency?.map(
     (membershipEfficency: MembershipEfficiencyData) => {
       return [
+        membershipEfficency.memberCapacityValue,
         membershipEfficency.membership?.teamMemberName,
         membershipEfficency.effortInMonth?.toFixed(2),
         membershipEfficency.realizedMoneyInMonth?.toLocaleString("pt-br", {
           style: "currency",
           currency: "BRL",
         }),
-        membershipEfficency.memberCapacityValue,
+        membershipEfficency.cardsCount,
         membershipEfficency.avgHoursPerDemand?.toFixed(2),
       ]
     }
@@ -161,6 +163,7 @@ export const MEMBER_EFFICIENCY_TABLE_QUERY = gql`
           effortInMonth
           realizedMoneyInMonth
           memberCapacityValue
+          cardsCount
         }
       }
     }
