@@ -23,6 +23,7 @@
     "producedValue": "Value",
     "capacity": "Capacity",
     "avgHoursPerDemand": "Hs / Deliverable",
+    "cardsCount": "Demands",
     "averageHoursPerMember": "Avg per member: {{ hours }}h",
     "actions": "Actions",
     "search": {

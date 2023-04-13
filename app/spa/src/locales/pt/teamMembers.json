@@ -23,6 +23,7 @@
     "producedValue": "Valor",
     "capacity": "Capacidade",
     "avgHoursPerDemand": "Hs / Demanda",
+    "cardsCount": "Demandas",
     "averageHoursPerMember": "Media por pessoa: {{ hours }}h",
     "actions": "Ações",
     "search": {
