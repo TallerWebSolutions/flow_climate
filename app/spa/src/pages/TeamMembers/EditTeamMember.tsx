@@ -34,7 +34,7 @@ const FORM_VALUES_QUERY = gql`
 
 const EDIT_TEAM_MEMBER_MUTATION = gql`
   mutation EditTeamMember(
-    $id: Int!
+    $id: ID!
     $name: String!
     $startDate: ISO8601Date!
     $endDate: ISO8601Date

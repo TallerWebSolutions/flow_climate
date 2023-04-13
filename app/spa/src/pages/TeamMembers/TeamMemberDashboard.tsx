@@ -10,7 +10,7 @@ import TeamMemberDashboardTables from "../../components/TeamMemberDashboardTable
 import TeamMemberDashboardCharts from "../../components/TeamMemberDashboardCharts"
 
 const TEAM_MEMBER_QUERY = gql`
-  query TeamMember($id: Int!) {
+  query TeamMember($id: ID!) {
     teamMember(id: $id) {
       id
       name

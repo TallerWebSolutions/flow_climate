@@ -1,7 +1,5 @@
-import BasicPage from "../../components/BasicPage"
 import { useParams } from "react-router-dom"
 import { gql, useQuery } from "@apollo/client"
-import { Team } from "../../modules/team/team.types"
 import {
   Box,
   Paper,
@@ -14,10 +12,12 @@ import {
   Typography,
   Link,
 } from "@mui/material"
-
 import EditIcon from "@mui/icons-material/Edit"
 import { useTranslation } from "react-i18next"
+
+import BasicPage from "../../components/BasicPage"
 import DateLocale from "../../components/ui/DateLocale"
+import { Team } from "../../modules/team/team.types"
 
 const MembershipsTable = () => {
   const { teamId, companySlug } = useParams()
@@ -45,7 +45,7 @@ const MembershipsTable = () => {
   return (
     <BasicPage breadcrumbsLinks={breadcrumbsLinks} loading={loading}>
       <Box sx={{ marginY: 4 }}>
-        <TableContainer component={Paper} sx={{ background: "white" }}>
+        <TableContainer component={Paper} sx={{ backgroundColor: "white" }}>
           <Typography
             color="primary"
             variant="h6"
@@ -63,8 +63,8 @@ const MembershipsTable = () => {
             <TableHead>
               <TableRow>
                 <TableCell>{t("fields.name")}</TableCell>
-                <TableCell>{t("fields.memberRole")}</TableCell>
                 <TableCell>{t("fields.hoursPerMonth")}</TableCell>
+                <TableCell>{t("fields.memberRole")}</TableCell>
                 <TableCell>{t("fields.startDate")}</TableCell>
                 <TableCell>{t("fields.endDate")}</TableCell>
                 <TableCell>{t("list.table.actions")}</TableCell>
@@ -78,20 +78,16 @@ const MembershipsTable = () => {
                   return (
                     <TableRow>
                       <TableCell>{membership.teamMemberName}</TableCell>
-                      <TableCell>{membership.memberRoleDescription}</TableCell>
                       <TableCell>{membership.hoursPerMonth}</TableCell>
+                      <TableCell>{membership.memberRoleDescription}</TableCell>
                       <TableCell>
-                        {membership.startDate ? (
+                        {membership.startDate && (
                           <DateLocale date={membership.startDate} />
-                        ) : (
-                          ""
                         )}
                       </TableCell>
                       <TableCell>
-                        {membership.endDate ? (
+                        {membership.endDate && (
                           <DateLocale date={membership.endDate} />
-                        ) : (
-                          ""
                         )}
                       </TableCell>
                       <TableCell>

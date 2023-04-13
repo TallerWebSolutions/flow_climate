@@ -53,9 +53,7 @@
     "type-check": "tsc --pretty --noEmit",
     "lint": "eslint . --ext ts --ext tsx",
     "format": "prettier --write .",
-    "watch": "npm-watch",
-    "storybook": "start-storybook -p 6006 -s public",
-    "build-storybook": "build-storybook -s public"
+    "watch": "npm-watch"
   },
   "engines": {
     "node": "18"
@@ -111,14 +109,6 @@
     ]
   },
   "devDependencies": {
-    "@storybook/addon-actions": "^6.4.18",
-    "@storybook/addon-essentials": "^6.4.18",
-    "@storybook/addon-links": "^6.4.18",
-    "@storybook/builder-webpack5": "^6.4.18",
-    "@storybook/manager-webpack5": "^6.4.18",
-    "@storybook/node-logger": "^6.4.18",
-    "@storybook/preset-create-react-app": "^1.2.0",
-    "@storybook/react": "^6.1.21",
     "@types/i18next": "^13.0.0",
     "@types/jest": "^27.4.0",
     "lint-staged": "^12.1.2",
