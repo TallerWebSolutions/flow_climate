@@ -237,6 +237,43 @@ RSpec.describe Types::MutationType do
     end
   end
 
+  describe '#create_portfolio_unit' do
+    let(:company) { Fabricate :company }
+    let(:product) { Fabricate :product, company: company }
+    let!(:portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'zzz' }
+
+    context 'with valid data' do
+      let(:mutation) do
+        %(mutation {
+          createPortfolioUnit(parentId: #{portfolio_unit.id}, productId: #{product.id},  name: "foo", portfolioUnitType: "epic", jiraMachineName: "teste") {
+            statusMessage
+          }
+        })
+      end
+
+      it 'succeeds' do
+        result = FlowClimateSchema.execute(mutation).as_json
+        expect(result['data']['createPortfolioUnit']['statusMessage']).to eq('SUCCESS')
+      end
+    end
+
+    context 'when the object is not valid' do
+      let(:mutation) do
+        %(mutation {
+          createPortfolioUnit(parentId: "foo", productId: #{product.id},  name: "foo", portfolioUnitType: "epic", jiraMachineName: "teste") {
+            statusMessage
+          }
+        })
+      end
+
+      it 'fails' do
+        allow_any_instance_of(PortfolioUnit).to(receive(:valid?)).and_return(false)
+        result = FlowClimateSchema.execute(mutation).as_json
+        expect(result['data']['createPortfolioUnit']['statusMessage']).to eq('FAIL')
+      end
+    end
+  end
+
   describe '#create_project_additional_hours' do
     let(:company) { Fabricate :company }
     let(:user) { Fabricate :user, companies: [company], last_company_id: company.id }

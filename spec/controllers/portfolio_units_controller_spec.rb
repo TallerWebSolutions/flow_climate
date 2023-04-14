@@ -79,7 +79,7 @@ RSpec.describe PortfolioUnitsController do
           expect(assigns(:portfolio_unit)).to be_a_new PortfolioUnit
           expect(assigns(:portfolio_units)).to eq [other_portfolio_unit, portfolio_unit]
           expect(assigns(:parent_portfolio_units)).to eq [other_portfolio_unit, portfolio_unit]
-          expect(response).to render_template :new
+          expect(response).to render_template 'spa-build/index'
         end
       end
 
