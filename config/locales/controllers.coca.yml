@@ -194,6 +194,10 @@ coca:
     consolidations:
       no_cache: "No consolidations. Click on the button to get some."
     open: "Open"
+    delivered_count:
+      zero: "no deliverables delivered"
+      one: "%{count} deliverable delivered"
+      other: "%{count} deliverables delivered"
   header:
     logout: Logout
     explore: Explore

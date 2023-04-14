@@ -49,7 +49,9 @@ Rails.application.routes.draw do
     root 'devise_customers/dashboard#home', as: :devise_customer_home
 
     namespace 'devise_customers' do
-      resources :customer_demands, only: :show
+      resources :customer_demands, only: :show do
+        post :search, on: :collection
+      end
     end
   end
 

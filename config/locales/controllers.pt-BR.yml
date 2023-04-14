@@ -194,6 +194,10 @@ pt-BR:
     consolidations:
       no_cache: 'Sem consolidações. Clique no botão para gerar.'
     open: 'Abertas'
+    delivered_count:
+      zero: "sem entregas"
+      one: "%{count} demanda entregue"
+      other: "%{count} demandas entregues"
   header:
     logout: Sair
     sign_up: Cadastre-se

@@ -1,0 +1,3 @@
+let customerDemandsTable = $("#customer-demands-list");
+
+customerDemandsTable.html("<%= escape_javascript(render 'devise_customers/customer_demands/demands_table', company: @company, demands: @paged_customer_last_deliveries) %>")

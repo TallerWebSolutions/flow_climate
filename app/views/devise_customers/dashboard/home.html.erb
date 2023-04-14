@@ -1,15 +1,38 @@
-<h1 class="mb-4"><%= I18n.t('dashboard.home.greetings', name: current_devise_customer.first_name) %></h1>
+<h1 class="mb-5"><%= I18n.t('dashboard.home.greetings', name: current_devise_customer.first_name) %></h1>
 
-<div class="mb-3">
-  <h2><%= Contract.model_name.human(count: 2) %></h2>
+<div class="mb-5">
+  <h2 class="mb-3"><%= Contract.model_name.human(count: 2) %></h2>
 
   <%= render 'devise_customers/contracts/contracts_table', company: @company, customer: @customer, contracts: @contracts %>
 </div>
 
-<div class="mb-3">
-  <h2><%= I18n.t('demands.index.last_deliveries') %></h2>
 
-  <%= render 'demands/demands_short_table', company: @company, demands: @customer_last_deliveries %>
+<div class="mb-5">
+  <div class="mb-3">
+    <h2><%= I18n.t('demands.index.last_deliveries') %></h2>
+  </div>
+
+  <%= form_with url: search_devise_customers_customer_demands_path, class: 'form', local: false do %>
+    <div class="row mb-3" style="display: flex">
+      <div class="col-xs-3">
+        <%= label_tag I18n.t('general.search.start_date'), nil, class: 'control-label' %>
+        <%= date_field_tag :demands_start_date, Time.zone.today.beginning_of_month, class: 'form-control' %>
+      </div>
+
+      <div class="col-xs-3">
+        <%= label_tag I18n.t('general.search.end_date'), nil, class: 'control-label' %>
+        <%= date_field_tag :demands_end_date, Time.zone.today, class: 'form-control' %>
+      </div>
+
+      <div class="col-xs-2" style="align-self: flex-end">
+        <%= submit_tag I18n.t('general.search.title'), class: 'btn btn-success' %>
+      </div>
+    </div>
+  <% end %>
+
+  <div id="customer-demands-list">
+    <%= render 'devise_customers/customer_demands/demands_table', company: @company, demands: @paged_customer_last_deliveries %>
+  </div>
 </div>
 
 <h2><%= I18n.t('teams.show.dashboard_tab') %></h2>

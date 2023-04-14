@@ -21,7 +21,11 @@ module DeviseCustomers
     private
 
     def assign_last_deliveries
-      @customer_last_deliveries = @customer.exclusives_demands.includes([:company]).includes([:project]).kept.finished_until_date(Time.zone.now).order(end_date: :desc).first(10)
+      start_date = Time.zone.today.beginning_of_month
+      end_date = Time.zone.today.end_of_month
+
+      @customer_last_deliveries = @customer.exclusives_demands.kept.to_end_dates(start_date, end_date).order(end_date: :desc)
+      @paged_customer_last_deliveries = @customer_last_deliveries.page(page_param)
     end
   end
 end
