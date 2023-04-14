@@ -14,12 +14,13 @@ import {
 import { FieldValues, useForm } from "react-hook-form"
 import { gql, useMutation, useQuery } from "@apollo/client"
 import { Product } from "../../modules/product/product.types"
+import { PRODUCT_QUERY } from "../../hooks/useProductQuery"
 
 type ProductDTO = {
   product?: Product
 }
 
-const PRODUCT_QUERY = gql`
+const PRODUCT_INFO_QUERY = gql`
   query ProductQuery($slug: String!) {
     product(slug: $slug) {
       id
@@ -67,7 +68,7 @@ const CreatePortfolioUnits = () => {
   const companySlug = params.companySlug || ""
   const portfolioUnitsUrl = `/companies/${companySlug}/products/${productSlug}/portfolio_units`
 
-  const { data, loading } = useQuery<ProductDTO>(PRODUCT_QUERY, {
+  const { data, loading } = useQuery<ProductDTO>(PRODUCT_INFO_QUERY, {
     variables: {
       slug: productSlug,
     },
@@ -94,6 +95,14 @@ const CreatePortfolioUnits = () => {
   const [createPortfolioUnit, { loading: mutationLoading }] = useMutation(
     PORTFOLIO_UNIT_MUTATION,
     {
+      refetchQueries: [
+        {
+          query: PRODUCT_QUERY,
+          variables: {
+            slug: productSlug,
+          },
+        },
+      ],
       update: () =>
         navigate(
           `/companies/${companySlug}/products/${productSlug}/portfolio_units`
@@ -166,21 +175,20 @@ const CreatePortfolioUnits = () => {
               <InputLabel htmlFor="machineName">
                 {t("portfolioUnits.fields.machineName")}
               </InputLabel>
-              <Input {...register("machineName")} />
+              <Input
+                {...register("machineName")}
+                placeholder="customfield_10052"
+              />
             </FormControl>
-            <Box sx={{ display: "flex", justifyContent: "flex-start" }}>
-              <Button type="submit" variant="contained" sx={{ marginRight: 2 }}>
-                {t("portfolioUnits.form.save")}
-              </Button>
-              <Button
-                variant="outlined"
-                component={Link}
-                to={portfolioUnitsUrl}
-              >
-                {t("portfolioUnits.form.cancel")}
-              </Button>
-            </Box>
           </FormGroup>
+          <Box sx={{ display: "flex", justifyContent: "flex-start" }}>
+            <Button variant="contained" sx={{ marginRight: 2 }} type="submit">
+              {t("portfolioUnits.form.save")}
+            </Button>
+            <Button variant="outlined" component={Link} to={portfolioUnitsUrl}>
+              {t("portfolioUnits.form.cancel")}
+            </Button>
+          </Box>
         </form>
       </Box>
     </BasicPage>

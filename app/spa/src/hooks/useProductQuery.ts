@@ -1,7 +1,7 @@
 import { gql, useQuery } from "@apollo/client"
 import { Product } from "../modules/product/product.types"
 
-const PRODUCT_QUERY = gql`
+export const PRODUCT_QUERY = gql`
   query ProductInfo($slug: String!) {
     product(slug: $slug) {
       id
