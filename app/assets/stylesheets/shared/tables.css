@@ -31,3 +31,13 @@
     display: -webkit-flex;
     flex-wrap: wrap;
 }
+
+.truncated-table-column {
+    white-space: nowrap;
+    text-overflow:ellipsis;
+    overflow: hidden;
+}
+
+.cell-small {
+    max-width: 130px;
+}

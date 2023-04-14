@@ -790,7 +790,7 @@ pt-BR:
       grouping_to_charts: 'Agrupamento para os Gráficos'
       total_blocked_work_time: 'Tempo Útil Bloq.'
       discarded_stage: 'Descartada na Etapa'
-      cost_to_project: 'Custo pro Projeto'
+      cost_to_project: 'Custo'
       total_queue_time: 'Fila'
       total_touch_time: 'Trabalho'
       montecarlo_projection:
