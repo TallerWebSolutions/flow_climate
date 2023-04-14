@@ -30,6 +30,7 @@
   "dashboard": {
     "name": "Nome",
     "startDate": "Data Inicial",
+    "endDate": "Data Final",
     "activeMembersCount": "Membros Ativos",
     "delivered": "Entregues",
     "days": "Dias",

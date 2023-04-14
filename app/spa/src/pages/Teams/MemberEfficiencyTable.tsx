@@ -46,7 +46,7 @@ const MemberEfficiencyTable = () => {
     { name: t("list.title") },
   ]
   const valuePerMemberColumns = [
-    " ",
+    t("list.name"),
     t("list.capacity"),
     t("list.hours"),
     t("list.producedValue"),
@@ -57,8 +57,8 @@ const MemberEfficiencyTable = () => {
   const valuePerMemberRow = team?.teamMemberEfficiency?.membersEfficiency?.map(
     (membershipEfficency: MembershipEfficiencyData) => {
       return [
-        membershipEfficency.memberCapacityValue,
         membershipEfficency.membership?.teamMemberName,
+        membershipEfficency.memberCapacityValue,
         membershipEfficency.effortInMonth?.toFixed(2),
         membershipEfficency.realizedMoneyInMonth?.toLocaleString("pt-br", {
           style: "currency",

@@ -1,8 +1,6 @@
 import { gql, useQuery } from "@apollo/client"
 import {
-  Backdrop,
   Button,
-  CircularProgress,
   FormGroup,
   Grid,
   Input,
@@ -17,11 +15,12 @@ import React, { useContext } from "react"
 import { useForm } from "react-hook-form"
 import SearchIcon from "@mui/icons-material/Search"
 import { useParams, useSearchParams } from "react-router-dom"
+import { useTranslation } from "react-i18next"
+
 import { BarChart } from "../../components/charts/BarChart"
 import { ChartGridItem } from "../../components/charts/ChartGridItem"
 import { LineChart, normalizeCfdData } from "../../components/charts/LineChart"
 import LineChartTooltip from "../../components/charts/tooltips/LineChartTooltip"
-
 import { FormElement } from "../../components/ui/Form"
 import Table from "../../components/ui/Table"
 import { MeContext } from "../../contexts/MeContext"
@@ -31,7 +30,6 @@ import { Demand } from "../../modules/demand/demand.types"
 import TeamBasicPage from "../../modules/team/components/TeamBasicPage"
 import { Team } from "../../modules/team/team.types"
 import MemberGeneralInfo from "./MemberGeneralInfo"
-import { useTranslation } from "react-i18next"
 
 const TEAM_DASHBOARD_QUERY = gql`
   query TeamDashboard($teamId: ID!, $startDate: ISO8601Date, $endDate: ISO8601Date) {
@@ -120,13 +118,6 @@ const TeamDashboard = () => {
     },
   })
   const { register } = useForm()
-
-  if (loading)
-    return (
-      <Backdrop open>
-        <CircularProgress color="secondary" />
-      </Backdrop>
-    )
 
   const company = me?.currentCompany
   const companyName = company?.name

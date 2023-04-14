@@ -18,6 +18,7 @@
   },
   "list": {
     "title": "People",
+    "name": "Name",
     "statusSelectLabel": "Member Status",
     "hours": "Hours",
     "producedValue": "Value",
