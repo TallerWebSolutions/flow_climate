@@ -24,7 +24,8 @@ class PortfolioUnitsController < AuthenticatedController
     assign_portfolio_units_list
     assign_parent_portfolio_units_list
 
-    render :new
+    prepend_view_path Rails.public_path
+    render 'spa-build/index'
   end
 
   def edit

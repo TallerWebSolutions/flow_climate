@@ -35,6 +35,7 @@
       "unitType": "Tipo da Unidade",
       "machineName": "Machine Name do Jira",
       "options": {
+        "select": "Selecione",
         "unitType": {
           "productModule": "Módulo do Produto",
           "journeyStage": "Etapa da Jornada",

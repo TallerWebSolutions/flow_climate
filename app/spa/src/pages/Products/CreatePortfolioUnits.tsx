@@ -12,9 +12,47 @@ import {
   Select,
 } from "@mui/material"
 import { FieldValues, useForm } from "react-hook-form"
-import { gql, useMutation } from "@apollo/client"
-// import { Project } from "../../modules/project/project.types"
-// import { PROJECT_STANDARD_FRAGMENT } from "../../components/ProjectPage"
+import { gql, useMutation, useQuery } from "@apollo/client"
+import { Product } from "../../modules/product/product.types"
+
+type ProductDTO = {
+  product?: Product
+}
+
+const PRODUCT_QUERY = gql`
+  query ProductQuery($slug: String!) {
+    product(slug: $slug) {
+      id
+      portfolioUnits {
+        id
+        name
+      }
+    }
+  }
+`
+
+const PORTFOLIO_UNIT_MUTATION = gql`
+  mutation PortfolioUnit(
+    $parentId: ID
+    $productId: ID!
+    $name: String!
+    $portfolioUnitType: String!
+    $jiraMachineName: String!
+  ) {
+    createPortfolioUnit(
+      parentId: $parentId
+      productId: $productId
+      name: $name
+      portfolioUnitType: $portfolioUnitType
+      jiraMachineName: $jiraMachineName
+    ) {
+      statusMessage
+      portfolioUnit {
+        name
+      }
+    }
+  }
+`
 
 const CreatePortfolioUnits = () => {
   const { register, handleSubmit } = useForm()
@@ -29,46 +67,13 @@ const CreatePortfolioUnits = () => {
   const companySlug = params.companySlug || ""
   const portfolioUnitsUrl = `/companies/${companySlug}/products/${productSlug}/portfolio_units`
 
-  // const PROJECT_QUERY = gql`
-  //   query ProjectQuery($projectId: ID!) {
-  //     project(id: $projectId) {
-  //       id
-  //     }
-  //   }
-  // `
+  const { data, loading } = useQuery<ProductDTO>(PRODUCT_QUERY, {
+    variables: {
+      slug: productSlug,
+    },
+  })
 
-  const PORTFOLIO_UNIT_MUTATION = gql`
-    mutation PortfolioUnit(
-      $parentId: ID!
-      $productId: ID!
-      $name: String!
-      $portfolioUnitType: String!
-      $jiraMachineName: String!
-    ) {
-      createPortfolioUnit(
-        parentId: $parentId
-        productId: $productId
-        name: $name
-        portfolioUnitType: $portfolioUnitType
-        jiraMachineName: $jiraMachineName
-      ) {
-        statusMessage
-        portfolioUnit {
-          name
-        }
-      }
-    }
-  `
-
-  // type ProjectType = {
-  //   project: Project
-  // }
-
-  // const { data, loading } = useQuery<ProjectType>(PROJECT_QUERY, {
-  //   variables: {
-  //     projectId: productId,
-  //   },
-  // })
+  const portfolioUnits = data?.product?.portfolioUnits
 
   const breadcrumbsLinks = [
     { name: "Home", url: "/" },
@@ -99,7 +104,7 @@ const CreatePortfolioUnits = () => {
   const handlePortfolioUnitSubmit = (data: FieldValues) => {
     createPortfolioUnit({
       variables: {
-        parentId: data.productId,
+        parentId: data.parentId,
         productId: product?.id,
         name: data.name,
         portfolioUnitType: data.unitType,
@@ -108,7 +113,10 @@ const CreatePortfolioUnits = () => {
     })
   }
   return (
-    <BasicPage breadcrumbsLinks={breadcrumbsLinks} loading={mutationLoading}>
+    <BasicPage
+      breadcrumbsLinks={breadcrumbsLinks}
+      loading={loading || mutationLoading}
+    >
       <Box sx={{ paddingY: 4 }}>
         <form onSubmit={handleSubmit(handlePortfolioUnitSubmit)}>
           <FormGroup
@@ -123,9 +131,10 @@ const CreatePortfolioUnits = () => {
                 {t("portfolioUnits.fields.ancestral")}
               </InputLabel>
               <Select native {...register("parentId")}>
-                <option value="0">Ações em massa</option>
-                <option value="1">Ações em massa para basic user</option>
-                <option value="2">Teste</option>
+                <option value="" />
+                {portfolioUnits?.map((unit) => (
+                  <option value={unit.id}>{unit.name}</option>
+                ))}
               </Select>
             </FormControl>
             <FormControl sx={{ marginBottom: 4 }}>

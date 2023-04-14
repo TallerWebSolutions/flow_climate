@@ -34,7 +34,8 @@ module SpaHelper
       { controller: 'memberships', action: 'index' },
       { controller: 'memberships', action: 'edit' },
       { controller: 'memberships', action: 'efficiency_table' },
-      { controller: 'portfolio_units', action: 'index' }
+      { controller: 'portfolio_units', action: 'index' },
+      { controller: 'portfolio_units', action: 'new' }
     ]
   end
 end

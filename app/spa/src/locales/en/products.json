@@ -36,6 +36,7 @@
       "unitType": "Unit Type",
       "machineName": "Jira's Machine Name",
       "options": {
+        "select": "Select",
         "unitType": {
           "productModule": "Product Module",
           "journeyStage": "Journey Stage",

@@ -1,6 +1,6 @@
 module Mutations
   class CreatePortfolioUnitMutation < Mutations::BaseMutation
-    argument :parent_id, ID, required: true
+    argument :parent_id, ID, required: false
     argument :product_id, ID, required: true
     argument :name, String, required: true
     argument :portfolio_unit_type, String, required: true
