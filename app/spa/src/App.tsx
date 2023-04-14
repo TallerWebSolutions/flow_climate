@@ -46,6 +46,7 @@ import MemberEfficiencyTable from "./pages/Teams/MemberEfficiencyTable"
 import PortfolioUnitsPage from "./pages/Products/PortfolioUnitsPage"
 import MembershipForm from "./pages/Teams/MembershipForm"
 import MembershipsTable from "./pages/Teams/MembershipsTable"
+import CreatePortfolioUnits from "./pages/Products/CreatePortfolioUnits"
 
 export const ME_QUERY = gql`
   query Me {
@@ -139,6 +140,10 @@ const App = () => {
             <Route
               path="/companies/:companySlug/products/:productSlug/portfolio_units"
               element={<PortfolioUnitsPage />}
+            />
+            <Route
+              path="/companies/:companySlug/products/:productSlug/portfolio_units/new"
+              element={<CreatePortfolioUnits />}
             />
             <Route
               path="/companies/:companySlug/projects/:projectId/tasks_tab"

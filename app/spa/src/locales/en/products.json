@@ -27,6 +27,27 @@
     "name": "Name",
     "parent": "Parent",
     "totalCost": "Total Cost",
-    "totalHours": "Total Hours"
-  }
+    "totalHours": "Total Hours",
+    "new": "New Portfolio Unit",
+    "portfolioUnits": "Portfolio Units",
+    "fields": {
+      "ancestral": "Ancestral",
+      "name": "Name",
+      "unitType": "Unit Type",
+      "machineName": "Jira's Machine Name",
+      "options": {
+        "unitType": {
+          "productModule": "Product Module",
+          "journeyStage": "Journey Stage",
+          "theme": "Theme",
+          "epic": "Epic"
+        }
+      }
+    },
+    "form": {
+      "cancel": "Cancel",
+      "save": "Save"
+    }
+  },
+  "create_portfolio_units_button": "Create Portfolio Units"
 }

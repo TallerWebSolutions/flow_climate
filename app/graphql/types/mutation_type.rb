@@ -24,6 +24,8 @@ module Types
 
     field :save_membership, mutation: Mutations::SaveMembershipMutation
 
+    field :create_portfolio_unit, mutation: Mutations::CreatePortfolioUnitMutation
+
     def me
       context[:current_user]
     end

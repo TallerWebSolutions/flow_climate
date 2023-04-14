@@ -26,6 +26,27 @@
     "name": "Nome",
     "parent": "Ancestral",
     "totalCost": "Custo total",
-    "totalHours": "Horas totais"
-  }
+    "totalHours": "Horas totais",
+    "new": "Nova Unidade do Portfólio",
+    "portfolioUnits": "Unidades de Portifólio",
+    "fields": {
+      "ancestral": "Ancestral",
+      "name": "Nome",
+      "unitType": "Tipo da Unidade",
+      "machineName": "Machine Name do Jira",
+      "options": {
+        "unitType": {
+          "productModule": "Módulo do Produto",
+          "journeyStage": "Etapa da Jornada",
+          "theme": "Tema",
+          "epic": "Épico"
+        }
+      }
+    },
+    "form": {
+      "cancel": "Cancelar",
+      "save": "Salvar"
+    }
+  },
+  "create_portfolio_units_button": "Criar Unidade de Portifólio"
 }
