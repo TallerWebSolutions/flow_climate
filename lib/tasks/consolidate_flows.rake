@@ -15,12 +15,10 @@ namespace :statistics do
 
   desc 'Consolidations for contracts'
   task consolidate_contracts: :environment do
-    if [10, 15, 20].include?(Time.zone.now.hour)
-      Company.all.each do |company|
-        company.customers.each do |customer|
-          customer.contracts.active(Time.zone.today).each do |contract|
-            Consolidations::ContractConsolidationJob.perform_later(contract)
-          end
+    Company.all.each do |company|
+      company.customers.each do |customer|
+        customer.contracts.active(Time.zone.today).each do |contract|
+          Consolidations::ContractConsolidationJob.perform_later(contract)
         end
       end
     end
@@ -31,7 +29,7 @@ namespace :statistics do
     Company.all.each do |company|
       company.customers.select(&:active?).each do |customer|
         start_date = customer.start_date
-        end_date = customer.start_date
+        end_date = customer.end_date
         (start_date..end_date).each do |date|
           Consolidations::CustomerConsolidationJob.perform_later(customer, date)
         end
