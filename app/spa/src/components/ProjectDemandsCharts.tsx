@@ -76,10 +76,11 @@ const ProjectDemandsCharts = ({
     {
       id: t("charts_tab.project_charts.operational_math_risk_evolution_chart"),
       data: projectConsolidationsWeekly.map(
-        ({ consolidationDate, operationalRisk }) => ({
+        ({ consolidationDate, operationalRisk }) => {
+          return ({
           x: consolidationDate,
-          y: operationalRisk,
-        })
+          y: operationalRisk * 100,
+        })} 
       ),
     },
   ]
@@ -193,7 +194,7 @@ const ProjectDemandsCharts = ({
       data: projectConsolidationsWeekly.map(
         ({ consolidationDate, projectQuality }) => ({
           x: consolidationDate,
-          y: 1 - projectQuality,
+          y: (1 - projectQuality) * 100,
         })
       ),
     },
@@ -419,8 +420,8 @@ const ProjectDemandsCharts = ({
               legendOffset: 60,
               tickRotation: -40,
             },
-            yFormat: "=.2",
             enableSlices: "x",
+            yFormat: (value: number) => `${value.toFixed(2)}%`,
             sliceTooltip: ({ slice }: SliceTooltipProps) => (
               <LineChartTooltip
                 slice={slice}
@@ -534,7 +535,6 @@ const ProjectDemandsCharts = ({
           )}
           props={{
             enableSlices: "x",
-            yFormat: (value: number) => `${value * 100}%`,
             sliceTooltip: ({ slice }: SliceTooltipProps) => (
               <LineChartTooltip slice={slice} />
             ),
@@ -645,7 +645,7 @@ const ProjectDemandsCharts = ({
               tickRotation: -40,
               legend: t("charts_tab.project_charts.quality_bugs_x_label"),
             },
-            yFormat: "=.2%",
+            yFormat: (value: number) => `${value.toFixed(2)}%`,
             enableSlices: "x",
             sliceTooltip: ({ slice }: SliceTooltipProps) => (
               <LineChartTooltip
