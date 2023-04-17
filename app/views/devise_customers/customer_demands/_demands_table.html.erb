@@ -22,7 +22,7 @@
           <td class="truncated-table-column"><%= link_to demand.project_name, company_project_path(demand.company, demand.project), target: :_blank %></td>
         <% end %>
 
-        <td><%= link_to demand.external_id, devise_customers_customer_demand_path(demand.external_id), target: :_blank %></td>
+        <td><%= link_to demand.external_id, company_demand_path(company, demand.slug), target: :_blank %></td>
         <td class="truncated-table-column"><%= demand.demand_title %></td>
 
         <td><%= I18n.l(demand.end_date, format: :short) %></td>
