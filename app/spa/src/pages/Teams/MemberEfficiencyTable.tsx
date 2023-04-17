@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next"
-import { useParams, useSearchParams } from "react-router-dom"
+
+import { Link as RouterLink, useParams, useSearchParams } from "react-router-dom"
 import { gql, useQuery } from "@apollo/client"
 import {
   Button,
@@ -7,6 +8,7 @@ import {
   Grid,
   Input,
   InputLabel,
+  Link,
   Select,
 } from "@mui/material"
 import { useForm } from "react-hook-form"
@@ -55,19 +57,24 @@ const MemberEfficiencyTable = () => {
   ]
 
   const valuePerMemberRow = team?.teamMemberEfficiency?.membersEfficiency?.map(
-    (membershipEfficency: MembershipEfficiencyData) => {
-      return [
-        membershipEfficency.membership?.teamMemberName,
-        membershipEfficency.memberCapacityValue,
-        membershipEfficency.effortInMonth?.toFixed(2),
-        membershipEfficency.realizedMoneyInMonth?.toLocaleString("pt-br", {
-          style: "currency",
-          currency: "BRL",
-        }),
-        membershipEfficency.cardsCount,
-        membershipEfficency.avgHoursPerDemand?.toFixed(2),
-      ]
-    }
+    (membershipEfficency: MembershipEfficiencyData) => [
+      <Link
+        component={RouterLink}
+        to={`/companies/${companySlug}/team_members/${membershipEfficency.membership?.teamMemberId}`}
+      >
+        {membershipEfficency.membership?.teamMemberName}
+      </Link>,
+      
+      membershipEfficency.memberCapacityValue,
+      membershipEfficency.effortInMonth?.toFixed(2),
+      membershipEfficency.realizedMoneyInMonth?.toLocaleString("pt-br", {
+        style: "currency",
+        currency: "BRL",
+      }),
+      membershipEfficency.cardsCount,
+      membershipEfficency.avgHoursPerDemand?.toFixed(2),
+    ]
+      
   )
 
   return (
@@ -157,6 +164,7 @@ export const MEMBER_EFFICIENCY_TABLE_QUERY = gql`
         membersEfficiency {
           membership {
             id
+            teamMemberId
             teamMemberName
           }
           avgHoursPerDemand
