@@ -31,7 +31,11 @@ namespace :statistics do
     if [8, 19, 22].include?(Time.zone.now.hour)
       Company.all.each do |company|
         company.customers.select(&:active?).each do |customer|
-          Consolidations::CustomerConsolidationJob.perform_later(customer)
+          start_date = customer.start_date
+          end_date = customer.start_date
+          (start_date..end_date).each do |date|
+            Consolidations::CustomerConsolidationJob.perform_later(customer, date)
+          end
         end
       end
     end
