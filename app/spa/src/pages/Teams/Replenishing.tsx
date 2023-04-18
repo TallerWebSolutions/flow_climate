@@ -96,7 +96,7 @@ type ReplenishingCacheDTO = ReplenishingCacheResult | undefined
 
 const Replenishing = () => {
   const { teamId, companySlug = "" } = useParams()
-  const { data, loading, error } = useQuery<ReplenishingDTO>(QUERY, {
+  const { data, loading } = useQuery<ReplenishingDTO>(QUERY, {
     variables: { teamId: Number(teamId) },
   })
   const { pushMessage } = useContext(MessagesContext)
