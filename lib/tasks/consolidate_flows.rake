@@ -28,11 +28,7 @@ namespace :statistics do
   task consolidate_customers: :environment do
     Company.all.each do |company|
       company.customers.select(&:active?).each do |customer|
-        start_date = customer.start_date
-        end_date = customer.end_date
-        (start_date..end_date).each do |date|
-          Consolidations::CustomerConsolidationJob.perform_later(customer, date)
-        end
+        Consolidations::CustomerConsolidationJob.perform_later(customer)
       end
     end
   end

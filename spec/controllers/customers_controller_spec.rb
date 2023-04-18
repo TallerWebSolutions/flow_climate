@@ -403,27 +403,12 @@ RSpec.describe CustomersController do
     describe 'PATCH #update_cache' do
       let(:customer) { Fabricate :customer, company: company }
 
-      context 'with no consolidations' do
+      context 'with valid data' do
         it 'enqueues the cache update for all customer time' do
           Fabricate :demand, customer: customer, created_date: 4.days.ago, end_date: 4.days.ago
           Fabricate :demand, customer: customer, created_date: 4.days.ago, end_date: 2.days.ago
 
           expect(Consolidations::CustomerConsolidationJob).to(receive(:perform_later)).exactly(3).times
-
-          patch :update_cache, params: { company_id: company, id: customer }
-
-          expect(flash[:notice]).to eq I18n.t('general.enqueued')
-          expect(response).to redirect_to company_customer_path(company, customer)
-        end
-      end
-
-      context 'with consolidations' do
-        it 'enqueues the cache update for the day' do
-          Fabricate :demand, customer: customer, created_date: 4.days.ago, end_date: 4.days.ago
-          Fabricate :demand, customer: customer, created_date: 4.days.ago, end_date: 2.days.ago
-          Fabricate :customer_consolidation, customer: customer
-
-          expect(Consolidations::CustomerConsolidationJob).to(receive(:perform_later)).exactly(1).time
 
           patch :update_cache, params: { company_id: company, id: customer }
 

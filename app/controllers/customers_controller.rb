@@ -58,15 +58,11 @@ class CustomersController < AuthenticatedController
   end
 
   def update_cache
-    if @customer.customer_consolidations.blank?
-      start_date = @customer.start_date
-      end_date = @customer.end_date
+    start_date = @customer.start_date
+    end_date = @customer.end_date
 
-      cache_date_arrays = TimeService.instance.days_between_of(start_date, end_date)
-      cache_date_arrays.each { |cache_date| Consolidations::CustomerConsolidationJob.perform_later(@customer, cache_date) }
-    else
-      Consolidations::CustomerConsolidationJob.perform_later(@customer)
-    end
+    cache_date_arrays = TimeService.instance.days_between_of(start_date, end_date)
+    cache_date_arrays.each { |cache_date| Consolidations::CustomerConsolidationJob.perform_later(@customer, cache_date) }
 
     flash[:notice] = I18n.t('general.enqueued')
 
