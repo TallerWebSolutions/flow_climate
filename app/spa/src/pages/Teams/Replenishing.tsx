@@ -16,7 +16,7 @@ import { formatDate } from "../../lib/date"
 import TeamBasicPage from "../../modules/team/components/TeamBasicPage"
 
 export const QUERY = gql`
-  query Replenishing($teamId: Int!) {
+  query Replenishing($teamId: ID!) {
     team(id: $teamId) {
       id
       name
@@ -96,7 +96,7 @@ type ReplenishingCacheDTO = ReplenishingCacheResult | undefined
 
 const Replenishing = () => {
   const { teamId, companySlug = "" } = useParams()
-  const { data, loading } = useQuery<ReplenishingDTO>(QUERY, {
+  const { data, loading, error } = useQuery<ReplenishingDTO>(QUERY, {
     variables: { teamId: Number(teamId) },
   })
   const { pushMessage } = useContext(MessagesContext)
@@ -127,7 +127,7 @@ const Replenishing = () => {
     { name: teamName || "", url: teamUrl },
     { name: "Reabastecimento" },
   ]
-
+console.log(error)
   return (
     <TeamBasicPage
       title="Reabastecimento"
