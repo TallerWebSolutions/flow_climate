@@ -127,7 +127,6 @@ const Replenishing = () => {
     { name: teamName || "", url: teamUrl },
     { name: "Reabastecimento" },
   ]
-console.log(error)
   return (
     <TeamBasicPage
       title="Reabastecimento"
