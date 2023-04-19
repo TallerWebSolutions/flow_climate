@@ -31,6 +31,7 @@ module SpaHelper
       { controller: 'work_item_types', action: 'new' },
       { controller: 'work_item_types', action: 'index' },
       { controller: 'devise_customers/customer_demands', action: 'show' },
+      { controller: 'devise_customers/customer_demands', action: 'demand_efforts' },
       { controller: 'memberships', action: 'index' },
       { controller: 'memberships', action: 'edit' },
       { controller: 'memberships', action: 'efficiency_table' },

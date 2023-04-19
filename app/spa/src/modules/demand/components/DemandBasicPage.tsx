@@ -7,6 +7,7 @@ import { Tabs } from "../../../components/Tabs"
 import Table from "../../../components/ui/Table"
 import { formatCurrency } from "../../../lib/currency"
 import { Demand } from "../demand.types"
+import DateLocale from "../../../components/ui/DateLocale"
 
 type DemandBasicPageProps = {
   demand: Demand
@@ -35,6 +36,9 @@ const DemandBasicPage = ({
     t("table.header.effortUpstream"),
     t("table.header.effortDownstream"),
     t("table.header.costToProject"),
+    t("table.header.createdDate"),
+    t("table.header.commitmentDate"),
+    t("table.header.deliveryDate"),
   ]
 
   const rows = [
@@ -43,6 +47,13 @@ const DemandBasicPage = ({
       demand?.effortUpstream?.toFixed(2) || "",
       demand?.effortDownstream?.toFixed(2) || "",
       formatCurrency(demand?.costToProject || 0),
+      demand?.createdDate ? <DateLocale date={demand?.createdDate} /> : "",
+      demand?.commitmentDate ? (
+        <DateLocale date={demand?.commitmentDate} />
+      ) : (
+        ""
+      ),
+      demand?.endDate ? <DateLocale date={demand?.endDate} /> : "",
     ],
   ]
 
@@ -74,7 +85,7 @@ const DemandBasicPage = ({
     },
     {
       label: t("tabs.efforts"),
-      to: `${demandPath}/demand_efforts`,
+      to: `/devise_customers/customer_demands/${params.demand}/demand_efforts`,
     },
   ]
 

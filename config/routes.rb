@@ -51,6 +51,8 @@ Rails.application.routes.draw do
     namespace 'devise_customers' do
       resources :customer_demands, only: :show do
         post :search, on: :collection
+
+        get :demand_efforts
       end
     end
   end

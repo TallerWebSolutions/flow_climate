@@ -19,6 +19,10 @@ const DEMAND_QUERY = gql`
       effortUpstream
       effortDownstream
       costToProject
+      costToProject
+      createdDate
+      commitmentDate
+      endDate
       demandEfforts {
         id
         effortValue

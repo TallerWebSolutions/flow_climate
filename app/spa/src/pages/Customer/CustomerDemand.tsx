@@ -13,6 +13,9 @@ const CUSTOMER_DEMAND_QUERY = gql`
       effortUpstream
       effortDownstream
       costToProject
+      createdDate
+      commitmentDate
+      endDate
     }
   }
 `

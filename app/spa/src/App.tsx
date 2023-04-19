@@ -246,6 +246,10 @@ const App = () => {
               path="/devise_customers/customer_demands/:demand"
               element={<CustomerDemand />}
             />
+            <Route
+              path="/devise_customers/customer_demands/:demand/demand_efforts"
+              element={<DemandEfforts />}
+            />
           </Routes>
         </BrowserRouter>
       </MeContext.Provider>

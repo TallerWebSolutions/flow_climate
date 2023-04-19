@@ -9,6 +9,11 @@ module DeviseCustomers
       render 'spa-build/index'
     end
 
+    def demand_efforts
+      prepend_view_path Rails.public_path
+      render 'spa-build/index'
+    end
+
     def search
       @customer = current_devise_customer.customers.last
 
