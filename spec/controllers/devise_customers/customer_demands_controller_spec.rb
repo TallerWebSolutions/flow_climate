@@ -28,6 +28,14 @@ RSpec.describe DeviseCustomers::CustomerDemandsController do
       end
     end
 
+    describe 'GET #demand_efforts' do
+      it 'renders project spa page' do
+        get :demand_efforts, params: { id: 'foo' }
+
+        expect(response).to render_template 'spa-build/index'
+      end
+    end
+
     describe 'POST #search' do
       context 'with valid data' do
         it 'searches the demands and updates the view' do
