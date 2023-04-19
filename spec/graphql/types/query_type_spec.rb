@@ -68,6 +68,82 @@ RSpec.describe Types::QueryType do
       end
     end
 
+    describe '#portfolio unit' do
+      context 'with portfolio data' do
+        it 'return portfolios data' do
+          company = Fabricate :company
+          product = Fabricate :product, id: 315, company: company
+          second_portfolio_unit = Fabricate :portfolio_unit, product: product, name: 'xxx', id: 2086, product_id: 315, portfolio_unit_type: 1
+          first_portfolio_unit = Fabricate :portfolio_unit, product: product, name: 'zzz', id: 2087, parent_id: second_portfolio_unit.id, product_id: 315, portfolio_unit_type: 1
+
+          query =
+            %(query {
+            portfolioUnitById(id: #{first_portfolio_unit.id}) {
+              id
+              name
+              totalCost
+              totalHours
+              portfolioUnitTypeName
+              parent {
+                id
+                name
+              }
+            }
+          })
+          context = {
+            current_portfolio: first_portfolio_unit
+          }
+
+          result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
+
+          expect(result.dig('data', 'portfolioUnitById', 'name')).to eq('zzz')
+        end
+      end
+
+      context 'without jira name data' do
+        it 'returns empty' do
+          company = Fabricate :company
+          product = Fabricate :product, id: 315, company: company
+          second_portfolio_unit = Fabricate :portfolio_unit, product: product, name: 'xxx', id: 2086, product_id: 315, portfolio_unit_type: 1
+          first_portfolio_unit = Fabricate :portfolio_unit, product: product, name: 'zzz', id: 2087, parent_id: second_portfolio_unit.id, product_id: 315, portfolio_unit_type: 1
+
+          query =
+            %(query {
+            jiraPortfolioUnitById(id: #{first_portfolio_unit.id})
+          })
+          context = {
+            current_portfolio: first_portfolio_unit
+          }
+
+          result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
+
+          expect(result.dig('data', 'jiraPortfolioUnitById')).to eq('')
+        end
+      end
+
+      context 'with jira name data' do
+        it 'returns jira name' do
+          company = Fabricate :company
+          product = Fabricate :product, id: 315, company: company
+          second_portfolio_unit = Fabricate :portfolio_unit, product: product, name: 'xxx', id: 2086, product_id: 315, portfolio_unit_type: 1
+          first_portfolio_unit = Fabricate :portfolio_unit, product: product, name: 'zzz', id: 2087, parent_id: second_portfolio_unit.id, product_id: 315, portfolio_unit_type: 1
+          Fabricate :jira_portfolio_unit_config, id: 1, jira_field_name: 'bbb', portfolio_unit_id: 2087, portfolio_unit: first_portfolio_unit
+
+          query =
+            %(query {
+            jiraPortfolioUnitById(id: #{first_portfolio_unit.id})
+          })
+          context = {
+            current_portfolio: first_portfolio_unit
+          }
+
+          result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
+
+          expect(result.dig('data', 'jiraPortfolioUnitById')).to eq('bbb')
+        end
+      end
+    end
+
     describe '#team' do
       context 'with replenishing consolidations' do
         it 'returns the team and its fields' do

@@ -79,10 +79,28 @@ module Types
       argument :status, String, required: false
     end
 
+    field :portfolio_unit_by_id, Types::PortfolioUnitType, null: false do
+      argument :id, ID, required: true
+    end
+
+    field :jira_portfolio_unit_by_id, String, null: false do
+      argument :id, ID, required: true
+    end
+
     field :work_item_types, [Types::WorkItemTypeType], null: false, description: 'A list of work item types registered to the logged user last company'
 
     def teams
       me.last_company.teams.preload(:company) if me.last_company.present?
+    end
+
+    def portfolio_unit_by_id(id:)
+      PortfolioUnit.find(id)
+    end
+
+    def jira_portfolio_unit_by_id(id:)
+      return '' if PortfolioUnit.find(id).jira_portfolio_unit_config.blank?
+
+      PortfolioUnit.find(id).jira_portfolio_unit_config[:jira_field_name]
     end
 
     def team(id:)

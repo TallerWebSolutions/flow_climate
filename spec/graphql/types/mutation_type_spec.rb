@@ -274,6 +274,44 @@ RSpec.describe Types::MutationType do
     end
   end
 
+  describe '#update_portfolio_unit' do
+    let(:company) { Fabricate :company }
+    let(:product) { Fabricate :product, id: 315, company: company }
+    let!(:portfolio_unit) { Fabricate :portfolio_unit, product: product, name: 'zzz', id: 2087, product_id: 315, portfolio_unit_type: 1 }
+
+    context 'with valid data' do
+      let(:mutation) do
+        %(mutation {
+          updatePortfolioUnit(parentId: #{portfolio_unit.id}, productId: #{product.id}, unitId: #{portfolio_unit.id}, name: "foo", portfolioUnitType: "epic", jiraMachineName: "teste") {
+            statusMessage
+          }
+        })
+      end
+
+      it 'succeeds' do
+        result = FlowClimateSchema.execute(mutation).as_json
+        expect(result['data']['updatePortfolioUnit']['statusMessage']).to eq('SUCCESS')
+      end
+    end
+
+    context 'when the object is not valid' do
+      let(:mutation) do
+        %(mutation {
+          updatePortfolioUnit(parentId: "foo", productId: #{product.id}, unitId: 10, name: "foo", portfolioUnitType: "epic", jiraMachineName: "teste") {
+            statusMessage
+          }
+        })
+      end
+
+      it 'fails' do
+        allow_any_instance_of(PortfolioUnit).to(receive(:valid?)).and_return(false)
+        result = FlowClimateSchema.execute(mutation).as_json
+        
+        expect(result['data']['updatePortfolioUnit']['statusMessage']).to eq('FAIL')
+      end
+    end
+  end
+
   describe '#create_project_additional_hours' do
     let(:company) { Fabricate :company }
     let(:user) { Fabricate :user, companies: [company], last_company_id: company.id }

@@ -26,6 +26,8 @@ module Types
 
     field :create_portfolio_unit, mutation: Mutations::CreatePortfolioUnitMutation
 
+    field :update_portfolio_unit, mutation: Mutations::UpdatePortfolioUnitMutation
+
     def me
       context[:current_user]
     end

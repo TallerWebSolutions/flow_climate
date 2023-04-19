@@ -68,6 +68,7 @@ const PortfolioUnitsPage = () => {
               <TableCell>{t("portfolioUnits.name")}</TableCell>
               <TableCell>{t("portfolioUnits.totalCost")}</TableCell>
               <TableCell>{t("portfolioUnits.totalHours")}</TableCell>
+              <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -78,7 +79,20 @@ const PortfolioUnitsPage = () => {
                   <TableCell>{unit.portfolioUnitTypeName}</TableCell>
                   <TableCell>{unit.name}</TableCell>
                   <TableCell>{formatCurrency(unit.totalCost ?? 0)}</TableCell>
-                  <TableCell>{unit.totalHours?.toFixed(2)}</TableCell>
+                  <TableCell>
+                    {unit.totalHours?.toFixed(2)}
+                  </TableCell>
+                  <TableCell>
+                  <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 3, mr: 3 }}>
+                      <Button
+                        component={RouterLink}
+                        to={`/companies/${companySlug}/products/${productSlug}/portfolio_units/${unit?.id}/edit`}
+                        variant="contained"
+                      >
+                        Editar
+                      </Button>
+                    </Box>
+                  </TableCell>
                 </TableRow>
               )
             })}
