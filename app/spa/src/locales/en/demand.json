@@ -17,6 +17,10 @@
       "productName": "Product name"
     }
   },
+  "notification": {
+    "discarded_demand_message_success": "Demand discarded!",
+    "discarded_demand_message_fail": "Unable to discarded demand!"
+  },
   "list": {
     "title": "Demands",
     "form": {

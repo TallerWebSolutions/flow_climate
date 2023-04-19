@@ -306,7 +306,7 @@ RSpec.describe Types::MutationType do
       it 'fails' do
         allow_any_instance_of(PortfolioUnit).to(receive(:valid?)).and_return(false)
         result = FlowClimateSchema.execute(mutation).as_json
-        
+
         expect(result['data']['updatePortfolioUnit']['statusMessage']).to eq('FAIL')
       end
     end
@@ -463,6 +463,25 @@ RSpec.describe Types::MutationType do
         allow_any_instance_of(WorkItemType).to(receive(:destroy)).and_return(false)
         result = FlowClimateSchema.execute(mutation).as_json
         expect(result['data']['deleteWorkItemType']['statusMessage']).to eq('FAIL')
+      end
+    end
+  end
+
+  describe '#discarded_demand' do
+    let(:demand) { Fabricate :demand }
+
+    let(:mutation) do
+      %(mutation{
+        discardedDemand(demandId: "#{demand.id}") {
+          statusMessage
+        }
+      })
+    end
+
+    context 'when demand is discarded' do
+      it 'succeeds' do
+        result = FlowClimateSchema.execute(mutation).as_json
+        expect(result['data']['discardedDemand']['statusMessage']).to eq('SUCCESS')
       end
     end
   end

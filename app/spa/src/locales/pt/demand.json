@@ -17,6 +17,10 @@
       "productName": "Nome do produto"
     }
   },
+  "notification": {
+    "discarded_demand_message_success": "Demand descartada!",
+    "discarded_demand_message_fail": "Não foi possivel descartar a demanda!"
+  },
   "list": {
     "title": "Demandas",
     "form": {

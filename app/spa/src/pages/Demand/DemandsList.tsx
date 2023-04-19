@@ -1,16 +1,17 @@
 import { useContext } from "react"
 import { useTranslation } from "react-i18next"
-import { gql, useLazyQuery, useQuery } from "@apollo/client"
+import { gql, useLazyQuery, useMutation, useQuery } from "@apollo/client"
 import {
   Avatar,
   AvatarGroup,
   Button,
+  ButtonGroup,
   CircularProgress,
   Link,
 } from "@mui/material"
 import { CSVLink } from "react-csv"
 import { FieldValues } from "react-hook-form"
-import EditIcon from "@mui/icons-material/Edit"
+import {Edit as EditIcon, Delete as DeleteIcon} from "@mui/icons-material"
 import { formatISO } from "date-fns"
 import { useSearchParams, Link as RouterLink } from "react-router-dom"
 
@@ -20,6 +21,7 @@ import DemandsPage, { DemandsSearchDTO } from "../../components/DemandsPage"
 import { MeContext } from "../../contexts/MeContext"
 import { secondsToReadbleDate } from "../../lib/date"
 import DateLocale from "../../components/ui/DateLocale"
+import { MessagesContext } from "../../contexts/MessageContext"
 
 const DEMAND_FRAGMENT = gql`
   fragment demandsList on DemandsList {
@@ -131,8 +133,23 @@ const DEMANDS_CSV_QUERY = gql`
   ${DEMAND_FRAGMENT}
 `
 
+const DISCARDED_DEMAND_MUTATION = gql`
+  mutation DiscardedDemand($demandId: String!) {
+    discardedDemand(demandId: $demandId) {
+      statusMessage
+    }
+  }
+
+`
+
 type DemandsCSVDTO = {
   demandsCsvData: DemandsList
+}
+
+type DiscardedDemandType = {
+  discardedDemand: {
+    statusMessage: string
+  }
 }
 
 const normalizeQueryStringFilters = (filters: FieldValues) =>
@@ -171,6 +188,24 @@ const DemandsListPage = () => {
       variables: demandsQueryFilters,
     }
   )
+  const { pushMessage } = useContext(MessagesContext)
+  const [discardedDemand] = useMutation<DiscardedDemandType>(
+    DISCARDED_DEMAND_MUTATION, 
+    {
+      update: (_, { data }) => {
+        const mutationResult = data?.discardedDemand.statusMessage === "SUCCESS"
+  
+        pushMessage({
+          text: mutationResult
+            ? t("notification.discarded_demand_message_success")
+            : t("notification.discarded_demand_message_fail"),
+          severity: mutationResult ? "success" : "error",
+        })
+      },
+      refetchQueries: [{query: DEMANDS_QUERY, variables: demandsQueryFilters}]
+    }
+  )
+  
   const [
     fetchCSVData,
     { data: csvData, loading: csvLoading, called: csvQueryCalled },
@@ -187,6 +222,12 @@ const DemandsListPage = () => {
       name: t("list.title"),
     },
   ]
+
+  const handleDiscardedDemand = (id: String) =>
+    discardedDemand({
+      variables: { demandId: id },
+    })
+
 
   const normalizeTableRow = (demand: Demand) => {
     return {
@@ -238,11 +279,22 @@ const DemandsListPage = () => {
         ),
         demand.endDate ? <DateLocale time date={demand.endDate} /> : "",
         secondsToReadbleDate(demand.leadtime),
-        <Link
-          href={`/companies/${companySlug}/demands/${demand.externalId}/edit`}
-        >
-          <EditIcon />
-        </Link>,
+        <ButtonGroup>
+          <Button variant="text"
+            href={`/companies/${companySlug}/demands/${demand.externalId}/edit`}
+          >
+            <EditIcon />
+          </Button>
+
+          <Button variant="text"
+            onClick={() => {
+              handleDiscardedDemand(demand.id)
+            } }
+          >      
+            <DeleteIcon />
+          </Button>
+        </ButtonGroup>
+          
       ],
       collapseInfo: {
         collapseHeader: [

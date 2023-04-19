@@ -139,7 +139,7 @@ module Types
     def demands_list(search_options:)
       demands = base_demands(search_options)
 
-      demands = demands.order(end_date: search_options.sort_direction || 'DESC', created_date: search_options.sort_direction || 'DESC')
+      demands = demands.where(discarded_at: nil).order(end_date: search_options.sort_direction || 'DESC', created_date: search_options.sort_direction || 'DESC')
       total_effort = demands.sum { |demand| demand.demand_efforts.sum(&:effort_value) }
 
       if search_options.per_page.present?
