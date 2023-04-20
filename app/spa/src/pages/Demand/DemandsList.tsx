@@ -135,8 +135,8 @@ const DEMANDS_CSV_QUERY = gql`
 `
 
 const DISCARD_DEMAND_MUTATION = gql`
-  mutation DiscardedDemand($demandId: String!) {
-    discardedDemand(demandId: $demandId) {
+  mutation DiscardDemand($demandId: String!) {
+    discardDemand(demandId: $demandId) {
       statusMessage
     }
   }
@@ -147,8 +147,8 @@ type DemandsCSVDTO = {
   demandsCsvData: DemandsList
 }
 
-type DiscardedDemandType = {
-  discardedDemand: {
+type DiscardDemandType = {
+  discardDemand: {
     statusMessage: string
   }
 }
@@ -190,11 +190,11 @@ const DemandsListPage = () => {
     }
   )
   const { pushMessage } = useContext(MessagesContext)
-  const [discardDemand] = useMutation<DiscardedDemandType>(
+  const [discardDemand] = useMutation<DiscardDemandType>(
     DISCARD_DEMAND_MUTATION, 
     {
       update: (_, { data }) => {
-        const mutationResult = data?.discardedDemand.statusMessage === "SUCCESS"
+        const mutationResult = data?.discardDemand.statusMessage === "SUCCESS"
   
         pushMessage({
           text: mutationResult
