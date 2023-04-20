@@ -38,6 +38,7 @@ const DEMAND_FRAGMENT = gql`
       effortDownstream
       effortUpstream
       demandBlocksCount
+      discardedAt
       product {
         name
       }
@@ -133,7 +134,7 @@ const DEMANDS_CSV_QUERY = gql`
   ${DEMAND_FRAGMENT}
 `
 
-const DISCARDED_DEMAND_MUTATION = gql`
+const DISCARD_DEMAND_MUTATION = gql`
   mutation DiscardedDemand($demandId: String!) {
     discardedDemand(demandId: $demandId) {
       statusMessage
@@ -189,8 +190,8 @@ const DemandsListPage = () => {
     }
   )
   const { pushMessage } = useContext(MessagesContext)
-  const [discardedDemand] = useMutation<DiscardedDemandType>(
-    DISCARDED_DEMAND_MUTATION, 
+  const [discardDemand] = useMutation<DiscardedDemandType>(
+    DISCARD_DEMAND_MUTATION, 
     {
       update: (_, { data }) => {
         const mutationResult = data?.discardedDemand.statusMessage === "SUCCESS"
@@ -223,8 +224,8 @@ const DemandsListPage = () => {
     },
   ]
 
-  const handleDiscardedDemand = (id: String) =>
-    discardedDemand({
+  const handleDiscardDemand = (id: String) =>
+    discardDemand({
       variables: { demandId: id },
     })
 
@@ -285,14 +286,15 @@ const DemandsListPage = () => {
           >
             <EditIcon />
           </Button>
-
-          <Button variant="text"
-            onClick={() => {
-              handleDiscardedDemand(demand.id)
-            } }
-          >      
-            <DeleteIcon />
-          </Button>
+          {!demand.discardedAt &&
+            <Button variant="text"
+              onClick={() => {
+                handleDiscardDemand(demand.id)
+              } }
+            >      
+              <DeleteIcon />
+            </Button>
+          }
         </ButtonGroup>
           
       ],

@@ -29,6 +29,7 @@ export type Demand = {
   productName: string
   demandBlocksCount: number
   demandEfforts?: DemandEffort[]
+  discardedAt?: string
 }
 
 type PortfolioUnit = {

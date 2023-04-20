@@ -26,7 +26,8 @@ module Types
 
     field :create_portfolio_unit, mutation: Mutations::CreatePortfolioUnitMutation
 
-    field :discarded_demand, mutation: Mutations::DiscardedDemandMutation
+    field :discard_demand, mutation: Mutations::DiscardDemandMutation
+
     field :update_portfolio_unit, mutation: Mutations::UpdatePortfolioUnitMutation
 
     def me

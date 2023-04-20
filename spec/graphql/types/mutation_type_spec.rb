@@ -467,21 +467,29 @@ RSpec.describe Types::MutationType do
     end
   end
 
-  describe '#discarded_demand' do
+  describe '#discard_demand' do
     let(:demand) { Fabricate :demand }
 
     let(:mutation) do
       %(mutation{
-        discardedDemand(demandId: "#{demand.id}") {
+        discardDemand(demandId: "#{demand.id}") {
           statusMessage
         }
       })
     end
 
-    context 'when demand is discarded' do
+    context 'when demand is discard' do
       it 'succeeds' do
         result = FlowClimateSchema.execute(mutation).as_json
-        expect(result['data']['discardedDemand']['statusMessage']).to eq('SUCCESS')
+        expect(result['data']['discardDemand']['statusMessage']).to eq('SUCCESS')
+      end
+    end
+
+    context 'when demand is not discard' do
+      it 'fails' do
+        allow_any_instance_of(Demand).to(receive(:discard)).and_return(false)
+        result = FlowClimateSchema.execute(mutation).as_json
+        expect(result['data']['discardDemand']['statusMessage']).to eq('FAIL')
       end
     end
   end
