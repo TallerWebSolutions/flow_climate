@@ -9,11 +9,8 @@ module Mutations
     def resolve(demand_id:)
       demand = Demand.find(demand_id)
 
-      if demand.discard_with_date(Time.zone.now)
-        { status_message: 'SUCCESS' }
-      else
-        { status_message: 'FAIL' }
-      end
+      demand.discard_with_date(Time.zone.now)
+      { status_message: 'SUCCESS' }
     end
   end
 end
