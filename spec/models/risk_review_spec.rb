@@ -63,7 +63,7 @@ RSpec.describe RiskReview do
 
     it 'returns the demands with lead time above the outlier limit' do
       expect(risk_review.outlier_demands).to match_array [first_demand, second_demand]
-      expect(other_risk_review.outlier_demands).to match_array []
+      expect(other_risk_review.outlier_demands).to be_empty
     end
   end
 

@@ -229,7 +229,7 @@ RSpec.describe DemandBlocksRepository, type: :repository do
     end
 
     context 'with no data' do
-      it { expect(described_class.instance.demand_blocks_for_products([first_product.id, second_product.id], 2.days.ago, 1.day.ago)).to match_array [] }
+      it { expect(described_class.instance.demand_blocks_for_products([first_product.id, second_product.id], 2.days.ago, 1.day.ago)).to be_empty }
     end
   end
 end

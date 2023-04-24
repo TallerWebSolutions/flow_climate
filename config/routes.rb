@@ -52,7 +52,7 @@ Rails.application.routes.draw do
       resources :customer_demands, only: :show do
         post :search, on: :collection
 
-        member do 
+        member do
           get :demand_efforts
         end
       end

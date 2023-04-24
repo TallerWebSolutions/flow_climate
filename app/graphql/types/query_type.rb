@@ -139,7 +139,8 @@ module Types
     def demands_list(search_options:)
       demands = base_demands(search_options)
 
-      demands = demands.order(end_date: search_options.sort_direction || 'DESC', created_date: search_options.sort_direction || 'DESC')
+      sort_direction = search_options.sort_direction || 'DESC'
+      demands = demands.order(end_date: sort_direction, created_date: sort_direction)
 
       demands = demands.discarded if search_options.demand_status == 'DISCARDED_DEMANDS'
 

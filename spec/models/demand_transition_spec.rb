@@ -30,7 +30,7 @@ RSpec.describe DemandTransition do
       end
 
       context 'having no data' do
-        it { expect(described_class.downstream_transitions).to match_array [] }
+        it { expect(described_class.downstream_transitions).to be_empty }
       end
     end
 
