@@ -1,6 +1,4 @@
 import { Link, useParams } from "react-router-dom"
-import useProductQuery from "../../hooks/useProductQuery"
-import ProductDetails from "../../modules/product/components/ProductDetails"
 import {
   Table,
   TableBody,
@@ -10,17 +8,49 @@ import {
   Typography,
   Button,
   Link as MaterialLink,
+  ButtonGroup,
 } from "@mui/material"
+import DeleteIcon from "@mui/icons-material/Delete"
 import { useTranslation } from "react-i18next"
+import { gql, useMutation, useQuery } from "@apollo/client"
+import { useContext } from "react"
+
+import ProductDetails from "../../modules/product/components/ProductDetails"
 import { formatDate } from "../../lib/date"
+import { Product } from "../../modules/product/product.types"
+import { MessagesContext } from "../../contexts/MessageContext"
 
 const ProductsRiskReviews = () => {
   const params = useParams()
+  const { t } = useTranslation("riskReview")
   const productSlug = params.productSlug || ""
   const companySlug = params.companySlug || ""
-  const { product, loading } = useProductQuery(productSlug)
+  const { data, loading } = useQuery<ProductRiskReviewsPageDTO>(
+    PRODUCT_RISK_REVIEWS_PAGE_QUERY,
+    {
+      variables: { productSlug },
+    }
+  )
+  const { pushMessage } = useContext(MessagesContext)
+  const [deleteRiskReview] = useMutation<DeleteRiskReviewDTO>(
+    DELETE_RISK_REVIEW_MUTATION,
+    {
+      update: (_, { data }) => {
+        const mutationResult =
+          data?.deleteProductRiskReview?.statusMessage === "SUCCESS"
 
-  const { t } = useTranslation("riskReviews")
+        pushMessage({
+          text: mutationResult
+            ? t("riskReviews.deletedRiskReviewSuccess")
+            : t("riskReviews.deletedRiskReviewFail"),
+          severity: mutationResult ? "success" : "error",
+        })
+      },
+      refetchQueries: ["ProductRiskReviewsPage"],
+    }
+  )
+
+  const product = data?.product
 
   return !!product ? (
     <ProductDetails product={product} loading={loading}>
@@ -44,10 +74,11 @@ const ProductsRiskReviews = () => {
             <TableCell>{t("riskReviews.leadTimeOutlierLimit")}</TableCell>
             <TableCell>{t("riskReviews.meetingDate")}</TableCell>
             <TableCell>{t("riskReviews.createdAt")}</TableCell>
+            <TableCell>{t("riskReviews.actions")}</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {product?.riskReviews?.length > 0 ? (
+          {!!product?.riskReviews?.length ? (
             product.riskReviews.map((riskReview) => (
               <TableRow
                 sx={{
@@ -76,15 +107,25 @@ const ProductsRiskReviews = () => {
                       format: "dd/MM/yyyy' 'HH:mm:ss",
                     })}
                 </TableCell>
+                <TableCell>
+                  <ButtonGroup>
+                    <Button
+                      variant="text"
+                      onClick={() =>
+                        deleteRiskReview({
+                          variables: { riskReviewId: riskReview.id },
+                        })
+                      }
+                    >
+                      <DeleteIcon />
+                    </Button>
+                  </ButtonGroup>
+                </TableCell>
               </TableRow>
             ))
           ) : (
-            <TableCell colSpan={5} align="center">
-              <Typography
-                variant="h6"
-                color="#1E1E1E"
-                sx={{ fontSize: 17, fontWeight: 500 }}
-              >
+            <TableCell colSpan={6} align="center">
+              <Typography variant="h6" sx={{ fontWeight: 500 }}>
                 Não existem dados de revisão de risco a serem exibidos.
               </Typography>
             </TableCell>
@@ -94,5 +135,42 @@ const ProductsRiskReviews = () => {
     </ProductDetails>
   ) : null
 }
+
+type ProductRiskReviewsPageDTO = {
+  product?: Product
+}
+
+const PRODUCT_RISK_REVIEWS_PAGE_QUERY = gql`
+  query ProductRiskReviewsPage($productSlug: String!) {
+    product(slug: $productSlug) {
+      id
+      riskReviews {
+        id
+        leadTimeOutlierLimit
+        meetingDate
+        monthlyAvgBlockedTime
+        weeklyAvgBlockedTime
+        createdAt
+      }
+      ...productDetails
+    }
+  }
+
+  ${ProductDetails.fragments}
+`
+
+type DeleteRiskReviewDTO = {
+  deleteProductRiskReview?: {
+    statusMessage?: string
+  }
+}
+
+const DELETE_RISK_REVIEW_MUTATION = gql`
+  mutation DeleteRiskReview($riskReviewId: ID!) {
+    deleteProductRiskReview(riskReviewId: $riskReviewId) {
+      statusMessage
+    }
+  }
+`
 
 export default ProductsRiskReviews

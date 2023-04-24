@@ -1,6 +1,7 @@
 import { gql, useQuery } from "@apollo/client"
 import { Product } from "../modules/product/product.types"
 
+// @TODO: this hook should be replaced with page-specific queries, so they won't be too slow.
 export const PRODUCT_QUERY = gql`
   query ProductInfo($slug: String!) {
     product(slug: $slug) {

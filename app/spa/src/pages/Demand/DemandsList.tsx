@@ -11,7 +11,8 @@ import {
 } from "@mui/material"
 import { CSVLink } from "react-csv"
 import { FieldValues } from "react-hook-form"
-import {Edit as EditIcon, Delete as DeleteIcon} from "@mui/icons-material"
+import EditIcon from "@mui/icons-material/Edit"
+import DeleteIcon from "@mui/icons-material/Delete"
 import { formatISO } from "date-fns"
 import { useSearchParams, Link as RouterLink } from "react-router-dom"
 
@@ -140,7 +141,6 @@ const DISCARD_DEMAND_MUTATION = gql`
       statusMessage
     }
   }
-
 `
 
 type DemandsCSVDTO = {
@@ -191,11 +191,11 @@ const DemandsListPage = () => {
   )
   const { pushMessage } = useContext(MessagesContext)
   const [discardDemand] = useMutation<DiscardDemandType>(
-    DISCARD_DEMAND_MUTATION, 
+    DISCARD_DEMAND_MUTATION,
     {
       update: (_, { data }) => {
         const mutationResult = data?.discardDemand.statusMessage === "SUCCESS"
-  
+
         pushMessage({
           text: mutationResult
             ? t("notification.discarded_demand_message_success")
@@ -203,10 +203,12 @@ const DemandsListPage = () => {
           severity: mutationResult ? "success" : "error",
         })
       },
-      refetchQueries: [{query: DEMANDS_QUERY, variables: demandsQueryFilters}]
+      refetchQueries: [
+        { query: DEMANDS_QUERY, variables: demandsQueryFilters },
+      ],
     }
   )
-  
+
   const [
     fetchCSVData,
     { data: csvData, loading: csvLoading, called: csvQueryCalled },
@@ -228,7 +230,6 @@ const DemandsListPage = () => {
     discardDemand({
       variables: { demandId: id },
     })
-
 
   const normalizeTableRow = (demand: Demand) => {
     return {
@@ -281,22 +282,23 @@ const DemandsListPage = () => {
         demand.endDate ? <DateLocale time date={demand.endDate} /> : "",
         secondsToReadbleDate(demand.leadtime),
         <ButtonGroup>
-          <Button variant="text"
+          <Button
+            variant="text"
             href={`/companies/${companySlug}/demands/${demand.externalId}/edit`}
           >
             <EditIcon />
           </Button>
-          {!demand.discardedAt &&
-            <Button variant="text"
+          {!demand.discardedAt && (
+            <Button
+              variant="text"
               onClick={() => {
                 handleDiscardDemand(demand.id)
-              } }
-            >      
+              }}
+            >
               <DeleteIcon />
             </Button>
-          }
-        </ButtonGroup>
-          
+          )}
+        </ButtonGroup>,
       ],
       collapseInfo: {
         collapseHeader: [

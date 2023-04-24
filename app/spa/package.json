@@ -83,18 +83,20 @@
       "complexity": [
         "error",
         17
+      ],
+      "max-depth": [
+        "error",
+        3
+      ],
+      "max-params": [
+        "error",
+        4
+      ],
+      "max-statements": [
+        "error",
+        44
       ]
-    },
-    "overrides": [
-      {
-        "files": [
-          "**/*.stories.*"
-        ],
-        "rules": {
-          "import/no-anonymous-default-export": "off"
-        }
-      }
-    ]
+    }
   },
   "browserslist": {
     "production": [

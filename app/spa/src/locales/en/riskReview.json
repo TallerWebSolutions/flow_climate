@@ -5,7 +5,10 @@
     "meetingDate": "Meeting date",
     "monthlyAvgBlockedTime": "Monthly avg blocked time",
     "weeklyAvgBlockedTime": "Weekly avg blocked time",
-    "createdAt": "Created at"
+    "createdAt": "Created at",
+    "actions": "Actions",
+    "deletedRiskReviewSuccess": "Sucessfully deleted Risk Review",
+    "deletedRiskReviewFail": "Risk Review could not be deleted"
   },
   "new": {
     "products": "Products",

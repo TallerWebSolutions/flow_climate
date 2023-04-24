@@ -7,6 +7,7 @@ import { Product } from "../product.types"
 import { Tabs } from "../../../components/Tabs"
 import BasicPage from "../../../components/BasicPage"
 import ProductGeneralInfo from "./ProductGeneralInfo"
+import { gql } from "@apollo/client"
 
 type ProductDetailsProps = {
   product: Product
@@ -22,8 +23,6 @@ const ProductDetails = ({
   const { pathname } = useLocation()
   const { t } = useTranslation(["products"])
   const params = useParams()
-
-  if (!product && !loading) return <strong>{t("products.notFound")}</strong>
 
   const productSlug = params.productSlug || ""
   const productName = product?.name || ""
@@ -62,7 +61,7 @@ const ProductDetails = ({
       {product && (
         <>
           <Button
-            href={`/companies/${company.slug}/jira/products/${product.slug}/jira_product_configs`}
+            href={`/companies/${companySlug}/jira/products/${product.slug}/jira_product_configs`}
           >
             {t("product.show.jiraProductConfigs")}
           </Button>
@@ -82,5 +81,47 @@ const ProductDetails = ({
     </BasicPage>
   )
 }
+
+ProductDetails.fragments = gql`
+  fragment productDetails on Product {
+    name
+    createdDemandsCount
+    deliveredDemandsCount
+    remainingBacklogCount
+    upstreamDemandsCount
+    downstreamDemandsCount
+    discardedDemandsCount
+    unscoredDemandsCount
+    demandsBlocksCount
+    portfolioUnitsCount
+    averageSpeed
+    averageQueueTime
+    averageTouchTime
+    leadtimeP95
+    leadtimeP80
+    leadtimeP65
+    company {
+      id
+      slug
+      name
+    }
+    latestDeliveries {
+      id
+      externalId
+      endDate
+      leadtime
+      demandBlocksCount
+      product {
+        id
+        slug
+        name
+      }
+      project {
+        id
+        name
+      }
+    }
+  }
+`
 
 export default ProductDetails

@@ -72,18 +72,23 @@ const PortfolioUnitsPage = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {product?.portfolioUnits.map((unit) => {
+            {product?.portfolioUnits?.map((unit) => {
               return (
                 <TableRow>
                   <TableCell>{unit.parent?.name}</TableCell>
                   <TableCell>{unit.portfolioUnitTypeName}</TableCell>
                   <TableCell>{unit.name}</TableCell>
                   <TableCell>{formatCurrency(unit.totalCost ?? 0)}</TableCell>
+                  <TableCell>{unit.totalHours?.toFixed(2)}</TableCell>
                   <TableCell>
-                    {unit.totalHours?.toFixed(2)}
-                  </TableCell>
-                  <TableCell>
-                  <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 3, mr: 3 }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        mb: 3,
+                        mr: 3,
+                      }}
+                    >
                       <Button
                         component={RouterLink}
                         to={`/companies/${companySlug}/products/${productSlug}/portfolio_units/${unit?.id}/edit`}

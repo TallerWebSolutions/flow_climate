@@ -3,6 +3,7 @@
 module Types
   class MutationType < Types::BaseObject
     field :create_product_risk_review, mutation: Mutations::CreateProductRiskReview
+    field :delete_product_risk_review, mutation: Mutations::DeleteProductRiskReview
 
     field :create_project_additional_hours, mutation: Mutations::CreateProjectAdditionalHoursMutation
 

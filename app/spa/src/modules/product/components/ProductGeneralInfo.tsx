@@ -18,12 +18,14 @@ const ProductGeneralInfo = ({ product }: ProductGeneralInfoProps) => {
         <ProductGeneralInfoTable product={product} />
       </Grid>
 
-      <Grid item xs={8} sx={{ padding: "16px" }}>
-        <LatestDeliveriesTable
-          demands={lastestDeliveries}
-          baseLink={baseLink}
-        />
-      </Grid>
+      {lastestDeliveries && (
+        <Grid item xs={8} sx={{ padding: "16px" }}>
+          <LatestDeliveriesTable
+            demands={lastestDeliveries}
+            baseLink={baseLink}
+          />
+        </Grid>
+      )}
     </Grid>
   )
 }

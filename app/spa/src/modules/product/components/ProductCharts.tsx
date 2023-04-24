@@ -11,9 +11,9 @@ type ProductChartsProps = {
 const ProductCharts = ({ product }: ProductChartsProps) => {
   const { t } = useTranslation("products")
   const leadtimeEvolutionData = product.leadtimeEvolutionData
-  const xAxis = leadtimeEvolutionData.xAxis
-  const yAxisInMonth = leadtimeEvolutionData.yAxisInMonth
-  const yAxisInAccumulated = leadtimeEvolutionData.yAxisAccumulated
+  const xAxis = leadtimeEvolutionData?.xAxis || []
+  const yAxisInMonth = leadtimeEvolutionData?.yAxisInMonth || []
+  const yAxisInAccumulated = leadtimeEvolutionData?.yAxisAccumulated || []
 
   return (
     <>

@@ -66,7 +66,7 @@ type CreateProductRiskReviewDTO = {
 
 const CreateProductRiskReview = () => {
   const { productSlug } = useParams()
-  const { t } = useTranslation("riskReviews")
+  const { t } = useTranslation("riskReview")
   const navigate = useNavigate()
   const { data, loading } = useQuery<ProductDTO>(PRODUCT_QUERY, {
     variables: { productSlug },

@@ -10,10 +10,11 @@ import {
   TableCellProps,
   TableRowProps,
 } from "@mui/material"
+import { useState } from "react"
+import { useTranslation } from "react-i18next"
+
 import { secondsToDays } from "../../../lib/date"
 import { ReadMoreButton } from "../../../components/ReadMoreButton"
-import { useTranslation } from "react-i18next"
-import { useState } from "react"
 import { Product } from "../product.types"
 
 const Row = (props: TableRowProps) => (
@@ -204,7 +205,7 @@ const ProductGeneralInfoTable = ({ product }: ProductGeneralInfoTableProps) => {
           <Row>
             <Cell>
               {tDemands("list.demandsTable.averageSpeed", {
-                numberOfDemandsPerDay: product.averageSpeed.toFixed(2),
+                numberOfDemandsPerDay: product.averageSpeed?.toFixed(2),
               })}
             </Cell>
           </Row>

@@ -13,13 +13,13 @@ export type RiskReview = {
 }
 
 export type Product = {
-  company: Company
   id: string
   name: string
   slug: string
-  latestDeliveries: Demand[]
-  riskReviews: RiskReview[]
-  portfolioUnits: PortfolioUnit[]
+  company?: Company
+  latestDeliveries?: Demand[]
+  riskReviews?: RiskReview[]
+  portfolioUnits?: PortfolioUnit[]
   remainingBacklogCount: number
   createdDemandsCount: number
   deliveredDemandsCount: number
@@ -29,12 +29,11 @@ export type Product = {
   unscoredDemandsCount: number
   demandsBlocksCount: number
   portfolioUnitsCount: number
-  averageSpeed: number
+  averageSpeed?: number
   averageQueueTime: number
   averageTouchTime: number
   leadtimeP95: number
   leadtimeP80: number
   leadtimeP65: number
-
-  leadtimeEvolutionData: LeadtimeEvolutionChart
+  leadtimeEvolutionData?: LeadtimeEvolutionChart
 }

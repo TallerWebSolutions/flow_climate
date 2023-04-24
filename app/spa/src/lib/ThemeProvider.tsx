@@ -3,6 +3,7 @@ import {
   createTheme,
   ThemeProvider as MaterialThemeProvider,
 } from "@mui/material/styles"
+import { GlobalStyles } from "@mui/material"
 
 const theme = createTheme({
   palette: {
@@ -108,7 +109,10 @@ const theme = createTheme({
 })
 
 const ThemeProvider = ({ children }: { children: ReactElement }) => (
-  <MaterialThemeProvider theme={theme}>{children}</MaterialThemeProvider>
+  <MaterialThemeProvider theme={theme}>
+    <GlobalStyles styles={{ body: { padding: 0, margin: 0 } }} />
+    {children}
+  </MaterialThemeProvider>
 )
 
 export default ThemeProvider

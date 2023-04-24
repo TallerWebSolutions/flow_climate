@@ -5,7 +5,10 @@
     "meetingDate": "Data da Reunião",
     "monthlyAvgBlockedTime": "Tempo médio de bloqueio mensal",
     "weeklyAvgBlockedTime": "Tempo médio de bloqueio semanal",
-    "createdAt": "Criado em"
+    "createdAt": "Criado em",
+    "actions": "Ações",
+    "deletedRiskReviewSuccess": "Revisão de Risco excluída com sucesso",
+    "deletedRiskReviewFail": "Não foi possível excluir a Revisão de Risco"
   },
   "new": {
     "products": "Produtos",
