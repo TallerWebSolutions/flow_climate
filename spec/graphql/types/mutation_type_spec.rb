@@ -587,4 +587,31 @@ RSpec.describe Types::MutationType do
       end
     end
   end
+
+  describe '#delete_product_risk_review' do
+    let(:risk_review) { Fabricate :risk_review }
+    let(:mutation) do
+      %(mutation {
+        deleteProductRiskReview(riskReviewId: "#{risk_review.id}") {
+          statusMessage
+        }
+      })
+    end
+
+    context 'when the risk review exists' do
+      it 'succeeds' do
+        result = FlowClimateSchema.execute(mutation).as_json
+        expect(result['data']['deleteProductRiskReview']['statusMessage']).to eq('SUCCESS')
+        expect(RiskReview.all.count).to eq 0
+      end
+    end
+
+    context 'when the object is not valid' do
+      it 'fails' do
+        allow_any_instance_of(RiskReview).to(receive(:destroy)).and_return(false)
+        result = FlowClimateSchema.execute(mutation).as_json
+        expect(result['data']['deleteProductRiskReview']['statusMessage']).to eq('FAIL')
+      end
+    end
+  end
 end

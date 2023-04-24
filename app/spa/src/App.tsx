@@ -146,7 +146,7 @@ const App = () => {
               path="/companies/:companySlug/products/:productSlug/portfolio_units/new"
               element={<CreatePortfolioUnits />}
             />
-            <Route 
+            <Route
               path="/companies/:companySlug/products/:productSlug/portfolio_units/:unitId/edit"
               element={<EditPortfolioUnits />}
             />

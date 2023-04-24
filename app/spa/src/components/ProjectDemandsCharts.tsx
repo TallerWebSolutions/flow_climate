@@ -77,10 +77,11 @@ const ProjectDemandsCharts = ({
       id: t("charts_tab.project_charts.operational_math_risk_evolution_chart"),
       data: projectConsolidationsWeekly.map(
         ({ consolidationDate, operationalRisk }) => {
-          return ({
-          x: consolidationDate,
-          y: operationalRisk * 100,
-        })} 
+          return {
+            x: consolidationDate,
+            y: operationalRisk * 100,
+          }
+        }
       ),
     },
   ]

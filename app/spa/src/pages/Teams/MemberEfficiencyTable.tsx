@@ -1,6 +1,10 @@
 import { useTranslation } from "react-i18next"
 
-import { Link as RouterLink, useParams, useSearchParams } from "react-router-dom"
+import {
+  Link as RouterLink,
+  useParams,
+  useSearchParams,
+} from "react-router-dom"
 import { gql, useQuery } from "@apollo/client"
 import {
   Button,
@@ -64,7 +68,7 @@ const MemberEfficiencyTable = () => {
       >
         {membershipEfficency.membership?.teamMemberName}
       </Link>,
-      
+
       membershipEfficency.memberCapacityValue,
       membershipEfficency.effortInMonth?.toFixed(2),
       membershipEfficency.realizedMoneyInMonth?.toLocaleString("pt-br", {
@@ -74,7 +78,6 @@ const MemberEfficiencyTable = () => {
       membershipEfficency.cardsCount,
       membershipEfficency.avgHoursPerDemand?.toFixed(2),
     ]
-      
   )
 
   return (
