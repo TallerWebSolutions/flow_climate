@@ -29,7 +29,8 @@ function buildLineChart(lineDiv) {
             },
             labels: {
                 format: '{value:.$(lineDiv.data(\'decimals\'))f}'
-            }
+            },
+            softMax: 100,
         },
             {
                 title: {
