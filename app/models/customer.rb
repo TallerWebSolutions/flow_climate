@@ -50,6 +50,23 @@ class Customer < ApplicationRecord
     devise_customers << devise_customer
   end
 
+  def customer_product
+    periods = [6.months.ago.end_of_month, 5.months.ago.end_of_month, 4.months.ago.end_of_month, 3.months.ago.end_of_month, 2.months.ago.end_of_month, 1.month.ago.end_of_month]
+    periods.map.with_index do |value, index|
+      if periods[index + 1].nil?
+        {
+          bugs: (100 * demands.to_created_date(value, Time.zone.today.end_of_day).bug.size) / (demands.to_created_date(value, Time.zone.today.end_of_day).size.nonzero? || 1),
+          date: Time.zone.today.end_of_day.strftime('%Y-%m-%d')
+        }
+      else
+        {
+          bugs: (100 * demands.to_created_date(value, periods[index + 1]).bug.size) / (demands.to_created_date(value, periods[index + 1]).size.nonzero? || 1),
+          date: periods[index + 1].strftime('%Y-%m-%d')
+        }
+      end
+    end
+  end
+
   def active?
     projects.active.present?
   end

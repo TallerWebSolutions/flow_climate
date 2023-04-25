@@ -758,6 +758,7 @@ pt-BR:
       throughput:
         title: 'Throughput'
       delivered_scope: '% Escopo Entregue'
+      project_bugs: '% Bugs'
       delivered_hours: '% Horas Entregues'
       operational_risk:
         title: 'Risco Operacional'
@@ -768,6 +769,7 @@ pt-BR:
       effort_hours_info: 'Horas de Esforço'
       throughput_in_month:
         title: "TH no Mês"
+      customer_project_bugs: "Bugs por período"
       value_per_demand: "Valor por demanda"
       value_per_demand_in_month: "Valor por mês"
   demands:
@@ -844,6 +846,8 @@ pt-BR:
         tooltipsufix: 'demanda(s)'
         title: 'Vazão'
       creation_date: 'Criadas'
+      bugs:
+        title: 'Bugs'
       demands:
         title: 'Demandas'
       commitment_date: 'Compromisso'

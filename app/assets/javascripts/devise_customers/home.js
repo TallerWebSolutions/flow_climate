@@ -15,3 +15,8 @@ const customerThroughput = $("#customer-throughput-dashboard");
 if (customerThroughput.length !== 0) {
   buildLineChart(customerThroughput);
 }
+
+const customerBugs = $("#customer-bugs");
+if (customerBugs.length !== 0) {
+  buildLineChart(customerBugs)
+}

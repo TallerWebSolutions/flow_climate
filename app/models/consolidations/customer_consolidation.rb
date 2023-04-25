@@ -52,5 +52,9 @@ module Consolidations
 
     validates :consolidation_date, presence: true
     validates :customer, uniqueness: { scope: :consolidation_date }
+
+    def customer_project
+      customer.customer_product
+    end
   end
 end

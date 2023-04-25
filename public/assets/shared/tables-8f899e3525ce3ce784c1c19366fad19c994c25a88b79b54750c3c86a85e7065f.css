@@ -18,6 +18,26 @@
 
 .bottom-button {
     position: absolute;
+    bottom: 0;
+}
+.bottom-right-button {
+    position: absolute;
     right: 0;
     bottom: 0;
+}
+
+.row-equal {
+    display: flex;
+    display: -webkit-flex;
+    flex-wrap: wrap;
+}
+
+.truncated-table-column {
+    white-space: nowrap;
+    text-overflow:ellipsis;
+    overflow: hidden;
+}
+
+.cell-small {
+    max-width: 130px;
 }

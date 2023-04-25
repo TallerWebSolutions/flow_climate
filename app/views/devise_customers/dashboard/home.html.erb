@@ -93,6 +93,24 @@
   </div>
 </div>
 
+<div class="col-xs-6">
+  <h4><%= I18n.t('customer.charts.customer_project_bugs') %></h4>
+  <div id="customer-bugs"
+       class="flow-chart"
+       data-title=""
+       data-xcategories="<%=  @customer_consolidations.map { |item| item.customer_project }.uniq.flatten.map { |bugs| bugs[:date] }.to_json %>"
+       data-ytitle="<%= I18n.t('general.bugs') %>"
+       data-prefix=""
+       data-tooltipsuffix="%"
+       data-datalabelsuffix=""
+       data-series="<%= [
+                          { type: 'column', name: I18n.t('customer.charts.project_bugs'), data: @customer_consolidations.map { |item| item.customer_project }.uniq.flatten.map { |bugs| bugs[:bugs] }},
+                        ].to_json %>"
+       data-stacking=""
+       data-decimals="0">
+  </div>
+</div>
+
 <% content_for :javascript do %>
   <%= javascript_include_tag 'devise_customers/home' %>
 <% end %>

@@ -669,6 +669,7 @@ en:
       throughput:
         title: "Throughput"
       delivered_scope: "% Delivered Scope"
+      project_bugs: '% Bugs'
       delivered_hours: "% Delivered Hours"
       operational_risk:
         title: "Operational Risk"
@@ -679,6 +680,7 @@ en:
       effort_hours_info: "Effort Hours"
       throughput_in_month:
         title: "TH in the Month"
+      customer_project_bugs: "Bugs by period"
       value_per_demand: "Value per demand"
       value_per_demand_in_month: "Value per month"
   demands:
@@ -766,6 +768,8 @@ en:
       demands_by_project:
         title: "Demands by Project"
       flow_data: "Flow Data"
+      bugs:
+        title: 'Bugs'
       demands:
         title: "Demands"
       hours:
