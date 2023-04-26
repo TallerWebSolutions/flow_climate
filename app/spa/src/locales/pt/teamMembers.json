@@ -108,5 +108,8 @@
     "throughput": "Taxa de Transferência",
     "averagePullInterval": "Intervalo Médio de Extração",
     "hoursPerProject": "Horas por Projeto"
+  },
+  "general": {
+    "notFound": "Pessoa não encontrada."
   }
 }

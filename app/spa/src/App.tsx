@@ -135,7 +135,7 @@ const App = () => {
               path="/companies/:companySlug/products/:productSlug/risk_reviews_tab"
               element={<ProductsRiskReviews />}
             />
-            <Route 
+            <Route
               path="/companies/:companySlug/products/:productSlug/service_delivery_review_tab"
               element={<ServiceDeliveryReview />}
             />

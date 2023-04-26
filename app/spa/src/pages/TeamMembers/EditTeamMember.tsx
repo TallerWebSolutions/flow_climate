@@ -17,7 +17,7 @@ import BasicPage from "../../components/BasicPage"
 import { MeContext } from "../../contexts/MeContext"
 
 const FORM_VALUES_QUERY = gql`
-  query EditTeamMemberFormValues($teamMemberId: Int!) {
+  query EditTeamMemberFormValues($teamMemberId: ID!) {
     teamMember(id: $teamMemberId) {
       id
       name
@@ -75,7 +75,7 @@ const EditTeamMember = () => {
   const { teamMemberId } = useParams()
   const { me } = useContext(MeContext)
   const { register, handleSubmit } = useForm()
-  const { data, loading } = useQuery(FORM_VALUES_QUERY, {
+  const { data, loading, error } = useQuery(FORM_VALUES_QUERY, {
     variables: {
       teamMemberId: Number(teamMemberId),
     },
@@ -84,8 +84,10 @@ const EditTeamMember = () => {
     EDIT_TEAM_MEMBER_MUTATION
   )
 
+  console.log(error)
+
   const teamMember = data?.teamMember
-  if (!teamMember) return <strong>{t("teamMembers.notFound")}</strong>
+  if (!teamMember) return <strong>{t("general.notFound")}</strong>
 
   const companyUrl = `/companies/${me?.currentCompany?.slug}`
   const teamMembersUrl = `${companyUrl}/team_members`

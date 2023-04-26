@@ -108,5 +108,8 @@
     "throughput": "Throughput",
     "averagePullInterval": "Average Pull Interval",
     "hoursPerProject": "Hours per Project"
+  },
+  "general": {
+    "notFound": "Person not found."
   }
 }
