@@ -84,8 +84,6 @@ const EditTeamMember = () => {
     EDIT_TEAM_MEMBER_MUTATION
   )
 
-  console.log(error)
-
   const teamMember = data?.teamMember
   if (!teamMember) return <strong>{t("general.notFound")}</strong>
 
