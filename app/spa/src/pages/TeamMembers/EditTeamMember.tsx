@@ -75,7 +75,7 @@ const EditTeamMember = () => {
   const { teamMemberId } = useParams()
   const { me } = useContext(MeContext)
   const { register, handleSubmit } = useForm()
-  const { data, loading, error } = useQuery(FORM_VALUES_QUERY, {
+  const { data, loading } = useQuery(FORM_VALUES_QUERY, {
     variables: {
       teamMemberId: Number(teamMemberId),
     },
