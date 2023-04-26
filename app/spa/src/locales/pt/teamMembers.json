@@ -51,6 +51,12 @@
       "cancel": "Cancelar"
     }
   },
+  "delete": {
+    "confirm": {
+      "title": "Excluir Pessoa",
+      "body": "Esta ação é permanente"
+    }
+  },
   "dashboard": {
     "name": "Nome",
     "memberInfoTitle": "Informação de Usuário",

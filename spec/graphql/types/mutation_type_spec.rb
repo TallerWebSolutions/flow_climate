@@ -157,6 +157,43 @@ RSpec.describe Types::MutationType do
     end
   end
 
+
+  describe '#delete_team_member' do
+    let(:team_member) { Fabricate :team_member }
+    let(:mutation) do
+      %(mutation {
+            deleteTeamMember(teamMemberId: "#{team_member.id}") {
+              statusMessage
+            }
+          })
+    end
+
+    context 'when the team member exists' do
+      it 'succeeds' do
+        result = FlowClimateSchema.execute(mutation).as_json
+        expect(result['data']['deleteTeamMember']['statusMessage']).to eq('SUCCESS')
+        expect(TeamMember.all.count).to eq 0
+      end
+    end
+
+    context 'when the team member does not exist' do
+      it 'fails' do
+        allow(TeamMember).to(receive(:find_by)).and_return(nil)
+        result = FlowClimateSchema.execute(mutation).as_json
+        expect(result['data']['deleteTeamMember']['statusMessage']).to eq('FAIL')
+        expect(TeamMember.all.count).to eq 1
+      end
+    end
+
+    context 'when the object is not valid' do
+      it 'fails' do
+        allow_any_instance_of(TeamMember).to(receive(:destroy)).and_return(false)
+        result = FlowClimateSchema.execute(mutation).as_json
+        expect(result['data']['deleteTeamMember']['statusMessage']).to eq('FAIL')
+      end
+    end
+  end
+
   describe '#save_membership' do
     let(:team) { Fabricate :team }
     let(:membership) { Fabricate :membership, team: team }
@@ -262,7 +299,6 @@ RSpec.describe Types::MutationType do
 
       it 'succeeds' do
         result = FlowClimateSchema.execute(mutation).as_json 
-        puts result
         expect(result['data']['createServiceDeliveryReview']['statusMessage']).to eq('SUCCESS')
       end
     end

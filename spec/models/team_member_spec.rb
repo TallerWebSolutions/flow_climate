@@ -11,7 +11,7 @@ RSpec.describe TeamMember do
     it { is_expected.to have_many(:memberships).dependent(:destroy) }
     it { is_expected.to have_many(:teams).through(:memberships) }
     it { is_expected.to have_many(:demand_comments).dependent(:nullify) }
-    it { is_expected.to have_many(:demand_blocks).inverse_of(:blocker).dependent(:destroy) }
+    it { is_expected.to have_many(:demand_blocks).inverse_of(:blocker).dependent(:restrict_with_error) }
     it { is_expected.to have_many(:demand_unblocks).class_name('DemandBlock').inverse_of(:unblocker).dependent(:destroy) }
     it { is_expected.to have_many(:demands).through(:memberships) }
     it { is_expected.to have_many(:projects).through(:demands) }

@@ -11,6 +11,8 @@ module Types
     field :delete_team, mutation: Mutations::DeleteTeamMutation
     field :update_team, mutation: Mutations::UpdateTeamMutation
 
+    field :delete_team_member, mutation: Mutations::DeleteTeamMemberMutation
+
     field :create_work_item_type, mutation: Mutations::CreateWorkItemTypeMutation
     field :delete_work_item_type, mutation: Mutations::DeleteWorkItemTypeMutation
 

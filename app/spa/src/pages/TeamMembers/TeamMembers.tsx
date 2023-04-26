@@ -2,15 +2,28 @@ import { useContext } from "react"
 import { useTranslation } from "react-i18next"
 import CheckIcon from "@mui/icons-material/Check"
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined"
-import { FormControl, InputLabel, Link, MenuItem, Select } from "@mui/material"
+import {
+  Box,
+  Button,
+  FormControl,
+  Grid,
+  InputLabel,
+  Link,
+  MenuItem,
+  Select,
+  Typography,
+} from "@mui/material"
 import { Link as RouterLink, useSearchParams } from "react-router-dom"
 
 import BasicPage from "../../components/BasicPage"
 import Table from "../../components/ui/Table"
 import { MeContext } from "../../contexts/MeContext"
-import { gql, useQuery } from "@apollo/client"
+import { gql, useMutation, useQuery } from "@apollo/client"
 import { TeamMember } from "../../modules/teamMember/teamMember.types"
 import { SelectChangeEvent } from "@mui/material/Select/SelectInput"
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined"
+import { useConfirm } from "material-ui-confirm"
+import { MessagesContext } from "../../contexts/MessageContext"
 
 const TEAM_MEMBERS_QUERY = gql`
   query TeamMembers($companyId: Int!, $active: Boolean!) {
@@ -28,14 +41,29 @@ const TEAM_MEMBERS_QUERY = gql`
   }
 `
 
+const DELETE_TEAM_MEMBER_MUTATION = gql`
+  mutation DeleteTeamMember($teamMemberId: ID!) {
+    deleteTeamMember(teamMemberId: $teamMemberId) {
+      statusMessage
+    }
+  }
+`
+
 type TeamMembersDTO = {
   teamMembers: TeamMember[]
+}
+
+type DeleteTeamMemberTypeDTO = {
+  deleteTeamMember: {
+    statusMessage: string
+  }
 }
 
 const TeamMembers = () => {
   const { t } = useTranslation(["teamMembers"])
   const { me } = useContext(MeContext)
   const [searchParams, setSearchParams] = useSearchParams()
+  const { pushMessage } = useContext(MessagesContext)
   const handleChangeActiveMembers = (event: SelectChangeEvent) =>
     setSearchParams((prev) => {
       prev.set("activeMembers", event.target.value)
@@ -51,6 +79,35 @@ const TeamMembers = () => {
       name: t("list.title"),
     },
   ]
+
+  const [deleteTeamMember] = useMutation<DeleteTeamMemberTypeDTO>(
+    DELETE_TEAM_MEMBER_MUTATION,
+    {
+      update: (_, { data }) => {
+        const mutationResult =
+          data?.deleteTeamMember.statusMessage === "SUCCESS"
+
+        pushMessage({
+          text: mutationResult ? "SUCCESS" : "FAIL",
+          severity: mutationResult ? "success" : "error",
+        })
+      },
+      refetchQueries: [{ query: TEAM_MEMBERS_QUERY }],
+    }
+  )
+
+  const deleteMemberConfirmationModal = useConfirm()
+
+  function handleOnDeleteMember(id: string) {
+    deleteMemberConfirmationModal({
+      title: t("delete.confirm.title"),
+      description: t("delete.confirm.body"),
+    }).then(() => {
+      deleteTeamMember({
+        variables: { teamMemberId: id },
+      })
+    })
+  }
 
   const membersColumns = [
     t("columns.name"),
@@ -82,9 +139,20 @@ const TeamMembers = () => {
       teamMember.endDate
         ? t("columns.status.inactive")
         : t("columns.status.active"),
-      <RouterLink to={`${companyUrl}/team_members/${teamMember.id}/edit`}>
-        <EditOutlinedIcon color="primary" />
-      </RouterLink>,
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
+        <RouterLink to={`${companyUrl}/team_members/${teamMember.id}/edit`}>
+          <EditOutlinedIcon color="primary" />
+        </RouterLink>
+
+        <Button onClick={() => handleOnDeleteMember(teamMember.id)}>
+          <DeleteOutlineOutlinedIcon color={"primary"} />
+        </Button>
+      </Box>,
     ]) || []
 
   return (

@@ -51,6 +51,12 @@
       "cancel": "Cancel"
     }
   },
+  "delete": {
+    "confirm": {
+      "title": "Delete Person",
+      "body": "This action is permanent."
+    }
+  },
   "dashboard": {
     "name": "Name",
     "memberInfoTitle": "User Info",
