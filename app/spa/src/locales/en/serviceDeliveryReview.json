@@ -1,0 +1,27 @@
+{
+    "serviceDeliveryReview": {
+        "notFound": "There is no service delivery review data to display.",
+        "new": "New review"
+    },
+    "newModal": {
+        "title": "New service delivery review",
+        "revisionDate": "Revision date",
+        "slaToPull": "SLA para puxar expedites",
+        "minExpediteLate": "SLA to pull expedites",
+        "maxExpediteLate": "Maximum expedite late",
+        "minLeadtime": "Minimum lead time",
+        "maxLeadtime": "Maximum lead time",
+        "minQuality": "Minimum quality",
+        "maxQuality": "Maximum quality",
+        "hours": "hours",
+        "save": "Save",
+        "cancel": "Cancel"
+    },
+    "table": {
+        "revisionDate": "Revision date",
+        "slaToPull": "SLA to pull expedites",
+        "lataDispatches": "Late dispatches",
+        "leadtime": "Leadtime",
+        "quality": "Quality"
+    }
+}

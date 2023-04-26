@@ -17,7 +17,9 @@
   },
 
   "products": {
-    "title": "Produtos"
+    "title": "Produtos",
+    "riskReview": "Risk review",
+    "serviceDeliveryReview": "Service delivery review"
   },
 
   "portfolioUnits": {

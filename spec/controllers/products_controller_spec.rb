@@ -56,6 +56,12 @@ RSpec.describe ProductsController do
       it { expect(response).to redirect_to new_user_session_path }
     end
 
+    describe 'GET #service_delivery_review' do
+      before { get :service_delivery_review_tab, params: { company_id: 'bar', id: 'foo' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
+
     describe 'GET #service_delivery_reviews_tab' do
       before { get :service_delivery_reviews_tab, params: { company_id: 'bar', id: 'foo' } }
 
@@ -539,6 +545,16 @@ RSpec.describe ProductsController do
 
       it 'renders project spa page' do
         get :risk_reviews_tab, params: { company_id: company, id: product }
+
+        expect(response).to render_template 'spa-build/index'
+      end
+    end
+
+    describe 'GET #service_delivery_review_tab' do
+      let!(:product) { Fabricate :product, company: company }
+
+      it 'renders project spa page' do
+        get :service_delivery_review_tab, params: { company_id: company, id: product }
 
         expect(response).to render_template 'spa-build/index'
       end

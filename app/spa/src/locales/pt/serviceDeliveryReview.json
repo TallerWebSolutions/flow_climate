@@ -1,0 +1,27 @@
+{
+    "serviceDeliveryReview": {
+        "notFound": "Não há dados de revisão de entrega de serviço para exibir.",
+        "new": "Nova revisão"
+    },
+    "newModal": {
+        "title": "Nova service delivery review",
+        "revisionDate": "Data da revisão",
+        "slaToPull": "SLA para puxar expedites",
+        "minExpediteLate": "Mínimo expedite atrasadas",
+        "maxExpediteLate": "Máximo expedites atrasadas",
+        "minLeadtime": "Mínimo lead time",
+        "maxLeadtime": "Máximo lead time",
+        "minQuality": "Mínimo qualidade",
+        "maxQuality": "Máximo qualidade",
+        "hours": "horas",
+        "save": "Salvar",
+        "cancel": "Cancelar"
+    },
+    "table": {
+        "revisionDate": "Data da revisão",
+        "slaToPull": "SLA para puxar expedites",
+        "expediteLate": "Expedites atrasadas",
+        "leadtime": "Leadtime",
+        "quality": "Qualidade"
+    }
+}

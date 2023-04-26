@@ -31,6 +31,8 @@ module Types
 
     field :update_portfolio_unit, mutation: Mutations::UpdatePortfolioUnitMutation
 
+    field :create_service_delivery_review, mutation: Mutations::CreateServiceDeliveryReviewMutation
+
     def me
       context[:current_user]
     end

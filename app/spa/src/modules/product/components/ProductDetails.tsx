@@ -50,6 +50,10 @@ const ProductDetails = ({
       label: t("products.riskReview"),
       to: `/companies/${companySlug}/products/${productSlug}/risk_reviews_tab`,
     },
+    {
+      label: t("products.serviceDeliveryReview"),
+      to: `/companies/${companySlug}/products/${productSlug}/service_delivery_review_tab`
+    }
   ]
 
   return (
