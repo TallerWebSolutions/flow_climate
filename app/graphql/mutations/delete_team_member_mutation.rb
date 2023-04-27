@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Mutations
   class DeleteTeamMemberMutation < Mutations::BaseMutation
     argument :team_member_id, ID, required: true

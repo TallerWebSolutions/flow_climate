@@ -157,7 +157,6 @@ RSpec.describe Types::MutationType do
     end
   end
 
-
   describe '#delete_team_member' do
     let(:team_member) { Fabricate :team_member }
     let(:mutation) do
@@ -298,7 +297,7 @@ RSpec.describe Types::MutationType do
       end
 
       it 'succeeds' do
-        result = FlowClimateSchema.execute(mutation).as_json 
+        result = FlowClimateSchema.execute(mutation).as_json
         expect(result['data']['createServiceDeliveryReview']['statusMessage']).to eq('SUCCESS')
       end
     end
@@ -324,7 +323,7 @@ RSpec.describe Types::MutationType do
 
       it 'fails' do
         allow_any_instance_of(ServiceDeliveryReview).to(receive(:valid?)).and_return(false)
-        result = FlowClimateSchema.execute(mutation).as_json 
+        result = FlowClimateSchema.execute(mutation).as_json
         expect(result['data']['createServiceDeliveryReview']['statusMessage']).to eq('FAIL')
       end
     end
