@@ -34,12 +34,12 @@ const ServiceDeliveryReviewTable = ({ productId }: ServiceDeliveryReviewTablePro
                 </TableHead>
                 <TableBody>
                     {!loading && data?.serviceDeliveryReview && data?.serviceDeliveryReview.map((sdr: any) => {
-                        const delayedExpediteBottomThreshold = sdr?.delayedExpediteBottomThreshold * 100
-                        const delayedExpediteTopThreshold = sdr?.delayedExpediteTopThreshold * 100
-                        const leadTimeBottomThreshold = sdr?.leadTimeBottomThreshold * 100
-                        const leadTimeTopThreshold = sdr?.leadTimeTopThreshold * 100
-                        const qualityBottomThreshold = sdr?.qualityBottomThreshold * 100
-                        const qualityTopThreshold = sdr?.qualityTopThreshold * 100
+                        const delayedExpediteBottomThreshold = sdr?.delayedExpediteBottomThreshold * 10
+                        const delayedExpediteTopThreshold = sdr?.delayedExpediteTopThreshold * 10
+                        const leadTimeBottomThreshold = sdr?.leadTimeBottomThreshold * 10
+                        const leadTimeTopThreshold = sdr?.leadTimeTopThreshold * 10
+                        const qualityBottomThreshold = sdr?.qualityBottomThreshold * 10
+                        const qualityTopThreshold = sdr?.qualityTopThreshold * 10
                         return (
                         <TableRow
                             sx={{
