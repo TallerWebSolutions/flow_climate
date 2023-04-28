@@ -95,7 +95,7 @@ const PROJECT_CHART_QUERY = gql`
 
 type MountSearchLinkProps = {
   companySlug: string
-  state: string
+  state?: string
   projectID: string
 }
 
@@ -113,8 +113,8 @@ const mountDemandsSearchLink = ({
   companySlug,
 }: MountSearchLinkProps) => {
   return (
-    `/companies/${companySlug}/demands/demands_list_by_ids?` +
-    `demand_state=${state}&flow_object_id=${projectID}&object_type=Project`
+    `/companies/${companySlug}/demands` +
+    `?searchText=&project=${projectID}&state=${state}`
   )
 }
 
@@ -163,7 +163,6 @@ export const ProjectChartsTable = () => {
 
   const projectID = project.id
   const companySlug = project.company?.slug || ""
-
   const baseLink = `/companies/${project?.company?.slug}`
 
   return (
@@ -224,6 +223,8 @@ export const ProjectChartsTable = () => {
                       projectID,
                       companySlug,
                       state: "created",
+                      
+
                     })}
                     sx={{ color: "info.dark", textDecoration: "none" }}
                   >
