@@ -12,6 +12,18 @@ export type RiskReview = {
   createdAt?: string
 }
 
+export type ServiceDeliveryReview = {
+  id: string
+  delayedExpediteBottomThreshold: number
+  delayedExpediteTopThreshold: number
+  expediteMaxPullTimeSla: number
+  leadTimeBottomThreshold: number
+  leadTimeTopThreshold: number
+  meetingDate: string
+  qualityBottomThreshold: number
+  qualityTopThreshold: number
+}
+
 export type Product = {
   id: string
   name: string

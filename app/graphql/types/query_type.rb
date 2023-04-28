@@ -89,8 +89,16 @@ module Types
 
     field :work_item_types, [Types::WorkItemTypeType], null: false, description: 'A list of work item types registered to the logged user last company'
 
+    field :service_delivery_review, [Types::ServiceDeliveryReviewType], null: false do
+      argument :product_id, ID, required: true
+    end
+
     def teams
       me.last_company.teams.preload(:company) if me.last_company.present?
+    end
+
+    def service_delivery_review(product_id:)
+      ServiceDeliveryReview.where(product_id: product_id).order(:meeting_date)
     end
 
     def portfolio_unit_by_id(id:)

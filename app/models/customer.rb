@@ -53,10 +53,9 @@ class Customer < ApplicationRecord
   def customer_product
     periods = TimeService.instance.months_between_of(6.months.ago.end_of_month, Time.zone.today)
     periods.map do |date|
-      bugs_created_count = demands.to_created_date(date, Time.zone.today.end_of_day).bug.size
-      demands_created_count = demands.to_created_date(date, Time.zone.today.end_of_day).size
+      data = demands_by_periods(date)
       {
-        bugs: bugs_created_count / demands_created_count,
+        bugs: (100 * data[:bugs_created_count]) / (data[:demands_created_count].nonzero? || 1),
         date: date.strftime('%Y-%m-%d')
       }
     end
@@ -119,5 +118,14 @@ class Customer < ApplicationRecord
 
   def last_contract_end
     contracts.map(&:end_date).max
+  end
+
+  private
+
+  def demands_by_periods(date)
+    {
+      bugs_created_count: demands.to_created_date(date, Time.zone.today.end_of_day).bug.size,
+      demands_created_count: demands.to_created_date(date, Time.zone.today.end_of_day).size
+    }
   end
 end

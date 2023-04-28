@@ -178,6 +178,8 @@ RSpec.describe Types::QueryType do
             Fabricate :project_consolidation, project: other_project, consolidation_date: 2.days.ago, project_throughput: 13, project_throughput_hours_additional: 17, project_throughput_hours_additional_in_month: 60
             Fabricate :project_consolidation, project: other_project, consolidation_date: 1.day.ago, project_throughput: 15, project_throughput_hours_additional: 47, project_throughput_hours_additional_in_month: 79
 
+            service_delivery_review = Fabricate :service_delivery_review, company: company, product: product, id: 1, company_id: company.id, product_id: product.id, delayed_expedite_bottom_threshold: 1.0, delayed_expedite_top_threshold: 1.0, expedite_max_pull_time_sla: 1, lead_time_bottom_threshold: 1, lead_time_top_threshold: 1.0, quality_bottom_threshold: 1.0, quality_top_threshold: 1.0
+
             query =
               %(query {
               me {
@@ -191,6 +193,16 @@ RSpec.describe Types::QueryType do
                   imageSource
                 }
               }
+              serviceDeliveryReview(productId: #{product.id}) {
+                id
+                delayedExpediteBottomThreshold
+                delayedExpediteTopThreshold
+                expediteMaxPullTimeSla
+                leadTimeBottomThreshold
+                leadTimeTopThreshold
+                qualityBottomThreshold
+                qualityTopThreshold
+            }
               team(id: #{team.id}) {
                 id
                 name
@@ -306,6 +318,16 @@ RSpec.describe Types::QueryType do
                                                        'imageSource' => user.avatar.url
                                                      }
                                                    })
+            expect(result.dig('data', 'serviceDeliveryReview')).to eq([{
+                                                                        'id' => service_delivery_review.id.to_s,
+                                                                        'delayedExpediteBottomThreshold' => 1.0,
+                                                                        'delayedExpediteTopThreshold' => 1.0,
+                                                                        'expediteMaxPullTimeSla' => 1,
+                                                                        'leadTimeTopThreshold' => 1.0,
+                                                                        'leadTimeBottomThreshold' => 1.0,
+                                                                        'qualityBottomThreshold' => 1.0,
+                                                                        'qualityTopThreshold' => 1.0
+                                                                      }])
             expect(result.dig('data', 'team')).to eq({
                                                        'id' => team.id.to_s,
                                                        'name' => team.name,
