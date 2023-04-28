@@ -1425,6 +1425,8 @@ coca:
     create:
       error: "The e-mail address should not be blank"
       success: "User invited"
+    delete:
+      success: 'User removed'
   contract:
     new:
       title: "New Contract"

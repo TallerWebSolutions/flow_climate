@@ -28,7 +28,7 @@
   </div>
 
   <div class="col-xs-4">
-    <%= render 'users/users_short_table', users: customer.devise_customers %>
+    <%= render 'users/users_short_table', users: customer.devise_customers, company: company, customer: customer %>
     <hr>
     <%= render 'customers/form_user_invite_to_customer', company: company, customer: customer, user_invite: user_invite %>
   </div>

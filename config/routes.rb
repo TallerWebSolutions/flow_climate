@@ -166,6 +166,8 @@ Rails.application.routes.draw do
     resources :customers do
       member do
         post :add_user_to_customer
+        delete 'remove_user_to_customer/:user_id', action: :remove_user_to_customer, as: :remove_user_to_customer
+
         patch :update_cache
       end
       resources :contracts, except: %i[index] do

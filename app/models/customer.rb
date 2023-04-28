@@ -61,6 +61,13 @@ class Customer < ApplicationRecord
     end
   end
 
+  def remove_user(devise_customer)
+    return unless devise_customers.include?(devise_customer)
+
+    customer_devise = CustomersDeviseCustomer.find_by(devise_customer_id: devise_customer)
+    customer_devise.delete
+  end
+
   def active?
     projects.active.present?
   end

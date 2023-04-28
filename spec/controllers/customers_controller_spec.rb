@@ -361,7 +361,6 @@ RSpec.describe CustomersController do
           expect(UserInviteService.instance).to(receive(:invite_customer).with(company, customer.id, 'foo@bar.com.br', new_devise_customer_registration_url(user_email: 'foo@bar.com.br')).once { I18n.t('user_invites.create.success') })
 
           post :add_user_to_customer, params: { company_id: company, id: customer, user_invite: { invite_email: 'foo@bar.com.br' } }
-
           expect(flash[:notice]).to eq I18n.t('user_invites.create.success')
         end
       end
@@ -397,6 +396,19 @@ RSpec.describe CustomersController do
             it { expect(response).to have_http_status :not_found }
           end
         end
+      end
+    end
+
+    describe 'DELETE #remove_user_to_customer' do
+      let(:customer) { Fabricate :customer, company: company }
+      let(:user) { Fabricate :user }
+
+      it 'remove user invite' do
+        devise_customer = Fabricate :devise_customer, email: user.email
+        Fabricate :user_invite, company: company, invite_email: user.email
+        CustomersDeviseCustomer.create(customer_id: customer.id, devise_customer_id: devise_customer.id)
+        delete :remove_user_to_customer, params: { company_id: company, id: customer, user_id: devise_customer.id }
+        expect(flash[:notice]).to eq I18n.t('user_invites.delete.success')
       end
     end
 

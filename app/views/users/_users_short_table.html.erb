@@ -14,6 +14,11 @@
           <td><%= user.id %></td>
           <td><%= user.first_name %></td>
           <td><%= user.last_name %></td>
+          <td>
+            <%= link_to remove_user_to_customer_company_customer_path(@company, @customer, user.id), method: :delete do %>
+              <i class="fa fa-trash"></i>
+            <% end %>
+          </td>
         </tr>
       <% end %>
     </tbody>

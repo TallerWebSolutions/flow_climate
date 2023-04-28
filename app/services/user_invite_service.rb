@@ -6,7 +6,6 @@ class UserInviteService
   def invite_customer(company, customer_id, invite_email, registration_url)
     customer = Customer.find(customer_id)
     devise_customer = DeviseCustomer.find_by(email: invite_email)
-
     if devise_customer.present?
       customer.add_user(devise_customer)
       message = I18n.t('customers.add_user_to_customer.success')
@@ -17,5 +16,14 @@ class UserInviteService
     end
 
     message
+  end
+
+  def remove_customer(customer, devise_customers_id)
+    devise_customer = DeviseCustomer.find_by(id: devise_customers_id)
+    user_invite = UserInvite.find_by(invite_email: devise_customer.email)
+    user_invite.delete if user_invite.present?
+    customer.remove_user(devise_customer)
+    devise_customer.delete
+    I18n.t('user_invites.delete.success')
   end
 end

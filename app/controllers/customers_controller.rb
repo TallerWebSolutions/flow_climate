@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CustomersController < AuthenticatedController
-  before_action :assign_customer, only: %i[edit update show destroy add_user_to_customer update_cache]
+  before_action :assign_customer, only: %i[edit update show destroy add_user_to_customer update_cache remove_user_to_customer]
 
   def index
     @customers = @company.customers.order(:name)
@@ -53,6 +53,14 @@ class CustomersController < AuthenticatedController
     else
       flash[:error] = I18n.t('user_invites.create.error')
     end
+
+    redirect_to company_customer_path(@company, @customer)
+  end
+
+  def remove_user_to_customer
+    devise_customers_id = params[:user_id]
+
+    flash[:notice] = UserInviteService.instance.remove_customer(@customer, devise_customers_id)
 
     redirect_to company_customer_path(@company, @customer)
   end

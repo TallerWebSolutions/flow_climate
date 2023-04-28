@@ -1417,6 +1417,9 @@ pt-BR:
     create:
       error: 'O e-mail não deve estar em branco.'
       success: 'Usuário convidado'
+    delete:
+      success: 'Usuário removido'
+
   contract:
     new:
       title: 'Novo Contrato'
