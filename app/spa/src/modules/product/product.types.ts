@@ -10,6 +10,7 @@ export type RiskReview = {
   monthlyAvgBlockedTime?: number[]
   weeklyAvgBlockedTime?: number[]
   createdAt?: string
+  product?: Product
 }
 
 export type ServiceDeliveryReview = {
@@ -22,6 +23,7 @@ export type ServiceDeliveryReview = {
   meetingDate: string
   qualityBottomThreshold: number
   qualityTopThreshold: number
+  product?: Product
 }
 
 export type Product = {

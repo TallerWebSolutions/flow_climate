@@ -13,5 +13,6 @@ module Types
     field :product_id, ID, null: false
     field :quality_bottom_threshold, Float, null: false
     field :quality_top_threshold, Float, null: false
+    field :product, Types::ProductType, null: false
   end
 end

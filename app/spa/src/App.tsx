@@ -48,6 +48,7 @@ import MembershipForm from "./pages/Teams/MembershipForm"
 import MembershipsTable from "./pages/Teams/MembershipsTable"
 import CreatePortfolioUnits from "./pages/Products/CreatePortfolioUnits"
 import EditPortfolioUnits from "./pages/Products/EditPortfolioUnits"
+import ServiceDeliveryReviews from "./pages/Products/ServiceDeliveryReviews"
 import ServiceDeliveryReview from "./pages/Products/ServiceDeliveryReview"
 
 export const ME_QUERY = gql`
@@ -136,7 +137,11 @@ const App = () => {
               element={<ProductsRiskReviews />}
             />
             <Route
-              path="/companies/:companySlug/products/:productSlug/service_delivery_review_tab"
+              path="/companies/:companySlug/products/:productSlug/service_delivery_reviews_tab"
+              element={<ServiceDeliveryReviews />}
+            />
+            <Route
+              path="/companies/:companySlug/products/:productSlug/service_delivery_reviews/:reviewId"
               element={<ServiceDeliveryReview />}
             />
             <Route

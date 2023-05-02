@@ -6,7 +6,13 @@ class ServiceDeliveryReviewsController < AuthenticatedController
   before_action :assign_service_delivery_review, only: %i[show destroy edit update refresh]
 
   def show
-    @demands_chart_adapter = Highchart::DemandsChartsAdapter.new(@service_delivery_review.demands, @service_delivery_review.start_date, @service_delivery_review.meeting_date, 'week')
+    prepend_view_path Rails.public_path
+    render 'spa-build/index'
+  end
+
+  def index
+    prepend_view_path Rails.public_path
+    render 'spa-build/index'
   end
 
   def new

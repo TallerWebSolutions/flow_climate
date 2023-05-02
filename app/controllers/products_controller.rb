@@ -86,14 +86,9 @@ class ProductsController < AuthenticatedController
     render 'spa-build/index'
   end
 
-  def service_delivery_review_tab
+  def service_delivery_reviews_tab
     prepend_view_path Rails.public_path
     render 'spa-build/index'
-  end
-
-  def service_delivery_reviews_tab
-    @service_delivery_reviews = @product.service_delivery_reviews.order(meeting_date: :desc)
-    respond_to { |format| format.js { render 'service_delivery_reviews/service_delivery_reviews_tab' } }
   end
 
   private

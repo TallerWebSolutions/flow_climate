@@ -187,7 +187,6 @@ Rails.application.routes.draw do
         get :projects_tab
         get :portfolio_charts_tab
         get :risk_reviews_tab
-        get :service_delivery_review_tab
         get :service_delivery_reviews_tab
       end
 

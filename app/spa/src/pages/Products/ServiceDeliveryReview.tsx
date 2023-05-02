@@ -1,63 +1,69 @@
 import { gql, useQuery } from "@apollo/client"
-import ProductDetails from "../../modules/product/components/ProductDetails"
-import { useParams } from "react-router-dom"
-import { Box, Button } from "@mui/material"
-import { useState } from "react"
+import BasicPage from "../../components/BasicPage"
+import { ServiceDeliveryReview } from "../../modules/product/product.types"
 import { useTranslation } from "react-i18next"
-import ServiceDeliveryReviewModal from "../../modules/product/components/ServiceDeliveryReviewModal"
-import ServiceDeliveryReviewTable from "../../modules/product/components/ServiceDeliveryReviewTable"
+import { useContext } from "react"
+import { MeContext } from "../../contexts/MeContext"
+import { useParams } from "react-router-dom"
 
-const ServiceDeliveryReview = () => {
-  const [open, setOpen] = useState<boolean>(false)
-  const params = useParams()
+const ServiceDeliveryReviewPage = () => {
   const { t } = useTranslation("serviceDeliveryReview")
-  const productSlug = params.productSlug || ""
+  const params = useParams()
 
-  const handleOpen = () => setOpen(true)
-  const handleClose = () => setOpen(false)
+  const reviewId = params.reviewId
+  const { data, loading } = useQuery<ServiceDeliveryReviewDTO>(
+    SERVICE_DELIVERY_REVIEW_QUERY,
+    { variables: { reviewId } }
+  )
+  const { me } = useContext(MeContext)
 
-  const { data, loading } = useQuery<any>(PRODUCT_DELIVERY_REVIEW_QUERY, {
-    variables: { productSlug },
-  })
+  const review = data?.serviceDeliveryReview
+  const product = review?.product
+  const productSlug = product?.slug
+  const productName = product?.name || ""
+  const company = me?.currentCompany
+  const companyName = company?.name || ""
+  const companySlug = company?.slug
+  const reviewTitle = t("title", { date: review?.meetingDate })
 
-  const product = data?.product
+  const breadcrumbsLinks = [
+    { name: companyName, url: `/companies/${companySlug}` },
+    {
+      name: t("products"),
+      url: `/companies/${companySlug}/products`,
+    },
+    {
+      name: productName,
+      url: `/companies/${companySlug}/products/${productSlug}`,
+    },
+    { name: reviewTitle },
+  ]
 
-  return !!product ? (
-    <ProductDetails product={product} loading={loading}>
-      <Box sx={{ marginY: 2 }}>
-      <Button variant="contained" onClick={handleOpen}>
-        {t("serviceDeliveryReview.new")}
-      </Button>
-      <ServiceDeliveryReviewModal
-        open={open}
-        handleClose={handleClose}
-        productSlug={productSlug}
-        productId={product?.id}
-      />
-      </Box>
-      <Box>
-        <ServiceDeliveryReviewTable productId={product?.id} />
-      </Box>
-    </ProductDetails>
-  ) : null
+  return (
+    <BasicPage
+      title={reviewTitle}
+      breadcrumbsLinks={breadcrumbsLinks}
+      loading={loading}
+    />
+  )
 }
 
-export default ServiceDeliveryReview
+type ServiceDeliveryReviewDTO = {
+  serviceDeliveryReview?: ServiceDeliveryReview
+}
 
-const PRODUCT_DELIVERY_REVIEW_QUERY = gql`
-  query ProductDeliveryReviewQuery($productSlug: String!) {
-    product(slug: $productSlug) {
+const SERVICE_DELIVERY_REVIEW_QUERY = gql`
+  query ServiceDeliveryReview($reviewId: ID!) {
+    serviceDeliveryReview(reviewId: $reviewId) {
       id
-      riskReviews {
+      meetingDate
+      product {
         id
-        leadTimeOutlierLimit
-        meetingDate
-        monthlyAvgBlockedTime
-        weeklyAvgBlockedTime
-        createdAt
+        name
+        slug
       }
-      ...productDetails
     }
   }
-  ${ProductDetails.fragments}
 `
+
+export default ServiceDeliveryReviewPage

@@ -1,6 +1,4 @@
 {
-  "title": "Service Delivery Review - {{ date }}",
-  "products": "Products",
   "serviceDeliveryReview": {
     "notFound": "There is no service delivery review data to display.",
     "new": "New review"
