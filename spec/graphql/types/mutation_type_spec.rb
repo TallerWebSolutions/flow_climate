@@ -586,6 +586,33 @@ RSpec.describe Types::MutationType do
     end
   end
 
+  describe '#delete_demand' do
+    let(:demand) { Fabricate :demand }
+
+    let(:mutation) do
+      %(mutation{
+        deleteDemand(demandId: "#{demand.id}") {
+          statusMessage
+        }
+      })
+    end
+
+    context 'when demand is delete' do
+      it 'succeeds' do
+        result = FlowClimateSchema.execute(mutation).as_json
+        expect(result['data']['deleteDemand']['statusMessage']).to eq('SUCCESS')
+      end
+    end
+
+    context 'when demand is not delete' do
+      it 'fails' do
+        allow_any_instance_of(Demand).to(receive(:destroy)).and_return(false)
+        result = FlowClimateSchema.execute(mutation).as_json
+        expect(result['data']['deleteDemand']['statusMessage']).to eq('FAIL')
+      end
+    end
+  end
+
   describe '#update_initiative' do
     let(:initiative) { Fabricate :initiative }
     let(:mutation) do

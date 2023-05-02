@@ -19,7 +19,15 @@
   },
   "notification": {
     "discarded_demand_message_success": "Demand discarded!",
-    "discarded_demand_message_fail": "Unable to discarded demand!"
+    "discarded_demand_message_fail": "Unable to discarded demand!",
+    "delete_demand_message_success": "Demand deleted!",
+    "delete_demand_message_fail": "Unable to deleted demand!"
+  },
+  "delete": {
+    "confirm": {
+      "title": "Delete Demand?",
+      "body": "This action is permanent."
+    }
   },
   "list": {
     "title": "Deliverables",

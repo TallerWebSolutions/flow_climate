@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Mutations
-  class DiscardDemandMutation < Mutations::BaseMutation
+  class DeleteDemandMutation < Mutations::BaseMutation
     argument :demand_id, String, required: true
 
     field :status_message, Types::DeleteOperationResponses, null: false
@@ -10,7 +10,7 @@ module Mutations
       demand = Demand.find_by(id: demand_id)
       return { status_message: 'FAIL' } if demand.nil?
 
-      if demand.discard
+      if demand.destroy
         { status_message: 'SUCCESS' }
       else
         { status_message: 'FAIL' }

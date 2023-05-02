@@ -1,13 +1,15 @@
-import { useContext } from "react"
+import { useContext, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { gql, useLazyQuery, useMutation, useQuery } from "@apollo/client"
 import {
   Avatar,
   AvatarGroup,
+  Box,
   Button,
   ButtonGroup,
   CircularProgress,
   Link,
+  Typography,
 } from "@mui/material"
 import { CSVLink } from "react-csv"
 import { FieldValues } from "react-hook-form"
@@ -23,6 +25,7 @@ import { MeContext } from "../../contexts/MeContext"
 import { secondsToReadbleDate } from "../../lib/date"
 import DateLocale from "../../components/ui/DateLocale"
 import { MessagesContext } from "../../contexts/MessageContext"
+import Modal from '@mui/material/Modal';
 
 const DEMAND_FRAGMENT = gql`
   fragment demandsList on DemandsList {
@@ -143,6 +146,14 @@ const DISCARD_DEMAND_MUTATION = gql`
   }
 `
 
+const DELETE_DEMAND_MUTATION = gql`
+  mutation DeleteDemand($demandId: String!) {
+    deleteDemand(demandId: $demandId) {
+      statusMessage
+    }
+  }
+`
+
 type DemandsCSVDTO = {
   demandsCsvData: DemandsList
 }
@@ -151,6 +162,19 @@ type DiscardDemandType = {
   discardDemand: {
     statusMessage: string
   }
+}
+
+type DeleteDemandType = {
+  deleteDemand: {
+    statusMessage: string
+  }
+}
+
+interface DemandOptionsModalProps {
+  demandId: string;
+  discardedAt?: string;
+  onDiscardDemand: (demandId: string) => void;
+  onDeleteDemand: (demandId: string) => void;
 }
 
 const normalizeQueryStringFilters = (filters: FieldValues) =>
@@ -190,6 +214,7 @@ const DemandsListPage = () => {
     }
   )
   const { pushMessage } = useContext(MessagesContext)
+
   const [discardDemand] = useMutation<DiscardDemandType>(
     DISCARD_DEMAND_MUTATION,
     {
@@ -209,12 +234,32 @@ const DemandsListPage = () => {
     }
   )
 
+  const [deleteDemand] = useMutation<DeleteDemandType>( 
+    DELETE_DEMAND_MUTATION,
+    {
+      update: (_, { data }) => {
+        const mutationResult = data?.deleteDemand.statusMessage === "SUCCESS"
+
+        pushMessage({
+          text: mutationResult
+            ? t("notification.delete_demand_message_success")
+            : t("notification.delete_demand_message_fail"),
+          severity: mutationResult ? "success" : "error",
+        })
+      },
+      refetchQueries: [
+        { query: DEMANDS_QUERY, variables: demandsQueryFilters },
+      ],
+    }
+  )
+
   const [
     fetchCSVData,
     { data: csvData, loading: csvLoading, called: csvQueryCalled },
   ] = useLazyQuery<DemandsCSVDTO>(DEMANDS_CSV_QUERY, {
     variables: demandsQueryFilters,
   })
+
   const companyUrl = `/companies/${me?.currentCompany?.slug}`
   const breadcrumbsLinks = [
     {
@@ -226,10 +271,85 @@ const DemandsListPage = () => {
     },
   ]
 
-  const handleDiscardDemand = (id: String) =>
-    discardDemand({
-      variables: { demandId: id },
-    })
+  const onDiscardDemand = (id: String) =>
+    discardDemand({ variables: { demandId: id }})
+
+  const onDeleteDemand = (id: String) =>
+      deleteDemand({
+        variables: { demandId: id },
+      })
+
+
+ const DemandOptionsModal = ({ demandId, discardedAt, onDiscardDemand, onDeleteDemand }:DemandOptionsModalProps) => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleOnDiscardDemand = () => {
+      setIsModalOpen(false);
+      onDiscardDemand(demandId);
+    }
+
+    const handleOnDeleteDemand = () => {
+      setIsModalOpen(false);
+      onDeleteDemand(demandId);
+    }
+
+    return (
+      <>
+        <Button
+          variant="text"
+          onClick={() => {
+            setIsModalOpen(true);
+          }}
+        >
+          <DeleteIcon/>
+        </Button>
+        <Modal         
+          open={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        >
+          <Box 
+            sx={{ 
+              position: "absolute" as "absolute",
+              p: 4,
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: 680,
+              height: 160,
+              bgcolor: "background.paper",
+              boxShadow: 24,
+              justifyContent: "space-between",
+              display: "flex",
+              flexDirection: "column"
+            }}
+          >
+            <Typography variant="h2"
+            component="h2"
+            fontSize={"1.25rem"}>
+              Tem certeza que deseja excluir a demanda?
+            </Typography>
+            <Box 
+              sx={{
+                alignSelf: "flex-end",
+              }}
+            >
+              {!discardedAt && (
+                <Button 
+                  sx={{ marginRight: 2 }}
+                  onClick={handleOnDiscardDemand}
+                >
+                    Enviar para a lixeira
+                </Button>
+              )}
+              <Button onClick={handleOnDeleteDemand}>
+                Excluir permanentemente
+              </Button>
+            </Box>
+          </Box>
+        </Modal>
+      </>
+    );
+  };
 
   const normalizeTableRow = (demand: Demand) => {
     return {
@@ -288,16 +408,31 @@ const DemandsListPage = () => {
           >
             <EditIcon />
           </Button>
-          {!demand.discardedAt && (
+          {/* {!demand.discardedAt && (
             <Button
               variant="text"
               onClick={() => {
-                handleDiscardDemand(demand.id)
+                handleOnDiscardDemand(demand.id)
               }}
             >
-              <DeleteIcon />
+              <DiscardIcon/>
             </Button>
           )}
+          <Button
+            variant="text"
+            onClick={() => {
+              handleOnDeleteDemand(demand.id)
+            }}
+          >
+            <DeleteIcon/>
+          </Button> */}
+          <DemandOptionsModal
+            demandId={demand.id}
+            discardedAt={demand.discardedAt}
+            onDiscardDemand={onDiscardDemand}
+            onDeleteDemand={onDeleteDemand}
+          />
+          
         </ButtonGroup>,
       ],
       collapseInfo: {

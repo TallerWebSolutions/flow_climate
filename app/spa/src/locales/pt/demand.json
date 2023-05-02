@@ -19,7 +19,15 @@
   },
   "notification": {
     "discarded_demand_message_success": "Demand descartada!",
-    "discarded_demand_message_fail": "Não foi possivel descartar a demanda!"
+    "discarded_demand_message_fail": "Não foi possivel descartar a demanda!",
+    "delete_demand_message_success": "Demand excluida!",
+    "delete_demand_message_fail": "Não foi possivel excluir a demanda!"
+  },
+  "delete": {
+    "confirm": {
+      "title": "Excluir Demanda?",
+      "body": "Esta ação é permanente."
+    }
   },
   "list": {
     "title": "Demandas",
