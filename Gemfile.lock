@@ -175,7 +175,7 @@ GEM
     httparty (0.21.0)
       mini_mime (>= 1.0.0)
       multi_xml (>= 0.5.2)
-    i18n (1.12.0)
+    i18n (1.13.0)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
     image_processing (1.12.2)
@@ -240,9 +240,11 @@ GEM
     net-smtp (0.3.3)
       net-protocol
     netrc (0.11.0)
-    newrelic_rpm (9.2.0)
+    newrelic_rpm (9.2.2)
     nio4r (2.5.9)
     nokogiri (1.14.3-arm64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.14.3-x86_64-darwin)
       racc (~> 1.4)
     nokogiri (1.14.3-x86_64-linux)
       racc (~> 1.4)
@@ -254,10 +256,10 @@ GEM
     parallel (1.23.0)
     parallel_tests (4.2.0)
       parallel
-    parser (3.2.2.0)
+    parser (3.2.2.1)
       ast (~> 2.4.1)
     path_expander (1.1.1)
-    pg (1.5.0)
+    pg (1.5.3)
     public_suffix (5.0.1)
     puma (6.2.2)
       nio4r (~> 2.0)
@@ -265,7 +267,7 @@ GEM
       get_process_mem (~> 0.2)
       puma (>= 2.7)
     racc (1.6.2)
-    rack (2.2.6.4)
+    rack (2.2.7)
     rack-mini-profiler (3.1.0)
       rack (>= 1.2.0)
     rack-test (2.1.0)
@@ -366,7 +368,7 @@ GEM
       rubocop-ast (>= 1.28.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 3.0)
-    rubocop-ast (1.28.0)
+    rubocop-ast (1.28.1)
       parser (>= 3.2.1.0)
     rubocop-capybara (2.18.0)
       rubocop (~> 1.41)
@@ -461,11 +463,12 @@ GEM
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
     yui-compressor (0.12.0)
-    zeitwerk (2.6.7)
+    zeitwerk (2.6.8)
 
 PLATFORMS
   arm64-darwin-21
   arm64-darwin-22
+  x86_64-darwin-22
   x86_64-linux
 
 DEPENDENCIES
