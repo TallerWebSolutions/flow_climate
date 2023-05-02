@@ -52,7 +52,7 @@ const ProductDetails = ({
     },
     {
       label: t("products.serviceDeliveryReview"),
-      to: `/companies/${companySlug}/products/${productSlug}/service_delivery_review_tab`,
+      to: `/companies/${companySlug}/products/${productSlug}/service_delivery_reviews_tab`,
     },
   ]
 

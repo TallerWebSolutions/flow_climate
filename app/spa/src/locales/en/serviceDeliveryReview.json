@@ -23,8 +23,26 @@
     "revisionDate": "Revision date",
     "slaToPull": "SLA to pull expedites",
     "lateDispatches": "Late dispatches",
-    "leadtime": "Leadtime",
+    "leadtime": "Lead Time P80",
     "quality": "Quality",
-    "expediteLate": "Late Expedites"
+    "expediteLate": "Late Expedites",
+    "demands": "Demands",
+    "bugs": "Bugs",
+    "discarded": "Discarded",
+    "longestStage": "Longest Stage"
+  },
+  "charts": {
+    "flowEvents": {
+      "title": "Flow Events by Type"
+    }
+  },
+  "actionItems": {
+    "id": "ID",
+    "actionType": "Action Type",
+    "createdAt": "Creation Date",
+    "responsible": "Responsible",
+    "deadline": "Deadline",
+    "doneDate": "Done Date",
+    "description": "Description"
   }
 }

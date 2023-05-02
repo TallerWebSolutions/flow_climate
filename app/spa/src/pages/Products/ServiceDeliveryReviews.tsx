@@ -7,7 +7,6 @@ import { useTranslation } from "react-i18next"
 import ProductDetails from "../../modules/product/components/ProductDetails"
 import ServiceDeliveryReviewModal from "../../modules/product/components/ServiceDeliveryReviewModal"
 import ServiceDeliveryReviewTable from "../../modules/product/components/ServiceDeliveryReviewTable"
-import ServiceDeliveryReviewCharts from "../../modules/product/components/ServiceDeliveryReviewCharts"
 
 const ServiceDeliveryReviews = () => {
   const [open, setOpen] = useState<boolean>(false)
@@ -38,7 +37,6 @@ const ServiceDeliveryReviews = () => {
         />
       </Box>
       <ServiceDeliveryReviewTable productId={product?.id} />
-      <ServiceDeliveryReviewCharts />
     </ProductDetails>
   ) : null
 }

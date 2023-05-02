@@ -2,6 +2,9 @@ import { Company } from "../company/company.types"
 import { Demand } from "../demand/demand.types"
 import { LeadtimeEvolutionChart } from "../charts/charts.types"
 import { PortfolioUnit } from "./portfolioUnit.types"
+import { FlowEvent } from "../flowEvent/flowEvent.types"
+import User from "../user/user.types"
+import { Membership } from "../team/team.types"
 
 export type RiskReview = {
   id: string
@@ -11,6 +14,16 @@ export type RiskReview = {
   weeklyAvgBlockedTime?: number[]
   createdAt?: string
   product?: Product
+}
+
+type ActionItem = {
+  id: string
+  actionType?: string
+  createdAt?: string
+  deadline?: string
+  doneDate?: string
+  description?: string
+  membership?: Membership
 }
 
 export type ServiceDeliveryReview = {
@@ -24,6 +37,13 @@ export type ServiceDeliveryReview = {
   qualityBottomThreshold: number
   qualityTopThreshold: number
   product?: Product
+  demandsCount?: number
+  discardedCount?: number
+  demandsLeadTimeP80?: number
+  bugsCount?: number
+  longestStageName?: string
+  longestStageTime?: number
+  serviceDeliveryReviewActionItems?: ActionItem[]
 }
 
 export type Product = {
@@ -50,4 +70,5 @@ export type Product = {
   leadtimeP80: number
   leadtimeP65: number
   leadtimeEvolutionData?: LeadtimeEvolutionChart
+  flowEvents?: FlowEvent[]
 }

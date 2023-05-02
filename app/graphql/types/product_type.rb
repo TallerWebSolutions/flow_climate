@@ -16,6 +16,7 @@ module Types
     field :demands_blocks_count, Integer
     field :discarded_demands_count, Integer
     field :downstream_demands_count, Integer
+    field :flow_events, [Types::FlowEventType], null: true
     field :leadtime_p65, Integer
     field :leadtime_p80, Integer
     field :leadtime_p95, Integer

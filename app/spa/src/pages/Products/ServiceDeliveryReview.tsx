@@ -5,6 +5,10 @@ import { useTranslation } from "react-i18next"
 import { useContext } from "react"
 import { MeContext } from "../../contexts/MeContext"
 import { useParams } from "react-router-dom"
+import ServiceDeliveryReviewCharts from "../../modules/product/components/ServiceDeliveryReviewCharts"
+import ServiceDeliveryReviewDetails from "../../modules/product/components/ServiceDeliveryReviewDetails"
+import { Grid } from "@mui/material"
+import ServiceDeliveryReviewActions from "../../modules/product/components/ServiceDeliveryReviewActions"
 
 const ServiceDeliveryReviewPage = () => {
   const { t } = useTranslation("serviceDeliveryReview")
@@ -13,7 +17,7 @@ const ServiceDeliveryReviewPage = () => {
   const reviewId = params.reviewId
   const { data, loading } = useQuery<ServiceDeliveryReviewDTO>(
     SERVICE_DELIVERY_REVIEW_QUERY,
-    { variables: { reviewId } }
+    { variables: { reviewId }, notifyOnNetworkStatusChange: true }
   )
   const { me } = useContext(MeContext)
 
@@ -44,7 +48,21 @@ const ServiceDeliveryReviewPage = () => {
       title={reviewTitle}
       breadcrumbsLinks={breadcrumbsLinks}
       loading={loading}
-    />
+    >
+      {review && (
+        <Grid container spacing={2}>
+          <Grid item xs={6}>
+            <ServiceDeliveryReviewDetails review={review} />
+          </Grid>
+          <Grid item xs={6}>
+            <ServiceDeliveryReviewActions review={review} />
+          </Grid>
+        </Grid>
+      )}
+      {product?.flowEvents && (
+        <ServiceDeliveryReviewCharts flowEvents={product.flowEvents} />
+      )}
+    </BasicPage>
   )
 }
 
@@ -57,10 +75,32 @@ const SERVICE_DELIVERY_REVIEW_QUERY = gql`
     serviceDeliveryReview(reviewId: $reviewId) {
       id
       meetingDate
+      demandsCount
+      discardedCount
+      demandsLeadTimeP80
+      bugsCount
+      longestStageName
+      longestStageTime
       product {
         id
         name
         slug
+        flowEvents {
+          id
+          eventType
+        }
+      }
+      serviceDeliveryReviewActionItems {
+        id
+        actionType
+        createdAt
+        deadline
+        doneDate
+        description
+        membership {
+          id
+          teamMemberName
+        }
       }
     }
   }
