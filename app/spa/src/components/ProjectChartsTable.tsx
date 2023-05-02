@@ -223,8 +223,6 @@ export const ProjectChartsTable = () => {
                       projectID,
                       companySlug,
                       state: "created",
-                      
-
                     })}
                     sx={{ color: "info.dark", textDecoration: "none" }}
                   >

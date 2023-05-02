@@ -12,7 +12,7 @@ import { FieldValues, useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import useProductQuery from "../../../hooks/useProductQuery"
 import { gql, useMutation } from "@apollo/client"
-import { SERVICE_DELIVERY_REVIEW_TABLE_QUERY } from './ServiceDeliveryReviewTable'
+import { SERVICE_DELIVERY_REVIEW_TABLE_QUERY } from "./ServiceDeliveryReviewTable"
 
 const style = {
   position: "absolute" as "absolute",
@@ -65,7 +65,7 @@ const ServiceDeliveryReviewModal = ({
   open,
   handleClose,
   productSlug,
-  productId
+  productId,
 }: ServiceDeliveryReviewModalProps) => {
   const { register, handleSubmit, reset } = useForm()
   const { product } = useProductQuery(productSlug)
@@ -76,8 +76,8 @@ const ServiceDeliveryReviewModal = ({
       handleClose()
     },
     refetchQueries: [
-      {query: SERVICE_DELIVERY_REVIEW_TABLE_QUERY, variables: { productId }} ,
-    ]
+      { query: SERVICE_DELIVERY_REVIEW_TABLE_QUERY, variables: { productId } },
+    ],
   })
 
   const handleServiceDeliveryReviewSubmit = (data: FieldValues) => {
