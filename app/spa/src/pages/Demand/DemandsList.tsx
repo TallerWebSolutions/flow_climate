@@ -408,24 +408,6 @@ const DemandsListPage = () => {
           >
             <EditIcon />
           </Button>
-          {/* {!demand.discardedAt && (
-            <Button
-              variant="text"
-              onClick={() => {
-                handleOnDiscardDemand(demand.id)
-              }}
-            >
-              <DiscardIcon/>
-            </Button>
-          )}
-          <Button
-            variant="text"
-            onClick={() => {
-              handleOnDeleteDemand(demand.id)
-            }}
-          >
-            <DeleteIcon/>
-          </Button> */}
           <DemandOptionsModal
             demandId={demand.id}
             discardedAt={demand.discardedAt}
