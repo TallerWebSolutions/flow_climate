@@ -25,7 +25,7 @@ import { MeContext } from "../../contexts/MeContext"
 import { secondsToReadbleDate } from "../../lib/date"
 import DateLocale from "../../components/ui/DateLocale"
 import { MessagesContext } from "../../contexts/MessageContext"
-import Modal from '@mui/material/Modal';
+import Modal from "@mui/material/Modal"
 
 const DEMAND_FRAGMENT = gql`
   fragment demandsList on DemandsList {
@@ -171,10 +171,10 @@ type DeleteDemandType = {
 }
 
 interface DemandOptionsModalProps {
-  demandId: string;
-  discardedAt?: string;
-  onDiscardDemand: (demandId: string) => void;
-  onDeleteDemand: (demandId: string) => void;
+  demandId: string
+  discardedAt?: string
+  onDiscardDemand: (demandId: string) => void
+  onDeleteDemand: (demandId: string) => void
 }
 
 const normalizeQueryStringFilters = (filters: FieldValues) =>
@@ -234,24 +234,19 @@ const DemandsListPage = () => {
     }
   )
 
-  const [deleteDemand] = useMutation<DeleteDemandType>( 
-    DELETE_DEMAND_MUTATION,
-    {
-      update: (_, { data }) => {
-        const mutationResult = data?.deleteDemand.statusMessage === "SUCCESS"
+  const [deleteDemand] = useMutation<DeleteDemandType>(DELETE_DEMAND_MUTATION, {
+    update: (_, { data }) => {
+      const mutationResult = data?.deleteDemand.statusMessage === "SUCCESS"
 
-        pushMessage({
-          text: mutationResult
-            ? t("notification.delete_demand_message_success")
-            : t("notification.delete_demand_message_fail"),
-          severity: mutationResult ? "success" : "error",
-        })
-      },
-      refetchQueries: [
-        { query: DEMANDS_QUERY, variables: demandsQueryFilters },
-      ],
-    }
-  )
+      pushMessage({
+        text: mutationResult
+          ? t("notification.delete_demand_message_success")
+          : t("notification.delete_demand_message_fail"),
+        severity: mutationResult ? "success" : "error",
+      })
+    },
+    refetchQueries: [{ query: DEMANDS_QUERY, variables: demandsQueryFilters }],
+  })
 
   const [
     fetchCSVData,
@@ -272,25 +267,29 @@ const DemandsListPage = () => {
   ]
 
   const onDiscardDemand = (id: String) =>
-    discardDemand({ variables: { demandId: id }})
+    discardDemand({ variables: { demandId: id } })
 
   const onDeleteDemand = (id: String) =>
-      deleteDemand({
-        variables: { demandId: id },
-      })
+    deleteDemand({
+      variables: { demandId: id },
+    })
 
-
- const DemandOptionsModal = ({ demandId, discardedAt, onDiscardDemand, onDeleteDemand }:DemandOptionsModalProps) => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+  const DemandOptionsModal = ({
+    demandId,
+    discardedAt,
+    onDiscardDemand,
+    onDeleteDemand,
+  }: DemandOptionsModalProps) => {
+    const [isModalOpen, setIsModalOpen] = useState(false)
 
     const handleOnDiscardDemand = () => {
-      setIsModalOpen(false);
-      onDiscardDemand(demandId);
+      setIsModalOpen(false)
+      onDiscardDemand(demandId)
     }
 
     const handleOnDeleteDemand = () => {
-      setIsModalOpen(false);
-      onDeleteDemand(demandId);
+      setIsModalOpen(false)
+      onDeleteDemand(demandId)
     }
 
     return (
@@ -298,17 +297,14 @@ const DemandsListPage = () => {
         <Button
           variant="text"
           onClick={() => {
-            setIsModalOpen(true);
+            setIsModalOpen(true)
           }}
         >
-          <DeleteIcon/>
+          <DeleteIcon />
         </Button>
-        <Modal         
-          open={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-        >
-          <Box 
-            sx={{ 
+        <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
+          <Box
+            sx={{
               position: "absolute" as "absolute",
               p: 4,
               top: "50%",
@@ -320,25 +316,20 @@ const DemandsListPage = () => {
               boxShadow: 24,
               justifyContent: "space-between",
               display: "flex",
-              flexDirection: "column"
+              flexDirection: "column",
             }}
           >
-            <Typography variant="h2"
-            component="h2"
-            fontSize={"1.25rem"}>
+            <Typography variant="h2" component="h2" fontSize={"1.25rem"}>
               Tem certeza que deseja excluir a demanda?
             </Typography>
-            <Box 
+            <Box
               sx={{
                 alignSelf: "flex-end",
               }}
             >
               {!discardedAt && (
-                <Button 
-                  sx={{ marginRight: 2 }}
-                  onClick={handleOnDiscardDemand}
-                >
-                    Enviar para a lixeira
+                <Button sx={{ marginRight: 2 }} onClick={handleOnDiscardDemand}>
+                  Enviar para a lixeira
                 </Button>
               )}
               <Button onClick={handleOnDeleteDemand}>
@@ -348,8 +339,8 @@ const DemandsListPage = () => {
           </Box>
         </Modal>
       </>
-    );
-  };
+    )
+  }
 
   const normalizeTableRow = (demand: Demand) => {
     return {
@@ -414,7 +405,6 @@ const DemandsListPage = () => {
             onDiscardDemand={onDiscardDemand}
             onDeleteDemand={onDeleteDemand}
           />
-          
         </ButtonGroup>,
       ],
       collapseInfo: {
