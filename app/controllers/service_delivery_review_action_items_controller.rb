@@ -7,6 +7,8 @@ class ServiceDeliveryReviewActionItemsController < AuthenticatedController
   def new
     @service_delivery_review_action_item = ServiceDeliveryReviewActionItem.new(service_delivery_review: @service_delivery_review)
     memberships
+
+    respond_to { |format| format.js { render 'service_delivery_review_action_items/new' } }
   end
 
   def create

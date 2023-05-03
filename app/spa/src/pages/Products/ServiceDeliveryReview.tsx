@@ -59,8 +59,8 @@ const ServiceDeliveryReviewPage = () => {
           </Grid>
         </Grid>
       )}
-      {product?.flowEvents && (
-        <ServiceDeliveryReviewCharts flowEvents={product.flowEvents} />
+      {review?.flowEvents && (
+        <ServiceDeliveryReviewCharts flowEvents={review.flowEvents} />
       )}
     </BasicPage>
   )
@@ -81,14 +81,14 @@ const SERVICE_DELIVERY_REVIEW_QUERY = gql`
       bugsCount
       longestStageName
       longestStageTime
+      flowEvents {
+        id
+        eventType
+      }
       product {
         id
         name
         slug
-        flowEvents {
-          id
-          eventType
-        }
       }
       serviceDeliveryReviewActionItems {
         id

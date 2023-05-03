@@ -193,7 +193,7 @@ RSpec.describe Types::QueryType do
                   imageSource
                 }
               }
-              serviceDeliveryReview(productId: #{product.id}) {
+              serviceDeliveryReviews(productId: #{product.id}) {
                 id
                 delayedExpediteBottomThreshold
                 delayedExpediteTopThreshold
@@ -318,16 +318,16 @@ RSpec.describe Types::QueryType do
                                                        'imageSource' => user.avatar.url
                                                      }
                                                    })
-            expect(result.dig('data', 'serviceDeliveryReview')).to eq([{
-                                                                        'id' => service_delivery_review.id.to_s,
-                                                                        'delayedExpediteBottomThreshold' => 1.0,
-                                                                        'delayedExpediteTopThreshold' => 1.0,
-                                                                        'expediteMaxPullTimeSla' => 1,
-                                                                        'leadTimeTopThreshold' => 1.0,
-                                                                        'leadTimeBottomThreshold' => 1.0,
-                                                                        'qualityBottomThreshold' => 1.0,
-                                                                        'qualityTopThreshold' => 1.0
-                                                                      }])
+            expect(result.dig('data', 'serviceDeliveryReviews')).to eq([{
+                                                                         'id' => service_delivery_review.id.to_s,
+                                                                         'delayedExpediteBottomThreshold' => 1.0,
+                                                                         'delayedExpediteTopThreshold' => 1.0,
+                                                                         'expediteMaxPullTimeSla' => 1,
+                                                                         'leadTimeTopThreshold' => 1.0,
+                                                                         'leadTimeBottomThreshold' => 1.0,
+                                                                         'qualityBottomThreshold' => 1.0,
+                                                                         'qualityTopThreshold' => 1.0
+                                                                       }])
             expect(result.dig('data', 'team')).to eq({
                                                        'id' => team.id.to_s,
                                                        'name' => team.name,
@@ -921,6 +921,43 @@ RSpec.describe Types::QueryType do
         )
 
         expect { FlowClimateSchema.execute(query, variables: nil, context: graphql_context) }.to raise_error ActiveRecord::RecordNotFound
+      end
+    end
+  end
+
+  describe '#service_delivery_review' do
+    it 'brings the data of a sdr given an ID' do
+      travel_to Time.zone.local(2023, 5, 3, 10) do
+        product = Fabricate :product
+        review = Fabricate :service_delivery_review, product: product, meeting_date: Time.zone.now
+        Fabricate :service_delivery_review, product: product, meeting_date: 2.weeks.ago
+
+        query =
+          %(
+            query {
+              serviceDeliveryReview(reviewId: "#{review.id}") {
+                id
+                bugsCount
+                demandsCount
+                discardedCount
+                longestStageName
+                longestStageTime
+                flowEvents {
+                  id
+                }
+              }
+            }
+          )
+
+        project = Fabricate :project, products: [product]
+        Fabricate :flow_event, project: project, event_date: 2.days.ago
+        Fabricate :flow_event, project: project, event_date: 3.weeks.ago
+        Fabricate :flow_event, project: project, event_date: 2.days.from_now
+
+        result = FlowClimateSchema.execute(query, variables: nil).as_json
+
+        expect(result.dig('data', 'serviceDeliveryReview', 'id')).to eq review.id.to_s
+        expect(result.dig('data', 'serviceDeliveryReview', 'flowEvents').count).to eq 1
       end
     end
   end

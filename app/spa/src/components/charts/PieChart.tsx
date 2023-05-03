@@ -15,7 +15,8 @@ const PieChart = ({ data }: PieChartProps) => (
       data={pieDataToDatum(data)}
       colors={{ scheme: "category10" }}
       innerRadius={0.1}
-      padAngle={0.7}
+      padAngle={0.9}
+      margin={{ top: 10, bottom: 10 }}
     />
   </Box>
 )

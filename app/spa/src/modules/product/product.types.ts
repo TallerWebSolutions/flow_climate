@@ -3,7 +3,6 @@ import { Demand } from "../demand/demand.types"
 import { LeadtimeEvolutionChart } from "../charts/charts.types"
 import { PortfolioUnit } from "./portfolioUnit.types"
 import { FlowEvent } from "../flowEvent/flowEvent.types"
-import User from "../user/user.types"
 import { Membership } from "../team/team.types"
 
 export type RiskReview = {
@@ -44,6 +43,7 @@ export type ServiceDeliveryReview = {
   longestStageName?: string
   longestStageTime?: number
   serviceDeliveryReviewActionItems?: ActionItem[]
+  flowEvents?: FlowEvent[]
 }
 
 export type Product = {

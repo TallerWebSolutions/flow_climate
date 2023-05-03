@@ -10,11 +10,6 @@ class ServiceDeliveryReviewsController < AuthenticatedController
     render 'spa-build/index'
   end
 
-  def index
-    prepend_view_path Rails.public_path
-    render 'spa-build/index'
-  end
-
   def new
     @service_delivery_review = ServiceDeliveryReview.new(product: @product)
     service_delivery_reviews

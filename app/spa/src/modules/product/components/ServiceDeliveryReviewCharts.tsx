@@ -1,8 +1,9 @@
 import { Grid } from "@mui/material"
+import { useTranslation } from "react-i18next"
+
 import PieChart from "../../../components/charts/PieChart"
 import { FlowEvent } from "../../flowEvent/flowEvent.types"
 import { ChartGridItem } from "../../../components/charts/ChartGridItem"
-import { useTranslation } from "react-i18next"
 
 type ServiceDeliveryReviewChartsProps = {
   flowEvents: FlowEvent[]
@@ -20,8 +21,8 @@ const ServiceDeliveryReviewCharts = ({
   }))
 
   return (
-    <Grid>
-      <ChartGridItem title={t("charts.flowEvents.title")}>
+    <Grid container>
+      <ChartGridItem title={t("charts.flowEvents.title")} columns={12}>
         <PieChart data={flowEventsData} />
       </ChartGridItem>
     </Grid>

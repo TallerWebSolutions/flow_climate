@@ -56,12 +56,6 @@ RSpec.describe ProductsController do
       it { expect(response).to redirect_to new_user_session_path }
     end
 
-    describe 'GET #service_delivery_review' do
-      before { get :service_delivery_review_tab, params: { company_id: 'bar', id: 'foo' } }
-
-      it { expect(response).to redirect_to new_user_session_path }
-    end
-
     describe 'GET #service_delivery_reviews_tab' do
       before { get :service_delivery_reviews_tab, params: { company_id: 'bar', id: 'foo' } }
 
@@ -550,67 +544,13 @@ RSpec.describe ProductsController do
       end
     end
 
-    describe 'GET #service_delivery_review_tab' do
+    describe 'GET #service_delivery_reviews_tab' do
       let!(:product) { Fabricate :product, company: company }
 
       it 'renders project spa page' do
-        get :service_delivery_review_tab, params: { company_id: company, id: product }
+        get :service_delivery_reviews_tab, params: { company_id: company, id: product }
 
         expect(response).to render_template 'spa-build/index'
-      end
-    end
-
-    describe 'GET #service_delivery_reviews_tab' do
-      let(:customer) { Fabricate :customer, company: company }
-
-      let!(:first_product) { Fabricate :product, company: company, customer: customer }
-      let!(:second_product) { Fabricate :product, company: company, customer: customer }
-
-      context 'with valid parameters' do
-        context 'having data' do
-          let!(:first_service_delivery) { Fabricate :service_delivery_review, product: first_product, meeting_date: 1.day.ago }
-          let!(:second_service_delivery) { Fabricate :service_delivery_review, product: first_product, meeting_date: Time.zone.today }
-
-          let!(:other_service_delivery) { Fabricate :service_delivery_review, product: second_product }
-
-          it 'creates the objects and renders the tab' do
-            get :service_delivery_reviews_tab, params: { company_id: company, id: first_product }, xhr: true
-            expect(response).to render_template 'service_delivery_reviews/service_delivery_reviews_tab'
-            expect(assigns(:service_delivery_reviews)).to eq [second_service_delivery, first_service_delivery]
-          end
-        end
-      end
-
-      context 'with no data' do
-        it 'render the template with empty data' do
-          get :service_delivery_reviews_tab, params: { company_id: company, id: first_product }, xhr: true
-          expect(assigns(:service_delivery_reviews)).to eq []
-          expect(response).to render_template 'service_delivery_reviews/service_delivery_reviews_tab'
-        end
-      end
-
-      context 'with invalid' do
-        context 'product' do
-          before { get :service_delivery_reviews_tab, params: { company_id: company, id: 'foo' }, xhr: true }
-
-          it { expect(response).to have_http_status :not_found }
-        end
-
-        context 'company' do
-          context 'no existent' do
-            before { get :service_delivery_reviews_tab, params: { company_id: 'foo', id: first_product } }
-
-            it { expect(response).to have_http_status :not_found }
-          end
-
-          context 'not permitted' do
-            let(:company) { Fabricate :company, users: [] }
-
-            before { get :service_delivery_reviews_tab, params: { company_id: company, id: first_product } }
-
-            it { expect(response).to have_http_status :not_found }
-          end
-        end
       end
     end
   end

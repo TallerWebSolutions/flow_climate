@@ -16,7 +16,20 @@ module Mutations
 
     def resolve(date:, product_id:, max_expedite_late:, max_leadtime:, max_quality:, min_expedite_late:, min_leadtime:, min_quality:, sla:)
       product = Product.find_by(id: product_id)
-      params = {
+      params = sdr_params(date, product_id, max_expedite_late, max_leadtime, max_quality, min_expedite_late, min_leadtime, min_quality, sla)
+      service_delivery_review = ServiceDeliveryReview.new(params.merge(product: product))
+
+      if service_delivery_review.save
+        { status_message: 'SUCCESS' }
+      else
+        { status_message: 'FAIL' }
+      end
+    end
+
+    private
+
+    def sdr_params(date:, product_id:, max_expedite_late:, max_leadtime:, max_quality:, min_expedite_late:, min_leadtime:, min_quality:, sla:)
+      {
         meeting_date: date,
         product_id: product_id,
         company_id: product[:company_id],
@@ -28,13 +41,6 @@ module Mutations
         quality_bottom_threshold: min_quality,
         expedite_max_pull_time_sla: sla
       }
-      service_delivery_review = ServiceDeliveryReview.new(params.merge(product: product))
-
-      if service_delivery_review.save
-        { status_message: 'SUCCESS' }
-      else
-        { status_message: 'FAIL' }
-      end
     end
   end
 end
