@@ -16,7 +16,7 @@ module Mutations
 
     def resolve(date:, product_id:, max_expedite_late:, max_leadtime:, max_quality:, min_expedite_late:, min_leadtime:, min_quality:, sla:)
       product = Product.find_by(id: product_id)
-      params = sdr_params(date, product_id, max_expedite_late, max_leadtime, max_quality, min_expedite_late, min_leadtime, min_quality, sla)
+      params = sdr_params(date, product_id, max_expedite_late, max_leadtime, max_quality, min_expedite_late, min_leadtime, min_quality, sla, product)
       service_delivery_review = ServiceDeliveryReview.new(params.merge(product: product))
 
       if service_delivery_review.save
@@ -28,7 +28,7 @@ module Mutations
 
     private
 
-    def sdr_params(date:, product_id:, max_expedite_late:, max_leadtime:, max_quality:, min_expedite_late:, min_leadtime:, min_quality:, sla:)
+    def sdr_params(date, product_id, max_expedite_late, max_leadtime, max_quality, min_expedite_late, min_leadtime, min_quality, sla, product)
       {
         meeting_date: date,
         product_id: product_id,
