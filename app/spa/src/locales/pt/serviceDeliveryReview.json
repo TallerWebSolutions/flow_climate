@@ -1,7 +1,9 @@
 {
   "serviceDeliveryReview": {
     "notFound": "Não há dados de revisão de entrega de serviço para exibir.",
-    "new": "Nova revisão"
+    "new": "Nova revisão",
+    "delete": "Service delivery review removido com sucesso.",
+    "fail": "Service delivery review não pode ser removida."
   },
   "newModal": {
     "title": "Nova service delivery review",

@@ -1,11 +1,14 @@
-import { gql, useQuery } from "@apollo/client"
-import { Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material"
+import { gql, useMutation, useQuery } from "@apollo/client"
+import { Button, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material"
+import DeleteIcon from "@mui/icons-material/Delete"
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp"
 import { useTranslation } from "react-i18next"
 
 import type { ServiceDeliveryReview } from "../product.types"
 import { Link, useParams } from "react-router-dom"
+import { useContext } from "react"
+import { MessagesContext } from "../../../contexts/MessageContext"
 
 type ServiceDeliveryReviewTableProps = {
   productId: string
@@ -20,6 +23,26 @@ const ServiceDeliveryReviewTable = ({
     SERVICE_DELIVERY_REVIEW_TABLE_QUERY,
     { variables: { productId } }
   )
+
+  const { pushMessage } = useContext(MessagesContext)
+  const [deleteServiceDeliveryReview] = useMutation<any>(
+    DELETE_SERVICE_DELIVERY_REVIEW,
+    {
+      update: (_, { data }) => {
+        const mutationResult =
+          data?.deleteServiceDeliveryReview?.statusMessage === "SUCCESS"
+
+        pushMessage({
+          text: mutationResult
+            ? t("serviceDeliveryReview.delete")
+            : t("serviceDeliveryReview.fail"),
+          severity: mutationResult ? "success" : "error",
+        })
+      },
+      refetchQueries: ["ServiceDeliveryReviewTableQuery"],
+    }
+  )
+
   const productPath = `/companies/${params.companySlug}/products/${params.productSlug}`
 
   return (
@@ -36,6 +59,7 @@ const ServiceDeliveryReviewTable = ({
           <TableCell>{t("table.expediteLate")}</TableCell>
           <TableCell>{t("table.leadtime")}</TableCell>
           <TableCell>{t("table.quality")}</TableCell>
+          <TableCell></TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -94,6 +118,18 @@ const ServiceDeliveryReviewTable = ({
                   color={"success"}
                 />
               </TableCell>
+              <TableCell>
+                <Button
+                   variant="text"
+                   onClick={() => {
+                    deleteServiceDeliveryReview({
+                       variables: { sdrId: sdr.id },
+                     })
+                   }}
+                >
+                <DeleteIcon />
+                </Button>
+              </TableCell>
             </TableRow>
           )
         })}
@@ -120,6 +156,14 @@ export const SERVICE_DELIVERY_REVIEW_TABLE_QUERY = gql`
       meetingDate
       qualityBottomThreshold
       qualityTopThreshold
+    }
+  }
+`
+
+const DELETE_SERVICE_DELIVERY_REVIEW = gql`
+  mutation DeleteServiceDeliveryReview($sdrId: ID!) {
+    deleteServiceDeliveryReview(sdrId: $sdrId) {
+      statusMessage
     }
   }
 `

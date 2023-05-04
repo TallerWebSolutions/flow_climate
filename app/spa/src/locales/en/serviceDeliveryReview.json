@@ -3,7 +3,9 @@
   "products": "Products",
   "serviceDeliveryReview": {
     "notFound": "There is no service delivery review data to display.",
-    "new": "New review"
+    "new": "New review",
+    "delete": "Service delivery revision successfully removed.",
+    "fail": "Service delivery review cannot be removed."
   },
   "newModal": {
     "title": "New service delivery review",
