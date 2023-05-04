@@ -278,17 +278,17 @@ RSpec.describe Types::MutationType do
     let(:product) { Fabricate :product, company: company, company_id: company.id }
     let(:service_delivery_review) { Fabricate :service_delivery_review, id: 2 }
 
-    context 'delete sdr success' do
-      let(:mutation) do
-        %(mutation {
-          deleteServiceDeliveryReview(
-            sdrId: #{service_delivery_review.id}
-          ) {
-            statusMessage
-          }
-        })
-      end
+    let(:mutation) do
+      %(mutation {
+        deleteServiceDeliveryReview(
+          sdrId: #{service_delivery_review.id}
+        ) {
+          statusMessage
+        }
+      })
+    end
 
+    context 'delete sdr success' do
       it 'succeeds' do
         result = FlowClimateSchema.execute(mutation).as_json
         expect(result['data']['deleteServiceDeliveryReview']['statusMessage']).to eq('SUCCESS')
@@ -296,16 +296,6 @@ RSpec.describe Types::MutationType do
     end
 
     context 'delete sdr fail' do
-      let(:mutation) do
-        %(mutation {
-          deleteServiceDeliveryReview(
-            sdrId: #{service_delivery_review.id}
-          ) {
-            statusMessage
-          }
-        })
-      end
-
       it 'failed' do
         allow_any_instance_of(ServiceDeliveryReview).to(receive(:destroy)).and_return(false)
         result = FlowClimateSchema.execute(mutation).as_json
