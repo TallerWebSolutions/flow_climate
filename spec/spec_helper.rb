@@ -7,7 +7,7 @@ SimpleCov.start do
   add_filter 'config/initializers/rack_profiler.rb'
   add_filter 'config/initializers/sidekiq.rb'
   add_filter 'readers/azure/azure_reader.rb'
-  minimum_coverage 99
+  minimum_coverage 100
 end
 
 require File.expand_path('../config/environment', __dir__)

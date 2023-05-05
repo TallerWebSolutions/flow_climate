@@ -2088,4 +2088,27 @@ RSpec.describe Types::QueryType do
       expect(result.dig('data', 'membership', 'id')).to eq membership.id.to_s
     end
   end
+
+  describe '#memberships' do
+    it 'retrieves the memberships for the team' do
+      team = Fabricate :team
+
+      member = Fabricate :team_member, name: 'zzz'
+      other_member = Fabricate :team_member, name: 'aaa'
+      membership = Fabricate :membership, team: team, team_member: member
+      other_membership = Fabricate :membership, team: team, team_member: other_member
+      Fabricate :membership
+
+      query =
+        %(query {
+            memberships(teamId: #{team.id}) {
+              id
+            }
+          })
+
+      result = FlowClimateSchema.execute(query, variables: nil).as_json
+
+      expect(result.dig('data', 'memberships').pluck('id')).to eq [other_membership.id.to_s, membership.id.to_s]
+    end
+  end
 end

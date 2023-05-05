@@ -273,7 +273,7 @@ RSpec.describe Types::MutationType do
     end
   end
 
-  describe '#service delivery review actions' do
+  describe '#create_service_delivery_review_action' do
     let(:membership) { Fabricate :membership, id: 2 }
     let(:sdr) { Fabricate :service_delivery_review }
 
@@ -302,7 +302,30 @@ RSpec.describe Types::MutationType do
       end
     end
 
-    pending 'with invalid data'
+    context 'with invalid data' do
+      let(:mutation) do
+        %(mutation {
+          createServiceDeliveryReviewAction(
+            actionType: 2
+            deadline: "#{Time.zone.tomorrow}"
+            description: "descriçao"
+            membershipId: "foo"
+            sdrId: "#{sdr.id}"
+          ) {
+            statusMessage
+            serviceDeliveryReviewAction{
+              id
+            }
+          }
+        })
+      end
+
+      it 'fails' do
+        result = FlowClimateSchema.execute(mutation).as_json
+        expect(result['data']['createServiceDeliveryReviewAction']['statusMessage']).to eq('FAIL')
+        expect(ServiceDeliveryReviewActionItem.count).to eq 0
+      end
+    end
   end
 
   describe '#service delivery review' do

@@ -8,7 +8,7 @@ module Mutations
     argument :membership_id, ID, required: true
     argument :sdr_id, ID, required: true
 
-    field :service_delivery_review_action, Types::ServiceDeliveryReviewActionItemType, null: false
+    field :service_delivery_review_action, Types::ServiceDeliveryReviewActionItemType
     field :status_message, Types::CreateResponses, null: false
 
     def resolve(action_type:, deadline:, description:, membership_id:, sdr_id:)

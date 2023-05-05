@@ -149,7 +149,7 @@ module Types
     end
 
     def memberships(team_id:)
-      Membership.where(team_id: team_id)
+      Membership.joins(:team_member).where(team_id: team_id).order('team_members.name')
     end
 
     def tasks_list(page_number: 1, limit: 0, title: nil, status: nil, initiative_id: nil, project_id: nil, team_id: nil, from_date: nil, until_date: nil, portfolio_unit: nil, task_type: nil)
