@@ -22,6 +22,7 @@ import BasicPage from "../../components/BasicPage"
 import { MembershipEfficiencyData, Team } from "../../modules/team/team.types"
 import Table from "../../components/ui/Table"
 import { FormElement } from "../../components/ui/Form"
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined"
 
 const MemberEfficiencyTable = () => {
   const { t } = useTranslation("teamMembers")
@@ -69,6 +70,8 @@ const MemberEfficiencyTable = () => {
         {membershipEfficency.membership?.teamMemberName}
       </Link>,
 
+      
+
       membershipEfficency.memberCapacityValue,
       membershipEfficency.effortInMonth?.toFixed(2),
       membershipEfficency.realizedMoneyInMonth?.toLocaleString("pt-br", {
@@ -77,6 +80,12 @@ const MemberEfficiencyTable = () => {
       }),
       membershipEfficency.cardsCount,
       membershipEfficency.avgHoursPerDemand?.toFixed(2),
+
+      <>
+        <RouterLink to={`${companyUrl}/team_members/${membershipEfficency.membership?.teamMemberId}/edit`}>
+            <EditOutlinedIcon color="primary" />
+        </RouterLink>
+      </>
     ]
   )
 
