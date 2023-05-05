@@ -14,6 +14,12 @@ type ServiceDeliveryReviewTableProps = {
   productId: string
 }
 
+type DeleteServiceDeliveryReviewDTO = {
+  deleteServiceDeliveryReview?: {
+    statusMessage?: string
+  }
+}
+
 const ServiceDeliveryReviewTable = ({
   productId,
 }: ServiceDeliveryReviewTableProps) => {
@@ -25,7 +31,7 @@ const ServiceDeliveryReviewTable = ({
   )
 
   const { pushMessage } = useContext(MessagesContext)
-  const [deleteServiceDeliveryReview] = useMutation<any>(
+  const [deleteServiceDeliveryReview] = useMutation<DeleteServiceDeliveryReviewDTO>(
     DELETE_SERVICE_DELIVERY_REVIEW,
     {
       update: (_, { data }) => {
