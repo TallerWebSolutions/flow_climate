@@ -849,6 +849,11 @@ RSpec.describe Types::QueryType do
                   leadtimeP80
                   leadtimeP65
 
+                  memberships{
+                    id
+                    teamMemberName
+                  }
+
                   latestDeliveries {
                     id
                     customerName

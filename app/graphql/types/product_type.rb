@@ -20,6 +20,7 @@ module Types
     field :leadtime_p65, Integer
     field :leadtime_p80, Integer
     field :leadtime_p95, Integer
+    field :memberships, [Types::Teams::MembershipType]
     field :portfolio_units, [Types::PortfolioUnitType]
     field :portfolio_units_count, Integer
     field :remaining_backlog_count, Integer
@@ -93,6 +94,10 @@ module Types
       return { x_axis: [], y_axis_in_month: [], y_axis_accumulated: [] } if leadtime_evolution.blank?
 
       { x_axis: demands_charts_adapter.x_axis.map(&:to_s), y_axis_in_month: leadtime_evolution[:y_axis][0][:data], y_axis_accumulated: leadtime_evolution[:y_axis][1][:data] }
+    end
+
+    def memberships
+      object.memberships.active
     end
 
     private

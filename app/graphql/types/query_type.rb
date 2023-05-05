@@ -20,6 +20,12 @@ module Types
       argument :id, ID
     end
 
+    field :team_members, [Types::Teams::TeamMemberType], null: true, description: 'Team Members of a Company' do
+      argument :active, Boolean, required: false
+      argument :company_id, Int, required: true
+      argument :team_id, Int, required: false
+    end
+
     field :membership, Types::Teams::MembershipType, null: true, description: 'A plain membership' do
       argument :id, ID
     end
@@ -50,11 +56,6 @@ module Types
 
     field :demand, Types::DemandType, null: true, description: 'A single demand by external ID' do
       argument :external_id, String, required: true
-    end
-
-    field :team_members, [Types::Teams::TeamMemberType], null: true, description: 'Team Members of a Company' do
-      argument :active, Boolean, required: false
-      argument :company_id, Int, required: true
     end
 
     field :project_additional_hours, [Types::ProjectAdditionalHourType], null: true, description: 'A list of project additional hours' do
@@ -95,6 +96,10 @@ module Types
 
     field :service_delivery_reviews, [Types::ServiceDeliveryReviewType], null: false do
       argument :product_id, ID, required: true
+    end
+
+    field :memberships, [Types::Teams::MembershipType], null: false do
+      argument :team_id, Int, required: true
     end
 
     def teams
@@ -141,6 +146,10 @@ module Types
 
     def membership(id:)
       Membership.find(id)
+    end
+
+    def memberships(team_id:)
+      Membership.where(team_id: team_id)
     end
 
     def tasks_list(page_number: 1, limit: 0, title: nil, status: nil, initiative_id: nil, project_id: nil, team_id: nil, from_date: nil, until_date: nil, portfolio_unit: nil, task_type: nil)

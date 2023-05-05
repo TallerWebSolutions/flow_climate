@@ -39,6 +39,8 @@ module Types
 
     field :delete_service_delivery_review, mutation: Mutations::DeleteServiceDeliveryReviewMutation
 
+    field :create_service_delivery_review_action, mutation: Mutations::CreateServiceDeliveryReviewActionMutation
+
     def me
       context[:current_user]
     end

@@ -70,7 +70,7 @@ type ServiceDeliveryReviewDTO = {
   serviceDeliveryReview?: ServiceDeliveryReview
 }
 
-const SERVICE_DELIVERY_REVIEW_QUERY = gql`
+export const SERVICE_DELIVERY_REVIEW_QUERY = gql`
   query ServiceDeliveryReview($reviewId: ID!) {
     serviceDeliveryReview(reviewId: $reviewId) {
       id
@@ -89,6 +89,10 @@ const SERVICE_DELIVERY_REVIEW_QUERY = gql`
         id
         name
         slug
+        memberships{
+          id
+          teamMemberName
+        }
       }
       serviceDeliveryReviewActionItems {
         id

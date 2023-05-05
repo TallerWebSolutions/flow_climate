@@ -39,6 +39,7 @@
     }
   },
   "actionItems": {
+    "actionServiceDeliveryReview": "Action - Service Delivery Review",
     "id": "ID",
     "actionType": "Action Type",
     "createdAt": "Creation Date",
@@ -46,5 +47,16 @@
     "deadline": "Deadline",
     "doneDate": "Done Date",
     "description": "Description"
+
+  },
+  "actionType": {
+    "technical_change": "Technical Change",
+    "permissions_update": "Permissions Update", 
+    "customer_alignment": "Customer Alignment",
+    "internal_process_change": "Internal Process Change",
+    "cadences_change": "Cadences Change",
+    "internal_comunication_change": "Internal Comunication Change",
+    "training": "Training",
+    "guidance": "Guidance"
   }
 }

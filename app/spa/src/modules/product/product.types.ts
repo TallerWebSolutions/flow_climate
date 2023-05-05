@@ -71,4 +71,5 @@ export type Product = {
   leadtimeP65: number
   leadtimeEvolutionData?: LeadtimeEvolutionChart
   flowEvents?: FlowEvent[]
+  memberships?: Membership[]
 }
