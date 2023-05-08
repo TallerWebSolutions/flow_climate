@@ -25,9 +25,9 @@ const ServiceDeliveryReviewActions = ({
   const handleCloseModal = () => setOpen(() => false)
   return (
     <>             
-      <Box sx={{ marginY: 2 }}>
+      <Box sx={{ marginY: 1 }}>
         <Button variant="contained" onClick={handleOpenModal}>
-          {"Nova Ação"}
+          {"Adicionar Ação"}
         </Button>
         <ServiceDeliveryReviewActionsModal
             open={open}

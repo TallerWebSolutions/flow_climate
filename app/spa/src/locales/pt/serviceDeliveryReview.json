@@ -30,8 +30,10 @@
     "actionServiceDeliveryReview": "Ações - Service Delivery Review",
     "id": "ID",
     "actionType": "Tipo de Ação",
+    "createdAt": "Criado em",
     "responsible": "Responsável",
-    "doneDate": "Prazo",
+    "deadline": "Prazo",
+    "doneDate": "Data Finalizada",
     "description": "Descrição"
   },
   "actionType": {

@@ -51,10 +51,10 @@ const ServiceDeliveryReviewPage = () => {
     >
       {review && (
         <Grid container spacing={2}>
-          <Grid item xs={6}>
+          <Grid item xs={4}>
             <ServiceDeliveryReviewDetails review={review} />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={8}>
             <ServiceDeliveryReviewActions review={review} />
           </Grid>
         </Grid>
