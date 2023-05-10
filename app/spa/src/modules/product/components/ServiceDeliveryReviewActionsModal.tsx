@@ -65,7 +65,7 @@ const ServiceDeliveryReviewActionsModal = ({
   const handleServiceDeliveryReviewActionSubmit = (data: FieldValues) => {
     createServiceDeliveryReviewAction({
       variables: {
-        actionType: Number(data.action_type || 0),
+        actionType: Number(data.actionType || 0),
         deadline: data.deadline,
         description: data.description,
         membershipId: data.membershipId,
@@ -99,7 +99,7 @@ const ServiceDeliveryReviewActionsModal = ({
           component="h2"
           fontSize={"1.25rem"}
         >
-          {"actionItems.actionServiceDeliveryReview"}
+          {t("actionItems.actionServiceDeliveryReview")}
         </Typography>
         <Box sx={{ marginTop: "42px" }}>
           <form onSubmit={handleSubmit(handleServiceDeliveryReviewActionSubmit)}>
@@ -114,7 +114,7 @@ const ServiceDeliveryReviewActionsModal = ({
             >
               <FormControl>
                 <InputLabel shrink htmlFor="deadline">
-                {t('actionItems.doneDate')}
+                {t('actionItems.deadline')}
                 </InputLabel>
                 <Input
                   type="date"

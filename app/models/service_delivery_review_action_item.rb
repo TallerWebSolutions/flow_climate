@@ -26,7 +26,7 @@
 #  fk_rails_bcb8a4f6b9  (membership_id => memberships.id)
 #
 class ServiceDeliveryReviewActionItem < ApplicationRecord
-  enum action_type: { cadences_change: 0, internal_comunication_change: 1, training: 2 }
+  enum action_type: { technical_change: 0, permissions_update: 1, customer_alignment: 2, internal_process_change: 3, cadences_change: 4, internal_comunication_change: 5, training: 6, guidance: 7 }
 
   belongs_to :service_delivery_review
   belongs_to :membership

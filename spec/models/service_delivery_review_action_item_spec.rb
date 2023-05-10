@@ -2,7 +2,7 @@
 
 RSpec.describe ServiceDeliveryReviewActionItem do
   context 'enums' do
-    it { is_expected.to define_enum_for(:action_type).with_values(cadences_change: 0, internal_comunication_change: 1, training: 2) }
+    it { is_expected.to define_enum_for(:action_type).with_values(technical_change: 0, permissions_update: 1, customer_alignment: 2, internal_process_change: 3, cadences_change: 4, internal_comunication_change: 5, training: 6, guidance: 7) }
   end
 
   context 'associations' do

@@ -18,7 +18,7 @@ const ServiceDeliveryReviewActions = ({
   review,
 }: ServiceDeliveryReviewActionsProps) => {
   const { t } = useTranslation("serviceDeliveryReview")
-
+ 
   const [open, setOpen] = useState<boolean>(false)
   
   const handleOpenModal = () => setOpen(true)
@@ -57,7 +57,7 @@ const ServiceDeliveryReviewActions = ({
             {review.serviceDeliveryReviewActionItems?.map((actionItem, index) => (
               <TableRow key={`${actionItem.id}--${index}`}>
                 <TableCell>{actionItem.id}</TableCell>
-                <TableCell>{actionItem.actionType}</TableCell>
+                <TableCell>{t(`actionType.${actionItem.actionType}`)}</TableCell>
                 <TableCell>{actionItem.createdAt}</TableCell>
                 <TableCell>{actionItem.membership?.teamMemberName}</TableCell>
                 <TableCell>{actionItem.deadline}</TableCell>

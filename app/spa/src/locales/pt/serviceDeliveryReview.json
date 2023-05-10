@@ -28,9 +28,9 @@
   },
   "actionItems": {
     "actionServiceDeliveryReview": "Ações - Service Delivery Review",
-    "id": "ID",
+    "id": "Revisão",
     "actionType": "Tipo de Ação",
-    "createdAt": "Criado em",
+    "createdAt": "Data da Criação",
     "responsible": "Responsável",
     "deadline": "Prazo",
     "doneDate": "Data Finalizada",
