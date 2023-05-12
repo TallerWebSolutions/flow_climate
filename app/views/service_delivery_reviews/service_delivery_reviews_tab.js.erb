@@ -1,8 +1,0 @@
-var serviceDeliveryReviewsDiv = $('#service-delivery-reviews')
-
-serviceDeliveryReviewsDiv.html("<%= escape_javascript(render 'service_delivery_reviews/service_delivery_reviews_table', company: @company, product: @product, service_delivery_reviews: @service_delivery_reviews) %>");
-
-$('#general-loader').hide();
-serviceDeliveryReviewsDiv.show();
-
-enableTabs();

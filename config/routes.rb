@@ -198,10 +198,7 @@ Rails.application.routes.draw do
         resources :risk_review_action_items, only: %w[new create destroy]
       end
 
-      resources :service_delivery_reviews, except: :index do
-        patch :refresh, on: :member
-        resources :service_delivery_review_action_items, only: %w[new create destroy]
-      end
+      resources :service_delivery_reviews, only: :show
 
       scope :jira do
         resources :jira_product_configs, only: %i[index new create destroy], module: 'jira'
