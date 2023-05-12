@@ -3,7 +3,7 @@
     "notFound": "There is no service delivery review data to display.",
     "new": "New review"
   },
-  "newModal": {
+  "new": {
     "title": "New service delivery review",
     "revisionDate": "Revision date",
     "slaToPull": "SLA to pull expedites",
@@ -37,7 +37,7 @@
   },
   "actionType": {
     "technical_change": "Technical Change",
-    "permissions_update": "Permissions Update", 
+    "permissions_update": "Permissions Update",
     "customer_alignment": "Customer Alignment",
     "internal_process_change": "Internal Process Change",
     "cadences_change": "Cadences Change",

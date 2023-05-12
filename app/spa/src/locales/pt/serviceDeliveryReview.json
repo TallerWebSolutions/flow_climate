@@ -5,7 +5,7 @@
     "delete": "Service delivery review removido com sucesso.",
     "fail": "Service delivery review não pode ser removida."
   },
-  "newModal": {
+  "new": {
     "title": "Nova service delivery review",
     "revisionDate": "Data da revisão",
     "slaToPull": "SLA para puxar expedites",
@@ -38,7 +38,7 @@
   },
   "actionType": {
     "technical_change": "Mudança Técnica",
-    "permissions_update": "Atualização de Permissões", 
+    "permissions_update": "Atualização de Permissões",
     "customer_alignment": "Alinhamento com o Cliente",
     "internal_process_change": "Alteração Interna do Processo",
     "cadences_change": "Alteração nas Cadências",

@@ -328,7 +328,7 @@ RSpec.describe Types::MutationType do
     end
   end
 
-  describe '#service delivery review' do
+  describe '#delete_service_delivery_review' do
     let(:company) { Fabricate :company }
     let(:product) { Fabricate :product, company: company, company_id: company.id }
     let(:service_delivery_review) { Fabricate :service_delivery_review, id: 2 }
@@ -357,33 +357,13 @@ RSpec.describe Types::MutationType do
         expect(result['data']['deleteServiceDeliveryReview']['statusMessage']).to eq('FAIL')
       end
     end
+  end
 
-    context 'with valid data' do
-      let(:mutation) do
-        %(mutation {
-          createServiceDeliveryReview(
-            date: "#{Time.zone.today.iso8601}",
-            productId: #{product.id},
-            maxExpediteLate: 2.0,
-            maxLeadtime: 2.0,
-            maxQuality: 2.0,
-            minExpediteLate: 2.0,
-            minLeadtime: 2.0,
-            minQuality: 2.0,
-            sla: 2
-          ) {
-            statusMessage
-          }
-        })
-      end
+  describe '#create_service_delivery_review' do
+    let(:company) { Fabricate :company }
+    let(:product) { Fabricate :product, company: company, company_id: company.id }
 
-      it 'succeeds' do
-        result = FlowClimateSchema.execute(mutation).as_json
-        expect(result['data']['createServiceDeliveryReview']['statusMessage']).to eq('SUCCESS')
-      end
-    end
-
-    context 'with invalid data' do
+    context 'with unauthenticated user' do
       let(:mutation) do
         %(mutation {
           createServiceDeliveryReview(
@@ -403,9 +383,64 @@ RSpec.describe Types::MutationType do
       end
 
       it 'fails' do
-        allow_any_instance_of(ServiceDeliveryReview).to(receive(:valid?)).and_return(false)
         result = FlowClimateSchema.execute(mutation).as_json
         expect(result['data']['createServiceDeliveryReview']['statusMessage']).to eq('FAIL')
+      end
+    end
+
+    context 'with authenticated user' do
+      let(:user) { Fabricate :user }
+      let(:context) { { current_user: user } }
+
+      context 'with valid data' do
+        let(:mutation) do
+          %(mutation {
+          createServiceDeliveryReview(
+            date: "#{Time.zone.today.iso8601}",
+            productId: #{product.id},
+            maxExpediteLate: 2.0,
+            maxLeadtime: 2.0,
+            maxQuality: 2.0,
+            minExpediteLate: 2.0,
+            minLeadtime: 2.0,
+            minQuality: 2.0,
+            sla: 2
+          ) {
+            statusMessage
+          }
+        })
+        end
+
+        it 'succeeds' do
+          result = FlowClimateSchema.execute(mutation, variables: nil, context: context).as_json
+          expect(result['data']['createServiceDeliveryReview']['statusMessage']).to eq('SUCCESS')
+        end
+      end
+
+      context 'with invalid data' do
+        let(:mutation) do
+          %(mutation {
+          createServiceDeliveryReview(
+            date: "#{Time.zone.today.iso8601}",
+            productId: #{product.id},
+            maxExpediteLate: 2.0,
+            maxLeadtime: 2.0,
+            maxQuality: 2.0,
+            minExpediteLate: 2.0,
+            minLeadtime: 2.0,
+            minQuality: 2.0,
+            sla: 2
+          ) {
+            statusMessage
+          }
+        })
+        end
+
+        it 'fails' do
+          allow_any_instance_of(ServiceDeliveryReview).to(receive(:valid?)).and_return(false)
+          result = FlowClimateSchema.execute(mutation, variables: nil, context: context).as_json
+          expect(result['data']['createServiceDeliveryReview']['statusMessage']).to eq('FAIL')
+        end
       end
     end
   end

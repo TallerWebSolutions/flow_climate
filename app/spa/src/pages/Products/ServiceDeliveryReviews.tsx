@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next"
 
 import ProductDetails from "../../modules/product/components/ProductDetails"
 import ServiceDeliveryReviewModal from "../../modules/product/components/ServiceDeliveryReviewModal"
-import ServiceDeliveryReviewTable from "../../modules/product/components/ServiceDeliveryReviewTable"
+import ServiceDeliveryReviewsTable from "../../modules/product/components/ServiceDeliveryReviewsTable"
 
 const ServiceDeliveryReviews = () => {
   const [open, setOpen] = useState<boolean>(false)
@@ -36,7 +36,7 @@ const ServiceDeliveryReviews = () => {
           productId={product?.id}
         />
       </Box>
-      <ServiceDeliveryReviewTable productId={product?.id} />
+      <ServiceDeliveryReviewsTable productId={product?.id} />
     </ProductDetails>
   ) : null
 }

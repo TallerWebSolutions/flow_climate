@@ -89,7 +89,7 @@ export const SERVICE_DELIVERY_REVIEW_QUERY = gql`
         id
         name
         slug
-        memberships{
+        memberships {
           id
           teamMemberName
         }

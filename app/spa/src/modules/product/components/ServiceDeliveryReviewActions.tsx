@@ -18,25 +18,25 @@ const ServiceDeliveryReviewActions = ({
   review,
 }: ServiceDeliveryReviewActionsProps) => {
   const { t } = useTranslation("serviceDeliveryReview")
- 
+
   const [open, setOpen] = useState<boolean>(false)
-  
+
   const handleOpenModal = () => setOpen(true)
   const handleCloseModal = () => setOpen(() => false)
   return (
-    <>             
+    <>
       <Box sx={{ marginY: 1 }}>
         <Button variant="contained" onClick={handleOpenModal}>
           {"Adicionar Ação"}
         </Button>
         <ServiceDeliveryReviewActionsModal
-            open={open}
-            handleClose={handleCloseModal}
-            memberships={review.product?.memberships || []}
-            sdrId={review.id}
-          />
+          open={open}
+          handleClose={handleCloseModal}
+          memberships={review.product?.memberships || []}
+          sdrId={review.id}
+        />
       </Box>
-  
+
       <TableContainer
         component={Paper}
         sx={{ marginY: 4, backgroundColor: "white" }}
@@ -54,17 +54,21 @@ const ServiceDeliveryReviewActions = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {review.serviceDeliveryReviewActionItems?.map((actionItem, index) => (
-              <TableRow key={`${actionItem.id}--${index}`}>
-                <TableCell>{actionItem.id}</TableCell>
-                <TableCell>{t(`actionType.${actionItem.actionType}`)}</TableCell>
-                <TableCell>{actionItem.createdAt}</TableCell>
-                <TableCell>{actionItem.membership?.teamMemberName}</TableCell>
-                <TableCell>{actionItem.deadline}</TableCell>
-                <TableCell>{actionItem.doneDate}</TableCell>
-                <TableCell>{actionItem.description}</TableCell>
-              </TableRow>
-            ))}
+            {review.serviceDeliveryReviewActionItems?.map(
+              (actionItem, index) => (
+                <TableRow key={`${actionItem.id}--${index}`}>
+                  <TableCell>{actionItem.id}</TableCell>
+                  <TableCell>
+                    {t(`actionType.${actionItem.actionType}`)}
+                  </TableCell>
+                  <TableCell>{actionItem.createdAt}</TableCell>
+                  <TableCell>{actionItem.membership?.teamMemberName}</TableCell>
+                  <TableCell>{actionItem.deadline}</TableCell>
+                  <TableCell>{actionItem.doneDate}</TableCell>
+                  <TableCell>{actionItem.description}</TableCell>
+                </TableRow>
+              )
+            )}
           </TableBody>
         </Table>
       </TableContainer>

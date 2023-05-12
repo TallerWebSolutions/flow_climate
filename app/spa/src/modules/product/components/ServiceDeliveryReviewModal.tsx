@@ -12,7 +12,7 @@ import { FieldValues, useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import useProductQuery from "../../../hooks/useProductQuery"
 import { gql, useMutation } from "@apollo/client"
-import { SERVICE_DELIVERY_REVIEW_TABLE_QUERY } from "./ServiceDeliveryReviewTable"
+import { SERVICE_DELIVERY_REVIEW_TABLE_QUERY } from "./ServiceDeliveryReviewsTable"
 
 const style = {
   position: "absolute" as "absolute",
@@ -26,8 +26,8 @@ const style = {
   p: 4,
 }
 
-const SERVICE_DELIVERY_REVIEW = gql`
-  mutation ServiceDeliveryReview(
+const CREATE_SERVICE_DELIVERY_REVIEW = gql`
+  mutation CreateServiceDeliveryReview(
     $date: ISO8601Date!
     $productId: ID!
     $maxExpediteLate: Float!
@@ -70,15 +70,21 @@ const ServiceDeliveryReviewModal = ({
   const { register, handleSubmit, reset } = useForm()
   const { product } = useProductQuery(productSlug)
   const { t } = useTranslation("serviceDeliveryReview")
-  const [createServiceDeliveryReview] = useMutation(SERVICE_DELIVERY_REVIEW, {
-    update: () => {
-      reset()
-      handleClose()
-    },
-    refetchQueries: [
-      { query: SERVICE_DELIVERY_REVIEW_TABLE_QUERY, variables: { productId } },
-    ],
-  })
+  const [createServiceDeliveryReview] = useMutation(
+    CREATE_SERVICE_DELIVERY_REVIEW,
+    {
+      update: () => {
+        reset()
+        handleClose()
+      },
+      refetchQueries: [
+        {
+          query: SERVICE_DELIVERY_REVIEW_TABLE_QUERY,
+          variables: { productId },
+        },
+      ],
+    }
+  )
 
   const handleServiceDeliveryReviewSubmit = (data: FieldValues) => {
     createServiceDeliveryReview({
@@ -97,138 +103,133 @@ const ServiceDeliveryReviewModal = ({
   }
 
   return (
-    <>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <Typography
-            id="modal-modal-title"
-            variant="h2"
-            component="h2"
-            fontSize={"1.25rem"}
-          >
-            {t("newModal.title")}
-          </Typography>
-          <Box sx={{ marginTop: "42px" }}>
-            <form onSubmit={handleSubmit(handleServiceDeliveryReviewSubmit)}>
-              <FormGroup
+    <Modal
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Box sx={style}>
+        <Typography
+          id="modal-modal-title"
+          variant="h2"
+          component="h2"
+          fontSize={"1.25rem"}
+        >
+          {t("new.title")}
+        </Typography>
+        <Box sx={{ marginTop: "42px" }}>
+          <form onSubmit={handleSubmit(handleServiceDeliveryReviewSubmit)}>
+            <FormGroup
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "repeat(2, 1fr)",
+                gridColumnGap: "30px",
+                gap: "40px",
+                marginTop: "42px",
+              }}
+            >
+              <FormControl>
+                <InputLabel shrink htmlFor="date">
+                  {t("new.revisionDate")}
+                </InputLabel>
+                <Input type="date" {...register("date", { required: true })} />
+              </FormControl>
+              <FormControl>
+                <InputLabel htmlFor="sla">
+                  {t("new.slaToPull")} ({t("new.hours")})
+                </InputLabel>
+                <Input
+                  type="number"
+                  inputProps={{ min: 0 }}
+                  {...register("sla", { required: true })}
+                />
+              </FormControl>
+              <FormControl>
+                <InputLabel htmlFor="minExpediteLate">
+                  {t("new.minExpediteLate")} (%)
+                </InputLabel>
+                <Input
+                  type="number"
+                  inputProps={{ min: 0, max: 100, step: 0.1 }}
+                  {...register("minExpediteLate", { required: true })}
+                />
+              </FormControl>
+              <FormControl>
+                <InputLabel htmlFor="maxExpediteLate">
+                  {t("new.maxExpediteLate")} (%)
+                </InputLabel>
+                <Input
+                  type="number"
+                  inputProps={{ min: 0, max: 100, step: 0.1 }}
+                  {...register("maxExpediteLate", { required: true })}
+                />
+              </FormControl>
+              <FormControl>
+                <InputLabel htmlFor="minLeadtime">
+                  {t("new.minLeadtime")} ({t("new.hours")})
+                </InputLabel>
+                <Input
+                  type="number"
+                  inputProps={{ min: 0, step: 0.1 }}
+                  {...register("minLeadtime", { required: true })}
+                />
+              </FormControl>
+              <FormControl>
+                <InputLabel htmlFor="maxLeadtime">
+                  {t("new.maxLeadtime")} ({t("new.hours")})
+                </InputLabel>
+                <Input
+                  type="number"
+                  inputProps={{ min: 0, step: 0.1 }}
+                  {...register("maxLeadtime", { required: true })}
+                />
+              </FormControl>
+              <FormControl>
+                <InputLabel htmlFor="minQuality">
+                  {t("new.minQuality")} (%)
+                </InputLabel>
+                <Input
+                  type="number"
+                  inputProps={{ min: 0, max: 100, step: 0.1 }}
+                  {...register("minQuality", { required: true })}
+                />
+              </FormControl>
+              <FormControl>
+                <InputLabel htmlFor="maxQuality">
+                  {t("new.maxQuality")} (%)
+                </InputLabel>
+                <Input
+                  type="number"
+                  inputProps={{ min: 0, max: 100, step: 0.1 }}
+                  {...register("maxQuality", { required: true })}
+                />
+              </FormControl>
+            </FormGroup>
+            <Box sx={{ position: "absolute", bottom: 20 }}>
+              <Box
                 sx={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(2, 1fr)",
-                  gridColumnGap: "30px",
-                  gap: "40px",
-                  marginTop: "42px",
+                  display: "flex",
+                  justifyContent: "flex-start",
+                  alignSelf: "flex-end",
                 }}
               >
-                <FormControl>
-                  <InputLabel shrink htmlFor="date">
-                    {t("newModal.revisionDate")}
-                  </InputLabel>
-                  <Input
-                    type="date"
-                    {...register("date", { required: true })}
-                  />
-                </FormControl>
-                <FormControl>
-                  <InputLabel htmlFor="sla">
-                    {t("newModal.slaToPull")} ({t("newModal.hours")})
-                  </InputLabel>
-                  <Input
-                    type="number"
-                    inputProps={{ min: 0 }}
-                    {...register("sla", { required: true })}
-                  />
-                </FormControl>
-                <FormControl>
-                  <InputLabel htmlFor="minExpediteLate">
-                    {t("newModal.minExpediteLate")} (%)
-                  </InputLabel>
-                  <Input
-                    type="number"
-                    inputProps={{ min: 0, max: 100, step: 0.1 }}
-                    {...register("minExpediteLate", { required: true })}
-                  />
-                </FormControl>
-                <FormControl>
-                  <InputLabel htmlFor="maxExpediteLate">
-                    {t("newModal.maxExpediteLate")} (%)
-                  </InputLabel>
-                  <Input
-                    type="number"
-                    inputProps={{ min: 0, max: 100, step: 0.1 }}
-                    {...register("maxExpediteLate", { required: true })}
-                  />
-                </FormControl>
-                <FormControl>
-                  <InputLabel htmlFor="minLeadtime">
-                    {t("newModal.minLeadtime")} ({t("newModal.hours")})
-                  </InputLabel>
-                  <Input
-                    type="number"
-                    inputProps={{ min: 0, step: 0.1 }}
-                    {...register("minLeadtime", { required: true })}
-                  />
-                </FormControl>
-                <FormControl>
-                  <InputLabel htmlFor="maxLeadtime">
-                    {t("newModal.maxLeadtime")} ({t("newModal.hours")})
-                  </InputLabel>
-                  <Input
-                    type="number"
-                    inputProps={{ min: 0, step: 0.1 }}
-                    {...register("maxLeadtime", { required: true })}
-                  />
-                </FormControl>
-                <FormControl>
-                  <InputLabel htmlFor="minQuality">
-                    {t("newModal.minQuality")} (%)
-                  </InputLabel>
-                  <Input
-                    type="number"
-                    inputProps={{ min: 0, max: 100, step: 0.1 }}
-                    {...register("minQuality", { required: true })}
-                  />
-                </FormControl>
-                <FormControl>
-                  <InputLabel htmlFor="maxQuality">
-                    {t("newModal.maxQuality")} (%)
-                  </InputLabel>
-                  <Input
-                    type="number"
-                    inputProps={{ min: 0, max: 100, step: 0.1 }}
-                    {...register("maxQuality", { required: true })}
-                  />
-                </FormControl>
-              </FormGroup>
-              <Box sx={{ position: "absolute", bottom: 20 }}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "flex-start",
-                    alignSelf: "flex-end",
-                  }}
+                <Button
+                  onClick={handleClose}
+                  variant="outlined"
+                  sx={{ marginRight: 2 }}
                 >
-                  <Button
-                    onClick={handleClose}
-                    variant="outlined"
-                    sx={{ marginRight: 2 }}
-                  >
-                    {t("newModal.cancel")}
-                  </Button>
-                  <Button variant="contained" type="submit">
-                    {t("newModal.save")}
-                  </Button>
-                </Box>
+                  {t("new.cancel")}
+                </Button>
+                <Button variant="contained" type="submit">
+                  {t("new.save")}
+                </Button>
               </Box>
-            </form>
-          </Box>
+            </Box>
+          </form>
         </Box>
-      </Modal>
-    </>
+      </Box>
+    </Modal>
   )
 }
 

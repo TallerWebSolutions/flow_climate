@@ -1,7 +1,7 @@
-import { gql, useMutation} from "@apollo/client";
-import { 
+import { gql, useMutation } from "@apollo/client"
+import {
   Modal,
-  Typography, 
+  Typography,
   Box,
   FormGroup,
   FormControl,
@@ -9,11 +9,11 @@ import {
   InputLabel,
   Button,
   Select,
-  MenuItem
-} from "@mui/material";
-import { FieldValues, useForm } from "react-hook-form";
-import { Membership } from "../../team/team.types";
-import { useTranslation } from "react-i18next";
+  MenuItem,
+} from "@mui/material"
+import { FieldValues, useForm } from "react-hook-form"
+import { Membership } from "../../team/team.types"
+import { useTranslation } from "react-i18next"
 
 const SERVICE_DELIVERY_REVIEW_ACTION = gql`
   mutation ServiceDeliveryReviewAction(
@@ -31,7 +31,7 @@ const SERVICE_DELIVERY_REVIEW_ACTION = gql`
       sdrId: $sdrId
     ) {
       statusMessage
-      serviceDeliveryReviewAction{
+      serviceDeliveryReviewAction {
         id
       }
     }
@@ -49,18 +49,21 @@ const ServiceDeliveryReviewActionsModal = ({
   open,
   handleClose,
   memberships,
-  sdrId
+  sdrId,
 }: ServiceDeliveryReviewActionsModalProps) => {
   const { register, handleSubmit, reset } = useForm()
   const { t } = useTranslation("serviceDeliveryReview")
-  
-  const [createServiceDeliveryReviewAction] = useMutation(SERVICE_DELIVERY_REVIEW_ACTION, {
-    update: () => {
-      reset()
-      handleClose()
-    },
-    refetchQueries: ["ServiceDeliveryReview"]
-  })
+
+  const [createServiceDeliveryReviewAction] = useMutation(
+    SERVICE_DELIVERY_REVIEW_ACTION,
+    {
+      update: () => {
+        reset()
+        handleClose()
+      },
+      refetchQueries: ["ServiceDeliveryReview"],
+    }
+  )
 
   const handleServiceDeliveryReviewActionSubmit = (data: FieldValues) => {
     createServiceDeliveryReviewAction({
@@ -69,28 +72,28 @@ const ServiceDeliveryReviewActionsModal = ({
         deadline: data.deadline,
         description: data.description,
         membershipId: data.membershipId,
-        sdrId: sdrId
+        sdrId: sdrId,
       },
     })
   }
-  
+
   return (
     <Modal
       open={open}
       onClose={handleClose}
       aria-labelledby="modal-modal-title"
     >
-      <Box 
+      <Box
         sx={{
-        position: "absolute" as "absolute",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-        width: 680,
-        height: 350,
-        bgcolor: "background.paper",
-        boxShadow: 24,
-        p: 4,
+          position: "absolute" as "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: 680,
+          height: 350,
+          bgcolor: "background.paper",
+          boxShadow: 24,
+          p: 4,
         }}
       >
         <Typography
@@ -102,7 +105,9 @@ const ServiceDeliveryReviewActionsModal = ({
           {t("actionItems.actionServiceDeliveryReview")}
         </Typography>
         <Box sx={{ marginTop: "42px" }}>
-          <form onSubmit={handleSubmit(handleServiceDeliveryReviewActionSubmit)}>
+          <form
+            onSubmit={handleSubmit(handleServiceDeliveryReviewActionSubmit)}
+          >
             <FormGroup
               sx={{
                 display: "grid",
@@ -114,7 +119,7 @@ const ServiceDeliveryReviewActionsModal = ({
             >
               <FormControl>
                 <InputLabel shrink htmlFor="deadline">
-                {t('actionItems.deadline')}
+                  {t("actionItems.deadline")}
                 </InputLabel>
                 <Input
                   type="date"
@@ -123,31 +128,43 @@ const ServiceDeliveryReviewActionsModal = ({
               </FormControl>
               <FormControl>
                 <InputLabel htmlFor="actionType">
-                  {t('actionItems.actionType')}
+                  {t("actionItems.actionType")}
                 </InputLabel>
                 <Select
                   autoWidth
                   labelId="active-members-select"
-                  label={t('actionItems.actionType')}
+                  label={t("actionItems.actionType")}
                   {...register("actionType", { required: true })}
                 >
-                  <MenuItem value="0">{t('actionType.technical_change')}</MenuItem>
-                  <MenuItem value="1">{t('actionType.permissions_update')}</MenuItem>
-                  <MenuItem value="2">{t('actionType.customer_alignment')}</MenuItem>
-                  <MenuItem value="3">{t('actionType.internal_process_change')}</MenuItem>
-                  <MenuItem value="4">{t('actionType.cadences_change')}</MenuItem>
-                  <MenuItem value="5">{t('actionType.internal_comunication_change')}</MenuItem>
-                  <MenuItem value="6">{t('actionType.training')}</MenuItem>
-                  <MenuItem value="7">{t('actionType.guidance')}</MenuItem>
+                  <MenuItem value="0">
+                    {t("actionType.technical_change")}
+                  </MenuItem>
+                  <MenuItem value="1">
+                    {t("actionType.permissions_update")}
+                  </MenuItem>
+                  <MenuItem value="2">
+                    {t("actionType.customer_alignment")}
+                  </MenuItem>
+                  <MenuItem value="3">
+                    {t("actionType.internal_process_change")}
+                  </MenuItem>
+                  <MenuItem value="4">
+                    {t("actionType.cadences_change")}
+                  </MenuItem>
+                  <MenuItem value="5">
+                    {t("actionType.internal_comunication_change")}
+                  </MenuItem>
+                  <MenuItem value="6">{t("actionType.training")}</MenuItem>
+                  <MenuItem value="7">{t("actionType.guidance")}</MenuItem>
                 </Select>
               </FormControl>
               <FormControl>
                 <InputLabel htmlFor="membershipId">
-                  {t('actionItems.responsible')}
+                  {t("actionItems.responsible")}
                 </InputLabel>
-                <Select 
+                <Select
                   autoWidth
-                  label={t('actionItems.responsible')}
+                  label={t("actionItems.responsible")}
                   {...register("membershipId", { required: true })}
                 >
                   {memberships?.map((member, index) => (
@@ -159,7 +176,7 @@ const ServiceDeliveryReviewActionsModal = ({
               </FormControl>
               <FormControl>
                 <InputLabel htmlFor="description">
-                {t('actionItems.description')}
+                  {t("actionItems.description")}
                 </InputLabel>
                 <Input
                   type="string"
@@ -179,17 +196,17 @@ const ServiceDeliveryReviewActionsModal = ({
                     variant="outlined"
                     sx={{ marginRight: 2 }}
                   >
-                    {t("newModal.cancel")}
+                    {t("new.cancel")}
                   </Button>
                   <Button variant="contained" type="submit">
-                    {t("newModal.save")}
+                    {t("new.save")}
                   </Button>
                 </Box>
               </Box>
             </FormGroup>
           </form>
         </Box>
-      </Box> 
+      </Box>
     </Modal>
   )
 }

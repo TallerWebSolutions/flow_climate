@@ -7,7 +7,7 @@
     "delete": "Service delivery revision successfully removed.",
     "fail": "Service delivery review cannot be removed."
   },
-  "newModal": {
+  "new": {
     "title": "New service delivery review",
     "revisionDate": "Revision date",
     "slaToPull": "SLA to pull expedites",
@@ -47,11 +47,10 @@
     "deadline": "Deadline",
     "doneDate": "Done Date",
     "description": "Description"
-
   },
   "actionType": {
     "technical_change": "Technical Change",
-    "permissions_update": "Permissions Update", 
+    "permissions_update": "Permissions Update",
     "customer_alignment": "Customer Alignment",
     "internal_process_change": "Internal Process Change",
     "cadences_change": "Cadences Change",
