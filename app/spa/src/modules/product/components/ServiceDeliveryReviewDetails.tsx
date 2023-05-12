@@ -41,7 +41,8 @@ const ServiceDeliveryReviewDetails = ({
         <TableRow>
           <TableCell>{t("table.longestStage")}</TableCell>
           <TableCell>
-            {review.longestStageName} ({secondsToDays(review.longestStageTime)})
+            {review.longestStage?.name} (
+            {secondsToDays(review.longestStage?.timeInStage)})
           </TableCell>
         </TableRow>
       </Table>

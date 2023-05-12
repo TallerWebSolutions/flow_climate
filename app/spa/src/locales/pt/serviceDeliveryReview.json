@@ -36,6 +36,14 @@
     "doneDate": "Data Finalizada",
     "description": "Descrição"
   },
+  "charts": {
+    "flowEvents": {
+      "title": "Eventos por tipo"
+    },
+    "classOfServiceChartData": {
+      "title": "Classes de Serviço"
+    }
+  },
   "actionType": {
     "technical_change": "Mudança Técnica",
     "permissions_update": "Atualização de Permissões",

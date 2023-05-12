@@ -383,6 +383,7 @@ RSpec.describe Types::MutationType do
       end
 
       it 'fails' do
+        expect(ServiceDeliveryReviewGeneratorJob).not_to(receive(:perform_later))
         result = FlowClimateSchema.execute(mutation).as_json
         expect(result['data']['createServiceDeliveryReview']['statusMessage']).to eq('FAIL')
       end
@@ -412,6 +413,7 @@ RSpec.describe Types::MutationType do
         end
 
         it 'succeeds' do
+          expect(ServiceDeliveryReviewGeneratorJob).to(receive(:perform_later)).once
           result = FlowClimateSchema.execute(mutation, variables: nil, context: context).as_json
           expect(result['data']['createServiceDeliveryReview']['statusMessage']).to eq('SUCCESS')
         end
@@ -438,6 +440,7 @@ RSpec.describe Types::MutationType do
 
         it 'fails' do
           allow_any_instance_of(ServiceDeliveryReview).to(receive(:valid?)).and_return(false)
+          expect(ServiceDeliveryReviewGeneratorJob).not_to(receive(:perform_later))
           result = FlowClimateSchema.execute(mutation, variables: nil, context: context).as_json
           expect(result['data']['createServiceDeliveryReview']['statusMessage']).to eq('FAIL')
         end

@@ -1,9 +1,10 @@
 import { Company } from "../company/company.types"
 import { Demand } from "../demand/demand.types"
-import { LeadtimeEvolutionChart } from "../charts/charts.types"
+import { LeadtimeEvolutionChart, SimpleChartData } from "../charts/charts.types"
 import { PortfolioUnit } from "./portfolioUnit.types"
-import { FlowEvent } from "../flowEvent/flowEvent.types"
 import { Membership } from "../team/team.types"
+import { Stage } from "../stage/stage.types"
+import { FlowEvent } from "../flowEvent/flowEvent.types"
 
 export type RiskReview = {
   id: string
@@ -40,10 +41,10 @@ export type ServiceDeliveryReview = {
   discardedCount?: number
   demandsLeadTimeP80?: number
   bugsCount?: number
-  longestStageName?: string
-  longestStageTime?: number
+  longestStage?: Stage
   serviceDeliveryReviewActionItems?: ActionItem[]
-  flowEvents?: FlowEvent[]
+  flowEventsChartData?: SimpleChartData[]
+  classOfServiceChartData?: SimpleChartData[]
 }
 
 export type Product = {

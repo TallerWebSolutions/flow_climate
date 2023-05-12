@@ -36,6 +36,9 @@
   "charts": {
     "flowEvents": {
       "title": "Flow Events by Type"
+    },
+    "classOfServiceChartData": {
+      "title": "Classes of Service"
     }
   },
   "actionItems": {

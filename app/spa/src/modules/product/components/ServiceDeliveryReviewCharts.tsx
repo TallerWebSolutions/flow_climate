@@ -2,29 +2,35 @@ import { Grid } from "@mui/material"
 import { useTranslation } from "react-i18next"
 
 import PieChart from "../../../components/charts/PieChart"
-import { FlowEvent } from "../../flowEvent/flowEvent.types"
 import { ChartGridItem } from "../../../components/charts/ChartGridItem"
+import { SimpleChartData } from "../../charts/charts.types"
 
 type ServiceDeliveryReviewChartsProps = {
-  flowEvents: FlowEvent[]
+  flowEventsChartData?: SimpleChartData[]
+  classOfServiceChartData?: SimpleChartData[]
 }
 
 const ServiceDeliveryReviewCharts = ({
-  flowEvents,
+  flowEventsChartData,
+  classOfServiceChartData,
 }: ServiceDeliveryReviewChartsProps) => {
   const { t } = useTranslation("serviceDeliveryReview")
 
-  const flowEventTypes = new Set(flowEvents?.map((event) => event.eventType))
-  const flowEventsData = Array.from(flowEventTypes).map((eventType) => ({
-    label: eventType,
-    value: flowEvents.filter((event) => event.eventType === eventType).length,
-  }))
-
   return (
-    <Grid container>
-      <ChartGridItem title={t("charts.flowEvents.title")} columns={12}>
-        <PieChart data={flowEventsData} />
-      </ChartGridItem>
+    <Grid container spacing={4}>
+      {!!flowEventsChartData?.length && (
+        <ChartGridItem title={t("charts.flowEvents.title")} columns={6}>
+          <PieChart data={flowEventsChartData} />
+        </ChartGridItem>
+      )}
+      {!!classOfServiceChartData?.length && (
+        <ChartGridItem
+          title={t("charts.classOfServiceChartData.title")}
+          columns={6}
+        >
+          <PieChart data={classOfServiceChartData} />
+        </ChartGridItem>
+      )}
     </Grid>
   )
 }

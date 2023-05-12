@@ -31,8 +31,8 @@ export type KeyValueData = {
 }
 
 export type SimpleChartData = {
-  label: string
-  value: number
+  label?: string
+  value?: number
 }
 
 export type SimpleListChartData = {

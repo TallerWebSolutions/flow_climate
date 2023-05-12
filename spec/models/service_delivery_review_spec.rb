@@ -228,7 +228,7 @@ RSpec.describe ServiceDeliveryReview do
       expect(longest_stage[:name]).to eq other_stage.name
       expect(longest_stage[:time_in_stage]).to be_within(0.1).of(1_213_200.0)
 
-      expect(other_service_delivery_review.longest_stage).to eq({})
+      expect(other_service_delivery_review.longest_stage).to be_nil
     end
   end
 

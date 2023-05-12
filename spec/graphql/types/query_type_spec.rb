@@ -945,10 +945,16 @@ RSpec.describe Types::QueryType do
                 bugsCount
                 demandsCount
                 discardedCount
-                longestStageName
-                longestStageTime
-                flowEvents {
+                longestStage {
                   id
+                }
+                flowEventsChartData {
+                  label
+                  value
+                }
+                classOfServiceChartData {
+                  label
+                  value
                 }
               }
             }
@@ -959,10 +965,16 @@ RSpec.describe Types::QueryType do
         Fabricate :flow_event, project: project, event_date: 3.weeks.ago
         Fabricate :flow_event, project: project, event_date: 2.days.from_now
 
+        Fabricate :demand, project: project, company: project.company, service_delivery_review: review, end_date: 4.weeks.ago, class_of_service: :expedite
+        Fabricate :demand, project: project, company: project.company, service_delivery_review: review, end_date: 3.weeks.ago, class_of_service: :standard
+        Fabricate :demand, project: project, company: project.company, service_delivery_review: review, end_date: 1.week.ago, class_of_service: :standard
+        Fabricate :demand, project: project, company: project.company, service_delivery_review: review, end_date: 4.days.ago, class_of_service: :fixed_date
+
         result = FlowClimateSchema.execute(query, variables: nil).as_json
 
         expect(result.dig('data', 'serviceDeliveryReview', 'id')).to eq review.id.to_s
-        expect(result.dig('data', 'serviceDeliveryReview', 'flowEvents').count).to eq 1
+        expect(result.dig('data', 'serviceDeliveryReview', 'flowEventsChartData').count).to eq 2
+        expect(result.dig('data', 'serviceDeliveryReview', 'classOfServiceChartData').pluck('label')).to eq(['Padrão', 'Expedição', 'Data Fixa'])
       end
     end
   end

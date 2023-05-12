@@ -108,7 +108,7 @@ class ServiceDeliveryReview < ApplicationRecord
   def longest_stage
     @longest_stage ||= lead_time_breakdown.max_by { |_stages, transitions| transitions.sum(&:total_seconds_in_transition) }
 
-    return {} if @longest_stage.blank?
+    return nil if @longest_stage.blank?
 
     { name: @longest_stage[0], time_in_stage: @longest_stage[1].sum(&:total_seconds_in_transition) }
   end

@@ -25,6 +25,14 @@
     "quality": "Quality",
     "expediteLate": "Late Expedites"
   },
+  "charts": {
+    "flowEvents": {
+      "title": "Events by Type"
+    },
+    "classOfServiceChartData": {
+      "title": "Classes of Service"
+    }
+  },
   "actionItems": {
     "actionServiceDeliveryReview": "Action - Service Delivery Review",
     "id": "ID",

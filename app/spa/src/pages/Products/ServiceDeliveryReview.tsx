@@ -43,6 +43,9 @@ const ServiceDeliveryReviewPage = () => {
     { name: reviewTitle },
   ]
 
+  const flowEvents = review?.flowEventsChartData
+  const classOfServiceChartData = review?.classOfServiceChartData
+
   return (
     <BasicPage
       title={reviewTitle}
@@ -59,9 +62,11 @@ const ServiceDeliveryReviewPage = () => {
           </Grid>
         </Grid>
       )}
-      {review?.flowEvents && (
-        <ServiceDeliveryReviewCharts flowEvents={review.flowEvents} />
-      )}
+
+      <ServiceDeliveryReviewCharts
+        flowEventsChartData={flowEvents}
+        classOfServiceChartData={classOfServiceChartData}
+      />
     </BasicPage>
   )
 }
@@ -79,11 +84,17 @@ export const SERVICE_DELIVERY_REVIEW_QUERY = gql`
       discardedCount
       demandsLeadTimeP80
       bugsCount
-      longestStageName
-      longestStageTime
-      flowEvents {
-        id
-        eventType
+      longestStage {
+        name
+        timeInStage
+      }
+      flowEventsChartData {
+        label
+        value
+      }
+      classOfServiceChartData {
+        label
+        value
       }
       product {
         id

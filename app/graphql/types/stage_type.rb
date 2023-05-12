@@ -16,6 +16,7 @@ module Types
     field :stage_level, Integer, null: false
     field :stage_stream, Integer, null: false
     field :stage_type, Integer, null: false
+    field :time_in_stage, Integer, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
   end
 end
