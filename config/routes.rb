@@ -227,6 +227,10 @@ Rails.application.routes.draw do
         patch 'dissociate_product/:product_id', action: :dissociate_product, as: 'dissociate_product'
       end
 
+      collection do
+        get :search_projects_by_team
+      end
+
       resources :demands, only: [] do
         resources :demand_blocks, only: %i[edit update] do
           member do

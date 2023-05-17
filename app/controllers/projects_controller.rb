@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ProjectsController < AuthenticatedController
-  before_action :assign_project, except: %i[show new create index status_report_dashboard]
+  before_action :assign_project, except: %i[show new create index search_projects_by_team status_report_dashboard]
 
   def index
     prepend_view_path Rails.public_path
@@ -56,6 +56,12 @@ class ProjectsController < AuthenticatedController
 
     redirect_to company_projects_path(@company)
   end
+
+  def search_projects_by_team
+    @projects_by_team = @company.teams.find(params[:team_id]).projects.running.order(:name)
+    respond_to { |format| format.js { render 'flow_events/search_projects_by_team' } }
+  end
+  
 
   def finish_project
     ProjectsRepository.instance.finish_project(@project, @project.end_date)
