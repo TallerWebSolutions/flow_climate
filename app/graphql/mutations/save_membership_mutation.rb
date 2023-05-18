@@ -16,6 +16,7 @@ module Mutations
       membership = Membership.find_by(id: membership_id)
 
       if membership.present?
+        History::MembershipAvailableHoursHistory.create(membership_id: membership_id, available_hours: hours_per_month)
         membership.update(member_role: member_role, hours_per_month: hours_per_month, start_date: start_date, end_date: end_date)
         { status_message: 'SUCCESS', membership: membership, message: 'Membership updated.' }
       else

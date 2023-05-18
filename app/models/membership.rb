@@ -33,6 +33,7 @@ class Membership < ApplicationRecord
   has_many :item_assignments, dependent: :destroy
   has_many :demands, through: :item_assignments
   has_many :demand_efforts, -> { distinct }, through: :item_assignments
+  has_many :membership_available_hours_histories, class_name: 'History::MembershipAvailableHoursHistory', dependent: :destroy
 
   validates :start_date, :member_role, presence: true
   validate :active_team_member_unique

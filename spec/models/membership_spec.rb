@@ -10,6 +10,7 @@ RSpec.describe Membership do
     it { is_expected.to belong_to :team_member }
     it { is_expected.to have_many(:item_assignments).dependent(:destroy) }
     it { is_expected.to have_many(:demands).through(:item_assignments) }
+    it { is_expected.to have_many(:membership_available_hours_histories).dependent(:destroy) }
   end
 
   context 'validations' do
