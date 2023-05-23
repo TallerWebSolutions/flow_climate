@@ -37,9 +37,7 @@ const MembershipsTable = () => {
     })
     
   const activeMemberships = searchParams.get("activeMemberships") !== "false"
-  // eslint-disable-next-line no-console
-  console.log(activeMemberships)
-
+  
   const { data, loading } = useQuery<MembershipsTableDTO>(
     MEMBERSHIPS_TABLE_QUERY,
     {

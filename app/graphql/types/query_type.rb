@@ -148,7 +148,7 @@ module Types
       Membership.find(id)
     end
 
-    def memberships(team_id:, active: nil)
+    def memberships(team_id:)
       Membership.joins(:team_member).where(team_id: team_id).order('team_members.name')
     end
 

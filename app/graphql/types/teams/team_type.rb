@@ -170,7 +170,7 @@ module Types
         TeamService.instance.compute_memberships_produced_hours(object, start_date, end_date)
       end
 
-      def memberships(active:)
+      def memberships(active: nil)
         membership = object.memberships
         membership = active ? membership.active : membership.inactive
         membership.joins(:team_member).order('team_members.name')

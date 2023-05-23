@@ -206,6 +206,7 @@ RSpec.describe Types::QueryType do
               team(id: #{team.id}) {
                 id
                 name
+                
                 throughputData
                 averageThroughput
                 increasedAvgThroughtput
@@ -256,7 +257,7 @@ RSpec.describe Types::QueryType do
                     realizedMoneyInMonth
                   }
                 }
-                memberships {
+                memberships(active: true) {
                   id
                   memberRoleDescription
                 }
