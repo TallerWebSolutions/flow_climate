@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom"
+import { useParams, useSearchParams } from "react-router-dom"
 import { gql, useQuery } from "@apollo/client"
 import {
   Box,
@@ -11,6 +11,12 @@ import {
   TableRow,
   Typography,
   Link,
+  FormControl,
+  Select,
+  MenuItem,
+  InputLabel,
+  SelectChangeEvent,
+  
 } from "@mui/material"
 import EditIcon from "@mui/icons-material/Edit"
 import { useTranslation } from "react-i18next"
@@ -19,15 +25,27 @@ import BasicPage from "../../components/BasicPage"
 import DateLocale from "../../components/ui/DateLocale"
 import { Team } from "../../modules/team/team.types"
 
+
 const MembershipsTable = () => {
   const { teamId, companySlug } = useParams()
   const { t } = useTranslation("membership")
+  const [searchParams, setSearchParams] = useSearchParams()
+  const handleChangeActiveMembers = (event: SelectChangeEvent) =>
+    setSearchParams((prev) => {
+      prev.set("activeMemberships", event.target.value)
+      return prev
+    })
+    
+  const activeMemberships = searchParams.get("activeMemberships") !== "false"
+  // eslint-disable-next-line no-console
+  console.log(activeMemberships)
 
   const { data, loading } = useQuery<MembershipsTableDTO>(
     MEMBERSHIPS_TABLE_QUERY,
     {
       variables: {
         teamId: Number(teamId),
+        active: activeMemberships,
       },
     }
   )
@@ -35,6 +53,8 @@ const MembershipsTable = () => {
   const team = data?.team
   const company = team?.company
   const companyUrl = `/companies/${companySlug}`
+  
+  
 
   const breadcrumbsLinks = [
     { name: company?.name || "", url: companyUrl || "" },
@@ -44,6 +64,21 @@ const MembershipsTable = () => {
 
   return (
     <BasicPage breadcrumbsLinks={breadcrumbsLinks} loading={loading}>
+      <FormControl sx={{ minWidth: 240 }}>
+        <InputLabel id="active-membership-select">
+          {t("list.statusSelectLabel")}
+        </InputLabel>
+        <Select
+          autoWidth
+          labelId="active-membership-select"
+          label={t("list.statusSelectLabel")}
+          onChange={handleChangeActiveMembers}
+          defaultValue={JSON.stringify(activeMemberships)}
+        >
+          <MenuItem value="true">{t("fields.status.active")}</MenuItem>
+          <MenuItem value="false">{t("fields.status.inactive")}</MenuItem>
+        </Select>
+      </FormControl>
       <Box sx={{ marginY: 4 }}>
         <TableContainer component={Paper} sx={{ backgroundColor: "white" }}>
           <Typography
@@ -58,7 +93,6 @@ const MembershipsTable = () => {
           >
             {t("list.title")}
           </Typography>
-
           <Table>
             <TableHead>
               <TableRow>
@@ -67,6 +101,7 @@ const MembershipsTable = () => {
                 <TableCell>{t("fields.memberRole")}</TableCell>
                 <TableCell>{t("fields.startDate")}</TableCell>
                 <TableCell>{t("fields.endDate")}</TableCell>
+                <TableCell>{t("fields.status.title")}</TableCell>
                 <TableCell>{t("list.table.actions")}</TableCell>
               </TableRow>
             </TableHead>
@@ -90,6 +125,9 @@ const MembershipsTable = () => {
                           <DateLocale date={membership.endDate} />
                         )}
                       </TableCell>
+                      <TableCell>{membership.endDate
+                        ? t("fields.status.inactive")
+                        : t("fields.status.active")}</TableCell>
                       <TableCell>
                         {membership && (
                           <Link
@@ -107,7 +145,7 @@ const MembershipsTable = () => {
             </TableBody>
           </Table>
         </TableContainer>
-      </Box>
+      </Box>            
     </BasicPage>
   )
 }
@@ -117,7 +155,7 @@ type MembershipsTableDTO = {
 }
 
 export const MEMBERSHIPS_TABLE_QUERY = gql`
-  query MembershipsTable($teamId: ID!) {
+  query MembershipsTable($teamId: ID!, $active: Boolean!) {
     team(id: $teamId) {
       id
       name
@@ -125,7 +163,7 @@ export const MEMBERSHIPS_TABLE_QUERY = gql`
         id
         name
       }
-      memberships {
+      memberships(active: $active) {
         id
         teamMemberName
         hoursPerMonth
@@ -133,6 +171,7 @@ export const MEMBERSHIPS_TABLE_QUERY = gql`
         endDate
         memberRole
         memberRoleDescription
+
       }
     }
   }

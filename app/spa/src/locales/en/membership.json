@@ -12,6 +12,11 @@
         "client": "Client",
         "designer": "Designer"
       }
+    },
+    "status": {
+      "title": "Status",
+      "active": "active",
+      "inactive": "inactive"
     }
   },
   "form": {
@@ -23,6 +28,7 @@
   "list": {
     "title": "People in the team",
     "breadcrumb": "People",
+    "statusSelectLabel": "Status",
     "table": {
       "name": "Name",
       "actions": "Actions"

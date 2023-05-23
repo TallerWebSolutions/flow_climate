@@ -12,7 +12,14 @@
         "client": "Cliente",
         "designer": "Designer"
       }
+    },
+    "status": {
+      "title": "Status",
+      "active": "Ativo",
+      "inactive": "Inativo"
+  
     }
+
   },
   "form": {
     "title": "Alterar Membro",
@@ -23,6 +30,7 @@
   "list": {
     "title": "Pessoas no time",
     "breadcrumb": "Pessoas",
+    "statusSelectLabel": "Status",
     "table": {
       "name": "Nome",
       "actions": "Ações"

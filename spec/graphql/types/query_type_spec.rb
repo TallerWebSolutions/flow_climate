@@ -220,7 +220,7 @@ RSpec.describe Types::QueryType do
                 leadTimeP65
                 leadTimeP80
                 leadTimeP95
-                numberOfDemandsDelivered
+                numberOfDemandsDelivered  
                 cumulativeFlowChartData {
                   xAxis
                   yAxis {

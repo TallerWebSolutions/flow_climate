@@ -61,7 +61,6 @@ class ProjectsController < AuthenticatedController
     @projects_by_team = @company.teams.find(params[:team_id]).projects.running.order(:name)
     respond_to { |format| format.js { render 'flow_events/search_projects_by_team' } }
   end
-  
 
   def finish_project
     ProjectsRepository.instance.finish_project(@project, @project.end_date)
