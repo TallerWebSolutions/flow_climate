@@ -506,7 +506,7 @@ DEPENDENCIES
   graphql
   histogram
   httparty
-  itly-plugin-amplitude
+  itly-plugin-amplitude (~> 0.1.1)
   jira-ruby
   jquery-rails
   kaminari

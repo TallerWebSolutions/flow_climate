@@ -22,6 +22,7 @@ gem 'graphiql-rails'
 gem 'graphql'
 gem 'histogram'
 gem 'httparty'
+gem 'itly-plugin-amplitude',
 gem 'jira-ruby', require: false
 gem 'jquery-rails'
 gem 'kaminari'
