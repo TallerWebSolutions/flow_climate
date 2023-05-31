@@ -1,8 +1,11 @@
 import React from "react"
 import ReactDOM from "react-dom"
+import * as amplitude from "@amplitude/analytics-browser"
 
 import App from "./App"
 import reportWebVitals from "./reportWebVitals"
+
+amplitude.init('a760159d283dcdb619d596057889137f')
 
 ReactDOM.render(
   <React.StrictMode>

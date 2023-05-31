@@ -21,6 +21,8 @@ import { MessagesContext } from "../../contexts/MessageContext"
 import { MeContext } from "../../contexts/MeContext"
 import { Team } from "../../modules/team/team.types"
 import User from "../../modules/user/user.types"
+import * as amplitude from "@amplitude/analytics-browser"
+
 
 export const TEAMS_QUERY = gql`
   query Teams {
@@ -83,16 +85,23 @@ const Teams = () => {
     },
   ]
 
+  amplitude.init("a760159d283dcdb619d596057889137f");
+
   const handleOnDeleteTeam = (id: string) => {
+    amplitude.logEvent("Excluir Time", {
+      teamId: id,
+      device_id: 'abcdefg',
+    });
+
     deleteTeamModal({
       title: t("delete_team_modal_title"),
       description: t("delete_team_modal_body"),
     }).then(() => {
       deleteTeam({
         variables: { teamId: id },
-      })
-    })
-  }
+      });
+    });
+  };
 
   return (
     <BasicPage

@@ -9,6 +9,7 @@ gem 'rails'
 gem 'bundler', require: false
 
 gem 'addressable'
+gem 'amplitude-api'
 gem 'barnes'
 gem 'carrierwave'
 gem 'cloudinary'
