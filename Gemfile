@@ -9,7 +9,6 @@ gem 'rails'
 gem 'bundler', require: false
 
 gem 'addressable'
-gem 'amplitude-api'
 gem 'barnes'
 gem 'carrierwave'
 gem 'cloudinary'
@@ -22,7 +21,8 @@ gem 'graphiql-rails'
 gem 'graphql'
 gem 'histogram'
 gem 'httparty'
-gem 'itly-plugin-amplitude'
+gem 'jira-ruby', require: false
+gem 'jquery-rails'
 gem 'kaminari'
 gem 'mini_magick'
 gem 'net-imap'
@@ -79,6 +79,4 @@ group :production do
   gem 'puma'
   gem 'puma_worker_killer'
   gem 'rails_12factor'
-  gem 'jira-ruby', require: false
-  gem 'jquery-rails'
 end

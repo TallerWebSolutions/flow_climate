@@ -13,8 +13,5 @@
   },
   "engines": {
     "node": "18"
-  },
-  "dependencies": {
-    "@amplitude/analytics-browser": "^1.10.3"
   }
 }
