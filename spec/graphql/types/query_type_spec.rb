@@ -936,7 +936,7 @@ RSpec.describe Types::QueryType do
       travel_to Time.zone.local(2023, 5, 3, 10) do
         product = Fabricate :product
         review = Fabricate :service_delivery_review, product: product, meeting_date: Time.zone.now
-        Fabricate :service_delivery_review, product: product, meeting_date: 2.weeks.ago
+        Fabricate :service_delivery_review, product: product, meeting_date: 4.weeks.ago
 
         query =
           %(
