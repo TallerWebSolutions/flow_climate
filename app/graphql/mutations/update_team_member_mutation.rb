@@ -10,7 +10,7 @@ module Mutations
     argument :monthly_payment, Float, required: false
     argument :name, String, required: true
     argument :start_date, GraphQL::Types::ISO8601Date, required: true
-    argument :team_member_id, Int, required: true
+    argument :team_member_id, ID, required: true
 
     field :updated_team_member, Types::Teams::TeamMemberType, null: false
 
