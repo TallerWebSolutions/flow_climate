@@ -85,6 +85,7 @@ export const ProjectPage = ({
   const company = projectInfo?.company
   const companyName = company?.name || ""
   const companySlug = company?.slug
+  const companyID = company?.id || ""
   const breadcrumbsLinks = [
     { name: companyName, url: `/companies/${companySlug}` },
     {
@@ -150,7 +151,7 @@ export const ProjectPage = ({
     },
     {
       name: t("settings_actions.jira_settings"),
-      href: `/companies/${companySlug}/jira/projects/${projectId}/jira_project_configs`,
+      href: `/companies/${companyID}/jira/projects/${projectId}/jira_project_configs/`,
     },
     {
       name: t("settings_actions.projects_stages"),
@@ -159,7 +160,8 @@ export const ProjectPage = ({
     {
       name: t("settings_actions.risk_settings"),
       href: `/companies/${companySlug}/projects/${projectId}/project_risk_configs`,
-    },
+    },       //companies/1/jira/projects/2028/jira_project_configs/1102/edit?
+             //companies/:companyId/jira/projects/:projectId/jira_project_configs/:id/edit
   ]
   const taskTabs = [
     {

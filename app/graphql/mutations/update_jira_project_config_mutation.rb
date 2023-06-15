@@ -5,7 +5,7 @@ module Mutations
     argument :fix_version_name, String, required: true
     argument :id, ID, required: true
 
-    field :id, ID, null: false
+    field :id, ID, null: true
     field :status_message, Types::UpdateResponses, null: false
 
     def resolve(id:, fix_version_name:)

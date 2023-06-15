@@ -4,55 +4,51 @@ import { useTranslation } from "react-i18next"
 import BasicPage from "../../components/BasicPage"
 import { useContext } from "react"
 import { useForm } from "react-hook-form"
-import { useParams } from "react-router-dom"
-import { MessagesContext } from "../../contexts/MessageContext"
+import { useNavigate, useParams } from "react-router-dom"
+import { MessagesContext } from "../../contexts/MessageContext" 
 
 type JiraProjectConfigDTO = {
-  project: string
-  jiraProjectConfig: string
+  jiraProjectConfigId: string
   fixVersionName: string
+  
 }
  
-
 export const JIRA_PROJECT_CONFIG_EDIT_QUERY = gql`
-  query JiraProjectConfigEdit($jiraProjectConfigEditId: String!) {
-    jiraProjectConfigEdit(id: $jiraProjectConfigEditId) {
+  query JiraProjectConfig($jiraProjectConfigId: id!) {
+    jiraProjectConfig( fixVersionName: $fixVersionName ) {
       id
-      name
+      fixVersionName
     }
   }
 `
-
 type UpdateJiraProjectConfigDTO = {
   updateJiraProjectConfigEdit: {
-    statusMessage: string    
+    statusMessage: string
+    id: Number
   }
 }
 
-const UPDATE_JIRA_PROJECT_CONFIG_EDIT_MUTATION = gql`
-  mutation JiraProjectConfigEdit($jiraProductKey: String!, $fixVersionName: String!, $id: String!) {
-    updateJiraProjectConfig(jiraProjectConfigId: $jiraProjectConfigId, name: $name) {
+const UPDATE_JIRA_PROJECT_CONFIG_MUTATION = gql`
+  mutation JiraProjectConfig( $id: ID!, $fixVersionName: String! ) {
+    updateJiraProjectConfig(id: $id, fixVersionName: $fixVersionName) {
       id
-      statusMessage
-      }
-    }
+  }
+}
 `
-
 const JiraProjectConfigEdit = () => {
-  const { t } = useTranslation(["teamMembers" ])
+  const { t } = useTranslation(["teamMembers"])
   const { id } = useParams()
   const { pushMessage } = useContext(MessagesContext)
- // const navigate = useNavigate()
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { data, loading } = useQuery<JiraProjectConfigDTO>(JIRA_PROJECT_CONFIG_EDIT_QUERY, {
+  const navigate = useNavigate()
+  const { loading } = useQuery<JiraProjectConfigDTO>(JIRA_PROJECT_CONFIG_EDIT_QUERY, {
     variables: {
       id: Number(id),
     },
   })
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [UpdateJiraProjectConfigEdit] = useMutation<UpdateJiraProjectConfigDTO>
-    (UPDATE_JIRA_PROJECT_CONFIG_EDIT_MUTATION, {
-    update: (_, { data }) => {
+
+  const [UpdateJiraProjectConfig] = useMutation<UpdateJiraProjectConfigDTO>
+    (UPDATE_JIRA_PROJECT_CONFIG_MUTATION, {
+      update: (_, { data }) => {
       const mutationResult = data?.updateJiraProjectConfigEdit.statusMessage === "SUCCESS"
       // eslint-disable-next-line no-console
       console.log(mutationResult)
@@ -63,25 +59,22 @@ const JiraProjectConfigEdit = () => {
         severity: mutationResult ? "success" : "error",
       })
 
-    //  navigate(`/companies/${companyId}/teams/${newJiraProjectConfigId}`)
+    navigate(`/`)
     },
   })
 
   const { register, handleSubmit } = useForm()
 
   const handleJiraProjectConfigEdit = (data: any) => {
-    const { jiraProductKey, fixVersionName } = data
+    const { id, fixVersionName } = data
 
-    UpdateJiraProjectConfigEdit({
+    UpdateJiraProjectConfig({
       variables: {
-        fixVersionName, jiraProductKey, id
-
+        id: String(id),
+        fixVersionName: String(fixVersionName)
       },
     })
-    // eslint-disable-next-line no-console
-    console.log(jiraProductKey, fixVersionName)
   }
-
 
   return (
     <BasicPage title='Editar Configuração do Jira' breadcrumbsLinks={[]}loading={loading}> 
@@ -89,11 +82,7 @@ const JiraProjectConfigEdit = () => {
         <Box sx={{ maxWidth: "480px", marginX: "auto", paddingY: 4, }}>
           <form onSubmit={handleSubmit(handleJiraProjectConfigEdit)}>
             <FormGroup>
-              <FormControl sx={{ marginBottom: 4 }}>
-              <InputLabel htmlFor="component-simple">Config do Produto</InputLabel>
-              <Input {...register("jiraProductKey")} />
-                         
-              </FormControl>
+
               <FormControl sx={{ marginBottom: 4 }}>
               <InputLabel htmlFor="component-simple">Fix Version ou Label no Jira</InputLabel>
               <Input {...register("fixVersionName")} />
