@@ -2124,4 +2124,54 @@ RSpec.describe Types::QueryType do
       expect(result.dig('data', 'memberships').pluck('id')).to eq [other_membership.id.to_s, membership.id.to_s]
     end
   end
+
+  describe '#jira_project_config' do
+    context 'with valid ID' do
+      it 'returns the demand' do
+        jira_project_config = Fabricate :jira_project_config
+
+        query =
+          %(
+          query {
+            jiraProjectConfig(id: "#{jira_project_config.id}") {
+              id
+            }
+          }
+        )
+
+        user = Fabricate :user
+
+        context = {
+          current_user: user
+        }
+
+        result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
+
+        expect(result.dig('data', 'jiraProjectConfig')['id']).to eq jira_project_config.id.to_s
+      end
+    end
+
+    context 'with invalid ID' do
+      it 'returns nil' do
+        query =
+          %(
+          query {
+            jiraProjectConfig(id: "foo") {
+              id
+            }
+          }
+        )
+
+        user = Fabricate :user
+
+        context = {
+          current_user: user
+        }
+
+        result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
+
+        expect(result.dig('data', 'jiraProjectConfig')).to be_nil
+      end
+    end
+  end
 end

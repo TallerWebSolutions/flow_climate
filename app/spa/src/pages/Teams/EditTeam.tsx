@@ -22,7 +22,7 @@ type TeamDTO = {
 }
 
 export const TEAM_QUERY = gql`
-  query Team($teamId: Int!) {
+  query Team($teamId: ID!) {
     team(id: $teamId) {
       id
       name
@@ -58,11 +58,13 @@ const EditTeam = () => {
   const { teamId } = useParams()
   const { pushMessage } = useContext(MessagesContext)
   const navigate = useNavigate()
+
   const { data, loading } = useQuery<TeamDTO>(TEAM_QUERY, {
     variables: {
       teamId: Number(teamId),
     },
   })
+
   const [updateTeam] = useMutation<UpdateTeamDTO>(UPDATE_TEAM_MUTATION, {
     update: (_, { data }) => {
       const newTeamID = data?.updateTeam.id

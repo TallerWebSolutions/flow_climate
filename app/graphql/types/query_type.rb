@@ -84,7 +84,11 @@ module Types
       argument :id, ID, required: true
     end
 
-    field :jira_portfolio_unit_by_id, String, null: false do
+    field :jira_portfolio_unit_by_id, String, null: true do
+      argument :id, ID, required: true
+    end
+
+    field :jira_project_config, Types::JiraProjectConfigType, null: false do
       argument :id, ID, required: true
     end
 
@@ -137,7 +141,7 @@ module Types
     end
 
     def jira_project_config(id:)
-      JiraProjectConfig.find(id)
+      Jira::JiraProjectConfig.find_by(id: id)
     end
 
     def product(slug:)

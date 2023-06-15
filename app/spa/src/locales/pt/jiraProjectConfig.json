@@ -1,0 +1,17 @@
+{
+  "breadcrumbs": {
+    "jiraProjectConfig": {
+      "title": "Configs do Jira"
+    }
+  },
+  "edit": {
+    "form": {
+      "save": "Salvar",
+      "cancel": "Cancelar",
+      "statusMessage": {
+        "success": "Config salva.",
+        "fail": "Problemas ao salvar a config."
+      }
+    }
+  }
+}
