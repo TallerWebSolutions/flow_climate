@@ -14,6 +14,11 @@ module Jira
       @jira_product_configs = @project.products.map(&:jira_product_configs).flatten - @project.jira_project_configs.map(&:jira_product_config)
     end
 
+    def edit
+      prepend_view_path Rails.public_path
+      render 'spa-build/index'
+    end
+
     def create
       @jira_project_config = JiraProjectConfig.new(jira_project_config_params.merge(project: @project))
       flash[:error] = I18n.t('jira_project_config.validations.fix_version_name_uniqueness.message') unless @jira_project_config.save

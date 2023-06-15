@@ -17,6 +17,7 @@ const ProjectsPage = () => {
   return (
     <ProjectsList breadcrumbsLinks={breadcrumbsLinks} companyUrl={companyUrl} />
   )
+    
 }
 
 export default ProjectsPage

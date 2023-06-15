@@ -19,10 +19,14 @@
           <% project.jira_project_configs.each do |config| %>
             <tr>
               <td><%= config.jira_product_config.jira_product_key %></td>
+              <td><%= config.id %></td>
               <td><%= config.fix_version_name %></td>
               <td>
                 <%= link_to company_project_jira_project_config_path(company, project, config), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') } do %>
                   <i class="fa fa-times" aria-hidden="true"></i>
+                <% end %>
+                <%= link_to edit_company_project_jira_project_config_path(company, project, config) do %>
+                  <i class="fa fa-edit" aria-hidden="true"></i>
                 <% end %>
 
                 <%= link_to synchronize_jira_company_project_jira_project_config_path(company, project, config), method: :put, remote: true do %>

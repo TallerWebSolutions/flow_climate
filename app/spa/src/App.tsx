@@ -50,6 +50,7 @@ import CreatePortfolioUnits from "./pages/Products/CreatePortfolioUnits"
 import EditPortfolioUnits from "./pages/Products/EditPortfolioUnits"
 import ServiceDeliveryReviews from "./pages/Products/ServiceDeliveryReviews"
 import ServiceDeliveryReview from "./pages/Products/ServiceDeliveryReview"
+import JiraProjectConfigEdit from "./pages/Jira/JiraProjectConfigEdit"
 
 export const ME_QUERY = gql`
   query Me {
@@ -264,6 +265,10 @@ const App = () => {
             <Route
               path="/devise_customers/customer_demands/:demand/demand_efforts"
               element={<DemandEfforts />}
+            />
+              <Route
+              path="/companies/:companyId/jira/projects/:projectId/jira_project_configs/:id/edit"
+              element={<JiraProjectConfigEdit />}
             />
           </Routes>
         </BrowserRouter>

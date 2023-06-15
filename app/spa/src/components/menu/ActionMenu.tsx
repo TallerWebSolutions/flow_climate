@@ -2,7 +2,6 @@ import { useState } from "react"
 import Button from "@mui/material/Button"
 import Menu from "@mui/material/Menu"
 import MenuItem from "@mui/material/MenuItem"
-import SettingsIcon from "@mui/icons-material/Settings"
 
 type ActionMenuItem = {
   name: string
@@ -26,16 +25,17 @@ const ActionMenu = ({ items }: ActionMenuProps) => {
 
   return (
     <div>
-      <Button
+      
+      <Button variant="text"
         id="basic-button"
         aria-controls={open ? "basic-menu" : undefined}
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
         sx={{ cursor: "pointer" }}
-      >
-        <SettingsIcon />
+      >Ações
       </Button>
+             
       <Menu
         id="basic-menu"
         anchorEl={anchorEl}
