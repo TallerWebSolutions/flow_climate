@@ -25,17 +25,18 @@ const ActionMenu = ({ items }: ActionMenuProps) => {
 
   return (
     <div>
-      
-      <Button variant="text"
+      <Button
+        variant="text"
         id="basic-button"
         aria-controls={open ? "basic-menu" : undefined}
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
         sx={{ cursor: "pointer" }}
-      >Ações
+      >
+        Ações
       </Button>
-             
+
       <Menu
         id="basic-menu"
         anchorEl={anchorEl}

@@ -16,7 +16,6 @@ import {
   MenuItem,
   InputLabel,
   SelectChangeEvent,
-  
 } from "@mui/material"
 import EditIcon from "@mui/icons-material/Edit"
 import { useTranslation } from "react-i18next"
@@ -24,7 +23,6 @@ import { useTranslation } from "react-i18next"
 import BasicPage from "../../components/BasicPage"
 import DateLocale from "../../components/ui/DateLocale"
 import { Team } from "../../modules/team/team.types"
-
 
 const MembershipsTable = () => {
   const { teamId, companySlug } = useParams()
@@ -35,9 +33,9 @@ const MembershipsTable = () => {
       prev.set("activeMemberships", event.target.value)
       return prev
     })
-    
+
   const activeMemberships = searchParams.get("activeMemberships") !== "false"
-  
+
   const { data, loading } = useQuery<MembershipsTableDTO>(
     MEMBERSHIPS_TABLE_QUERY,
     {
@@ -51,8 +49,6 @@ const MembershipsTable = () => {
   const team = data?.team
   const company = team?.company
   const companyUrl = `/companies/${companySlug}`
-  
-  
 
   const breadcrumbsLinks = [
     { name: company?.name || "", url: companyUrl || "" },
@@ -123,9 +119,11 @@ const MembershipsTable = () => {
                           <DateLocale date={membership.endDate} />
                         )}
                       </TableCell>
-                      <TableCell>{membership.endDate
-                        ? t("fields.status.inactive")
-                        : t("fields.status.active")}</TableCell>
+                      <TableCell>
+                        {membership.endDate
+                          ? t("fields.status.inactive")
+                          : t("fields.status.active")}
+                      </TableCell>
                       <TableCell>
                         {membership && (
                           <Link
@@ -143,7 +141,7 @@ const MembershipsTable = () => {
             </TableBody>
           </Table>
         </TableContainer>
-      </Box>            
+      </Box>
     </BasicPage>
   )
 }
@@ -169,7 +167,6 @@ export const MEMBERSHIPS_TABLE_QUERY = gql`
         endDate
         memberRole
         memberRoleDescription
-
       }
     }
   }

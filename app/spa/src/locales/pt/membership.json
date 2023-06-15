@@ -17,9 +17,7 @@
       "title": "Status",
       "active": "Ativo",
       "inactive": "Inativo"
-  
     }
-
   },
   "form": {
     "title": "Alterar Membro",

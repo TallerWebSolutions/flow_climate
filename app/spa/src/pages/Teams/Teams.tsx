@@ -23,7 +23,6 @@ import { Team } from "../../modules/team/team.types"
 import User from "../../modules/user/user.types"
 import * as amplitude from "@amplitude/analytics-browser"
 
-
 export const TEAMS_QUERY = gql`
   query Teams {
     teams {
@@ -85,13 +84,13 @@ const Teams = () => {
     },
   ]
 
-  amplitude.init("a760159d283dcdb619d596057889137f");
+  amplitude.init("a760159d283dcdb619d596057889137f")
 
   const handleOnDeleteTeam = (id: string) => {
     amplitude.logEvent("Excluir Time", {
       teamId: id,
-      device_id: 'abcdefg',
-    });
+      device_id: "abcdefg",
+    })
 
     deleteTeamModal({
       title: t("delete_team_modal_title"),
@@ -99,9 +98,9 @@ const Teams = () => {
     }).then(() => {
       deleteTeam({
         variables: { teamId: id },
-      });
-    });
-  };
+      })
+    })
+  }
 
   return (
     <BasicPage

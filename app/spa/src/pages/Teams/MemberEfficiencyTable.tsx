@@ -70,8 +70,6 @@ const MemberEfficiencyTable = () => {
         {membershipEfficency.membership?.teamMemberName}
       </Link>,
 
-      
-
       membershipEfficency.memberCapacityValue,
       membershipEfficency.effortInMonth?.toFixed(2),
       membershipEfficency.realizedMoneyInMonth?.toLocaleString("pt-br", {
@@ -82,10 +80,12 @@ const MemberEfficiencyTable = () => {
       membershipEfficency.avgHoursPerDemand?.toFixed(2),
 
       <>
-        <RouterLink to={`${companyUrl}/team_members/${membershipEfficency.membership?.teamMemberId}/edit`}>
-            <EditOutlinedIcon color="primary" />
+        <RouterLink
+          to={`${companyUrl}/team_members/${membershipEfficency.membership?.teamMemberId}/edit`}
+        >
+          <EditOutlinedIcon color="primary" />
         </RouterLink>
-      </>
+      </>,
     ]
   )
 
