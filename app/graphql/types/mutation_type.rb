@@ -41,7 +41,7 @@ module Types
 
     field :create_service_delivery_review_action, mutation: Mutations::CreateServiceDeliveryReviewActionMutation
 
-    field :update_jira_project_config_edit, mutation: Mutations::UpdateJiraProjectConfigEditMutation
+    field :update_jira_project_config, mutation: Mutations::UpdateJiraProjectConfigMutation
 
     def me
       context[:current_user]

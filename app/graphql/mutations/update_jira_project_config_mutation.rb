@@ -1,21 +1,25 @@
 # frozen_string_literal: true
 
 module Mutations
-  class UpdateJiraProjectConfigEditMutation < Mutations::BaseMutation
-    argument :jira_product_key, String, required: true
+  class UpdateJiraProjectConfigMutation < Mutations::BaseMutation
     argument :fix_version_name, String, required: true
-    argument :id, String, required: true
+    argument :id, ID, required: true
 
-    field :id, String, null: false
-    field :status_message, String, null: false
+    field :id, ID, null: false
+    field :status_message, Types::UpdateResponses, null: false
 
-    def resolve(jira_product_key:, fix_version_name:, id:)
-      jira_project_config = JiraProjectConfig.find_by(id: id)
+    def resolve(id:, fix_version_name:)
+      jira_project_config = Jira::JiraProjectConfig.find_by(id: id)
 
-      if jira_project_config.update(jira_product_key: jira_product_key, fix_version_name: fix_version_name)
-        { id: jira_project_config.id, status_message: 'SUCCESS' }
+      if jira_project_config.present?
+        if jira_project_config.update(fix_version_name: fix_version_name)
+          { id: jira_project_config.id, status_message: 'SUCCESS' }
+        else
+          { id: nil, status_message: 'FAIL' }
+        end
+
       else
-        { id: nil, status_message: 'FAIL' }
+        { id: nil, status_message: 'NOT_FOUND' }
       end
     end
   end

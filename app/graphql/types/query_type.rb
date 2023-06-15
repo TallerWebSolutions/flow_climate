@@ -12,10 +12,6 @@ module Types
       argument :id, ID
     end
 
-    field :jira_project_config, Types::JiraProjectConfigType, null: true, description: 'A project config on Jira' do
-      argument :id, ID
-    end
-
     field :product, Types::ProductType, null: true, description: 'A plain product' do
       argument :slug, String
     end

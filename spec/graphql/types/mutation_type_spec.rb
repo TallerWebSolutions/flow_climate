@@ -852,4 +852,44 @@ RSpec.describe Types::MutationType do
       end
     end
   end
+
+  describe '#update_jira_project_config_mutation' do
+    let(:jira_project_config) { Fabricate :jira_project_config }
+
+    let(:mutation) do
+      %(mutation {
+          updateJiraProjectConfig(
+            id: #{jira_project_config.id}
+            fixVersionName: "foo"
+          ) {
+            statusMessage
+          }
+        })
+    end
+
+    context 'with valid data' do
+      it 'updates the fields from mutation input' do
+        result = FlowClimateSchema.execute(mutation).as_json
+        expect(result['data']['updateJiraProjectConfig']['statusMessage']).to eq('SUCCESS')
+        updated_config = jira_project_config.reload
+        expect(updated_config.fix_version_name).to eq 'foo'
+      end
+    end
+
+    context 'with invalid data' do
+      it 'fails to update' do
+        allow_any_instance_of(Jira::JiraProjectConfig).to(receive(:update)).and_return(false)
+        result = FlowClimateSchema.execute(mutation).as_json
+        expect(result['data']['updateJiraProjectConfig']['statusMessage']).to eq('FAIL')
+      end
+    end
+
+    context 'with invalid project config' do
+      it 'fails to update' do
+        allow(Jira::JiraProjectConfig).to(receive(:find_by)).and_return(nil)
+        result = FlowClimateSchema.execute(mutation).as_json
+        expect(result['data']['updateJiraProjectConfig']['statusMessage']).to eq('NOT_FOUND')
+      end
+    end
+  end
 end
