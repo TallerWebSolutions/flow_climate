@@ -81,6 +81,7 @@ RSpec.describe Jira::JiraProjectConfigsController do
       end
     end
 
+
     describe 'POST #create' do
       let!(:project) { Fabricate :project, customers: [customer], products: [product] }
       let(:jira_product_config) { Fabricate :jira_product_config, product: product, company: product.company, jira_product_key: 'bar' }
@@ -234,6 +235,16 @@ RSpec.describe Jira::JiraProjectConfigsController do
             it { expect(response).to have_http_status :not_found }
           end
         end
+      end
+    end
+
+    describe 'GET #edit' do
+      let!(:project) { Fabricate :project, customers: [customer], products: [product] }
+      it 'renders the SPA template' do
+        
+        get :edit, params: { company_id: company, project_id: project, id: 'foo'  }
+
+        expect(response).to render_template 'spa-build/index'
       end
     end
 
