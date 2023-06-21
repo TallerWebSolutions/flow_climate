@@ -81,7 +81,6 @@ RSpec.describe Jira::JiraProjectConfigsController do
       end
     end
 
-
     describe 'POST #create' do
       let!(:project) { Fabricate :project, customers: [customer], products: [product] }
       let(:jira_product_config) { Fabricate :jira_product_config, product: product, company: product.company, jira_product_key: 'bar' }
@@ -240,9 +239,9 @@ RSpec.describe Jira::JiraProjectConfigsController do
 
     describe 'GET #edit' do
       let!(:project) { Fabricate :project, customers: [customer], products: [product] }
+
       it 'renders the SPA template' do
-        
-        get :edit, params: { company_id: company, project_id: project, id: 'foo'  }
+        get :edit, params: { company_id: company, project_id: project, id: 'foo' }
 
         expect(response).to render_template 'spa-build/index'
       end
@@ -257,9 +256,8 @@ RSpec.describe Jira::JiraProjectConfigsController do
       context 'valid parameters' do
         before { get :index, params: { company_id: company, project_id: project } }
 
-        it 'assigns the instance variable @jira_project_configs and renders the index template' do
-          expect(response).to render_template 'jira/jira_project_configs/index'
-          expect(assigns(:jira_project_configs)).to match_array [jira_config, other_jira_config]
+        it 'renders the index template' do
+          expect(response).to render_template 'spa-build/index'
         end
       end
 

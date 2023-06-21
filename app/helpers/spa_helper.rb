@@ -39,7 +39,9 @@ module SpaHelper
       { controller: 'memberships', action: 'efficiency_table' },
       { controller: 'portfolio_units', action: 'index' },
       { controller: 'portfolio_units', action: 'new' },
-      { controller: 'jira/jira_project_configs', action: 'edit' }
+      { controller: 'jira/jira_project_configs', action: 'edit' },
+      { controller: 'jira/jira_project_configs', action: 'index'}
+
     ]
   end
 end

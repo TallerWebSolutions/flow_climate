@@ -26,7 +26,7 @@ const ActionMenu = ({ items }: ActionMenuProps) => {
   return (
     <div>
       <Button
-        variant="text"
+        variant="contained"
         id="basic-button"
         aria-controls={open ? "basic-menu" : undefined}
         aria-haspopup="true"

@@ -92,6 +92,10 @@ module Types
       argument :id, ID, required: true
     end
 
+    field :jira_project_config_list, Types::JiraProjectConfigType, null: true do
+      argument :id, ID, required: true
+    end
+
     field :work_item_types, [Types::WorkItemTypeType], null: false, description: 'A list of work item types registered to the logged user last company'
 
     field :service_delivery_review, Types::ServiceDeliveryReviewType, null: true do
@@ -142,6 +146,10 @@ module Types
 
     def jira_project_config(id:)
       Jira::JiraProjectConfig.find_by(id: id)
+    end
+
+    def jira_project_config_list(id:)
+      Jira::JiraProjectConfig.where(project_id: id).first
     end
 
     def product(slug:)

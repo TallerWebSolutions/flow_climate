@@ -6,6 +6,7 @@ type JiraProductConfig = {
   company?: Company
   product?: Product
   jiraProductKey?: string
+  
 }
 
 export type JiraProjectConfig = {

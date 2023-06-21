@@ -6,7 +6,8 @@ module Jira
     before_action :assign_jira_project_config, only: %i[destroy synchronize_jira]
 
     def index
-      @jira_project_configs = @project.jira_project_configs
+      prepend_view_path Rails.public_path
+      render 'spa-build/index'
     end
 
     def new

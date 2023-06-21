@@ -51,6 +51,7 @@ import EditPortfolioUnits from "./pages/Products/EditPortfolioUnits"
 import ServiceDeliveryReviews from "./pages/Products/ServiceDeliveryReviews"
 import ServiceDeliveryReview from "./pages/Products/ServiceDeliveryReview"
 import EditJiraProjectConfig from "./pages/Jira/EditJiraProjectConfig"
+import JiraProjectConfigList from "./pages/Jira/JiraProjectConfigList"
 
 export const ME_QUERY = gql`
   query Me {
@@ -269,6 +270,10 @@ const App = () => {
             <Route
               path="/companies/:companyId/jira/projects/:projectId/jira_project_configs/:id/edit"
               element={<EditJiraProjectConfig />}
+            />
+            <Route
+              path="/companies/:company_id/jira/projects/:project_id/jira_project_configs" 
+              element={<JiraProjectConfigList />}
             />
           </Routes>
         </BrowserRouter>

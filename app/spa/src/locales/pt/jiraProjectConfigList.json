@@ -1,0 +1,19 @@
+{
+"breadcrumbs": {
+    "jiraProjectConfigList": {
+      "projects":"Projetos",
+      "title": "Configs do Jira"          
+    }
+  },  
+
+  "fields": {
+    "productConfig": "Config do Produto",
+    "fixVersionOrLabelOnJira": "Fix Version ou Label no Jira"
+  },
+
+  "list":{
+    "title": "Informações"
+  },
+
+  "jiraProjectConfig": "Configurações do Projeto"
+}

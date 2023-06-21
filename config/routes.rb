@@ -255,7 +255,6 @@ Rails.application.routes.draw do
       scope :jira do
         resources :jira_project_configs, only: %i[new create destroy index edit], module: 'jira' do
           put :synchronize_jira, on: :member
-          
         end
       end
     end
