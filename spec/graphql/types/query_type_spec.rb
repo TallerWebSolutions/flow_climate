@@ -2178,7 +2178,8 @@ RSpec.describe Types::QueryType do
   describe '#jira_project_config_list' do
     context 'with valid ID' do
       it 'returns the config list' do
-        jira_project_config = Fabricate :jira_project_config
+        jira_project_config = Fabricate :jira_project_config, id: 1
+
         query =
           %(
           query {
@@ -2187,29 +2188,38 @@ RSpec.describe Types::QueryType do
             }
           }
         )
+
         user = Fabricate :user
+
         context = {
           current_user: user
         }
+
         result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
-        expect(result.dig('data', 'jiraProjectConfigList', 'id')).to eq jira_project_config.project.id.to_s
+        
+        expect(result.dig('data', 'jiraProjectConfigList').first['id']).to eq jira_project_config.id.to_s
       end
     end
+
     context 'with invalid ID' do
       it 'returns nil' do
         query =
           %(
           query {
-            jiraProjectConfigList(id: "foo") {
+            jiraProjectConfigList(project_id: "foo") {
               id
             }
           }
         )
+
         user = Fabricate :user
+
         context = {
           current_user: user
         }
+
         result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
+
         expect(result.dig('data', 'jiraProjectConfigList')).to be_nil
       end
     end

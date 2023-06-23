@@ -92,7 +92,7 @@ module Types
       argument :id, ID, required: true
     end
 
-    field :jira_project_config_list, Types::JiraProjectConfigType, null: true do
+    field :jira_project_config_list, [Types::JiraProjectConfigType], null: true do
       argument :id, ID, required: true
     end
 
@@ -149,7 +149,7 @@ module Types
     end
 
     def jira_project_config_list(id:)
-      Jira::JiraProjectConfig.where(project_id: id).first
+      Jira::JiraProjectConfig.where(project_id: id)
     end
 
     def product(slug:)

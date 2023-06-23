@@ -11,12 +11,12 @@ import { MeContext } from "../../contexts/MeContext"
 
 
 type JiraProjectConfigListDTO = {
-  jiraProjectConfigList?: JiraProjectConfig
+  jiraProjectConfigList?: JiraProjectConfig[]
 }
 
-export const JIRA_PROJECT_CONFIG_TABLE_QUERY = gql`
+export const JIRA_PROJECT_CONFIG_LIST_QUERY = gql`
   query JiraProjectConfigList($projectId: ID!){
-    jiraProjectConfigList (id: $projectId) {
+    jiraProjectConfigList(id: $projectId) {
       id
       fixVersionName
       jiraProductConfig {
@@ -29,25 +29,23 @@ export const JIRA_PROJECT_CONFIG_TABLE_QUERY = gql`
 const JiraProjectConfigList = () => {
   const { t } = useTranslation(["jiraProjectConfigList"])
   const params = useParams()
-
   
   const companySlug = params.company_id
   const projectId = params.project_id
 
   const { data, loading } =
-    useQuery<JiraProjectConfigListDTO>(JIRA_PROJECT_CONFIG_TABLE_QUERY,
-      { 
+    useQuery<JiraProjectConfigListDTO>(JIRA_PROJECT_CONFIG_LIST_QUERY,
+      {
         variables: {
-          projectId: projectId, 
+          projectId: projectId,
         },
       }
     )
-  // eslint-disable-next-line no-console
-  console.log({ data, loading, projectId })
-  const jiraId =data?.jiraProjectConfigList?.id || 0
-  const fixVersionName = data?.jiraProjectConfigList?.fixVersionName || ""
-  const productKey = data?.jiraProjectConfigList?.jiraProductConfig?.jiraProductKey || ""
-   
+      
+  const jiraId = data?.jiraProjectConfigList?.map(({id}) => id) || 0
+  const fixVersionName = data?.jiraProjectConfigList?.map(({ fixVersionName }) => fixVersionName) || ""
+  const productKey = data?.jiraProjectConfigList?.map(
+    ({ jiraProductConfig }) => jiraProductConfig?.jiraProductKey) || ""
 
   const { me } = useContext(MeContext)
   const company = me?.currentCompany
