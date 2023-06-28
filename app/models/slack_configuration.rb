@@ -62,7 +62,7 @@ class SlackConfiguration < ApplicationRecord
     rescue StandardError
       false
     end
-    return if room_webhook_url.is_a?(URI::HTTP) || room_webhook_url.is_a?(URI::HTTPS)
+    return false if room_webhook_url.is_a?(URI::HTTP) || room_webhook_url.is_a?(URI::HTTPS)
 
     errors.add(:room_webhook, I18n.t('errors.messages.invalid'))
   end

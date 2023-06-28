@@ -20,7 +20,6 @@ export type BasicPageProps = {
   actions?: ReactNode
   loading?: boolean
 }
-
 const BasicPage = ({
   breadcrumbsLinks,
   title,

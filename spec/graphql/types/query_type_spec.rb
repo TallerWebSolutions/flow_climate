@@ -2196,7 +2196,7 @@ RSpec.describe Types::QueryType do
         }
 
         result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
-        
+
         expect(result.dig('data', 'jiraProjectConfigList').first['id']).to eq jira_project_config.id.to_s
       end
     end

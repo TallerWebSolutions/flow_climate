@@ -23,7 +23,7 @@ import { Team } from "../../modules/team/team.types"
 import User from "../../modules/user/user.types"
 import * as amplitude from "@amplitude/analytics-browser"
 
-export const TEAMS_QUERY = gql`
+export const TEAMS_QUERY = gql` 
   query Teams {
     teams {
       id

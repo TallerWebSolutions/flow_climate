@@ -39,7 +39,7 @@ class UserInvite < ApplicationRecord
 
   def same_invite?
     existent_invite = UserInvite.where(invite_email: invite_email, company: company).where.not(invite_status: UserInvite.invite_statuses[:cancelled])
-    return if existent_invite.first&.id == id || existent_invite.blank?
+    return false if existent_invite.first&.id == id || existent_invite.blank?
 
     errors.add(:invite_email, I18n.t('activerecord.errors.models.user_invite.invite_email.not_same'))
   end
