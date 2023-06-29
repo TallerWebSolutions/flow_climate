@@ -114,8 +114,6 @@ const Teams = () => {
     if (amplitudeUser?.id)
     return trackPageView("Teams", amplitudeUser?.id, { user: amplitudeUser },)
   },)
-  // eslint-disable-next-line no-console
-  console.log({ amplitudeUser, trackPageView })
 
   return (
     <BasicPage
