@@ -18,24 +18,24 @@ export const trackPageView = (pageName: string, userId: string, userData: object
   });
 };
 
-export const setUserId = (userId: string): any => {
-  amplitude.setUserId(userId);
-};
-
-export const trackEvent = (eventName: string, userId: string, userData: object, company: string): any => {
-  amplitude.logEvent(eventName, {
-    'ID do Usuário': userId,
-    'Dados do Usuário': userData,
-    'Empresa Cliente': company,
-  });
-};
-
-export const trackPageAccess = (pageTitle: string): any => {
-  amplitude.logEvent('Acesso à Página', {
-    'Título': pageTitle,
-  });
-};
-
+//export const setUserId = (userId: string): any => {
+//  amplitude.setUserId(userId);
+//};
+//
+//export const trackEvent = (eventName: string, userId: string, userData: object, company: string): any => {
+//  amplitude.logEvent(eventName, {
+//    'ID do Usuário': userId,
+//    'Dados do Usuário': userData,
+//    'Empresa Cliente': company,
+//  });
+//};
+//
+//export const trackPageAccess = (pageTitle: string): any => {
+//  amplitude.logEvent('Acesso à Página', {
+//    'Título': pageTitle,
+//  });
+//};
+//
 
 
 

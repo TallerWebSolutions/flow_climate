@@ -4,6 +4,7 @@ import { MeContext } from "../../contexts/MeContext";
 import ProjectsList from "../../modules/project/components/ProjectsList";
 import { trackPageView } from "../../amplitude/amplitudeEvents";
 
+
 const ProjectsPage = () => {
   const { t } = useTranslation(["projects"]);
   const { me } = useContext(MeContext);
@@ -16,12 +17,9 @@ const ProjectsPage = () => {
   ];
 
   useEffect(() => {
-    if (me?.id) {
-      trackPageView("ProjectsPage", me.id, { user: me }); 
-    }
-  }, [me]);
-  // eslint-disable-next-line no-console
-  console.log({ me });
+    if (me?.id)
+    return trackPageView("ProjectsPage", me?.id, { user: me });
+  },);
 
   return (
     <ProjectsList breadcrumbsLinks={breadcrumbsLinks} companyUrl={companyUrl} />
@@ -29,9 +27,3 @@ const ProjectsPage = () => {
 };
 
 export default ProjectsPage;
-
-
-
-
-
-
