@@ -26,8 +26,6 @@ const ProjectsPage = () => {
     if (amplitudeUser?.id)
     return trackPageView("ProjectsPage", amplitudeUser?.id, { user: amplitudeUser },)
   },)
-  // eslint-disable-next-line no-console
-  console.log(amplitudeUser)
 
   return (
     <ProjectsList breadcrumbsLinks={breadcrumbsLinks} companyUrl={companyUrl} />

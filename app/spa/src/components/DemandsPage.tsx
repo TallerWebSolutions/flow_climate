@@ -10,13 +10,14 @@ import {
 import SearchIcon from "@mui/icons-material/Search"
 import { useTranslation } from "react-i18next"
 import { FieldValues, useForm } from "react-hook-form"
-import { Dispatch, ReactNode, SetStateAction, useContext } from "react"
+import { Dispatch, ReactNode, SetStateAction, useContext, useEffect } from "react"
 import { DemandsList } from "../modules/demand/demand.types"
 import { MeContext } from "../contexts/MeContext"
 import BasicPage, { BasicPageProps } from "./BasicPage"
 import { Tabs } from "./Tabs"
 import { useLocation } from "react-router-dom"
 import { FormElement } from "./ui/Form"
+import { trackPageView } from "../amplitude/amplitudeEvents"
 
 export type DemandsSearchDTO = {
   demandsTableData: DemandsList
@@ -44,6 +45,16 @@ const DemandsPage = ({
   const projects = me?.currentCompany?.projects
   const teams = me?.currentCompany?.teams
   const { pathname, search } = useLocation()
+  const amplitudeUser = {
+    id: me?.id,
+    fullName: me?.fullName,
+    companySlug: me?.currentCompany?.slug,
+  };
+
+  useEffect(() => {
+    if (amplitudeUser?.id)
+    return trackPageView("DemandsPage", amplitudeUser?.id, { user: amplitudeUser },)
+  },)
 
   const demandsTabs = [
     {

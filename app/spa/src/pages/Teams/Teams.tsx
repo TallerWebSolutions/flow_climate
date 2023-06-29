@@ -14,14 +14,15 @@ import {
   Typography,
 } from "@mui/material"
 import { useConfirm } from "material-ui-confirm"
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import BasicPage from "../../components/BasicPage"
 import { MessagesContext } from "../../contexts/MessageContext"
 import { MeContext } from "../../contexts/MeContext"
 import { Team } from "../../modules/team/team.types"
 import User from "../../modules/user/user.types"
-import * as amplitude from "@amplitude/analytics-browser"
+import * as amplitude from "../../amplitude/amplitudeEvents"
+import { trackPageView } from "../../amplitude/amplitudeEvents"
 
 export const TEAMS_QUERY = gql` 
   query Teams {
@@ -77,6 +78,8 @@ const Teams = () => {
   const companyUrl = `/companies/${companySlug}`
   const companyName = company?.name || t("company")
 
+  
+
   const breadcrumbsLinks = [
     { name: companyName || "", url: companyUrl },
     {
@@ -84,13 +87,12 @@ const Teams = () => {
     },
   ]
 
-  amplitude.init("a760159d283dcdb619d596057889137f")
-
   const handleOnDeleteTeam = (id: string) => {
     amplitude.logEvent("Excluir Time", {
       teamId: id,
       device_id: "abcdefg",
     })
+
 
     deleteTeamModal({
       title: t("delete_team_modal_title"),
@@ -101,6 +103,19 @@ const Teams = () => {
       })
     })
   }
+
+  const amplitudeUser = {
+    id: me?.id,
+    fullName: me?.fullName,
+    companySlug: me?.currentCompany?.slug,
+  };
+
+  useEffect(() => {
+    if (amplitudeUser?.id)
+    return trackPageView("Teams", amplitudeUser?.id, { user: amplitudeUser },)
+  },)
+  // eslint-disable-next-line no-console
+  console.log({ amplitudeUser, trackPageView })
 
   return (
     <BasicPage

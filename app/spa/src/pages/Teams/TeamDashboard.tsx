@@ -11,7 +11,7 @@ import {
 import { BarDatum } from "@nivo/bar"
 import { SliceTooltipProps } from "@nivo/line"
 import { format, subWeeks } from "date-fns"
-import React, { useContext } from "react"
+import React, { useContext, useEffect } from "react"
 import { useForm } from "react-hook-form"
 import SearchIcon from "@mui/icons-material/Search"
 import { useParams, useSearchParams } from "react-router-dom"
@@ -30,6 +30,7 @@ import { Demand } from "../../modules/demand/demand.types"
 import TeamBasicPage from "../../modules/team/components/TeamBasicPage"
 import { Team } from "../../modules/team/team.types"
 import MemberGeneralInfo from "./MemberGeneralInfo"
+import { trackPageView } from "../../amplitude/amplitudeEvents"
 
 const TEAM_DASHBOARD_QUERY = gql`
   query TeamDashboard($teamId: ID!, $startDate: ISO8601Date, $endDate: ISO8601Date) {
