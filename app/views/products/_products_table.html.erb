@@ -18,7 +18,11 @@
     <tbody>
       <% products_list.each do |product| %>
         <tr>
-          <td><%= link_to product.customer_name, company_customer_path(company, product.customer) %></td>
+          <td>
+            <% if product.customer_name.present? %>
+              <%= link_to product.customer_name, company_customer_path(company, product.customer) %>
+            <% end %>
+          </td>
           <td><%= link_to product.name, company_product_path(company, product)  %></td>
           <td><%= number_with_precision(product.avg_hours_per_demand, precision: 2) %></td>
           <td><%= number_with_precision(product.total_flow_pressure, precision: 3) %></td>

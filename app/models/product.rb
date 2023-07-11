@@ -52,7 +52,7 @@ class Product < ApplicationRecord
   validates :name, presence: true
   validates :name, uniqueness: { scope: :customer, message: I18n.t('product.name.uniqueness') }
 
-  delegate :name, to: :customer, prefix: true
+  delegate :name, to: :customer, prefix: true, allow_nil: true
 
   before_validation :define_slug
 
