@@ -3,7 +3,15 @@
 ![FlowClimateBuild](https://github.com/TallerWebSolutions/flow_climate/workflows/FlowClimateBuild/badge.svg)
 [![sponsored by Taller](https://raw.githubusercontent.com/TallerWebSolutions/tallerwebsolutions.github.io/master/sponsored-by-taller.png)](https://taller.net.br/en/)
 
+<p align="center">
 # Flow Climate
+</p>
+<p align="center">
+  <img src="https://img.shields.io/static/v1?logo=Ruby&label=&message=Ruby&color=111&logoColor=d20002&style=flat-square" />
+  <img src="https://img.shields.io/static/v1?logo=GraphQL&label=&message=GraphQL&color=111&logoColor=DD34A6&style=flat-square" />
+  <img src="https://img.shields.io/static/v1?logo=postgresql&label=&message=PostgreSQL&color=111&logoColor=31648C&style=flat-square" />
+   <img src="https://img.shields.io/static/v1?logo=TypeScript&label=&message=TypeScript&color=111&logoColor=2F73BF&style=flat-square" />
+</p>
 
 Bringing the management to the next level.
 
@@ -62,14 +70,13 @@ Have the ultimate management tools in your hands!
 \*\* Local debugging for Visual Studio Code
 [See this article](https://rahul-arora.medium.com/debugging-ruby-on-rails-server-in-vs-code-819b45113e78)
 
-
 ## Build frontend environment
 
 Always run build for spa components.
 
 ```
 cd app/spa
-npm run build 
+npm run build
 ```
 
 ## Troubleshoot
@@ -77,6 +84,7 @@ npm run build
 fe_sendauth: no password supplied
 
 When syncing production database this error may occur. Check the following:
-- /var/lib/pgsql/data/pg_hba.conf (may be another path in your OS) is set to use md5 in local and  127.0.0.1/32 
+
+- /var/lib/pgsql/data/pg_hba.conf (may be another path in your OS) is set to use md5 in local and 127.0.0.1/32
 - You have a postgres user with the same name as your OS user and all privileges.
 - You have a password file in your home directory. https://www.postgresql.org/docs/current/libpq-pgpass.html
