@@ -12,7 +12,8 @@
   },
 
   "list": {
-    "title": "Informations"
+    "title": "Information",
+    "new": "New Config"
   },
 
   "jiraProjectConfig": "Project Configurations"

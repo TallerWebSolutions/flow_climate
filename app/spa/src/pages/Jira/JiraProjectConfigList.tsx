@@ -5,6 +5,8 @@ import { useParams } from "react-router-dom"
 import BasicPage from "../../components/BasicPage"
 import {
   Box,
+  Button,
+  Link,
   Paper,
   Table,
   TableBody,
@@ -65,6 +67,13 @@ const JiraProjectConfigList = () => {
       breadcrumbsLinks={breadcrumbsLinks}
       loading={loading}
     >
+      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+        <Link
+          href={`/companies/${companySlug}/jira/projects/${projectId}/jira_project_configs/new`}
+        >
+          <Button variant="contained">{t("list.new")}</Button>
+        </Link>
+      </Box>
       <Box sx={{ marginY: 4 }}>
         <TableContainer component={Paper} sx={{ backgroundColor: "white" }}>
           <Typography
