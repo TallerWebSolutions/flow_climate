@@ -160,7 +160,7 @@ export const ProjectPage = ({
     {
       name: t("settings_actions.risk_settings"),
       href: `/companies/${companySlug}/projects/${projectId}/project_risk_configs`,
-    }, 
+    },
   ]
   const taskTabs = [
     {

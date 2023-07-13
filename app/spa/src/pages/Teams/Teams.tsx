@@ -24,7 +24,7 @@ import User from "../../modules/user/user.types"
 import * as amplitude from "../../amplitude/amplitudeEvents"
 import { trackPageView } from "../../amplitude/amplitudeEvents"
 
-export const TEAMS_QUERY = gql` 
+export const TEAMS_QUERY = gql`
   query Teams {
     teams {
       id
@@ -78,8 +78,6 @@ const Teams = () => {
   const companyUrl = `/companies/${companySlug}`
   const companyName = company?.name || t("company")
 
-  
-
   const breadcrumbsLinks = [
     { name: companyName || "", url: companyUrl },
     {
@@ -92,7 +90,6 @@ const Teams = () => {
       teamId: id,
       device_id: "abcdefg",
     })
-
 
     deleteTeamModal({
       title: t("delete_team_modal_title"),
@@ -108,12 +105,12 @@ const Teams = () => {
     id: me?.id,
     fullName: me?.fullName,
     companySlug: me?.currentCompany?.slug,
-  };
+  }
 
   useEffect(() => {
     if (amplitudeUser?.id)
-    return trackPageView("Teams", amplitudeUser?.id, { user: amplitudeUser },)
-  },)
+      return trackPageView("Teams", amplitudeUser?.id, { user: amplitudeUser })
+  })
 
   return (
     <BasicPage

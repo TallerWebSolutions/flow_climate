@@ -1,7 +1,7 @@
 {
   "breadcrumbs": {
     "jiraProjectConfigTable": {
-      "projects":"Projects",
+      "projects": "Projects",
       "title": "Jira Configs"
     }
   },
@@ -11,7 +11,7 @@
     "fixVersionOrLabelOnJira": "Fix Version or Label on Jira"
   },
 
-  "list":{
+  "list": {
     "title": "Informations"
   },
 

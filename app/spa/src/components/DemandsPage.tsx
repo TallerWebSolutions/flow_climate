@@ -10,7 +10,13 @@ import {
 import SearchIcon from "@mui/icons-material/Search"
 import { useTranslation } from "react-i18next"
 import { FieldValues, useForm } from "react-hook-form"
-import { Dispatch, ReactNode, SetStateAction, useContext, useEffect } from "react"
+import {
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useContext,
+  useEffect,
+} from "react"
 import { DemandsList } from "../modules/demand/demand.types"
 import { MeContext } from "../contexts/MeContext"
 import BasicPage, { BasicPageProps } from "./BasicPage"
@@ -49,12 +55,14 @@ const DemandsPage = ({
     id: me?.id,
     fullName: me?.fullName,
     companySlug: me?.currentCompany?.slug,
-  };
+  }
 
   useEffect(() => {
     if (amplitudeUser?.id)
-    return trackPageView("DemandsPage", amplitudeUser?.id, { user: amplitudeUser },)
-  },)
+      return trackPageView("DemandsPage", amplitudeUser?.id, {
+        user: amplitudeUser,
+      })
+  })
 
   const demandsTabs = [
     {

@@ -272,7 +272,7 @@ const App = () => {
               element={<EditJiraProjectConfig />}
             />
             <Route
-              path="/companies/:company_id/jira/projects/:project_id/jira_project_configs" 
+              path="/companies/:company_id/jira/projects/:project_id/jira_project_configs"
               element={<JiraProjectConfigList />}
             />
           </Routes>
