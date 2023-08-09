@@ -28,7 +28,6 @@ function buildLineChart(lineDiv) {
                 enabled: true
             },
             labels: {
-                format: '{value:.$(lineDiv.data(\'decimals\'))f}'
             },
             softMax: 100,
         },
@@ -37,7 +36,7 @@ function buildLineChart(lineDiv) {
                     text: lineDiv.data('ytitleright')
                 },
                 labels: {
-                    format: '{value:.$(lineDiv.data(\'decimals\'))f}'
+                    format: 'value:..${lineDiv.data(\'decimals\')}f'
                 },
                 opposite: true
             }
