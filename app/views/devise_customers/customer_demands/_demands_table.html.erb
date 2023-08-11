@@ -33,4 +33,6 @@
   </tbody>
 </table>
 
-<%= paginate @customer_last_deliveries.page(params[:page]) %>
+<div id="customer_demands_pagination">
+  <%= paginate demands %>
+</div>

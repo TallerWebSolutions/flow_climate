@@ -12,7 +12,7 @@
     <h2><%= I18n.t('demands.index.last_deliveries') %></h2>
   </div>
 
-  <%= form_with url: search_devise_customers_customer_demands_path, class: 'form', local: false do %>
+  <%= form_with url: search_devise_customers_dashboard_index_path, class: 'form', method: :get, local: false do %>
     <div class="row mb-3" style="display: flex">
       <div class="col-xs-3">
         <%= label_tag I18n.t('general.search.start_date'), nil, class: 'control-label' %>
@@ -31,7 +31,7 @@
   <% end %>
 
   <div id="customer-demands-list">
-    <%= render 'devise_customers/customer_demands/demands_table', company: @company, demands: @paged_customer_last_deliveries %>
+    <%= render 'devise_customers/customer_demands/demands_table', company: @company, demands: @paged_customer_last_deliveries, customer_last_deliveries: @customer_last_deliveries %>
   </div>
 </div>
 

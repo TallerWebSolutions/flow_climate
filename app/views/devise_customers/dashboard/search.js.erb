@@ -1,0 +1,2 @@
+$("#customer-demands-list").html("<%= escape_javascript(render 'devise_customers/customer_demands/demands_table', company: @company, demands: @paged_customer_last_deliveries, customer_last_deliveries: @customer_last_deliveries) %>")
+$("#customer_demands_pagination").html("<%= escape_javascript(paginate @paged_customer_last_deliveries, remote: true) %>")

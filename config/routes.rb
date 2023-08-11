@@ -50,7 +50,6 @@ Rails.application.routes.draw do
 
     namespace 'devise_customers' do
       resources :customer_demands, only: :show do
-        post :search, on: :collection
 
         member do
           get :demand_efforts
@@ -100,7 +99,10 @@ Rails.application.routes.draw do
 
   namespace :devise_customers do
     resources :dashboard, only: [] do
-      get :home, on: :collection
+      collection do
+        get :home
+        get :search
+      end
     end
 
     resources :contracts, only: :show
