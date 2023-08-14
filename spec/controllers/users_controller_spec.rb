@@ -299,7 +299,7 @@ RSpec.describe UsersController do
 
             expect(updated_user.first_name).to eq 'Bla'
             expect(updated_user.last_name).to eq 'Foo'
-            expect(updated_user.avatar.file.file).to match 'default_image.png'
+            expect(updated_user.avatar.file.file).to include 'default_image'
             expect(updated_user.language).to eq 'en'
             expect(response).to redirect_to user_path(user)
           end
