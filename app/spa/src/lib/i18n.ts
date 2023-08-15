@@ -4,7 +4,7 @@ import resourcesToBackend from "i18next-resources-to-backend"
 
 i18n
   .use(
-    resourcesToBackend((language, namespace, callback) => {
+    resourcesToBackend((language?: string, namespace?: string, callback?: any) => {
       import(`../locales/${language}/${namespace}.json`)
         .then((resources) => {
           callback(null, resources)
