@@ -252,7 +252,7 @@ module Slack
 
     def notify_week_team_efficiency(slack_notifier, team)
       date = Time.zone.now
-      average_team_efficiency = TeamService.instance.compute_memberships_produced_hours(team, date.beginning_of_month, date.end_of_month)
+      average_team_efficiency = TeamService.instance.compute_memberships_produced_hours(team, date.beginning_of_week, date.end_of_week)
       members = average_team_efficiency[:members_efficiency]
 
       members.each_with_index do |member, index|
