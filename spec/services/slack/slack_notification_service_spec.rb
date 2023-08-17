@@ -69,25 +69,6 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
       end
     end
 
-    describe '#notify_week_team_efficiency' do
-      context 'with no exceptions' do
-        it 'calls slack notification method' do
-          Fabricate :demand, team: team, project: project
-          date = Time.zone.now
-          average_team_efficiency = TeamService.instance.compute_memberships_produced_hours(team, date.beginning_of_month, date.end_of_month)
-          average_team_efficiency[:members_efficiency]
-        end
-      end
-
-      context 'with exceptions' do
-        it 'logs the error' do
-          allow(first_slack_notifier).to(receive(:post)).and_raise(Slack::Notifier::APIError)
-          expect(Rails.logger).to(receive(:error))
-          described_class.instance.notify_team_review(first_slack_notifier, team)
-        end
-      end
-    end
-
     describe '#notify_team_review' do
       context 'with no exceptions' do
         it 'calls slack notification method' do
@@ -502,6 +483,28 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
         expect(Rails.logger).to(receive(:error)).once
 
         described_class.instance.notify_item_blocked(demand_block, 'http://foo.com', 'http://bar.com', 'blocked')
+      end
+    end
+  end
+
+  describe '#notify_week_team_efficiency' do
+    context 'with no exceptions' do
+      it 'calls slack notification method' do
+        Fabricate :demand, team: team, project: project
+        date = Time.zone.now
+        average_team_efficiency = TeamService.instance.compute_memberships_produced_hours(team, date.beginning_of_month, date.end_of_month)
+        average_team_efficiency[:members_efficiency]
+        
+        expect_any_instance_of(Slack::Notifier).to receive(:ping).with(">:first_place_medal: team_member || *Entregas*: 0 || *Horas*: 0,000 || *Capacidade*: 120 h").once
+        described_class.instance.notify_week_team_efficiency(first_slack_notifier, team)
+      end
+    end
+
+    context 'with exceptions' do
+      it 'logs the error' do
+        allow(first_slack_notifier).to(receive(:post)).and_raise(Slack::Notifier::APIError)
+        expect(Rails.logger).to(receive(:error))
+        described_class.instance.notify_week_team_efficiency(first_slack_notifier, team)
       end
     end
   end
