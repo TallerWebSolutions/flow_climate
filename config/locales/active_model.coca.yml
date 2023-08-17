@@ -209,6 +209,7 @@ coca:
             item_assigned: "Deliverable Assigned"
             demand_blocked: "Deliverable Blocks"
             team_review: "Team Review"
+            team_efficiency: "Eficiência do Time"
           config_type:
             team: "Team"
             customer: "Customer"

@@ -27,6 +27,25 @@ module Slack
       Rails.logger.error('Invalid Slack API - It may be caused by an API token problem')
     end
 
+    def notify_week_team_efficiency(slack_notifier, team)
+      date = Time.zone.now
+      average_team_efficiency = TeamService.instance.compute_memberships_produced_hours(team, date.beginning_of_month, date.end_of_month)
+      members = average_team_efficiency[:members_efficiency]
+
+      members.each_with_index do |member, index|
+        slack_notifier.ping(
+          medal_of_honor(index, team, member).to_s + ' || ' \
+                                                     '*Entregas*: ' + (member[:cards_count]).to_s + ' || ' \
+                                                                                                    '*Horas*: ' + number_with_precision(member[:effort_in_month]).to_s + ' || ' \
+                                                                                                                                                                         '*Capacidade*: ' + "#{member[:membership][:hours_per_month]} h" # + " - " +
+          # "*valor*: " + "#{number_with_precision(member[:realized_money_in_month])}" + " - " +
+          # "*HS/Deamnda*: " + "#{number_with_precision(member[:avg_hours_per_demand])}"
+        )
+      end
+    rescue Slack::Notifier::APIError
+      Rails.logger.error('Invalid Slack API - It may be caused by an API token problem')
+    end
+
     def notify_team_review(slack_notifier, team)
       date = Time.zone.now
       business_days_in_month = TimeService.instance.business_days_between(date.beginning_of_month, date)
@@ -248,6 +267,22 @@ module Slack
       Notifications::DemandBlockNotification.create(demand_block: demand_block, block_state: block_state)
     rescue Slack::Notifier::APIError => e
       Rails.logger.error("Invalid Slack API - #{e.message}")
+    end
+
+    def medal_of_honor(medal, team, member)
+      gold_medal = 0
+      silver_medal = 1
+      bronze_medal = 2
+
+      if medal == gold_medal
+        ">:first_place_medal: #{team.team_members.find(member[:membership][:team_member_id]).name}"
+      elsif medal == silver_medal
+        ">:second_place_medal: #{team.team_members.find(member[:membership][:team_member_id]).name}"
+      elsif medal == bronze_medal
+        ">:third_place_medal: #{team.team_members.find(member[:membership][:team_member_id]).name}"
+      else
+        ">#{team.team_members.find(member[:membership][:team_member_id]).name}"
+      end
     end
 
     private

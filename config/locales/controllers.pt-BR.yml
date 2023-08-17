@@ -526,6 +526,7 @@ pt-BR:
       risk_evolution_in_time: 'Evolução do Risco Matemático Operacional'
       risk_evolution_in_time_team_based: 'Evolução do Risco Matemático Operacional - Dados do Time'
       quality_block_per_demand: 'bloqueios por demanda'
+      team_efficiency: Eficiência do Time
       throughput_hours_six_months:
         title: 'Horas de Projetos por Mês - Últimos 6 meses'
     project_risk_alert_table: 'Alertas de risco para o projeto'

@@ -33,6 +33,7 @@ RSpec.describe Slack::SlackNotificationsJob, type: :active_job do
     let!(:fifth_slack_config) { Fabricate :slack_configuration, team: team, info_type: :outdated_demands, room_webhook: 'http://foo.com' }
     let!(:sixth_slack_config) { Fabricate :slack_configuration, team: team, info_type: :failure_load, room_webhook: 'http://foo.com' }
     let!(:seventh_slack_config) { Fabricate :slack_configuration, team: team, info_type: :team_review, room_webhook: 'http://foo.com' }
+    let!(:eighth_slack_config) { Fabricate :slack_configuration, team: team, info_type: :team_efficiency, room_webhook: 'http://foo.com' }
 
     context 'with average_demand_cost notification' do
       it 'calls slack notification method' do
@@ -85,6 +86,14 @@ RSpec.describe Slack::SlackNotificationsJob, type: :active_job do
         expect_any_instance_of(Slack::SlackNotificationService).to receive(:notify_team_review).once
 
         described_class.perform_now(seventh_slack_config, team)
+      end
+    end
+
+    context 'with team_efficiency notification' do
+      it 'calls slack notification method' do
+        expect_any_instance_of(Slack::SlackNotificationService).to receive(:notify_week_team_efficiency).once
+
+        described_class.perform_now(eighth_slack_config, team)
       end
     end
   end
