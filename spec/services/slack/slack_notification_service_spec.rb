@@ -494,8 +494,8 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
         date = Time.zone.now
         average_team_efficiency = TeamService.instance.compute_memberships_produced_hours(team, date.beginning_of_month, date.end_of_month)
         average_team_efficiency[:members_efficiency]
-        
-        expect_any_instance_of(Slack::Notifier).to receive(:ping).with(">:first_place_medal: team_member | *Entregas*: 0 | *Horas*: 0,000 | *Capacidade*: 120 h").once
+
+        expect_any_instance_of(Slack::Notifier).to receive(:ping).with('>:first_place_medal: team_member | *Entregas*: 0 | *Horas*: 0,000 | *Capacidade*: 120 h').once
         described_class.instance.notify_week_team_efficiency(first_slack_notifier, team)
       end
     end

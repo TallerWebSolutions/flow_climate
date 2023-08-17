@@ -50,7 +50,6 @@ Rails.application.routes.draw do
 
     namespace 'devise_customers' do
       resources :customer_demands, only: :show do
-
         member do
           get :demand_efforts
         end
