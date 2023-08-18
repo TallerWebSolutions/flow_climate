@@ -33,7 +33,7 @@ module Highchart
 
     def lead_time_control_chart
       demands_delivered = demands.finished_until_date(Time.zone.now).order(:end_date)
-      lead_times = demands_delivered.map(&:leadtime_in_days).map(&:to_f)
+      lead_times = demands_delivered.map { |demand| demand.leadtime_in_days.to_f }
       { x_axis: demands_delivered.map(&:external_id), lead_times: lead_times,
         lead_time_95p: Stats::StatisticsService.instance.percentile(95, lead_times),
         lead_time_80p: Stats::StatisticsService.instance.percentile(80, lead_times),

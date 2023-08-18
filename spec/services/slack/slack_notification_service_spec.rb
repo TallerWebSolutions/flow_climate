@@ -488,14 +488,27 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
   end
 
   describe '#notify_week_team_efficiency' do
-    context 'with no exceptions' do
+    context 'with efforts' do
       it 'calls slack notification method' do
-        Fabricate :demand, team: team, project: project
-        date = Time.zone.now
-        average_team_efficiency = TeamService.instance.compute_memberships_produced_hours(team, date.beginning_of_month, date.end_of_month)
-        average_team_efficiency[:members_efficiency]
+        Fabricate :demand, team: team
+        first_member = Fabricate :team_member, company: company, name: 'Foo do Bar', billable: true
+        second_member = Fabricate :team_member, company: company, name: 'Xpto Sbbrubles', billable: true
+        third_member = Fabricate :team_member, company: company, name: 'Truco Sbbrubles', billable: true
 
-        expect_any_instance_of(Slack::Notifier).to receive(:ping).with('>:first_place_medal: team_member | *Entregas*: 0 | *Horas*: 0,000 | *Capacidade*: 120 h').once
+        first_membership = Fabricate :membership, team: team, team_member: first_member, hours_per_month: 100, start_date: 1.day.ago, end_date: nil
+        second_membership = Fabricate :membership, team: team, team_member: second_member, hours_per_month: 120, start_date: 1.day.ago, end_date: nil
+        third_membership = Fabricate :membership, team: team, team_member: third_member, hours_per_month: 60, start_date: 1.day.ago, end_date: nil
+
+        demand = Fabricate :demand, team: team, company: company
+        first_assignment = Fabricate :item_assignment, demand: demand, membership: first_membership
+        second_assignment = Fabricate :item_assignment, demand: demand, membership: second_membership
+        third_assignment = Fabricate :item_assignment, demand: demand, membership: third_membership
+
+        Fabricate :demand_effort, demand: demand, item_assignment: first_assignment, effort_value: 100, start_time_to_computation: Time.zone.now
+        Fabricate :demand_effort, demand: demand, item_assignment: second_assignment, effort_value: 200, start_time_to_computation: Time.zone.now
+        Fabricate :demand_effort, demand: demand, item_assignment: third_assignment, effort_value: 250, start_time_to_computation: Time.zone.now
+
+        expect(first_slack_notifier).to receive(:post).once
         described_class.instance.notify_week_team_efficiency(first_slack_notifier, team)
       end
     end

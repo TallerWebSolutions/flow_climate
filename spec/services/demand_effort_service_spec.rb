@@ -193,8 +193,8 @@ RSpec.describe DemandEffortService, type: :service do
         described_class.instance.build_efforts_to_demand(demand)
 
         expect(DemandEffort.all.count).to eq 2
-        expect(DemandEffort.all.map(&:effort_value).map(&:to_f)).to eq [2.56, 4.819999999999999]
-        expect(DemandEffort.all.map(&:total_blocked).map(&:to_f)).to eq [7.016666666666667, 0.9833333333333333]
+        expect(DemandEffort.all.map { |effort| effort.effort_value.to_f }).to eq [2.56, 4.819999999999999]
+        expect(DemandEffort.all.map { |effort| effort.total_blocked.to_f }).to eq [7.016666666666667, 0.9833333333333333]
         expect(demand.reload.effort_upstream.to_f).to eq 7.379999999999999
         expect(demand.reload.effort_downstream.to_f).to eq 0
         expect(demand.reload.effort_development.to_f).to eq 7.379999999999999
@@ -235,10 +235,10 @@ RSpec.describe DemandEffortService, type: :service do
         described_class.instance.build_efforts_to_demand(demand)
         described_class.instance.build_efforts_to_demand(other_project_demand)
 
-        expect(demand.demand_efforts.all.map(&:effort_value).map(&:to_f)).to match_array [6.88, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 3.659999999999999, 3.54, 2.5]
+        expect(demand.demand_efforts.all.map { |effort| effort.effort_value.to_f }).to match_array [6.88, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 3.659999999999999, 3.54, 2.5]
         expect(demand.demand_efforts.sum(&:effort_value).to_f).to eq 20.18
 
-        expect(other_project_demand.demand_efforts.all.map(&:effort_value).map(&:to_f)).to eq [1.96, 1.96]
+        expect(other_project_demand.demand_efforts.all.map { |effort| effort.effort_value.to_f }).to eq [1.96, 1.96]
         expect(other_project_demand.demand_efforts.sum(&:effort_value).to_f).to eq 3.92
       end
     end

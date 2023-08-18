@@ -1033,7 +1033,7 @@ RSpec.describe Types::QueryType do
           Fabricate :demand, company: company, project: project, team: team, created_date: 7.days.ago, commitment_date: 7.days.ago, end_date: 5.days.ago, total_queue_time: 100_000, total_touch_time: 3768
 
           demands_external_ids = Demand.finished_with_leadtime.order(end_date: :asc).map(&:external_id)
-          demands_lead_times = Demand.finished_with_leadtime.order(end_date: :asc).map(&:leadtime).map(&:to_f)
+          demands_lead_times = Demand.finished_with_leadtime.order(end_date: :asc).map { |demand| demand.leadtime.to_f }
           demands_ids = Demand.all.order(:created_date).map(&:id)
 
           lead_time_p65 = Stats::StatisticsService.instance.percentile(65, demands_lead_times)
@@ -1848,9 +1848,9 @@ RSpec.describe Types::QueryType do
           current_user: user
         }
 
-        lead_time_p65 = Stats::StatisticsService.instance.percentile(65, team_member.demands.finished_with_leadtime.order(:end_date).map(&:leadtime).map(&:to_f))
-        lead_time_p80 = Stats::StatisticsService.instance.percentile(80, team_member.demands.finished_with_leadtime.order(:end_date).map(&:leadtime).map(&:to_f))
-        lead_time_p95 = Stats::StatisticsService.instance.percentile(95, team_member.demands.finished_with_leadtime.order(:end_date).map(&:leadtime).map(&:to_f))
+        lead_time_p65 = Stats::StatisticsService.instance.percentile(65, team_member.demands.finished_with_leadtime.order(:end_date).map { |demand| demand.leadtime.to_f })
+        lead_time_p80 = Stats::StatisticsService.instance.percentile(80, team_member.demands.finished_with_leadtime.order(:end_date).map { |demand| demand.leadtime.to_f })
+        lead_time_p95 = Stats::StatisticsService.instance.percentile(95, team_member.demands.finished_with_leadtime.order(:end_date).map { |demand| demand.leadtime.to_f })
 
         result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
         expect(result.dig('data', 'me')).to eq({

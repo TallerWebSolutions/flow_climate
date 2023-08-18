@@ -253,20 +253,25 @@ module Slack
     def notify_week_team_efficiency(slack_notifier, team)
       date = Time.zone.now
       average_team_efficiency = TeamService.instance.compute_memberships_produced_hours(team, date.beginning_of_week, date.end_of_week)
-      members = average_team_efficiency[:members_efficiency]
+      return if average_team_efficiency.blank?
 
-      members.each_with_index do |member, index|
-        slack_notifier.ping(
-          medal_of_honor(index, team, member).to_s + ' | ' \
-                                                     '*Entregas*: ' + (member[:cards_count]).to_s + ' | ' \
-                                                                                                    '*Horas*: ' + number_with_precision(member[:effort_in_month]).to_s + ' | ' \
-                                                                                                                                                                         '*Capacidade*: ' + "#{member[:membership][:hours_per_month]} h" # + " - " +
-          # "*valor*: " + "#{number_with_precision(member[:realized_money_in_month])}" + " - " +
-          # "*HS/Deamnda*: " + "#{number_with_precision(member[:avg_hours_per_demand])}"
-        )
+      members_efforts = average_team_efficiency[:members_efficiency].reject { |member_effort| member_effort.try(:[], :membership).try(:[], :hours_per_month).blank? || member_effort.try(:[], :membership).try(:[], :hours_per_month).zero? }
+
+      return if members_efforts.blank?
+
+      effort_text = ">*#{I18n.t('slack_configurations.notifications.notify_week_team_efficiency.title', team_name: team.name)}*\n\n"
+
+      members_efforts.each_with_index do |member, index|
+        effort_text += "• #{medal_of_honor(index)} #{member[:membership].team_member.name} | Demandas: #{member[:cards_count]} | Horas: #{number_with_precision(member[:effort_in_month])} | Capacidade: #{member[:membership][:hours_per_month]}\n"
       end
-    rescue Slack::Notifier::APIError
-      Rails.logger.error('Invalid Slack API - It may be caused by an API token problem')
+
+      effort_info_block = { type: 'section', text: { type: 'mrkdwn', text: effort_text } }
+
+      divider_block = { type: 'divider' }
+
+      slack_notifier.post(blocks: [effort_info_block, divider_block])
+    rescue Slack::Notifier::APIError => e
+      Rails.logger.error("Invalid Slack API - #{e.message}")
     end
 
     private
@@ -295,12 +300,16 @@ module Slack
       slack_notifier.post(blocks: [message_title, block_type, block_detail, divider_block])
     end
 
-    def medal_of_honor(medal, team, member)
-      gold_medal = 0
-      silver_medal = 1
-      bronze_medal = 2
-
-      if medal == gold_medal then ">:first_place_medal: #{team.team_members.find(member[:membership][:team_member_id]).name}" elsif medal == silver_medal then ">:second_place_medal: #{team.team_members.find(member[:membership][:team_member_id]).name}" elsif medal == bronze_medal then ">:third_place_medal: #{team.team_members.find(member[:membership][:team_member_id]).name}" else ">#{team.team_members.find(member[:membership][:team_member_id]).name}" end
+    def medal_of_honor(member_position)
+      if member_position.zero?
+        ':first_place_medal:'
+      elsif member_position == 1
+        ':second_place_medal:'
+      elsif member_position == 2
+        ':third_place_medal:'
+      else
+        ''
+      end
     end
   end
 end

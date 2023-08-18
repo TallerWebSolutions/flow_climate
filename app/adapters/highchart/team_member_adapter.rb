@@ -26,7 +26,7 @@ module Highchart
     ##
     # It captures the projects in the efforts found and add it to the private instance variable
     def build_projects_in_efforts
-      @projects_in_efforts = @item_assignments_efforts.map(&:demand).map(&:project).uniq
+      @projects_in_efforts = @item_assignments_efforts.map { |assignment| assignment.demand.project }.uniq
     end
 
     ##
@@ -47,7 +47,7 @@ module Highchart
         end_period = date.end_of_month
 
         item_assignments_efforts_in_period = @item_assignments_efforts.where('start_time_to_computation BETWEEN :start_date AND :end_date', start_date: start_period, end_date: end_period)
-        projects_in_period = item_assignments_efforts_in_period.map(&:demand).map(&:project).uniq
+        projects_in_period = item_assignments_efforts_in_period.map { |assignment| assignment.demand.project }.uniq
 
         build_project_efforts(item_assignments_efforts_in_period, projects_in_period)
         normalize_projects_data(projects_in_period)

@@ -129,7 +129,7 @@ module Types
       end
 
       def average_pull_interval_data
-        { x_axis: operations_dashboards.map(&:dashboard_date).map(&:iso8601), y_axis: operations_dashboards.map(&:pull_interval) }
+        { x_axis: operations_dashboards.map { |dash| dash.dashboard_date.iso8601 }, y_axis: operations_dashboards.map(&:pull_interval) }
       end
 
       def member_throughput_data(number_of_weeks: 52)

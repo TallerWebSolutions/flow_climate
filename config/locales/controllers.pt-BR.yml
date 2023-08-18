@@ -1285,6 +1285,8 @@ pt-BR:
     notifications:
       beyond_expected_title: 'O time %{team_name} está com %{beyond_expected_count} demanda(s) acima do esperado na etapa'
       block_change_type_text: 'Clique no tipo para classificar o bloqueio'
+      notify_week_team_efficiency:
+        title: "Horas realizadas na semana de %{team_name}"
     index:
       active: 'Ativo?'
       parent: "Pai"

@@ -1301,6 +1301,8 @@ coca:
     notifications:
       beyond_expected_title: "The team %{team_name} has %{beyond_expected_count} outdated deliverables."
       block_change_type_text: "Click on the type to classify the block"
+      notify_week_team_efficiency:
+        title: "Produced hours in the week for %{team_name}"
     index:
       active: "Active?"
       parent: "Parent"
