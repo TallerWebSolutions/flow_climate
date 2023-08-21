@@ -535,7 +535,8 @@ pt-BR:
             item_assigned: Demanda Atribuída
             demand_blocked: Bloqueios de Demanda
             team_review: Team Review
-            team_efficiency: Eficiência do Time
+            weekly_team_efficiency: Eficiência Semanal do Time
+            monthly_team_efficiency: Eficiência Mensal do Time
           config_type:
             team: "Team"
             customer: "Customer"

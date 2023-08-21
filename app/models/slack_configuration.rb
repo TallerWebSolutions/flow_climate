@@ -32,7 +32,7 @@
 #
 
 class SlackConfiguration < ApplicationRecord
-  enum info_type: { average_demand_cost: 0, current_week_throughput: 1, last_week_delivered_demands_info: 2, demands_wip_info: 3, outdated_demands: 4, failure_load: 5, demand_state_changed: 6, item_assigned: 7, demand_blocked: 8, team_review: 9, team_efficiency: 10 }
+  enum info_type: { average_demand_cost: 0, current_week_throughput: 1, last_week_delivered_demands_info: 2, demands_wip_info: 3, outdated_demands: 4, failure_load: 5, demand_state_changed: 6, item_assigned: 7, demand_blocked: 8, team_review: 9, weekly_team_efficiency: 10, monthly_team_efficiency: 11 }
   enum config_type: { team: 0, customer: 1 }
   enum weekday_to_notify: { all_weekdays: 0, monday: 1, tuesday: 2, wednesday: 3, thursday: 4, friday: 5 }
 

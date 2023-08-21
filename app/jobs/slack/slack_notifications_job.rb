@@ -19,8 +19,10 @@ module Slack
         Slack::SlackNotificationService.instance.notify_failure_load(slack_notifier, team)
       elsif slack_configuration.team_review?
         Slack::SlackNotificationService.instance.notify_team_review(slack_notifier, team)
-      elsif slack_configuration.team_efficiency?
+      elsif slack_configuration.weekly_team_efficiency?
         Slack::SlackNotificationService.instance.notify_week_team_efficiency(slack_notifier, team)
+      elsif slack_configuration.monthly_team_efficiency?
+        Slack::SlackNotificationService.instance.notify_month_team_efficiency(slack_notifier, team)
       end
     end
   end
