@@ -92,7 +92,7 @@ RSpec.describe Slack::SlackNotificationsJob, type: :active_job do
 
     context 'with weekly_team_efficiency notification' do
       it 'calls slack notification method' do
-        expect_any_instance_of(Slack::SlackNotificationService).to receive(:notify_week_team_efficiency).once
+        expect_any_instance_of(Slack::SlackNotificationService).to receive(:notify_team_efficiency).once
 
         described_class.perform_now(eighth_slack_config, team)
       end
@@ -100,7 +100,7 @@ RSpec.describe Slack::SlackNotificationsJob, type: :active_job do
 
     context 'with monthly_team_efficiency notification' do
       it 'calls slack notification method' do
-        expect_any_instance_of(Slack::SlackNotificationService).to receive(:notify_month_team_efficiency).once
+        expect_any_instance_of(Slack::SlackNotificationService).to receive(:notify_team_efficiency).once
 
         described_class.perform_now(nineth_slack_config, team)
       end

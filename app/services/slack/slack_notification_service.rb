@@ -250,20 +250,8 @@ module Slack
       Rails.logger.error("Invalid Slack API - #{e.message}")
     end
 
-    def notify_week_team_efficiency(slack_notifier, team)
+    def notify_team_efficiency(slack_notifier, team, start_date, end_date)
       date = Time.zone.now
-      title = "notify_week_team_efficiency"
-      team_efficiency(slack_notifier, team, date.beginning_of_week, date.end_of_week, title)
-    end
-
-    def notify_month_team_efficiency(slack_notifier, team)
-      date = Time.zone.now
-      title = "notify_month_team_efficiency"
-      team_efficiency(slack_notifier, team, date.beginning_of_month, date.end_of_month, title)
-    end
-    
-    
-    def team_efficiency(slack_notifier, team, start_date, end_date, title)
       average_team_efficiency = TeamService.instance.compute_memberships_produced_hours(team, start_date, end_date)
       return if average_team_efficiency.blank?
 
@@ -271,10 +259,10 @@ module Slack
 
       return if members_efforts.blank?
 
-      effort_text = ">*#{I18n.t("slack_configurations.notifications.#{title}.title", team_name: team.name)}*\n\n"
+      start_date == date.beginning_of_week ? effort_text = ">*#{I18n.t('slack_configurations.notifications.notify_week_team_efficiency.title', team_name: team.name)}*\n\n" : effort_text = ">*#{I18n.t('slack_configurations.notifications.notify_month_team_efficiency.title', team_name: team.name)}*\n\n"
 
       members_efforts.each_with_index do |member, index|
-        effort_text += "• #{medal_of_honor(index)} #{member[:membership].team_member.name} | Demandas: #{member[:cards_count]} | Horas: #{number_with_precision(member[:effort_in_month])}% | Capacidade: #{member[:membership][:hours_per_month]}\n"
+        effort_text += "• #{medal_of_honor(index)} #{member[:membership].team_member.name} | Demandas: #{member[:cards_count]} | Horas: #{number_with_precision(member[:effort_in_month])} | Capacidade: #{member[:membership][:hours_per_month]}\n"
       end
 
       effort_info_block = { type: 'section', text: { type: 'mrkdwn', text: effort_text } }

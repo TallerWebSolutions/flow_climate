@@ -487,7 +487,7 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
     end
   end
 
-  describe '#notify_week_team_efficiency' do
+  describe '#notify_team_efficiency' do
     context 'with efforts' do
       it 'calls slack notification method' do
         Fabricate :demand, team: team
@@ -509,7 +509,7 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
         Fabricate :demand_effort, demand: demand, item_assignment: third_assignment, effort_value: 250, start_time_to_computation: Time.zone.now
 
         expect(first_slack_notifier).to receive(:post).once
-        described_class.instance.notify_week_team_efficiency(first_slack_notifier, team)
+        described_class.instance.notify_team_efficiency(first_slack_notifier, team, Time.zone.now.beginning_of_month, Time.zone.now.end_of_month)
       end
     end
 
@@ -517,42 +517,7 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
       it 'logs the error' do
         allow(first_slack_notifier).to(receive(:post)).and_raise(Slack::Notifier::APIError)
         expect(Rails.logger).to(receive(:error))
-        described_class.instance.notify_week_team_efficiency(first_slack_notifier, team)
-      end
-    end
-  end
-
-  describe '#notify_month_team_efficiency' do
-    context 'with efforts' do
-      it 'calls slack notification method' do
-        Fabricate :demand, team: team
-        first_member = Fabricate :team_member, company: company, name: 'Foo do Bar', billable: true
-        second_member = Fabricate :team_member, company: company, name: 'Xpto Sbbrubles', billable: true
-        third_member = Fabricate :team_member, company: company, name: 'Truco Sbbrubles', billable: true
-
-        first_membership = Fabricate :membership, team: team, team_member: first_member, hours_per_month: 100, start_date: 1.day.ago, end_date: nil
-        second_membership = Fabricate :membership, team: team, team_member: second_member, hours_per_month: 120, start_date: 1.day.ago, end_date: nil
-        third_membership = Fabricate :membership, team: team, team_member: third_member, hours_per_month: 60, start_date: 1.day.ago, end_date: nil
-
-        demand = Fabricate :demand, team: team, company: company
-        first_assignment = Fabricate :item_assignment, demand: demand, membership: first_membership
-        second_assignment = Fabricate :item_assignment, demand: demand, membership: second_membership
-        third_assignment = Fabricate :item_assignment, demand: demand, membership: third_membership
-
-        Fabricate :demand_effort, demand: demand, item_assignment: first_assignment, effort_value: 100, start_time_to_computation: Time.zone.now
-        Fabricate :demand_effort, demand: demand, item_assignment: second_assignment, effort_value: 200, start_time_to_computation: Time.zone.now
-        Fabricate :demand_effort, demand: demand, item_assignment: third_assignment, effort_value: 250, start_time_to_computation: Time.zone.now
-
-        expect(first_slack_notifier).to receive(:post).once
-        described_class.instance.notify_month_team_efficiency(first_slack_notifier, team)
-      end
-    end
-
-    context 'with exceptions' do
-      it 'logs the error' do
-        allow(first_slack_notifier).to(receive(:post)).and_raise(Slack::Notifier::APIError)
-        expect(Rails.logger).to(receive(:error))
-        described_class.instance.notify_month_team_efficiency(first_slack_notifier, team)
+        described_class.instance.notify_team_efficiency(first_slack_notifier, team, Time.zone.now.beginning_of_month, Time.zone.now.end_of_month)
       end
     end
   end
