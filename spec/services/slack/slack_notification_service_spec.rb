@@ -487,7 +487,7 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
     end
   end
 
-  describe '#notify_week_team_efficiency' do
+  describe '#notify_team_efficiency' do
     context 'with efforts' do
       it 'calls slack notification method' do
         Fabricate :demand, team: team
@@ -509,7 +509,7 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
         Fabricate :demand_effort, demand: demand, item_assignment: third_assignment, effort_value: 250, start_time_to_computation: Time.zone.now
 
         expect(first_slack_notifier).to receive(:post).once
-        described_class.instance.notify_week_team_efficiency(first_slack_notifier, team)
+        described_class.instance.notify_team_efficiency(first_slack_notifier, team, Time.zone.now.beginning_of_month, Time.zone.now.end_of_month)
       end
     end
 
@@ -517,7 +517,7 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
       it 'logs the error' do
         allow(first_slack_notifier).to(receive(:post)).and_raise(Slack::Notifier::APIError)
         expect(Rails.logger).to(receive(:error))
-        described_class.instance.notify_week_team_efficiency(first_slack_notifier, team)
+        described_class.instance.notify_team_efficiency(first_slack_notifier, team, Time.zone.now.beginning_of_month, Time.zone.now.end_of_month)
       end
     end
   end

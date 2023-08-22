@@ -1303,6 +1303,8 @@ en:
       block_change_type_text: "Click on the type to classify the block"
       notify_week_team_efficiency:
         title: "Produced hours in the week for %{team_name}"
+      notify_month_team_efficiency:
+        title: "Horas realizadas no mês de %{team_name}"
     index:
       active: "Active?"
       parent: "Parent"

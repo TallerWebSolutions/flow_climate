@@ -526,7 +526,8 @@ pt-BR:
       risk_evolution_in_time: 'Evolução do Risco Matemático Operacional'
       risk_evolution_in_time_team_based: 'Evolução do Risco Matemático Operacional - Dados do Time'
       quality_block_per_demand: 'bloqueios por demanda'
-      team_efficiency: Eficiência do Time
+      weekly_team_efficiency: Eficiência Semanal do Time
+      monthly_team_efficiency: Eficiência Mensal do Time
       throughput_hours_six_months:
         title: 'Horas de Projetos por Mês - Últimos 6 meses'
     project_risk_alert_table: 'Alertas de risco para o projeto'
@@ -1287,6 +1288,8 @@ pt-BR:
       block_change_type_text: 'Clique no tipo para classificar o bloqueio'
       notify_week_team_efficiency:
         title: "Horas realizadas na semana de %{team_name}"
+      notify_month_team_efficiency:
+        title: "Horas realizadas no mês de %{team_name}"
     index:
       active: 'Ativo?'
       parent: "Pai"

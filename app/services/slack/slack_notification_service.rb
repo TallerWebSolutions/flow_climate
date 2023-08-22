@@ -250,16 +250,16 @@ module Slack
       Rails.logger.error("Invalid Slack API - #{e.message}")
     end
 
-    def notify_week_team_efficiency(slack_notifier, team)
+    def notify_team_efficiency(slack_notifier, team, start_date, end_date)
       date = Time.zone.now
-      average_team_efficiency = TeamService.instance.compute_memberships_produced_hours(team, date.beginning_of_week, date.end_of_week)
+      average_team_efficiency = TeamService.instance.compute_memberships_produced_hours(team, start_date, end_date)
       return if average_team_efficiency.blank?
 
       members_efforts = average_team_efficiency[:members_efficiency].reject { |member_effort| member_effort.try(:[], :membership).try(:[], :hours_per_month).blank? || member_effort.try(:[], :membership).try(:[], :hours_per_month).zero? }
 
       return if members_efforts.blank?
 
-      effort_text = ">*#{I18n.t('slack_configurations.notifications.notify_week_team_efficiency.title', team_name: team.name)}*\n\n"
+      start_date == date.beginning_of_week ? effort_text = ">*#{I18n.t('slack_configurations.notifications.notify_week_team_efficiency.title', team_name: team.name)}*\n\n" : effort_text = ">*#{I18n.t('slack_configurations.notifications.notify_month_team_efficiency.title', team_name: team.name)}*\n\n"
 
       members_efforts.each_with_index do |member, index|
         effort_text += "• #{medal_of_honor(index)} #{member[:membership].team_member.name} | Demandas: #{member[:cards_count]} | Horas: #{number_with_precision(member[:effort_in_month])} | Capacidade: #{member[:membership][:hours_per_month]}\n"
@@ -273,7 +273,7 @@ module Slack
     rescue Slack::Notifier::APIError => e
       Rails.logger.error("Invalid Slack API - #{e.message}")
     end
-
+      
     private
 
     def slack_configurations(demand, info_type)
