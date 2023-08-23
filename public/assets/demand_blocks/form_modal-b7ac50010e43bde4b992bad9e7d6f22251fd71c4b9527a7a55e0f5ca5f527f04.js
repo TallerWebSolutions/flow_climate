@@ -6,10 +6,15 @@ function bindBlockFormModalActionToSpecificElement(element) {
     element.on('click', {} ,function(e){
         e.preventDefault();
         const $this = $(this);
-        jQuery.noConflict();
-        $("#edit-block-form").modal({
-            backdrop: 'static',
-            keyboard: false
-        });
+        $('#edit-block-form').modal('show');
+        // $("#edit-block-form").modal({
+        //     backdrop: 'static',
+        //     keyboard: false
+        // });
     });
 }
+
+
+$(window).load(function() {
+    $('#prizePopup').modal('show');
+});
