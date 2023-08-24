@@ -19,7 +19,7 @@ const ProjectsList = ({ companyUrl, ...props }: ProjectsListProps) => {
 
   const projectsFilters: FieldValues = {
     name: searchParams.get("name"),
-    status: searchParams.get("status"),
+    status: searchParams.get("status") || "executing",
     startDate: searchParams.get("startDate"),
     endDate: searchParams.get("endDate"),
   }
