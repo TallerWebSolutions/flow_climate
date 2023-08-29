@@ -6,9 +6,11 @@ class RiskReviewsController < AuthenticatedController
   before_action :assign_risk_review, only: %i[show destroy edit update]
 
   def show
-    @demand_blocks = @risk_review.demand_blocks.order(:block_time)
-    @demands_count = @risk_review.demands.count
-    @paged_demand_blocks = @risk_review.demand_blocks.order(:block_time).page(page_param)
+    # @demand_blocks = @risk_review.demand_blocks.order(:block_time)
+    # @demands_count = @risk_review.demands.count
+    # @paged_demand_blocks = @risk_review.demand_blocks.order(:block_time).page(page_param)
+    prepend_view_path Rails.public_path
+    render 'spa-build/index'
   end
 
   def new

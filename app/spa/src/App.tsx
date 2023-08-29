@@ -42,6 +42,7 @@ import CustomerDemand from "./pages/Customer/CustomerDemand"
 import DemandEfforts from "./pages/Demand/DemandEfforts"
 import ProductsRiskReviews from "./pages/Products/ProductsRiskReviews"
 import CreateProductRiskReview from "./pages/Products/CreateProductRiskReview"
+import ShowProductsRiskReview from "./pages/Products/ShowProductsRiskReview"
 import MemberEfficiencyTable from "./pages/Teams/MemberEfficiencyTable"
 import PortfolioUnitsPage from "./pages/Products/PortfolioUnitsPage"
 import MembershipForm from "./pages/Teams/MembershipForm"
@@ -149,6 +150,10 @@ const App = () => {
             <Route
               path="/companies/:companySlug/products/:productSlug/risk_reviews/new"
               element={<CreateProductRiskReview />}
+            />
+            <Route
+              path="/companies/:companySlug/products/:productSlug/risk_reviews/:riskReviewId"
+              element={<ShowProductsRiskReview />}
             />
             <Route
               path="/companies/:companySlug/products/:productSlug/portfolio_units"
