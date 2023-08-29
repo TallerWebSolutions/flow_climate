@@ -42,6 +42,10 @@ class RiskReview < ApplicationRecord
   delegate :name, to: :product, prefix: true
   delegate :count, to: :bugs, prefix: true
 
+  def demands_count
+    demands.count
+  end
+
   def bugs
     demands.bug
   end

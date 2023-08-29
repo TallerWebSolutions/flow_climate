@@ -14,6 +14,7 @@ module SpaHelper
       { controller: 'products', action: 'risk_reviews_tab' },
       { controller: 'products', action: 'service_delivery_reviews_tab' },
       { controller: 'risk_reviews', action: 'new' },
+      { controller: 'risk_reviews', action: 'show' },
       { controller: 'service_delivery_reviews', action: 'show' },
       { controller: 'project_additional_hours', action: 'new' },
       { controller: 'teams', action: 'show' },

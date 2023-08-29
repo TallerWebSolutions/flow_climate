@@ -3,6 +3,7 @@
 module Types
   class RiskReviewType < Types::BaseObject
     field :company, Types::CompanyType, null: false
+    field :demands_count, Integer
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :id, ID, null: false
     field :lead_time_outlier_limit, Float, null: false
