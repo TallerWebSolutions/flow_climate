@@ -46,6 +46,18 @@ class RiskReview < ApplicationRecord
     demands.count
   end
 
+  def project_broken_wip_count
+    demands.map { |demand| demand.project }.uniq.map { |project| project.project_broken_wip_logs.count }.compact.sum
+  end
+
+  def flow_events_count
+    flow_events.count
+  end
+
+  def outlier_demands_count
+    outlier_demands.count
+  end
+
   def bugs
     demands.bug
   end

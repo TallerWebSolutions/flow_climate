@@ -1,7 +1,15 @@
 {
   "riskReviews": {
     "riskReviewID": "ID da risk review",
+    "demandsCount": "Demandas",
+    "leadTime": "Lead time (p80)",
     "leadTimeOutlierLimit": "Outlier no lead time",
+    "outlierDemands": "Demandas no outlier",
+    "bugsCount": "Defeitos",
+    "blocksPerDemand": "Bloqueios/Demanda",
+    "flowEventsCount": "Eventos de fluxo",
+    "eventsPerDemand": "Eventos/Demanda",
+    "projectBrokenWipCount": "Quantidade de quebras de WiP",
     "meetingDate": "Data da Reunião",
     "monthlyAvgBlockedTime": "Tempo médio de bloqueio mensal",
     "weeklyAvgBlockedTime": "Tempo médio de bloqueio semanal",

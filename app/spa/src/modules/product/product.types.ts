@@ -8,7 +8,17 @@ import { FlowEvent } from "../flowEvent/flowEvent.types"
 
 export type RiskReview = {
   id: string
+  demandsCount: number
+  demandsLeadTimeP80: number
   leadTimeOutlierLimit?: number
+  outlierDemandsCount: number
+  outlierDemandsPercentage: number
+  bugsCount: number
+  bugPercentage: number
+  blocksPerDemand: number
+  flowEventsCount: number
+  eventsPerDemand: number
+  projectBrokenWipCount: number
   meetingDate?: string
   monthlyAvgBlockedTime?: number[]
   weeklyAvgBlockedTime?: number[]

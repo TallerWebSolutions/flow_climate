@@ -127,45 +127,43 @@ const Cell = (props: TableCellProps) => (
 
       return !!product ? (
         <BasicPage
-        title={"alou"}
+        title={""}
         loading={false}
         breadcrumbsLinks={[]}
       >
-        <h1>{"Vamos lá chchu!"}</h1>
-
-        <p> {"product.riskReviews"} </p>
-
-        {product && (
+        {product && product.riskReviews?.map( riskReview => (
         <>
-          <Button
-            href={`/companies/${companySlug}/jira/products/${product.slug}/jira_product_configs`}
-          >
-            {t("product.show.jiraProductConfigs")}
-          </Button>
-
           <Grid container spacing={2}>
             <Grid item xs={4} sx={{ padding: "16px" }}>
-              <TableContainer component={Paper} sx={{ background: "white", marginY: 4 }}>
                 <Typography
-                  color="primary"
-                  variant="h6"
-                  component="h6"
-                  sx={{ padding: "16px " }}
-                >
-                  {tDemands("list.demandsTable.generalInfo")}
-                </Typography>
+                      color="primary"
+                      variant="h6"
+                      component="h6"
+                      sx={{ }}
+                    >
+                      {t("riskReviews.meetingDate")}
+              </Typography>
+              <Typography
+                      color="primary"
+                      variant="h4"
+                      component="h4"
+                      sx={{ }}
+                    >
+                      {((riskReview.meetingDate? riskReview.meetingDate : Date())).toLocaleString()}
+              </Typography>
+              <TableContainer component={Paper} sx={{ background: "white", marginY: 4 }}>
                 <Box
                   sx={{
                     position: "relative",
-                    height: readMore ? "586px" : "auto",
-                    overflow: readMore ? "hidden" : "",
+                    height: "500px",
+                    overflow: "hidden",
                   }}
                 >
                   <Table>
                     <Row>
                       <Cell>
                         <Typography component="span">
-                          {tDemands("list.demandsTable.createdDemands")}
+                          {t("riskReviews.demandsCount")}
                         </Typography>
                       </Cell>
                       <Cell align="right">
@@ -177,14 +175,14 @@ const Cell = (props: TableCellProps) => (
                           sx={{ color: "info.dark", textDecoration: "none" }}
                         >
 
-                          {product.createdDemandsCount}
+                          {riskReview.demandsCount}
                         </Link>
                       </Cell>
                     </Row>
                     <Row>
                       <Cell>
                         <Typography component="span">
-                          {tDemands("list.demandsTable.deliveredDemands")}
+                          {t("riskReviews.leadTime")}
                         </Typography>
                       </Cell>
                       <Cell align="right">
@@ -195,14 +193,14 @@ const Cell = (props: TableCellProps) => (
                           }
                           sx={{ color: "info.dark", textDecoration: "none" }}
                         >
-                          {product.deliveredDemandsCount}
+                          {`${(riskReview.demandsLeadTimeP80/ 86400).toPrecision(4)} dias`}
                         </Link>
                       </Cell>
                     </Row>
                     <Row>
                       <Cell>
                         <Box component="span">
-                          {tDemands("list.demandsTable.backlog")}
+                          {t("riskReviews.leadTimeOutlierLimit")}
                         </Box>
                       </Cell>
                       <Cell align="right">
@@ -213,14 +211,14 @@ const Cell = (props: TableCellProps) => (
                           }
                           sx={{ color: "info.dark", textDecoration: "none" }}
                         >
-                          {product.remainingBacklogCount}
+                          {`${(riskReview.leadTimeOutlierLimit? riskReview.leadTimeOutlierLimit : 0).toPrecision(3)} dias`}
                         </Link>
                       </Cell>
                     </Row>
                     <Row>
                       <Cell>
                         <Box component="span">
-                          {tDemands("list.demandsTable.upstreamDemands")}
+                          {t("riskReviews.outlierDemands")}
                         </Box>
                       </Cell>
                       <Cell align="right">
@@ -231,14 +229,14 @@ const Cell = (props: TableCellProps) => (
                           }
                           sx={{ color: "info.dark", textDecoration: "none" }}
                         >
-                          {product.upstreamDemandsCount}
+                           {riskReview.outlierDemandsCount}<sup>({(riskReview.outlierDemandsPercentage).toPrecision(2)}%)</sup> 
                         </Link>
                       </Cell>
                     </Row>
                     <Row>
                       <Cell>
                         <Box component="span">
-                          {tDemands("list.demandsTable.downstreamDemands")}
+                          {t("riskReviews.bugsCount")}
                         </Box>
                       </Cell>
                       <Cell align="right">
@@ -249,12 +247,12 @@ const Cell = (props: TableCellProps) => (
                           }
                           sx={{ color: "info.dark", textDecoration: "none" }}
                         >
-                          {product.downstreamDemandsCount}
+                          {riskReview.bugsCount}<sup>({(riskReview.bugPercentage).toPrecision(3)}%)</sup>
                         </Link>
                       </Cell>
                     </Row>
                     <Row>
-                      <Cell>{tDemands("list.demandsTable.discardedDemands")}</Cell>
+                      <Cell>{t("riskReviews.blocksPerDemand")}</Cell>
                       <Cell align="right">
                         <Link
                           href={
@@ -263,12 +261,12 @@ const Cell = (props: TableCellProps) => (
                           }
                           sx={{ color: "info.dark", textDecoration: "none" }}
                         >
-                          {product.discardedDemandsCount}
+                          {(riskReview.blocksPerDemand).toPrecision(2)}
                         </Link>
                       </Cell>
                     </Row>
                     <Row>
-                      <Cell>{tDemands("list.demandsTable.unscoredDemands")}</Cell>
+                      <Cell>{t("riskReviews.flowEventsCount")}</Cell>
                       <Cell align="right">
                         <Link
                           href={
@@ -277,87 +275,49 @@ const Cell = (props: TableCellProps) => (
                           }
                           sx={{ color: "info.dark", textDecoration: "none" }}
                         >
-                          {product.unscoredDemandsCount}
+                          {riskReview.flowEventsCount}
                         </Link>
                       </Cell>
                     </Row>
                     <Row>
-                      <Cell>{tDemands("list.demandsTable.demandBlocks")}</Cell>
+                      <Cell>{t("riskReviews.eventsPerDemand")}</Cell>
                       <Cell align="right">
                         <Typography sx={{ color: "info.dark", textDecoration: "none" }}>
-                          {product.demandsBlocksCount}
+                          {(riskReview.eventsPerDemand).toPrecision(4)}
                         </Typography>
                       </Cell>
                     </Row>
                     <Row>
-                      <Cell>{tDemands("list.demandsTable.portfolioUnits")}</Cell>
+                      <Cell>{t("riskReviews.projectBrokenWipCount")}</Cell>
                       <Cell align="right">
                         <Link
                           href={`/companies/${companySlug}/products/${productId}/portfolio_units`}
                           sx={{ color: "info.dark", textDecoration: "none" }}
                         >
-                          {product.portfolioUnitsCount}
+                          {riskReview.projectBrokenWipCount}
                         </Link>
                       </Cell>
                     </Row>
-                    <Row>
-                      <Cell>
-                        {tDemands("list.demandsTable.averageSpeed", {
-                          numberOfDemandsPerDay: product.averageSpeed?.toFixed(2),
-                        })}
-                      </Cell>
-                    </Row>
-                    <Row>
-                      <Cell>
-                        {tDemands("list.demandsTable.averageQueueTime", {
-                          time: secondsToDays(product.averageQueueTime).toFixed(2),
-                        })}
-                      </Cell>
-                    </Row>
-                    <Row>
-                      <Cell>
-                        {tDemands("list.demandsTable.averageWorkTime", {
-                          time: secondsToDays(product.averageTouchTime).toFixed(2),
-                        })}
-                      </Cell>
-                    </Row>
-                    <Row>
-                      <Cell>
-                        {tDemands("list.demandsTable.leadTimeP95", {
-                          days: secondsToDays(product.leadtimeP95).toFixed(2),
-                        })}
-                      </Cell>
-                    </Row>
-                    <Row>
-                      <Cell>
-                        {tDemands("list.demandsTable.leadTimeP80", {
-                          days: secondsToDays(product.leadtimeP80).toFixed(2),
-                        })}
-                      </Cell>
-                    </Row>
-                    <Row>
-                      <Cell>
-                        {tDemands("list.demandsTable.leadTimeP65", {
-                          days: secondsToDays(product.leadtimeP65).toFixed(2),
-                        })}
-                      </Cell>
-                    </Row>
                   </Table>
-                  {readMore && (
-                    <ReadMoreButton handleDisplayPostContent={() => setReadMore(false)} />
-                  )}
                 </Box>
               </TableContainer>
             </Grid>
-
-            
-              <Grid item xs={8} sx={{ padding: "16px" }}>
+            <Grid item xs={4} sx={{ padding: "16px" }}>
+              <Typography
+                    color="primary"
+                    variant="h6"
+                    component="h6"
+                    sx={{ }}
+                  >
+                    {t("riskReviews.actions")}
+              </Typography>
+            </Grid>
+          </Grid>
+          <Grid item xs={8} sx={{ padding: "16px" }}>
                 
-              </Grid>
-            
           </Grid>
         </>
-      )}
+      ))}
       <Box
         sx={{
           display: "flex",
@@ -457,7 +417,16 @@ const Cell = (props: TableCellProps) => (
           riskReviews {
             id
             demandsCount
+            demandsLeadTimeP80
+            outlierDemandsCount
+            outlierDemandsPercentage
             leadTimeOutlierLimit
+            bugsCount
+            bugPercentage
+            blocksPerDemand
+            flowEventsCount
+            eventsPerDemand
+            projectBrokenWipCount
             meetingDate
             monthlyAvgBlockedTime
             weeklyAvgBlockedTime
