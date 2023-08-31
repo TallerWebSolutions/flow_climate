@@ -4,8 +4,10 @@ module Types
   class DemandType < Types::BaseObject
     field :commitment_date, GraphQL::Types::ISO8601DateTime, null: true
     field :company, Types::CompanyType, null: false
+    field :class_of_service, String
     field :cost_to_project, Float, null: true
     field :created_date, GraphQL::Types::ISO8601DateTime, null: true
+    field :current_stage_name, String
     field :customer, Types::CustomerType, null: true
     field :customer_name, String, null: true
     field :demand_blocks_count, Int, null: false
@@ -20,6 +22,7 @@ module Types
     field :id, ID, null: false
     field :leadtime, Float, null: true
     field :portfolio_unit, Types::PortfolioUnitType, null: true
+    field :portfolio_unit_name, String
     field :product, Types::ProductType, null: true
     field :product_name, String, null: true
     field :project, Types::ProjectType, null: false

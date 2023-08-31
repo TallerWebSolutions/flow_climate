@@ -3,7 +3,8 @@ import BasicPage, { BasicPageProps } from "../../components/BasicPage"
 import useProductQuery from "../../hooks/useProductQuery"
 import { useTranslation } from "react-i18next"
 import { secondsToDays } from "../../lib/date"
-
+import { FormElement } from "../../components/ui/Form"
+import SearchIcon from "@mui/icons-material/Search"
 import {
   Box,
   Button,
@@ -64,6 +65,7 @@ const Cell = (props: TableCellProps) => (
   const ShowProductsRiskReview = () => {
 
     const params = useParams()
+    const { register } = useForm()
 
     const productSlug = params.productSlug || ""
     const companySlug = params.companySlug || ""
@@ -133,7 +135,7 @@ const Cell = (props: TableCellProps) => (
       >
         {product && product.riskReviews?.map( riskReview => (
         <>
-          <Grid container spacing={2}>
+          <Grid container spacing={3}>
             <Grid item xs={4} sx={{ padding: "16px" }}>
                 <Typography
                       color="primary"
@@ -155,7 +157,7 @@ const Cell = (props: TableCellProps) => (
                 <Box
                   sx={{
                     position: "relative",
-                    height: "500px",
+                    height: "auto",
                     overflow: "hidden",
                   }}
                 >
@@ -302,15 +304,152 @@ const Cell = (props: TableCellProps) => (
                 </Box>
               </TableContainer>
             </Grid>
-            <Grid item xs={4} sx={{ padding: "16px" }}>
+            <Grid item xs={8} sx={{ padding: "16px" }}>
               <Typography
                     color="primary"
                     variant="h6"
                     component="h6"
                     sx={{ }}
                   >
-                    {t("riskReviews.actions")}
+                    {t("riskReviews.riskReviewActions")}
               </Typography>
+
+              <form>
+                <FormGroup>
+                  <Grid container xs={12} rowSpacing={4} columnSpacing={1}>
+                    <Grid item xs={6}>
+                      <FormElement>
+                        <InputLabel htmlFor="startDate">
+                          {t("list.form.startDate")}
+                        </InputLabel>
+                        <Input
+                          type="date"
+                          defaultValue={0}
+                          {...register("startDate")}
+                          sx = {{width:400, padding:2}}
+                        />
+                      </FormElement>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <FormElement>
+                        <InputLabel htmlFor="endDate">
+                          {t("list.form.endDate")}
+                        </InputLabel>
+                        <Input
+                          type="date"
+                          defaultValue={0}
+                          {...register("endDate")}
+                          sx = {{width:[20, 400], padding:2}}
+                        />
+                      </FormElement>
+                    </Grid>
+                    <FormElement>
+                      <InputLabel
+                        htmlFor="demandStatus"
+                        sx={{ backgroundColor: "white" }}
+                        shrink
+                      >
+                        {t("list.form.status.title")}
+                      </InputLabel>
+                      <Select
+                        native
+                        {...register("demandStatus")}
+                        defaultValue={[0]}
+                      >
+                        <option value="">{t("list.form.common.placeholder")}</option>
+                        <option value="ALL_DEMANDS">{t("list.form.status.all")}</option>
+                        <option value="NOT_COMMITTED">
+                          {t("list.form.status.notCommitted")}
+                        </option>
+                        <option value="WORK_IN_PROGRESS">
+                          {t("list.form.status.wip")}
+                        </option>
+                        <option value="DELIVERED_DEMANDS">
+                          {t("list.form.status.delivered")}
+                        </option>
+                        <option value="NOT_STARTED">
+                          {t("list.form.status.notStarted")}
+                        </option>
+                        <option value="DISCARDED_DEMANDS">
+                          {t("list.form.status.discarded")}
+                        </option>
+                        <option value="NOT_DISCARDED_DEMANDS">
+                          {t("list.form.status.notDiscarded")}
+                        </option>
+                      </Select>
+                    </FormElement>
+                    
+                      <FormElement>
+                        <InputLabel
+                          htmlFor="initiative"
+                          sx={{ backgroundColor: "white" }}
+                          shrink
+                        >
+                          {t("list.form.initiative")}
+                        </InputLabel>
+                        <Select
+                          native
+                          {...register("initiative")}
+                          defaultValue={0}
+                        >
+                          <option value="">{t("list.form.common.placeholder")}</option>
+
+                        </Select>
+                      </FormElement>
+
+                      <FormElement>
+                        <InputLabel
+                          htmlFor="team"
+                          sx={{ backgroundColor: "white" }}
+                          shrink
+                        >
+                          {t("list.form.team")}
+                        </InputLabel>
+                        <Select
+                          native
+                          {...register("team")}
+                          defaultValue={0}
+                        >
+                          <option value="">{t("list.form.common.placeholder")}</option>
+                        </Select>
+                      </FormElement>
+                    <FormElement>
+                      <InputLabel
+                        htmlFor="demandType"
+                        sx={{ backgroundColor: "white" }}
+                        shrink
+                      >
+                        {t("list.form.demandType")}
+                      </InputLabel>
+                      <Select
+                        native
+                        {...register("demandType")}
+                        defaultValue={0}
+                      >
+                        <option value="">{t("list.form.common.placeholder")}</option>
+                        {company?.workItemTypes?.map((type, index) => (
+                          <option value={type.name} key={`${type.id}--${index}`}>
+                            {type.name}
+                          </option>
+                        ))}
+                      </Select>
+                    </FormElement>
+                    <FormElement>
+                      <Button sx={{ alignSelf: "flex-start" }} type="submit">
+                        <SearchIcon fontSize="large" color="primary" />
+                      </Button>
+                    </FormElement>
+
+                    <FormControl sx={{ marginBottom: 4 }}>
+                      <InputLabel htmlFor="name">{t("form.name")}</InputLabel>
+                      <Input
+                        {...register("name", { required: true })}
+                        defaultValue={0}
+                      />
+                    </FormControl>
+                  </Grid>
+                </FormGroup>
+              </form>
             </Grid>
           </Grid>
           <Grid item xs={8} sx={{ padding: "16px" }}>
@@ -318,6 +457,7 @@ const Cell = (props: TableCellProps) => (
           </Grid>
         </>
       ))}
+      
       <Box
         sx={{
           display: "flex",
@@ -336,16 +476,21 @@ const Cell = (props: TableCellProps) => (
               borderBottomColor: "grey.200",
             }}
           >
-            <TableCell>{t("riskReviews.riskReviewID")}</TableCell>
-            <TableCell>{t("riskReviews.leadTimeOutlierLimit")}</TableCell>
-            <TableCell>{t("riskReviews.meetingDate")}</TableCell>
-            <TableCell>{t("riskReviews.createdAt")}</TableCell>
-            <TableCell>{t("riskReviews.actions")}</TableCell>
+            <TableCell>{tDemands("list.demandsTable.portfolioUnits")}</TableCell>
+            <TableCell>{tDemands("list.demandsTable.demandId")}</TableCell>
+            <TableCell>{tDemands("list.demandsTable.demandType")}</TableCell>
+            <TableCell>{tDemands("list.demandsTable.classOfService")}</TableCell>
+            <TableCell>{tDemands("list.demandsTable.currentStage")}</TableCell>
+            <TableCell>{tDemands("list.demandsTable.createdDate")}</TableCell>
+            <TableCell>{tDemands("list.demandsTable.commitmentDate")}</TableCell>
+            <TableCell>{tDemands("list.demandsTable.deliveryDate")}</TableCell>
+            <TableCell>{tDemands("list.demandsTable.leadTime")}</TableCell>
+            <TableCell>{tDemands("list.demandsTable.demandTitle")}</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {!!product?.riskReviews?.length ? (
-            product.riskReviews.map((riskReview) => (
+          {!!product?.demands?.length ? (
+            product.demands.map((demands) => (
               <TableRow
                 sx={{
                   borderBottom: "1px solid",
@@ -354,32 +499,42 @@ const Cell = (props: TableCellProps) => (
               >
                 <TableCell>
                   <Link
-                    href={`/companies/${companySlug}/products/${productSlug}/risk_reviews/${riskReview.id}`}
+                    href={`/companies/${companySlug}/products/${productSlug}/risk_reviews/${demands.id}`}
                   >
-                    {riskReview.id}
+                    {demands.portfolioUnitName}
                   </Link>
                 </TableCell>
-                <TableCell>{riskReview.leadTimeOutlierLimit}</TableCell>
+                <TableCell>{demands.externalId}</TableCell>
+                <TableCell>{demands.demandType}</TableCell>
+                <TableCell>{demands.classOfService}</TableCell>
+                <TableCell>{demands.currentStageName}</TableCell>
                 <TableCell>
-                  {riskReview.meetingDate &&
+                  {demands.createdDate &&
                     formatDate({
-                      date: riskReview.meetingDate,
+                      date: demands.createdDate,
                     })}
                 </TableCell>
                 <TableCell>
-                  {riskReview.createdAt &&
+                  {demands.commitmentDate &&
                     formatDate({
-                      date: riskReview.createdAt,
-                      format: "dd/MM/yyyy' 'HH:mm:ss",
+                      date: demands.commitmentDate,
                     })}
                 </TableCell>
+                <TableCell>
+                  {demands.endDate &&
+                    formatDate({
+                      date: demands.endDate,
+                    })}
+                </TableCell>
+                <TableCell>{demands.leadtime}</TableCell>
+                <TableCell>{demands.demandTitle}</TableCell>
                 <TableCell>
                   <ButtonGroup>
                     <Button
                       variant="text"
                       onClick={() =>
                         deleteRiskReview({
-                          variables: { riskReviewId: riskReview.id },
+                          variables: { riskReviewId: demands.id },
                         })
                       }
                     >
@@ -431,6 +586,27 @@ const Cell = (props: TableCellProps) => (
             monthlyAvgBlockedTime
             weeklyAvgBlockedTime
             createdAt
+          }
+          
+          demands{
+            id
+            demandTitle
+            demandType
+            endDate
+            classOfService
+            currentStageName
+            commitmentDate
+            createdDate
+            externalId
+            leadtime
+            costToProject
+            effortUpstream
+            effortDownstream
+            portfolioUnitName
+            projectName
+            productName
+            demandBlocksCount
+            discardedAt
           }
           ...productDetails
         }

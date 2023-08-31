@@ -12,6 +12,8 @@ export type Demand = {
   demandTitle?: string
   demandType: string
   endDate?: string
+  classOfService: string
+  currentStageName: String
   commitmentDate?: string
   createdDate: string
   product?: Product
@@ -25,6 +27,7 @@ export type Demand = {
   effortUpstream?: number
   effortDownstream?: number
   portfolioUnit?: PortfolioUnit
+  portfolioUnitName: String
   projectName: string
   productName: string
   demandBlocksCount: number

@@ -15,6 +15,7 @@
     "weeklyAvgBlockedTime": "Tempo médio de bloqueio semanal",
     "createdAt": "Criado em",
     "actions": "Ações",
+    "riskReviewActions": "Ações de Revisão de risco",
     "deletedRiskReviewSuccess": "Revisão de Risco excluída com sucesso",
     "deletedRiskReviewFail": "Não foi possível excluir a Revisão de Risco"
   },

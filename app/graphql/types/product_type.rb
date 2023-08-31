@@ -7,7 +7,7 @@ module Types
     field :latest_deliveries, [Types::DemandType], null: true
     field :name, String, null: false
     field :slug, String, null: false
-
+    field :demands, [Types::DemandType]
     field :average_queue_time, Integer
     field :average_speed, Float
     field :average_touch_time, Integer

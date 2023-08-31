@@ -63,6 +63,7 @@ export type Product = {
   slug: string
   company?: Company
   latestDeliveries?: Demand[]
+  demands?: Demand[]
   riskReviews?: RiskReview[]
   portfolioUnits?: PortfolioUnit[]
   remainingBacklogCount: number
