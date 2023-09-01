@@ -31,7 +31,7 @@ import { useForm } from "react-hook-form"
 import { gql, useMutation, useQuery } from "@apollo/client"
 import { Product } from "../../modules/product/product.types"
 import ProductDetails from "../../modules/product/components/ProductDetails"
-import { useContext, useState } from "react"
+import { useContext } from "react"
 import { MessagesContext } from "../../contexts/MessageContext"
 import { Tabs } from "../../components/Tabs"
 
