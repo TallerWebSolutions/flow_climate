@@ -1,8 +1,6 @@
-import { useNavigate, useParams, useLocation } from "react-router-dom"
+import { useParams, useLocation } from "react-router-dom"
 import BasicPage, { BasicPageProps } from "../../components/BasicPage"
-import useProductQuery from "../../hooks/useProductQuery"
 import { useTranslation } from "react-i18next"
-import { secondsToDays } from "../../lib/date"
 import { FormElement } from "../../components/ui/Form"
 import SearchIcon from "@mui/icons-material/Search"
 import {
@@ -29,17 +27,13 @@ import {
 } from "@mui/material"
 import DeleteIcon from "@mui/icons-material/Delete"
 import { formatDate } from "../../lib/date"
-import { FieldValues, useForm } from "react-hook-form"
+import { useForm } from "react-hook-form"
 import { gql, useMutation, useQuery } from "@apollo/client"
 import { Product } from "../../modules/product/product.types"
-import { PRODUCT_QUERY } from "../../hooks/useProductQuery"
 import ProductDetails from "../../modules/product/components/ProductDetails"
-import ProductGeneralInfo from "../../../src/modules/product/components/ProductGeneralInfo"
 import { useContext, useState } from "react"
 import { MessagesContext } from "../../contexts/MessageContext"
 import { Tabs } from "../../components/Tabs"
-import ProductGeneralInfoTable from "../../../src/modules/product/components/ProductGeneralInfoTable"
-import { ReadMoreButton } from "../../../src/components/ReadMoreButton"
 
 const Row = (props: TableRowProps) => (
   <TableRow
