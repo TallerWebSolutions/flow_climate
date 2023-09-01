@@ -1,6 +1,11 @@
 {
   "riskReviews": {
     "riskReviewID": "ID da risk review",
+    "demands": "Demandas",
+    "demandsOutlier": "Demandas Outlier",
+    "bugs": "Defeitos",
+    "demandBlocks": "Bloqueios de Demanda",
+    "flowEvents": "Eventos de fluxo",
     "demandsCount": "Demandas",
     "leadTime": "Lead time (p80)",
     "leadTimeOutlierLimit": "Outlier no lead time",

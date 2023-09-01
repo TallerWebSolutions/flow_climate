@@ -112,16 +112,24 @@ const Cell = (props: TableCellProps) => (
 
     const productTabs = [
       {
-        label: t("products.product"),
-        to: `/companies/${companySlug}/products/${productSlug}`,
+        label: t("riskReviews.demands"),
+        to: ``,
       },
       {
-        label: t("products.riskReview"),
-        to: `/companies/${companySlug}/products/${productSlug}/risk_reviews_tab`,
+        label: t("riskReviews.demandsOutlier"),
+        to: ``,
       },
       {
-        label: t("products.serviceDeliveryReview"),
-        to: `/companies/${companySlug}/products/${productSlug}/service_delivery_reviews_tab`,
+        label: t("riskReviews.bugs"),
+        to: ``,
+      },
+      {
+        label: t("riskReviews.demandBlocks"),
+        to: ``,
+      },
+      {
+        label: t("riskReviews.flowEvents"),
+        to: ``,
       },
     ]
 
@@ -315,7 +323,7 @@ const Cell = (props: TableCellProps) => (
               </Typography>
 
               <form>
-                <FormGroup>
+                <FormGroup sx={{display:"none"}}>
                   <Grid container xs={12} rowSpacing={4} columnSpacing={1}>
                     <Grid item xs={6}>
                       <FormElement>
@@ -467,6 +475,15 @@ const Cell = (props: TableCellProps) => (
       >
         <Tabs tabs={productTabs} currentPath={pathname} />
       </Box>
+
+      <Typography
+                    color="primary"
+                    variant="h6"
+                    component="h6"
+                    sx={{ }}
+                  >
+                    {`Total: ${product?.riskReviews? product.riskReviews.map(x => x.demandsCount) : 0} Demanda(s)`}
+      </Typography>
 
         <Table>
         <TableHead>
