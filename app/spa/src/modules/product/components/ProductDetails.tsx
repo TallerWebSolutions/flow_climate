@@ -65,7 +65,7 @@ const ProductDetails = ({
       {product && (
         <>
           <Button
-            href={`/companies/${companySlug}/jira/products/${product.slug}/jira_product_configs`}
+            href={`/companies/${companySlug}/jira/products/${productSlug}/jira_product_configs`}
           >
             {t("product.show.jiraProductConfigs")}
           </Button>
