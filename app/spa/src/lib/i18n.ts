@@ -4,15 +4,17 @@ import resourcesToBackend from "i18next-resources-to-backend"
 
 i18n
   .use(
-    resourcesToBackend((language?: string, namespace?: string, callback?: any) => {
-      import(`../locales/${language}/${namespace}.json`)
-        .then((resources) => {
-          callback(null, resources)
-        })
-        .catch((error) => {
-          callback(error, null)
-        })
-    })
+    resourcesToBackend(
+      (language?: string, namespace?: string, callback?: any) => {
+        import(`../locales/${language}/${namespace}.json`)
+          .then((resources) => {
+            callback(null, resources)
+          })
+          .catch((error) => {
+            callback(error, null)
+          })
+      }
+    )
   )
   .use(initReactI18next)
   .init({
