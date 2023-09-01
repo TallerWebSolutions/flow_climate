@@ -9,6 +9,7 @@ module Types
     field :outlier_demands_percentage, Float
     field :bugs_count, Integer
     field :bug_percentage, Float
+    field :demands, [Types::DemandType]
     field :blocks_per_demand, Float
     field :flow_events_count, Integer
     field :events_per_demand, Float

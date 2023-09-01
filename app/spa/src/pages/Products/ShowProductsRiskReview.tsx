@@ -29,7 +29,7 @@ import DeleteIcon from "@mui/icons-material/Delete"
 import { formatDate } from "../../lib/date"
 import { useForm } from "react-hook-form"
 import { gql, useMutation, useQuery } from "@apollo/client"
-import { Product } from "../../modules/product/product.types"
+import { Product, RiskReview } from "../../modules/product/product.types"
 import ProductDetails from "../../modules/product/components/ProductDetails"
 import { useContext } from "react"
 import { MessagesContext } from "../../contexts/MessageContext"
@@ -64,10 +64,10 @@ const Cell = (props: TableCellProps) => (
     const productSlug = params.productSlug || ""
     const companySlug = params.companySlug || ""
 
-    const { data } = useQuery<ProductRiskReviewsPageDTO>(
-      PRODUCT_RISK_REVIEWS_PAGE_QUERY,
+    const { data } = useQuery<RiskReviewPageDTO>(
+      RISK_REVIEW_PAGE_QUERY,
       {
-        variables: { productSlug },
+        variables: { id: params.riskReviewId },
       }
     )
 
@@ -90,7 +90,7 @@ const Cell = (props: TableCellProps) => (
       }
     )
 
-    const product = data?.product
+    const riskReview = data?.riskReview
     const { pathname } = useLocation()
 
     
@@ -98,9 +98,9 @@ const Cell = (props: TableCellProps) => (
     
 
     const { t: tDemands } = useTranslation(["demand"])
-    const company = product?.company
+    const company = riskReview?.product?.company
 
-    const productId = product?.id || ""
+    const productId = riskReview?.product?.id || ""
 
     const productTabs = [
       {
@@ -127,13 +127,12 @@ const Cell = (props: TableCellProps) => (
 
     
 
-      return !!product ? (
+      return(
         <BasicPage
         title={""}
         loading={false}
         breadcrumbsLinks={[]}
       >
-        {product && product.riskReviews?.map( riskReview => (
         <>
           <Grid container spacing={3}>
             <Grid item xs={4} sx={{ padding: "16px" }}>
@@ -151,7 +150,7 @@ const Cell = (props: TableCellProps) => (
                       component="h4"
                       sx={{ }}
                     >
-                      {((riskReview.meetingDate? riskReview.meetingDate : Date())).toLocaleString()}
+                      {((riskReview?.meetingDate ? riskReview.meetingDate : Date())).toLocaleString()}
               </Typography>
               <TableContainer component={Paper} sx={{ background: "white", marginY: 4 }}>
                 <Box
@@ -177,7 +176,7 @@ const Cell = (props: TableCellProps) => (
                           sx={{ color: "info.dark", textDecoration: "none" }}
                         >
 
-                          {riskReview.demandsCount}
+                          {riskReview?.demandsCount}
                         </Link>
                       </Cell>
                     </Row>
@@ -195,7 +194,7 @@ const Cell = (props: TableCellProps) => (
                           }
                           sx={{ color: "info.dark", textDecoration: "none" }}
                         >
-                          {`${(riskReview.demandsLeadTimeP80/ 86400).toPrecision(4)} dias`}
+                         { riskReview?.demandsLeadTimeP80 && `${(riskReview.demandsLeadTimeP80 / 86400).toPrecision(4)} dias`}
                         </Link>
                       </Cell>
                     </Row>
@@ -213,7 +212,7 @@ const Cell = (props: TableCellProps) => (
                           }
                           sx={{ color: "info.dark", textDecoration: "none" }}
                         >
-                          {`${(riskReview.leadTimeOutlierLimit? riskReview.leadTimeOutlierLimit : 0).toPrecision(3)} dias`}
+                          {`${(riskReview?.leadTimeOutlierLimit ? riskReview.leadTimeOutlierLimit : 0).toPrecision(3)} dias`}
                         </Link>
                       </Cell>
                     </Row>
@@ -231,7 +230,8 @@ const Cell = (props: TableCellProps) => (
                           }
                           sx={{ color: "info.dark", textDecoration: "none" }}
                         >
-                           {riskReview.outlierDemandsCount}<sup>({(riskReview.outlierDemandsPercentage).toPrecision(2)}%)</sup> 
+                           {riskReview?.outlierDemandsCount}
+                           <sup>({riskReview?.outlierDemandsPercentage && (riskReview.outlierDemandsPercentage).toPrecision(2)}%)</sup> 
                         </Link>
                       </Cell>
                     </Row>
@@ -249,7 +249,7 @@ const Cell = (props: TableCellProps) => (
                           }
                           sx={{ color: "info.dark", textDecoration: "none" }}
                         >
-                          {riskReview.bugsCount}<sup>({(riskReview.bugPercentage).toPrecision(3)}%)</sup>
+                          {riskReview?.bugsCount}<sup>({riskReview?.bugPercentage && (riskReview.bugPercentage).toPrecision(3)}%)</sup>
                         </Link>
                       </Cell>
                     </Row>
@@ -263,7 +263,7 @@ const Cell = (props: TableCellProps) => (
                           }
                           sx={{ color: "info.dark", textDecoration: "none" }}
                         >
-                          {(riskReview.blocksPerDemand).toPrecision(2)}
+                          {riskReview?.blocksPerDemand && (riskReview.blocksPerDemand).toPrecision(2)}
                         </Link>
                       </Cell>
                     </Row>
@@ -277,7 +277,7 @@ const Cell = (props: TableCellProps) => (
                           }
                           sx={{ color: "info.dark", textDecoration: "none" }}
                         >
-                          {riskReview.flowEventsCount}
+                          {riskReview?.flowEventsCount}
                         </Link>
                       </Cell>
                     </Row>
@@ -285,7 +285,7 @@ const Cell = (props: TableCellProps) => (
                       <Cell>{t("riskReviews.eventsPerDemand")}</Cell>
                       <Cell align="right">
                         <Typography sx={{ color: "info.dark", textDecoration: "none" }}>
-                          {(riskReview.eventsPerDemand).toPrecision(4)}
+                          {riskReview?.eventsPerDemand && (riskReview.eventsPerDemand).toPrecision(4)}
                         </Typography>
                       </Cell>
                     </Row>
@@ -296,7 +296,7 @@ const Cell = (props: TableCellProps) => (
                           href={`/companies/${companySlug}/products/${productId}/portfolio_units`}
                           sx={{ color: "info.dark", textDecoration: "none" }}
                         >
-                          {riskReview.projectBrokenWipCount}
+                          {riskReview?.projectBrokenWipCount}
                         </Link>
                       </Cell>
                     </Row>
@@ -456,7 +456,6 @@ const Cell = (props: TableCellProps) => (
                 
           </Grid>
         </>
-      ))}
       
       <Box
         sx={{
@@ -474,7 +473,7 @@ const Cell = (props: TableCellProps) => (
                     component="h6"
                     sx={{ }}
                   >
-                    {`Total: ${product?.riskReviews? product.riskReviews.map(x => x.demandsCount) : 0} Demanda(s)`}
+                    {`Total: ${riskReview?.demandsCount} Demanda(s)`}
       </Typography>
 
         <Table>
@@ -498,8 +497,8 @@ const Cell = (props: TableCellProps) => (
           </TableRow>
         </TableHead>
         <TableBody>
-          {!!product?.demands?.length ? (
-            product.demands.map((demands) => (
+          {!!riskReview?.demands?.length ? (
+            riskReview.demands.map((demands) => (
               <TableRow
                 sx={{
                   borderBottom: "1px solid",
@@ -567,36 +566,40 @@ const Cell = (props: TableCellProps) => (
 
         </BasicPage>
         
-      ) : null
+      )
     }
 
-    type ProductRiskReviewsPageDTO = {
-      product?: Product
+    type RiskReviewPageDTO = {
+      riskReview?: RiskReview
     }
     
-    const PRODUCT_RISK_REVIEWS_PAGE_QUERY = gql`
-      query ProductRiskReviewsPage($productSlug: String!) {
-        product(slug: $productSlug) {
+    const RISK_REVIEW_PAGE_QUERY = gql`
+      query RiskReviewPage($id: ID!) {
+        riskReview(id: $id) {
           id
-          riskReviews {
+          demandsCount
+          demandsLeadTimeP80
+          outlierDemandsCount
+          outlierDemandsPercentage
+          leadTimeOutlierLimit
+          product{
             id
-            demandsCount
-            demandsLeadTimeP80
-            outlierDemandsCount
-            outlierDemandsPercentage
-            leadTimeOutlierLimit
-            bugsCount
-            bugPercentage
-            blocksPerDemand
-            flowEventsCount
-            eventsPerDemand
-            projectBrokenWipCount
-            meetingDate
-            monthlyAvgBlockedTime
-            weeklyAvgBlockedTime
-            createdAt
+            company{
+              id
+              slug
+              name
+            }
           }
-          
+          bugsCount
+          bugPercentage
+          blocksPerDemand
+          flowEventsCount
+          eventsPerDemand
+          projectBrokenWipCount
+          meetingDate
+          monthlyAvgBlockedTime
+          weeklyAvgBlockedTime
+          createdAt
           demands{
             id
             demandTitle
@@ -617,11 +620,8 @@ const Cell = (props: TableCellProps) => (
             demandBlocksCount
             discardedAt
           }
-          ...productDetails
         }
       }
-    
-      ${ProductDetails.fragments}
     `
 
     type DeleteRiskReviewDTO = {

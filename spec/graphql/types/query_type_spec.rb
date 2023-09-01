@@ -1191,6 +1191,57 @@ RSpec.describe Types::QueryType do
     end
   end
 
+  describe '#risk_Review' do
+    context 'with valid ID' do
+      it 'returns the risk review' do
+        risk_review = Fabricate :risk_review
+
+        query =
+          %(
+          query {
+            riskReview(id: "#{risk_review.id}") {
+              id
+            }
+          }
+        )
+
+        user = Fabricate :user
+
+        context = {
+          current_user: user
+        }
+
+        result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
+
+        expect(result.dig('data', 'riskReview', 'id')).to eq risk_review.id.to_s
+      end
+    end
+
+    context 'with invalid ID' do
+      it 'returns nil' do
+        query =
+          %(
+          query {
+            risk_review(id: "foo") {
+              id
+            }
+          }
+        )
+
+        user = Fabricate :user
+
+        context = {
+          current_user: user
+        }
+
+        result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
+
+        expect(result.dig('data', 'risk_review')).to be_nil
+      end
+    end
+  end
+
+
   describe '#projects' do
     let(:company) { Fabricate :company }
 

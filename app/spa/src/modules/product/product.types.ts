@@ -14,6 +14,7 @@ export type RiskReview = {
   outlierDemandsCount: number
   outlierDemandsPercentage: number
   bugsCount: number
+  demands: Demand[]
   bugPercentage: number
   blocksPerDemand: number
   flowEventsCount: number

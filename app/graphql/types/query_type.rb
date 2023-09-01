@@ -8,6 +8,10 @@ module Types
       argument :id, ID
     end
 
+    field :risk_review, Types::RiskReviewType, null: true, description: 'A plain risk review' do
+      argument :id, ID, required: true
+    end
+
     field :project, Types::ProjectType, null: true, description: 'A plain project' do
       argument :id, ID
     end
@@ -142,6 +146,10 @@ module Types
 
     def project(id:)
       Project.find(id)
+    end
+
+    def risk_review(id:)
+      RiskReview.find(id)
     end
 
     def jira_project_config(id:)
