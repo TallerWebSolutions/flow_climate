@@ -1,5 +1,5 @@
 import { useParams, useLocation } from "react-router-dom"
-import BasicPage, { BasicPageProps } from "../../components/BasicPage"
+import BasicPage from "../../components/BasicPage"
 import { useTranslation } from "react-i18next"
 import { FormElement } from "../../components/ui/Form"
 import SearchIcon from "@mui/icons-material/Search"
@@ -64,7 +64,7 @@ const Cell = (props: TableCellProps) => (
     const productSlug = params.productSlug || ""
     const companySlug = params.companySlug || ""
 
-    const { data, loading } = useQuery<ProductRiskReviewsPageDTO>(
+    const { data } = useQuery<ProductRiskReviewsPageDTO>(
       PRODUCT_RISK_REVIEWS_PAGE_QUERY,
       {
         variables: { productSlug },
@@ -91,7 +91,6 @@ const Cell = (props: TableCellProps) => (
     )
 
     const product = data?.product
-    const riskReview = data?.product?.riskReviews
     const { pathname } = useLocation()
 
     
@@ -99,7 +98,6 @@ const Cell = (props: TableCellProps) => (
     
 
     const { t: tDemands } = useTranslation(["demand"])
-    const [readMore, setReadMore] = useState(true)
     const company = product?.company
 
     const productId = product?.id || ""
