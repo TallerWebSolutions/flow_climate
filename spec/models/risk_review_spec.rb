@@ -58,6 +58,42 @@ RSpec.describe RiskReview do
     let!(:third_flow_event) { Fabricate :flow_event, risk_review: risk_review, event_date: Time.zone.parse('2018-03-06 14:00') }
   end
 
+  describe '#demands_count' do
+    include_context 'risk reviews data'
+
+    it 'returns the demands with lead time above the outlier limit' do
+      expect(risk_review.demands_count).to eq 4
+      expect(other_risk_review.demands_count).to eq 0
+    end
+  end
+
+  describe '#flow_events_count' do
+    include_context 'risk reviews data'
+
+    it 'returns the demands with lead time above the outlier limit' do
+      expect(risk_review.flow_events_count).to eq 3
+      expect(other_risk_review.flow_events_count).to eq 0
+    end
+  end
+
+  describe '#outlier_demands_count' do
+    include_context 'risk reviews data'
+
+    it 'returns the demands with lead time above the outlier limit' do
+      expect(risk_review.outlier_demands_count).to eq 2
+      expect(other_risk_review.outlier_demands_count).to eq 0
+    end
+  end
+
+  describe '#project_broken_wip_count' do
+    include_context 'risk reviews data'
+
+    it 'returns the demands with lead time above the outlier limit' do
+      expect(risk_review.project_broken_wip_count).to eq 0
+      expect(other_risk_review.project_broken_wip_count).to eq 0
+    end
+  end
+
   describe '#outlier_demands' do
     include_context 'risk reviews data'
 
