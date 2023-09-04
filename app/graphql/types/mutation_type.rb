@@ -43,6 +43,8 @@ module Types
 
     field :update_jira_project_config, mutation: Mutations::UpdateJiraProjectConfigMutation
 
+    field :synchronize_jira_project_config, mutation: Mutations::SynchronizeJiraProjectConfigMutation
+
     def me
       context[:current_user]
     end
