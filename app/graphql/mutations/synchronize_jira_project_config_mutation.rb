@@ -9,8 +9,8 @@ module Mutations
       field :id, ID, null: true
       field :status_message, Types::UpdateResponses, null: false
 
-      def resolve(id:, company_id:)
-        jira_project_config = Jira::JiraProjectConfig.find_by_project_id(id)
+      def resolve(id:)
+        jira_project_config = Jira::JiraProjectConfig.find_by_project_id(id: id)
         company = jira_project_config.jira_product_config.company
         jira_account = company.jira_accounts.first
   
