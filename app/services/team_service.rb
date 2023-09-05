@@ -63,7 +63,7 @@ class TeamService
     hours_consumed_hash
   end
 
-  def compute_memberships_produced_hours(team, start_date, end_date)
+  def compute_memberships_realized_hours(team, start_date, end_date)
     memberships = team.memberships.active.billable_member
 
     efficiency_data = memberships.map do |membership|
