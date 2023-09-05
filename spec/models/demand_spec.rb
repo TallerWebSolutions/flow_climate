@@ -17,6 +17,7 @@ RSpec.describe Demand do
     it { is_expected.to belong_to(:service_delivery_review).optional }
     it { is_expected.to belong_to(:contract).optional }
     it { is_expected.to belong_to(:current_stage).class_name('Stage').inverse_of(:current_demands).optional }
+    it { is_expected.to have_many(:operations_dashboards).class_name('Dashboards::OperationsDashboard').inverse_of(:first_delivery) }
 
     it { is_expected.to have_many(:demand_transitions).dependent(:destroy) }
     it { is_expected.to have_many(:demand_blocks).dependent(:destroy) }
