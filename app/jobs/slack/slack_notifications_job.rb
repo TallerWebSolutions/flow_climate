@@ -20,9 +20,17 @@ module Slack
       elsif slack_configuration.team_review?
         Slack::SlackNotificationService.instance.notify_team_review(slack_notifier, team)
       elsif slack_configuration.weekly_team_efficiency?
-        Slack::SlackNotificationService.instance.notify_team_efficiency(slack_notifier, team, Time.zone.now.beginning_of_week, Time.zone.now.end_of_week)
+        start_date = Time.zone.now.beginning_of_week
+        end_date = Time.zone.now.end_of_week
+        title = ">*#{I18n.t('slack_configurations.notifications.notify_week_team_efficiency.title', team_name: team.name)}*\n\n"
+
+        Slack::SlackNotificationService.instance.notify_team_efficiency(slack_notifier, team, start_date, end_date, title)
+
       elsif slack_configuration.monthly_team_efficiency?
-        Slack::SlackNotificationService.instance.notify_team_efficiency(slack_notifier, team, Time.zone.now.beginning_of_month, Time.zone.now.end_of_month)
+        start_date = Time.zone.now.beginning_of_month
+        end_date = Time.zone.now.end_of_month
+        title = ">*#{I18n.t('slack_configurations.notifications.notify_month_team_efficiency.title', team_name: team.name)} em #{I18n.l(start_date, format: '%B')}/#{start_date.year}*\n\n"
+        Slack::SlackNotificationService.instance.notify_team_efficiency(slack_notifier, team, start_date, end_date, title)
       end
     end
   end
