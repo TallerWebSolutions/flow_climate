@@ -167,7 +167,7 @@ module Types
         start_date = Time.zone.local(year, month, 1)
         end_date = start_date.end_of_month
 
-        TeamService.instance.compute_memberships_produced_hours(object, start_date, end_date)
+        TeamService.instance.compute_memberships_realized_hours(object, start_date, end_date)
       end
 
       def memberships(active: nil)

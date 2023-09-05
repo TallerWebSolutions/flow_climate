@@ -251,10 +251,10 @@ module Slack
     end
 
     def notify_team_efficiency(slack_notifier, team, start_date, end_date, title)
-      average_team_efficiency = TeamService.instance.compute_memberships_produced_hours(team, start_date, end_date)
+      average_team_efficiency = TeamService.instance.compute_memberships_realized_hours(team, start_date, end_date)
       return if average_team_efficiency.blank?
 
-      members_efforts = average_team_efficiency[:members_efficiency].reject { |member_effort| member_effort.try(:[], :membership).try(:[], :hours_per_month).blank? || member_effort.try(:[], :membership).try(:[], :hours_per_month).zero? }
+      members_efforts = average_team_efficiency[:members_efficiency].reject { |member_effort| member_effort.try(:[], :membership).try(:[], :hours_per_month).blank? && member_effort.try(:[], :membership).try(:[], :hours_per_month).zero? }
 
       return if members_efforts.blank?
 
