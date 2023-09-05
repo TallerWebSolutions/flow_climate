@@ -250,8 +250,7 @@ module Slack
       Rails.logger.error("Invalid Slack API - #{e.message}")
     end
 
-    def notify_team_efficiency(slack_notifier, team, start_date, end_date)
-      date = Time.zone.now
+    def notify_team_efficiency(slack_notifier, team, start_date, end_date, title)
       average_team_efficiency = TeamService.instance.compute_memberships_produced_hours(team, start_date, end_date)
       return if average_team_efficiency.blank?
 
@@ -259,7 +258,7 @@ module Slack
 
       return if members_efforts.blank?
 
-      start_date == date.beginning_of_week ? effort_text = ">*#{I18n.t('slack_configurations.notifications.notify_week_team_efficiency.title', team_name: team.name)}*\n\n" : effort_text = ">*#{I18n.t('slack_configurations.notifications.notify_month_team_efficiency.title', team_name: team.name)} em #{I18n.l(start_date, format: '%B')}/#{start_date.year}*\n\n"
+      effort_text = title
 
       members_efforts.each_with_index do |member, index|
         effort_text += "• #{medal_of_honor(index)} #{member[:membership].team_member.name} | Demandas: #{member[:cards_count]} | Horas: #{number_with_precision(member[:effort_in_month])} | Capacidade: #{member[:membership][:hours_per_month]}\n"
@@ -273,7 +272,7 @@ module Slack
     rescue Slack::Notifier::APIError => e
       Rails.logger.error("Invalid Slack API - #{e.message}")
     end
-      
+
     private
 
     def slack_configurations(demand, info_type)

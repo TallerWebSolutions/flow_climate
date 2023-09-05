@@ -4,6 +4,16 @@ desc 'Update partial efforts'
 
 namespace :demands do
   task update_partial_effort: :environment do
-    Demand.in_wip(Time.zone.now).each { |demand| DemandEffortService.instance.build_efforts_to_demand(demand) }
+    Demand.in_flow(Time.zone.now).each do |demand|
+      jira_account = demand.company.jira_accounts.first
+
+      if jira_account.present?
+        Jira::ProcessJiraIssueJob.perform_later(jira_account, demand.project, demand.external_id, '', '', '')
+
+        DemandEffortService.instance.build_efforts_to_demand(demand)
+      else
+        demand.destroy
+      end
+    end
   end
 end
