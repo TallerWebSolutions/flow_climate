@@ -4,6 +4,8 @@ desc 'Update partial efforts'
 
 namespace :demands do
   task update_partial_effort: :environment do
+    return unless Time.zone.now.hour.between?(8, 21)
+
     Demand.in_flow(Time.zone.now).each do |demand|
       jira_account = demand.company.jira_accounts.first
 
