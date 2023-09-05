@@ -68,20 +68,20 @@ RSpec.describe RiskReviewsController do
             allow_any_instance_of(Demand).to(receive(:stage_at)).and_return(stage)
             demand = Fabricate :demand
             demand_block = Fabricate :demand_block, demand: demand
-            
+
             risk_review = Fabricate :risk_review, product: product, demands: [demand], demand_blocks: [demand_block]
-            
+
             get :show, params: { company_id: company, product_id: product, id: risk_review }
-            
+
             expect(response).to render_template 'spa-build/index'
           end
         end
-        
+
         context 'with data to blockings' do
           let(:risk_review) { Fabricate :risk_review, product: product, weekly_avg_blocked_time: [2, 3, 5], monthly_avg_blocked_time: [1, 2] }
-          
+
           before { get :show, params: { company_id: company, product_id: product, id: risk_review } }
-          
+
           it 'instantiates a new Team Member and renders the template' do
             expect(response).to render_template 'spa-build/index'
           end

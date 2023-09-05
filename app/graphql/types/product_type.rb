@@ -2,29 +2,29 @@
 
 module Types
   class ProductType < Types::BaseObject
-    field :company, Types::CompanyType, null: true
-    field :id, ID, null: false
-    field :latest_deliveries, [Types::DemandType], null: true
-    field :name, String, null: false
-    field :slug, String, null: false
-    field :demands, [Types::DemandType]
     field :average_queue_time, Integer
     field :average_speed, Float
     field :average_touch_time, Integer
+    field :company, Types::CompanyType, null: true
     field :created_demands_count, Integer
     field :delivered_demands_count, Integer
+    field :demands, [Types::DemandType]
     field :demands_blocks_count, Integer
     field :discarded_demands_count, Integer
     field :downstream_demands_count, Integer
     field :flow_events, [Types::FlowEventType], null: true
+    field :id, ID, null: false
+    field :latest_deliveries, [Types::DemandType], null: true
     field :leadtime_p65, Integer
     field :leadtime_p80, Integer
     field :leadtime_p95, Integer
     field :memberships, [Types::Teams::MembershipType]
+    field :name, String, null: false
     field :portfolio_units, [Types::PortfolioUnitType]
     field :portfolio_units_count, Integer
     field :remaining_backlog_count, Integer
     field :risk_reviews, [Types::RiskReviewType]
+    field :slug, String, null: false
     field :unscored_demands_count, Integer
     field :upstream_demands_count, Integer
 

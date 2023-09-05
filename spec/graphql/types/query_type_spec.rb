@@ -1241,7 +1241,6 @@ RSpec.describe Types::QueryType do
     end
   end
 
-
   describe '#projects' do
     let(:company) { Fabricate :company }
 
