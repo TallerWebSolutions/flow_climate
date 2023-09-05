@@ -42,21 +42,15 @@ class RiskReview < ApplicationRecord
   delegate :name, to: :product, prefix: true
   delegate :count, to: :bugs, prefix: true
 
-  def demands_count
-    demands.count
-  end
+  delegate :count, to: :demands, prefix: true
 
   def project_broken_wip_count
-    demands.map { |demand| demand.project }.uniq.map { |project| project.project_broken_wip_logs.count }.compact.sum
+    demands.map(&:project).uniq.filter_map { |project| project.project_broken_wip_logs.count }.sum
   end
 
-  def flow_events_count
-    flow_events.count
-  end
+  delegate :count, to: :flow_events, prefix: true
 
-  def outlier_demands_count
-    outlier_demands.count
-  end
+  delegate :count, to: :outlier_demands, prefix: true
 
   def bugs
     demands.bug

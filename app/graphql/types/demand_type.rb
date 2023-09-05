@@ -2,9 +2,9 @@
 
 module Types
   class DemandType < Types::BaseObject
+    field :class_of_service, String
     field :commitment_date, GraphQL::Types::ISO8601DateTime, null: true
     field :company, Types::CompanyType, null: false
-    field :class_of_service, String
     field :cost_to_project, Float, null: true
     field :created_date, GraphQL::Types::ISO8601DateTime, null: true
     field :current_stage_name, String
