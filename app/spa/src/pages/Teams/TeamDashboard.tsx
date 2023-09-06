@@ -10,20 +10,19 @@ import {
 } from "@mui/material"
 import { BarDatum } from "@nivo/bar"
 import { SliceTooltipProps } from "@nivo/line"
-import { useContext } from "react"
+import { format, subWeeks } from "date-fns"
+import React, { useContext } from "react"
 import { useForm } from "react-hook-form"
 import SearchIcon from "@mui/icons-material/Search"
 import { useParams, useSearchParams } from "react-router-dom"
 import { useTranslation } from "react-i18next"
-
 import { BarChart } from "../../components/charts/BarChart"
 import { ChartGridItem } from "../../components/charts/ChartGridItem"
-import { LineChart, normalizeCfdData } from "../../components/charts/LineChart"
+import { LineChart } from "../../components/charts/LineChart"
 import LineChartTooltip from "../../components/charts/tooltips/LineChartTooltip"
 import { FormElement } from "../../components/ui/Form"
 import Table from "../../components/ui/Table"
 import { MeContext } from "../../contexts/MeContext"
-import { cfdChartData } from "../../lib/charts"
 import { formatDate, secondsToDays, secondsToReadbleDate } from "../../lib/date"
 import { Demand } from "../../modules/demand/demand.types"
 import TeamBasicPage from "../../modules/team/components/TeamBasicPage"
@@ -43,13 +42,6 @@ const TEAM_DASHBOARD_QUERY = gql`
       numberOfDemandsDelivered
       activeBillableCount
       availableHoursInMonthFor
-      cumulativeFlowChartData(startDate: $startDate, endDate: $endDate) {
-        xAxis
-        yAxis {
-          name
-          data
-        }
-      }
       demandsFlowChartData(startDate: $startDate, endDate: $endDate) {
         creationChartData
         committedChartData
@@ -61,6 +53,17 @@ const TEAM_DASHBOARD_QUERY = gql`
         keys
         values
       }
+      biggestFiveLeadTimes: latestDeliveries(orderField: "leadtime", sortDirection: DESC, limit: 5) {
+        ...demand
+      }
+      biggestFiveLeadTimesInFourWeeks: latestDeliveries(
+        orderField: "leadtime"
+        sortDirection: DESC
+        limit: 5
+        startDate: "${format(subWeeks(new Date(), 4), "yyyy-MM-dd")}"
+      ) {
+        ...demand
+      }
       teamConsolidationsWeekly(startDate: $startDate, endDate: $endDate) {
         leadTimeP80
         consolidationDate
@@ -69,6 +72,20 @@ const TEAM_DASHBOARD_QUERY = gql`
         xAxis
         yAxis
       }
+    }
+  }
+
+  fragment demand on Demand {
+    id
+    leadtime
+    endDate
+    product {
+      id
+      name
+    }
+    project {
+      id
+      name
     }
   }
 `
@@ -101,16 +118,6 @@ const TeamDashboard = () => {
     { name: companyName || "", url: companyUrl },
     { name: team?.name || "" },
   ]
-
-  const cumulativeFlowChartData = team?.cumulativeFlowChartData
-  const cfdXaxis = cumulativeFlowChartData?.xAxis || []
-  const cfdYaxis = cumulativeFlowChartData?.yAxis.reverse() || []
-  const teamStages = cfdYaxis.map((item) => item.name)
-  const teamCumulativeFlowChartData = cfdChartData(
-    teamStages,
-    cfdXaxis,
-    cfdYaxis
-  )
 
   const biggestFiveLeadTimesRows = deliveriesRows(
     team?.biggestFiveLeadTimes,
@@ -202,13 +209,13 @@ const TeamDashboard = () => {
           </Grid>
         )}
 
-        <Grid item xs={4} display={'none'}>
+        <Grid item xs={4}>
           <Table
             title={t("dashboard.biggestFiveLeadTimes")}
             rows={biggestFiveLeadTimesRows}
           />
         </Grid>
-        <Grid item xs={4} display={'none'}>
+        <Grid item xs={4}>
           <Table
             title={t("dashboard.biggestFiveLeadTimesInFourWeeks")}
             rows={biggestFiveLeadTimesInFourWeeksRows}
@@ -250,38 +257,6 @@ const TeamDashboard = () => {
         </FormGroup>
       </form>
       <Grid container columnSpacing={4}>
-        {teamCumulativeFlowChartData && (
-          <ChartGridItem
-            title={t("charts.cumulativeFlowChart", {
-              teamName: team?.name,
-            })}
-          >
-            <LineChart
-              data={normalizeCfdData(teamCumulativeFlowChartData)}
-              axisLeftLegend={t("charts.cumulativeFlowYLabel")}
-              props={{
-                yScale: {
-                  type: "linear",
-                  stacked: true,
-                },
-                areaOpacity: 1,
-                enableArea: true,
-                enableSlices: "x",
-                sliceTooltip: ({ slice }: SliceTooltipProps) => (
-                  <LineChartTooltip slice={slice} />
-                ),
-                margin: { left: 80, right: 20, top: 25, bottom: 65 },
-                axisBottom: {
-                  tickSize: 5,
-                  tickPadding: 5,
-                  legendPosition: "middle",
-                  legendOffset: 60,
-                  tickRotation: -40,
-                },
-              }}
-            />
-          </ChartGridItem>
-        )}
         <ChartGridItem title={t("charts.flowDataChart")}>
           <BarChart
             data={teamFlowChartData}
