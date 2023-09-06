@@ -62,17 +62,6 @@ const TEAM_DASHBOARD_QUERY = gql`
         keys
         values
       }
-      biggestFiveLeadTimes: latestDeliveries(orderField: "leadtime", sortDirection: DESC, limit: 5) {
-        ...demand
-      }
-      biggestFiveLeadTimesInFourWeeks: latestDeliveries(
-        orderField: "leadtime"
-        sortDirection: DESC
-        limit: 5
-        startDate: "${format(subWeeks(new Date(), 4), "yyyy-MM-dd")}"
-      ) {
-        ...demand
-      }
       teamConsolidationsWeekly(startDate: $startDate, endDate: $endDate) {
         leadTimeP80
         consolidationDate
@@ -81,20 +70,6 @@ const TEAM_DASHBOARD_QUERY = gql`
         xAxis
         yAxis
       }
-    }
-  }
-
-  fragment demand on Demand {
-    id
-    leadtime
-    endDate
-    product {
-      id
-      name
-    }
-    project {
-      id
-      name
     }
   }
 `
@@ -228,13 +203,13 @@ const TeamDashboard = () => {
           </Grid>
         )}
 
-        <Grid item xs={4}>
+        <Grid item xs={4} display={'none'}>
           <Table
             title={t("dashboard.biggestFiveLeadTimes")}
             rows={biggestFiveLeadTimesRows}
           />
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={4} display={'none'}>
           <Table
             title={t("dashboard.biggestFiveLeadTimesInFourWeeks")}
             rows={biggestFiveLeadTimesInFourWeeksRows}
