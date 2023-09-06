@@ -16,5 +16,12 @@
     "new": "Nova Config"
   },
 
-  "jiraProjectConfig": "Configurações do Projeto"
+  "jiraProjectConfig": "Configurações do Projeto",
+
+  "sync": {
+    "statusMessage": {
+      "success": "Sua solicitação foi colocada na fila.",
+      "fail": "Problemas aconteceram ao colocar a solicitação na fila."
+    }
+  }
 }

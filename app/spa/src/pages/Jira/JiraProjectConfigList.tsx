@@ -36,7 +36,6 @@ type SynchronizeJiraProjectConfigDTO = {
 
 const JiraProjectConfigList = () => {
   const { t } = useTranslation(["jiraProjectConfigList"])
-  const { t: tConfig } = useTranslation(["jiraProjectConfig"])
   const { pushMessage } = useContext(MessagesContext)
   const params = useParams()
   const companySlug = params.company_id
@@ -46,34 +45,29 @@ const JiraProjectConfigList = () => {
     JIRA_PROJECT_CONFIG_LIST_QUERY,
     {
       variables: {
-        projectId: projectId,
+        projectId,
       },
     }
   )
-  const [synchronizeJiraProjectConfigMutation] = useMutation<SynchronizeJiraProjectConfigDTO>(
-    SYNCHRONIZE_JIRA_PROJECT_CONFIG_MUTATION,
-    {
-      update: (_, { data }) => {
-        const mutationResult =
-          data?.synchronizeJiraProjectConfigMutation?.statusMessage === "SUCCESS"
+  const [synchronizeJiraProjectConfigMutation] =
+    useMutation<SynchronizeJiraProjectConfigDTO>(
+      SYNCHRONIZE_JIRA_PROJECT_CONFIG_MUTATION,
+      {
+        update: (_, { data }) => {
+          const mutationResult =
+            data?.synchronizeJiraProjectConfigMutation?.statusMessage ===
+            "SUCCESS"
 
-        pushMessage({
-          text: mutationResult
-            ? tConfig("edit.statusMessage.success")
-            : tConfig("edit.statusMessage.fail"),
-          severity: mutationResult ? "success" : "error",
-        })
-      },
-    }
-  )
-  const handleJiraProjectConfigSynchronize = (event: React.MouseEvent<SVGSVGElement>) => {
+          pushMessage({
+            text: mutationResult
+              ? t("sync.statusMessage.success")
+              : t("sync.statusMessage.fail"),
+            severity: mutationResult ? "success" : "error",
+          })
+        },
+      }
+    )
 
-    synchronizeJiraProjectConfigMutation({
-      variables: {
-        projectId: projectId,
-      },
-    })
-  }
   const jiraConfigList = data?.jiraProjectConfigList
   const { me } = useContext(MeContext)
   const company = me?.currentCompany
@@ -138,7 +132,15 @@ const JiraProjectConfigList = () => {
                     >
                       <EditOutlinedIcon color="primary" />
                     </RouterLink>
-                    <RefreshOutlinedIcon color="primary" onClick={handleJiraProjectConfigSynchronize} cursor="pointer" />
+                    <RefreshOutlinedIcon
+                      color="primary"
+                      onClick={() => {
+                        synchronizeJiraProjectConfigMutation({
+                          variables: { projectId },
+                        })
+                      }}
+                      cursor="pointer"
+                    />
                   </TableCell>
                 </TableRow>
               ))}
@@ -150,10 +152,9 @@ const JiraProjectConfigList = () => {
   )
 }
 
-
 const SYNCHRONIZE_JIRA_PROJECT_CONFIG_MUTATION = gql`
   mutation SynchronizeJiraProjectConfigMutation($projectId: ID!) {
-    synchronizeJiraProjectConfigMutation(id: $projectId) {
+    synchronizeJiraProjectConfig(projectId: $projectId) {
       id
       statusMessage
     }
@@ -162,7 +163,7 @@ const SYNCHRONIZE_JIRA_PROJECT_CONFIG_MUTATION = gql`
 
 export const JIRA_PROJECT_CONFIG_LIST_QUERY = gql`
   query JiraProjectConfigList($projectId: ID!) {
-    jiraProjectConfigList(id: $projectId) {
+    jiraProjectConfigList(projectId: $projectId) {
       id
       fixVersionName
       jiraProductConfig {

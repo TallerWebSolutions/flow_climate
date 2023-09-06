@@ -16,5 +16,12 @@
     "new": "New Config"
   },
 
-  "jiraProjectConfig": "Project Configurations"
+  "jiraProjectConfig": "Project Configurations",
+
+  "sync": {
+    "statusMessage": {
+      "success": "Your request was enqueued.",
+      "fail": "Problems occurred."
+    }
+  }
 }

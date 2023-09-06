@@ -894,41 +894,41 @@ RSpec.describe Types::MutationType do
   end
 
   describe '#synchronize_jira_project_config_mutation' do
-    include Rails.application.routes.url_helpers
     let(:jira_project_config) { Fabricate :jira_project_config }
-    let(:current_user) { Fabricate :user}
+    let(:current_user) { Fabricate :user }
 
-    let(:mutation) do
-      %(mutation {
-          synchronizeJiraProjectConfigMutation(
-            id: #{jira_project_config.project_id}
+    context 'with valid data' do
+      it 'synchronizes the config and returns success' do
+        mutation =
+          %(mutation {
+          synchronizeJiraProjectConfig(
+            projectId: #{jira_project_config.project_id}
           ) {
             id
             statusMessage
           }
         })
-    end
 
-    context 'with valid data' do
-      it 'synchronizes the fields from mutation input' do
-        
-
-        company = jira_project_config.jira_product_config.company
-        jira_account = company.jira_accounts.first
-        project_url = company_project_url(company, jira_project_config)
         result = FlowClimateSchema.execute(mutation).as_json
-        expect( result['data']['synchronizeJiraProjectConfigMutation'] ).to eq( status_message: 'SUCCESS')
-        updated_config = jira_project_config.reload
-        expect(updated_config.fix_version_name).to eq 'foo'
+        expect(result['data']['synchronizeJiraProjectConfig']).to eq({ 'id' => jira_project_config.id.to_s, 'statusMessage' => 'SUCCESS' })
       end
     end
 
-    # context 'with invalid data' do
-    #   it 'fails to update' do
-    #     allow_any_instance_of(Jira::JiraProjectConfig).to(receive(:update)).and_return(false)
-    #     result = FlowClimateSchema.execute(mutation).as_json
-    #     expect(result['data']['updateJiraProjectConfig']['statusMessage']).to eq('FAIL')
-    #   end
-    # end
+    context 'with invalid data' do
+      it 'returns not found' do
+        mutation =
+          %(mutation {
+          synchronizeJiraProjectConfig(
+            projectId: "foo"
+          ) {
+            id
+            statusMessage
+          }
+        })
+
+        result = FlowClimateSchema.execute(mutation).as_json
+        expect(result['data']['synchronizeJiraProjectConfig']).to eq({ 'id' => nil, 'statusMessage' => 'NOT_FOUND' })
+      end
+    end
   end
 end
