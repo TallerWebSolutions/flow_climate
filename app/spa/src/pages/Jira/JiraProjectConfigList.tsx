@@ -40,7 +40,6 @@ const JiraProjectConfigList = () => {
   const params = useParams()
   const companySlug = params.company_id
   const projectId = params.project_id
-  const configId = params.id
   const { data, loading } = useQuery<JiraProjectConfigListDTO>(
     JIRA_PROJECT_CONFIG_LIST_QUERY,
     {
