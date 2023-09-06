@@ -118,7 +118,7 @@ module Types
         projects.active
       end
 
-      def cumulative_flow_chart_data(start_date: 6.months.ago, end_date: Time.zone.today)
+      def cumulative_flow_chart_data(start_date: 2.months.ago, end_date: Time.zone.today)
         start_date = [object.start_date, start_date].max
         end_date = [object.end_date, end_date].min
         array_of_dates = TimeService.instance.weeks_between_of(start_date, end_date)
@@ -127,18 +127,18 @@ module Types
         { x_axis: array_of_dates, y_axis: work_item_flow_information.demands_stages_count_hash }
       end
 
-      def demands_flow_chart_data(start_date: 6.months.ago, end_date: Time.zone.today)
+      def demands_flow_chart_data(start_date: 2.months.ago, end_date: Time.zone.today)
         start_date = [object.start_date, start_date].max
         end_date = [object.end_date, end_date].min
         Highchart::DemandsChartsAdapter.new(object.demands.kept, start_date, end_date, 'week')
       end
 
-      def lead_time_histogram_data(start_date: 6.months.ago, end_date: Time.zone.today)
+      def lead_time_histogram_data(start_date: 2.months.ago, end_date: Time.zone.today)
         demands = demands_finished_with_leadtime(start_date, end_date)
         Stats::StatisticsService.instance.leadtime_histogram_hash(demands.map(&:leadtime).map { |leadtime| leadtime.round(3) })
       end
 
-      def team_consolidations_weekly(start_date: 6.months.ago, end_date: Time.zone.today)
+      def team_consolidations_weekly(start_date: 2.months.ago, end_date: Time.zone.today)
         weekly_team_consolidations = object.team_consolidations.weekly_data.order(:consolidation_date)
 
         consolidations = Consolidations::TeamConsolidation
@@ -148,7 +148,7 @@ module Types
         consolidations.order(:consolidation_date)
       end
 
-      def team_monthly_investment(start_date: 6.months.ago, end_date: Time.zone.today)
+      def team_monthly_investment(start_date: 2.months.ago, end_date: Time.zone.today)
         start_date = [object.start_date, start_date].max
         end_date = [object.end_date, end_date].min
         array_of_months = TimeService.instance.months_between_of(start_date, end_date)
