@@ -28,7 +28,7 @@ type JiraProjectConfigListDTO = {
 }
 
 type SynchronizeJiraProjectConfigDTO = {
-  synchronizeJiraProjectConfigMutation: {
+  synchronizeJiraProjectConfig: {
     statusMessage?: string
     id?: string
   }
@@ -45,17 +45,17 @@ const JiraProjectConfigList = () => {
     JIRA_PROJECT_CONFIG_LIST_QUERY,
     {
       variables: {
-        projectId,
+        projectId: projectId,
       },
     }
   )
-  const [synchronizeJiraProjectConfigMutation] =
+  const [synchronizeJiraProjectConfig] =
     useMutation<SynchronizeJiraProjectConfigDTO>(
       SYNCHRONIZE_JIRA_PROJECT_CONFIG_MUTATION,
       {
         update: (_, { data }) => {
           const mutationResult =
-            data?.synchronizeJiraProjectConfigMutation?.statusMessage ===
+            data?.synchronizeJiraProjectConfig?.statusMessage ===
             "SUCCESS"
 
           pushMessage({
@@ -135,7 +135,7 @@ const JiraProjectConfigList = () => {
                     <RefreshOutlinedIcon
                       color="primary"
                       onClick={() => {
-                        synchronizeJiraProjectConfigMutation({
+                        synchronizeJiraProjectConfig({
                           variables: { projectId },
                         })
                       }}
@@ -163,7 +163,7 @@ const SYNCHRONIZE_JIRA_PROJECT_CONFIG_MUTATION = gql`
 
 export const JIRA_PROJECT_CONFIG_LIST_QUERY = gql`
   query JiraProjectConfigList($projectId: ID!) {
-    jiraProjectConfigList(projectId: $projectId) {
+    jiraProjectConfigList(id: $projectId) {
       id
       fixVersionName
       jiraProductConfig {
