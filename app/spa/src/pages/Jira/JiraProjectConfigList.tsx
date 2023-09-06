@@ -1,4 +1,4 @@
-import { gql, useQuery } from "@apollo/client"
+import { gql, useMutation, useQuery } from "@apollo/client"
 import { useTranslation } from "react-i18next"
 import { JiraProjectConfig } from "../../modules/project/jiraProjectConfig.types"
 import { useParams } from "react-router-dom"
@@ -18,20 +18,29 @@ import {
 } from "@mui/material"
 import { Link as RouterLink } from "react-router-dom"
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined"
+import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined"
 import { useContext } from "react"
 import { MeContext } from "../../contexts/MeContext"
+import { MessagesContext } from "../../contexts/MessageContext"
 
 type JiraProjectConfigListDTO = {
   jiraProjectConfigList?: JiraProjectConfig[]
 }
 
+type SynchronizeJiraProjectConfigDTO = {
+  synchronizeJiraProjectConfig: {
+    statusMessage?: string
+    id?: string
+  }
+}
+
 const JiraProjectConfigList = () => {
   const { t } = useTranslation(["jiraProjectConfigList"])
+  const { pushMessage } = useContext(MessagesContext)
   const params = useParams()
-
   const companySlug = params.company_id
   const projectId = params.project_id
-
+  const configId = params.id
   const { data, loading } = useQuery<JiraProjectConfigListDTO>(
     JIRA_PROJECT_CONFIG_LIST_QUERY,
     {
@@ -40,12 +49,28 @@ const JiraProjectConfigList = () => {
       },
     }
   )
+  const [synchronizeJiraProjectConfig] =
+    useMutation<SynchronizeJiraProjectConfigDTO>(
+      SYNCHRONIZE_JIRA_PROJECT_CONFIG_MUTATION,
+      {
+        update: (_, { data }) => {
+          const mutationResult =
+            data?.synchronizeJiraProjectConfig?.statusMessage ===
+            "SUCCESS"
+
+          pushMessage({
+            text: mutationResult
+              ? t("sync.statusMessage.success")
+              : t("sync.statusMessage.fail"),
+            severity: mutationResult ? "success" : "error",
+          })
+        },
+      }
+    )
 
   const jiraConfigList = data?.jiraProjectConfigList
-
   const { me } = useContext(MeContext)
   const company = me?.currentCompany
-
   const breadcrumbsLinks = [
     {
       name: company?.name || "",
@@ -60,7 +85,6 @@ const JiraProjectConfigList = () => {
       url: `/companies/${companySlug}/jira/projects/${projectId}/jira_project_configs`,
     },
   ]
-
   return (
     <BasicPage
       title={t("jiraProjectConfig")}
@@ -102,11 +126,22 @@ const JiraProjectConfigList = () => {
                     {config?.jiraProductConfig?.jiraProductKey}
                   </TableCell>
                   <TableCell>{config?.fixVersionName}</TableCell>
-                  <RouterLink
-                    to={`/companies/${companySlug}/jira/projects/${projectId}/jira_project_configs/${config?.id}/edit`}
-                  >
-                    <EditOutlinedIcon color="primary" />
-                  </RouterLink>
+                  <TableCell>
+                    <RouterLink
+                      to={`/companies/${companySlug}/jira/projects/${projectId}/jira_project_configs/${config?.id}/edit`}
+                    >
+                      <EditOutlinedIcon color="primary" />
+                    </RouterLink>
+                    <RefreshOutlinedIcon
+                      color="primary"
+                      onClick={() => {
+                        synchronizeJiraProjectConfig({
+                          variables: { projectId },
+                        })
+                      }}
+                      cursor="pointer"
+                    />
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -116,6 +151,15 @@ const JiraProjectConfigList = () => {
     </BasicPage>
   )
 }
+
+const SYNCHRONIZE_JIRA_PROJECT_CONFIG_MUTATION = gql`
+  mutation SynchronizeJiraProjectConfigMutation($projectId: ID!) {
+    synchronizeJiraProjectConfig(projectId: $projectId) {
+      id
+      statusMessage
+    }
+  }
+`
 
 export const JIRA_PROJECT_CONFIG_LIST_QUERY = gql`
   query JiraProjectConfigList($projectId: ID!) {
@@ -129,5 +173,4 @@ export const JIRA_PROJECT_CONFIG_LIST_QUERY = gql`
     }
   }
 `
-
 export default JiraProjectConfigList

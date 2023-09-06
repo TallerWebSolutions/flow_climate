@@ -892,4 +892,43 @@ RSpec.describe Types::MutationType do
       end
     end
   end
+
+  describe '#synchronize_jira_project_config_mutation' do
+    let(:jira_project_config) { Fabricate :jira_project_config }
+    let(:current_user) { Fabricate :user }
+
+    context 'with valid data' do
+      it 'synchronizes the config and returns success' do
+        mutation =
+          %(mutation {
+          synchronizeJiraProjectConfig(
+            projectId: #{jira_project_config.project_id}
+          ) {
+            id
+            statusMessage
+          }
+        })
+
+        result = FlowClimateSchema.execute(mutation).as_json
+        expect(result['data']['synchronizeJiraProjectConfig']).to eq({ 'id' => jira_project_config.id.to_s, 'statusMessage' => 'SUCCESS' })
+      end
+    end
+
+    context 'with invalid data' do
+      it 'returns not found' do
+        mutation =
+          %(mutation {
+          synchronizeJiraProjectConfig(
+            projectId: "foo"
+          ) {
+            id
+            statusMessage
+          }
+        })
+
+        result = FlowClimateSchema.execute(mutation).as_json
+        expect(result['data']['synchronizeJiraProjectConfig']).to eq({ 'id' => nil, 'statusMessage' => 'NOT_FOUND' })
+      end
+    end
+  end
 end
