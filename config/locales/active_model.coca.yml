@@ -210,7 +210,8 @@ coca:
             demand_blocked: "Deliverable Blocks"
             team_review: "Team Review"
             weekly_team_efficiency: "Eficiência Semanal do Time"
-            monthly_team_efficiency: Eficiência Mensal do Time
+            monthly_team_efficiency: "Eficiência Mensal do Time"
+            monthly_team_efficiency_retrospective: "Retrospectiva Mensal de Eficiência do Time"
           config_type:
             team: "Team"
             customer: "Customer"

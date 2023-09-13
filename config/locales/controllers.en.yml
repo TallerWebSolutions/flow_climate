@@ -1304,7 +1304,9 @@ en:
       notify_week_team_efficiency:
         title: "Produced hours in the week for %{team_name}"
       notify_month_team_efficiency:
-        title: "Horas realizadas no mês de %{team_name}"
+        title: "Produced hours in the month for %{team_name}"
+      notify_month_team_efficiency_retrospective:
+        title: "Produced hours last month for %{team_name}"
     index:
       active: "Active?"
       parent: "Parent"

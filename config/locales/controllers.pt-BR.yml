@@ -1290,6 +1290,8 @@ pt-BR:
         title: "Horas realizadas na semana de %{team_name}"
       notify_month_team_efficiency:
         title: "Horas realizadas no mês de %{team_name}"
+      notify_month_team_efficiency_retrospective:
+        title: "Horas realizadas mês passado de %{team_name}"
     index:
       active: 'Ativo?'
       parent: "Pai"
