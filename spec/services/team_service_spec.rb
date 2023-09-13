@@ -103,7 +103,7 @@ RSpec.describe TeamService, type: :service do
 
         start_date = Time.zone.today.beginning_of_month
         end_date = Time.zone.today.end_of_month
-        expect(described_class.instance.compute_memberships_realized_hours(team, start_date, end_date)[:members_efficiency]).to contain_exactly({ membership: membership, avg_hours_per_demand: 0, cards_count: 0, effort_in_month: 0, realized_money_in_month: 0, member_capacity_value: 120 }, { membership: other_membership, avg_hours_per_demand: 0, cards_count: 0, effort_in_month: 0, realized_money_in_month: 0, member_capacity_value: 40 })
+        expect(described_class.instance.compute_memberships_realized_hours(team, start_date, end_date)[:members_efficiency]).to contain_exactly({ membership: membership, avg_hours_per_demand: 0, cards_count: 0, effort_in_month: 0, realized_money_in_month: 0, member_capacity_value: 120, value_per_hour_performed: 0.0 }, { membership: other_membership, avg_hours_per_demand: 0, cards_count: 0, effort_in_month: 0, realized_money_in_month: 0, member_capacity_value: 40, value_per_hour_performed: 0.0 })
         expect(described_class.instance.compute_memberships_realized_hours(team, start_date, end_date)[:total_hours_produced]).to eq 0
         expect(described_class.instance.compute_memberships_realized_hours(team, start_date, end_date)[:total_money_produced]).to eq 0
         expect(described_class.instance.compute_memberships_realized_hours(team, start_date, end_date)[:avg_hours_per_member]).to eq 0

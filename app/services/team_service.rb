@@ -70,7 +70,9 @@ class TeamService
       { membership: membership, effort_in_month: membership.effort_in_period(start_date, end_date),
         avg_hours_per_demand: membership.avg_hours_per_demand(start_date, end_date),
         cards_count: membership.cards_count(start_date, end_date),
-        realized_money_in_month: membership.realized_money_in_period(start_date, end_date), member_capacity_value: membership.hours_per_month || 0 }
+        realized_money_in_month: membership.realized_money_in_period(start_date, end_date), member_capacity_value: membership.hours_per_month || 0,
+        value_per_hour_performed: calculate_hours_per_month(membership.monthly_payment, membership.effort_in_period(start_date, end_date)) 
+      }
     end
     efficiency_data = efficiency_data.sort_by { |member_ef| member_ef[:effort_in_month] }.reverse
 
@@ -78,6 +80,15 @@ class TeamService
   end
 
   private
+
+  def calculate_hours_per_month(sallary, month_hours)
+    result = sallary / month_hours
+    if result.nan? || result.infinite?
+      0.0
+    else
+      result
+    end
+  end
 
   def build_members_efficiency(efficiency_data)
     total_hours_produced = efficiency_data.pluck(:effort_in_month).sum
