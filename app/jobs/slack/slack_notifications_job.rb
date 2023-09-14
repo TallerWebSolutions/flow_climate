@@ -35,12 +35,18 @@ module Slack
         Slack::SlackNotificationService.instance.notify_team_efficiency(slack_notifier, team, start_date, end_date, title, notification_period)
 
       elsif slack_configuration.monthly_team_efficiency_retrospective?
-        start_date = Time.zone.now.ago(1.month).beginning_of_month
-        end_date = Time.zone.now.ago(1.month).end_of_month
-        title = ">*#{I18n.t('slack_configurations.notifications.notify_month_team_efficiency_retrospective.title', team_name: team.name)} em #{I18n.l(start_date, format: '%B')}/#{start_date.year}*\n\n"
-        notification_period = "month"
-        Slack::SlackNotificationService.instance.notify_team_efficiency(slack_notifier, team, start_date, end_date, title, notification_period)
+        if Time.zone.now.day.to_i <= Time.zone.now.beginning_of_month.day.to_i + 2
+          firstWDay = { 0 => 1 , 1 => 1 , 2 => 2 , 3 => 3 , 4 => 4 , 5 => 5 , 6 => 1}
+          if Time.zone.now.wday == firstWDay[Time.zone.now.beginning_of_month.wday]
+            start_date = Time.zone.now.ago(1.month).beginning_of_month
+            end_date = Time.zone.now.ago(1.month).end_of_month
+            title = ">*#{I18n.t('slack_configurations.notifications.notify_month_team_efficiency_retrospective.title', team_name: team.name)} em #{I18n.l(start_date, format: '%B')}/#{start_date.year}*\n\n"
+            notification_period = "month"
+            Slack::SlackNotificationService.instance.notify_team_efficiency(slack_notifier, team, start_date, end_date, title, notification_period)
+          end
+        end
       end
+
     end
   end
 end
