@@ -8,9 +8,9 @@ class MoveHoursPerMonthFromTeamMemberToMembership < ActiveRecord::Migration[5.2]
       t.date :end_date
     end
 
-    Membership.all.each { |membership| membership.update(hours_per_month: membership.team_member.hours_per_month, start_date: membership.team_member.start_date, end_date: membership.team_member.end_date) }
+    Membership.find_each { |membership| membership.update(hours_per_month: membership.team_member.hours_per_month, start_date: membership.team_member.start_date, end_date: membership.team_member.end_date) }
 
-    memberships_start_date_nil = Membership.all.where(start_date: nil)
+    memberships_start_date_nil = Membership.where(start_date: nil)
     team_members_start_date_nil = memberships_start_date_nil.where(start_date: nil).map(&:team_member)
 
     memberships_start_date_nil.map(&:destroy)
@@ -28,7 +28,7 @@ class MoveHoursPerMonthFromTeamMemberToMembership < ActiveRecord::Migration[5.2]
 
     add_column :team_members, :hours_per_month, :integer
 
-    Membership.all.each { |membership| membership.team_member.update(hours_per_month: membership.hours_per_month) }
+    Membership.find_each { |membership| membership.team_member.update(hours_per_month: membership.hours_per_month) }
 
     change_table :memberships, bulk: true do |t|
       t.remove :hours_per_month

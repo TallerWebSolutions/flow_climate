@@ -525,7 +525,7 @@ RSpec.describe DemandsController do
           delete :destroy_physically, params: { company_id: company, id: demand }, xhr: true
 
           expect(response).to render_template 'demands/destroy_physically'
-          expect(Demand.all.count).to eq 0
+          expect(Demand.count).to eq 0
         end
       end
 

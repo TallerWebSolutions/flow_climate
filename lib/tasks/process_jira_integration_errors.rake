@@ -3,7 +3,7 @@
 namespace :jira_errors do
   desc 'Process Jira integration errors'
   task process_api_errors: :environment do
-    Jira::JiraApiError.where(processed: false).each do |jira_error|
+    Jira::JiraApiError.where(processed: false).find_each do |jira_error|
       demand = jira_error.demand
       if demand.jira_api_errors.count > 5
         demand.jira_api_errors.map { |demand_jira_error| demand_jira_error.update(processed: true) }

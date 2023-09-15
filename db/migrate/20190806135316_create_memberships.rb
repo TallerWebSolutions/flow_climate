@@ -19,7 +19,7 @@ class CreateMemberships < ActiveRecord::Migration[5.2]
     add_foreign_key :memberships, :team_members, column: :team_member_id
     add_foreign_key :memberships, :teams, column: :team_id
 
-    TeamMember.all.each do |member|
+    TeamMember.find_each do |member|
       Membership.create(team_id: member.team_id, team_member_id: member.id)
       member.update(name: "#{member.teams.first.name} | #{member.name}") unless member.valid?
       member.update(company_id: Team.find_by(id: member.team_id).company_id)

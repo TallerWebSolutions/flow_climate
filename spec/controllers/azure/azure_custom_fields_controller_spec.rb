@@ -74,7 +74,7 @@ RSpec.describe Azure::AzureCustomFieldsController do
 
           delete :destroy, params: { company_id: company, id: custom_field }, xhr: true
 
-          expect(Azure::AzureCustomField.all.count).to eq 0
+          expect(Azure::AzureCustomField.count).to eq 0
           expect(response).to render_template 'azure/azure_custom_fields/destroy'
         end
       end

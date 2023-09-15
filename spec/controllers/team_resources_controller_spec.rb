@@ -76,7 +76,7 @@ RSpec.describe TeamResourcesController do
         before { post :create, params: { company_id: company, team_resource: { resource_type: nil } }, xhr: true }
 
         it 'does not create the team resource and re-render the template with the errors' do
-          expect(TeamResource.all.count).to eq 0
+          expect(TeamResource.count).to eq 0
           expect(response).to render_template 'team_resources/create'
           expect(assigns(:team_resource).errors.full_messages).to eq ['Tipo do Recurso não pode ficar em branco']
         end

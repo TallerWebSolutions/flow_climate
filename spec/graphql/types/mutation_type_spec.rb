@@ -116,7 +116,7 @@ RSpec.describe Types::MutationType do
       it 'succeeds' do
         result = FlowClimateSchema.execute(mutation).as_json
         expect(result['data']['deleteTeam']['statusMessage']).to eq('SUCCESS')
-        expect(Team.all.count).to eq 0
+        expect(Team.count).to eq 0
       end
     end
 
@@ -171,7 +171,7 @@ RSpec.describe Types::MutationType do
       it 'succeeds' do
         result = FlowClimateSchema.execute(mutation).as_json
         expect(result['data']['deleteTeamMember']['statusMessage']).to eq('SUCCESS')
-        expect(TeamMember.all.count).to eq 0
+        expect(TeamMember.count).to eq 0
       end
     end
 
@@ -180,7 +180,7 @@ RSpec.describe Types::MutationType do
         allow(TeamMember).to(receive(:find_by)).and_return(nil)
         result = FlowClimateSchema.execute(mutation).as_json
         expect(result['data']['deleteTeamMember']['statusMessage']).to eq('FAIL')
-        expect(TeamMember.all.count).to eq 1
+        expect(TeamMember.count).to eq 1
       end
     end
 
@@ -665,7 +665,7 @@ RSpec.describe Types::MutationType do
       it 'succeeds' do
         result = FlowClimateSchema.execute(mutation).as_json
         expect(result['data']['deleteWorkItemType']['statusMessage']).to eq('SUCCESS')
-        expect(WorkItemType.all.count).to eq 0
+        expect(WorkItemType.count).to eq 0
       end
     end
 
@@ -840,7 +840,7 @@ RSpec.describe Types::MutationType do
       it 'succeeds' do
         result = FlowClimateSchema.execute(mutation).as_json
         expect(result['data']['deleteProductRiskReview']['statusMessage']).to eq('SUCCESS')
-        expect(RiskReview.all.count).to eq 0
+        expect(RiskReview.count).to eq 0
       end
     end
 

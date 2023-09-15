@@ -106,7 +106,7 @@ class TeamsController < DemandsListController
   def build_membership_lead_time_in_time_array(active_memberships)
     @memberships_lead_time_in_time = []
     array_of_dates = []
-    active_memberships.includes([:demands]).each do |membership|
+    active_memberships.includes([:demands]).find_each do |membership|
       membership_lead_times_hash = compute_membership_lead_times(membership)
       array_of_dates << membership_lead_times_hash[:membership_period]
       @memberships_lead_time_in_time << membership_lead_times_hash[:membership_data]

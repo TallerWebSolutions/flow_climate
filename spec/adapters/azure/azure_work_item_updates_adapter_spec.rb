@@ -27,10 +27,10 @@ RSpec.describe Azure::AzureWorkItemUpdatesAdapter do
 
           expect(Stage.all.map(&:name)).to match_array ['To Do', 'Doing', 'Done']
           expect(Stage.all.map { |s| [s.name, s.projects] }).to match_array [['To Do', [demand.project]], ['Doing', [demand.project]], ['Done', [demand.project]]]
-          expect(DemandTransition.all.order(:id).map(&:last_time_in)).to eq %w[2022-01-13T14:05:06.22Z 2022-01-17T13:34:43.95Z 2022-01-24T15:02:14.39Z]
-          expect(DemandTransition.all.order(:id).map(&:last_time_out)).to eq ['2022-01-17T13:34:43.95Z', '2022-01-24T15:02:14.39Z', nil]
-          expect(TeamMember.all.order(:id).map(&:name)).to eq ['Celso Martins']
-          expect(TeamMember.all.order(:id).map(&:user_id)).to eq [user.id]
+          expect(DemandTransition.order(:id).map(&:last_time_in)).to eq %w[2022-01-13T14:05:06.22Z 2022-01-17T13:34:43.95Z 2022-01-24T15:02:14.39Z]
+          expect(DemandTransition.order(:id).map(&:last_time_out)).to eq ['2022-01-17T13:34:43.95Z', '2022-01-24T15:02:14.39Z', nil]
+          expect(TeamMember.order(:id).map(&:name)).to eq ['Celso Martins']
+          expect(TeamMember.order(:id).map(&:user_id)).to eq [user.id]
         end
       end
 
@@ -48,10 +48,10 @@ RSpec.describe Azure::AzureWorkItemUpdatesAdapter do
 
           expect(Stage.all.map(&:name)).to match_array ['To Do', 'Doing', 'Done']
           expect(Stage.all.map { |s| [s.name, s.projects] }).to match_array [['To Do', [demand.project]], ['Doing', [demand.project]], ['Done', [demand.project]]]
-          expect(DemandTransition.all.order(:id).map(&:last_time_in)).to eq %w[2022-01-13T14:05:06.22Z 2022-01-17T13:34:43.95Z 2022-01-24T15:02:14.39Z]
-          expect(DemandTransition.all.order(:id).map(&:last_time_out)).to eq ['2022-01-17T13:34:43.95Z', '2022-01-24T15:02:14.39Z', nil]
-          expect(TeamMember.all.order(:id).map(&:name)).to eq ['Celso Martins']
-          expect(TeamMember.all.order(:id).map(&:user_id)).to eq [user.id]
+          expect(DemandTransition.order(:id).map(&:last_time_in)).to eq %w[2022-01-13T14:05:06.22Z 2022-01-17T13:34:43.95Z 2022-01-24T15:02:14.39Z]
+          expect(DemandTransition.order(:id).map(&:last_time_out)).to eq ['2022-01-17T13:34:43.95Z', '2022-01-24T15:02:14.39Z', nil]
+          expect(TeamMember.order(:id).map(&:name)).to eq ['Celso Martins']
+          expect(TeamMember.order(:id).map(&:user_id)).to eq [user.id]
           expect(demand.discarded_at).to eq '2022-01-24T15:02:14.39Z'
         end
       end

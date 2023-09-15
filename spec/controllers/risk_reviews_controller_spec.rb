@@ -137,7 +137,7 @@ RSpec.describe RiskReviewsController do
             expect(RiskReviewGeneratorJob).not_to receive(:perform_later)
             post :create, params: { company_id: company, product_id: product, risk_review: { meeting_date: nil, lead_time_outlier_limit: nil } }, xhr: true
 
-            expect(RiskReview.all.count).to eq 0
+            expect(RiskReview.count).to eq 0
             expect(response).to render_template 'risk_reviews/create'
             expect(assigns(:risk_review).errors.full_messages).to eq ['Outlier no lead time não pode ficar em branco', 'Data da Reunião não pode ficar em branco']
           end

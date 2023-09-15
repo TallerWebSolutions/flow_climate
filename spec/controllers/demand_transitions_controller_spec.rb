@@ -126,7 +126,7 @@ RSpec.describe DemandTransitionsController do
             expect(assigns(:stages_to_select)).to eq [second_stage, first_stage]
             expect(demand.reload.current_stage).to eq stage
 
-            expect(ProjectBrokenWipLog.all.count).to eq 0
+            expect(ProjectBrokenWipLog.count).to eq 0
           end
         end
 
@@ -152,7 +152,7 @@ RSpec.describe DemandTransitionsController do
 
             it 'creates the new demand transition and does not create the new broken wip log' do
               expect(response).to render_template 'demand_transitions/create'
-              expect(ProjectBrokenWipLog.all.count).to eq 1
+              expect(ProjectBrokenWipLog.count).to eq 1
             end
           end
         end
@@ -162,7 +162,7 @@ RSpec.describe DemandTransitionsController do
         before { post :create, params: { company_id: company, demand_id: demand, demand_transition: { stage_id: nil, last_time_in: nil, last_time_out: nil } }, xhr: true }
 
         it 'does not create the transition and re-render the template with the errors' do
-          expect(DemandTransition.all.count).to eq 0
+          expect(DemandTransition.count).to eq 0
           expect(response).to render_template 'demand_transitions/create'
           expect(assigns(:demand_transition).errors.full_messages).to eq ['Etapa deve existir', 'Entrada não pode ficar em branco']
         end

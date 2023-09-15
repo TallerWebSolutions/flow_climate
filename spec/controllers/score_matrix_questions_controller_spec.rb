@@ -182,7 +182,7 @@ RSpec.describe ScoreMatrixQuestionsController do
 
         it 'deletes the score matrix' do
           expect(response).to render_template 'score_matrix_questions/destroy'
-          expect(ScoreMatrixQuestion.all.count).to eq 4
+          expect(ScoreMatrixQuestion.count).to eq 4
           expect(assigns(:score_matrix_questions)).to eq [first_score_matrix_question, fourth_score_matrix_question, second_score_matrix_question, third_score_matrix_question]
         end
       end

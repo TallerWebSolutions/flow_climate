@@ -7,7 +7,7 @@ class UsersController < AuthenticatedController
 
   def admin_dashboard
     @users_list = User.all.sort_by(&:full_name)
-    @companies_list = Company.all.order(:name)
+    @companies_list = Company.order(:name)
   end
 
   def activate_email_notifications

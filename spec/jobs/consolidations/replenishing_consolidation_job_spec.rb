@@ -34,7 +34,7 @@ RSpec.describe Consolidations::ReplenishingConsolidationJob do
           allow(Stats::StatisticsService.instance).to(receive(:run_montecarlo)).and_return([4, 3, 6, 10])
           described_class.perform_now
 
-          new_consolidations = Consolidations::ReplenishingConsolidation.all.order(:consolidation_date)
+          new_consolidations = Consolidations::ReplenishingConsolidation.order(:consolidation_date)
           expect(new_consolidations.count).to eq 2
 
           expect(new_consolidations.map(&:consolidation_date)).to eq [Time.zone.today, Time.zone.today]
@@ -77,7 +77,7 @@ RSpec.describe Consolidations::ReplenishingConsolidationJob do
           allow(Stats::StatisticsService.instance).to(receive(:run_montecarlo)).and_return([4, 3, 6, 10])
           described_class.perform_now(team.id)
 
-          new_consolidations = Consolidations::ReplenishingConsolidation.all.order(:consolidation_date)
+          new_consolidations = Consolidations::ReplenishingConsolidation.order(:consolidation_date)
           expect(new_consolidations.count).to eq 2
 
           expect(new_consolidations.map(&:consolidation_date)).to eq [Time.zone.today, Time.zone.today]
@@ -107,7 +107,7 @@ RSpec.describe Consolidations::ReplenishingConsolidationJob do
       travel_to Time.zone.local(2020, 7, 8, 10, 0, 0) do
         described_class.perform_now
 
-        new_consolidations = Consolidations::ReplenishingConsolidation.all.order(:consolidation_date)
+        new_consolidations = Consolidations::ReplenishingConsolidation.order(:consolidation_date)
         expect(new_consolidations.count).to eq 0
       end
     end
@@ -118,7 +118,7 @@ RSpec.describe Consolidations::ReplenishingConsolidationJob do
       expect(Rails.logger).to(receive(:warn)).once
       described_class.perform_now('foo')
 
-      new_consolidations = Consolidations::ReplenishingConsolidation.all.order(:consolidation_date)
+      new_consolidations = Consolidations::ReplenishingConsolidation.order(:consolidation_date)
       expect(new_consolidations.count).to eq 0
     end
   end

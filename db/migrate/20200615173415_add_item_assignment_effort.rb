@@ -9,7 +9,7 @@ class AddItemAssignmentEffort < ActiveRecord::Migration[6.0]
     end
     add_foreign_key :item_assignments, :memberships, column: :membership_id
 
-    ItemAssignment.all.each do |item_assignment|
+    ItemAssignment.find_each do |item_assignment|
       membership = Membership.where(team_member_id: item_assignment.team_member_id, team: item_assignment.demand.team).first_or_initialize
 
       membership.update(start_date: Time.zone.today) unless membership.valid?

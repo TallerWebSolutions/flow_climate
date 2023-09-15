@@ -37,7 +37,7 @@ class CreateJiraProductConfigs < ActiveRecord::Migration[5.2]
     end
     add_foreign_key :jira_project_configs, :jira_product_configs, column: :jira_product_config_id
 
-    Jira::JiraProjectConfig.all.each do |project_config|
+    Jira::JiraProjectConfig.find_each do |project_config|
       product_config = Jira::JiraProductConfig.where(jira_product_key: project_config.jira_project_key)&.first&.id
       project_config.update(jira_product_config_id: product_config) if product_config.present?
     end

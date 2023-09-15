@@ -10,7 +10,7 @@ RSpec.describe Azure::AzureReader, type: :service do
 
         described_class.instance.read_team(company, azure_account, JSON.parse(azure_item_return))
 
-        expect(Team.all.count).to eq 0
+        expect(Team.count).to eq 0
       end
     end
 
@@ -72,7 +72,7 @@ RSpec.describe Azure::AzureReader, type: :service do
 
         described_class.instance.read_customer(company, JSON.parse(azure_item_return))
 
-        expect(Customer.all.count).to eq 1
+        expect(Customer.count).to eq 1
       end
     end
   end
@@ -96,7 +96,7 @@ RSpec.describe Azure::AzureReader, type: :service do
 
         described_class.instance.read_initiative(company, JSON.parse(azure_item_return))
 
-        expect(Initiative.all.count).to be_zero
+        expect(Initiative.count).to be_zero
       end
     end
 
@@ -108,7 +108,7 @@ RSpec.describe Azure::AzureReader, type: :service do
 
         described_class.instance.read_initiative(company, JSON.parse(azure_item_return))
 
-        expect(Initiative.all.count).to eq 1
+        expect(Initiative.count).to eq 1
       end
     end
   end

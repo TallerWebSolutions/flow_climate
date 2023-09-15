@@ -7,7 +7,7 @@ class AddHoursBasedPaymentToTeamMember < ActiveRecord::Migration[5.1]
       t.decimal :total_monthly_payment
     end
 
-    TeamMember.all.each do |member|
+    TeamMember.find_each do |member|
       member.update(total_monthly_payment: member.monthly_payment + (member.hours_per_month * member.hour_value))
     end
 

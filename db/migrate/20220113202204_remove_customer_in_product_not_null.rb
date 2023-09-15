@@ -7,7 +7,7 @@ class RemoveCustomerInProductNotNull < ActiveRecord::Migration[6.1]
     add_column :products, :company_id, :integer
     add_index :products, :company_id
 
-    Product.all.each do |product|
+    Product.find_each do |product|
       company_id = Customer.find_by(id: product.customer_id).company_id
       product.update(company_id: company_id)
     end

@@ -119,7 +119,7 @@ RSpec.describe RiskReviewActionItemsController do
           it 'does not create the review and re-render the template with the errors' do
             post :create, params: { company_id: company, product_id: product, risk_review_id: risk_review, risk_review_action_item: { created_date: nil, deadline: nil, description: nil, membership_id: nil, action_type: nil } }, xhr: true
 
-            expect(RiskReviewActionItem.all.count).to eq 3
+            expect(RiskReviewActionItem.count).to eq 3
             expect(response).to render_template 'risk_review_action_items/create'
             expect(assigns(:risk_review_action_item).errors.full_messages).to eq ['Responsável deve existir', 'Dt Criação não pode ficar em branco', 'Tipo da Ação não pode ficar em branco', 'Descrição não pode ficar em branco', 'Prazo não pode ficar em branco']
           end

@@ -292,7 +292,7 @@ RSpec.describe Flow::ContractsFlowInformation do
           Fabricate :demand_block, demand: demand, block_time: 34.days.ago, unblock_time: 31.days.ago
           Fabricate :demand_block, demand: other_demand, block_time: 38.days.ago, unblock_time: 37.days.ago
 
-          Demand.all.each { |demand_to_effort| DemandEffortService.instance.build_efforts_to_demand(demand_to_effort) }
+          Demand.find_each { |demand_to_effort| DemandEffortService.instance.build_efforts_to_demand(demand_to_effort) }
 
           contract_flow = described_class.new(contract)
 

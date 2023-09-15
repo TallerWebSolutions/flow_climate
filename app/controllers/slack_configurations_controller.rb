@@ -4,7 +4,7 @@ class SlackConfigurationsController < AuthenticatedController
   before_action :assign_slack_config, only: %i[edit update toggle_active destroy]
 
   def index
-    @slack_configurations = SlackConfiguration.all.order(:created_at)
+    @slack_configurations = SlackConfiguration.order(:created_at)
   end
 
   def new
@@ -15,7 +15,7 @@ class SlackConfigurationsController < AuthenticatedController
   end
 
   def edit
-    @slack_configurations = SlackConfiguration.all.order(:created_at)
+    @slack_configurations = SlackConfiguration.order(:created_at)
     assign_teams
     assign_customers
     assign_stages
@@ -41,7 +41,7 @@ class SlackConfigurationsController < AuthenticatedController
   end
 
   def update
-    @slack_configurations = SlackConfiguration.all.order(:created_at)
+    @slack_configurations = SlackConfiguration.order(:created_at)
     read_stages_in_params
 
     if @slack_configuration.update(slack_configuration_params.merge(stages_to_notify_transition: @stage_ids))

@@ -2,7 +2,7 @@
 
 namespace :initiatives do
   task create_today_initiative_consolidation: :environment do
-    Initiative.all.each do |initiative|
+    Initiative.find_each do |initiative|
       Consolidations::InitiativeConsolidationJob.perform_later(initiative)
     end
   end

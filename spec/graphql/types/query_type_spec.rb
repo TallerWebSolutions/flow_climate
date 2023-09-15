@@ -1034,7 +1034,7 @@ RSpec.describe Types::QueryType do
 
           demands_external_ids = Demand.finished_with_leadtime.order(end_date: :asc).map(&:external_id)
           demands_lead_times = Demand.finished_with_leadtime.order(end_date: :asc).map { |demand| demand.leadtime.to_f }
-          demands_ids = Demand.all.order(:created_date).map(&:id)
+          demands_ids = Demand.order(:created_date).map(&:id)
 
           lead_time_p65 = Stats::StatisticsService.instance.percentile(65, demands_lead_times)
           lead_time_p80 = Stats::StatisticsService.instance.percentile(80, demands_lead_times)

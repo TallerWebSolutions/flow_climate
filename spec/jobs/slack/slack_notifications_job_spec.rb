@@ -109,12 +109,12 @@ RSpec.describe Slack::SlackNotificationsJob, type: :active_job do
 
     context 'with monthly_team_efficiency_retrospective notification' do
       before { travel_to Time.zone.now.end_of_month + 1.day }
+
       it 'calls slack notification method' do
         expect_any_instance_of(Slack::SlackNotificationService).to receive(:notify_team_efficiency).once
 
         described_class.perform_now(tenth_slack_config, team)
       end
     end
-
   end
 end

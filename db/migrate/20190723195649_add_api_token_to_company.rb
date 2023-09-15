@@ -6,7 +6,7 @@ class AddApiTokenToCompany < ActiveRecord::Migration[5.2]
 
     add_index :companies, :api_token, unique: true
 
-    Company.all.each.map(&:save)
+    Company.find_each.map(&:save)
 
     change_column_null :companies, :api_token, false
   end

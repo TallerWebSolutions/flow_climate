@@ -26,9 +26,9 @@ RSpec.describe DemandEffortService, type: :service do
 
             described_class.instance.build_efforts_to_demand(demand)
 
-            expect(DemandEffort.all.count).to eq 2
-            expect(DemandEffort.all.sum(&:effort_value)).to be_within(0.1).of(2.5)
-            expect(DemandEffort.all.sum(&:total_blocked)).to eq 0
+            expect(DemandEffort.count).to eq 2
+            expect(DemandEffort.sum(&:effort_value)).to be_within(0.1).of(2.5)
+            expect(DemandEffort.sum(&:total_blocked)).to eq 0
             expect(demand.reload.effort_development).to be_within(0.1).of(2.5)
             expect(demand.reload.effort_design).to eq 0
             expect(demand.reload.effort_management).to eq 0
@@ -52,9 +52,9 @@ RSpec.describe DemandEffortService, type: :service do
 
             described_class.instance.build_efforts_to_demand(demand)
 
-            expect(DemandEffort.all.count).to eq 2
-            expect(DemandEffort.all.sum(&:effort_value)).to be_within(0.1).of(1.3)
-            expect(DemandEffort.all.sum(&:total_blocked)).to eq 0
+            expect(DemandEffort.count).to eq 2
+            expect(DemandEffort.sum(&:effort_value)).to be_within(0.1).of(1.3)
+            expect(DemandEffort.sum(&:total_blocked)).to eq 0
             expect(demand.reload.effort_development).to be_within(0.1).of(1.3)
             expect(demand.reload.effort_design).to eq 0
             expect(demand.reload.effort_management).to eq 0
@@ -72,8 +72,8 @@ RSpec.describe DemandEffortService, type: :service do
 
         described_class.instance.build_efforts_to_demand(demand)
 
-        expect(DemandEffort.all.count).to eq 1
-        expect(DemandEffort.all.sum(&:effort_value)).to eq 2.4
+        expect(DemandEffort.count).to eq 1
+        expect(DemandEffort.sum(&:effort_value)).to eq 2.4
         expect(demand.reload.effort_development).to eq 2.4
         expect(demand.reload.effort_design).to eq 0
         expect(demand.reload.effort_management).to eq 0
@@ -90,8 +90,8 @@ RSpec.describe DemandEffortService, type: :service do
 
         described_class.instance.build_efforts_to_demand(demand)
 
-        expect(DemandEffort.all.count).to eq 2
-        expect(DemandEffort.all.sum(&:effort_value)).to eq 9
+        expect(DemandEffort.count).to eq 2
+        expect(DemandEffort.sum(&:effort_value)).to eq 9
         expect(demand.reload.effort_development).to eq 9
         expect(demand.reload.effort_design).to eq 0
         expect(demand.reload.effort_management).to eq 0
@@ -107,8 +107,8 @@ RSpec.describe DemandEffortService, type: :service do
 
         described_class.instance.build_efforts_to_demand(demand)
 
-        expect(DemandEffort.all.count).to eq 1
-        expect(DemandEffort.all.sum(&:effort_value)).to eq 1.2
+        expect(DemandEffort.count).to eq 1
+        expect(DemandEffort.sum(&:effort_value)).to eq 1.2
         expect(demand.reload.effort_development).to eq 1.2
         expect(demand.reload.effort_design).to eq 0
         expect(demand.reload.effort_management).to eq 0
@@ -124,8 +124,8 @@ RSpec.describe DemandEffortService, type: :service do
 
         described_class.instance.build_efforts_to_demand(demand)
 
-        expect(DemandEffort.all.count).to eq 1
-        expect(DemandEffort.all.sum(&:effort_value)).to eq 2.4
+        expect(DemandEffort.count).to eq 1
+        expect(DemandEffort.sum(&:effort_value)).to eq 2.4
         expect(demand.reload.effort_development).to eq 2.4
         expect(demand.reload.effort_design).to eq 0
         expect(demand.reload.effort_management).to eq 0
@@ -141,8 +141,8 @@ RSpec.describe DemandEffortService, type: :service do
 
         described_class.instance.build_efforts_to_demand(demand)
 
-        expect(DemandEffort.all.count).to eq 1
-        expect(DemandEffort.all.sum(&:effort_value)).to eq 1.2
+        expect(DemandEffort.count).to eq 1
+        expect(DemandEffort.sum(&:effort_value)).to eq 1.2
         expect(demand.reload.effort_development).to eq 1.2
         expect(demand.reload.effort_design).to eq 0
         expect(demand.reload.effort_management).to eq 0
@@ -164,8 +164,8 @@ RSpec.describe DemandEffortService, type: :service do
 
         described_class.instance.build_efforts_to_demand(demand)
 
-        expect(DemandEffort.all.count).to eq 2
-        expect(DemandEffort.all.sum(&:effort_value)).to be_within(0.1).of(9.5)
+        expect(DemandEffort.count).to eq 2
+        expect(DemandEffort.sum(&:effort_value)).to be_within(0.1).of(9.5)
         expect(demand.reload.effort_upstream).to be_within(0.1).of(9.5)
         expect(demand.reload.effort_downstream).to eq 0
         expect(demand.reload.effort_development).to be_within(0.1).of(9.5)
@@ -192,7 +192,7 @@ RSpec.describe DemandEffortService, type: :service do
 
         described_class.instance.build_efforts_to_demand(demand)
 
-        expect(DemandEffort.all.count).to eq 2
+        expect(DemandEffort.count).to eq 2
         expect(DemandEffort.all.map { |effort| effort.effort_value.to_f }).to eq [2.56, 4.819999999999999]
         expect(DemandEffort.all.map { |effort| effort.total_blocked.to_f }).to eq [7.016666666666667, 0.9833333333333333]
         expect(demand.reload.effort_upstream.to_f).to eq 7.379999999999999
@@ -258,9 +258,9 @@ RSpec.describe DemandEffortService, type: :service do
 
         described_class.instance.build_efforts_to_demand(demand)
 
-        expect(DemandEffort.all.count).to eq 3
-        expect(DemandEffort.all.sum(&:effort_value)).to be_within(0.1).of(18.21)
-        expect(DemandEffort.all.sum(&:total_blocked)).to eq 0
+        expect(DemandEffort.count).to eq 3
+        expect(DemandEffort.sum(&:effort_value)).to be_within(0.1).of(18.21)
+        expect(DemandEffort.sum(&:total_blocked)).to eq 0
         expect(demand.reload.effort_development).to be_within(0.1).of(18.21)
         expect(demand.reload.effort_design).to eq 0
         expect(demand.reload.effort_management).to eq 0
@@ -276,8 +276,8 @@ RSpec.describe DemandEffortService, type: :service do
         Fabricate :item_assignment, demand: demand, membership: dev_membership, start_time: Time.zone.local(2022, 12, 5, 18, 30), finish_time: Time.zone.local(2022, 12, 6, 10, 46)
 
         described_class.instance.build_efforts_to_demand(demand)
-        expect(DemandEffort.all.count).to eq 2
-        expect(DemandEffort.all.sum(&:effort_value)).to eq 4.25
+        expect(DemandEffort.count).to eq 2
+        expect(DemandEffort.sum(&:effort_value)).to eq 4.25
       end
     end
 
@@ -290,8 +290,8 @@ RSpec.describe DemandEffortService, type: :service do
         Fabricate :item_assignment, demand: demand, membership: dev_membership, start_time: Time.zone.local(2022, 12, 5, 11, 30), finish_time: Time.zone.local(2022, 12, 6, 10, 46)
 
         described_class.instance.build_efforts_to_demand(demand)
-        expect(DemandEffort.all.count).to eq 2
-        expect(DemandEffort.all.sum(&:effort_value)).to eq 8.75
+        expect(DemandEffort.count).to eq 2
+        expect(DemandEffort.sum(&:effort_value)).to eq 8.75
       end
     end
   end

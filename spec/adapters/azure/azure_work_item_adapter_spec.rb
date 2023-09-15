@@ -91,9 +91,9 @@ RSpec.describe Azure::AzureWorkItemAdapter do
 
             described_class.new(azure_account).work_item(2, azure_product_config.azure_team.azure_project)
 
-            expect(PortfolioUnit.all.count).to eq 1
-            expect(Demand.all.count).to eq 1
-            expect(Task.all.count).to eq 1
+            expect(PortfolioUnit.count).to eq 1
+            expect(Demand.count).to eq 1
+            expect(Task.count).to eq 1
 
             expect(PortfolioUnit.all.map(&:name)).to eq ['This Is An Epic']
 
@@ -138,8 +138,8 @@ RSpec.describe Azure::AzureWorkItemAdapter do
 
             described_class.new(azure_account).work_item(2, azure_product_config.azure_team.azure_project)
 
-            expect(Demand.all.count).to eq 1
-            expect(Task.all.count).to eq 1
+            expect(Demand.count).to eq 1
+            expect(Task.count).to eq 1
 
             expect(demand.reload.discarded_at).not_to be_nil
             expect(task.reload.discarded_at).not_to be_nil
@@ -168,8 +168,8 @@ RSpec.describe Azure::AzureWorkItemAdapter do
 
             described_class.new(azure_account).work_item(2, azure_product_config.azure_team.azure_project)
 
-            expect(Demand.all.count).to eq 1
-            expect(Task.all.count).to eq 1
+            expect(Demand.count).to eq 1
+            expect(Task.count).to eq 1
 
             expect(demand.reload.discarded_at).to be_nil
             expect(task.reload.discarded_at).to be_nil
@@ -208,9 +208,9 @@ RSpec.describe Azure::AzureWorkItemAdapter do
 
             described_class.new(azure_account).work_item(2, azure_product_config.azure_team.azure_project)
 
-            expect(PortfolioUnit.all.count).to eq 1
-            expect(Demand.all.count).to eq 2
-            expect(Task.all.count).to eq 1
+            expect(PortfolioUnit.count).to eq 1
+            expect(Demand.count).to eq 2
+            expect(Task.count).to eq 1
           end
         end
 
@@ -233,8 +233,8 @@ RSpec.describe Azure::AzureWorkItemAdapter do
 
             described_class.new(azure_account).work_item(2, azure_product_config.azure_team.azure_project)
 
-            expect(Task.all.count).to eq 0
-            expect(Demand.all.count).to eq 0
+            expect(Task.count).to eq 0
+            expect(Demand.count).to eq 0
           end
         end
       end
@@ -298,8 +298,8 @@ RSpec.describe Azure::AzureWorkItemAdapter do
 
             expect(Rails.logger).to(receive(:error)).once
             described_class.new(azure_account).work_item(1, azure_product_config.azure_team.azure_project)
-            expect(Demand.all.count).to be_zero
-            expect(PortfolioUnit.all.count).to be_zero
+            expect(Demand.count).to be_zero
+            expect(PortfolioUnit.count).to be_zero
           end
         end
       end

@@ -4,7 +4,7 @@ namespace :statistics do
   desc 'Data cache for projects'
   task consolidate_active_projects: :environment do
     if Time.zone.now.hour.odd?
-      Company.all.each do |company|
+      Company.find_each do |company|
         company.projects.active.finishing_after(Time.zone.today).each do |project|
           project.remove_outdated_consolidations
           Consolidations::ProjectConsolidationJob.perform_later(project)
@@ -15,7 +15,7 @@ namespace :statistics do
 
   desc 'Consolidations for contracts'
   task consolidate_contracts: :environment do
-    Company.all.each do |company|
+    Company.find_each do |company|
       company.customers.each do |customer|
         customer.contracts.active(Time.zone.today).each do |contract|
           Consolidations::ContractConsolidationJob.perform_later(contract)
@@ -26,7 +26,7 @@ namespace :statistics do
 
   desc 'Consolidations for customers'
   task consolidate_customers: :environment do
-    Company.all.each do |company|
+    Company.find_each do |company|
       company.customers.select(&:active?).each do |customer|
         Consolidations::CustomerConsolidationJob.perform_later(customer)
       end
@@ -36,7 +36,7 @@ namespace :statistics do
   desc 'Consolidations for teams'
   task consolidate_teams: :environment do
     if Time.zone.now.hour.even?
-      Company.all.each do |company|
+      Company.find_each do |company|
         company.teams.select(&:active?).each do |team|
           Consolidations::TeamConsolidationJob.perform_later(team)
         end

@@ -20,7 +20,7 @@ class RenameFlowImpactToFlowEvent < ActiveRecord::Migration[6.1]
 
     change_column_null :flow_events, :project_id, true
 
-    FlowEvent.all.each { |event| event.update(company_id: event.project.company.id) }
+    FlowEvent.find_each { |event| event.update(company_id: event.project.company.id) }
 
     change_column_null :flow_events, :company_id, false
   end

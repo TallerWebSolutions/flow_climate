@@ -84,8 +84,8 @@ RSpec.describe TeamResourceAllocationsController do
         before { post :create, params: { company_id: company, team_id: team, team_resource_allocation: { team_resource_id: nil, start_date: nil, end_date: nil, monthly_payment: nil } }, xhr: true }
 
         it 'does not create the team member allocation and re-render the template with the errors' do
-          expect(TeamResource.all.count).to eq 1
-          expect(TeamResourceAllocation.all.count).to eq 0
+          expect(TeamResource.count).to eq 1
+          expect(TeamResourceAllocation.count).to eq 0
           expect(response).to render_template 'team_resource_allocations/create'
           expect(assigns(:team_resource_allocation).errors.full_messages).to eq ['Recurso do Time deve existir', 'Início não pode ficar em branco', 'Pagamento Mensal não pode ficar em branco']
         end

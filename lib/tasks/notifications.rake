@@ -4,7 +4,7 @@ namespace :notifications do
   desc 'Notifications for the user'
 
   task slack_notifications: :environment do
-    Team.all.each do |team|
+    Team.find_each do |team|
       next if team.slack_configurations.blank? || Time.zone.today.saturday? || Time.zone.today.sunday?
 
       hour_now = Time.zone.now.hour
@@ -27,7 +27,7 @@ namespace :notifications do
   end
 
   task slack_notifications_for_demands: :environment do
-    Team.all.each do |team|
+    Team.find_each do |team|
       next if team.slack_configurations.blank? || !team.active?
 
       Slack::DemandSlackNotificationsJob.perform_now(team)

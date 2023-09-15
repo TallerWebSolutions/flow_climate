@@ -90,7 +90,7 @@ RSpec.describe Jira::JiraCustomFieldMappingsController do
         before { post :create, params: { company_id: company, jira_account_id: jira_account, jira_jira_custom_field_mapping: { custom_field_type: nil, custom_field_machine_name: nil } }, xhr: true }
 
         it 'does not create the jira custom field and re-render the template with the errors' do
-          expect(Jira::JiraCustomFieldMapping.all.count).to eq 0
+          expect(Jira::JiraCustomFieldMapping.count).to eq 0
           expect(response).to render_template 'jira/jira_custom_field_mappings/create'
           expect(assigns(:jira_custom_field_mapping).errors.full_messages).to eq ['Machine Name do Jira não pode ficar em branco', 'Tipo do Campo não pode ficar em branco']
         end
@@ -186,7 +186,7 @@ RSpec.describe Jira::JiraCustomFieldMappingsController do
         it 'deletes the jira custom field mapping and renders the template' do
           delete :destroy, params: { company_id: company, jira_account_id: jira_account, id: jira_custom_field_mapping }, xhr: true
 
-          expect(Jira::JiraCustomFieldMapping.all.count).to eq 0
+          expect(Jira::JiraCustomFieldMapping.count).to eq 0
           expect(response).to render_template 'jira/jira_custom_field_mappings/destroy'
         end
       end

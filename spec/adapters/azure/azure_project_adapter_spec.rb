@@ -25,10 +25,10 @@ RSpec.describe Azure::AzureProjectAdapter do
         it 'creates the product and the azure config for it' do
           mocked_azure_return = file_fixture('azure_teams_list.json').read
           allow(HTTParty).to(receive(:get)).once { JSON.parse(mocked_azure_return) }
-          expect(described_class.new(azure_account).products).to eq [Product.all.first]
-          expect(Azure::AzureTeam.all.count).not_to be_zero
-          expect(Azure::AzureProject.all.count).not_to be_zero
-          expect(Azure::AzureProductConfig.all.count).not_to be_zero
+          expect(described_class.new(azure_account).products).to eq [Product.first]
+          expect(Azure::AzureTeam.count).not_to be_zero
+          expect(Azure::AzureProject.count).not_to be_zero
+          expect(Azure::AzureProductConfig.count).not_to be_zero
         end
       end
     end

@@ -4,7 +4,7 @@ desc 'Create legacy notifications control'
 
 namespace :demand_block_notification do
   task create_legacy: :environment do
-    Company.all.each do |company|
+    Company.find_each do |company|
       company.projects.each do |project|
         project.demands.each do |demand|
           demand.demand_blocks.each do |block|

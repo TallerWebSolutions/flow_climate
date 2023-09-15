@@ -106,7 +106,7 @@ RSpec.describe ScoreMatrixAnswersController do
         it 'deletes the score matrix' do
           expect(response).to render_template 'score_matrix_answers/_score_matrix_answers_table'
           expect(response).to render_template 'score_matrix_answers/destroy'
-          expect(ScoreMatrixAnswer.all.count).to eq 4
+          expect(ScoreMatrixAnswer.count).to eq 4
           expect(assigns(:score_matrix_answers)).to eq [third_score_matrix_answer, second_score_matrix_answer, first_score_matrix_answer, fourth_score_matrix_answer]
         end
       end

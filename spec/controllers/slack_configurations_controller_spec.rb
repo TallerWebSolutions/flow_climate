@@ -261,7 +261,7 @@ RSpec.describe SlackConfigurationsController do
           delete :destroy, params: { company_id: company, id: config }
 
           expect(flash[:notice]).to eq I18n.t('slack_configurations.destroy.success')
-          expect(SlackConfiguration.all.count).to eq 2
+          expect(SlackConfiguration.count).to eq 2
         end
       end
 

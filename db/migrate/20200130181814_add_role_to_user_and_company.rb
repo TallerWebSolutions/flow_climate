@@ -5,7 +5,6 @@ class AddRoleToUserAndCompany < ActiveRecord::Migration[6.0]
     rename_table :companies_users, :user_company_roles
 
     change_table :user_company_roles, bulk: true do |t|
-      t.integer :id, index: true, primary_key: true
       t.integer :user_role, index: true, default: 0, null: false
 
       t.date :start_date

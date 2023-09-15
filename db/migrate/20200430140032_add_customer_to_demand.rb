@@ -7,7 +7,7 @@ class AddCustomerToDemand < ActiveRecord::Migration[6.0]
 
     add_foreign_key :demands, :customers, columm: :customer_id
 
-    Customer.all.each do |customer|
+    Customer.find_each do |customer|
       customer.exclusive_projects.each do |project|
         project.demands.each do |demand|
           demand.update(customer: project.customers.first)

@@ -3,7 +3,7 @@
 namespace :dashboards_cache do
   desc 'Generates operations cache - all time'
   task generate_operations_dashboard_cache_all_time: :environment do
-    TeamMember.all.each do |member|
+    TeamMember.find_each do |member|
       last_delivery = member.last_delivery
       first_pull = member.first_assignment
       last_pull = member.last_assignment

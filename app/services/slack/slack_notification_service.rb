@@ -255,13 +255,13 @@ module Slack
       return if average_team_efficiency.blank?
 
       members_efforts = average_team_efficiency[:members_efficiency].reject { |member_effort| member_effort.try(:[], :membership).try(:[], :hours_per_month).blank? && member_effort.try(:[], :membership).try(:[], :hours_per_month)&.zero? }
-    
+
       return if members_efforts.blank?
 
       effort_text = title
 
       members_efforts.each_with_index do |member, index|
-        effort_text += "• #{medal_of_honor(index)} #{member[:membership].team_member.name} | Demandas: #{member[:cards_count]} | Horas: #{number_with_precision(member[:effort_in_month])} | Capacidade: #{member[:membership][:hours_per_month]} #{notification_period == "month" ? "| Vl Hr: #{number_with_precision(member[:value_per_hour_performed])}" : ''}\n"
+        effort_text += "• #{medal_of_honor(index)} #{member[:membership].team_member.name} | Demandas: #{member[:cards_count]} | Horas: #{number_with_precision(member[:effort_in_month])} | Capacidade: #{member[:membership][:hours_per_month]} #{notification_period == 'month' ? "| Vl Hr: #{number_with_precision(member[:value_per_hour_performed])}" : ''}\n"
       end
 
       effort_info_block = { type: 'section', text: { type: 'mrkdwn', text: effort_text } }
