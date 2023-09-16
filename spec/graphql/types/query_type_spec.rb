@@ -971,6 +971,8 @@ RSpec.describe Types::QueryType do
         Fabricate :demand, project: project, company: project.company, service_delivery_review: review, end_date: 1.week.ago, class_of_service: :standard
         Fabricate :demand, project: project, company: project.company, service_delivery_review: review, end_date: 4.days.ago, class_of_service: :fixed_date
 
+        review.save
+
         result = FlowClimateSchema.execute(query, variables: nil).as_json
 
         expect(result.dig('data', 'serviceDeliveryReview', 'id')).to eq review.id.to_s
