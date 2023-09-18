@@ -85,7 +85,7 @@ const DemandBasicPage = ({
     },
     {
       label: t("tabs.efforts"),
-      to: `/devise_customers/customer_demands/${params.demand}/demand_efforts`,
+      to: `/companies/${params.company}/demands/${params.demand}/demand_efforts`,
     },
   ]
 
