@@ -86,8 +86,6 @@ class DemandEffortService
     effort_start_time = [start_time, day_to_effort.beginning_of_day.change(hour: 8, minute: 0, second: 0)].max
     effort_end_time = [assignment.finish_time, transition.last_time_out, demand.discarded_at, day_to_effort.end_of_day.change(hour: 20, minute: 0, second: 0), Time.zone.now].compact.min
 
-    remove_duplications_effort(demand, effort_start_time, transition)
-
     demand_effort = demand
                     .demand_efforts
                     .where(demand_transition: transition, item_assignment: assignment)
@@ -117,17 +115,6 @@ class DemandEffortService
                          start_time_to_computation: effort_start_time, finish_time_to_computation: effort_end_time)
 
     demand_effort.id
-  end
-
-  def remove_duplications_effort(demand, effort_start_time, transition)
-    demand_efforts = demand
-                     .demand_efforts
-                     .where(demand_transition: transition)
-                     .where('start_time_to_computation BETWEEN :start_time AND :end_time',
-                            start_time: effort_start_time.beginning_of_day,
-                            end_time: effort_start_time.end_of_day)
-
-    demand_efforts.map(&:destroy) if demand_efforts.count > 1
   end
 
   def remove_member_previous_efforts_in_demand(assignment, demand, demand_effort, effort_start_time, effort_total)

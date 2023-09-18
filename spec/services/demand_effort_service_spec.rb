@@ -235,8 +235,8 @@ RSpec.describe DemandEffortService, type: :service do
         described_class.instance.build_efforts_to_demand(demand)
         described_class.instance.build_efforts_to_demand(other_project_demand)
 
-        expect(demand.demand_efforts.all.map { |effort| effort.effort_value.to_f }).to match_array [2.5, 3.54]
-        expect(demand.demand_efforts.sum(&:effort_value).to_f).to eq 6.04
+        expect(demand.demand_efforts.all.map { |effort| effort.effort_value.to_f }).to match_array [6.88, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 3.659999999999999, 3.54, 2.5]
+        expect(demand.demand_efforts.sum(&:effort_value).to_f).to eq 20.18
 
         expect(other_project_demand.demand_efforts.all.map { |effort| effort.effort_value.to_f }).to eq [1.96, 1.96]
         expect(other_project_demand.demand_efforts.sum(&:effort_value).to_f).to eq 3.92
