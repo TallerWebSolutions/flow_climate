@@ -8,6 +8,7 @@
       "finishTimeToComputation": "End of Data",
       "stagePercentage": "% Stage",
       "pairingPercentage": "% Pair",
+      "membershipEffortPercentage": "% Membership",
       "managementPercentage": "% Management",
       "totalBlocked": "Blocked Time",
       "mainEffortInTransition": "Main Effort?",

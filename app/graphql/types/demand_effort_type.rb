@@ -18,5 +18,6 @@ module Types
     field :total_blocked, Float, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
     field :who, String, null: true
+    field :membership_effort_percentage, Float, null: true
   end
 end

@@ -13,4 +13,5 @@ export type DemandEffort = {
   who?: string
   memberRole?: string
   automaticUpdate?: boolean
+  membershipEffortPercentage?: number
 }

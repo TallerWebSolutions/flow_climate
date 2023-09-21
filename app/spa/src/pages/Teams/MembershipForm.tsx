@@ -32,6 +32,7 @@ const MembershipForm = () => {
       $endDate: String
       $startDate: String!
       $hoursPerMonth: Int!
+      $effortPercentage: Float!
     ) {
       saveMembership(
         membershipId: $membershipId
@@ -39,11 +40,13 @@ const MembershipForm = () => {
         endDate: $endDate
         startDate: $startDate
         hoursPerMonth: $hoursPerMonth
+        effortPercentage: $effortPercentage
       ) {
         membership {
           id
           teamMemberName
           hoursPerMonth
+          effortPercentage
           startDate
           endDate
           memberRole
@@ -81,6 +84,7 @@ const MembershipForm = () => {
       variables: {
         memberRole: Number(data.memberRole),
         hoursPerMonth: Number(data.hoursPerMonth),
+        effortPercentage: Number(data.effortPercentage),
         startDate: data.startDate,
         endDate: data.endDate,
         membershipId: membershipId,
@@ -124,6 +128,17 @@ const MembershipForm = () => {
                 defaultValue={membership?.hoursPerMonth}
                 type="number"
                 {...register("hoursPerMonth", { required: true })}
+              />
+            </FormControl>
+            <FormControl sx={{ marginBottom: 4 }}>
+              <InputLabel htmlFor="effortPercentage">
+                {t("fields.effortPercentage")}
+              </InputLabel>
+
+              <Input
+                defaultValue={membership?.effortPercentage}
+                type="number"
+                {...register("effortPercentage", { required: true })}
               />
             </FormControl>
             <FormControl sx={{ marginBottom: 4 }}>
@@ -181,6 +196,7 @@ const MEMBERSHIP_FORM_QUERY = gql`
       startDate
       endDate
       hoursPerMonth
+      effortPercentage
       team {
         id
         name

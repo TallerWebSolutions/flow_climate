@@ -38,6 +38,7 @@ const DEMAND_QUERY = gql`
         who
         memberRole
         automaticUpdate
+        membershipEffortPercentage
       }
     }
   }
@@ -68,6 +69,7 @@ const DemandEfforts = () => {
     t("table.header.stagePercentage"),
     t("table.header.pairingPercentage"),
     t("table.header.managementPercentage"),
+    t("table.header.membershipEffortPercentage"),
     t("table.header.totalBlocked"),
     t("table.header.mainEffortInTransition"),
     t("table.header.automaticUpdate"),
@@ -91,9 +93,10 @@ const DemandEfforts = () => {
       ) : (
         ""
       ),
-      (Number(effort.stagePercentage || 0) * 100).toFixed(2) || 0,
-      (Number(effort.pairingPercentage || 0) * 100).toFixed(2) || 0,
-      (Number(effort.managementPercentage || 0) * 100).toFixed(2) || 0,
+      (Number(effort.stagePercentage || 0) * 100).toFixed(2),
+      (Number(effort.pairingPercentage || 0) * 100).toFixed(2),
+      (Number(effort.managementPercentage || 0) * 100).toFixed(2),
+      (Number(effort.membershipEffortPercentage || 0)).toFixed(2),
       effort.totalBlocked || 0,
       effort.mainEffortInTransition ? <CheckIcon color="primary" /> : "",
       effort.automaticUpdate ? <CheckIcon color="primary" /> : "",

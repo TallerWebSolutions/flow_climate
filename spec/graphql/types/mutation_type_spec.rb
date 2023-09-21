@@ -200,7 +200,7 @@ RSpec.describe Types::MutationType do
     context 'when the membership exists' do
       let(:mutation) do
         %(mutation {
-            saveMembership(membershipId: "#{membership.id}", memberRole: 1, startDate: "#{1.day.ago.to_date.iso8601}", endDate: "#{Time.zone.today.iso8601}", hoursPerMonth: 80) {
+            saveMembership(membershipId: "#{membership.id}", memberRole: 1, startDate: "#{1.day.ago.to_date.iso8601}", endDate: "#{Time.zone.today.iso8601}", hoursPerMonth: 80, effortPercentage: 50.0) {
               statusMessage
             }
           })
@@ -216,7 +216,7 @@ RSpec.describe Types::MutationType do
     context 'when the object is not valid' do
       let(:mutation) do
         %(mutation {
-            saveMembership(membershipId: "foo", memberRole: 1, startDate: "#{1.day.ago.to_date.iso8601}", endDate: "#{Time.zone.today.iso8601}", hoursPerMonth: 80) {
+            saveMembership(membershipId: "foo", memberRole: 1, startDate: "#{1.day.ago.to_date.iso8601}", endDate: "#{Time.zone.today.iso8601}", hoursPerMonth: 80, effortPercentage: 50.0) {
               statusMessage
             }
           })

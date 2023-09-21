@@ -14,9 +14,9 @@ RSpec.describe DemandEffortService, type: :service do
       context 'for not discarded demands' do
         it 'builds a demand_effort to the demand' do
           travel_to Time.zone.local(2022, 3, 14, 10, 0, 0) do
-            dev_membership = Fabricate :membership, member_role: :developer
-            other_dev_membership = Fabricate :membership, member_role: :developer
-            client_membership = Fabricate :membership, member_role: :client
+            dev_membership = Fabricate :membership, member_role: :developer, effort_percentage: 100
+            other_dev_membership = Fabricate :membership, member_role: :developer, effort_percentage: 100
+            client_membership = Fabricate :membership, member_role: :client, effort_percentage: 100
 
             Fabricate :stage_project_config, stage: stage, project: project, compute_effort: true, stage_percentage: 100, management_percentage: 20, pairing_percentage: 50
             Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: Time.zone.parse('2021-05-24 10:51'), last_time_out: Time.zone.parse('2021-05-24 12:51')
@@ -40,9 +40,9 @@ RSpec.describe DemandEffortService, type: :service do
         it 'builds a demand_effort to the demand' do
           travel_to Time.zone.local(2022, 3, 14, 10, 0, 0) do
             demand.update(discarded_at: Time.zone.local(2021, 5, 24, 11, 51))
-            dev_membership = Fabricate :membership, member_role: :developer
-            other_dev_membership = Fabricate :membership, member_role: :developer
-            client_membership = Fabricate :membership, member_role: :client
+            dev_membership = Fabricate :membership, member_role: :developer, effort_percentage: 100
+            other_dev_membership = Fabricate :membership, member_role: :developer, effort_percentage: 100
+            client_membership = Fabricate :membership, member_role: :client, effort_percentage: 100
 
             Fabricate :stage_project_config, stage: stage, project: project, compute_effort: true, stage_percentage: 100, management_percentage: 20, pairing_percentage: 50
             Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: Time.zone.parse('2021-05-24 10:51'), last_time_out: Time.zone.parse('2021-05-24 12:51')
@@ -65,7 +65,7 @@ RSpec.describe DemandEffortService, type: :service do
 
     context 'with one assignment starting before the transition start time' do
       it 'builds a demand_effort to the demand using the transition start date' do
-        dev_membership = Fabricate :membership, member_role: :developer
+        dev_membership = Fabricate :membership, member_role: :developer, effort_percentage: 100
         Fabricate :stage_project_config, stage: stage, project: project, compute_effort: true, stage_percentage: 100, management_percentage: 20, pairing_percentage: 50
         Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: Time.zone.parse('2021-05-24 10:51'), last_time_out: Time.zone.parse('2021-05-24 12:51')
         Fabricate :item_assignment, demand: demand, membership: dev_membership, start_time: Time.zone.parse('2021-05-24 09:51'), finish_time: Time.zone.parse('2021-05-24 12:51')
@@ -82,7 +82,7 @@ RSpec.describe DemandEffortService, type: :service do
 
     context 'with one previous effort with 8h' do
       it 'builds a zero value effort' do
-        dev_membership = Fabricate :membership, member_role: :developer
+        dev_membership = Fabricate :membership, member_role: :developer, effort_percentage: 100
         Fabricate :stage_project_config, stage: stage, project: project, compute_effort: true, stage_percentage: 100, management_percentage: 50, pairing_percentage: 50
         Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: Time.zone.parse('2021-05-24 08:00'), last_time_out: Time.zone.parse('2021-05-24 20:51')
         Fabricate :item_assignment, demand: demand, membership: dev_membership, start_time: Time.zone.parse('2021-05-24 08:00'), finish_time: Time.zone.parse('2021-05-24 16:30')
@@ -100,7 +100,7 @@ RSpec.describe DemandEffortService, type: :service do
 
     context 'with one assignment starting after the transition start time' do
       it 'builds a demand_effort to the demand using the assignment start date' do
-        dev_membership = Fabricate :membership, member_role: :developer
+        dev_membership = Fabricate :membership, member_role: :developer, effort_percentage: 100
         Fabricate :stage_project_config, stage: stage, project: project, compute_effort: true, stage_percentage: 100, management_percentage: 20, pairing_percentage: 50
         Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: Time.zone.parse('2021-05-24 10:51'), last_time_out: Time.zone.parse('2021-05-24 12:51')
         Fabricate :item_assignment, demand: demand, membership: dev_membership, start_time: Time.zone.parse('2021-05-24 11:51'), finish_time: Time.zone.parse('2021-05-24 12:51')
@@ -117,7 +117,7 @@ RSpec.describe DemandEffortService, type: :service do
 
     context 'with one assignment ending after the transition end time' do
       it 'builds a demand_effort to the demand using the transition end date' do
-        dev_membership = Fabricate :membership, member_role: :developer
+        dev_membership = Fabricate :membership, member_role: :developer, effort_percentage: 100
         Fabricate :stage_project_config, stage: stage, project: project, compute_effort: true, stage_percentage: 100, management_percentage: 20, pairing_percentage: 50
         Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: Time.zone.parse('2021-05-24 10:51'), last_time_out: Time.zone.parse('2021-05-24 12:51')
         Fabricate :item_assignment, demand: demand, membership: dev_membership, start_time: Time.zone.parse('2021-05-24 10:51'), finish_time: Time.zone.parse('2021-05-24 13:51')
@@ -134,7 +134,7 @@ RSpec.describe DemandEffortService, type: :service do
 
     context 'with one assignment ending before the transition end time' do
       it 'builds a demand_effort to the demand using the assignment end date' do
-        dev_membership = Fabricate :membership, member_role: :developer
+        dev_membership = Fabricate :membership, member_role: :developer, effort_percentage: 100
         Fabricate :stage_project_config, stage: stage, project: project, compute_effort: true, stage_percentage: 100, management_percentage: 20, pairing_percentage: 50
         Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: Time.zone.parse('2021-05-24 10:51'), last_time_out: Time.zone.parse('2021-05-24 12:51')
         Fabricate :item_assignment, demand: demand, membership: dev_membership, start_time: Time.zone.parse('2021-05-24 10:51'), finish_time: Time.zone.parse('2021-05-24 11:51')
@@ -155,7 +155,7 @@ RSpec.describe DemandEffortService, type: :service do
         Fabricate :stage_project_config, stage: other_stage, project: project, compute_effort: true, stage_percentage: 100, management_percentage: 20, pairing_percentage: 50
 
         team_member = Fabricate :team_member, company: demand.company
-        membership = Fabricate :membership, team_member: team_member, team: demand.team, member_role: :developer
+        membership = Fabricate :membership, team_member: team_member, team: demand.team, member_role: :developer, effort_percentage: 100
 
         Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: Time.zone.parse('2021-05-24 10:51'), last_time_out: Time.zone.parse('2021-05-24 20:51')
         Fabricate :demand_transition, demand: demand, stage: other_stage, last_time_in: Time.zone.parse('2021-05-24 21:51'), last_time_out: Time.zone.parse('2021-05-24 22:51')
@@ -176,8 +176,8 @@ RSpec.describe DemandEffortService, type: :service do
 
     context 'with blocked time in the transition' do
       it 'builds the demand efforts removing the time blocked' do
-        dev_membership = Fabricate :membership, member_role: :developer
-        other_dev_membership = Fabricate :membership, member_role: :developer
+        dev_membership = Fabricate :membership, member_role: :developer, effort_percentage: 100
+        other_dev_membership = Fabricate :membership, member_role: :developer, effort_percentage: 100
 
         Fabricate :stage_project_config, stage: stage, project: project, compute_effort: true, stage_percentage: 100, management_percentage: 20, pairing_percentage: 50
         Fabricate :stage_project_config, stage: other_stage, project: project, compute_effort: true, stage_percentage: 100, management_percentage: 20, pairing_percentage: 50
@@ -215,8 +215,8 @@ RSpec.describe DemandEffortService, type: :service do
 
         team_member = Fabricate :team_member, company: company, jira_account_user_email: 'foo', jira_account_id: 'bar', name: 'team_member'
         other_team_member = Fabricate :team_member, company: company, name: 'other_team_member'
-        membership = Fabricate :membership, team: team, team_member: team_member, member_role: :developer, hours_per_month: 120, start_date: 1.month.ago, end_date: nil
-        other_membership = Fabricate :membership, team: team, team_member: other_team_member, member_role: :developer, hours_per_month: 120, start_date: 1.month.ago, end_date: nil
+        membership = Fabricate :membership, team: team, team_member: team_member, member_role: :developer, hours_per_month: 120, start_date: 1.month.ago, end_date: nil, effort_percentage: 100
+        other_membership = Fabricate :membership, team: team, team_member: other_team_member, member_role: :developer, hours_per_month: 120, start_date: 1.month.ago, end_date: nil, effort_percentage: 100
 
         Fabricate :item_assignment, membership: membership, demand: demand, start_time: Time.zone.parse('2021-05-24 10:51'), finish_time: Time.zone.parse('2021-05-24 11:51')
         Fabricate :item_assignment, membership: membership, demand: demand, start_time: Time.zone.parse('2021-05-24 11:52'), finish_time: Time.zone.parse('2021-05-24 12:52')
@@ -245,8 +245,8 @@ RSpec.describe DemandEffortService, type: :service do
 
     context 'with holidays' do
       it 'does not create demand_effort' do
-        dev_membership = Fabricate :membership, member_role: :developer
-        other_dev_membership = Fabricate :membership, member_role: :developer
+        dev_membership = Fabricate :membership, member_role: :developer, effort_percentage: 100
+        other_dev_membership = Fabricate :membership, member_role: :developer, effort_percentage: 100
 
         Fabricate :stage_project_config, stage: stage, project: project, compute_effort: true, stage_percentage: 100, management_percentage: 20, pairing_percentage: 50
         Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: Time.zone.parse('2021-05-24 10:51'), last_time_out: Time.zone.parse('2021-05-28 12:51')
@@ -269,7 +269,7 @@ RSpec.describe DemandEffortService, type: :service do
 
     context 'with efforts in the edges of the day' do
       it 'computes the correct times' do
-        dev_membership = Fabricate :membership, member_role: :developer
+        dev_membership = Fabricate :membership, member_role: :developer, effort_percentage: 100
 
         Fabricate :stage_project_config, stage: stage, project: project, compute_effort: true, stage_percentage: 100, management_percentage: 0, pairing_percentage: 0
         Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: Time.zone.local(2022, 12, 5, 18, 29), last_time_out: Time.zone.local(2022, 12, 6, 10, 45)
@@ -283,7 +283,7 @@ RSpec.describe DemandEffortService, type: :service do
 
     context 'with efforts passing the day but not completing 24h' do
       it 'computes the correct times' do
-        dev_membership = Fabricate :membership, member_role: :developer
+        dev_membership = Fabricate :membership, member_role: :developer, effort_percentage: 100
 
         Fabricate :stage_project_config, stage: stage, project: project, compute_effort: true, stage_percentage: 100, management_percentage: 0, pairing_percentage: 0
         Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: Time.zone.local(2022, 12, 5, 11, 29), last_time_out: Time.zone.local(2022, 12, 6, 10, 45)
@@ -299,7 +299,7 @@ RSpec.describe DemandEffortService, type: :service do
   describe '#update_demand_effort_caches' do
     it 'computes the effort cached based on the demand efforts' do
       dev_membership = Fabricate :membership, member_role: :developer
-      other_dev_membership = Fabricate :membership, member_role: :developer
+      other_dev_membership = Fabricate :membership, member_role: :developer, effort_percentage: 100
 
       first_transition = Fabricate :demand_transition, demand: demand, stage: stage, last_time_in: Time.zone.parse('2021-05-24 10:51'), last_time_out: Time.zone.parse('2021-05-24 12:51')
       second_transition = Fabricate :demand_transition, demand: demand, stage: other_stage, last_time_in: Time.zone.parse('2021-05-24 10:51'), last_time_out: Time.zone.parse('2021-05-24 12:51')

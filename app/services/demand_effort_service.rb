@@ -103,16 +103,18 @@ class DemandEffortService
     pairing_percentage = transition.stage_pairing_percentage_to_project
 
     management_percentage = transition.stage_management_percentage_to_project
+                      
+    membership_effort_percentage = membership.effort_percentage.nil? ? 100.0 : membership.effort_percentage
 
-    effort_total = effort_by_dates * (management_percentage + 1) * stage_percentage
+    effort_total = (effort_by_dates * (management_percentage + 1) * stage_percentage * membership_effort_percentage)/100
 
     effort_total *= pairing_percentage unless main_assignment
-
+    
     effort_total = remove_member_previous_efforts_in_demand(assignment, demand, demand_effort, effort_start_time, effort_total)
 
     demand_effort.update(effort_value: effort_total, stage_percentage: stage_percentage,
                          management_percentage: management_percentage, pairing_percentage: pairing_percentage, main_effort_in_transition: main_assignment,
-                         start_time_to_computation: effort_start_time, finish_time_to_computation: effort_end_time)
+                         start_time_to_computation: effort_start_time, finish_time_to_computation: effort_end_time, membership_effort_percentage: membership_effort_percentage)
 
     demand_effort.id
   end

@@ -68,6 +68,7 @@ export type Membership = {
   team: Team
   teamMemberName?: string
   hoursPerMonth?: number
+  effortPercentage?: number
   startDate?: string
   endDate?: string
   memberRole?: number

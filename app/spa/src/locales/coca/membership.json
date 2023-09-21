@@ -5,6 +5,7 @@
     "startDate": "Start",
     "endDate": "End",
     "hoursPerMonth": "Hours per Month",
+    "effortPercentage": "Effort Percentage",
     "options": {
       "memberRole": {
         "developer": "Developer",
