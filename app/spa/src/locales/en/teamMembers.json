@@ -77,6 +77,14 @@
       "endDate": "Delivery Date",
       "leadTime": "Lead Time"
     },
+    "latestEfforts": {
+      "title": "Latest Efforts",
+      "project": "Project",
+      "product": "Product",
+      "externalId": "External ID",
+      "endDate": "Delivery Date",
+      "leadTime": "Lead Time"
+    },
     "teams": {
       "title": "Teams"
     },

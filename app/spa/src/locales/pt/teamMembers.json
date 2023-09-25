@@ -77,6 +77,14 @@
       "endDate": "Dt Entrega",
       "leadTime": "Lead Time"
     },
+    "latestEfforts": {
+      "title": "Últimos esforços",
+      "project": "Projeto",
+      "product": "Produto",
+      "externalId": "ID Externo",
+      "endDate": "Dt Entrega",
+      "leadTime": "Lead Time"
+    },
     "teams": {
       "title": "Times"
     },

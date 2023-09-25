@@ -149,6 +149,13 @@ const TeamMemberDashboardTables = ({
           rows={latestProjectsRows}
         />
       </Grid>
+      <Grid item xs={6}>
+      <Table
+          title={t("dashboard.latestEfforts.title")}
+          headerCells={latestProjectsHeader}
+          rows={latestProjectsRows}
+        />
+      </Grid>
     </Grid>
   )
 }

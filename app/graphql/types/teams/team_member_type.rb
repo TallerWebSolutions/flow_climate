@@ -14,6 +14,7 @@ module Types
       field :start_date, GraphQL::Types::ISO8601Date, null: true
       field :teams, [Types::Teams::TeamType], null: true
       field :user, Types::UserType, null: true
+      field :demand_efforts, [Types::DemandEffortType], null: true
 
       field :demands, [Types::DemandType] do
         argument :limit, Int, required: false

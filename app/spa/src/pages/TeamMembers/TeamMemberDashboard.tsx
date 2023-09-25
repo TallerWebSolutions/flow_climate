@@ -115,6 +115,23 @@ const TEAM_MEMBER_QUERY = gql`
           slug
         }
       }
+      demandEfforts {
+        id
+        effortValue
+        effortMoney
+        startTimeToComputation
+        finishTimeToComputation
+        stagePercentage
+        pairingPercentage
+        managementPercentage
+        totalBlocked
+        mainEffortInTransition
+        stage
+        who
+        memberRole
+        automaticUpdate
+        membershipEffortPercentage
+      }
     }
   }
 `
