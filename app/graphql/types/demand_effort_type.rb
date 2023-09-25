@@ -11,6 +11,7 @@ module Types
     field :main_effort_in_transition, Boolean, null: false
     field :management_percentage, Float, null: false
     field :member_role, String, null: true
+    field :membership_effort_percentage, Float, null: true
     field :pairing_percentage, Float, null: false
     field :stage, String, null: true
     field :stage_percentage, Float, null: false
@@ -18,6 +19,5 @@ module Types
     field :total_blocked, Float, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
     field :who, String, null: true
-    field :membership_effort_percentage, Float, null: true
   end
 end

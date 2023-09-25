@@ -4,9 +4,9 @@ module Types
   module Teams
     class MembershipType < Types::BaseObject
       field :created_at, GraphQL::Types::ISO8601DateTime, null: false
+      field :effort_percentage, Float
       field :end_date, GraphQL::Types::ISO8601Date
       field :hours_per_month, Integer
-      field :effort_percentage, Float
       field :id, ID, null: false
       field :member_role, Integer, null: false
       field :member_role_description, String, null: false

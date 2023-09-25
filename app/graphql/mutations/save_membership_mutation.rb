@@ -2,9 +2,9 @@
 
 module Mutations
   class SaveMembershipMutation < Mutations::BaseMutation
+    argument :effort_percentage, Float, required: true
     argument :end_date, String, required: false
     argument :hours_per_month, Integer, required: true
-    argument :effort_percentage, Float, required: true
     argument :member_role, Integer, required: true
     argument :membership_id, ID, required: true
     argument :start_date, String, required: true
