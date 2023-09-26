@@ -19,5 +19,8 @@ module Types
     field :total_blocked, Float, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
     field :who, String, null: true
+    field :demand_id, Integer, null: false
+    field :team, Types::Teams::TeamType, null: false
+    field :demand_external_id, String, null: false
   end
 end

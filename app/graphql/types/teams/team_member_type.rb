@@ -16,7 +16,7 @@ module Types
       field :user, Types::UserType, null: true
       field :demand_efforts, [Types::DemandEffortType], null: true
 
-      field :latest_deliveries_demands_effort, [Types::DemandType], null: true
+      field :latest_demand_efforts, [Types::DemandEffortType], null: true
 
       field :demands, [Types::DemandType] do
         argument :limit, Int, required: false
@@ -55,9 +55,8 @@ module Types
       end
       field :project_hours_data, Types::Charts::ProjectHoursChartDataType, null: true
 
-      def latest_deliveries_demands_effort
-        object.demands.order(end_date: :desc).limit(15)
-      end
+      def latest_demand_efforts = object.demand_efforts.order(updated_at: :desc).limit(15)
+  
 
       def demands(status: 'ALL', type: 'ALL', limit: nil)
         demands = if status == 'DELIVERED_DEMANDS'

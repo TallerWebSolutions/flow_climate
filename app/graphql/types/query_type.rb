@@ -185,6 +185,10 @@ module Types
                                       until_date: until_date, portfolio_unit_name: portfolio_unit, task_type: task_type)
     end
 
+    def demand_efforts_list(search_options:)
+      DemandEffort.order(updated_at: :desc).limit(15)
+    end
+
     def demands_list(search_options:)
       demands = base_demands(search_options)
 

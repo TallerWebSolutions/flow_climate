@@ -75,6 +75,14 @@ class DemandEffort < ApplicationRecord
     item_assignment.team_member_name
   end
 
+  def team
+    item_assignment.membership.team
+  end
+
+  def demand_external_id
+    item_assignment.demand.external_id
+  end
+
   def stage
     demand_transition.stage_name
   end
