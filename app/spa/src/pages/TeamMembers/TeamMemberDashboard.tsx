@@ -8,6 +8,7 @@ import BasicPage from "../../components/BasicPage"
 import { TeamMember } from "../../modules/teamMember/teamMember.types"
 import TeamMemberDashboardTables from "../../components/TeamMemberDashboardTables"
 import TeamMemberDashboardCharts from "../../components/TeamMemberDashboardCharts"
+import { FieldValues } from "react-hook-form"
 
 const TEAM_MEMBER_QUERY = gql`
   query TeamMember($id: ID!) {
@@ -157,6 +158,7 @@ const TeamMemberDashboard = () => {
       id: Number(teamMemberId),
     },
   })
+
   const companySlug = me?.currentCompany?.slug
   const companyUrl = `/companies/${companySlug}`
   const teamMemberName = data?.teamMember?.name || ""
