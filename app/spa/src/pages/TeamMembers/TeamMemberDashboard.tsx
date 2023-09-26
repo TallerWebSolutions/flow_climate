@@ -115,7 +115,7 @@ const TEAM_MEMBER_QUERY = gql`
           slug
         }
       }
-      demandEfforts {
+      latestDeliveriesDemandsEfforts {
         id
         effortValue
         effortMoney
