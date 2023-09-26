@@ -79,11 +79,11 @@
     },
     "latestEfforts": {
       "title": "Latest Efforts",
-      "project": "Project",
-      "product": "Product",
-      "externalId": "External ID",
-      "endDate": "Delivery Date",
-      "leadTime": "Lead Time"
+      "name": "Name",
+      "team": "Team",
+      "effortDate": "Effort date",
+      "demands": "Demands",
+      "effortValue": "effort Value"
     },
     "teams": {
       "title": "Teams"

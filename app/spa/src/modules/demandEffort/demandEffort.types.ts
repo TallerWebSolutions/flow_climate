@@ -1,3 +1,5 @@
+import { Team } from "../team/team.types"
+
 export type DemandEffort = {
   id: string
   effortValue?: number
@@ -12,6 +14,11 @@ export type DemandEffort = {
   stage?: string
   who?: string
   memberRole?: string
+  updatedAt?: Date
+  createdAt?: Date
   automaticUpdate?: boolean
   membershipEffortPercentage?: number
+  team?: Team
+  demandId?: number
+  demandExternalId?: string
 }

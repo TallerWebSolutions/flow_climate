@@ -115,7 +115,7 @@ const TEAM_MEMBER_QUERY = gql`
           slug
         }
       }
-      latestDeliveriesDemandsEfforts {
+      latestDemandEfforts {
         id
         effortValue
         effortMoney
@@ -128,6 +128,14 @@ const TEAM_MEMBER_QUERY = gql`
         mainEffortInTransition
         stage
         who
+        team {
+          id
+          name
+        }
+        createdAt
+        updatedAt
+        demandId
+        demandExternalId
         memberRole
         automaticUpdate
         membershipEffortPercentage

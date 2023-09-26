@@ -78,12 +78,12 @@
       "leadTime": "Lead Time"
     },
     "latestEfforts": {
-      "title": "Últimos esforços",
-      "project": "Projeto",
-      "product": "Produto",
-      "externalId": "ID Externo",
-      "endDate": "Dt Entrega",
-      "leadTime": "Lead Time"
+      "title": "Últimos Esforços",
+      "name": "Nome",
+      "team": "Time",
+      "effortDate": "Data do esforço",
+      "demands": "Demandas",
+      "effortValue": "Valor do esforço"
     },
     "teams": {
       "title": "Times"
