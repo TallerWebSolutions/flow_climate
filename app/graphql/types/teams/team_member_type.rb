@@ -16,6 +16,8 @@ module Types
       field :user, Types::UserType, null: true
       field :demand_efforts, [Types::DemandEffortType], null: true
 
+      field :latest_deliveries_demands_effort, [Types::DemandType], null: true
+
       field :demands, [Types::DemandType] do
         argument :limit, Int, required: false
         argument :status, Types::Enums::DemandStatusesType, required: false
@@ -52,6 +54,10 @@ module Types
         argument :number_of_weeks, Int, required: false
       end
       field :project_hours_data, Types::Charts::ProjectHoursChartDataType, null: true
+
+      def latest_deliveries_demands_effort
+        object.demands.order(end_date: :desc).limit(15)
+      end
 
       def demands(status: 'ALL', type: 'ALL', limit: nil)
         demands = if status == 'DELIVERED_DEMANDS'
