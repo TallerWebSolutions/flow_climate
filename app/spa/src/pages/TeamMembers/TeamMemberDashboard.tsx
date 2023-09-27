@@ -8,10 +8,12 @@ import BasicPage from "../../components/BasicPage"
 import { TeamMember } from "../../modules/teamMember/teamMember.types"
 import TeamMemberDashboardTables from "../../components/TeamMemberDashboardTables"
 import TeamMemberDashboardCharts from "../../components/TeamMemberDashboardCharts"
-import { FieldValues } from "react-hook-form"
 
 const TEAM_MEMBER_QUERY = gql`
-  query TeamMember($id: ID!) {
+  query TeamMember(
+    $id: ID!
+    $fromDate: ISO8601Date
+    $untilDate: ISO8601Date) {
     teamMember(id: $id) {
       id
       name
@@ -141,6 +143,31 @@ const TEAM_MEMBER_QUERY = gql`
         automaticUpdate
         membershipEffortPercentage
       }
+      demandEffortsList(fromDate: $fromDate, untilDate: $untilDate) {
+        id
+        effortValue
+        effortMoney
+        startTimeToComputation
+        finishTimeToComputation
+        stagePercentage
+        pairingPercentage
+        managementPercentage
+        totalBlocked
+        mainEffortInTransition
+        stage
+        who
+        team {
+          id
+          name
+        }
+        createdAt
+        updatedAt
+        demandId
+        demandExternalId
+        memberRole
+        automaticUpdate
+        membershipEffortPercentage
+      }
     }
   }
 `
@@ -156,9 +183,10 @@ const TeamMemberDashboard = () => {
   const { data, loading } = useQuery<TeamMemberDTO>(TEAM_MEMBER_QUERY, {
     variables: {
       id: Number(teamMemberId),
+      fromDate: '2023-09-13T13:42:49-03:00',
+      untilDate: '2023-06-13T13:42:49-03:00',
     },
   })
-
   const companySlug = me?.currentCompany?.slug
   const companyUrl = `/companies/${companySlug}`
   const teamMemberName = data?.teamMember?.name || ""

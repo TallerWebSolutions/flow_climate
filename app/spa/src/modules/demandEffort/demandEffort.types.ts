@@ -14,8 +14,8 @@ export type DemandEffort = {
   stage?: string
   who?: string
   memberRole?: string
-  updatedAt?: Date
-  createdAt?: Date
+  updatedAt?: string
+  createdAt?: string
   automaticUpdate?: boolean
   membershipEffortPercentage?: number
   team?: Team

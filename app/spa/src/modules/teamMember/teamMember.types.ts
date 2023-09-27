@@ -27,6 +27,7 @@ export type TeamMember = {
   demandLargestLeadTime?: Demand
   latestDeliveries?: Demand[]
   latestDemandEfforts?: DemandEffort[]
+  demandEffortsList?: DemandEffort[]
   demandLeadTimeP80?: number
   projectsList?: ProjectsList
   demandBlocksList?: DemandBlocksList

@@ -34,11 +34,6 @@ module Types
       argument :id, ID
     end
 
-    field :demand_efforts_list Type::DemandEffortList, null: true, description: 'A list of demand effort the arguments as search parameters' do
-      argument :from_date, GraphQL::Types::ISO8601Date, required: false
-      argument :until_date, GraphQL::Types::ISO8601Date, required: false
-    end
-
     field :tasks_list, Types::TasksListType, null: true, description: 'A list of tasks using the arguments as search parameters' do
       argument :from_date, GraphQL::Types::ISO8601Date, required: false
       argument :initiative_id, ID, required: false
