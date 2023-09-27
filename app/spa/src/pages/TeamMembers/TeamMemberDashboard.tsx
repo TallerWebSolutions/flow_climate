@@ -1,13 +1,15 @@
 import { useContext } from "react"
 import { useTranslation } from "react-i18next"
 import { gql, useQuery } from "@apollo/client"
-import { useParams } from "react-router-dom"
+import { useParams, useSearchParams } from "react-router-dom"
 
 import { MeContext } from "../../contexts/MeContext"
 import BasicPage from "../../components/BasicPage"
 import { TeamMember } from "../../modules/teamMember/teamMember.types"
 import TeamMemberDashboardTables from "../../components/TeamMemberDashboardTables"
 import TeamMemberDashboardCharts from "../../components/TeamMemberDashboardCharts"
+import { FieldValues } from "react-hook-form"
+import { getTime } from "date-fns"
 
 const TEAM_MEMBER_QUERY = gql`
   query TeamMember(
@@ -176,15 +178,33 @@ type TeamMemberDTO = {
   teamMember: TeamMember
 }
 
+
+
+
 const TeamMemberDashboard = () => {
   const { t } = useTranslation(["teamMembers"])
   const { me } = useContext(MeContext)
   const { teamMemberId } = useParams()
+  const [searchParams] = useSearchParams()
+
+  const effortsFilters: FieldValues = {
+    fromDate: searchParams.get("fromDate"),
+    untilDate: searchParams.get("untilDate"),
+  }
+
+  const effortsQueryFilters = Object.keys(effortsFilters)
+    .filter((key) => {
+      return String(effortsFilters[key]).length > 0
+    })
+    .reduce<Record<string, string>>((acc, el) => {
+      return { ...acc, [el]: effortsFilters[el] }
+    }, {})
+
   const { data, loading } = useQuery<TeamMemberDTO>(TEAM_MEMBER_QUERY, {
     variables: {
       id: Number(teamMemberId),
-      fromDate: '2023-09-13T13:42:49-03:00',
-      untilDate: '2023-06-13T13:42:49-03:00',
+      fromDate: effortsQueryFilters.fromDate,
+      untilDate: effortsQueryFilters.untilDate,
     },
   })
   const companySlug = me?.currentCompany?.slug
@@ -211,7 +231,7 @@ const TeamMemberDashboard = () => {
     >
       {teamMember && (
         <>
-          <TeamMemberDashboardTables teamMember={teamMember} />
+          <TeamMemberDashboardTables teamMember={teamMember} effortsFilters={effortsFilters}/>
           <TeamMemberDashboardCharts teamMember={teamMember} />
         </>
       )}

@@ -1,4 +1,4 @@
-import { Grid, Link } from "@mui/material"
+import { Button, FormGroup, Grid, Input, InputLabel, Link } from "@mui/material"
 import { Link as RouterLink } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 
@@ -6,15 +6,22 @@ import { TeamMember } from "../modules/teamMember/teamMember.types"
 import Table from "./ui/Table"
 import { secondsToDays } from "../lib/date"
 import DateLocale from "./ui/DateLocale"
+import { FormElement } from "./ui/Form"
+import { GridSearchIcon } from "@material-ui/data-grid"
+import { FieldValues, useForm } from "react-hook-form"
 
 type TeamMemberDashboardTablesProps = {
   teamMember: TeamMember
+  effortsFilters: FieldValues
 }
 
 const TeamMemberDashboardTables = ({
   teamMember,
+  effortsFilters,
 }: TeamMemberDashboardTablesProps) => {
   const { t } = useTranslation(["teamMembers"])
+  const { register } = useForm()
+
   const demandShortestLeadTime =
     teamMember.demandShortestLeadTime?.leadtime || 0
   const demandLargestLeadTime = teamMember.demandLargestLeadTime?.leadtime || 0
@@ -179,6 +186,40 @@ const TeamMemberDashboardTables = ({
         />
       </Grid>
       <Grid item xs={12}>
+      <form>
+        <FormGroup sx={{ marginBottom: 8 }}>
+          <Grid container spacing={5}>
+          <FormElement>
+              <InputLabel htmlFor="startDate" shrink>
+                {t("projectsTable.filter.startDate")}
+              </InputLabel>
+              <Input
+                type="date"
+                defaultValue={effortsFilters.fromDate}
+                {...register("fromDate")}
+              />
+            </FormElement>
+
+            <FormElement>
+              <InputLabel htmlFor="endDate" shrink>
+                {t("projectsTable.filter.endDate")}
+              </InputLabel>
+              <Input
+                type="date"
+                defaultValue={effortsFilters.untilDate}
+                {...register("untilDate")}
+              />
+            </FormElement>
+
+            <FormElement>
+              <Button sx={{ alignSelf: "flex-start" }} type="submit">
+                <GridSearchIcon fontSize="large" color="primary" />
+              </Button>
+            </FormElement>
+
+          </Grid>
+        </FormGroup>
+      </form>
       <Table
           title={t("dashboard.latestEfforts.title")}
           headerCells={latestEffortsHeader}
