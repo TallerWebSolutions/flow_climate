@@ -19,7 +19,7 @@ class DemandBlocksController < AuthenticatedController
   def index
     @demand_blocks_ids = @company.demand_blocks.unscoped.map(&:id)
     @demand_blocks = @company.demand_blocks.for_active_projects.active.order(block_time: :desc)
-    @paged_demand_blocks = @demand_blocks.page(page_param)
+    @paged_demand_blocks = @demand_blocks.page(page_param).per(1000)
     demands_count
   end
 
