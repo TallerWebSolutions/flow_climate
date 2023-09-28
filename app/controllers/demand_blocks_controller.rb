@@ -61,7 +61,7 @@ class DemandBlocksController < AuthenticatedController
     @demand_blocks = build_project_query(@demand_blocks)
     @demand_blocks = build_ordering_query(@demand_blocks)
 
-    @paged_demand_blocks = @demand_blocks.page(page_param)
+    @paged_demand_blocks = @demand_blocks.page(page_param).per(100)
     demands_count
 
     render 'demand_blocks/index'
