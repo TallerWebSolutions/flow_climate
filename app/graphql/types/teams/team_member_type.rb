@@ -62,8 +62,8 @@ module Types
         argument :until_date, GraphQL::Types::ISO8601Date, required: false
       end
 
-      def demand_efforts_list(from_date:, until_date:)
-        object.demand_efforts.updated_between(:from_date, :until_date)
+      def demand_efforts_list(from_date: Date.today.ago(1.month), until_date: Date.today)
+        object.demand_efforts.updated_between(from_date, until_date)
       end
 
       def latest_demand_efforts = object.demand_efforts.order(updated_at: :desc).limit(15)

@@ -120,7 +120,7 @@ const TeamMemberDashboardTables = ({
   ]
 
   const latestEffortsRows =
-    teamMember?.latestDemandEfforts?.map((effort) => [
+    teamMember?.demandEffortsList?.map((effort) => [
       `${(effort.who || "")}`,
       <Link
         component={RouterLink}
