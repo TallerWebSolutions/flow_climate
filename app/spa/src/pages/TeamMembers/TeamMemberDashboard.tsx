@@ -200,18 +200,11 @@ const TeamMemberDashboard = () => {
       return { ...acc, [el]: effortsFilters[el] }
     }, {})
 
-    const a = new Date('Tue, 29 Aug 2023 01:46:22 -0300')
-    const b = new Date('Wed, 13 Sep 2023 14:24:57 -0300')
-
   const { data, loading } = useQuery<TeamMemberDTO>(TEAM_MEMBER_QUERY, {
     variables: {
       id: Number(teamMemberId),
-      // fromDate: a,
-      // untilDate: b,
       fromDate: effortsQueryFilters.fromDate,
       untilDate: effortsQueryFilters.untilDate,
-      // fromDate: 'Wed, 13 Sep 2023 14:24:57.574000000 -03 -03:00',
-      // untilDate: 'Wed, 13 Sep 2023 14:24:57.574000000 -03 -03:00'
     },
   })
   const companySlug = me?.currentCompany?.slug

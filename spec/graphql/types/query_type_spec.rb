@@ -1753,6 +1753,8 @@ RSpec.describe Types::QueryType do
         other_demand_finished = Fabricate :demand, team: team, project: other_project, created_date: 3.days.ago, commitment_date: 6.hours.ago, end_date: 2.hours.ago, work_item_type: bug_type
         bug = Fabricate :demand, team: team, project: project, created_date: 2.days.ago, end_date: nil, work_item_type: bug_type
         other_bug = Fabricate :demand, team: team, project: project, created_date: 1.day.ago, end_date: nil, work_item_type: bug_type
+        demand_effort = Fabricate :demand_effort, demand: demand_finished, start_time_to_computation: 1.day.ago, finish_time_to_computation: 20.days.ago, effort_value: 70
+       
 
         first_assignmen = Fabricate :item_assignment, membership: membership, demand: demand_finished
 
@@ -1779,7 +1781,6 @@ RSpec.describe Types::QueryType do
         Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignmen, start_time_to_computation: 1.day.ago, effort_value: 20
         Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignmen, start_time_to_computation: 2.days.from_now, effort_value: 100
         Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignmen, start_time_to_computation: 2.days.from_now, effort_value: 70
-
         Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignmen, start_time_to_computation: 2.months.ago, effort_value: 100
 
         query =
@@ -1891,6 +1892,9 @@ RSpec.describe Types::QueryType do
             yAxisHours
           }
           memberThroughputData(numberOfWeeks: 3)
+          demandEffortsList{
+            finishTimeToComputation
+          }
         }
       })
 
@@ -2040,7 +2044,8 @@ RSpec.describe Types::QueryType do
                                                            'yAxisProjectsNames' => [project.name]
 
                                                          },
-                                                         'memberThroughputData' => [0, 0, 0, 2]
+                                                         'memberThroughputData' =>  [0, 0, 0, 2] ,
+                                                         'demandEffortsList' => []
                                                        })
       end
     end

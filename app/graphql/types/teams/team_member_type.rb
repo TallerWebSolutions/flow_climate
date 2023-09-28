@@ -63,7 +63,13 @@ module Types
       end
 
       def demand_efforts_list(from_date: Date.today.ago(1.month), until_date: Date.today)
-        object.demand_efforts.updated_between(from_date, until_date)
+        if from_date.nil? && until_date.nil?
+          object.demand_efforts.updated_between(Date.today.ago(1.month), Date.today)
+        else
+          near_date = [from_date, until_date].max
+          far_date = [from_date, until_date].min
+          object.demand_efforts.updated_between(far_date, near_date)
+        end
       end
 
       def latest_demand_efforts = object.demand_efforts.order(updated_at: :desc).limit(15)

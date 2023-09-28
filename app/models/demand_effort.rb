@@ -55,7 +55,7 @@ class DemandEffort < ApplicationRecord
   scope :to_dates, ->(start_date, end_date) { where('start_time_to_computation BETWEEN :start_date AND :end_date', start_date: start_date, end_date: end_date) }
   scope :until_date, ->(limit_date) { where('start_time_to_computation <= :limit_date', limit_date: limit_date) }
   
-  scope :updated_between, ->(start_date, end_date) { where('finish_time_to_computation BETWEEN :start_date AND :end_date', start_date: start_date, end_date: end_date) }
+  scope :updated_between, ->(start_date, end_date) { where('finish_time_to_computation BETWEEN :start_date AND :end_date', start_date: start_date, end_date: end_date).order(finish_time_to_computation: :desc) }
   
 
   after_save :update_demand_caches
@@ -96,6 +96,10 @@ class DemandEffort < ApplicationRecord
 
   def effort_money
     effort_value * demand.project.hour_value
+  end
+  
+  def search_by_date(start_date, end_date)
+    return DemandEffort.updated_between(start_date, end_date) unless start_date.present? && end_date.present?
   end
   
   private
