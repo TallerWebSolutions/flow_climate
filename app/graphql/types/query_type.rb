@@ -185,10 +185,6 @@ module Types
                                       until_date: until_date, portfolio_unit_name: portfolio_unit, task_type: task_type)
     end
 
-    def demand_efforts_list(from_date, until_date)
-      DemandEffort.search_by_date(from_date, until_date)
-    end
-
     def demands_list(search_options:)
       demands = base_demands(search_options)
 

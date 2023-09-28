@@ -97,10 +97,6 @@ class DemandEffort < ApplicationRecord
   def effort_money
     effort_value * demand.project.hour_value
   end
-
-  def search_by_date(start_date, end_date)
-    return DemandEffort.updated_between(start_date, end_date) unless start_date.present? && end_date.present?
-  end
   
   private
 

@@ -119,4 +119,38 @@ RSpec.describe DemandEffort do
       expect(effort.who).to eq 'foo do bar'
     end
   end
+
+  describe '#demand_external_id' do
+    it 'returns the demand extrenal id assigned' do
+      team_member = Fabricate :team_member, name: 'foo do bar'
+      membership = Fabricate :membership, team_member: team_member
+      demand = Fabricate :demand, external_id: 'lambda-10'
+      item_assignment = Fabricate :item_assignment, membership: membership, demand: demand
+      effort = Fabricate :demand_effort, item_assignment: item_assignment
+
+      expect(effort.demand_external_id).to eq 'lambda-10'
+    end
+  end
+
+  describe '#team' do
+    it 'returns the team assigned' do
+      team_member = Fabricate :team_member, name: 'foo do bar'
+      membership = Fabricate :membership, team_member: team_member
+      item_assignment = Fabricate :item_assignment, membership: membership
+      effort = Fabricate :demand_effort, item_assignment: item_assignment
+
+      expect(effort.team.name).to eq effort.team.name
+    end
+  end
+
+  describe '#member_role' do
+    it 'returns the member role assigned' do
+      team_member = Fabricate :team_member, name: 'foo do bar'
+      membership = Fabricate :membership, team_member: team_member
+      item_assignment = Fabricate :item_assignment, membership: membership
+      effort = Fabricate :demand_effort, item_assignment: item_assignment
+
+      expect(effort.member_role).to eq 'developer'
+    end
+  end
 end
