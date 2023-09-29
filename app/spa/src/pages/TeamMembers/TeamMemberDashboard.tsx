@@ -1,16 +1,17 @@
 import { useContext } from "react"
 import { useTranslation } from "react-i18next"
 import { gql, useQuery } from "@apollo/client"
-import { useParams } from "react-router-dom"
+import { useParams, useSearchParams } from "react-router-dom"
 
 import { MeContext } from "../../contexts/MeContext"
 import BasicPage from "../../components/BasicPage"
 import { TeamMember } from "../../modules/teamMember/teamMember.types"
 import TeamMemberDashboardTables from "../../components/TeamMemberDashboardTables"
 import TeamMemberDashboardCharts from "../../components/TeamMemberDashboardCharts"
+import { FieldValues } from "react-hook-form"
 
 const TEAM_MEMBER_QUERY = gql`
-  query TeamMember($id: ID!) {
+  query TeamMember($id: ID!, $fromDate: ISO8601Date, $untilDate: ISO8601Date ) {
     teamMember(id: $id) {
       id
       name
@@ -115,6 +116,56 @@ const TEAM_MEMBER_QUERY = gql`
           slug
         }
       }
+      latestDemandEfforts {
+        id
+        effortValue
+        effortMoney
+        startTimeToComputation
+        finishTimeToComputation
+        stagePercentage
+        pairingPercentage
+        managementPercentage
+        totalBlocked
+        mainEffortInTransition
+        stage
+        who
+        team {
+          id
+          name
+        }
+        createdAt
+        updatedAt
+        demandId
+        demandExternalId
+        memberRole
+        automaticUpdate
+        membershipEffortPercentage
+      }
+      demandEffortsList(fromDate: $fromDate, untilDate: $untilDate) {
+        id
+        effortValue
+        effortMoney
+        startTimeToComputation
+        finishTimeToComputation
+        stagePercentage
+        pairingPercentage
+        managementPercentage
+        totalBlocked
+        mainEffortInTransition
+        stage
+        who
+        team {
+          id
+          name
+        }
+        createdAt
+        updatedAt
+        demandId
+        demandExternalId
+        memberRole
+        automaticUpdate
+        membershipEffortPercentage
+      }
     }
   }
 `
@@ -127,9 +178,29 @@ const TeamMemberDashboard = () => {
   const { t } = useTranslation(["teamMembers"])
   const { me } = useContext(MeContext)
   const { teamMemberId } = useParams()
+  const [searchParams] = useSearchParams()
+
+  const today = new Date()
+  const monthAgo = new Date(new Date().setDate(new Date().getDate() - 30))
+
+  const effortsFilters: FieldValues = {
+    fromDate: searchParams.get("fromDate"),
+    untilDate: searchParams.get("untilDate"),
+  }
+
+  const effortsQueryFilters = Object.keys(effortsFilters)
+    .filter((key) => {
+      return String(effortsFilters[key]).length > 0
+    })
+    .reduce<Record<string, string>>((acc, el) => {
+      return { ...acc, [el]: effortsFilters[el] }
+    }, {})
+
   const { data, loading } = useQuery<TeamMemberDTO>(TEAM_MEMBER_QUERY, {
     variables: {
       id: Number(teamMemberId),
+      fromDate: effortsQueryFilters.fromDate,
+      untilDate: effortsQueryFilters.untilDate,
     },
   })
   const companySlug = me?.currentCompany?.slug
@@ -156,7 +227,10 @@ const TeamMemberDashboard = () => {
     >
       {teamMember && (
         <>
-          <TeamMemberDashboardTables teamMember={teamMember} />
+          <TeamMemberDashboardTables
+            teamMember={teamMember}
+            effortsFilters={effortsFilters}
+          />
           <TeamMemberDashboardCharts teamMember={teamMember} />
         </>
       )}

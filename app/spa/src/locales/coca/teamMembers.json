@@ -77,6 +77,16 @@
       "endDate": "Delivery Date",
       "leadTime": "Lead Time"
     },
+    "latestEfforts": {
+      "title": "Latest Efforts",
+      "name": "Name",
+      "team": "Team",
+      "effortDate": "Effort date",
+      "demands": "Demands",
+      "effortValue": "Effort Value",
+      "untilDate": "End Date",
+      "fromDate": "Start Date"
+    },
     "teams": {
       "title": "Teams"
     },

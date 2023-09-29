@@ -1,4 +1,4 @@
-import { Grid, Link } from "@mui/material"
+import { Button, FormGroup, Grid, Input, InputLabel, Link } from "@mui/material"
 import { Link as RouterLink } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 
@@ -6,15 +6,30 @@ import { TeamMember } from "../modules/teamMember/teamMember.types"
 import Table from "./ui/Table"
 import { secondsToDays } from "../lib/date"
 import DateLocale from "./ui/DateLocale"
+import { FormElement } from "./ui/Form"
+import { GridSearchIcon } from "@material-ui/data-grid"
+import { FieldValues, useForm } from "react-hook-form"
 
 type TeamMemberDashboardTablesProps = {
   teamMember: TeamMember
+  effortsFilters: FieldValues
 }
 
 const TeamMemberDashboardTables = ({
   teamMember,
+  effortsFilters,
 }: TeamMemberDashboardTablesProps) => {
   const { t } = useTranslation(["teamMembers"])
+  const { register } = useForm()
+
+  if (effortsFilters.fromDate === ""){
+    (effortsFilters.fromDate = new Date(new Date().setDate(new Date().getDate() - 30)))
+  }
+    
+  if (effortsFilters.untilDate === ""){
+    (effortsFilters.untilDate = new Date())
+  }
+
   const demandShortestLeadTime =
     teamMember.demandShortestLeadTime?.leadtime || 0
   const demandLargestLeadTime = teamMember.demandLargestLeadTime?.leadtime || 0
@@ -88,6 +103,7 @@ const TeamMemberDashboardTables = ({
     t("dashboard.demandBlocks.blockTime"),
     t("dashboard.demandBlocks.unblockTime"),
   ]
+
   const demandBlocksRows =
     teamMember.demandBlocksList?.demandBlocks?.map((block) => [
       block.demand?.demandTitle || "",
@@ -103,6 +119,35 @@ const TeamMemberDashboardTables = ({
     t("dashboard.latestProjects.quality"),
     t("dashboard.latestProjects.leadTime"),
   ]
+
+  const latestEffortsHeader = [
+    t("dashboard.latestEfforts.name"),
+    t("dashboard.latestEfforts.team"),
+    t("dashboard.latestEfforts.effortDate"),
+    t("dashboard.latestEfforts.demands"),
+    t("dashboard.latestEfforts.effortValue"),
+  ]
+
+  const latestEffortsRows =
+    teamMember?.demandEffortsList?.map((effort) => [
+      `${(effort.who || "")}`,
+      <Link
+        component={RouterLink}
+        to={`/companies/taller/teams/${effort.team?.id}`}
+      >
+        {effort.team?.name}
+      </Link>,
+      <DateLocale date={String(effort.updatedAt)} />,
+      <Link
+        component={RouterLink}
+        to={`/companies/taller/demands/${effort.demandExternalId}`}
+      >
+        {effort.demandExternalId}
+      </Link>,
+      `${(effort.effortValue || "")}`,
+      
+    ]) || []
+
   const latestProjectsRows =
     teamMember.projectsList?.projects?.map((project) => [
       <Link
@@ -147,6 +192,47 @@ const TeamMemberDashboardTables = ({
           title={t("dashboard.latestProjects.title")}
           headerCells={latestProjectsHeader}
           rows={latestProjectsRows}
+        />
+      </Grid>
+      <Grid item xs={12}>
+      <form>
+        <FormGroup sx={{ marginBottom: 8 }}>
+          <Grid container spacing={5}>
+          <FormElement>
+              <InputLabel htmlFor="fromDate" shrink>
+                {t("dashboard.latestEfforts.fromDate")}
+              </InputLabel>
+              <Input
+                type="date"
+                defaultValue={effortsFilters.fromDate}
+                {...register("fromDate")}
+              />
+            </FormElement>
+
+            <FormElement>
+              <InputLabel htmlFor="untilDate" shrink>
+                {t("dashboard.latestEfforts.untilDate")}
+              </InputLabel>
+              <Input
+                type="date"
+                defaultValue={effortsFilters.untilDate}
+                {...register("untilDate")}
+              />
+            </FormElement>
+
+            <FormElement>
+              <Button sx={{ alignSelf: "flex-start" }} type="submit">
+                <GridSearchIcon fontSize="large" color="primary" />
+              </Button>
+            </FormElement>
+
+          </Grid>
+        </FormGroup>
+      </form>
+      <Table
+          title={t("dashboard.latestEfforts.title")}
+          headerCells={latestEffortsHeader}
+          rows={latestEffortsRows}
         />
       </Grid>
     </Grid>

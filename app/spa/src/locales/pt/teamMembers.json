@@ -77,6 +77,16 @@
       "endDate": "Dt Entrega",
       "leadTime": "Lead Time"
     },
+    "latestEfforts": {
+      "title": "Últimos Esforços",
+      "name": "Nome",
+      "team": "Time",
+      "effortDate": "Data do esforço",
+      "demands": "Demandas",
+      "effortValue": "Valor do esforço",
+      "untilDate": "Data final",
+      "fromDate": "Data inicial"
+    },
     "teams": {
       "title": "Times"
     },

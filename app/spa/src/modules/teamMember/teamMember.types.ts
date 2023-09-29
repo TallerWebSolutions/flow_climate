@@ -3,6 +3,7 @@ import { ProjectsList } from "../project/project.types"
 import { Team } from "../team/team.types"
 import User from "../user/user.types"
 import { ChartAxisData, KeyValueData } from "../charts/charts.types"
+import { DemandEffort } from "../demandEffort/demandEffort.types"
 
 type LeadTimesChartData = {
   xAxis: (string | number)[]
@@ -25,6 +26,8 @@ export type TeamMember = {
   demandShortestLeadTime?: Demand
   demandLargestLeadTime?: Demand
   latestDeliveries?: Demand[]
+  latestDemandEfforts?: DemandEffort[]
+  demandEffortsList?: DemandEffort[]
   demandLeadTimeP80?: number
   projectsList?: ProjectsList
   demandBlocksList?: DemandBlocksList
@@ -40,4 +43,5 @@ export type TeamMember = {
     yAxisHours: number[]
     yAxisProjectsNames: string[]
   }
+  demandEfforts?: DemandEffort[]
 }
