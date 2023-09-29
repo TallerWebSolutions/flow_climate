@@ -22,12 +22,14 @@ const TeamMemberDashboardTables = ({
   const { t } = useTranslation(["teamMembers"])
   const { register } = useForm()
 
-  if (effortsFilters.fromDate === ""){
-    (effortsFilters.fromDate = new Date(new Date().setDate(new Date().getDate() - 30)))
+  if (effortsFilters.fromDate === "") {
+    effortsFilters.fromDate = new Date(
+      new Date().setDate(new Date().getDate() - 30)
+    )
   }
-    
-  if (effortsFilters.untilDate === ""){
-    (effortsFilters.untilDate = new Date())
+
+  if (effortsFilters.untilDate === "") {
+    effortsFilters.untilDate = new Date()
   }
 
   const demandShortestLeadTime =
@@ -129,8 +131,8 @@ const TeamMemberDashboardTables = ({
   ]
 
   const latestEffortsRows =
-    teamMember?.demandEffortsList?.map((effort) => [
-      `${(effort.who || "")}`,
+    teamMember?.demandEfforts?.map((effort) => [
+      `${effort.who || ""}`,
       <Link
         component={RouterLink}
         to={`/companies/taller/teams/${effort.team?.id}`}
@@ -144,8 +146,7 @@ const TeamMemberDashboardTables = ({
       >
         {effort.demandExternalId}
       </Link>,
-      `${(effort.effortValue || "")}`,
-      
+      `${effort.effortValue || ""}`,
     ]) || []
 
   const latestProjectsRows =
@@ -158,8 +159,8 @@ const TeamMemberDashboardTables = ({
       </Link>,
       <DateLocale date={project.startDate} />,
       <DateLocale date={project.endDate} />,
-      `${(project.currentRiskToDeadline || 0 * 100).toFixed(2)}%`,
-      `${(project.quality || 0 * 100).toFixed(2)}%`,
+      `${((project.currentRiskToDeadline || 0) * 100).toFixed(2)}%`,
+      `${((project.quality || 0) * 100).toFixed(2)}%`,
       `${secondsToDays(project.leadTimeP80)} ${t("dashboard.days")}`,
     ]) || []
   return (
@@ -195,41 +196,40 @@ const TeamMemberDashboardTables = ({
         />
       </Grid>
       <Grid item xs={12}>
-      <form>
-        <FormGroup sx={{ marginBottom: 8 }}>
-          <Grid container spacing={5}>
-          <FormElement>
-              <InputLabel htmlFor="fromDate" shrink>
-                {t("dashboard.latestEfforts.fromDate")}
-              </InputLabel>
-              <Input
-                type="date"
-                defaultValue={effortsFilters.fromDate}
-                {...register("fromDate")}
-              />
-            </FormElement>
+        <form>
+          <FormGroup sx={{ marginBottom: 8 }}>
+            <Grid container spacing={5}>
+              <FormElement>
+                <InputLabel htmlFor="fromDate" shrink>
+                  {t("dashboard.latestEfforts.fromDate")}
+                </InputLabel>
+                <Input
+                  type="date"
+                  defaultValue={effortsFilters.fromDate}
+                  {...register("fromDate")}
+                />
+              </FormElement>
 
-            <FormElement>
-              <InputLabel htmlFor="untilDate" shrink>
-                {t("dashboard.latestEfforts.untilDate")}
-              </InputLabel>
-              <Input
-                type="date"
-                defaultValue={effortsFilters.untilDate}
-                {...register("untilDate")}
-              />
-            </FormElement>
+              <FormElement>
+                <InputLabel htmlFor="untilDate" shrink>
+                  {t("dashboard.latestEfforts.untilDate")}
+                </InputLabel>
+                <Input
+                  type="date"
+                  defaultValue={effortsFilters.untilDate}
+                  {...register("untilDate")}
+                />
+              </FormElement>
 
-            <FormElement>
-              <Button sx={{ alignSelf: "flex-start" }} type="submit">
-                <GridSearchIcon fontSize="large" color="primary" />
-              </Button>
-            </FormElement>
-
-          </Grid>
-        </FormGroup>
-      </form>
-      <Table
+              <FormElement>
+                <Button sx={{ alignSelf: "flex-start" }} type="submit">
+                  <GridSearchIcon fontSize="large" color="primary" />
+                </Button>
+              </FormElement>
+            </Grid>
+          </FormGroup>
+        </form>
+        <Table
           title={t("dashboard.latestEfforts.title")}
           headerCells={latestEffortsHeader}
           rows={latestEffortsRows}

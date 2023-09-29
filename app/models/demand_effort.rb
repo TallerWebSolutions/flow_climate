@@ -52,12 +52,9 @@ class DemandEffort < ApplicationRecord
   scope :manager_efforts, -> { joins(item_assignment: :membership).where(memberships: { member_role: :manager }) }
 
   scope :previous_in_day, ->(limit_time) { where('start_time_to_computation BETWEEN :start_time AND :end_time', start_time: limit_time.beginning_of_day, end_time: limit_time) }
-  scope :to_dates, ->(start_date, end_date) { where('start_time_to_computation BETWEEN :start_date AND :end_date', start_date: start_date, end_date: end_date) }
+  scope :to_dates, ->(start_date = 1.month.ago, end_date = Time.zone.today) { where('start_time_to_computation BETWEEN :start_date AND :end_date', start_date: start_date, end_date: end_date) }
   scope :until_date, ->(limit_date) { where('start_time_to_computation <= :limit_date', limit_date: limit_date) }
   
-  scope :updated_between, ->(start_date, end_date) { where('demand_efforts.updated_at BETWEEN :start_date AND :end_date', start_date: start_date, end_date: end_date).order(finish_time_to_computation: :desc) }
-  
-
   after_save :update_demand_caches
 
   def csv_array

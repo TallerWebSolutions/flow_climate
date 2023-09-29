@@ -4,6 +4,10 @@ module Types
   module Teams
     class TeamMemberType < Types::BaseObject
       field :billable, Boolean, null: false
+      field :demand_efforts, [Types::DemandEffortType], null: true do
+        argument :from_date, GraphQL::Types::ISO8601Date, required: false
+        argument :until_date, GraphQL::Types::ISO8601Date, required: false
+      end
       field :end_date, GraphQL::Types::ISO8601Date, null: true
       field :hours_per_month, Int, null: false
       field :id, ID, null: false
@@ -14,9 +18,6 @@ module Types
       field :start_date, GraphQL::Types::ISO8601Date, null: true
       field :teams, [Types::Teams::TeamType], null: true
       field :user, Types::UserType, null: true
-      field :demand_efforts, [Types::DemandEffortType], null: true
-
-      field :latest_demand_efforts, [Types::DemandEffortType], null: true
 
       field :demands, [Types::DemandType] do
         argument :limit, Int, required: false
@@ -57,18 +58,9 @@ module Types
 
       field :project_hours_data, Types::Charts::ProjectHoursChartDataType, null: true
 
-      field :demand_efforts_list, [Types::DemandEffortType], null: true, description: 'A list of demand effort the arguments as search parameters' do
-        argument :from_date, GraphQL::Types::ISO8601Date, required: false
-        argument :until_date, GraphQL::Types::ISO8601Date, required: false
+      def demand_efforts(from_date: nil, until_date: nil)
+        object.demand_efforts.to_dates(from_date, until_date)
       end
-
-      def demand_efforts_list(from_date: 1.month.ago.to_date, until_date: Time.zone.now.to_date)
-        object.demand_efforts.updated_between(from_date, until_date)
-      end
-
-      def latest_demand_efforts = object.demand_efforts.order(updated_at: :desc).limit(15)
-
-  
 
       def demands(status: 'ALL', type: 'ALL', limit: nil)
         demands = if status == 'DELIVERED_DEMANDS'

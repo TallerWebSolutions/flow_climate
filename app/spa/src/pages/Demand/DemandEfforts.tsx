@@ -96,7 +96,7 @@ const DemandEfforts = () => {
       (Number(effort.stagePercentage || 0) * 100).toFixed(2),
       (Number(effort.pairingPercentage || 0) * 100).toFixed(2),
       (Number(effort.managementPercentage || 0) * 100).toFixed(2),
-      (Number(effort.membershipEffortPercentage || 0)).toFixed(2),
+      Number(effort.membershipEffortPercentage || 0).toFixed(2),
       effort.totalBlocked || 0,
       effort.mainEffortInTransition ? <CheckIcon color="primary" /> : "",
       effort.automaticUpdate ? <CheckIcon color="primary" /> : "",

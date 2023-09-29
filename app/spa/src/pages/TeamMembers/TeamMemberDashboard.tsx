@@ -11,7 +11,7 @@ import TeamMemberDashboardCharts from "../../components/TeamMemberDashboardChart
 import { FieldValues } from "react-hook-form"
 
 const TEAM_MEMBER_QUERY = gql`
-  query TeamMember($id: ID!, $fromDate: ISO8601Date, $untilDate: ISO8601Date ) {
+  query TeamMember($id: ID!, $fromDate: ISO8601Date, $untilDate: ISO8601Date) {
     teamMember(id: $id) {
       id
       name
@@ -116,32 +116,7 @@ const TEAM_MEMBER_QUERY = gql`
           slug
         }
       }
-      latestDemandEfforts {
-        id
-        effortValue
-        effortMoney
-        startTimeToComputation
-        finishTimeToComputation
-        stagePercentage
-        pairingPercentage
-        managementPercentage
-        totalBlocked
-        mainEffortInTransition
-        stage
-        who
-        team {
-          id
-          name
-        }
-        createdAt
-        updatedAt
-        demandId
-        demandExternalId
-        memberRole
-        automaticUpdate
-        membershipEffortPercentage
-      }
-      demandEffortsList(fromDate: $fromDate, untilDate: $untilDate) {
+      demandEfforts(fromDate: $fromDate, untilDate: $untilDate) {
         id
         effortValue
         effortMoney

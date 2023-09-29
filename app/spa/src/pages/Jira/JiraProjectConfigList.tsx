@@ -54,8 +54,7 @@ const JiraProjectConfigList = () => {
       {
         update: (_, { data }) => {
           const mutationResult =
-            data?.synchronizeJiraProjectConfig?.statusMessage ===
-            "SUCCESS"
+            data?.synchronizeJiraProjectConfig?.statusMessage === "SUCCESS"
 
           pushMessage({
             text: mutationResult
