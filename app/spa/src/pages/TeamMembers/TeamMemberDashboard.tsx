@@ -11,7 +11,7 @@ import TeamMemberDashboardCharts from "../../components/TeamMemberDashboardChart
 import { FieldValues } from "react-hook-form"
 
 const TEAM_MEMBER_QUERY = gql`
-  query TeamMember($id: ID!, $fromDate: ISO8601Date, $untilDate: ISO8601Date) {
+  query TeamMember($id: ID!, $fromDate: ISO8601Date, $untilDate: ISO8601Date ) {
     teamMember(id: $id) {
       id
       name
@@ -179,6 +179,9 @@ const TeamMemberDashboard = () => {
   const { me } = useContext(MeContext)
   const { teamMemberId } = useParams()
   const [searchParams] = useSearchParams()
+
+  const today = new Date()
+  const monthAgo = new Date(new Date().setDate(new Date().getDate() - 30))
 
   const effortsFilters: FieldValues = {
     fromDate: searchParams.get("fromDate"),

@@ -1753,11 +1753,10 @@ RSpec.describe Types::QueryType do
         other_demand_finished = Fabricate :demand, team: team, project: other_project, created_date: 3.days.ago, commitment_date: 6.hours.ago, end_date: 2.hours.ago, work_item_type: bug_type
         bug = Fabricate :demand, team: team, project: project, created_date: 2.days.ago, end_date: nil, work_item_type: bug_type
         other_bug = Fabricate :demand, team: team, project: project, created_date: 1.day.ago, end_date: nil, work_item_type: bug_type
-        demand_effort = Fabricate :demand_effort, demand: demand_finished, start_time_to_computation: 1.day.ago, finish_time_to_computation: 20.days.ago, effort_value: 70
-       
-
+        
+        
         first_assignmen = Fabricate :item_assignment, membership: membership, demand: demand_finished
-
+        
         another_team_member_assignmen_that_should_not_appear = Fabricate :item_assignment, membership: another_membership, demand: demand_finished
 
         Fabricate :item_assignment, membership: membership, demand: other_demand_finished
@@ -1777,7 +1776,7 @@ RSpec.describe Types::QueryType do
 
         Fabricate :demand_effort, demand: demand_finished, item_assignment: another_team_member_assignmen_that_should_not_appear, start_time_to_computation: 2.days.ago, effort_value: 10_000
 
-        Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignmen, start_time_to_computation: 1.day.ago, effort_value: 100
+        Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignmen, start_time_to_computation: 1.day.ago, finish_time_to_computation: 20.days.ago, effort_value: 100
         Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignmen, start_time_to_computation: 1.day.ago, effort_value: 20
         Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignmen, start_time_to_computation: 2.days.from_now, effort_value: 100
         Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignmen, start_time_to_computation: 2.days.from_now, effort_value: 70
@@ -1886,7 +1885,7 @@ RSpec.describe Types::QueryType do
             xAxis
             yAxis
           }
-          demandEffortsList{
+          demandEffortsList(fromDate: "#{25.days.ago.iso8601}", untilDate: "#{15.days.ago.iso8601}"){
             finishTimeToComputation
           }
           projectHoursData {
@@ -1907,7 +1906,7 @@ RSpec.describe Types::QueryType do
         lead_time_p65 = Stats::StatisticsService.instance.percentile(65, team_member.demands.finished_with_leadtime.order(:end_date).map { |demand| demand.leadtime.to_f })
         lead_time_p80 = Stats::StatisticsService.instance.percentile(80, team_member.demands.finished_with_leadtime.order(:end_date).map { |demand| demand.leadtime.to_f })
         lead_time_p95 = Stats::StatisticsService.instance.percentile(95, team_member.demands.finished_with_leadtime.order(:end_date).map { |demand| demand.leadtime.to_f })
-
+        
         result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
         expect(result.dig('data', 'me')).to eq({
                                                  'id' => user.id.to_s,
@@ -2045,7 +2044,9 @@ RSpec.describe Types::QueryType do
 
                                                          },
                                                          'memberThroughputData' =>  [0, 0, 0, 2] ,
-                                                         'demandEffortsList' => []
+                                                         'demandEffortsList' => [{
+                                                          'finishTimeToComputation' => 20.days.ago.iso8601
+                                                         }]
                                                        })
       end
     end
