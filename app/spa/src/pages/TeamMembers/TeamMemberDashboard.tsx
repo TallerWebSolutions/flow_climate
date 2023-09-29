@@ -9,13 +9,9 @@ import { TeamMember } from "../../modules/teamMember/teamMember.types"
 import TeamMemberDashboardTables from "../../components/TeamMemberDashboardTables"
 import TeamMemberDashboardCharts from "../../components/TeamMemberDashboardCharts"
 import { FieldValues } from "react-hook-form"
-import { getTime } from "date-fns"
 
 const TEAM_MEMBER_QUERY = gql`
-  query TeamMember(
-    $id: ID!
-    $fromDate: ISO8601Date
-    $untilDate: ISO8601Date) {
+  query TeamMember($id: ID!, $fromDate: ISO8601Date, $untilDate: ISO8601Date) {
     teamMember(id: $id) {
       id
       name
@@ -178,9 +174,6 @@ type TeamMemberDTO = {
   teamMember: TeamMember
 }
 
-
-
-
 const TeamMemberDashboard = () => {
   const { t } = useTranslation(["teamMembers"])
   const { me } = useContext(MeContext)
@@ -231,7 +224,10 @@ const TeamMemberDashboard = () => {
     >
       {teamMember && (
         <>
-          <TeamMemberDashboardTables teamMember={teamMember} effortsFilters={effortsFilters}/>
+          <TeamMemberDashboardTables
+            teamMember={teamMember}
+            effortsFilters={effortsFilters}
+          />
           <TeamMemberDashboardCharts teamMember={teamMember} />
         </>
       )}

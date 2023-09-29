@@ -83,7 +83,9 @@
       "team": "Time",
       "effortDate": "Data do esforço",
       "demands": "Demandas",
-      "effortValue": "Valor do esforço"
+      "effortValue": "Valor do esforço",
+      "untilDate": "Data final",
+      "fromDate": "Data inicial"
     },
     "teams": {
       "title": "Times"

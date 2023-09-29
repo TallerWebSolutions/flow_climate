@@ -22,6 +22,14 @@ const TeamMemberDashboardTables = ({
   const { t } = useTranslation(["teamMembers"])
   const { register } = useForm()
 
+  if (effortsFilters.fromDate === ""){
+    (effortsFilters.fromDate = new Date(new Date().setDate(new Date().getDate() - 30)))
+  }
+    
+  if (effortsFilters.untilDate === ""){
+    (effortsFilters.untilDate = new Date())
+  }
+
   const demandShortestLeadTime =
     teamMember.demandShortestLeadTime?.leadtime || 0
   const demandLargestLeadTime = teamMember.demandLargestLeadTime?.leadtime || 0
@@ -95,6 +103,7 @@ const TeamMemberDashboardTables = ({
     t("dashboard.demandBlocks.blockTime"),
     t("dashboard.demandBlocks.unblockTime"),
   ]
+
   const demandBlocksRows =
     teamMember.demandBlocksList?.demandBlocks?.map((block) => [
       block.demand?.demandTitle || "",
@@ -190,8 +199,8 @@ const TeamMemberDashboardTables = ({
         <FormGroup sx={{ marginBottom: 8 }}>
           <Grid container spacing={5}>
           <FormElement>
-              <InputLabel htmlFor="startDate" shrink>
-                {t("projectsTable.filter.startDate")}
+              <InputLabel htmlFor="fromDate" shrink>
+                {t("dashboard.latestEfforts.fromDate")}
               </InputLabel>
               <Input
                 type="date"
@@ -201,8 +210,8 @@ const TeamMemberDashboardTables = ({
             </FormElement>
 
             <FormElement>
-              <InputLabel htmlFor="endDate" shrink>
-                {t("projectsTable.filter.endDate")}
+              <InputLabel htmlFor="untilDate" shrink>
+                {t("dashboard.latestEfforts.untilDate")}
               </InputLabel>
               <Input
                 type="date"

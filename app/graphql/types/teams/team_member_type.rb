@@ -62,8 +62,8 @@ module Types
         argument :until_date, GraphQL::Types::ISO8601Date, required: false
       end
 
-      def demand_efforts_list(from_date: Date.today.ago(1.month), until_date: Date.today)
-        if from_date.nil? && until_date.nil?
+      def demand_efforts_list(from_date: nil , until_date: nil )
+        if from_date.blank? && until_date.blank?
           object.demand_efforts.updated_between(Date.today.ago(1.month), Date.today)
         else
           near_date = [from_date, until_date].max

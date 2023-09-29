@@ -1886,15 +1886,15 @@ RSpec.describe Types::QueryType do
             xAxis
             yAxis
           }
+          demandEffortsList{
+            finishTimeToComputation
+          }
           projectHoursData {
             xAxis
             yAxisProjectsNames
             yAxisHours
           }
           memberThroughputData(numberOfWeeks: 3)
-          demandEffortsList{
-            finishTimeToComputation
-          }
         }
       })
 
