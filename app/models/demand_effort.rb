@@ -98,8 +98,6 @@ class DemandEffort < ApplicationRecord
     effort_value * demand.project.hour_value
   end
   
-  def search_by_date(start_date, end_date)
-  
   private
 
   def stage_percentage_value
