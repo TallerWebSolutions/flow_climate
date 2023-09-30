@@ -5,15 +5,15 @@ RSpec.describe Types::QueryType do
     describe '#teams' do
       let(:query) do
         %(query {
-        teams {
-          id
-          name
-          company {
+          teams {
             id
             name
+            company {
+              id
+              name
+            }
           }
-        }
-      })
+        })
       end
 
       context 'when the user has no a last company setted' do
@@ -963,7 +963,7 @@ RSpec.describe Types::QueryType do
 
         project = Fabricate :project, products: [product]
         Fabricate :flow_event, project: project, event_date: 2.days.ago
-        Fabricate :flow_event, project: project, event_date: 3.weeks.ago
+        Fabricate :flow_event, project: project, event_date: 1.week.ago
         Fabricate :flow_event, project: project, event_date: 2.days.from_now
 
         Fabricate :demand, project: project, company: project.company, service_delivery_review: review, end_date: 4.weeks.ago, class_of_service: :expedite
