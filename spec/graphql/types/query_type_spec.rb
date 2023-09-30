@@ -1753,10 +1753,9 @@ RSpec.describe Types::QueryType do
         other_demand_finished = Fabricate :demand, team: team, project: other_project, created_date: 3.days.ago, commitment_date: 6.hours.ago, end_date: 2.hours.ago, work_item_type: bug_type
         bug = Fabricate :demand, team: team, project: project, created_date: 2.days.ago, end_date: nil, work_item_type: bug_type
         other_bug = Fabricate :demand, team: team, project: project, created_date: 1.day.ago, end_date: nil, work_item_type: bug_type
-        
-        
-        first_assignmen = Fabricate :item_assignment, membership: membership, demand: demand_finished
-        
+
+        first_assignment = Fabricate :item_assignment, membership: membership, demand: demand_finished
+
         another_team_member_assignmen_that_should_not_appear = Fabricate :item_assignment, membership: another_membership, demand: demand_finished
 
         Fabricate :item_assignment, membership: membership, demand: other_demand_finished
@@ -1771,131 +1770,131 @@ RSpec.describe Types::QueryType do
         Dashboards::OperationsDashboard.create(team_member: team_member, dashboard_date: 1.month.ago, last_data_in_month: true, member_effort: 12.3, pull_interval: 10)
         Dashboards::OperationsDashboard.create(team_member: team_member, dashboard_date: Time.zone.today, last_data_in_month: true, member_effort: 100, pull_interval: 89)
 
-        Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignmen, start_time_to_computation: 2.days.ago, effort_value: 100
-        Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignmen, start_time_to_computation: 2.days.ago, effort_value: 50
+        Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignment, start_time_to_computation: 2.days.ago, effort_value: 100
+        Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignment, start_time_to_computation: 2.days.ago, effort_value: 50
 
         Fabricate :demand_effort, demand: demand_finished, item_assignment: another_team_member_assignmen_that_should_not_appear, start_time_to_computation: 2.days.ago, effort_value: 10_000
 
-        Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignmen, start_time_to_computation: 1.day.ago, finish_time_to_computation: 20.days.ago, effort_value: 100
-        Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignmen, start_time_to_computation: 1.day.ago, effort_value: 20
-        Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignmen, start_time_to_computation: 2.days.from_now, effort_value: 100
-        Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignmen, start_time_to_computation: 2.days.from_now, effort_value: 70
-        Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignmen, start_time_to_computation: 2.months.ago, effort_value: 100
+        Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignment, start_time_to_computation: 21.days.ago, finish_time_to_computation: 15.days.ago, effort_value: 100
+        Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignment, start_time_to_computation: 1.day.ago, effort_value: 20
+        Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignment, start_time_to_computation: 2.days.from_now, effort_value: 100
+        Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignment, start_time_to_computation: 2.days.from_now, effort_value: 70
+        Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignment, start_time_to_computation: 2.months.ago, effort_value: 100
 
         query =
           %(query {
-        me {
-          id
-          fullName
-          language
-          currentCompany {
+          me {
+            id
+            fullName
+            language
+            currentCompany {
+              name
+            }
+            avatar {
+              imageSource
+            }
+          }
+          teamMember(id: #{team_member.id}) {
+            id
             name
-          }
-          avatar {
-            imageSource
-          }
-        }
-        teamMember(id: #{team_member.id}) {
-          id
-          name
-          startDate
-          endDate
-          jiraAccountUserEmail
-          jiraAccountId
-          billable
-          hoursPerMonth
-          monthlyPayment
-          teams {
-            name
-          }
-          projectsEndDateAsc: projectsList(orderField: "end_date", sortDirection: ASC, perPage: 1) {
-            totalCount
-            lastPage
-            totalPages
-            projects {
+            startDate
+            endDate
+            jiraAccountUserEmail
+            jiraAccountId
+            billable
+            hoursPerMonth
+            monthlyPayment
+            teams {
+              name
+            }
+            projectsEndDateAsc: projectsList(orderField: "end_date", sortDirection: ASC, perPage: 1) {
+              totalCount
+              lastPage
+              totalPages
+              projects {
+                id
+              }
+            }
+            projectsEndDateDesc: projectsList(orderField: "end_date", sortDirection: DESC, perPage: 1) {
+              totalCount
+              lastPage
+              totalPages
+              projects {
+                id
+              }
+            }
+            demandsFinished: demands(status: DELIVERED_DEMANDS) {
               id
             }
-          }
-          projectsEndDateDesc: projectsList(orderField: "end_date", sortDirection: DESC, perPage: 1) {
-            totalCount
-            lastPage
-            totalPages
-            projects {
+            bugs: demands(type: "BUG") {
               id
             }
-          }
-          demandsFinished: demands(status: DELIVERED_DEMANDS) {
-            id
-          }
-          bugs: demands(type: "BUG") {
-            id
-          }
-          bugsFinished: demands(status: DELIVERED_DEMANDS, type: "BUG") {
-            id
-          }
-          lastDeliveries: demands(status: DELIVERED_DEMANDS, limit: 1) {
-            id
-          }
-          demandShortestLeadTime {
-            id
-          }
-          demandLargestLeadTime {
-            id
-          }
-          demandLeadTimeP80
-          firstDelivery {
-            id
-          }
-          demandBlocksListDesc: demandBlocksList(orderField: "block_time", sortDirection: DESC, perPage: 1) {
-            totalPages
-            lastPage
-            totalCount
-            demandBlocks {
+            bugsFinished: demands(status: DELIVERED_DEMANDS, type: "BUG") {
               id
             }
-          }
-          demandBlocksListAsc: demandBlocksList(orderField: "block_time", sortDirection: ASC, perPage: 1) {
-            totalPages
-            lastPage
-            totalCount
-            demandBlocks {
+            lastDeliveries: demands(status: DELIVERED_DEMANDS, limit: 1) {
               id
             }
+            demandShortestLeadTime {
+              id
+            }
+            demandLargestLeadTime {
+              id
+            }
+            demandLeadTimeP80
+            firstDelivery {
+              id
+            }
+            demandBlocksListDesc: demandBlocksList(orderField: "block_time", sortDirection: DESC, perPage: 1) {
+              totalPages
+              lastPage
+              totalCount
+              demandBlocks {
+                id
+              }
+            }
+            demandBlocksListAsc: demandBlocksList(orderField: "block_time", sortDirection: ASC, perPage: 1) {
+              totalPages
+              lastPage
+              totalCount
+              demandBlocks {
+                id
+              }
+            }
+            leadTimeControlChartData {
+              xAxis
+              leadTimes
+              leadTimeP65
+              leadTimeP80
+              leadTimeP95
+            }
+            leadTimeHistogramChartData {
+              keys
+              values
+            }
+            memberEffortData {
+              xAxis
+              yAxis
+            }
+            memberEffortDailyData {
+              xAxis
+              yAxis
+            }
+            averagePullIntervalData {
+              xAxis
+              yAxis
+            }
+            demandEfforts(fromDate: "#{25.days.ago.iso8601}", untilDate: "#{15.days.ago.iso8601}"){
+              finishTimeToComputation
+            }
+            projectHoursData {
+              xAxis
+              yAxisProjectsNames
+              yAxisHours
+            }
+            memberThroughputData(numberOfWeeks: 3)
           }
-          leadTimeControlChartData {
-            xAxis
-            leadTimes
-            leadTimeP65
-            leadTimeP80
-            leadTimeP95
-          }
-          leadTimeHistogramChartData {
-            keys
-            values
-          }
-          memberEffortData {
-            xAxis
-            yAxis
-          }
-          memberEffortDailyData {
-            xAxis
-            yAxis
-          }
-          averagePullIntervalData {
-            xAxis
-            yAxis
-          }
-          demandEffortsList(fromDate: "#{25.days.ago.iso8601}", untilDate: "#{15.days.ago.iso8601}"){
-            finishTimeToComputation
-          }
-          projectHoursData {
-            xAxis
-            yAxisProjectsNames
-            yAxisHours
-          }
-          memberThroughputData(numberOfWeeks: 3)
-        }
-      })
+        })
 
         user = Fabricate :user, companies: [company], last_company_id: company.id
 
@@ -1906,7 +1905,7 @@ RSpec.describe Types::QueryType do
         lead_time_p65 = Stats::StatisticsService.instance.percentile(65, team_member.demands.finished_with_leadtime.order(:end_date).map { |demand| demand.leadtime.to_f })
         lead_time_p80 = Stats::StatisticsService.instance.percentile(80, team_member.demands.finished_with_leadtime.order(:end_date).map { |demand| demand.leadtime.to_f })
         lead_time_p95 = Stats::StatisticsService.instance.percentile(95, team_member.demands.finished_with_leadtime.order(:end_date).map { |demand| demand.leadtime.to_f })
-        
+
         result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
         expect(result.dig('data', 'me')).to eq({
                                                  'id' => user.id.to_s,
@@ -2012,7 +2011,6 @@ RSpec.describe Types::QueryType do
                                                                'id' => other_demand_block.id.to_s
                                                              }
                                                            ]
-
                                                          },
                                                          'leadTimeControlChartData' => {
                                                            'xAxis' => [other_demand_finished.external_id, demand_finished.external_id],
@@ -2027,11 +2025,11 @@ RSpec.describe Types::QueryType do
                                                          },
                                                          'memberEffortData' => {
                                                            'xAxis' => %w[2021-11-01 2021-12-01 2022-01-01 2022-02-01 2022-03-01 2022-04-01 2022-05-01],
-                                                           'yAxis' => [0.0, 0.0, 0.0, 0.0, 100.0, 0.0, 440.0]
+                                                           'yAxis' => [0.0, 0.0, 0.0, 0.0, 100.0, 100.0, 340.0]
                                                          },
                                                          'memberEffortDailyData' => {
                                                            'xAxis' => %w[2022-04-18 2022-04-19 2022-04-20 2022-04-21 2022-04-22 2022-04-23 2022-04-24 2022-04-25 2022-04-26 2022-04-27 2022-04-28 2022-04-29 2022-04-30 2022-05-01 2022-05-02 2022-05-03 2022-05-04 2022-05-05 2022-05-06 2022-05-07 2022-05-08 2022-05-09 2022-05-10 2022-05-11 2022-05-12 2022-05-13 2022-05-14 2022-05-15 2022-05-16 2022-05-17 2022-05-18 2022-05-20],
-                                                           'yAxis' => [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 150.0, 120.0, 0.0, 170.0]
+                                                           'yAxis' => [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 100.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 150.0, 20.0, 0.0, 170.0]
                                                          },
                                                          'averagePullIntervalData' => {
                                                            'xAxis' => %w[2022-03-18 2022-04-18 2022-05-18],
@@ -2039,13 +2037,12 @@ RSpec.describe Types::QueryType do
                                                          },
                                                          'projectHoursData' => {
                                                            'xAxis' => ['2022-05-31'],
-                                                           'yAxisHours' => [270.0],
+                                                           'yAxisHours' => [170.0],
                                                            'yAxisProjectsNames' => [project.name]
-
                                                          },
-                                                         'memberThroughputData' =>  [0, 0, 0, 2] ,
-                                                         'demandEffortsList' => [{
-                                                          'finishTimeToComputation' => 20.days.ago.iso8601
+                                                         'memberThroughputData' => [0, 0, 0, 2],
+                                                         'demandEfforts' => [{
+                                                           'finishTimeToComputation' => '2022-05-03T10:00:00-03:00'
                                                          }]
                                                        })
       end

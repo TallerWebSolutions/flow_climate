@@ -125,29 +125,30 @@ const TeamMemberDashboardTables = ({
   const latestEffortsHeader = [
     t("dashboard.latestEfforts.name"),
     t("dashboard.latestEfforts.team"),
-    t("dashboard.latestEfforts.effortDate"),
+    t("dashboard.latestEfforts.start"),
+    t("dashboard.latestEfforts.end"),
     t("dashboard.latestEfforts.demands"),
     t("dashboard.latestEfforts.effortValue"),
   ]
 
-  const latestEffortsRows =
-    teamMember?.demandEfforts?.map((effort) => [
-      `${effort.who || ""}`,
-      <Link
-        component={RouterLink}
-        to={`/companies/taller/teams/${effort.team?.id}`}
-      >
-        {effort.team?.name}
-      </Link>,
-      <DateLocale date={String(effort.updatedAt)} />,
-      <Link
-        component={RouterLink}
-        to={`/companies/taller/demands/${effort.demandExternalId}`}
-      >
-        {effort.demandExternalId}
-      </Link>,
-      `${effort.effortValue || ""}`,
-    ]) || []
+  const latestEffortsRows = teamMember?.demandEfforts?.map((effort) => [
+    `${effort.who || ""}`,
+    <Link
+      component={RouterLink}
+      to={`/companies/taller/teams/${effort.team?.id}`}
+    >
+      {effort.team?.name}
+    </Link>,
+    <DateLocale time date={String(effort.startTimeToComputation)} />,
+    <DateLocale time date={String(effort.finishTimeToComputation)} />,
+    <Link
+      component={RouterLink}
+      to={`/companies/taller/demands/${effort.demandExternalId}`}
+    >
+      {effort.demandExternalId}
+    </Link>,
+    `${(effort.effortValue || 0).toFixed(2)}`,
+  ])
 
   const latestProjectsRows =
     teamMember.projectsList?.projects?.map((project) => [
@@ -232,7 +233,7 @@ const TeamMemberDashboardTables = ({
         <Table
           title={t("dashboard.latestEfforts.title")}
           headerCells={latestEffortsHeader}
-          rows={latestEffortsRows}
+          rows={latestEffortsRows || []}
         />
       </Grid>
     </Grid>

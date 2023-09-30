@@ -59,7 +59,7 @@ module Types
       field :project_hours_data, Types::Charts::ProjectHoursChartDataType, null: true
 
       def demand_efforts(from_date: nil, until_date: nil)
-        object.demand_efforts.to_dates(from_date, until_date)
+        object.demand_efforts.to_dates(from_date, until_date).order(start_time_to_computation: :desc)
       end
 
       def demands(status: 'ALL', type: 'ALL', limit: nil)

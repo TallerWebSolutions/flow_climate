@@ -75,7 +75,7 @@
       "__tests__"
     ],
     "rules": {
-      "no-console": "error",
+      "no-console": "warn",
       "max-len": [
         "error",
         {
