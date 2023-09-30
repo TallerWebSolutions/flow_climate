@@ -155,9 +155,6 @@ const TeamMemberDashboard = () => {
   const { teamMemberId } = useParams()
   const [searchParams] = useSearchParams()
 
-  const today = new Date()
-  const monthAgo = new Date(new Date().setDate(new Date().getDate() - 30))
-
   const effortsFilters: FieldValues = {
     fromDate: searchParams.get("fromDate"),
     untilDate: searchParams.get("untilDate"),
