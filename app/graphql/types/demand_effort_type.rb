@@ -4,6 +4,8 @@ module Types
   class DemandEffortType < Types::BaseObject
     field :automatic_update, Boolean, null: false
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
+    field :demand_external_id, String, null: false
+    field :demand_id, Integer, null: false
     field :effort_money, String, null: true
     field :effort_value, Float, null: false
     field :finish_time_to_computation, GraphQL::Types::ISO8601DateTime, null: false
@@ -16,11 +18,9 @@ module Types
     field :stage, String, null: true
     field :stage_percentage, Float, null: false
     field :start_time_to_computation, GraphQL::Types::ISO8601DateTime, null: false
+    field :team, Types::Teams::TeamType, null: false
     field :total_blocked, Float, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
     field :who, String, null: true
-    field :demand_id, Integer, null: false
-    field :team, Types::Teams::TeamType, null: false
-    field :demand_external_id, String, null: false
   end
 end
