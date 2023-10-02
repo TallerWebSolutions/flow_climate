@@ -11,7 +11,7 @@ import TeamMemberDashboardCharts from "../../components/TeamMemberDashboardChart
 import { FieldValues } from "react-hook-form"
 
 const TEAM_MEMBER_QUERY = gql`
-  query TeamMember($id: ID!, $fromDate: ISO8601Date, $untilDate: ISO8601Date) {
+  query TeamMember($id: ID!, $fromDate: ISO8601Date, $untilDate: ISO8601Date, $pageNumber: Int) {
     teamMember(id: $id) {
       id
       name
@@ -116,7 +116,7 @@ const TEAM_MEMBER_QUERY = gql`
           slug
         }
       }
-      demandEfforts(fromDate: $fromDate, untilDate: $untilDate) {
+      demandEfforts(fromDate: $fromDate, untilDate: $untilDate, pageNumber: $pageNumber) {
         id
         effortValue
         effortMoney
@@ -158,6 +158,7 @@ const TeamMemberDashboard = () => {
   const effortsFilters: FieldValues = {
     fromDate: searchParams.get("fromDate"),
     untilDate: searchParams.get("untilDate"),
+    pageNumber: Number(searchParams.get("pageNumber") || 1),
   }
 
   const effortsQueryFilters = Object.keys(effortsFilters)
@@ -173,6 +174,7 @@ const TeamMemberDashboard = () => {
       id: Number(teamMemberId),
       fromDate: effortsQueryFilters.fromDate,
       untilDate: effortsQueryFilters.untilDate,
+      pageNumber: (effortsQueryFilters.pageNumber || 1),
     },
   })
   const companySlug = me?.currentCompany?.slug

@@ -1,5 +1,5 @@
 import { Button, FormGroup, Grid, Input, InputLabel, Link } from "@mui/material"
-import { Link as RouterLink } from "react-router-dom"
+import { Link as RouterLink, useSearchParams } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 
 import { TeamMember } from "../modules/teamMember/teamMember.types"
@@ -21,16 +21,16 @@ const TeamMemberDashboardTables = ({
 }: TeamMemberDashboardTablesProps) => {
   const { t } = useTranslation(["teamMembers"])
   const { register } = useForm()
+  const [searchParams, setSearchParams] = useSearchParams()
 
-  if (effortsFilters.fromDate === "") {
-    effortsFilters.fromDate = new Date(
-      new Date().setDate(new Date().getDate() - 30)
-    )
-  }
-
-  if (effortsFilters.untilDate === "") {
-    effortsFilters.untilDate = new Date()
-  }
+  const normalizeQueryStringFilters = (filters: FieldValues) =>
+  Object.keys(filters)
+    .filter((key) => {
+      return String(filters[key]).length > 0 && filters[key] !== "null"
+    })
+    .reduce<Record<string, string>>((acc, el) => {
+      return { ...acc, [el]: filters[el] }
+    }, {})
 
   const demandShortestLeadTime =
     teamMember.demandShortestLeadTime?.leadtime || 0
@@ -123,7 +123,6 @@ const TeamMemberDashboardTables = ({
   ]
 
   const latestEffortsHeader = [
-    t("dashboard.latestEfforts.name"),
     t("dashboard.latestEfforts.team"),
     t("dashboard.latestEfforts.start"),
     t("dashboard.latestEfforts.end"),
@@ -132,7 +131,6 @@ const TeamMemberDashboardTables = ({
   ]
 
   const latestEffortsRows = teamMember?.demandEfforts?.map((effort) => [
-    `${effort.who || ""}`,
     <Link
       component={RouterLink}
       to={`/companies/taller/teams/${effort.team?.id}`}
@@ -230,11 +228,23 @@ const TeamMemberDashboardTables = ({
             </Grid>
           </FormGroup>
         </form>
-        <Table
+        {searchParams && (
+          <Table
           title={t("dashboard.latestEfforts.title")}
           headerCells={latestEffortsHeader}
           rows={latestEffortsRows || []}
+          pagination={{
+            count: (teamMember?.demandEfforts?.length || 0),
+            rowsPerPage: (10),
+            page: effortsFilters.pageNumber - 1,
+            onPageChange: (_, newPage: number) =>
+              setSearchParams({
+                ...normalizeQueryStringFilters(effortsFilters || {}),
+                pageNumber: String(newPage + 1),
+              }),
+          }}
         />
+        )}
       </Grid>
     </Grid>
   )
