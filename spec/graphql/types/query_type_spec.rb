@@ -1884,8 +1884,11 @@ RSpec.describe Types::QueryType do
               xAxis
               yAxis
             }
-            demandEfforts(fromDate: "#{25.days.ago.iso8601}", untilDate: "#{15.days.ago.iso8601}"){
+            demandEfforts(fromDate: "#{25.days.ago.iso8601}", untilDate: "#{15.days.ago.iso8601}", pageNumber: 1){
               finishTimeToComputation
+            }
+            demandEffortsList(fromDate: "#{25.days.ago.iso8601}", untilDate: "#{15.days.ago.iso8601}", pageNumber: 1){
+              demandEffortsCount
             }
             projectHoursData {
               xAxis
@@ -2043,7 +2046,10 @@ RSpec.describe Types::QueryType do
                                                          'memberThroughputData' => [0, 0, 0, 2],
                                                          'demandEfforts' => [{
                                                            'finishTimeToComputation' => '2022-05-03T10:00:00-03:00'
-                                                         }]
+                                                         }],
+                                                         'demandEffortsList' => {
+                                                          'demandEffortsCount' => 1
+                                                        }
                                                        })
       end
     end

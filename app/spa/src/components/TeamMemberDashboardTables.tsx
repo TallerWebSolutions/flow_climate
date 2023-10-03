@@ -130,7 +130,7 @@ const TeamMemberDashboardTables = ({
     t("dashboard.latestEfforts.effortValue"),
   ]
 
-  const latestEffortsRows = teamMember?.demandEfforts?.map((effort) => [
+  const latestEffortsRows = teamMember?.demandEffortsList?.demandEfforts?.map((effort) => [
     <Link
       component={RouterLink}
       to={`/companies/taller/teams/${effort.team?.id}`}
@@ -234,7 +234,7 @@ const TeamMemberDashboardTables = ({
           headerCells={latestEffortsHeader}
           rows={latestEffortsRows || []}
           pagination={{
-            count: (teamMember?.demandEfforts?.length || 0),
+            count: (teamMember?.demandEffortsList?.demandEffortsCount|| 0),
             rowsPerPage: (10),
             page: effortsFilters.pageNumber - 1,
             onPageChange: (_, newPage: number) =>

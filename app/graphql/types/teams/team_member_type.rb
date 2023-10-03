@@ -19,6 +19,11 @@ module Types
       field :start_date, GraphQL::Types::ISO8601Date, null: true
       field :teams, [Types::Teams::TeamType], null: true
       field :user, Types::UserType, null: true
+      field :demand_efforts_list, Types::DemandEffortsListType, null: true do
+        argument :from_date, GraphQL::Types::ISO8601Date, required: false
+        argument :until_date, GraphQL::Types::ISO8601Date, required: false
+        argument :page_number, Integer, required: false
+      end
 
       field :demands, [Types::DemandType] do
         argument :limit, Int, required: false
@@ -77,6 +82,12 @@ module Types
         return demands if limit.blank?
 
         demands.limit(limit)
+      end
+
+      def demand_efforts_list(from_date: nil, until_date: nil, page_number: nil)
+        efforts = object.demand_efforts.to_dates(from_date, until_date).order(start_time_to_computation: :desc)
+        efforts_paginated = efforts.page(page_number).per(10)
+        { 'demand_efforts_count' => efforts.count, 'demand_efforts' => efforts_paginated }
       end
 
       def projects_list(order_field:, sort_direction: 'ASC', per_page: 10, page_number: 1)

@@ -141,6 +141,34 @@ const TEAM_MEMBER_QUERY = gql`
         automaticUpdate
         membershipEffortPercentage
       }
+      demandEffortsList(fromDate: $fromDate, untilDate: $untilDate, pageNumber: $pageNumber) {
+        demandEfforts{
+          id
+        effortValue
+        effortMoney
+        startTimeToComputation
+        finishTimeToComputation
+        stagePercentage
+        pairingPercentage
+        managementPercentage
+        totalBlocked
+        mainEffortInTransition
+        stage
+        who
+        team {
+          id
+          name
+        }
+        createdAt
+        updatedAt
+        demandId
+        demandExternalId
+        memberRole
+        automaticUpdate
+        membershipEffortPercentage
+        }
+        demandEffortsCount
+      }
     }
   }
 `

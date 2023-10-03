@@ -42,4 +42,8 @@ export type TeamMember = {
     yAxisProjectsNames: string[]
   }
   demandEfforts?: DemandEffort[]
+  demandEffortsList?: {
+    demandEfforts?: DemandEffort[]
+    demandEffortsCount?: number
+  }
 }
