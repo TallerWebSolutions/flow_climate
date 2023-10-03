@@ -28,6 +28,7 @@ export type RowWithCollapse = {
 type TableProps = {
   rows: Row[] | RowWithCollapse[]
   title?: string | ReactElement
+  subtitle?: string | ReactElement
   headerCells?: Cell[]
   footerCells?: Cell[]
   pagination?: TablePaginationProps
@@ -110,6 +111,7 @@ const TableRowWithCollapse = ({ row, index }: TableRowWithCollapseProps) => {
 
 const Table = ({
   title,
+  subtitle,
   headerCells,
   rows,
   withCollapse = false,
@@ -131,6 +133,22 @@ const Table = ({
             }}
           >
             {title}
+          </Typography>
+        )}
+        {subtitle && (
+          <Typography
+            color="primary"
+            variant="h6"
+            component="h6"
+            sx={{
+              paddingLeft: 2,
+              display: "flex",
+              justifyContent: "space-between",
+              fontSize: "18px",
+              fontWeight: 400,
+            }}
+          >
+            {subtitle}
           </Typography>
         )}
         <MUITable>

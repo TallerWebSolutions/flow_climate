@@ -168,6 +168,7 @@ const TEAM_MEMBER_QUERY = gql`
         membershipEffortPercentage
         }
         demandEffortsCount
+        effortsValueSum
       }
     }
   }

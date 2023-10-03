@@ -231,6 +231,7 @@ const TeamMemberDashboardTables = ({
         {searchParams && (
           <Table
           title={t("dashboard.latestEfforts.title")}
+          subtitle={`${t("dashboard.latestEfforts.effortsValueSum")} ${teamMember?.demandEffortsList?.effortsValueSum || 0}`}
           headerCells={latestEffortsHeader}
           rows={latestEffortsRows || []}
           pagination={{

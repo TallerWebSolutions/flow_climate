@@ -87,7 +87,7 @@ module Types
       def demand_efforts_list(from_date: nil, until_date: nil, page_number: nil)
         efforts = object.demand_efforts.to_dates(from_date, until_date).order(start_time_to_computation: :desc)
         efforts_paginated = efforts.page(page_number).per(10)
-        { 'demand_efforts_count' => efforts.count, 'demand_efforts' => efforts_paginated }
+        { 'demand_efforts_count' => efforts.count, 'demand_efforts' => efforts_paginated, 'efforts_value_sum' => efforts.sum(&:effort_value).round(2) }
       end
 
       def projects_list(order_field:, sort_direction: 'ASC', per_page: 10, page_number: 1)

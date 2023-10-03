@@ -45,5 +45,6 @@ export type TeamMember = {
   demandEffortsList?: {
     demandEfforts?: DemandEffort[]
     demandEffortsCount?: number
+    effortsValueSum?: number
   }
 }

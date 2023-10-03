@@ -86,7 +86,8 @@
       "demands": "Demands",
       "effortValue": "Effort Value",
       "untilDate": "End Date",
-      "fromDate": "Start Date"
+      "fromDate": "Start Date",
+      "effortsValueSum": "Total Effort:"
     },
     "teams": {
       "title": "Teams"
