@@ -111,7 +111,7 @@ class Membership < ApplicationRecord
   end
 
   def effort_in_period(start_date, end_date)
-    demand_efforts.to_dates(start_date.beginning_of_day, end_date.end_of_day).sum(:effort_value)
+    demand_efforts.to_dates(start_date.beginning_of_day, end_date.end_of_day).sum(&:effort_value)
   end
 
   def avg_hours_per_demand(start_date, end_date)

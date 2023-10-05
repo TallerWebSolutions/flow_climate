@@ -377,7 +377,7 @@ RSpec.describe Membership do
           Fabricate :demand_effort, demand: demand, item_assignment: assignment, start_time_to_computation: 1.day.ago, finish_time_to_computation: Time.zone.now, effort_value: 100
           Fabricate :demand_effort, demand: other_demand, item_assignment: other_assignment, start_time_to_computation: 1.day.ago, finish_time_to_computation: Time.zone.now, effort_value: 100
 
-          expect(membership.avg_hours_per_demand(start_date, end_date).to_f).to eq 50
+          expect(membership.avg_hours_per_demand(start_date, end_date).to_f).to eq 100
         end
       end
     end
