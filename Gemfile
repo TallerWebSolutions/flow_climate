@@ -37,6 +37,7 @@ gem 'slack-notifier'
 gem 'sprockets-rails', require: 'sprockets/railtie'
 gem 'uglifier'
 gem 'yui-compressor'
+gem 'tzinfo-data'
 
 group :test, :development do
   gem 'bullet'
