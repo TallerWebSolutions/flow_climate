@@ -55,8 +55,6 @@ group :test, :development do
   gem 'shoulda-matchers'
   gem 'simplecov'
   gem 'webmock'
-  #remover essa gem
-  gem 'debug'
 end
 
 group :development do

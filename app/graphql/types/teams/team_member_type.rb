@@ -87,14 +87,11 @@ module Types
       end
 
       def team_member_consolidation_list
-        binding.break
-        consolidation_date = []
-        value_per_hour_performed = []
-        membership = object.memberships.active.last
+        # membership = object.memberships.active.last
+        membership = object.memberships.first
+
         tmcArray = []
         (1..13).reverse_each do |i|
-          consolidation_date << Date.today.ago(i.month).beginning_of_month
-          value_per_hour_performed.push(calculate_hours_per_month(membership.monthly_payment, membership.effort_in_period(Date.today.ago(i.month).beginning_of_month, Date.today.ago(i.month).end_of_month)))
           tmcArray << {'consolidation_date' => Date.today.ago(i.month).beginning_of_month, 'value_per_hour_performed' => (calculate_hours_per_month(membership.monthly_payment, membership.effort_in_period(Date.today.ago(i.month).beginning_of_month, Date.today.ago(i.month).end_of_month)))}
         end
 
