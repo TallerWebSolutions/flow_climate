@@ -87,12 +87,10 @@ module Types
       end
 
       def team_member_consolidation_list
-        # membership = object.memberships.active.last
-        membership = object.memberships.first
-
+        membership = object
         tmcArray = []
         (1..13).reverse_each do |i|
-          tmcArray << {'consolidation_date' => Date.today.ago(i.month).beginning_of_month, 'value_per_hour_performed' => (calculate_hours_per_month(membership.monthly_payment, membership.effort_in_period(Date.today.ago(i.month).beginning_of_month, Date.today.ago(i.month).end_of_month)))}
+          tmcArray << {'consolidation_date' => Date.today.ago(i.month).beginning_of_month, 'value_per_hour_performed' => (calculate_hours_per_month(membership.monthly_payment, membership.demand_efforts.to_dates(Date.today.ago(i.month).beginning_of_month, Date.today.ago(i.month).end_of_month).sum(&:effort_value).to_f))}
         end
 
         tmcArray 
