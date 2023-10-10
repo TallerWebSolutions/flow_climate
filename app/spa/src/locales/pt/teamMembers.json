@@ -125,7 +125,8 @@
     "memberEffortDaily_legend_label": "Horas",
     "throughput": "Taxa de Transferência",
     "averagePullInterval": "Intervalo Médio de Extração",
-    "hoursPerProject": "Horas por Projeto"
+    "hoursPerProject": "Horas por Projeto",
+    "valuePerHour": "Valor por hora"
   },
   "general": {
     "notFound": "Pessoa não encontrada."

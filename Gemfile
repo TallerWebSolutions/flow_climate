@@ -37,7 +37,6 @@ gem 'slack-notifier'
 gem 'sprockets-rails', require: 'sprockets/railtie'
 gem 'uglifier'
 gem 'yui-compressor'
-gem 'tzinfo-data'
 
 group :test, :development do
   gem 'bullet'
@@ -56,6 +55,8 @@ group :test, :development do
   gem 'shoulda-matchers'
   gem 'simplecov'
   gem 'webmock'
+  #remover essa gem
+  gem 'debug'
 end
 
 group :development do

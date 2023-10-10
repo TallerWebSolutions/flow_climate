@@ -141,6 +141,10 @@ const TEAM_MEMBER_QUERY = gql`
         automaticUpdate
         membershipEffortPercentage
       }
+      teamMemberConsolidationList{
+        consolidationDate
+        valuePerHourPerformed
+      }
       demandEffortsList(fromDate: $fromDate, untilDate: $untilDate, pageNumber: $pageNumber) {
         demandEfforts{
           id

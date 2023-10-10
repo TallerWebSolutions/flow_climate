@@ -1780,7 +1780,7 @@ RSpec.describe Types::QueryType do
         Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignment, start_time_to_computation: 2.days.from_now, effort_value: 100
         Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignment, start_time_to_computation: 2.days.from_now, effort_value: 70
         Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignment, start_time_to_computation: 2.months.ago, effort_value: 100
-
+        
         query =
           %(query {
           me {
@@ -1894,6 +1894,10 @@ RSpec.describe Types::QueryType do
               xAxis
               yAxisProjectsNames
               yAxisHours
+            }
+            teamMemberConsolidationList {
+              consolidationDate
+              valuePerHourPerformed
             }
             memberThroughputData(numberOfWeeks: 3)
           }
@@ -2043,6 +2047,7 @@ RSpec.describe Types::QueryType do
                                                            'yAxisHours' => [170.0],
                                                            'yAxisProjectsNames' => [project.name]
                                                          },
+                                                         'teamMemberConsolidationList' => [{"consolidationDate"=>"2021-04-01", "valuePerHourPerformed"=>0.0}, {"consolidationDate"=>"2021-05-01", "valuePerHourPerformed"=>0.0}, {"consolidationDate"=>"2021-06-01", "valuePerHourPerformed"=>0.0}, {"consolidationDate"=>"2021-07-01", "valuePerHourPerformed"=>0.0}, {"consolidationDate"=>"2021-08-01", "valuePerHourPerformed"=>0.0}, {"consolidationDate"=>"2021-09-01", "valuePerHourPerformed"=>0.0}, {"consolidationDate"=>"2021-10-01", "valuePerHourPerformed"=>0.0}, {"consolidationDate"=>"2021-11-01", "valuePerHourPerformed"=>0.0}, {"consolidationDate"=>"2021-12-01", "valuePerHourPerformed"=>0.0}, {"consolidationDate"=>"2022-01-01", "valuePerHourPerformed"=>0.0}, {"consolidationDate"=>"2022-02-01", "valuePerHourPerformed"=>0.0}, {"consolidationDate"=>"2022-03-01", "valuePerHourPerformed"=>(team_member.monthly_payment.to_f/100)}, {"consolidationDate"=>"2022-04-01", "valuePerHourPerformed"=>(team_member.monthly_payment.to_f/100)}],
                                                          'memberThroughputData' => [0, 0, 0, 2],
                                                          'demandEfforts' => [{
                                                            'finishTimeToComputation' => '2022-05-03T10:00:00-03:00'

@@ -125,7 +125,8 @@
     "memberEffortDaily_legend_label": "Hours",
     "throughput": "Throughput",
     "averagePullInterval": "Average Pull Interval",
-    "hoursPerProject": "Hours per Project"
+    "hoursPerProject": "Hours per Project",
+    "valuePerHour": "Value Per Hour"
   },
   "general": {
     "notFound": "Person not found."

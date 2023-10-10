@@ -9,6 +9,9 @@ import { BarChart } from "./charts/BarChart"
 import { ScatterChart } from "./charts/ScatterChart"
 import { ChartGridItem } from "./charts/ChartGridItem"
 import TeamMemberEffortDailyData from "../modules/teamMember/components/TeamMemberEffortDailyData"
+import { LineChart } from "./charts/LineChart"
+import { SliceTooltipProps } from "@nivo/line"
+import LineChartTooltip from "./charts/tooltips/LineChartTooltip"
 
 type TeamMemberDashboardChartsProps = {
   teamMember: TeamMember
@@ -79,6 +82,21 @@ const TeamMemberDashboardCharts = ({
     }
   )
 
+  const lineChartData = [
+    {
+      id: teamMember.name,
+      data: teamMember.teamMemberConsolidationList? teamMember.teamMemberConsolidationList.map(
+        ({ valuePerHourPerformed, consolidationDate }) => {
+
+          return {
+            x: String(consolidationDate || ''),
+            y: Number(valuePerHourPerformed || 0),
+          }
+        }
+      ) : [],
+    },
+  ]
+
   return (
     <Grid container spacing={2}>
       {leadTimeHistogramChartData && (
@@ -139,6 +157,23 @@ const TeamMemberDashboardCharts = ({
             groupMode="grouped"
           />
         </ChartGridItem>
+      )}
+       {projectHoursData && (
+        <ChartGridItem title={t("charts.valuePerHour")}>
+        <LineChart
+         data={lineChartData}
+         axisLeftLegend={t("charts.valuePerHour")}
+          axisBottomLegend={t(
+            "charts.memberEffort_x_label"
+          )}
+          props={{
+            enableSlices: "x",
+            sliceTooltip: ({ slice }: SliceTooltipProps) => (
+              <LineChartTooltip slice={slice} />
+            ),
+          }}
+        />
+      </ChartGridItem>
       )}
     </Grid>
   )

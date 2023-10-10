@@ -52,6 +52,8 @@ module Types
         argument :sort_direction, Types::Enums::SortDirection, required: false
       end
 
+      field :team_member_consolidation_list, [Types::TeamMemberConsolidationType], null: true
+
       field :average_pull_interval_data, Types::Charts::SimpleDateChartDataType, null: true
       field :lead_time_control_chart_data, Types::Charts::ControlChartType, null: true
       field :lead_time_histogram_chart_data, Types::Charts::LeadTimeHistogramDataType, null: true
@@ -82,6 +84,21 @@ module Types
         return demands if limit.blank?
 
         demands.limit(limit)
+      end
+
+      def team_member_consolidation_list
+        binding.break
+        consolidation_date = []
+        value_per_hour_performed = []
+        membership = object.memberships.active.last
+        tmcArray = []
+        (1..13).reverse_each do |i|
+          consolidation_date << Date.today.ago(i.month).beginning_of_month
+          value_per_hour_performed.push(calculate_hours_per_month(membership.monthly_payment, membership.effort_in_period(Date.today.ago(i.month).beginning_of_month, Date.today.ago(i.month).end_of_month)))
+          tmcArray << {'consolidation_date' => Date.today.ago(i.month).beginning_of_month, 'value_per_hour_performed' => (calculate_hours_per_month(membership.monthly_payment, membership.effort_in_period(Date.today.ago(i.month).beginning_of_month, Date.today.ago(i.month).end_of_month)))}
+        end
+
+        tmcArray 
       end
 
       def demand_efforts_list(from_date: nil, until_date: nil, page_number: nil)
@@ -195,6 +212,15 @@ module Types
           accumulator[day.to_s] = 0
         end
         accumulator
+      end
+
+      def calculate_hours_per_month(sallary, month_hours)
+        result = sallary / month_hours
+        if result.nan? || result.infinite?
+          0.0
+        else
+          (result.to_f).round(2)
+        end
       end
     end
   end
