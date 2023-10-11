@@ -8,3 +8,7 @@ queues:
   - critical
   - default
   - low
+
+limits:
+  default: 2
+  low: 2

@@ -415,6 +415,8 @@ GEM
       connection_pool (>= 2.2.5)
       rack (~> 2.0)
       redis (>= 4.5.0, < 5)
+    sidekiq-limit_fetch (4.4.1)
+      sidekiq (>= 6)
     simplecov (0.22.0)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
@@ -532,6 +534,7 @@ DEPENDENCIES
   rubycritic
   shoulda-matchers
   sidekiq (= 6.5.7)
+  sidekiq-limit_fetch
   simplecov
   slack-notifier
   sprockets-rails
