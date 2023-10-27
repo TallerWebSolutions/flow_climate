@@ -220,7 +220,7 @@ const TeamDashboard = () => {
 
 const lineChartMembershipData = team?.memberships? team?.memberships?.map((membership)=> {
   const seila = { id: membership?.teamMemberName? membership.teamMemberName : "",
-  data: membership?.teamMembersHourlyRateList?.map( 
+  data: membership?.teamMembersHourlyRateList? membership?.teamMembersHourlyRateList?.map( 
     ( teamMembersHourlyRate ) => {
         return {
           x: String(teamMembersHourlyRate.periodDate || ''),
@@ -228,7 +228,7 @@ const lineChartMembershipData = team?.memberships? team?.memberships?.map((membe
         }
       }
     
-  ) || {x: "", y: 0}}
+  ) : []}
   return seila
 }):[]
 
