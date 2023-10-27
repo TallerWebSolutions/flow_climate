@@ -59,6 +59,8 @@ module Types
       field :throughput_data, [Int], null: true
       field :work_in_progress, Int, null: true
 
+      field :team_members_hourly_rate_list, [Types::TeamMembersHourlyRateType], null: true
+
       delegate :projects, to: :object
 
       def latest_deliveries(order_field: 'end_date', sort_direction: :desc, limit: 5, start_date: '')
@@ -174,6 +176,15 @@ module Types
         membership = object.memberships
         membership = active ? membership.active : membership.inactive
         membership.joins(:team_member).order('team_members.name')
+      end
+
+      def calculate_hours_per_month(sallary, month_hours)
+        result = sallary / month_hours
+        if result.nan? || result.infinite?
+          0.0
+        else
+          (result.to_f).round(2)
+        end
       end
 
       private

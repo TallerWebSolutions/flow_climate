@@ -492,7 +492,7 @@ const ProjectDemandsCharts = ({
           groupMode="grouped"
         />
       </ChartGridItem>
-      <ChartGridItem
+      {/* <ChartGridItem
         title={t("charts_tab.project_charts.demands_burn_up_chart", {
           projectName: project.name,
         })}
@@ -509,7 +509,7 @@ const ProjectDemandsCharts = ({
             ),
           }}
         />
-      </ChartGridItem>
+      </ChartGridItem> */}
       <ChartGridItem
         title={t("charts_tab.project_charts.hours_burn_up_chart", {
           projectName: project.name,

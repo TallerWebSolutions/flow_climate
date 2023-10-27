@@ -9,6 +9,12 @@ import { Demand } from "../demand/demand.types"
 import { ProjectConsolidation } from "../project/projectConsolidation.types"
 import { ReplenishingConsolidation } from "../replenishing/replenishingConsolidation.types"
 
+
+export type TeamMembersHourlyRate = {
+  periodDate?: string
+  valuePerHourPerformed?: number
+}
+
 export type Team = {
   id?: string
   name?: string
@@ -73,4 +79,6 @@ export type Membership = {
   endDate?: string
   memberRole?: number
   memberRoleDescription?: string
+  teamMembersHourlyRateList?: TeamMembersHourlyRate[]
+  
 }

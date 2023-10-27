@@ -28,6 +28,8 @@ import { Demand } from "../../modules/demand/demand.types"
 import TeamBasicPage from "../../modules/team/components/TeamBasicPage"
 import { Team } from "../../modules/team/team.types"
 import MemberGeneralInfo from "./MemberGeneralInfo"
+import TeamMembers from "../TeamMembers/TeamMembers"
+
 
 const TEAM_DASHBOARD_QUERY = gql`
   query TeamDashboard($teamId: ID!, $startDate: ISO8601Date, $endDate: ISO8601Date) {
@@ -42,6 +44,14 @@ const TEAM_DASHBOARD_QUERY = gql`
       numberOfDemandsDelivered
       activeBillableCount
       availableHoursInMonthFor
+      memberships{
+        teamMembersHourlyRateList{
+          periodDate
+          valuePerHourPerformed
+        }
+        teamMemberName 
+        hoursPerMonth
+      }
       demandsFlowChartData(startDate: $startDate, endDate: $endDate) {
         creationChartData
         committedChartData
@@ -196,6 +206,63 @@ const TeamDashboard = () => {
     },
   ]
 
+  const lineChartData = [
+  { id: team?.name || "",
+  data:team?.memberships? team?.memberships?.map(
+    ({ teamMemberName, hoursPerMonth }) => {
+        return {
+          x: String(teamMemberName || ''),
+          y: String(hoursPerMonth || 0),
+        }
+      }
+    
+) :[] }]
+
+// const idds = team?.memberships?.map((membership)=> membership.teamMemberName || "") || ""
+
+const lineChartMembershipData = team?.memberships?.map((membership)=> {
+  { id: membership.teamMemberName;
+  data: membership.teamMembersHourlyRateList?.map( 
+    ( teamMembersHourlyRate ) => {
+        return {
+          x: String(teamMembersHourlyRate.periodDate || ''),
+          y: String(teamMembersHourlyRate.valuePerHourPerformed || 0),
+        }
+      }
+    
+  )}
+})
+
+lineChartData.push(lineChartMembershipData)
+
+
+// const lineChartData = [ 
+//   {id: team?.name || "", 
+//   data:team?.memberships? team?.memberships?.map(
+//     ({ teamMemberName, hoursPerMonth }) => {
+//         return {
+//           x: String(teamMemberName || ''),
+//           y: String(hoursPerMonth || 0),
+//         }
+//       }
+    
+// ) :[] }];
+
+  // const lineChartData = [
+  //   {
+  //     id: team?.name || "",
+  //     data: team?.teamMembersHourlyRateList? team.teamMembersHourlyRateList.map(
+  //       ({ allMembers, periodDates }) => {
+  //         return {
+  //           x: String(periodDates || ''),
+  //           y: String(allMembers || 0),
+  //         }
+  //       }
+  //     ) : [],
+  //   },
+  // ]
+
+
   return (
     <TeamBasicPage
       breadcrumbsLinks={breadcrumbsLinks}
@@ -299,6 +366,21 @@ const TeamDashboard = () => {
             data={financialPerformanceChartData}
             axisLeftLegend={t("charts.financialPerformanceYLabel")}
             props={{
+              enableSlices: "x",
+              sliceTooltip: ({ slice }: SliceTooltipProps) => (
+                <LineChartTooltip slice={slice} />
+              ),
+            }}
+          />
+        </ChartGridItem>
+
+        <ChartGridItem title={t("charts.financialPerformance")}>
+          <LineChart            
+            data={lineChartData}
+            axisLeftLegend={t("charts.financialPerformanceYLabel")}
+
+            props={{
+
               enableSlices: "x",
               sliceTooltip: ({ slice }: SliceTooltipProps) => (
                 <LineChartTooltip slice={slice} />
