@@ -26,7 +26,7 @@ import { MeContext } from "../../contexts/MeContext"
 import { formatDate, secondsToDays, secondsToReadbleDate } from "../../lib/date"
 import { Demand } from "../../modules/demand/demand.types"
 import TeamBasicPage from "../../modules/team/components/TeamBasicPage"
-import { Team } from "../../modules/team/team.types"
+import { Membership, Team } from "../../modules/team/team.types"
 import MemberGeneralInfo from "./MemberGeneralInfo"
 import TeamMembers from "../TeamMembers/TeamMembers"
 
@@ -218,11 +218,9 @@ const TeamDashboard = () => {
     
 ) :[] }]
 
-// const idds = team?.memberships?.map((membership)=> membership.teamMemberName || "") || ""
-
-const lineChartMembershipData = team?.memberships?.map((membership)=> {
-  { id: membership.teamMemberName;
-  data: membership.teamMembersHourlyRateList?.map( 
+const lineChartMembershipData = team?.memberships? team?.memberships?.map((membership)=> {
+  const seila = { id: membership?.teamMemberName? membership.teamMemberName : "",
+  data: membership?.teamMembersHourlyRateList?.map( 
     ( teamMembersHourlyRate ) => {
         return {
           x: String(teamMembersHourlyRate.periodDate || ''),
@@ -230,10 +228,10 @@ const lineChartMembershipData = team?.memberships?.map((membership)=> {
         }
       }
     
-  )}
-})
+  ) || {x: "", y: 0}}
+  return seila
+}):[]
 
-lineChartData.push(lineChartMembershipData)
 
 
 // const lineChartData = [ 
@@ -376,7 +374,7 @@ lineChartData.push(lineChartMembershipData)
 
         <ChartGridItem title={t("charts.financialPerformance")}>
           <LineChart            
-            data={lineChartData}
+            data={lineChartMembershipData}
             axisLeftLegend={t("charts.financialPerformanceYLabel")}
 
             props={{
