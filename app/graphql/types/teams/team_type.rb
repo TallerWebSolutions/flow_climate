@@ -178,15 +178,6 @@ module Types
         membership.joins(:team_member).order('team_members.name')
       end
 
-      def calculate_hours_per_month(sallary, month_hours)
-        result = sallary / month_hours
-        if result.nan? || result.infinite?
-          0.0
-        else
-          (result.to_f).round(2)
-        end
-      end
-
       private
 
       def build_work_item_flow_information(array_of_dates)

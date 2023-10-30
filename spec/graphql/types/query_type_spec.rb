@@ -260,6 +260,10 @@ RSpec.describe Types::QueryType do
                 memberships(active: true) {
                   id
                   memberRoleDescription
+                  teamMembersHourlyRateList{
+                    periodDate
+                    valuePerHourPerformed
+                  }
                 }
                 lastReplenishingConsolidations {
                   id
@@ -353,7 +357,10 @@ RSpec.describe Types::QueryType do
                                                        'teamConsolidationsWeekly' => [],
                                                        'teamMonthlyInvestment' => { 'xAxis' => ['2022-09-30'], 'yAxis' => [-4500.0] },
                                                        'teamMemberEfficiency' => { 'membersEfficiency' => [{ 'effortInMonth' => 0.0, 'membership' => { 'teamMemberName' => 'aaa' }, 'realizedMoneyInMonth' => 0.0 }, { 'effortInMonth' => 0.0, 'membership' => { 'teamMemberName' => 'ddd' }, 'realizedMoneyInMonth' => 0.0 }] },
-                                                       'memberships' => [{ 'id' => other_membership.id.to_s, 'memberRoleDescription' => 'Cliente' }, { 'id' => membership.id.to_s, 'memberRoleDescription' => 'Desenvolvedor' }],
+                                                       'memberships' => [{ 'id' => other_membership.id.to_s, 'memberRoleDescription' => 'Cliente', 'teamMembersHourlyRateList' => [{"periodDate"=>"2021-08-01","valuePerHourPerformed"=>2000.0}, {"periodDate"=>"2021-09-01", "valuePerHourPerformed"=>2000.0}, {"periodDate"=>"2021-10-01", "valuePerHourPerformed"=>2000.0}, {"periodDate"=>"2021-11-01", "valuePerHourPerformed"=>2000.0}, {"periodDate"=>"2021-12-01", "valuePerHourPerformed"=>2000.0}, {"periodDate"=>"2022-01-01", "valuePerHourPerformed"=>2000.0}, {"periodDate"=>"2022-02-01", "valuePerHourPerformed"=>2000.0}, 
+                                                        {"periodDate"=>"2022-03-01", "valuePerHourPerformed"=>2000.0}, {"periodDate"=>"2022-04-01", "valuePerHourPerformed"=>2000.0}, {"periodDate"=>"2022-05-01", "valuePerHourPerformed"=>2000.0}, {"periodDate"=>"2022-06-01", "valuePerHourPerformed"=>2000.0}, {"periodDate"=>"2022-07-01", "valuePerHourPerformed"=>2000.0}, {"periodDate"=>"2022-08-01", "valuePerHourPerformed"=>2000.0}] }, 
+                                                        { 'id' => membership.id.to_s, 'memberRoleDescription' => 'Desenvolvedor', "teamMembersHourlyRateList"=> [{"periodDate"=>"2021-08-01", "valuePerHourPerformed"=>0.0}, {"periodDate"=>"2021-09-01", "valuePerHourPerformed"=>0.0}, {"periodDate"=>"2021-10-01", "valuePerHourPerformed"=>0.0}, {"periodDate"=>"2021-11-01", "valuePerHourPerformed"=>0.0}, {"periodDate"=>"2021-12-01", "valuePerHourPerformed"=>0.0}, {"periodDate"=>"2022-01-01", "valuePerHourPerformed"=>0.0}, {"periodDate"=>"2022-02-01", "valuePerHourPerformed"=>0.0}, 
+                                                        {"periodDate"=>"2022-03-01", "valuePerHourPerformed"=>0.0}, {"periodDate"=>"2022-04-01", "valuePerHourPerformed"=>0.0}, {"periodDate"=>"2022-05-01", "valuePerHourPerformed"=>0.0}, {"periodDate"=>"2022-06-01", "valuePerHourPerformed"=>0.0}, {"periodDate"=>"2022-07-01", "valuePerHourPerformed"=>0.0}, {"periodDate"=>"2022-08-01", "valuePerHourPerformed"=>0.0}] }],
                                                        'lastReplenishingConsolidations' => [
                                                          {
                                                            'id' => replenishing_consolidation.id.to_s,

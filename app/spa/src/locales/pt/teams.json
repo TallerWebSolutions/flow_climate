@@ -75,7 +75,8 @@
     "leadTimeP80Chart": "Lead Time P80 Evolution",
     "leadTimeP80YLabel": "Days",
     "financialPerformance": "Financial Performance",
-    "financialPerformanceYLabel": "Amount"
+    "financialPerformanceYLabel": "Amount",
+    "hoursPerPeriodMemberships": "Memberships Hours"
   },
   "actions": {
     "edit": "Editar Time",

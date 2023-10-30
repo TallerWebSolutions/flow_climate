@@ -44,7 +44,7 @@ const TEAM_DASHBOARD_QUERY = gql`
       numberOfDemandsDelivered
       activeBillableCount
       availableHoursInMonthFor
-      memberships{
+      memberships(active: true){
         teamMembersHourlyRateList{
           periodDate
           valuePerHourPerformed
@@ -232,35 +232,6 @@ const lineChartMembershipData = team?.memberships? team?.memberships?.map((membe
   return seila
 }):[]
 
-
-
-// const lineChartData = [ 
-//   {id: team?.name || "", 
-//   data:team?.memberships? team?.memberships?.map(
-//     ({ teamMemberName, hoursPerMonth }) => {
-//         return {
-//           x: String(teamMemberName || ''),
-//           y: String(hoursPerMonth || 0),
-//         }
-//       }
-    
-// ) :[] }];
-
-  // const lineChartData = [
-  //   {
-  //     id: team?.name || "",
-  //     data: team?.teamMembersHourlyRateList? team.teamMembersHourlyRateList.map(
-  //       ({ allMembers, periodDates }) => {
-  //         return {
-  //           x: String(periodDates || ''),
-  //           y: String(allMembers || 0),
-  //         }
-  //       }
-  //     ) : [],
-  //   },
-  // ]
-
-
   return (
     <TeamBasicPage
       breadcrumbsLinks={breadcrumbsLinks}
@@ -372,10 +343,10 @@ const lineChartMembershipData = team?.memberships? team?.memberships?.map((membe
           />
         </ChartGridItem>
 
-        <ChartGridItem title={t("charts.financialPerformance")}>
+        <ChartGridItem title={t("charts.hoursPerPeriodMemberships")}>
           <LineChart            
             data={lineChartMembershipData}
-            axisLeftLegend={t("charts.financialPerformanceYLabel")}
+            axisLeftLegend={t("charts.hoursPerPeriodMemberships")}
 
             props={{
 
