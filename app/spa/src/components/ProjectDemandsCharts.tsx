@@ -159,13 +159,6 @@ const ProjectDemandsCharts = ({
       })
     : []
 
-  const projectDemandsBurnupChartData = buildBurnupData(
-    t("charts_tab.project_charts.demands_burn_up_label_scope"),
-    t("charts_tab.project_charts.demands_burn_up_label_ideal"),
-    t("charts_tab.project_charts.demands_burn_up_label_delivered"),
-    project.demandsBurnup
-  )
-
   const projectHoursBurnupChartData = buildBurnupData(
     t("charts_tab.project_charts.hours_burn_up_label_scope"),
     t("charts_tab.project_charts.hours_burn_up_label_ideal"),
