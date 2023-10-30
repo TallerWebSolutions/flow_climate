@@ -26,9 +26,8 @@ import { MeContext } from "../../contexts/MeContext"
 import { formatDate, secondsToDays, secondsToReadbleDate } from "../../lib/date"
 import { Demand } from "../../modules/demand/demand.types"
 import TeamBasicPage from "../../modules/team/components/TeamBasicPage"
-import { Membership, Team } from "../../modules/team/team.types"
+import { Team } from "../../modules/team/team.types"
 import MemberGeneralInfo from "./MemberGeneralInfo"
-import TeamMembers from "../TeamMembers/TeamMembers"
 
 
 const TEAM_DASHBOARD_QUERY = gql`
@@ -205,18 +204,6 @@ const TeamDashboard = () => {
         }) || [],
     },
   ]
-
-  const lineChartData = [
-  { id: team?.name || "",
-  data:team?.memberships? team?.memberships?.map(
-    ({ teamMemberName, hoursPerMonth }) => {
-        return {
-          x: String(teamMemberName || ''),
-          y: String(hoursPerMonth || 0),
-        }
-      }
-    
-) :[] }]
 
 const lineChartMembershipData = team?.memberships? team?.memberships?.map((membership)=> {
   const seila = { id: membership?.teamMemberName? membership.teamMemberName : "",
