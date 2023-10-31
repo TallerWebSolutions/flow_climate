@@ -76,7 +76,7 @@
     "leadTimeP80YLabel": "Days",
     "financialPerformance": "Financial Performance",
     "financialPerformanceYLabel": "Amount",
-    "hoursPerPeriodMemberships": "Memberships Hours"
+    "hoursPerPeriodMemberships": "Value per Hour of Work"
   },
   "actions": {
     "edit": "Editar Time",

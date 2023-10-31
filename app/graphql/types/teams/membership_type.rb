@@ -23,11 +23,13 @@ module Types
       end
 
       def team_members_hourly_rate_list 
-        tmhrl = []
-        (1..13).reverse_each do |date|
-          tmhrl << {'value_per_hour_performed' => (calculate_hours_per_month(object.monthly_payment, object.effort_in_period(Date.today.ago(date.month).beginning_of_month, Date.today.ago(date.month).end_of_month))), 'period_date' => Date.today.ago(date.month).beginning_of_month  }
+        if object.monthly_payment != 0 && object.team_member.billable? 
+          tmhrl = []
+          (1..7).reverse_each do |date|
+            tmhrl << {'value_per_hour_performed' => (calculate_hours_per_month(object.monthly_payment, object.effort_in_period(Date.today.ago(date.month).beginning_of_month, Date.today.ago(date.month).end_of_month))), 'period_date' => Date.today.ago(date.month).end_of_month  }
+          end
+          tmhrl
         end
-        tmhrl
       end
       
       def calculate_hours_per_month(sallary, month_hours)
