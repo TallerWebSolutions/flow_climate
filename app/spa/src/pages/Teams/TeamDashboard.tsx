@@ -333,7 +333,7 @@ const lineChartMembershipData = team?.memberships? team?.memberships?.map((membe
         <ChartGridItem title={t("charts.hoursPerPeriodMemberships")}>
           <LineChart            
             data={lineChartMembershipData}
-            axisLeftLegend={t("charts.hoursPerPeriodMemberships")}
+            axisLeftLegend={t("charts.valueInReal")}
 
             props={{
 
