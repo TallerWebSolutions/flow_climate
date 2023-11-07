@@ -6,8 +6,13 @@ module Types
       field :billable, Boolean, null: false
       field :demand_efforts, [Types::DemandEffortType], null: true do
         argument :from_date, GraphQL::Types::ISO8601Date, required: false
-        argument :until_date, GraphQL::Types::ISO8601Date, required: false
         argument :page_number, Integer, required: false
+        argument :until_date, GraphQL::Types::ISO8601Date, required: false
+      end
+      field :demand_efforts_list, Types::DemandEffortsListType, null: true do
+        argument :from_date, GraphQL::Types::ISO8601Date, required: false
+        argument :page_number, Integer, required: false
+        argument :until_date, GraphQL::Types::ISO8601Date, required: false
       end
       field :end_date, GraphQL::Types::ISO8601Date, null: true
       field :hours_per_month, Int, null: false
@@ -19,11 +24,6 @@ module Types
       field :start_date, GraphQL::Types::ISO8601Date, null: true
       field :teams, [Types::Teams::TeamType], null: true
       field :user, Types::UserType, null: true
-      field :demand_efforts_list, Types::DemandEffortsListType, null: true do
-        argument :from_date, GraphQL::Types::ISO8601Date, required: false
-        argument :until_date, GraphQL::Types::ISO8601Date, required: false
-        argument :page_number, Integer, required: false
-      end
 
       field :demands, [Types::DemandType] do
         argument :limit, Int, required: false
@@ -68,8 +68,7 @@ module Types
 
       def demand_efforts(from_date: nil, until_date: nil, page_number: nil)
         efforts = object.demand_efforts.to_dates(from_date, until_date).order(start_time_to_computation: :desc)
-        efforts_paginated = efforts.page(page_number).per(20)
-        demand_efforts = efforts_paginated
+        efforts.page(page_number).per(20)
       end
 
       def demands(status: 'ALL', type: 'ALL', limit: nil)
@@ -90,10 +89,10 @@ module Types
         membership = object
         tmcArray = []
         (1..13).reverse_each do |i|
-          tmcArray << {'consolidation_date' => Date.today.ago(i.month).beginning_of_month, 'value_per_hour_performed' => (calculate_hours_per_month(membership.monthly_payment, membership.demand_efforts.to_dates(Date.today.ago(i.month).beginning_of_month, Date.today.ago(i.month).end_of_month).sum(&:effort_value).to_f))}
+          tmcArray << { 'consolidation_date' => Time.zone.today.ago(i.month).beginning_of_month, 'value_per_hour_performed' => calculate_hours_per_month(membership.monthly_payment, membership.demand_efforts.to_dates(Time.zone.today.ago(i.month).beginning_of_month, Time.zone.today.ago(i.month).end_of_month).sum(&:effort_value).to_f) }
         end
 
-        tmcArray 
+        tmcArray
       end
 
       def demand_efforts_list(from_date: nil, until_date: nil, page_number: nil)
@@ -214,7 +213,7 @@ module Types
         if result.nan? || result.infinite?
           0.0
         else
-          (result.to_f).round(2)
+          result.to_f.round(2)
         end
       end
     end

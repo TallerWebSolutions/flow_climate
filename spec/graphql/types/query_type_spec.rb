@@ -357,8 +357,8 @@ RSpec.describe Types::QueryType do
                                                        'teamConsolidationsWeekly' => [],
                                                        'teamMonthlyInvestment' => { 'xAxis' => ['2022-09-30'], 'yAxis' => [-4500.0] },
                                                        'teamMemberEfficiency' => { 'membersEfficiency' => [{ 'effortInMonth' => 0.0, 'membership' => { 'teamMemberName' => 'aaa' }, 'realizedMoneyInMonth' => 0.0 }, { 'effortInMonth' => 0.0, 'membership' => { 'teamMemberName' => 'ddd' }, 'realizedMoneyInMonth' => 0.0 }] },
-                                                       'memberships' => [{ 'id' => other_membership.id.to_s, 'memberRoleDescription' => 'Cliente', "teamMembersHourlyRateList"=>[{"periodDate"=>"2022-02-28", "valuePerHourPerformed"=>2000.0}, {"periodDate"=>"2022-03-31", "valuePerHourPerformed"=>2000.0}, {"periodDate"=>"2022-04-30", "valuePerHourPerformed"=>2000.0}, {"periodDate"=>"2022-05-31", "valuePerHourPerformed"=>2000.0}, {"periodDate"=>"2022-06-30", "valuePerHourPerformed"=>2000.0}, {"periodDate"=>"2022-07-31", "valuePerHourPerformed"=>2000.0}, {"periodDate"=>"2022-08-31", "valuePerHourPerformed"=>2000.0}] }, 
-                                                        { 'id' => membership.id.to_s, 'memberRoleDescription' => 'Desenvolvedor', "teamMembersHourlyRateList"=>[{"periodDate"=>"2022-02-28", "valuePerHourPerformed"=>0.0}, {"periodDate"=>"2022-03-31", "valuePerHourPerformed"=>0.0}, {"periodDate"=>"2022-04-30", "valuePerHourPerformed"=>0.0}, {"periodDate"=>"2022-05-31", "valuePerHourPerformed"=>0.0}, {"periodDate"=>"2022-06-30", "valuePerHourPerformed"=>0.0}, {"periodDate"=>"2022-07-31", "valuePerHourPerformed"=>0.0}, {"periodDate"=>"2022-08-31", "valuePerHourPerformed"=>0.0}]}],
+                                                       'memberships' => [{ 'id' => other_membership.id.to_s, 'memberRoleDescription' => 'Cliente', 'teamMembersHourlyRateList' => [{ 'periodDate' => '2022-02-28', 'valuePerHourPerformed' => 2000.0 }, { 'periodDate' => '2022-03-31', 'valuePerHourPerformed' => 2000.0 }, { 'periodDate' => '2022-04-30', 'valuePerHourPerformed' => 2000.0 }, { 'periodDate' => '2022-05-31', 'valuePerHourPerformed' => 2000.0 }, { 'periodDate' => '2022-06-30', 'valuePerHourPerformed' => 2000.0 }, { 'periodDate' => '2022-07-31', 'valuePerHourPerformed' => 2000.0 }, { 'periodDate' => '2022-08-31', 'valuePerHourPerformed' => 2000.0 }] },
+                                                                         { 'id' => membership.id.to_s, 'memberRoleDescription' => 'Desenvolvedor', 'teamMembersHourlyRateList' => [{ 'periodDate' => '2022-02-28', 'valuePerHourPerformed' => 0.0 }, { 'periodDate' => '2022-03-31', 'valuePerHourPerformed' => 0.0 }, { 'periodDate' => '2022-04-30', 'valuePerHourPerformed' => 0.0 }, { 'periodDate' => '2022-05-31', 'valuePerHourPerformed' => 0.0 }, { 'periodDate' => '2022-06-30', 'valuePerHourPerformed' => 0.0 }, { 'periodDate' => '2022-07-31', 'valuePerHourPerformed' => 0.0 }, { 'periodDate' => '2022-08-31', 'valuePerHourPerformed' => 0.0 }] }],
                                                        'lastReplenishingConsolidations' => [
                                                          {
                                                            'id' => replenishing_consolidation.id.to_s,
@@ -1785,7 +1785,7 @@ RSpec.describe Types::QueryType do
         Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignment, start_time_to_computation: 2.days.from_now, effort_value: 100
         Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignment, start_time_to_computation: 2.days.from_now, effort_value: 70
         Fabricate :demand_effort, demand: demand_finished, item_assignment: first_assignment, start_time_to_computation: 2.months.ago, effort_value: 100
-        
+
         query =
           %(query {
           me {
@@ -2052,14 +2052,14 @@ RSpec.describe Types::QueryType do
                                                            'yAxisHours' => [170.0],
                                                            'yAxisProjectsNames' => [project.name]
                                                          },
-                                                         'teamMemberConsolidationList' => [{"consolidationDate"=>"2021-04-01", "valuePerHourPerformed"=>0.0}, {"consolidationDate"=>"2021-05-01", "valuePerHourPerformed"=>0.0}, {"consolidationDate"=>"2021-06-01", "valuePerHourPerformed"=>0.0}, {"consolidationDate"=>"2021-07-01", "valuePerHourPerformed"=>0.0}, {"consolidationDate"=>"2021-08-01", "valuePerHourPerformed"=>0.0}, {"consolidationDate"=>"2021-09-01", "valuePerHourPerformed"=>0.0}, {"consolidationDate"=>"2021-10-01", "valuePerHourPerformed"=>0.0}, {"consolidationDate"=>"2021-11-01", "valuePerHourPerformed"=>0.0}, {"consolidationDate"=>"2021-12-01", "valuePerHourPerformed"=>0.0}, {"consolidationDate"=>"2022-01-01", "valuePerHourPerformed"=>0.0}, {"consolidationDate"=>"2022-02-01", "valuePerHourPerformed"=>0.0}, {"consolidationDate"=>"2022-03-01", "valuePerHourPerformed"=>(team_member.monthly_payment.to_f/100)}, {"consolidationDate"=>"2022-04-01", "valuePerHourPerformed"=>(team_member.monthly_payment.to_f/100)}],
+                                                         'teamMemberConsolidationList' => [{ 'consolidationDate' => '2021-04-01', 'valuePerHourPerformed' => 0.0 }, { 'consolidationDate' => '2021-05-01', 'valuePerHourPerformed' => 0.0 }, { 'consolidationDate' => '2021-06-01', 'valuePerHourPerformed' => 0.0 }, { 'consolidationDate' => '2021-07-01', 'valuePerHourPerformed' => 0.0 }, { 'consolidationDate' => '2021-08-01', 'valuePerHourPerformed' => 0.0 }, { 'consolidationDate' => '2021-09-01', 'valuePerHourPerformed' => 0.0 }, { 'consolidationDate' => '2021-10-01', 'valuePerHourPerformed' => 0.0 }, { 'consolidationDate' => '2021-11-01', 'valuePerHourPerformed' => 0.0 }, { 'consolidationDate' => '2021-12-01', 'valuePerHourPerformed' => 0.0 }, { 'consolidationDate' => '2022-01-01', 'valuePerHourPerformed' => 0.0 }, { 'consolidationDate' => '2022-02-01', 'valuePerHourPerformed' => 0.0 }, { 'consolidationDate' => '2022-03-01', 'valuePerHourPerformed' => (team_member.monthly_payment.to_f / 100) }, { 'consolidationDate' => '2022-04-01', 'valuePerHourPerformed' => (team_member.monthly_payment.to_f / 100) }],
                                                          'memberThroughputData' => [0, 0, 0, 2],
                                                          'demandEfforts' => [{
                                                            'finishTimeToComputation' => '2022-05-03T10:00:00-03:00'
                                                          }],
                                                          'demandEffortsList' => {
-                                                          'demandEffortsCount' => 1
-                                                        }
+                                                           'demandEffortsCount' => 1
+                                                         }
                                                        })
       end
     end

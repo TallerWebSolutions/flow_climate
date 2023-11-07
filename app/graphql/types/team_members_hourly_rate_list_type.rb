@@ -2,6 +2,6 @@
 
 module Types
   class TeamMembersHourlyRateListType < BaseObject
-      field :team_members_hourly_rate, [Types::TeamMembersHourlyRateType], null: true
+    field :team_members_hourly_rate, [Types::TeamMembersHourlyRateType], null: true
   end
 end
