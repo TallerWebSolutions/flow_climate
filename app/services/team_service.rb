@@ -81,11 +81,15 @@ class TeamService
   private
 
   def calculate_hours_per_month(sallary, month_hours)
-    result = sallary / month_hours
-    if result.nan? || result.infinite?
-      0.0
-    else
-      result
+    if month_hours == 0
+      result = 0.0
+    else  
+      result = sallary / month_hours
+      if result.infinite? || result.nan?
+        0.0
+      else
+        result
+      end
     end
   end
 
