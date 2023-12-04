@@ -6,6 +6,7 @@ module Types
       field :created_at, GraphQL::Types::ISO8601DateTime, null: false
       field :effort_percentage, Float
       field :end_date, GraphQL::Types::ISO8601Date
+      field :expected_hour_value, Float
       field :hours_per_month, Integer
       field :id, ID, null: false
       field :member_role, Integer, null: false

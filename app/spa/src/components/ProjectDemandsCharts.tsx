@@ -164,7 +164,7 @@ const ProjectDemandsCharts = ({
     t("charts_tab.project_charts.demands_burn_up_label_ideal"),
     t("charts_tab.project_charts.demands_burn_up_label_delivered"),
     project.demandsBurnup
-  )  
+  )
 
   const projectHoursBurnupChartData = buildBurnupData(
     t("charts_tab.project_charts.hours_burn_up_label_scope"),
@@ -172,7 +172,7 @@ const ProjectDemandsCharts = ({
     t("charts_tab.project_charts.hours_burn_up_label_delivered"),
     project.hoursBurnup
   )
-  
+
   const leadTimeP80ChartData = [
     {
       id: project.name,

@@ -24,13 +24,13 @@ const TeamMemberDashboardTables = ({
   const [searchParams, setSearchParams] = useSearchParams()
 
   const normalizeQueryStringFilters = (filters: FieldValues) =>
-  Object.keys(filters)
-    .filter((key) => {
-      return String(filters[key]).length > 0 && filters[key] !== "null"
-    })
-    .reduce<Record<string, string>>((acc, el) => {
-      return { ...acc, [el]: filters[el] }
-    }, {})
+    Object.keys(filters)
+      .filter((key) => {
+        return String(filters[key]).length > 0 && filters[key] !== "null"
+      })
+      .reduce<Record<string, string>>((acc, el) => {
+        return { ...acc, [el]: filters[el] }
+      }, {})
 
   const demandShortestLeadTime =
     teamMember.demandShortestLeadTime?.leadtime || 0
@@ -130,23 +130,25 @@ const TeamMemberDashboardTables = ({
     t("dashboard.latestEfforts.effortValue"),
   ]
 
-  const latestEffortsRows = teamMember?.demandEffortsList?.demandEfforts?.map((effort) => [
-    <Link
-      component={RouterLink}
-      to={`/companies/taller/teams/${effort.team?.id}`}
-    >
-      {effort.team?.name}
-    </Link>,
-    <DateLocale time date={String(effort.startTimeToComputation)} />,
-    <DateLocale time date={String(effort.finishTimeToComputation)} />,
-    <Link
-      component={RouterLink}
-      to={`/companies/taller/demands/${effort.demandExternalId}`}
-    >
-      {effort.demandExternalId}
-    </Link>,
-    `${(effort.effortValue || 0).toFixed(2)}`,
-  ])
+  const latestEffortsRows = teamMember?.demandEffortsList?.demandEfforts?.map(
+    (effort) => [
+      <Link
+        component={RouterLink}
+        to={`/companies/taller/teams/${effort.team?.id}`}
+      >
+        {effort.team?.name}
+      </Link>,
+      <DateLocale time date={String(effort.startTimeToComputation)} />,
+      <DateLocale time date={String(effort.finishTimeToComputation)} />,
+      <Link
+        component={RouterLink}
+        to={`/companies/taller/demands/${effort.demandExternalId}`}
+      >
+        {effort.demandExternalId}
+      </Link>,
+      `${(effort.effortValue || 0).toFixed(2)}`,
+    ]
+  )
 
   const latestProjectsRows =
     teamMember.projectsList?.projects?.map((project) => [
@@ -230,21 +232,23 @@ const TeamMemberDashboardTables = ({
         </form>
         {searchParams && (
           <Table
-          title={t("dashboard.latestEfforts.title")}
-          subtitle={`${t("dashboard.latestEfforts.effortsValueSum")} ${teamMember?.demandEffortsList?.effortsValueSum || 0}`}
-          headerCells={latestEffortsHeader}
-          rows={latestEffortsRows || []}
-          pagination={{
-            count: (teamMember?.demandEffortsList?.demandEffortsCount|| 0),
-            rowsPerPage: (10),
-            page: effortsFilters.pageNumber - 1,
-            onPageChange: (_, newPage: number) =>
-              setSearchParams({
-                ...normalizeQueryStringFilters(effortsFilters || {}),
-                pageNumber: String(newPage + 1),
-              }),
-          }}
-        />
+            title={t("dashboard.latestEfforts.title")}
+            subtitle={`${t("dashboard.latestEfforts.effortsValueSum")} ${
+              teamMember?.demandEffortsList?.effortsValueSum || 0
+            }`}
+            headerCells={latestEffortsHeader}
+            rows={latestEffortsRows || []}
+            pagination={{
+              count: teamMember?.demandEffortsList?.demandEffortsCount || 0,
+              rowsPerPage: 10,
+              page: effortsFilters.pageNumber - 1,
+              onPageChange: (_, newPage: number) =>
+                setSearchParams({
+                  ...normalizeQueryStringFilters(effortsFilters || {}),
+                  pageNumber: String(newPage + 1),
+                }),
+            }}
+          />
         )}
       </Grid>
     </Grid>

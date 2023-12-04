@@ -29,7 +29,6 @@ import TeamBasicPage from "../../modules/team/components/TeamBasicPage"
 import { Team } from "../../modules/team/team.types"
 import MemberGeneralInfo from "./MemberGeneralInfo"
 
-
 const TEAM_DASHBOARD_QUERY = gql`
   query TeamDashboard($teamId: ID!, $startDate: ISO8601Date, $endDate: ISO8601Date) {
     team(id: $teamId) {
@@ -205,19 +204,24 @@ const TeamDashboard = () => {
     },
   ]
 
-const lineChartMembershipData = team?.memberships? team?.memberships?.map((membership)=> {
-  const seila = { id: membership?.teamMemberName? membership.teamMemberName : "",
-  data: membership?.teamMembersHourlyRateList? membership?.teamMembersHourlyRateList?.map( 
-    ( teamMembersHourlyRate ) => {
-        return {
-          x: String(teamMembersHourlyRate.periodDate || ''),
-          y: String(teamMembersHourlyRate.valuePerHourPerformed || 0),
+  const lineChartMembershipData = team?.memberships
+    ? team?.memberships?.map((membership) => {
+        const seila = {
+          id: membership?.teamMemberName ? membership.teamMemberName : "",
+          data: membership?.teamMembersHourlyRateList
+            ? membership?.teamMembersHourlyRateList?.map(
+                (teamMembersHourlyRate) => {
+                  return {
+                    x: String(teamMembersHourlyRate.periodDate || ""),
+                    y: String(teamMembersHourlyRate.valuePerHourPerformed || 0),
+                  }
+                }
+              )
+            : [],
         }
-      }
-    
-  ) : []}
-  return seila
-}):[]
+        return seila
+      })
+    : []
 
   return (
     <TeamBasicPage
@@ -331,12 +335,10 @@ const lineChartMembershipData = team?.memberships? team?.memberships?.map((membe
         </ChartGridItem>
 
         <ChartGridItem title={t("charts.hoursPerPeriodMemberships")}>
-          <LineChart            
+          <LineChart
             data={lineChartMembershipData}
             axisLeftLegend={t("charts.valueInReal")}
-
             props={{
-
               enableSlices: "x",
               sliceTooltip: ({ slice }: SliceTooltipProps) => (
                 <LineChartTooltip slice={slice} />

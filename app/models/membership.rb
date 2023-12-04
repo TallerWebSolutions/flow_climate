@@ -98,6 +98,12 @@ class Membership < ApplicationRecord
     stages_to_work_on
   end
 
+  def expected_hour_value
+    return 0 if hours_per_month.zero?
+
+    monthly_payment / hours_per_month
+  end
+
   def monthly_payment
     return 0 if team_member.monthly_payment.blank?
 

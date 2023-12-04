@@ -8,7 +8,7 @@ type DateLocaleProps = {
   isPtBr?: boolean
 }
 
-const DateLocale = ({ date, time, isPtBr = true}: DateLocaleProps) => {
+const DateLocale = ({ date, time, isPtBr = true }: DateLocaleProps) => {
   const dateFormat = isPtBr ? "dd/MM/yyyy" : "MM/dd/yyyy"
   const format = time ? `${dateFormat} HH:mm` : dateFormat
 

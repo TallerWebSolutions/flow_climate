@@ -85,15 +85,16 @@ const TeamMemberDashboardCharts = ({
   const lineChartData = [
     {
       id: teamMember.name,
-      data: teamMember.teamMemberConsolidationList? teamMember.teamMemberConsolidationList.map(
-        ({ valuePerHourPerformed, consolidationDate }) => {
-
-          return {
-            x: String(consolidationDate || ''),
-            y: Number(valuePerHourPerformed || 0),
-          }
-        }
-      ) : [],
+      data: teamMember.teamMemberConsolidationList
+        ? teamMember.teamMemberConsolidationList.map(
+            ({ valuePerHourPerformed, consolidationDate }) => {
+              return {
+                x: String(consolidationDate || ""),
+                y: Number(valuePerHourPerformed || 0),
+              }
+            }
+          )
+        : [],
     },
   ]
 
@@ -158,22 +159,20 @@ const TeamMemberDashboardCharts = ({
           />
         </ChartGridItem>
       )}
-       {projectHoursData && (
+      {projectHoursData && (
         <ChartGridItem title={t("charts.valuePerHour")}>
-        <LineChart
-         data={lineChartData}
-         axisLeftLegend={t("charts.valuePerHour")}
-          axisBottomLegend={t(
-            "charts.memberEffort_x_label"
-          )}
-          props={{
-            enableSlices: "x",
-            sliceTooltip: ({ slice }: SliceTooltipProps) => (
-              <LineChartTooltip slice={slice} />
-            ),
-          }}
-        />
-      </ChartGridItem>
+          <LineChart
+            data={lineChartData}
+            axisLeftLegend={t("charts.valuePerHour")}
+            axisBottomLegend={t("charts.memberEffort_x_label")}
+            props={{
+              enableSlices: "x",
+              sliceTooltip: ({ slice }: SliceTooltipProps) => (
+                <LineChartTooltip slice={slice} />
+              ),
+            }}
+          />
+        </ChartGridItem>
       )}
     </Grid>
   )

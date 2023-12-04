@@ -396,4 +396,24 @@ RSpec.describe Membership do
       end
     end
   end
+
+  describe '#expected_hour_value' do
+    context 'with hours per month' do
+      it 'returns the monthly payment divided by the hours per month' do
+        team_member = Fabricate :team_member, hours_per_month: 160, monthly_payment: 10_000
+        membership = Fabricate :membership, team_member: team_member, hours_per_month: 100
+
+        expect(membership.expected_hour_value).to eq 62.5
+      end
+    end
+
+    context 'without hours per month' do
+      it 'returns zero' do
+        team_member = Fabricate :team_member, hours_per_month: 160, monthly_payment: 10_000
+        membership = Fabricate :membership, team_member: team_member, hours_per_month: 0
+
+        expect(membership.expected_hour_value).to eq 0
+      end
+    end
+  end
 end

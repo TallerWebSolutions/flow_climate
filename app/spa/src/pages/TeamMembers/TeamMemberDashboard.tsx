@@ -11,7 +11,12 @@ import TeamMemberDashboardCharts from "../../components/TeamMemberDashboardChart
 import { FieldValues } from "react-hook-form"
 
 const TEAM_MEMBER_QUERY = gql`
-  query TeamMember($id: ID!, $fromDate: ISO8601Date, $untilDate: ISO8601Date, $pageNumber: Int) {
+  query TeamMember(
+    $id: ID!
+    $fromDate: ISO8601Date
+    $untilDate: ISO8601Date
+    $pageNumber: Int
+  ) {
     teamMember(id: $id) {
       id
       name
@@ -116,7 +121,11 @@ const TEAM_MEMBER_QUERY = gql`
           slug
         }
       }
-      demandEfforts(fromDate: $fromDate, untilDate: $untilDate, pageNumber: $pageNumber) {
+      demandEfforts(
+        fromDate: $fromDate
+        untilDate: $untilDate
+        pageNumber: $pageNumber
+      ) {
         id
         effortValue
         effortMoney
@@ -141,35 +150,39 @@ const TEAM_MEMBER_QUERY = gql`
         automaticUpdate
         membershipEffortPercentage
       }
-      teamMemberConsolidationList{
+      teamMemberConsolidationList {
         consolidationDate
         valuePerHourPerformed
       }
-      demandEffortsList(fromDate: $fromDate, untilDate: $untilDate, pageNumber: $pageNumber) {
-        demandEfforts{
+      demandEffortsList(
+        fromDate: $fromDate
+        untilDate: $untilDate
+        pageNumber: $pageNumber
+      ) {
+        demandEfforts {
           id
-        effortValue
-        effortMoney
-        startTimeToComputation
-        finishTimeToComputation
-        stagePercentage
-        pairingPercentage
-        managementPercentage
-        totalBlocked
-        mainEffortInTransition
-        stage
-        who
-        team {
-          id
-          name
-        }
-        createdAt
-        updatedAt
-        demandId
-        demandExternalId
-        memberRole
-        automaticUpdate
-        membershipEffortPercentage
+          effortValue
+          effortMoney
+          startTimeToComputation
+          finishTimeToComputation
+          stagePercentage
+          pairingPercentage
+          managementPercentage
+          totalBlocked
+          mainEffortInTransition
+          stage
+          who
+          team {
+            id
+            name
+          }
+          createdAt
+          updatedAt
+          demandId
+          demandExternalId
+          memberRole
+          automaticUpdate
+          membershipEffortPercentage
         }
         demandEffortsCount
         effortsValueSum
@@ -207,7 +220,7 @@ const TeamMemberDashboard = () => {
       id: Number(teamMemberId),
       fromDate: effortsQueryFilters.fromDate,
       untilDate: effortsQueryFilters.untilDate,
-      pageNumber: (effortsQueryFilters.pageNumber || 1),
+      pageNumber: effortsQueryFilters.pageNumber || 1,
     },
   })
   const companySlug = me?.currentCompany?.slug
