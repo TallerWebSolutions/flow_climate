@@ -81,7 +81,7 @@ class TeamService
   private
 
   def calculate_hours_per_month(sallary, month_hours)
-    result = month_hours.zero? ? 0.0 : sallary / month_hours
+    month_hours.zero? ? 0.0 : sallary / month_hours
   end
 
   def build_members_efficiency(efficiency_data)

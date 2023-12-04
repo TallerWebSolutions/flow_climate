@@ -36,7 +36,6 @@ module Highchart
 
       finances_hash_with_computed_data = finances_hash_with_computed_data.merge(build_finances_hash(financial_information, incomes_population, expenses_population, cost_per_hour_population))
       finances_hash_with_computed_data['accumulated_financial_result'] = sum_finances_results(finances_data, finances_hash_with_computed_data)
-      finances_hash_with_computed_data['finances_date'] = finances_hash_with_computed_data['finances_date']
 
       finances_hash_with_computed_data
     end

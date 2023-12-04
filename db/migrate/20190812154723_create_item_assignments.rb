@@ -10,7 +10,7 @@ class CreateItemAssignments < ActiveRecord::Migration[5.2]
     end
 
     ItemAssignment.find_each do |assigment|
-      assigment.update(start_time: (Demand.find(assigment.demand_id).commitment_date || Demand.find(assigment.demand_id).created_date), finish_time: Demand.find(assigment.demand_id).end_date)
+      assigment.update(start_time: Demand.find(assigment.demand_id).commitment_date || Demand.find(assigment.demand_id).created_date, finish_time: Demand.find(assigment.demand_id).end_date)
       assigment.destroy unless assigment.valid?
     end
 

@@ -142,7 +142,7 @@ module Jira
     end
 
     def class_of_service_field?(history)
-      (history['items'].first['field'].downcase.include?('class of service') || history['items'].first['field'].downcase.include?('classe de serviço'))
+      history['items'].first['field'].downcase.include?('class of service') || history['items'].first['field'].downcase.include?('classe de serviço')
     end
 
     def build_jira_custom_fields_hash(jira_issue_attrs)

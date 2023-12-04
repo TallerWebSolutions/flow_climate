@@ -85,14 +85,13 @@ module Types
         demands.limit(limit)
       end
 
+      # TODO: Fix logic
       def team_member_consolidation_list
         membership = object
-        tmcArray = []
-        (1..13).reverse_each do |i|
-          tmcArray << { 'consolidation_date' => Time.zone.today.ago(i.month).beginning_of_month, 'value_per_hour_performed' => calculate_hours_per_month(membership.monthly_payment, membership.demand_efforts.to_dates(Time.zone.today.ago(i.month).beginning_of_month, Time.zone.today.ago(i.month).end_of_month).sum(&:effort_value).to_f) }
-        end
+        members_value_per_hour = []
+        (1..13).reverse_each { |month| members_value_per_hour << build_member_value_per_hour(month, membership) }
 
-        tmcArray
+        members_value_per_hour
       end
 
       def demand_efforts_list(from_date: nil, until_date: nil, page_number: nil)
@@ -178,14 +177,16 @@ module Types
 
       private
 
+      # TODO: Fix Logic
+      def build_member_value_per_hour(month, membership)
+        { 'consolidation_date' => month.month.ago.beginning_of_month, 'value_per_hour_performed' => compute_hours_per_month(membership.monthly_payment, membership.demand_efforts.to_dates(month.month.ago.beginning_of_month, month.month.ago.end_of_month).sum(&:effort_value).to_f) }
+      end
+
       def operations_dashboards
-        @operations_dashboards ||= Dashboards::OperationsDashboard
-                                   .where(
-                                     team_member: object,
-                                     last_data_in_month: true
-                                   )
-                                   .where('operations_dashboards.dashboard_date > :limit_date', limit_date: 6.months.ago.beginning_of_day)
-                                   .order(:dashboard_date)
+        @operations_dashboards ||= Dashboards::OperationsDashboard.where(
+          team_member: object,
+          last_data_in_month: true
+        ).where('operations_dashboards.dashboard_date > :limit_date', limit_date: 6.months.ago.beginning_of_day).order(:dashboard_date)
       end
 
       def member_effort_data_interval = 6.months.ago.at_beginning_of_month.beginning_of_day
@@ -208,13 +209,10 @@ module Types
         accumulator
       end
 
-      def calculate_hours_per_month(sallary, month_hours)
-        result = sallary / month_hours
-        if result.nan? || result.infinite?
-          0.0
-        else
-          result.to_f.round(2)
-        end
+      def compute_hours_per_month(monthly_payment, monthly_hours)
+        return monthly_payment if monthly_hours.zero?
+
+        monthly_payment / monthly_hours
       end
     end
   end

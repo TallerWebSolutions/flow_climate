@@ -26,7 +26,6 @@ module FlowControl
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.0
     config.active_support.default_message_encryptor_serializer = :hybrid
-    config.active_record.legacy_connection_handling = false
     config.action_controller.default_protect_from_forgery = true
 
     config.i18n.enforce_available_locales = false

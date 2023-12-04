@@ -94,7 +94,7 @@ class Project < ApplicationRecord
       produced_hours_in_current_month: project_consolidations.order(:consolidation_date).last&.project_throughput_hours_in_month&.to_f || 0,
       produced_hours_total: consumed_hours,
       deadline_risk: current_risk_to_deadline.to_f,
-      deadline_risk_team_info: (last_project_consolidation&.team_based_operational_risk || 1), current_lead_time: last_project_consolidation&.lead_time_p80 }
+      deadline_risk_team_info: last_project_consolidation&.team_based_operational_risk || 1, current_lead_time: last_project_consolidation&.lead_time_p80 }
   end
 
   def add_user(user)
@@ -552,7 +552,7 @@ class Project < ApplicationRecord
 
   def replenishing_consolidations_to_date(date)
     ordered_consolidations = replenishing_consolidations.order(:consolidation_date)
-    (ordered_consolidations.where(consolidation_date: date).last || ordered_consolidations.last)
+    ordered_consolidations.where(consolidation_date: date).last || ordered_consolidations.last
   end
 
   def backlog_for(date = Time.zone.now)

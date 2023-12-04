@@ -74,6 +74,6 @@ class ScoreMatrixQuestionsController < AuthenticatedController
   end
 
   def product_score_matrix
-    @product_score_matrix ||= (@product.score_matrix || ScoreMatrix.new(product: @product))
+    @product_score_matrix ||= @product.score_matrix || ScoreMatrix.new(product: @product)
   end
 end

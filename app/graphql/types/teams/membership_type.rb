@@ -22,23 +22,26 @@ module Types
         I18n.t("activerecord.attributes.membership.enums.member_role.#{object.member_role}")
       end
 
+      # TODO: fix logic
       def team_members_hourly_rate_list
         return unless object.monthly_payment != 0 && object.team_member.billable?
 
-        tmhrl = []
-        (1..7).reverse_each do |date|
-          tmhrl << { 'value_per_hour_performed' => calculate_hours_per_month(object.monthly_payment, object.effort_in_period(Time.zone.today.ago(date.month).beginning_of_month, Time.zone.today.ago(date.month).end_of_month)), 'period_date' => Time.zone.today.ago(date.month).end_of_month }
-        end
-        tmhrl
+        hourly_rate = []
+        (1..7).reverse_each { |date| hourly_rate << build_hour_rate(date) }
+        hourly_rate
       end
 
-      def calculate_hours_per_month(sallary, month_hours)
-        result = sallary / (month_hours.nonzero? || 1)
-        if result.infinite? || result > 2000.00
-          0.0
-        else
-          result.to_f.round(2)
-        end
+      private
+
+      def build_hour_rate(date)
+        { 'value_per_hour_performed' => compute_hours_per_month(object.monthly_payment, object.effort_in_period(Time.zone.today.ago(date.month).beginning_of_month, Time.zone.today.ago(date.month).end_of_month)), 'period_date' => Time.zone.today.ago(date.month).end_of_month }
+      end
+
+      def compute_hours_per_month(monthly_payment, effort_in_period)
+        return monthly_payment if effort_in_period.zero?
+
+        result = monthly_payment / effort_in_period
+        result.round(2)
       end
     end
   end

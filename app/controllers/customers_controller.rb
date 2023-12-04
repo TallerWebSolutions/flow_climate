@@ -80,7 +80,7 @@ class CustomersController < AuthenticatedController
   private
 
   def build_pressure_and_speed
-    @flow_pressure = (@customer_consolidations.last&.flow_pressure || @customer.total_flow_pressure)
+    @flow_pressure = @customer_consolidations.last&.flow_pressure || @customer.total_flow_pressure
     @average_speed = DemandService.instance.average_speed(@customer.exclusives_demands)
   end
 

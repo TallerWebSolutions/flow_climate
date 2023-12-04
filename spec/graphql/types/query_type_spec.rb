@@ -150,8 +150,8 @@ RSpec.describe Types::QueryType do
           travel_to Time.zone.local(2022, 9, 25, 10) do
             company = Fabricate :company
             team = Fabricate :team, company: company
-            team_member = Fabricate :team_member, company: company, name: 'ddd', start_date: 4.months.ago, end_date: nil, monthly_payment: 2500.00
-            other_team_member = Fabricate :team_member, company: company, name: 'aaa', start_date: 4.months.ago, end_date: nil, monthly_payment: 2000.00
+            team_member = Fabricate :team_member, company: company, name: 'ddd', start_date: 4.months.ago, end_date: nil, monthly_payment: 2500.00, hours_per_month: 160
+            other_team_member = Fabricate :team_member, company: company, name: 'aaa', start_date: 4.months.ago, end_date: nil, monthly_payment: 2000.00, hours_per_month: 160
             customer = Fabricate :customer, company: company
             product = Fabricate :product, company: company, customer: customer
             project = Fabricate :project, company: company, customers: [customer], products: [product], team: team, status: :executing, start_date: 4.days.ago, end_date: 1.day.from_now, max_work_in_progress: 2, hour_value: 180
@@ -160,6 +160,10 @@ RSpec.describe Types::QueryType do
             inactive_by_status_project = Fabricate :project, company: company, team: team, status: :finished, start_date: 2.days.ago, end_date: 1.day.ago
             membership = Fabricate :membership, team: team, team_member: team_member, start_date: 6.days.ago, end_date: nil, hours_per_month: 160, member_role: :developer
             other_membership = Fabricate :membership, team: team, team_member: other_team_member, start_date: 6.days.ago, end_date: nil, hours_per_month: 160, member_role: :client
+            demand = Fabricate :demand, product: product, customer: customer, project: project
+            assignment = Fabricate :item_assignment, demand: demand, membership: membership
+            Fabricate :demand_effort, demand: demand, item_assignment: assignment, effort_value: 100, start_time_to_computation: 1.month.ago
+            Fabricate :demand_effort, demand: demand, item_assignment: assignment, effort_value: 120, start_time_to_computation: 2.months.ago
 
             Fabricate :replenishing_consolidation, project: project, consolidation_date: 1.day.ago, team_throughput_data: [7, 10, 9], team_lead_time: 2.4, team_wip: 6, team_based_montecarlo_80_percent: 0.5, team_monte_carlo_weeks_max: 9, team_monte_carlo_weeks_min: 2, team_monte_carlo_weeks_std_dev: 2.1, team_based_odds_to_deadline: 0.9
             replenishing_consolidation = Fabricate :replenishing_consolidation, project: project, consolidation_date: Time.zone.today, team_throughput_data: [10, 9, 15], team_lead_time: 4.1, team_wip: 6, team_based_montecarlo_80_percent: 0.2, team_monte_carlo_weeks_max: 7, team_monte_carlo_weeks_min: 4, team_monte_carlo_weeks_std_dev: 4.1, team_based_odds_to_deadline: 0.7
@@ -358,7 +362,7 @@ RSpec.describe Types::QueryType do
                                                        'teamMonthlyInvestment' => { 'xAxis' => ['2022-09-30'], 'yAxis' => [-4500.0] },
                                                        'teamMemberEfficiency' => { 'membersEfficiency' => [{ 'effortInMonth' => 0.0, 'membership' => { 'teamMemberName' => 'aaa' }, 'realizedMoneyInMonth' => 0.0 }, { 'effortInMonth' => 0.0, 'membership' => { 'teamMemberName' => 'ddd' }, 'realizedMoneyInMonth' => 0.0 }] },
                                                        'memberships' => [{ 'id' => other_membership.id.to_s, 'memberRoleDescription' => 'Cliente', 'teamMembersHourlyRateList' => [{ 'periodDate' => '2022-02-28', 'valuePerHourPerformed' => 2000.0 }, { 'periodDate' => '2022-03-31', 'valuePerHourPerformed' => 2000.0 }, { 'periodDate' => '2022-04-30', 'valuePerHourPerformed' => 2000.0 }, { 'periodDate' => '2022-05-31', 'valuePerHourPerformed' => 2000.0 }, { 'periodDate' => '2022-06-30', 'valuePerHourPerformed' => 2000.0 }, { 'periodDate' => '2022-07-31', 'valuePerHourPerformed' => 2000.0 }, { 'periodDate' => '2022-08-31', 'valuePerHourPerformed' => 2000.0 }] },
-                                                                         { 'id' => membership.id.to_s, 'memberRoleDescription' => 'Desenvolvedor', 'teamMembersHourlyRateList' => [{ 'periodDate' => '2022-02-28', 'valuePerHourPerformed' => 0.0 }, { 'periodDate' => '2022-03-31', 'valuePerHourPerformed' => 0.0 }, { 'periodDate' => '2022-04-30', 'valuePerHourPerformed' => 0.0 }, { 'periodDate' => '2022-05-31', 'valuePerHourPerformed' => 0.0 }, { 'periodDate' => '2022-06-30', 'valuePerHourPerformed' => 0.0 }, { 'periodDate' => '2022-07-31', 'valuePerHourPerformed' => 0.0 }, { 'periodDate' => '2022-08-31', 'valuePerHourPerformed' => 0.0 }] }],
+                                                                         { 'id' => membership.id.to_s, 'memberRoleDescription' => 'Desenvolvedor', 'teamMembersHourlyRateList' => [{ 'periodDate' => '2022-02-28', 'valuePerHourPerformed' => 2500.0 }, { 'periodDate' => '2022-03-31', 'valuePerHourPerformed' => 2500.0 }, { 'periodDate' => '2022-04-30', 'valuePerHourPerformed' => 2500.0 }, { 'periodDate' => '2022-05-31', 'valuePerHourPerformed' => 2500.0 }, { 'periodDate' => '2022-06-30', 'valuePerHourPerformed' => 2500.0 }, { 'periodDate' => '2022-07-31', 'valuePerHourPerformed' => 20.83 }, { 'periodDate' => '2022-08-31', 'valuePerHourPerformed' => 25.0 }] }],
                                                        'lastReplenishingConsolidations' => [
                                                          {
                                                            'id' => replenishing_consolidation.id.to_s,
@@ -389,7 +393,7 @@ RSpec.describe Types::QueryType do
                                                              'teamMonteCarloWeeksStdDev' => 4.1,
                                                              'teamBasedOddsToDeadline' => 0.7,
                                                              'customers' => [{ 'name' => customer.name }],
-                                                             'products' => [{ 'name' => product.name, 'leadtimeEvolutionData' => { 'xAxis' => [] } }]
+                                                             'products' => [{ 'name' => product.name, 'leadtimeEvolutionData' => { 'xAxis' => ['2022-09-30'] } }]
                                                            }
                                                          },
                                                          {
@@ -1750,8 +1754,8 @@ RSpec.describe Types::QueryType do
         other_project = Fabricate :project, start_date: 2.weeks.ago, end_date: 2.days.from_now
 
         team = Fabricate :team, company: company
-        team_member = Fabricate :team_member, company: company
-        another_team_member = Fabricate :team_member, company: company
+        team_member = Fabricate :team_member, company: company, monthly_payment: 1000
+        another_team_member = Fabricate :team_member, company: company, monthly_payment: 1000
         membership = Fabricate :membership, team_member: team_member, team: team
         another_membership = Fabricate :membership, team_member: another_team_member, team: team
         demand_finished = Fabricate :demand, team: team, project: project, created_date: 2.days.ago, commitment_date: 10.hours.ago, end_date: 1.hour.ago, work_item_type: feature_type
@@ -2052,7 +2056,7 @@ RSpec.describe Types::QueryType do
                                                            'yAxisHours' => [170.0],
                                                            'yAxisProjectsNames' => [project.name]
                                                          },
-                                                         'teamMemberConsolidationList' => [{ 'consolidationDate' => '2021-04-01', 'valuePerHourPerformed' => 0.0 }, { 'consolidationDate' => '2021-05-01', 'valuePerHourPerformed' => 0.0 }, { 'consolidationDate' => '2021-06-01', 'valuePerHourPerformed' => 0.0 }, { 'consolidationDate' => '2021-07-01', 'valuePerHourPerformed' => 0.0 }, { 'consolidationDate' => '2021-08-01', 'valuePerHourPerformed' => 0.0 }, { 'consolidationDate' => '2021-09-01', 'valuePerHourPerformed' => 0.0 }, { 'consolidationDate' => '2021-10-01', 'valuePerHourPerformed' => 0.0 }, { 'consolidationDate' => '2021-11-01', 'valuePerHourPerformed' => 0.0 }, { 'consolidationDate' => '2021-12-01', 'valuePerHourPerformed' => 0.0 }, { 'consolidationDate' => '2022-01-01', 'valuePerHourPerformed' => 0.0 }, { 'consolidationDate' => '2022-02-01', 'valuePerHourPerformed' => 0.0 }, { 'consolidationDate' => '2022-03-01', 'valuePerHourPerformed' => (team_member.monthly_payment.to_f / 100) }, { 'consolidationDate' => '2022-04-01', 'valuePerHourPerformed' => (team_member.monthly_payment.to_f / 100) }],
+                                                         'teamMemberConsolidationList' => [{ 'consolidationDate' => '2021-04-01', 'valuePerHourPerformed' => 1000.0 }, { 'consolidationDate' => '2021-05-01', 'valuePerHourPerformed' => 1000.0 }, { 'consolidationDate' => '2021-06-01', 'valuePerHourPerformed' => 1000.0 }, { 'consolidationDate' => '2021-07-01', 'valuePerHourPerformed' => 1000.0 }, { 'consolidationDate' => '2021-08-01', 'valuePerHourPerformed' => 1000.0 }, { 'consolidationDate' => '2021-09-01', 'valuePerHourPerformed' => 1000.0 }, { 'consolidationDate' => '2021-10-01', 'valuePerHourPerformed' => 1000.0 }, { 'consolidationDate' => '2021-11-01', 'valuePerHourPerformed' => 1000.0 }, { 'consolidationDate' => '2021-12-01', 'valuePerHourPerformed' => 1000.0 }, { 'consolidationDate' => '2022-01-01', 'valuePerHourPerformed' => 1000.0 }, { 'consolidationDate' => '2022-02-01', 'valuePerHourPerformed' => 1000.0 }, { 'consolidationDate' => '2022-03-01', 'valuePerHourPerformed' => 10.0 }, { 'consolidationDate' => '2022-04-01', 'valuePerHourPerformed' => 10.0 }],
                                                          'memberThroughputData' => [0, 0, 0, 2],
                                                          'demandEfforts' => [{
                                                            'finishTimeToComputation' => '2022-05-03T10:00:00-03:00'

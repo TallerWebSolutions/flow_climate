@@ -47,7 +47,7 @@ class StageProjectConfigsController < AuthenticatedController
   end
 
   def time_in_stage_param
-    params[:max_time_in_stage]&.to_i || 0
+    params[:max_time_in_stage].to_i
   end
 
   def replicate_to_other_projects

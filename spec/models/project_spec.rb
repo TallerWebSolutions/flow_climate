@@ -157,7 +157,7 @@ RSpec.describe Project do
                      remaining_days: project.remaining_days, remaining_weeks: project.remaining_weeks, remaining_hours: project.remaining_hours,
                      produced_hours_in_current_month: 10, produced_hours_total: 30,
                      deadline_risk: project.current_risk_to_deadline.to_f,
-                     deadline_risk_team_info: (project.last_project_consolidation&.team_based_operational_risk || 1), current_lead_time: project.last_project_consolidation&.lead_time_p80 }
+                     deadline_risk_team_info: project.last_project_consolidation&.team_based_operational_risk || 1, current_lead_time: project.last_project_consolidation&.lead_time_p80 }
 
         expect(project.to_hash).to eq expected
       end
@@ -171,7 +171,7 @@ RSpec.describe Project do
                      remaining_days: project.remaining_days, remaining_weeks: project.remaining_weeks, remaining_hours: project.remaining_hours,
                      produced_hours_in_current_month: 0,
                      produced_hours_total: 0, deadline_risk: project.current_risk_to_deadline.to_f,
-                     deadline_risk_team_info: (project.last_project_consolidation&.team_based_operational_risk || 1), current_lead_time: project.last_project_consolidation&.lead_time_p80 }
+                     deadline_risk_team_info: project.last_project_consolidation&.team_based_operational_risk || 1, current_lead_time: project.last_project_consolidation&.lead_time_p80 }
 
         expect(project.to_hash).to eq expected
       end
