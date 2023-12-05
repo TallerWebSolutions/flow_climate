@@ -35,7 +35,7 @@ module Types
       private
 
       def build_hour_rate(date)
-        { 'value_per_hour_performed' => compute_hours_per_month(object.monthly_payment, object.effort_in_period(Time.zone.today.ago(date.month).beginning_of_month, Time.zone.today.ago(date.month).end_of_month)), 'period_date' => Time.zone.today.ago(date.month).end_of_month }
+        { 'hour_value_realized' => compute_hours_per_month(object.monthly_payment, object.effort_in_period(Time.zone.today.ago(date.month).beginning_of_month, Time.zone.today.ago(date.month).end_of_month)), 'period_date' => Time.zone.today.ago(date.month).end_of_month }
       end
 
       def compute_hours_per_month(monthly_payment, effort_in_period)

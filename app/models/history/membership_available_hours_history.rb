@@ -5,8 +5,8 @@
 # Table name: membership_available_hours_histories
 #
 #  id              :bigint           not null, primary key
-#  available_hours :integer
-#  change_date     :date
+#  available_hours :integer          not null
+#  change_date     :datetime         not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  membership_id   :integer          not null
@@ -23,10 +23,8 @@ module History
   class MembershipAvailableHoursHistory < ApplicationRecord
     belongs_to :membership
 
-    before_save :update_avaliable_hours
+    validates :available_hours, :change_date, presence: true
 
-    def update_avaliable_hours
-      self.change_date = Time.zone.now
-    end
+    scope :until_date, ->(date) { where('change_date <= :limit_date', limit_date: date) }
   end
 end

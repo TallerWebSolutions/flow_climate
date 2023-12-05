@@ -179,7 +179,7 @@ module Types
 
       # TODO: Fix Logic
       def build_member_value_per_hour(month, membership)
-        { 'consolidation_date' => month.month.ago.beginning_of_month, 'value_per_hour_performed' => compute_hours_per_month(membership.monthly_payment, membership.demand_efforts.to_dates(month.month.ago.beginning_of_month, month.month.ago.end_of_month).sum(&:effort_value).to_f) }
+        { 'consolidation_date' => month.month.ago.beginning_of_month, 'hour_value_realized' => compute_hours_per_month(membership.monthly_payment, membership.demand_efforts.to_dates(month.month.ago.beginning_of_month, month.month.ago.end_of_month).sum(&:effort_value).to_f) }
       end
 
       def operations_dashboards

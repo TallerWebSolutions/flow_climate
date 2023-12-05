@@ -67,21 +67,24 @@ class TeamService
     memberships = team.memberships.active.billable_member
 
     efficiency_data = memberships.map do |membership|
-      { membership: membership, effort_in_month: membership.effort_in_period(start_date, end_date),
-        avg_hours_per_demand: membership.avg_hours_per_demand(start_date, end_date),
+      { membership: membership, effort_in_month: membership.effort_in_period(start_date, end_date).to_f,
+        avg_hours_per_demand: membership.avg_hours_per_demand(start_date, end_date).to_f,
         cards_count: membership.cards_count(start_date, end_date),
-        realized_money_in_month: membership.realized_money_in_period(start_date, end_date), member_capacity_value: membership.hours_per_month || 0,
-        value_per_hour_performed: calculate_hours_per_month(membership.monthly_payment, membership.effort_in_period(start_date, end_date)) }
+        realized_money_in_month: membership.realized_money_in_period(start_date, end_date).to_f, member_capacity_value: membership.current_hours_per_month(end_date) || 0,
+        hour_value_realized: compute_hour_value(membership.monthly_payment(end_date), membership.effort_in_period(start_date, end_date)).to_f,
+        hour_value_expected: membership.expected_hour_value(end_date).to_f }
     end
-    efficiency_data = efficiency_data.sort_by { |member_ef| member_ef[:effort_in_month] }.reverse
+    efficiency_data = efficiency_data.sort_by { |member_efficiency| member_efficiency[:effort_in_month] }.reverse
 
     build_members_efficiency(efficiency_data)
   end
 
   private
 
-  def calculate_hours_per_month(sallary, month_hours)
-    month_hours.zero? ? 0.0 : sallary / month_hours
+  def compute_hour_value(monthly_payment, hours_per_month)
+    return 0 if hours_per_month.zero?
+
+    monthly_payment / hours_per_month
   end
 
   def build_members_efficiency(efficiency_data)

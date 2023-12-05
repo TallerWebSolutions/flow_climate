@@ -266,7 +266,7 @@ RSpec.describe Types::QueryType do
                   memberRoleDescription
                   teamMembersHourlyRateList{
                     periodDate
-                    valuePerHourPerformed
+                    hourValueRealized
                   }
                 }
                 lastReplenishingConsolidations {
@@ -361,8 +361,8 @@ RSpec.describe Types::QueryType do
                                                        'teamConsolidationsWeekly' => [],
                                                        'teamMonthlyInvestment' => { 'xAxis' => ['2022-09-30'], 'yAxis' => [-4500.0] },
                                                        'teamMemberEfficiency' => { 'membersEfficiency' => [{ 'effortInMonth' => 0.0, 'membership' => { 'teamMemberName' => 'aaa' }, 'realizedMoneyInMonth' => 0.0 }, { 'effortInMonth' => 0.0, 'membership' => { 'teamMemberName' => 'ddd' }, 'realizedMoneyInMonth' => 0.0 }] },
-                                                       'memberships' => [{ 'id' => other_membership.id.to_s, 'memberRoleDescription' => 'Cliente', 'teamMembersHourlyRateList' => [{ 'periodDate' => '2022-02-28', 'valuePerHourPerformed' => 2000.0 }, { 'periodDate' => '2022-03-31', 'valuePerHourPerformed' => 2000.0 }, { 'periodDate' => '2022-04-30', 'valuePerHourPerformed' => 2000.0 }, { 'periodDate' => '2022-05-31', 'valuePerHourPerformed' => 2000.0 }, { 'periodDate' => '2022-06-30', 'valuePerHourPerformed' => 2000.0 }, { 'periodDate' => '2022-07-31', 'valuePerHourPerformed' => 2000.0 }, { 'periodDate' => '2022-08-31', 'valuePerHourPerformed' => 2000.0 }] },
-                                                                         { 'id' => membership.id.to_s, 'memberRoleDescription' => 'Desenvolvedor', 'teamMembersHourlyRateList' => [{ 'periodDate' => '2022-02-28', 'valuePerHourPerformed' => 2500.0 }, { 'periodDate' => '2022-03-31', 'valuePerHourPerformed' => 2500.0 }, { 'periodDate' => '2022-04-30', 'valuePerHourPerformed' => 2500.0 }, { 'periodDate' => '2022-05-31', 'valuePerHourPerformed' => 2500.0 }, { 'periodDate' => '2022-06-30', 'valuePerHourPerformed' => 2500.0 }, { 'periodDate' => '2022-07-31', 'valuePerHourPerformed' => 20.83 }, { 'periodDate' => '2022-08-31', 'valuePerHourPerformed' => 25.0 }] }],
+                                                       'memberships' => [{ 'id' => other_membership.id.to_s, 'memberRoleDescription' => 'Cliente', 'teamMembersHourlyRateList' => [{ 'periodDate' => '2022-02-28', 'hourValueRealized' => 2000.0 }, { 'periodDate' => '2022-03-31', 'hourValueRealized' => 2000.0 }, { 'periodDate' => '2022-04-30', 'hourValueRealized' => 2000.0 }, { 'periodDate' => '2022-05-31', 'hourValueRealized' => 2000.0 }, { 'periodDate' => '2022-06-30', 'hourValueRealized' => 2000.0 }, { 'periodDate' => '2022-07-31', 'hourValueRealized' => 2000.0 }, { 'periodDate' => '2022-08-31', 'hourValueRealized' => 2000.0 }] },
+                                                                         { 'id' => membership.id.to_s, 'memberRoleDescription' => 'Desenvolvedor', 'teamMembersHourlyRateList' => [{ 'periodDate' => '2022-02-28', 'hourValueRealized' => 2500.0 }, { 'periodDate' => '2022-03-31', 'hourValueRealized' => 2500.0 }, { 'periodDate' => '2022-04-30', 'hourValueRealized' => 2500.0 }, { 'periodDate' => '2022-05-31', 'hourValueRealized' => 2500.0 }, { 'periodDate' => '2022-06-30', 'hourValueRealized' => 2500.0 }, { 'periodDate' => '2022-07-31', 'hourValueRealized' => 20.83 }, { 'periodDate' => '2022-08-31', 'hourValueRealized' => 25.0 }] }],
                                                        'lastReplenishingConsolidations' => [
                                                          {
                                                            'id' => replenishing_consolidation.id.to_s,
@@ -1906,7 +1906,7 @@ RSpec.describe Types::QueryType do
             }
             teamMemberConsolidationList {
               consolidationDate
-              valuePerHourPerformed
+              hourValueRealized
             }
             memberThroughputData(numberOfWeeks: 3)
           }
@@ -2056,7 +2056,7 @@ RSpec.describe Types::QueryType do
                                                            'yAxisHours' => [170.0],
                                                            'yAxisProjectsNames' => [project.name]
                                                          },
-                                                         'teamMemberConsolidationList' => [{ 'consolidationDate' => '2021-04-01', 'valuePerHourPerformed' => 1000.0 }, { 'consolidationDate' => '2021-05-01', 'valuePerHourPerformed' => 1000.0 }, { 'consolidationDate' => '2021-06-01', 'valuePerHourPerformed' => 1000.0 }, { 'consolidationDate' => '2021-07-01', 'valuePerHourPerformed' => 1000.0 }, { 'consolidationDate' => '2021-08-01', 'valuePerHourPerformed' => 1000.0 }, { 'consolidationDate' => '2021-09-01', 'valuePerHourPerformed' => 1000.0 }, { 'consolidationDate' => '2021-10-01', 'valuePerHourPerformed' => 1000.0 }, { 'consolidationDate' => '2021-11-01', 'valuePerHourPerformed' => 1000.0 }, { 'consolidationDate' => '2021-12-01', 'valuePerHourPerformed' => 1000.0 }, { 'consolidationDate' => '2022-01-01', 'valuePerHourPerformed' => 1000.0 }, { 'consolidationDate' => '2022-02-01', 'valuePerHourPerformed' => 1000.0 }, { 'consolidationDate' => '2022-03-01', 'valuePerHourPerformed' => 10.0 }, { 'consolidationDate' => '2022-04-01', 'valuePerHourPerformed' => 10.0 }],
+                                                         'teamMemberConsolidationList' => [{ 'consolidationDate' => '2021-04-01', 'hourValueRealized' => 1000.0 }, { 'consolidationDate' => '2021-05-01', 'hourValueRealized' => 1000.0 }, { 'consolidationDate' => '2021-06-01', 'hourValueRealized' => 1000.0 }, { 'consolidationDate' => '2021-07-01', 'hourValueRealized' => 1000.0 }, { 'consolidationDate' => '2021-08-01', 'hourValueRealized' => 1000.0 }, { 'consolidationDate' => '2021-09-01', 'hourValueRealized' => 1000.0 }, { 'consolidationDate' => '2021-10-01', 'hourValueRealized' => 1000.0 }, { 'consolidationDate' => '2021-11-01', 'hourValueRealized' => 1000.0 }, { 'consolidationDate' => '2021-12-01', 'hourValueRealized' => 1000.0 }, { 'consolidationDate' => '2022-01-01', 'hourValueRealized' => 1000.0 }, { 'consolidationDate' => '2022-02-01', 'hourValueRealized' => 1000.0 }, { 'consolidationDate' => '2022-03-01', 'hourValueRealized' => 10.0 }, { 'consolidationDate' => '2022-04-01', 'hourValueRealized' => 10.0 }],
                                                          'memberThroughputData' => [0, 0, 0, 2],
                                                          'demandEfforts' => [{
                                                            'finishTimeToComputation' => '2022-05-03T10:00:00-03:00'

@@ -4,22 +4,23 @@
 #
 # Table name: demand_efforts
 #
-#  id                         :bigint           not null, primary key
-#  automatic_update           :boolean          default(TRUE), not null
-#  effort_value               :decimal(, )      default(0.0), not null
-#  finish_time_to_computation :datetime         not null
-#  lock_version               :integer
-#  main_effort_in_transition  :boolean          default(FALSE), not null
-#  management_percentage      :decimal(, )      default(0.0), not null
-#  pairing_percentage         :decimal(, )      default(0.0), not null
-#  stage_percentage           :decimal(, )      default(0.0), not null
-#  start_time_to_computation  :datetime         not null
-#  total_blocked              :decimal(, )      default(0.0), not null
-#  created_at                 :datetime         not null
-#  updated_at                 :datetime         not null
-#  demand_id                  :integer          not null
-#  demand_transition_id       :integer          not null
-#  item_assignment_id         :integer          not null
+#  id                           :bigint           not null, primary key
+#  automatic_update             :boolean          default(TRUE), not null
+#  effort_value                 :decimal(, )      default(0.0), not null
+#  finish_time_to_computation   :datetime         not null
+#  lock_version                 :integer
+#  main_effort_in_transition    :boolean          default(FALSE), not null
+#  management_percentage        :decimal(, )      default(0.0), not null
+#  membership_effort_percentage :decimal(, )
+#  pairing_percentage           :decimal(, )      default(0.0), not null
+#  stage_percentage             :decimal(, )      default(0.0), not null
+#  start_time_to_computation    :datetime         not null
+#  total_blocked                :decimal(, )      default(0.0), not null
+#  created_at                   :datetime         not null
+#  updated_at                   :datetime         not null
+#  demand_id                    :integer          not null
+#  demand_transition_id         :integer          not null
+#  item_assignment_id           :integer          not null
 #
 # Indexes
 #

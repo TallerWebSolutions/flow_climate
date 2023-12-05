@@ -1,23 +1,24 @@
 # frozen_string_literal: true
 
 RSpec.describe History::MembershipAvailableHoursHistory do
-  describe 'associations' do
+  context 'for associations' do
     it { is_expected.to belong_to(:membership) }
   end
 
-  describe 'callbacks' do
-    describe 'before_save' do
-      it 'updates the change_date to the current time' do
-        travel_to Time.zone.local(2023, 1, 30, 10, 0, 0) do
-          team = Fabricate :team
-          team_member = Fabricate :team_member
-          membership = Fabricate :membership, team: team, team_member: team_member, end_date: nil
-          membership_available_hours_history = Fabricate :membership_available_hours_history, membership: membership
+  context 'for validations' do
+    it { is_expected.to validate_presence_of :available_hours }
+    it { is_expected.to validate_presence_of :change_date }
+  end
 
-          membership_available_hours_history.save
+  context 'for scopes' do
+    describe '.until_date' do
+      it 'returns the histories until date' do
+        first_history = Fabricate :membership_available_hours_history, change_date: 2.months.ago
+        second_history = Fabricate :membership_available_hours_history, change_date: 3.months.ago
+        third_history = Fabricate :membership_available_hours_history, change_date: 4.months.ago
+        Fabricate :membership_available_hours_history, change_date: 15.days.ago
 
-          expect(membership_available_hours_history.change_date).to eq Time.zone.now
-        end
+        expect(described_class.until_date(1.month.ago)).to contain_exactly(first_history, second_history, third_history)
       end
     end
   end

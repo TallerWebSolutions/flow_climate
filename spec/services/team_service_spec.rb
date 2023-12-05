@@ -91,23 +91,30 @@ RSpec.describe TeamService, type: :service do
 
     context 'with data' do
       it 'returns the average demand cost informations in a hash' do
-        team_member = Fabricate :team_member, billable_type: :outsourcing, monthly_payment: 10_000, start_date: 1.month.ago, end_date: nil
-        other_team_member = Fabricate :team_member, billable_type: :outsourcing, monthly_payment: 10_000, start_date: 2.months.ago, end_date: nil
-        inactive_team_member = Fabricate :team_member, billable_type: :outsourcing, monthly_payment: 10_000, start_date: 2.months.ago, end_date: 1.month.ago
+        project = Fabricate :project, hour_value: 200
+        team_member = Fabricate :team_member, billable_type: :outsourcing, hours_per_month: 120, monthly_payment: 10_000, start_date: 1.month.ago, end_date: nil
+        other_team_member = Fabricate :team_member, billable_type: :outsourcing, hours_per_month: 120, monthly_payment: 10_000, start_date: 2.months.ago, end_date: nil
+        inactive_team_member = Fabricate :team_member, billable_type: :outsourcing, hours_per_month: 120, monthly_payment: 10_000, start_date: 2.months.ago, end_date: 1.month.ago
         membership = Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120, start_date: 1.month.ago, end_date: nil
         other_membership = Fabricate :membership, team: team, team_member: other_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: nil
         Fabricate :membership, team: team, team_member: inactive_team_member, hours_per_month: 40, start_date: 2.months.ago, end_date: 1.day.ago
-        Fabricate :demand, team: team, end_date: 1.week.ago
-        Fabricate :demand, team: team, end_date: 1.week.ago
+        demand = Fabricate :demand, team: team, project: project, end_date: 1.week.ago
+        other_demand = Fabricate :demand, team: team, project: project, end_date: 1.week.ago
         Fabricate :demand, team: team, end_date: Time.zone.now
+
+        assignment = Fabricate :item_assignment, membership: membership, demand: demand
+        other_assignment = Fabricate :item_assignment, membership: membership, demand: other_demand
+        Fabricate :demand_effort, demand: demand, item_assignment: assignment, start_time_to_computation: 1.day.ago, finish_time_to_computation: Time.zone.now, effort_value: 100
+        Fabricate :demand_effort, demand: other_demand, item_assignment: other_assignment, start_time_to_computation: 1.day.ago, finish_time_to_computation: Time.zone.now, effort_value: 100
 
         start_date = Time.zone.today.beginning_of_month
         end_date = Time.zone.today.end_of_month
-        expect(described_class.instance.compute_memberships_realized_hours(team, start_date, end_date)[:members_efficiency]).to contain_exactly({ membership: membership, avg_hours_per_demand: 0, cards_count: 0, effort_in_month: 0, realized_money_in_month: 0, member_capacity_value: 120, value_per_hour_performed: 0.0 }, { membership: other_membership, avg_hours_per_demand: 0, cards_count: 0, effort_in_month: 0, realized_money_in_month: 0, member_capacity_value: 40, value_per_hour_performed: 0.0 })
-        expect(described_class.instance.compute_memberships_realized_hours(team, start_date, end_date)[:total_hours_produced]).to eq 0
-        expect(described_class.instance.compute_memberships_realized_hours(team, start_date, end_date)[:total_money_produced]).to eq 0
-        expect(described_class.instance.compute_memberships_realized_hours(team, start_date, end_date)[:avg_hours_per_member]).to eq 0
-        expect(described_class.instance.compute_memberships_realized_hours(team, start_date, end_date)[:avg_money_per_member]).to eq 0
+        expect(described_class.instance.compute_memberships_realized_hours(team, start_date, end_date)[:members_efficiency][0]).to eq({ membership: membership, avg_hours_per_demand: 100.0, cards_count: 2, effort_in_month: 200.0, realized_money_in_month: 40_000.0, member_capacity_value: 120, hour_value_realized: 50.0, hour_value_expected: 83.333333333333325 })
+        expect(described_class.instance.compute_memberships_realized_hours(team, start_date, end_date)[:members_efficiency][1]).to eq({ membership: other_membership, avg_hours_per_demand: 0, cards_count: 0, effort_in_month: 0, realized_money_in_month: 0, member_capacity_value: 40, hour_value_realized: 0, hour_value_expected: 83.333333333333333333333333333333333333 })
+        expect(described_class.instance.compute_memberships_realized_hours(team, start_date, end_date)[:total_hours_produced]).to eq 200
+        expect(described_class.instance.compute_memberships_realized_hours(team, start_date, end_date)[:total_money_produced]).to eq 40_000
+        expect(described_class.instance.compute_memberships_realized_hours(team, start_date, end_date)[:avg_hours_per_member]).to eq 100
+        expect(described_class.instance.compute_memberships_realized_hours(team, start_date, end_date)[:avg_money_per_member]).to eq 20_000
         expect(described_class.instance.compute_memberships_realized_hours(team, start_date, end_date)[:team_capacity_hours]).to eq 160
       end
     end

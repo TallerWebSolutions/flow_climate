@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe Membership do
-  context 'enums' do
+  context 'for enums' do
     it { is_expected.to define_enum_for(:member_role).with_values(developer: 0, manager: 1, client: 2, designer: 3) }
   end
 
-  context 'associations' do
+  context 'for associations' do
     it { is_expected.to belong_to :team }
     it { is_expected.to belong_to :team_member }
     it { is_expected.to have_many(:item_assignments).dependent(:destroy) }
@@ -13,7 +13,7 @@ RSpec.describe Membership do
     it { is_expected.to have_many(:membership_available_hours_histories).dependent(:destroy) }
   end
 
-  context 'validations' do
+  context 'for validations' do
     it { is_expected.to validate_presence_of :start_date }
 
     context 'unique active membership for team member' do
@@ -38,7 +38,7 @@ RSpec.describe Membership do
     end
   end
 
-  context 'scopes' do
+  context 'for scopes' do
     let!(:active) { Fabricate :membership, end_date: nil }
     let!(:other_active) { Fabricate :membership, end_date: nil }
     let!(:inactive) { Fabricate :membership, end_date: Time.zone.today }
@@ -56,11 +56,33 @@ RSpec.describe Membership do
     end
   end
 
-  context 'delegations' do
+  context 'for delegations' do
     it { is_expected.to delegate_method(:name).to(:team_member).with_prefix }
     it { is_expected.to delegate_method(:jira_account_id).to(:team_member) }
     it { is_expected.to delegate_method(:company).to(:team) }
     it { is_expected.to delegate_method(:projects).to(:team_member) }
+  end
+
+  context 'for callbacks' do
+    describe '#save_hours_history' do
+      context 'if the hours changed' do
+        it 'saves the history' do
+          membership = Fabricate :membership, hours_per_month: 100
+
+          membership.update(hours_per_month: 110, start_date: 2.days.ago)
+          expect(History::MembershipAvailableHoursHistory.all.map(&:available_hours)).to eq [110]
+        end
+      end
+
+      context 'if the hours did not change' do
+        it 'does not save the history' do
+          membership = Fabricate :membership, hours_per_month: 100
+
+          membership.update(hours_per_month: 100, start_date: 2.days.ago)
+          expect(History::MembershipAvailableHoursHistory.count).to eq 0
+        end
+      end
+    end
   end
 
   describe '#hours_per_day' do
@@ -413,6 +435,49 @@ RSpec.describe Membership do
         membership = Fabricate :membership, team_member: team_member, hours_per_month: 0
 
         expect(membership.expected_hour_value).to eq 0
+      end
+    end
+
+    context 'with histories' do
+      it 'returns based on the history' do
+        team_member = Fabricate :team_member, hours_per_month: 128, monthly_payment: 10_000
+        membership = Fabricate :membership, team_member: team_member, hours_per_month: 200
+        Fabricate :membership_available_hours_history, membership: membership, change_date: 3.months.ago, available_hours: 160
+        Fabricate :membership_available_hours_history, membership: membership, change_date: 2.months.ago, available_hours: 90
+
+        expect(membership.expected_hour_value(1.month.ago)).to eq 78.125
+      end
+    end
+  end
+
+  describe '#current_hours_per_month' do
+    context 'without histories' do
+      it 'returns the value in the membership' do
+        membership = Fabricate :membership, hours_per_month: 100
+
+        expect(membership.current_hours_per_month).to eq 100
+      end
+    end
+
+    context 'with histories' do
+      context 'without date' do
+        it 'returns the value in the last history' do
+          membership = Fabricate :membership, hours_per_month: 100
+          Fabricate :membership_available_hours_history, membership: membership, change_date: 3.months.ago, available_hours: 160
+          Fabricate :membership_available_hours_history, membership: membership, change_date: 2.months.ago, available_hours: 90
+
+          expect(membership.current_hours_per_month).to eq 90
+        end
+      end
+
+      context 'with date' do
+        it 'returns the value in the last history' do
+          membership = Fabricate :membership, hours_per_month: 100
+          Fabricate :membership_available_hours_history, membership: membership, change_date: 3.months.ago, available_hours: 160
+          Fabricate :membership_available_hours_history, membership: membership, change_date: 2.months.ago, available_hours: 90
+
+          expect(membership.current_hours_per_month(65.days.ago)).to eq 160
+        end
       end
     end
   end

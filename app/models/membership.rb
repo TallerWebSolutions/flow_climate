@@ -4,15 +4,16 @@
 #
 # Table name: memberships
 #
-#  id              :bigint           not null, primary key
-#  end_date        :date
-#  hours_per_month :integer
-#  member_role     :integer          default("developer"), not null
-#  start_date      :date             not null
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  team_id         :integer          not null
-#  team_member_id  :integer          not null
+#  id                :bigint           not null, primary key
+#  effort_percentage :decimal(, )
+#  end_date          :date
+#  hours_per_month   :integer
+#  member_role       :integer          default("developer"), not null
+#  start_date        :date             not null
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  team_id           :integer          not null
+#  team_member_id    :integer          not null
 #
 # Indexes
 #
@@ -36,7 +37,6 @@ class Membership < ApplicationRecord
   has_many :membership_available_hours_histories, class_name: 'History::MembershipAvailableHoursHistory', dependent: :destroy
 
   validates :start_date, :member_role, presence: true
-  validate :active_team_member_unique
 
   scope :active, -> { where('memberships.end_date' => nil) }
   scope :inactive, -> { where.not('memberships.end_date' => nil) }
@@ -47,6 +47,9 @@ class Membership < ApplicationRecord
   delegate :jira_account_id, to: :team_member
   delegate :company, to: :team
   delegate :projects, to: :team_member
+
+  before_create :active_team_member_unique
+  before_update :save_hours_history
 
   def to_hash
     { member_name: team_member_name, jira_account_id: team_member.jira_account_id }
@@ -98,17 +101,21 @@ class Membership < ApplicationRecord
     stages_to_work_on
   end
 
-  def expected_hour_value
-    return 0 if hours_per_month.zero?
+  def expected_hour_value(date = Time.zone.now)
+    current_hours_per_month = current_hours_per_month(date)
 
-    monthly_payment / hours_per_month
+    return 0 if current_hours_per_month.zero?
+
+    monthly_payment(date) / current_hours_per_month
   end
 
-  def monthly_payment
+  def monthly_payment(date = Time.zone.now)
     return 0 if team_member.monthly_payment.blank?
 
-    membership_share = if hours_per_month.present? && team_member.hours_per_month.present? && hours_per_month < team_member.hours_per_month
-                         hours_per_month.to_f / team_member.hours_per_month
+    current_hours_per_month = current_hours_per_month(date)
+
+    membership_share = if current_hours_per_month.present? && team_member.hours_per_month.present? && current_hours_per_month < team_member.hours_per_month
+                         current_hours_per_month.to_f / team_member.hours_per_month
                        else
                          1
                        end
@@ -138,6 +145,10 @@ class Membership < ApplicationRecord
     demand_efforts.to_dates(start_date, end_date).map(&:demand).uniq.count
   end
 
+  def current_hours_per_month(date = Time.zone.now)
+    membership_available_hours_histories.until_date(date).order(:change_date).last&.available_hours || hours_per_month
+  end
+
   private
 
   def pairing_members_in_demand(demand)
@@ -157,9 +168,17 @@ class Membership < ApplicationRecord
   end
 
   def active_team_member_unique
+    return if end_date.present?
+
     existent_memberships = Membership.where(team: team, team_member: team_member, end_date: nil)
-    return if existent_memberships == [self] || end_date.present?
+    return if existent_memberships == [self]
 
     errors.add(:team_member, I18n.t('activerecord.errors.models.membership.team_member.already_existent_active')) if existent_memberships.present?
+  end
+
+  def save_hours_history
+    return if hours_per_month_was == hours_per_month
+
+    History::MembershipAvailableHoursHistory.create(membership_id: id, available_hours: hours_per_month, change_date: Time.zone.now)
   end
 end
