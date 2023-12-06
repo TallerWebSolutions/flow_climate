@@ -36,7 +36,7 @@ module Types
       field :lead_time_p80, Float, null: true
       field :lead_time_p95, Float, null: true
       field :max_work_in_progress, Int, null: false
-      field :membership_hour_value_chart_list_type, [Types::Teams::MembershipHourValueChartListType] do
+      field :membership_hour_value_chart_list, [Types::Teams::MembershipHourValueChartListType] do
         argument :end_date, GraphQL::Types::ISO8601Date, required: false
         argument :start_date, GraphQL::Types::ISO8601Date, required: false
       end
@@ -145,7 +145,7 @@ module Types
         weekly_team_consolidations = object.team_consolidations.weekly_data.order(:consolidation_date)
 
         consolidations = Consolidations::TeamConsolidation
-                           .where(id: weekly_team_consolidations.map(&:id) + [last_consolidation&.id])
+                         .where(id: weekly_team_consolidations.map(&:id) + [last_consolidation&.id])
         consolidations = consolidations.where('consolidation_date >= :limit_date', limit_date: start_date) if start_date.present?
         consolidations = consolidations.where('consolidation_date <= :limit_date', limit_date: end_date) if end_date.present?
         consolidations.order(:consolidation_date)
@@ -170,16 +170,16 @@ module Types
         TeamService.instance.compute_memberships_realized_hours(object, start_date, end_date)
       end
 
-      def membership_hour_value_chart_list_type(start_date: 6.months.ago, end_date: Time.zone.now)
+      def membership_hour_value_chart_list(start_date: 6.months.ago, end_date: Time.zone.now)
         months = TimeService.instance.months_between_of(start_date, end_date)
 
         memberships_hour_value_list = []
         object.memberships.active.billable_member.each do |membership|
-          membership_hour_value_chart_data = []
+          member_hour_value_chart_data = []
           months.each do |month|
-            membership_hour_value_chart_data.push({ date: month, hour_value_expected: membership.expected_hour_value(month), hour_value_realized: membership.realized_hour_value(month) })
+            member_hour_value_chart_data.push({ date: month, hour_value_expected: membership.expected_hour_value(month), hour_value_realized: membership.realized_hour_value(month) })
           end
-          memberships_hour_value_list.push({ membership: membership, membership_hour_value_chart_data: membership_hour_value_chart_data })
+          memberships_hour_value_list.push({ membership: membership, member_hour_value_chart_data: member_hour_value_chart_data })
         end
 
         memberships_hour_value_list

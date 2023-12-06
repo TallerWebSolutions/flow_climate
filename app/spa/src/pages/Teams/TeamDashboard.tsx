@@ -86,7 +86,7 @@ const TEAM_DASHBOARD_QUERY = gql`
           id
           teamMemberName
         }
-        membershipHourValueChartData {
+        memberHourValueChartData {
           date
           hourValueRealized
         }
@@ -215,16 +215,16 @@ const TeamDashboard = () => {
     },
   ]
 
-  const lineChartMembershipData =
+  const lineChartMembershipHourValueData =
     team?.membershipHourValueChartList?.map((membershipHourValueList) => {
       return {
         id: membershipHourValueList.membership?.teamMemberName ?? "",
         data:
-          membershipHourValueList.membershipHourValueChartData?.map(
-            (membershipHourValueChartData) => {
+          membershipHourValueList.memberHourValueChartData?.map(
+            (memberHourValueChartData) => {
               return {
-                x: String(membershipHourValueChartData.date || ""),
-                y: String(membershipHourValueChartData.hourValueRealized || 0),
+                x: String(memberHourValueChartData.date || ""),
+                y: String(memberHourValueChartData.hourValueRealized || 0),
               }
             }
           ) ?? [],
@@ -344,7 +344,7 @@ const TeamDashboard = () => {
 
         <ChartGridItem title={t("charts.hoursPerPeriodMemberships")}>
           <LineChart
-            data={lineChartMembershipData}
+            data={lineChartMembershipHourValueData}
             axisLeftLegend={t("charts.valueInReal")}
             props={{
               enableSlices: "x",

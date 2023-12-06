@@ -183,6 +183,17 @@ const TEAM_MEMBER_QUERY = gql`
         demandEffortsCount
         effortsValueSum
       }
+
+      teamMemberHourValueChartList {
+        team {
+          id
+          name
+        }
+        memberHourValueChartData {
+          date
+          hourValueRealized
+        }
+      }
     }
   }
 `

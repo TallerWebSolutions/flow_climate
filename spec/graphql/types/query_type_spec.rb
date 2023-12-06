@@ -261,12 +261,12 @@ RSpec.describe Types::QueryType do
                     realizedMoneyInMonth
                   }
                 }
-                membershipHourValueChartListType(startDate: "#{1.month.ago.to_date.iso8601}") {
-                  date
-                  membershipHourValueChartData {
-                    membership {
-                      id
-                    }
+                membershipHourValueChartList(startDate: "#{1.month.ago.to_date.iso8601}") {
+                  membership {
+                    id
+                  }
+                  memberHourValueChartData {
+                    date
                     hourValueExpected
                     hourValueRealized
                   }
@@ -367,7 +367,7 @@ RSpec.describe Types::QueryType do
                                                        'teamConsolidationsWeekly' => [],
                                                        'teamMonthlyInvestment' => { 'xAxis' => ['2022-09-30'], 'yAxis' => [-4500.0] },
                                                        'teamMemberEfficiency' => { 'membersEfficiency' => [{ 'effortInMonth' => 0.0, 'membership' => { 'teamMemberName' => 'aaa' }, 'realizedMoneyInMonth' => 0.0 }, { 'effortInMonth' => 0.0, 'membership' => { 'teamMemberName' => 'ddd' }, 'realizedMoneyInMonth' => 0.0 }] },
-                                                       'membershipHourValueChartListType' => [{ 'date' => '2022-08-31', 'membershipHourValueChartData' => [{ 'hourValueExpected' => 15.625, 'hourValueRealized' => 25.0, 'membership' => { 'id' => membership.id.to_s } }, { 'hourValueExpected' => 12.5, 'hourValueRealized' => 0.0, 'membership' => { 'id' => other_membership.id.to_s } }] }, { 'date' => '2022-09-30', 'membershipHourValueChartData' => [{ 'hourValueExpected' => 15.625, 'hourValueRealized' => 0.0, 'membership' => { 'id' => membership.id.to_s } }, { 'hourValueExpected' => 12.5, 'hourValueRealized' => 0.0, 'membership' => { 'id' => other_membership.id.to_s } }] }],
+                                                       'membershipHourValueChartList' => [{ 'memberHourValueChartData' => [{ 'date' => '2022-08-31', 'hourValueExpected' => 15.625, 'hourValueRealized' => 25.0 }, { 'date' => '2022-09-30', 'hourValueExpected' => 15.625, 'hourValueRealized' => 0.0 }], 'membership' => { 'id' => membership.id.to_s } }, { 'memberHourValueChartData' => [{ 'date' => '2022-08-31', 'hourValueExpected' => 12.5, 'hourValueRealized' => 0.0 }, { 'date' => '2022-09-30', 'hourValueExpected' => 12.5, 'hourValueRealized' => 0.0 }], 'membership' => { 'id' => other_membership.id.to_s } }],
                                                        'memberships' => [{ 'id' => other_membership.id.to_s, 'memberRoleDescription' => 'Cliente' },
                                                                          { 'id' => membership.id.to_s, 'memberRoleDescription' => 'Desenvolvedor' }],
                                                        'lastReplenishingConsolidations' => [
@@ -1761,10 +1761,11 @@ RSpec.describe Types::QueryType do
         other_project = Fabricate :project, start_date: 2.weeks.ago, end_date: 2.days.from_now
 
         team = Fabricate :team, company: company
-        team_member = Fabricate :team_member, company: company, monthly_payment: 1000
+        other_team = Fabricate :team, company: company
+        team_member = Fabricate :team_member, company: company, monthly_payment: 1000, hours_per_month: 160
         another_team_member = Fabricate :team_member, company: company, monthly_payment: 1000
-        membership = Fabricate :membership, team_member: team_member, team: team
-        another_membership = Fabricate :membership, team_member: another_team_member, team: team
+        membership = Fabricate :membership, team_member: team_member, team: team, end_date: nil, hours_per_month: 100
+        another_membership = Fabricate :membership, team_member: team_member, team: other_team, end_date: nil, hours_per_month: 60
         demand_finished = Fabricate :demand, team: team, project: project, created_date: 2.days.ago, commitment_date: 10.hours.ago, end_date: 1.hour.ago, work_item_type: feature_type
         other_demand_finished = Fabricate :demand, team: team, project: other_project, created_date: 3.days.ago, commitment_date: 6.hours.ago, end_date: 2.hours.ago, work_item_type: bug_type
         bug = Fabricate :demand, team: team, project: project, created_date: 2.days.ago, end_date: nil, work_item_type: bug_type
@@ -1912,6 +1913,17 @@ RSpec.describe Types::QueryType do
               yAxisHours
             }
             memberThroughputData(numberOfWeeks: 3)
+
+            teamMemberHourValueChartList(startDate: "#{1.month.ago.to_date.iso8601}") {
+              team {
+                id
+                name
+              }
+              memberHourValueChartData {
+                date
+                hourValueRealized
+              }
+            }
           }
         })
 
@@ -1948,17 +1960,12 @@ RSpec.describe Types::QueryType do
                                                          'billable' => team_member.billable,
                                                          'hoursPerMonth' => team_member.hours_per_month,
                                                          'monthlyPayment' => team_member.monthly_payment.to_f,
-                                                         'teams' => [{
-                                                           'name' => team.name
-                                                         }],
+                                                         'teams' => [{ 'name' => team.name }, { 'name' => other_team.name }],
                                                          'projectsEndDateAsc' => {
                                                            'lastPage' => false,
                                                            'totalCount' => 2,
                                                            'totalPages' => 2,
-                                                           'projects' =>
-                                                             [{
-                                                               'id' => project.id.to_s
-                                                             }]
+                                                           'projects' => [{ 'id' => project.id.to_s }]
                                                          },
                                                          'projectsEndDateDesc' => {
                                                            'lastPage' => false,
@@ -1968,68 +1975,25 @@ RSpec.describe Types::QueryType do
                                                              'id' => other_project.id.to_s
                                                            }]
                                                          },
-                                                         'demandsFinished' => [
-                                                           {
-                                                             'id' => demand_finished.id.to_s
-                                                           },
-                                                           {
-                                                             'id' => other_demand_finished.id.to_s
-                                                           }
-                                                         ],
-                                                         'bugs' => [
-                                                           {
-                                                             'id' => other_demand_finished.id.to_s
-                                                           },
-                                                           {
-                                                             'id' => bug.id.to_s
-                                                           },
-                                                           {
-                                                             'id' => other_bug.id.to_s
-                                                           }
-                                                         ],
-                                                         'bugsFinished' => [
-                                                           {
-                                                             'id' => other_demand_finished.id.to_s
-                                                           }
-                                                         ],
-                                                         'lastDeliveries' => [
-                                                           {
-                                                             'id' => demand_finished.id.to_s
-                                                           }
-                                                         ],
-                                                         'demandShortestLeadTime' =>
-                                                           {
-                                                             'id' => other_demand_finished.id.to_s
-                                                           },
-                                                         'demandLargestLeadTime' =>
-                                                           {
-                                                             'id' => demand_finished.id.to_s
-                                                           },
+                                                         'demandsFinished' => [{ 'id' => demand_finished.id.to_s }, { 'id' => other_demand_finished.id.to_s }],
+                                                         'bugs' => [{ 'id' => other_demand_finished.id.to_s }, { 'id' => bug.id.to_s }, { 'id' => other_bug.id.to_s }],
+                                                         'bugsFinished' => [{ 'id' => other_demand_finished.id.to_s }],
+                                                         'lastDeliveries' => [{ 'id' => demand_finished.id.to_s }],
+                                                         'demandShortestLeadTime' => { 'id' => other_demand_finished.id.to_s },
+                                                         'demandLargestLeadTime' => { 'id' => demand_finished.id.to_s },
                                                          'demandLeadTimeP80' => Stats::StatisticsService.instance.percentile(80, team_member.demands.finished_with_leadtime.map(&:leadtime)),
-                                                         'firstDelivery' =>
-                                                           {
-                                                             'id' => other_demand_finished.id.to_s
-                                                           },
+                                                         'firstDelivery' => { 'id' => other_demand_finished.id.to_s },
                                                          'demandBlocksListDesc' => {
                                                            'totalPages' => 2,
                                                            'lastPage' => false,
                                                            'totalCount' => 2,
-                                                           'demandBlocks' => [
-                                                             {
-                                                               'id' => demand_block.id.to_s
-                                                             }
-                                                           ]
-
+                                                           'demandBlocks' => [{ 'id' => demand_block.id.to_s }]
                                                          },
                                                          'demandBlocksListAsc' => {
                                                            'totalPages' => 2,
                                                            'lastPage' => false,
                                                            'totalCount' => 2,
-                                                           'demandBlocks' => [
-                                                             {
-                                                               'id' => other_demand_block.id.to_s
-                                                             }
-                                                           ]
+                                                           'demandBlocks' => [{ 'id' => other_demand_block.id.to_s }]
                                                          },
                                                          'leadTimeControlChartData' => {
                                                            'xAxis' => [other_demand_finished.external_id, demand_finished.external_id],
@@ -2038,17 +2002,14 @@ RSpec.describe Types::QueryType do
                                                            'leadTimeP80' => lead_time_p80,
                                                            'leadTimeP95' => lead_time_p95
                                                          },
-                                                         'leadTimeHistogramChartData' => {
-                                                           'keys' => [23_400.0],
-                                                           'values' => [2]
-                                                         },
+                                                         'leadTimeHistogramChartData' => { 'keys' => [23_400.0], 'values' => [2] },
                                                          'memberEffortData' => {
                                                            'xAxis' => %w[2021-11-01 2021-12-01 2022-01-01 2022-02-01 2022-03-01 2022-04-01 2022-05-01],
-                                                           'yAxis' => [0.0, 0.0, 0.0, 0.0, 100.0, 100.0, 340.0]
+                                                           'yAxis' => [0.0, 0.0, 0.0, 0.0, 100.0, 100.0, 10_340.0]
                                                          },
                                                          'memberEffortDailyData' => {
                                                            'xAxis' => %w[2022-04-18 2022-04-19 2022-04-20 2022-04-21 2022-04-22 2022-04-23 2022-04-24 2022-04-25 2022-04-26 2022-04-27 2022-04-28 2022-04-29 2022-04-30 2022-05-01 2022-05-02 2022-05-03 2022-05-04 2022-05-05 2022-05-06 2022-05-07 2022-05-08 2022-05-09 2022-05-10 2022-05-11 2022-05-12 2022-05-13 2022-05-14 2022-05-15 2022-05-16 2022-05-17 2022-05-18 2022-05-20],
-                                                           'yAxis' => [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 100.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 150.0, 20.0, 0.0, 170.0]
+                                                           'yAxis' => [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 100.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 10_150.0, 20.0, 0.0, 170.0]
                                                          },
                                                          'averagePullIntervalData' => {
                                                            'xAxis' => %w[2022-03-18 2022-04-18 2022-05-18],
@@ -2056,16 +2017,13 @@ RSpec.describe Types::QueryType do
                                                          },
                                                          'projectHoursData' => {
                                                            'xAxis' => ['2022-05-31'],
-                                                           'yAxisHours' => [170.0],
+                                                           'yAxisHours' => [10_170.0],
                                                            'yAxisProjectsNames' => [project.name]
                                                          },
                                                          'memberThroughputData' => [0, 0, 0, 2],
-                                                         'demandEfforts' => [{
-                                                           'finishTimeToComputation' => '2022-05-03T10:00:00-03:00'
-                                                         }],
-                                                         'demandEffortsList' => {
-                                                           'demandEffortsCount' => 1
-                                                         }
+                                                         'demandEfforts' => [{ 'finishTimeToComputation' => '2022-05-03T10:00:00-03:00' }],
+                                                         'demandEffortsList' => { 'demandEffortsCount' => 1 },
+                                                         'teamMemberHourValueChartList' => [{ 'memberHourValueChartData' => [{ 'date' => '2022-05-31', 'hourValueRealized' => 1.838235294117647 }], 'team' => { 'id' => team.id.to_s, 'name' => team.name } }, { 'memberHourValueChartData' => [{ 'date' => '2022-05-31', 'hourValueRealized' => 0.0375 }], 'team' => { 'id' => other_team.id.to_s, 'name' => other_team.name } }]
                                                        })
       end
     end

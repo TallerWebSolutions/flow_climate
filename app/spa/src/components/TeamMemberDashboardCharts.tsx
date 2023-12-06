@@ -82,21 +82,21 @@ const TeamMemberDashboardCharts = ({
     }
   )
 
-  const lineChartData = [
-    {
-      id: teamMember.name,
-      data: teamMember.teamMemberConsolidationList
-        ? teamMember.teamMemberConsolidationList.map(
-            ({ valuePerHourPerformed, consolidationDate }) => {
+  const lineChartTeamMemberHourValueData =
+    teamMember?.teamMemberHourValueChartList?.map((teamMemberHourValueList) => {
+      return {
+        id: teamMemberHourValueList.team?.name ?? "",
+        data:
+          teamMemberHourValueList.memberHourValueChartData?.map(
+            (memberHourValueChartData) => {
               return {
-                x: String(consolidationDate || ""),
-                y: Number(valuePerHourPerformed || 0),
+                x: String(memberHourValueChartData.date || ""),
+                y: String(memberHourValueChartData.hourValueRealized || 0),
               }
             }
-          )
-        : [],
-    },
-  ]
+          ) ?? [],
+      }
+    }) ?? []
 
   return (
     <Grid container spacing={2}>
@@ -162,7 +162,7 @@ const TeamMemberDashboardCharts = ({
       {projectHoursData && (
         <ChartGridItem title={t("charts.valuePerHour")}>
           <LineChart
-            data={lineChartData}
+            data={lineChartTeamMemberHourValueData}
             axisLeftLegend={t("charts.valuePerHour")}
             axisBottomLegend={t("charts.memberEffort_x_label")}
             props={{

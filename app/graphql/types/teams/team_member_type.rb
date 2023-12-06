@@ -14,55 +14,52 @@ module Types
         argument :page_number, Integer, required: false
         argument :until_date, GraphQL::Types::ISO8601Date, required: false
       end
+      field :demand_largest_lead_time, Types::DemandType, null: true
+      field :demand_lead_time_p80, Float, null: true
+      field :demand_shortest_lead_time, Types::DemandType, null: true
+      field :demands, [Types::DemandType] do
+        argument :limit, Int, required: false
+        argument :status, Types::Enums::DemandStatusesType, required: false
+        argument :type, String, required: false
+      end
       field :end_date, GraphQL::Types::ISO8601Date, null: true
+      field :first_delivery, Types::DemandType, null: true
+      field :first_demand_delivery, Types::DemandType, null: true
       field :hours_per_month, Int, null: false
       field :id, ID, null: false
       field :jira_account_id, String, null: true
       field :jira_account_user_email, String, null: true
       field :monthly_payment, Float, null: true
       field :name, String, null: false
-      field :start_date, GraphQL::Types::ISO8601Date, null: true
-      field :teams, [Types::Teams::TeamType], null: true
-      field :user, Types::UserType, null: true
-
-      field :demands, [Types::DemandType] do
-        argument :limit, Int, required: false
-        argument :status, Types::Enums::DemandStatusesType, required: false
-        argument :type, String, required: false
-      end
-
       field :projects_list, Types::ProjectsListType, null: true do
         argument :order_field, String, required: true
         argument :page_number, Int, required: false
         argument :per_page, Int, required: false
         argument :sort_direction, Types::Enums::SortDirection, required: false
       end
+      field :start_date, GraphQL::Types::ISO8601Date, null: true
+      field :teams, [Types::Teams::TeamType], null: true
+      field :user, Types::UserType, null: true
 
-      field :demand_largest_lead_time, Types::DemandType, null: true
-      field :demand_shortest_lead_time, Types::DemandType, null: true
-      field :first_demand_delivery, Types::DemandType, null: true
-
-      field :demand_lead_time_p80, Float, null: true
-      field :first_delivery, Types::DemandType, null: true
-
+      field :average_pull_interval_data, Types::Charts::SimpleDateChartDataType, null: true
       field :demand_blocks_list, Types::DemandBlocksListType, null: true do
         argument :order_field, String, required: true
         argument :page_number, Int, required: false
         argument :per_page, Int, required: false
         argument :sort_direction, Types::Enums::SortDirection, required: false
       end
-
-      field :average_pull_interval_data, Types::Charts::SimpleDateChartDataType, null: true
       field :lead_time_control_chart_data, Types::Charts::ControlChartType, null: true
       field :lead_time_histogram_chart_data, Types::Charts::LeadTimeHistogramDataType, null: true
       field :member_effort_daily_data, Types::Charts::SimpleDateChartDataType, null: true
       field :member_effort_data, Types::Charts::SimpleDateChartDataType, null: true
-
       field :member_throughput_data, [Int], null: true do
         argument :number_of_weeks, Int, required: false
       end
-
       field :project_hours_data, Types::Charts::ProjectHoursChartDataType, null: true
+      field :team_member_hour_value_chart_list, [Types::Teams::TeamMemberHourValueChartListType], null: true do
+        argument :end_date, GraphQL::Types::ISO8601Date, required: false
+        argument :start_date, GraphQL::Types::ISO8601Date, required: false
+      end
 
       def demand_efforts(from_date: nil, until_date: nil, page_number: nil)
         efforts = object.demand_efforts.to_dates(from_date, until_date).order(start_time_to_computation: :desc)
@@ -164,6 +161,24 @@ module Types
         { x_axis: team_chart_adapter.x_axis_hours_per_project, y_axis_projects_names: team_chart_adapter.y_axis_hours_per_project.pluck(:name), y_axis_hours: team_chart_adapter.y_axis_hours_per_project.pluck(:data).flatten }
       end
 
+      def team_member_hour_value_chart_list(start_date: 6.months.ago, end_date: Time.zone.now)
+        months = TimeService.instance.months_between_of(start_date, end_date)
+
+        member_hour_value_list = []
+        object.teams.each do |team|
+          member_hour_value_chart_data = []
+          months.each do |month|
+            membership = object.memberships.active_for_date(month).find_by(team: team)
+            next if membership.blank?
+
+            member_hour_value_chart_data.push({ date: month, hour_value_expected: membership.expected_hour_value(month), hour_value_realized: membership.realized_hour_value(month) })
+          end
+          member_hour_value_list.push({ team: team, member_hour_value_chart_data: member_hour_value_chart_data })
+        end
+
+        member_hour_value_list
+      end
+
       private
 
       def operations_dashboards
@@ -196,12 +211,6 @@ module Types
           accumulator[day.to_s] = 0
         end
         accumulator
-      end
-
-      def compute_hours_per_month(monthly_payment, monthly_hours)
-        return monthly_payment if monthly_hours.zero?
-
-        monthly_payment / monthly_hours
       end
     end
   end

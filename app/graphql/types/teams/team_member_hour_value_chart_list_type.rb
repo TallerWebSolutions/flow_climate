@@ -2,9 +2,9 @@
 
 module Types
   module Teams
-    class MembershipHourValueChartListType < Types::BaseObject
+    class TeamMemberHourValueChartListType < Types::BaseObject
       field :member_hour_value_chart_data, [Types::Teams::MemberHourValueChartDataType]
-      field :membership, Types::Teams::MembershipType
+      field :team, Types::Teams::TeamType
     end
   end
 end

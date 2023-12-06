@@ -67,10 +67,10 @@ export type MembershipEfficiencyData = {
 
 type MembershipHourValueChartList = {
   membership?: Membership
-  membershipHourValueChartData?: MembershipHourValueChartData[]
+  memberHourValueChartData?: MemberHourValueChartData[]
 }
 
-type MembershipHourValueChartData = {
+export type MemberHourValueChartData = {
   date?: string
   hourValueExpected?: number
   hourValueRealized?: number

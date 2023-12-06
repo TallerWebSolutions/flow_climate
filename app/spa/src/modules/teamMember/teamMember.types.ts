@@ -1,6 +1,6 @@
 import { Demand, DemandBlocksList } from "../demand/demand.types"
 import { ProjectsList } from "../project/project.types"
-import { Team } from "../team/team.types"
+import { MemberHourValueChartData, Team } from "../team/team.types"
 import User from "../user/user.types"
 import { ChartAxisData, KeyValueData } from "../charts/charts.types"
 import { DemandEffort } from "../demandEffort/demandEffort.types"
@@ -43,6 +43,12 @@ export type TeamMember = {
   }
   demandEfforts?: DemandEffort[]
   demandEffortsList?: DemandEffortsList
+  teamMemberHourValueChartList?: TeamMemberHourValueChartList[]
+}
+
+type TeamMemberHourValueChartList = {
+  team?: Team
+  memberHourValueChartData?: MemberHourValueChartData[]
 }
 
 type DemandEffortsList = {
