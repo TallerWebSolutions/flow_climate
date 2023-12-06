@@ -84,6 +84,7 @@ export type Membership = {
   hoursPerMonth?: number
   effortPercentage?: number
   expectedHourValue?: number
+  realizedHourValue?: number
   startDate?: string
   endDate?: string
   memberRole?: number

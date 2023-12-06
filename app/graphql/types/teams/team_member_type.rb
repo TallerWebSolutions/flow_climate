@@ -167,19 +167,26 @@ module Types
         member_hour_value_list = []
         object.teams.each do |team|
           member_hour_value_chart_data = []
-          months.each do |month|
-            membership = object.memberships.active_for_date(month).find_by(team: team)
-            next if membership.blank?
-
-            member_hour_value_chart_data.push({ date: month, hour_value_expected: membership.expected_hour_value(month), hour_value_realized: membership.realized_hour_value(month) })
-          end
-          member_hour_value_list.push({ team: team, member_hour_value_chart_data: member_hour_value_chart_data })
+          member_hour_value_chart_data << read_hours_in_month(months, team)
+          member_hour_value_list.push({ team: team, member_hour_value_chart_data: member_hour_value_chart_data.flatten }) if member_hour_value_chart_data.flatten.present?
         end
 
         member_hour_value_list
       end
 
       private
+
+      def read_hours_in_month(months, team)
+        member_hour_value_chart_data = []
+        months.each do |month|
+          membership = object.memberships.active_for_date(month).find_by(team: team)
+          next if membership.blank? || membership.expected_hour_value(month).zero? || membership.realized_hour_value(month).zero?
+
+          member_hour_value_chart_data.push({ date: month, hour_value_expected: membership.expected_hour_value(month), hour_value_realized: membership.realized_hour_value(month) })
+        end
+
+        member_hour_value_chart_data
+      end
 
       def operations_dashboards
         @operations_dashboards ||= Dashboards::OperationsDashboard.where(

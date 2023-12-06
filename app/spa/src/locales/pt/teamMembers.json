@@ -8,6 +8,8 @@
     "billable": "Faturável?",
     "monthlyPayment": "Pagamento",
     "hoursPerMonth": "Horas por Mês",
+    "expectedHourValue": "Valor Hora Esperado",
+    "realizedHourValue": "Valor Hora Realizado",
     "jiraAccountUserEmail": "Email",
     "jiraAccountId": "ID da Conta do Jira",
     "status": {
@@ -22,6 +24,8 @@
     "statusSelectLabel": "Status do Membro",
     "hours": "Horas",
     "producedValue": "Valor",
+    "hourValueRealized": "Valor Hora Realizado",
+    "hourValueExpected": "Valor Hora Esperado",
     "capacity": "Capacidade",
     "avgHoursPerDemand": "Hs / Demanda",
     "cardsCount": "Demandas",

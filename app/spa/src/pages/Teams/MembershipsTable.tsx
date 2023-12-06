@@ -23,6 +23,7 @@ import { useTranslation } from "react-i18next"
 import BasicPage from "../../components/BasicPage"
 import DateLocale from "../../components/ui/DateLocale"
 import { Team } from "../../modules/team/team.types"
+import { formatCurrency } from "../../lib/currency"
 
 const MembershipsTable = () => {
   const { teamId, companySlug } = useParams()
@@ -108,6 +109,12 @@ const MembershipsTable = () => {
                     <TableRow>
                       <TableCell>{membership.teamMemberName}</TableCell>
                       <TableCell>{membership.hoursPerMonth}</TableCell>
+                      <TableCell>
+                        {formatCurrency(membership.expectedHourValue || 0)}
+                      </TableCell>
+                      <TableCell>
+                        {formatCurrency(membership.realizedHourValue || 0)}
+                      </TableCell>
                       <TableCell>{membership.memberRoleDescription}</TableCell>
                       <TableCell>
                         {membership.startDate && (
@@ -167,6 +174,8 @@ export const MEMBERSHIPS_TABLE_QUERY = gql`
         endDate
         memberRole
         memberRoleDescription
+        hourValueExpected
+        hourValueRealized
       }
     }
   }

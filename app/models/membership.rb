@@ -154,7 +154,7 @@ class Membership < ApplicationRecord
   end
 
   def current_hours_per_month(date = Time.zone.now)
-    membership_available_hours_histories.until_date(date).order(:change_date).last&.available_hours || hours_per_month
+    membership_available_hours_histories.until_date(date).order(:change_date).last&.available_hours || hours_per_month || 0
   end
 
   private

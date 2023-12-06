@@ -5,6 +5,8 @@
     "startDate": "Start",
     "endDate": "End",
     "hoursPerMonth": "Hours per Month",
+    "expectedHourValue": "Expected Hour Value",
+    "realizedHourValue": "Realized Hour Value",
     "effortPercentage": "Effort Percentage",
     "options": {
       "memberRole": {

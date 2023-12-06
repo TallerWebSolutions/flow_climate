@@ -28,6 +28,7 @@ import { Demand } from "../../modules/demand/demand.types"
 import TeamBasicPage from "../../modules/team/components/TeamBasicPage"
 import { Team } from "../../modules/team/team.types"
 import MemberGeneralInfo from "./MemberGeneralInfo"
+import { formatCurrency } from "../../lib/currency"
 
 const TEAM_DASHBOARD_QUERY = gql`
   query TeamDashboard($teamId: ID!, $startDate: ISO8601Date, $endDate: ISO8601Date) {
@@ -43,10 +44,6 @@ const TEAM_DASHBOARD_QUERY = gql`
       activeBillableCount
       availableHoursInMonthFor
       memberships(active: true){
-        teamMembersHourlyRateList{
-          periodDate
-          valuePerHourPerformed
-        }
         teamMemberName
         hoursPerMonth
       }
@@ -89,6 +86,7 @@ const TEAM_DASHBOARD_QUERY = gql`
         memberHourValueChartData {
           date
           hourValueRealized
+          hourValueExpected
         }
       }
     }
@@ -215,7 +213,7 @@ const TeamDashboard = () => {
     },
   ]
 
-  const lineChartMembershipHourValueData =
+  const lineChartMembershipHourRealizedValueData =
     team?.membershipHourValueChartList?.map((membershipHourValueList) => {
       return {
         id: membershipHourValueList.membership?.teamMemberName ?? "",
@@ -224,13 +222,34 @@ const TeamDashboard = () => {
             (memberHourValueChartData) => {
               return {
                 x: String(memberHourValueChartData.date || ""),
-                y: String(memberHourValueChartData.hourValueRealized || 0),
+                y: String(
+                  memberHourValueChartData.hourValueRealized?.toFixed(2) || 0
+                ),
               }
             }
           ) ?? [],
       }
     }) ?? []
 
+  const lineChartMembershipHoursExpectedValueData =
+    team?.membershipHourValueChartList?.map((membershipHourValueList) => {
+      return {
+        id: membershipHourValueList.membership?.teamMemberName ?? "",
+        data:
+          membershipHourValueList.memberHourValueChartData?.map(
+            (memberHourValueChartData) => {
+              return {
+                x: String(memberHourValueChartData.date || ""),
+                y: String(
+                  memberHourValueChartData.hourValueExpected?.toFixed(2) || 0
+                ),
+              }
+            }
+          ) ?? [],
+      }
+    }) ?? []
+
+  const num = 2
   return (
     <TeamBasicPage
       breadcrumbsLinks={breadcrumbsLinks}
@@ -342,9 +361,22 @@ const TeamDashboard = () => {
           />
         </ChartGridItem>
 
-        <ChartGridItem title={t("charts.hoursPerPeriodMemberships")}>
+        <ChartGridItem title={t("charts.hourValueRealized")}>
           <LineChart
-            data={lineChartMembershipHourValueData}
+            data={lineChartMembershipHourRealizedValueData}
+            axisLeftLegend={t("charts.valueInReal")}
+            props={{
+              enableSlices: "x",
+              sliceTooltip: ({ slice }: SliceTooltipProps) => (
+                <LineChartTooltip slice={slice} />
+              ),
+            }}
+          />
+        </ChartGridItem>
+
+        <ChartGridItem title={t("charts.hoursExpected")}>
+          <LineChart
+            data={lineChartMembershipHoursExpectedValueData}
             axisLeftLegend={t("charts.valueInReal")}
             props={{
               enableSlices: "x",

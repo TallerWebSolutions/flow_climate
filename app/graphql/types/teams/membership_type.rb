@@ -11,6 +11,7 @@ module Types
       field :id, ID, null: false
       field :member_role, Integer, null: false
       field :member_role_description, String, null: false
+      field :realized_hour_value, Float
       field :start_date, GraphQL::Types::ISO8601Date, null: false
       field :team, Types::Teams::TeamType, null: false
       field :team_id, Integer, null: false

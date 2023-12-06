@@ -12,6 +12,7 @@ import TeamMemberEffortDailyData from "../modules/teamMember/components/TeamMemb
 import { LineChart } from "./charts/LineChart"
 import { SliceTooltipProps } from "@nivo/line"
 import LineChartTooltip from "./charts/tooltips/LineChartTooltip"
+import { formatCurrency } from "../lib/currency"
 
 type TeamMemberDashboardChartsProps = {
   teamMember: TeamMember
@@ -91,7 +92,9 @@ const TeamMemberDashboardCharts = ({
             (memberHourValueChartData) => {
               return {
                 x: String(memberHourValueChartData.date || ""),
-                y: String(memberHourValueChartData.hourValueRealized || 0),
+                y: String(
+                  memberHourValueChartData.hourValueRealized?.toFixed(2) || 0
+                ),
               }
             }
           ) ?? [],
@@ -159,7 +162,7 @@ const TeamMemberDashboardCharts = ({
           />
         </ChartGridItem>
       )}
-      {projectHoursData && (
+      {lineChartTeamMemberHourValueData && (
         <ChartGridItem title={t("charts.valuePerHour")}>
           <LineChart
             data={lineChartTeamMemberHourValueData}

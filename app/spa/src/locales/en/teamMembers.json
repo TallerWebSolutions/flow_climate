@@ -8,6 +8,8 @@
     "billable": "Billable",
     "monthlyPayment": "Payment",
     "hoursPerMonth": "Hours per Month",
+    "expectedHourValue": "Expected Hour Value",
+    "realizedHourValue": "Realized Hour Value",
     "jiraAccountUserEmail": "User Email",
     "jiraAccountId": "Jira Account ID",
     "status": {
@@ -22,6 +24,8 @@
     "statusSelectLabel": "Member Status",
     "hours": "Hours",
     "producedValue": "Value",
+    "hourValueRealized": "Hour Value Realized",
+    "hourValueExpected": "Hour Value Expected",
     "capacity": "Capacity",
     "avgHoursPerDemand": "Hs / Demand",
     "averageHoursPerMember": "Avg per member: {{ hours }}h",
