@@ -76,6 +76,8 @@ Rails.application.configure do
   config.logger = ActiveSupport::TaggedLogging.new(logger)
   config.log_level = ENV.fetch('LOG_LEVEL') { :error }
 
+  config.read_encrypted_secrets = true
+
   # Use a different logger for distributed setups.
   # require 'syslog/logger'
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
