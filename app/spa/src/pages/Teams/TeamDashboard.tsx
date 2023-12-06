@@ -28,7 +28,6 @@ import { Demand } from "../../modules/demand/demand.types"
 import TeamBasicPage from "../../modules/team/components/TeamBasicPage"
 import { Team } from "../../modules/team/team.types"
 import MemberGeneralInfo from "./MemberGeneralInfo"
-import { formatCurrency } from "../../lib/currency"
 
 const TEAM_DASHBOARD_QUERY = gql`
   query TeamDashboard($teamId: ID!, $startDate: ISO8601Date, $endDate: ISO8601Date) {
@@ -249,7 +248,6 @@ const TeamDashboard = () => {
       }
     }) ?? []
 
-  const num = 2
   return (
     <TeamBasicPage
       breadcrumbsLinks={breadcrumbsLinks}

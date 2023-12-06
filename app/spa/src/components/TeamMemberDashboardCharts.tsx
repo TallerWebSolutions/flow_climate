@@ -12,7 +12,6 @@ import TeamMemberEffortDailyData from "../modules/teamMember/components/TeamMemb
 import { LineChart } from "./charts/LineChart"
 import { SliceTooltipProps } from "@nivo/line"
 import LineChartTooltip from "./charts/tooltips/LineChartTooltip"
-import { formatCurrency } from "../lib/currency"
 
 type TeamMemberDashboardChartsProps = {
   teamMember: TeamMember

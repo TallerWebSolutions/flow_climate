@@ -14,7 +14,6 @@ import {
   InputLabel,
   Link,
   Select,
-  TableCell,
 } from "@mui/material"
 import { useForm } from "react-hook-form"
 import SearchIcon from "@mui/icons-material/Search"
@@ -24,7 +23,6 @@ import { MembershipEfficiencyData, Team } from "../../modules/team/team.types"
 import Table from "../../components/ui/Table"
 import { FormElement } from "../../components/ui/Form"
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined"
-import { formatCurrency } from "../../lib/currency"
 
 const MemberEfficiencyTable = () => {
   const { t } = useTranslation("teamMembers")
