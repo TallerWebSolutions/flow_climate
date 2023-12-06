@@ -419,69 +419,169 @@ RSpec.describe DemandBlocksController do
       let!(:other_company_project) { Fabricate :project, company: other_company, status: :executing, start_date: 6.days.ago, end_date: Time.zone.today }
 
       context 'with data' do
-        let!(:first_demand) { Fabricate :demand, project: first_project, company: company }
-        let!(:second_demand) { Fabricate :demand, project: second_project, company: company }
-        let!(:third_demand) { Fabricate :demand, project: third_project, company: company }
-        let!(:other_company_demand) { Fabricate :demand, project: other_company_project, company: other_company }
-
-        let!(:first_demand_transition) { Fabricate :demand_transition, demand: first_demand, stage: stage, last_time_in: 7.days.ago, last_time_out: 3.days.ago }
-        let!(:second_demand_transition) { Fabricate :demand_transition, demand: first_demand, stage: other_stage, last_time_in: 2.days.ago, last_time_out: Time.zone.now }
-
-        let(:team_member) { Fabricate :team_member, company: company, name: 'zzz' }
-        let(:other_team_member) { Fabricate :team_member, company: company, name: 'aaa' }
-
-        let!(:first_block) { Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'first_block', block_time: 1.hour.ago, unblock_time: Time.zone.today, active: true }
-        let!(:second_block) { Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: other_team_member, block_reason: 'second_block', block_time: 3.days.ago, unblock_time: 2.days.ago, active: true }
-        let!(:third_block) { Fabricate :demand_block, demand: second_demand, block_type: :specification_needed, blocker: other_team_member, unblocker: other_team_member, block_reason: 'third_block', block_time: 5.days.ago, unblock_time: 4.days.ago, active: true }
-        let!(:fourth_block) { Fabricate :demand_block, demand: first_demand, block_type: :specification_needed, blocker: other_team_member, unblocker: other_team_member, block_reason: 'fourth_block', block_time: 4.days.ago, unblock_time: Time.zone.yesterday, active: true }
-        let!(:fifth_block) { Fabricate :demand_block, demand: first_demand, block_type: :waiting_external_supplier, blocker: other_team_member, unblocker: team_member, block_reason: 'fifth_block', block_time: 5.days.ago, unblock_time: 3.days.ago, active: true }
-        let!(:sixth_block) { Fabricate :demand_block, demand: second_demand, block_type: :waiting_external_supplier, blocker: team_member, unblocker: team_member, block_reason: 'sixth_block', block_time: 6.days.ago, unblock_time: 5.days.ago, active: true }
-        let!(:seventh_block) { Fabricate :demand_block, demand: second_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'seventh_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: Time.zone.today }
-        let!(:eigth_block) { Fabricate :demand_block, demand: third_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'eigth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: nil }
-        let!(:ninth_block) { Fabricate :demand_block, demand: third_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'ninth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: nil }
-        let!(:tenth_block) { Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'tenth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: false, discarded_at: nil }
-
-        let!(:other_company_block) { Fabricate :demand_block, demand: other_company_demand, block_type: :coding_needed, block_reason: 'first_block', block_time: 1.hour.ago, unblock_time: Time.zone.today, active: true }
-
         context 'and valid parameters' do
           context 'no filters are provided' do
             it 'builds the statistic adapter and renders the view using the dates in project to a monthly period' do
-              post :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(',') }
-              expect(response).to render_template 'demand_blocks/index'
-              expect(assigns(:demand_blocks)).to eq [first_block, second_block, fourth_block, fifth_block, third_block, sixth_block, seventh_block]
-              expect(assigns(:demands_count)).to eq 2
+              travel_to Time.zone.local(2020, 12, 2, 10, 0, 0) do
+                first_demand = Fabricate :demand, project: first_project, company: company
+                second_demand = Fabricate :demand, project: second_project, company: company
+                third_demand = Fabricate :demand, project: third_project, company: company
+                other_company_demand = Fabricate :demand, project: other_company_project, company: other_company
+
+                Fabricate :demand_transition, demand: first_demand, stage: stage, last_time_in: 7.days.ago, last_time_out: 3.days.ago
+                Fabricate :demand_transition, demand: first_demand, stage: other_stage, last_time_in: 2.days.ago, last_time_out: Time.zone.now
+
+                team_member = Fabricate :team_member, company: company, name: 'zzz'
+                other_team_member = Fabricate :team_member, company: company, name: 'aaa'
+
+                first_block = Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'first_block', block_time: 1.hour.ago, unblock_time: Time.zone.today, active: true
+                second_block = Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: other_team_member, block_reason: 'second_block', block_time: 3.days.ago, unblock_time: 2.days.ago, active: true
+                third_block = Fabricate :demand_block, demand: second_demand, block_type: :specification_needed, blocker: other_team_member, unblocker: other_team_member, block_reason: 'third_block', block_time: 5.days.ago, unblock_time: 4.days.ago, active: true
+                fourth_block = Fabricate :demand_block, demand: first_demand, block_type: :specification_needed, blocker: other_team_member, unblocker: other_team_member, block_reason: 'fourth_block', block_time: 4.days.ago, unblock_time: Time.zone.yesterday, active: true
+                fifth_block = Fabricate :demand_block, demand: first_demand, block_type: :waiting_external_supplier, blocker: other_team_member, unblocker: team_member, block_reason: 'fifth_block', block_time: 5.days.ago, unblock_time: 3.days.ago, active: true
+                sixth_block = Fabricate :demand_block, demand: second_demand, block_type: :waiting_external_supplier, blocker: team_member, unblocker: team_member, block_reason: 'sixth_block', block_time: 6.days.ago, unblock_time: 5.days.ago, active: true
+                seventh_block = Fabricate :demand_block, demand: second_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'seventh_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: Time.zone.today
+                Fabricate :demand_block, demand: third_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'eigth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: nil
+                Fabricate :demand_block, demand: third_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'ninth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: nil
+                Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'tenth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: false, discarded_at: nil
+
+                Fabricate :demand_block, demand: other_company_demand, block_type: :coding_needed, block_reason: 'first_block', block_time: 1.hour.ago, unblock_time: Time.zone.today, active: true
+
+                post :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(',') }
+                expect(response).to render_template 'demand_blocks/index'
+                expect(assigns(:demand_blocks)).to eq [first_block, second_block, fourth_block, third_block, fifth_block, sixth_block, seventh_block]
+                expect(assigns(:demands_count)).to eq 2
+              end
             end
           end
 
           context 'and a filter by start and end dates are provided' do
             it 'builds the block list and renders the template' do
+              first_demand = Fabricate :demand, project: first_project, company: company
+              second_demand = Fabricate :demand, project: second_project, company: company
+              third_demand = Fabricate :demand, project: third_project, company: company
+              other_company_demand = Fabricate :demand, project: other_company_project, company: other_company
+
+              Fabricate :demand_transition, demand: first_demand, stage: stage, last_time_in: 7.days.ago, last_time_out: 3.days.ago
+              Fabricate :demand_transition, demand: first_demand, stage: other_stage, last_time_in: 2.days.ago, last_time_out: Time.zone.now
+
+              team_member = Fabricate :team_member, company: company, name: 'zzz'
+              other_team_member = Fabricate :team_member, company: company, name: 'aaa'
+
+              first_block = Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'first_block', block_time: 1.hour.ago, unblock_time: Time.zone.today, active: true
+              second_block = Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: other_team_member, block_reason: 'second_block', block_time: 3.days.ago, unblock_time: 2.days.ago, active: true
+              third_block = Fabricate :demand_block, demand: first_demand, block_type: :specification_needed, blocker: other_team_member, unblocker: other_team_member, block_reason: 'fourth_block', block_time: 4.days.ago, unblock_time: Time.zone.yesterday, active: true
+              Fabricate :demand_block, demand: second_demand, block_type: :specification_needed, blocker: other_team_member, unblocker: other_team_member, block_reason: 'third_block', block_time: 5.days.ago, unblock_time: 4.days.ago, active: true
+              Fabricate :demand_block, demand: first_demand, block_type: :waiting_external_supplier, blocker: other_team_member, unblocker: team_member, block_reason: 'fifth_block', block_time: 5.days.ago, unblock_time: 3.days.ago, active: true
+              Fabricate :demand_block, demand: second_demand, block_type: :waiting_external_supplier, blocker: team_member, unblocker: team_member, block_reason: 'sixth_block', block_time: 6.days.ago, unblock_time: 5.days.ago, active: true
+              Fabricate :demand_block, demand: second_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'seventh_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: Time.zone.today
+              Fabricate :demand_block, demand: third_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'eigth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: nil
+              Fabricate :demand_block, demand: third_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'ninth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: nil
+              Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'tenth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: false, discarded_at: nil
+
+              Fabricate :demand_block, demand: other_company_demand, block_type: :coding_needed, block_reason: 'first_block', block_time: 1.hour.ago, unblock_time: Time.zone.today, active: true
+
               post :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_start_date: 2.days.ago.to_date, blocks_end_date: Time.zone.today }
               expect(response).to render_template 'demand_blocks/index'
-              expect(assigns(:demand_blocks)).to eq [first_block, second_block, fourth_block]
+              expect(assigns(:demand_blocks)).to eq [first_block, second_block, third_block]
               expect(assigns(:demands_count)).to eq 1
             end
           end
 
           context 'and a filter by type was provided' do
             it 'builds the block list and renders the template' do
+              first_demand = Fabricate :demand, project: first_project, company: company
+              second_demand = Fabricate :demand, project: second_project, company: company
+              third_demand = Fabricate :demand, project: third_project, company: company
+              other_company_demand = Fabricate :demand, project: other_company_project, company: other_company
+
+              Fabricate :demand_transition, demand: first_demand, stage: stage, last_time_in: 7.days.ago, last_time_out: 3.days.ago
+              Fabricate :demand_transition, demand: first_demand, stage: other_stage, last_time_in: 2.days.ago, last_time_out: Time.zone.now
+
+              team_member = Fabricate :team_member, company: company, name: 'zzz'
+              other_team_member = Fabricate :team_member, company: company, name: 'aaa'
+
+              first_block = Fabricate :demand_block, demand: second_demand, block_type: :specification_needed, blocker: other_team_member, unblocker: other_team_member, block_reason: 'first_block', block_time: 5.days.ago, unblock_time: 4.days.ago, active: true
+              second_block = Fabricate :demand_block, demand: first_demand, block_type: :specification_needed, blocker: other_team_member, unblocker: other_team_member, block_reason: 'second_block', block_time: 4.days.ago, unblock_time: Time.zone.yesterday, active: true
+              Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_time: 1.hour.ago, unblock_time: Time.zone.today, active: true
+              Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: other_team_member, block_time: 3.days.ago, unblock_time: 2.days.ago, active: true
+              Fabricate :demand_block, demand: first_demand, block_type: :waiting_external_supplier, blocker: other_team_member, unblocker: team_member, block_time: 5.days.ago, unblock_time: 3.days.ago, active: true
+              Fabricate :demand_block, demand: second_demand, block_type: :waiting_external_supplier, blocker: team_member, unblocker: team_member, block_time: 6.days.ago, unblock_time: 5.days.ago, active: true
+              Fabricate :demand_block, demand: second_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: Time.zone.today
+              Fabricate :demand_block, demand: third_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: nil
+              Fabricate :demand_block, demand: third_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: nil
+              Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_time: 7.days.ago, unblock_time: 6.days.ago, active: false, discarded_at: nil
+
+              Fabricate :demand_block, demand: other_company_demand, block_type: :coding_needed, block_reason: 'first_block', block_time: 1.hour.ago, unblock_time: Time.zone.today, active: true
+
               post :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_type: 1 }
               expect(response).to render_template 'demand_blocks/index'
-              expect(assigns(:demand_blocks)).to eq [fourth_block, third_block]
+              expect(assigns(:demand_blocks)).to eq [second_block, first_block]
               expect(assigns(:demands_count)).to eq 2
             end
           end
 
           context 'and a filter by team member was provided' do
             it 'builds the block list and render the template' do
-              post :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_team_member: other_team_member.id }
-              expect(response).to render_template 'demand_blocks/index'
-              expect(assigns(:demand_blocks)).to eq [second_block, fourth_block, fifth_block, third_block]
-              expect(assigns(:demands_count)).to eq 2
+              travel_to Time.zone.local(2020, 12, 2, 10, 0, 0) do
+                first_demand = Fabricate :demand, project: first_project, company: company
+                second_demand = Fabricate :demand, project: second_project, company: company
+                third_demand = Fabricate :demand, project: third_project, company: company
+                other_company_demand = Fabricate :demand, project: other_company_project, company: other_company
+
+                Fabricate :demand_transition, demand: first_demand, stage: stage, last_time_in: 7.days.ago, last_time_out: 3.days.ago
+                Fabricate :demand_transition, demand: first_demand, stage: other_stage, last_time_in: 2.days.ago, last_time_out: Time.zone.now
+
+                team_member = Fabricate :team_member, company: company, name: 'zzz'
+                other_team_member = Fabricate :team_member, company: company, name: 'aaa'
+
+                Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'first_block', block_time: 1.hour.ago, unblock_time: Time.zone.today, active: true
+                second_block = Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: other_team_member, block_reason: 'second_block', block_time: 3.days.ago, unblock_time: 2.days.ago, active: true
+                third_block = Fabricate :demand_block, demand: second_demand, block_type: :specification_needed, blocker: other_team_member, unblocker: other_team_member, block_reason: 'third_block', block_time: 5.days.ago, unblock_time: 4.days.ago, active: true
+                fourth_block = Fabricate :demand_block, demand: first_demand, block_type: :specification_needed, blocker: other_team_member, unblocker: other_team_member, block_reason: 'fourth_block', block_time: 4.days.ago, unblock_time: Time.zone.yesterday, active: true
+                Fabricate :demand_block, demand: first_demand, block_type: :waiting_external_supplier, blocker: other_team_member, unblocker: team_member, block_reason: 'fifth_block', block_time: 5.days.ago, unblock_time: 3.days.ago, active: true
+                Fabricate :demand_block, demand: second_demand, block_type: :waiting_external_supplier, blocker: team_member, unblocker: team_member, block_reason: 'sixth_block', block_time: 6.days.ago, unblock_time: 5.days.ago, active: true
+                Fabricate :demand_block, demand: second_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'seventh_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: Time.zone.today
+                Fabricate :demand_block, demand: third_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'eigth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: nil
+                Fabricate :demand_block, demand: third_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'ninth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: nil
+                Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'tenth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: false, discarded_at: nil
+
+                Fabricate :demand_block, demand: other_company_demand, block_type: :coding_needed, block_reason: 'first_block', block_time: 1.hour.ago, unblock_time: Time.zone.today, active: true
+
+                post :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_team_member: other_team_member.id }
+                expect(response).to render_template 'demand_blocks/index'
+                expect(assigns(:demand_blocks)).to eq [second_block, fourth_block, third_block]
+                expect(assigns(:demands_count)).to eq 2
+              end
             end
           end
 
           context 'and a filter by stage was provided' do
             it 'builds the block list and renders the template' do
+              first_demand = Fabricate :demand, project: first_project, company: company
+              second_demand = Fabricate :demand, project: second_project, company: company
+              third_demand = Fabricate :demand, project: third_project, company: company
+              other_company_demand = Fabricate :demand, project: other_company_project, company: other_company
+
+              Fabricate :demand_transition, demand: first_demand, stage: stage, last_time_in: 7.days.ago, last_time_out: 3.days.ago
+              Fabricate :demand_transition, demand: first_demand, stage: other_stage, last_time_in: 2.days.ago, last_time_out: Time.zone.now
+
+              team_member = Fabricate :team_member, company: company, name: 'zzz'
+              other_team_member = Fabricate :team_member, company: company, name: 'aaa'
+
+              Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'first_block', block_time: 1.hour.ago, unblock_time: Time.zone.today, active: true
+              Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: other_team_member, block_reason: 'second_block', block_time: 3.days.ago, unblock_time: 2.days.ago, active: true
+              Fabricate :demand_block, demand: second_demand, block_type: :specification_needed, blocker: other_team_member, unblocker: other_team_member, block_reason: 'third_block', block_time: 5.days.ago, unblock_time: 4.days.ago, active: true
+              fourth_block = Fabricate :demand_block, demand: first_demand, block_type: :specification_needed, blocker: other_team_member, unblocker: other_team_member, block_reason: 'fourth_block', block_time: 4.days.ago, unblock_time: Time.zone.yesterday, active: true
+              fifth_block = Fabricate :demand_block, demand: first_demand, block_type: :waiting_external_supplier, blocker: other_team_member, unblocker: team_member, block_reason: 'fifth_block', block_time: 5.days.ago, unblock_time: 3.days.ago, active: true
+              Fabricate :demand_block, demand: second_demand, block_type: :waiting_external_supplier, blocker: team_member, unblocker: team_member, block_reason: 'sixth_block', block_time: 6.days.ago, unblock_time: 5.days.ago, active: true
+              Fabricate :demand_block, demand: second_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'seventh_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: Time.zone.today
+              Fabricate :demand_block, demand: third_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'eigth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: nil
+              Fabricate :demand_block, demand: third_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'ninth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: nil
+              Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'tenth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: false, discarded_at: nil
+
+              Fabricate :demand_block, demand: other_company_demand, block_type: :coding_needed, block_reason: 'first_block', block_time: 1.hour.ago, unblock_time: Time.zone.today, active: true
+
               post :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_stage: stage.id }
               expect(response).to render_template 'demand_blocks/index'
               expect(assigns(:demand_blocks)).to eq [fourth_block, fifth_block]
@@ -491,6 +591,30 @@ RSpec.describe DemandBlocksController do
 
           context 'and a filter by project was provided' do
             it 'builds the block list and renders the template' do
+              first_demand = Fabricate :demand, project: first_project, company: company
+              second_demand = Fabricate :demand, project: second_project, company: company
+              third_demand = Fabricate :demand, project: third_project, company: company
+              other_company_demand = Fabricate :demand, project: other_company_project, company: other_company
+
+              Fabricate :demand_transition, demand: first_demand, stage: stage, last_time_in: 7.days.ago, last_time_out: 3.days.ago
+              Fabricate :demand_transition, demand: first_demand, stage: other_stage, last_time_in: 2.days.ago, last_time_out: Time.zone.now
+
+              team_member = Fabricate :team_member, company: company, name: 'zzz'
+              other_team_member = Fabricate :team_member, company: company, name: 'aaa'
+
+              first_block = Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'first_block', block_time: 1.hour.ago, unblock_time: Time.zone.today, active: true
+              second_block = Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: other_team_member, block_reason: 'second_block', block_time: 3.days.ago, unblock_time: 2.days.ago, active: true
+              Fabricate :demand_block, demand: second_demand, block_type: :specification_needed, blocker: other_team_member, unblocker: other_team_member, block_reason: 'third_block', block_time: 5.days.ago, unblock_time: 4.days.ago, active: true
+              fourth_block = Fabricate :demand_block, demand: first_demand, block_type: :specification_needed, blocker: other_team_member, unblocker: other_team_member, block_reason: 'fourth_block', block_time: 4.days.ago, unblock_time: Time.zone.yesterday, active: true
+              fifth_block = Fabricate :demand_block, demand: first_demand, block_type: :waiting_external_supplier, blocker: other_team_member, unblocker: team_member, block_reason: 'fifth_block', block_time: 5.days.ago, unblock_time: 3.days.ago, active: true
+              Fabricate :demand_block, demand: second_demand, block_type: :waiting_external_supplier, blocker: team_member, unblocker: team_member, block_reason: 'sixth_block', block_time: 6.days.ago, unblock_time: 5.days.ago, active: true
+              Fabricate :demand_block, demand: second_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'seventh_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: Time.zone.today
+              Fabricate :demand_block, demand: third_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'eigth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: nil
+              Fabricate :demand_block, demand: third_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'ninth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: nil
+              Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'tenth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: false, discarded_at: nil
+
+              Fabricate :demand_block, demand: other_company_demand, block_type: :coding_needed, block_reason: 'first_block', block_time: 1.hour.ago, unblock_time: Time.zone.today, active: true
+
               post :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_project: first_project.id }
               expect(response).to render_template 'demand_blocks/index'
               expect(assigns(:demand_blocks)).to eq [first_block, second_block, fourth_block, fifth_block]
@@ -500,6 +624,30 @@ RSpec.describe DemandBlocksController do
 
           context 'and a filter by finished projects was provided' do
             it 'builds the block list and renders the template' do
+              first_demand = Fabricate :demand, project: first_project, company: company
+              second_demand = Fabricate :demand, project: second_project, company: company
+              third_demand = Fabricate :demand, project: third_project, company: company
+              other_company_demand = Fabricate :demand, project: other_company_project, company: other_company
+
+              Fabricate :demand_transition, demand: first_demand, stage: stage, last_time_in: 7.days.ago, last_time_out: 3.days.ago
+              Fabricate :demand_transition, demand: first_demand, stage: other_stage, last_time_in: 2.days.ago, last_time_out: Time.zone.now
+
+              team_member = Fabricate :team_member, company: company, name: 'zzz'
+              other_team_member = Fabricate :team_member, company: company, name: 'aaa'
+
+              Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'first_block', block_time: 1.hour.ago, unblock_time: Time.zone.today, active: true
+              Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: other_team_member, block_reason: 'second_block', block_time: 3.days.ago, unblock_time: 2.days.ago, active: true
+              Fabricate :demand_block, demand: second_demand, block_type: :specification_needed, blocker: other_team_member, unblocker: other_team_member, block_reason: 'third_block', block_time: 5.days.ago, unblock_time: 4.days.ago, active: true
+              Fabricate :demand_block, demand: first_demand, block_type: :specification_needed, blocker: other_team_member, unblocker: other_team_member, block_reason: 'fourth_block', block_time: 4.days.ago, unblock_time: Time.zone.yesterday, active: true
+              Fabricate :demand_block, demand: first_demand, block_type: :waiting_external_supplier, blocker: other_team_member, unblocker: team_member, block_reason: 'fifth_block', block_time: 5.days.ago, unblock_time: 3.days.ago, active: true
+              Fabricate :demand_block, demand: second_demand, block_type: :waiting_external_supplier, blocker: team_member, unblocker: team_member, block_reason: 'sixth_block', block_time: 6.days.ago, unblock_time: 5.days.ago, active: true
+              Fabricate :demand_block, demand: second_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'seventh_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: Time.zone.today
+              eigth_block = Fabricate :demand_block, demand: third_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'eigth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: nil
+              ninth_block = Fabricate :demand_block, demand: third_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'ninth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: nil
+              Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'tenth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: false, discarded_at: nil
+
+              Fabricate :demand_block, demand: other_company_demand, block_type: :coding_needed, block_reason: 'first_block', block_time: 1.hour.ago, unblock_time: Time.zone.today, active: true
+
               post :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), finished_projects: true }
               expect(response).to render_template 'demand_blocks/index'
               expect(assigns(:demand_blocks)).to match_array [eigth_block, ninth_block]
@@ -509,6 +657,30 @@ RSpec.describe DemandBlocksController do
 
           context 'and a filter by inactive blocks was provided' do
             it 'builds the block list and renders the template' do
+              first_demand = Fabricate :demand, project: first_project, company: company
+              second_demand = Fabricate :demand, project: second_project, company: company
+              third_demand = Fabricate :demand, project: third_project, company: company
+              other_company_demand = Fabricate :demand, project: other_company_project, company: other_company
+
+              Fabricate :demand_transition, demand: first_demand, stage: stage, last_time_in: 7.days.ago, last_time_out: 3.days.ago
+              Fabricate :demand_transition, demand: first_demand, stage: other_stage, last_time_in: 2.days.ago, last_time_out: Time.zone.now
+
+              team_member = Fabricate :team_member, company: company, name: 'zzz'
+              other_team_member = Fabricate :team_member, company: company, name: 'aaa'
+
+              Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'first_block', block_time: 1.hour.ago, unblock_time: Time.zone.today, active: true
+              Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: other_team_member, block_reason: 'second_block', block_time: 3.days.ago, unblock_time: 2.days.ago, active: true
+              Fabricate :demand_block, demand: second_demand, block_type: :specification_needed, blocker: other_team_member, unblocker: other_team_member, block_reason: 'third_block', block_time: 5.days.ago, unblock_time: 4.days.ago, active: true
+              Fabricate :demand_block, demand: first_demand, block_type: :specification_needed, blocker: other_team_member, unblocker: other_team_member, block_reason: 'fourth_block', block_time: 4.days.ago, unblock_time: Time.zone.yesterday, active: true
+              Fabricate :demand_block, demand: first_demand, block_type: :waiting_external_supplier, blocker: other_team_member, unblocker: team_member, block_reason: 'fifth_block', block_time: 5.days.ago, unblock_time: 3.days.ago, active: true
+              Fabricate :demand_block, demand: second_demand, block_type: :waiting_external_supplier, blocker: team_member, unblocker: team_member, block_reason: 'sixth_block', block_time: 6.days.ago, unblock_time: 5.days.ago, active: true
+              Fabricate :demand_block, demand: second_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'seventh_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: Time.zone.today
+              Fabricate :demand_block, demand: third_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'eigth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: nil
+              Fabricate :demand_block, demand: third_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'ninth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: nil
+              tenth_block = Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'tenth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: false, discarded_at: nil
+
+              Fabricate :demand_block, demand: other_company_demand, block_type: :coding_needed, block_reason: 'first_block', block_time: 1.hour.ago, unblock_time: Time.zone.today, active: true
+
               post :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), inactive_blocks: 'yes' }
               expect(assigns(:demand_blocks)).to eq [tenth_block]
               expect(response).to render_template 'demand_blocks/index'
@@ -518,6 +690,30 @@ RSpec.describe DemandBlocksController do
 
           context 'and all filters are provided' do
             it 'builds the block list and renders the template' do
+              first_demand = Fabricate :demand, project: first_project, company: company
+              second_demand = Fabricate :demand, project: second_project, company: company
+              third_demand = Fabricate :demand, project: third_project, company: company
+              other_company_demand = Fabricate :demand, project: other_company_project, company: other_company
+
+              Fabricate :demand_transition, demand: first_demand, stage: stage, last_time_in: 7.days.ago, last_time_out: 3.days.ago
+              Fabricate :demand_transition, demand: first_demand, stage: other_stage, last_time_in: 2.days.ago, last_time_out: Time.zone.now
+
+              team_member = Fabricate :team_member, company: company, name: 'zzz'
+              other_team_member = Fabricate :team_member, company: company, name: 'aaa'
+
+              Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'first_block', block_time: 1.hour.ago, unblock_time: Time.zone.today, active: true
+              Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: other_team_member, block_reason: 'second_block', block_time: 3.days.ago, unblock_time: 2.days.ago, active: true
+              Fabricate :demand_block, demand: second_demand, block_type: :specification_needed, blocker: other_team_member, unblocker: other_team_member, block_reason: 'third_block', block_time: 5.days.ago, unblock_time: 4.days.ago, active: true
+              fourth_block = Fabricate :demand_block, demand: first_demand, block_type: :specification_needed, blocker: other_team_member, unblocker: other_team_member, block_reason: 'fourth_block', block_time: 4.days.ago, unblock_time: Time.zone.yesterday, active: true
+              Fabricate :demand_block, demand: first_demand, block_type: :waiting_external_supplier, blocker: other_team_member, unblocker: team_member, block_reason: 'fifth_block', block_time: 5.days.ago, unblock_time: 3.days.ago, active: true
+              Fabricate :demand_block, demand: second_demand, block_type: :waiting_external_supplier, blocker: team_member, unblocker: team_member, block_reason: 'sixth_block', block_time: 6.days.ago, unblock_time: 5.days.ago, active: true
+              Fabricate :demand_block, demand: second_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'seventh_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: Time.zone.today
+              Fabricate :demand_block, demand: third_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'eigth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: nil
+              Fabricate :demand_block, demand: third_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'ninth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: nil
+              Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'tenth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: false, discarded_at: nil
+
+              Fabricate :demand_block, demand: other_company_demand, block_type: :coding_needed, block_reason: 'first_block', block_time: 1.hour.ago, unblock_time: Time.zone.today, active: true
+
               post :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_stage: stage.id, blocks_team_member: other_team_member.id, blocks_start_date: 2.days.ago, blocks_end_date: Time.zone.today }
               expect(response).to render_template 'demand_blocks/index'
               expect(assigns(:demand_blocks)).to eq [fourth_block]
@@ -527,19 +723,68 @@ RSpec.describe DemandBlocksController do
 
           context 'and an ordering by blocker is requested' do
             it 'builds the block list and renders the template' do
-              post :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_team_member: other_team_member.id, blocks_ordering: :member_name }
-              expect(response).to have_http_status :ok
-              expect(assigns(:demand_blocks)).to match_array [second_block, third_block, fourth_block, fifth_block]
-              expect(response).to render_template 'demand_blocks/index'
+              travel_to Time.zone.local(2020, 12, 2, 10, 0, 0) do
+                first_demand = Fabricate :demand, project: first_project, company: company
+                second_demand = Fabricate :demand, project: second_project, company: company
+                third_demand = Fabricate :demand, project: third_project, company: company
+                other_company_demand = Fabricate :demand, project: other_company_project, company: other_company
+
+                Fabricate :demand_transition, demand: first_demand, stage: stage, last_time_in: 7.days.ago, last_time_out: 3.days.ago
+                Fabricate :demand_transition, demand: first_demand, stage: other_stage, last_time_in: 2.days.ago, last_time_out: Time.zone.now
+
+                team_member = Fabricate :team_member, company: company, name: 'zzz'
+                other_team_member = Fabricate :team_member, company: company, name: 'aaa'
+
+                Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'first_block', block_time: 1.hour.ago, unblock_time: Time.zone.today, active: true
+                second_block = Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: other_team_member, block_reason: 'second_block', block_time: 3.days.ago, unblock_time: 2.days.ago, active: true
+                third_block = Fabricate :demand_block, demand: second_demand, block_type: :specification_needed, blocker: other_team_member, unblocker: other_team_member, block_reason: 'third_block', block_time: 5.days.ago, unblock_time: 4.days.ago, active: true
+                fourth_block = Fabricate :demand_block, demand: first_demand, block_type: :specification_needed, blocker: other_team_member, unblocker: other_team_member, block_reason: 'fourth_block', block_time: 4.days.ago, unblock_time: Time.zone.yesterday, active: true
+                Fabricate :demand_block, demand: first_demand, block_type: :waiting_external_supplier, blocker: other_team_member, unblocker: team_member, block_reason: 'fifth_block', block_time: 5.days.ago, unblock_time: 3.days.ago, active: true
+                Fabricate :demand_block, demand: second_demand, block_type: :waiting_external_supplier, blocker: team_member, unblocker: team_member, block_reason: 'sixth_block', block_time: 6.days.ago, unblock_time: 5.days.ago, active: true
+                Fabricate :demand_block, demand: second_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'seventh_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: Time.zone.today
+                Fabricate :demand_block, demand: third_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'eigth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: nil
+                Fabricate :demand_block, demand: third_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'ninth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: nil
+                Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'tenth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: false, discarded_at: nil
+
+                Fabricate :demand_block, demand: other_company_demand, block_type: :coding_needed, block_reason: 'first_block', block_time: 1.hour.ago, unblock_time: Time.zone.today, active: true
+
+                post :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_team_member: other_team_member.id, blocks_ordering: :member_name }
+                expect(response).to have_http_status :ok
+                expect(assigns(:demand_blocks)).to match_array [second_block, third_block, fourth_block]
+                expect(response).to render_template 'demand_blocks/index'
+              end
             end
           end
 
-          context 'and an ordering by block time is requested' do
+          context 'if an ordering by block time was requested' do
             it 'builds the block list and render the template' do
-              post :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_team_member: other_team_member.id, blocks_ordering: :block_time }
-              expect(response).to have_http_status :ok
-              expect(assigns(:demand_blocks)).to eq [second_block, fourth_block, fifth_block, third_block]
-              expect(response).to render_template 'demand_blocks/index'
+              travel_to Time.zone.local(2020, 12, 2, 10, 0, 0) do
+                first_demand = Fabricate :demand, project: first_project, company: company
+                second_demand = Fabricate :demand, project: second_project, company: company
+                third_demand = Fabricate :demand, project: third_project, company: company
+                other_company_demand = Fabricate :demand, project: other_company_project, company: other_company
+
+                team_member = Fabricate :team_member, company: company, name: 'zzz'
+                other_team_member = Fabricate :team_member, company: company, name: 'aaa'
+
+                Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'first_block', block_time: 1.hour.ago, unblock_time: Time.zone.today, active: true
+                second_block = Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: other_team_member, block_reason: 'second_block', block_time: 3.days.ago, unblock_time: 2.days.ago, active: true
+                third_block = Fabricate :demand_block, demand: second_demand, block_type: :specification_needed, blocker: other_team_member, unblocker: other_team_member, block_reason: 'third_block', block_time: 5.days.ago, unblock_time: 4.days.ago, active: true
+                fourth_block = Fabricate :demand_block, demand: first_demand, block_type: :specification_needed, blocker: other_team_member, unblocker: other_team_member, block_reason: 'fourth_block', block_time: 4.days.ago, unblock_time: Time.zone.yesterday, active: true
+                Fabricate :demand_block, demand: first_demand, block_type: :waiting_external_supplier, blocker: other_team_member, unblocker: team_member, block_reason: 'fifth_block', block_time: 5.days.ago, unblock_time: 3.days.ago, active: true
+                Fabricate :demand_block, demand: second_demand, block_type: :waiting_external_supplier, blocker: team_member, unblocker: team_member, block_reason: 'sixth_block', block_time: 6.days.ago, unblock_time: 5.days.ago, active: true
+                Fabricate :demand_block, demand: second_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'seventh_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: Time.zone.today
+                Fabricate :demand_block, demand: third_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'eigth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: nil
+                Fabricate :demand_block, demand: third_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'ninth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: nil
+                Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'tenth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: false, discarded_at: nil
+
+                Fabricate :demand_block, demand: other_company_demand, block_type: :coding_needed, block_reason: 'first_block', block_time: 1.hour.ago, unblock_time: Time.zone.today, active: true
+
+                post :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_team_member: other_team_member.id, blocks_ordering: :block_time }
+                expect(response).to have_http_status :ok
+                expect(assigns(:demand_blocks)).to eq [second_block, fourth_block, third_block]
+                expect(response).to render_template 'demand_blocks/index'
+              end
             end
           end
         end

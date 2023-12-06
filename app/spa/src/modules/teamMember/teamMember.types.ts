@@ -13,11 +13,6 @@ type LeadTimesChartData = {
   leadTimeP95?: number
 }
 
-type TeamMemberConsolidation = {
-  consolidationDate?: string
-  valuePerHourPerformed?: number
-}
-
 export type TeamMember = {
   id: string
   name: string
@@ -48,7 +43,6 @@ export type TeamMember = {
   }
   demandEfforts?: DemandEffort[]
   demandEffortsList?: DemandEffortsList
-  teamMemberConsolidationList?: TeamMemberConsolidation[]
 }
 
 type DemandEffortsList = {

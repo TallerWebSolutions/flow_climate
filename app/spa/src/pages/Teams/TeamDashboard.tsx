@@ -47,7 +47,7 @@ const TEAM_DASHBOARD_QUERY = gql`
           periodDate
           valuePerHourPerformed
         }
-        teamMemberName 
+        teamMemberName
         hoursPerMonth
       }
       demandsFlowChartData(startDate: $startDate, endDate: $endDate) {
@@ -79,6 +79,17 @@ const TEAM_DASHBOARD_QUERY = gql`
       teamMonthlyInvestment(startDate: $startDate, endDate: $endDate) {
         xAxis
         yAxis
+      }
+
+      membershipHourValueChartList {
+        membership {
+          id
+          teamMemberName
+        }
+        membershipHourValueChartData {
+          date
+          hourValueRealized
+        }
       }
     }
   }
@@ -204,24 +215,21 @@ const TeamDashboard = () => {
     },
   ]
 
-  const lineChartMembershipData = team?.memberships
-    ? team?.memberships?.map((membership) => {
-        const seila = {
-          id: membership?.teamMemberName ? membership.teamMemberName : "",
-          data: membership?.teamMembersHourlyRateList
-            ? membership?.teamMembersHourlyRateList?.map(
-                (teamMembersHourlyRate) => {
-                  return {
-                    x: String(teamMembersHourlyRate.periodDate || ""),
-                    y: String(teamMembersHourlyRate.valuePerHourPerformed || 0),
-                  }
-                }
-              )
-            : [],
-        }
-        return seila
-      })
-    : []
+  const lineChartMembershipData =
+    team?.membershipHourValueChartList?.map((membershipHourValueList) => {
+      return {
+        id: membershipHourValueList.membership?.teamMemberName ?? "",
+        data:
+          membershipHourValueList.membershipHourValueChartData?.map(
+            (membershipHourValueChartData) => {
+              return {
+                x: String(membershipHourValueChartData.date || ""),
+                y: String(membershipHourValueChartData.hourValueRealized || 0),
+              }
+            }
+          ) ?? [],
+      }
+    }) ?? []
 
   return (
     <TeamBasicPage

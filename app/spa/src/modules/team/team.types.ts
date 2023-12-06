@@ -9,11 +9,6 @@ import { Demand } from "../demand/demand.types"
 import { ProjectConsolidation } from "../project/projectConsolidation.types"
 import { ReplenishingConsolidation } from "../replenishing/replenishingConsolidation.types"
 
-export type TeamMembersHourlyRate = {
-  periodDate?: string
-  valuePerHourPerformed?: number
-}
-
 export type Team = {
   id?: string
   name?: string
@@ -48,6 +43,7 @@ export type Team = {
   teamMonthlyInvestment?: NumberChartData
   teamMemberEfficiency?: MembershipEfficiencyList
   memberships?: Membership[]
+  membershipHourValueChartList?: MembershipHourValueChartList[]
 }
 
 export type MembershipEfficiencyList = {
@@ -65,8 +61,19 @@ export type MembershipEfficiencyData = {
   realizedMoneyInMonth?: number
   avgHoursPerDemand?: number
   cardsCount?: number
-  expectedHourValue?: number
-  realizedHourValue?: number
+  hourValueRealized?: number
+  hourValueExpected?: number
+}
+
+type MembershipHourValueChartList = {
+  membership?: Membership
+  membershipHourValueChartData?: MembershipHourValueChartData[]
+}
+
+type MembershipHourValueChartData = {
+  date?: string
+  hourValueExpected?: number
+  hourValueRealized?: number
 }
 
 export type Membership = {
@@ -81,5 +88,4 @@ export type Membership = {
   endDate?: string
   memberRole?: number
   memberRoleDescription?: string
-  teamMembersHourlyRateList?: TeamMembersHourlyRate[]
 }

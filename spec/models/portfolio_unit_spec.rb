@@ -20,18 +20,18 @@ RSpec.describe PortfolioUnit do
     end
 
     context 'with complex ones' do
-      let(:product) { Fabricate :product }
-
       it 'rejects the one duplicated on name and parent' do
-        parent = Fabricate.build :portfolio_unit, product: product, name: 'parent'
-        first_portfolio_unit = Fabricate :portfolio_unit, product: product, parent: parent, name: 'aaa'
-        second_portfolio_unit = Fabricate.build :portfolio_unit, product: product, name: 'aaa'
-        third_portfolio_unit = Fabricate.build :portfolio_unit, product: product, parent: parent, name: 'aaa'
+        product = Fabricate :product
+        parent = Fabricate.build :portfolio_unit, product: product, name: 'parent', children: []
+        expect(parent).to be_valid
 
-        expect(parent.valid?).to be true
-        expect(first_portfolio_unit.valid?).to be true
-        expect(second_portfolio_unit.valid?).to be true
-        expect(third_portfolio_unit.valid?).to be false
+        first_portfolio_unit = Fabricate :portfolio_unit, product: product, parent: parent, name: 'aaa', children: []
+        second_portfolio_unit = Fabricate.build :portfolio_unit, product: product, name: 'aaa', children: []
+        third_portfolio_unit = Fabricate.build :portfolio_unit, product: product, parent: parent, name: 'aaa', children: []
+
+        expect(first_portfolio_unit).to be_valid
+        expect(second_portfolio_unit).to be_valid
+        expect(third_portfolio_unit).not_to be_valid
         expect(third_portfolio_unit.errors_on(:name)).to eq [I18n.t('portfolio_unit.validations.name')]
       end
     end

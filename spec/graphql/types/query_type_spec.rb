@@ -261,13 +261,19 @@ RSpec.describe Types::QueryType do
                     realizedMoneyInMonth
                   }
                 }
+                membershipHourValueChartListType(startDate: "#{1.month.ago.to_date.iso8601}") {
+                  date
+                  membershipHourValueChartData {
+                    membership {
+                      id
+                    }
+                    hourValueExpected
+                    hourValueRealized
+                  }
+                }
                 memberships(active: true) {
                   id
                   memberRoleDescription
-                  teamMembersHourlyRateList{
-                    periodDate
-                    hourValueRealized
-                  }
                 }
                 lastReplenishingConsolidations {
                   id
@@ -361,8 +367,9 @@ RSpec.describe Types::QueryType do
                                                        'teamConsolidationsWeekly' => [],
                                                        'teamMonthlyInvestment' => { 'xAxis' => ['2022-09-30'], 'yAxis' => [-4500.0] },
                                                        'teamMemberEfficiency' => { 'membersEfficiency' => [{ 'effortInMonth' => 0.0, 'membership' => { 'teamMemberName' => 'aaa' }, 'realizedMoneyInMonth' => 0.0 }, { 'effortInMonth' => 0.0, 'membership' => { 'teamMemberName' => 'ddd' }, 'realizedMoneyInMonth' => 0.0 }] },
-                                                       'memberships' => [{ 'id' => other_membership.id.to_s, 'memberRoleDescription' => 'Cliente', 'teamMembersHourlyRateList' => [{ 'periodDate' => '2022-02-28', 'hourValueRealized' => 2000.0 }, { 'periodDate' => '2022-03-31', 'hourValueRealized' => 2000.0 }, { 'periodDate' => '2022-04-30', 'hourValueRealized' => 2000.0 }, { 'periodDate' => '2022-05-31', 'hourValueRealized' => 2000.0 }, { 'periodDate' => '2022-06-30', 'hourValueRealized' => 2000.0 }, { 'periodDate' => '2022-07-31', 'hourValueRealized' => 2000.0 }, { 'periodDate' => '2022-08-31', 'hourValueRealized' => 2000.0 }] },
-                                                                         { 'id' => membership.id.to_s, 'memberRoleDescription' => 'Desenvolvedor', 'teamMembersHourlyRateList' => [{ 'periodDate' => '2022-02-28', 'hourValueRealized' => 2500.0 }, { 'periodDate' => '2022-03-31', 'hourValueRealized' => 2500.0 }, { 'periodDate' => '2022-04-30', 'hourValueRealized' => 2500.0 }, { 'periodDate' => '2022-05-31', 'hourValueRealized' => 2500.0 }, { 'periodDate' => '2022-06-30', 'hourValueRealized' => 2500.0 }, { 'periodDate' => '2022-07-31', 'hourValueRealized' => 20.83 }, { 'periodDate' => '2022-08-31', 'hourValueRealized' => 25.0 }] }],
+                                                       'membershipHourValueChartListType' => [{ 'date' => '2022-08-31', 'membershipHourValueChartData' => [{ 'hourValueExpected' => 15.625, 'hourValueRealized' => 25.0, 'membership' => { 'id' => membership.id.to_s } }, { 'hourValueExpected' => 12.5, 'hourValueRealized' => 0.0, 'membership' => { 'id' => other_membership.id.to_s } }] }, { 'date' => '2022-09-30', 'membershipHourValueChartData' => [{ 'hourValueExpected' => 15.625, 'hourValueRealized' => 0.0, 'membership' => { 'id' => membership.id.to_s } }, { 'hourValueExpected' => 12.5, 'hourValueRealized' => 0.0, 'membership' => { 'id' => other_membership.id.to_s } }] }],
+                                                       'memberships' => [{ 'id' => other_membership.id.to_s, 'memberRoleDescription' => 'Cliente' },
+                                                                         { 'id' => membership.id.to_s, 'memberRoleDescription' => 'Desenvolvedor' }],
                                                        'lastReplenishingConsolidations' => [
                                                          {
                                                            'id' => replenishing_consolidation.id.to_s,
@@ -945,7 +952,7 @@ RSpec.describe Types::QueryType do
       travel_to Time.zone.local(2023, 5, 3, 10) do
         product = Fabricate :product
         review = Fabricate :service_delivery_review, product: product, meeting_date: Time.zone.now
-        Fabricate :service_delivery_review, product: product, meeting_date: 4.weeks.ago
+        Fabricate :service_delivery_review, product: product, meeting_date: 5.weeks.ago
 
         query =
           %(
@@ -971,13 +978,13 @@ RSpec.describe Types::QueryType do
           )
 
         project = Fabricate :project, products: [product]
-        Fabricate :flow_event, project: project, event_date: 2.days.ago
-        Fabricate :flow_event, project: project, event_date: 1.week.ago
-        Fabricate :flow_event, project: project, event_date: 2.days.from_now
+        Fabricate :flow_event, project: project, event_date: 2.days.ago, event_type: :other_team_dependency
+        Fabricate :flow_event, project: project, event_date: 1.week.ago, event_type: :api_not_ready
+        Fabricate :flow_event, project: project, event_date: 2.days.from_now, event_type: :customer_not_available
 
         Fabricate :demand, project: project, company: project.company, service_delivery_review: review, end_date: 4.weeks.ago, class_of_service: :expedite
         Fabricate :demand, project: project, company: project.company, service_delivery_review: review, end_date: 3.weeks.ago, class_of_service: :standard
-        Fabricate :demand, project: project, company: project.company, service_delivery_review: review, end_date: 1.week.ago, class_of_service: :standard
+        Fabricate :demand, project: project, company: project.company, service_delivery_review: review, end_date: 2.weeks.ago, class_of_service: :standard
         Fabricate :demand, project: project, company: project.company, service_delivery_review: review, end_date: 4.days.ago, class_of_service: :fixed_date
 
         review.save
@@ -985,7 +992,7 @@ RSpec.describe Types::QueryType do
         result = FlowClimateSchema.execute(query, variables: nil).as_json
 
         expect(result.dig('data', 'serviceDeliveryReview', 'id')).to eq review.id.to_s
-        expect(result.dig('data', 'serviceDeliveryReview', 'flowEventsChartData').count).to eq 2
+        expect(result.dig('data', 'serviceDeliveryReview', 'flowEventsChartData').pluck('label')).to contain_exactly('Dependência de outro time', 'API não está pronta')
         expect(result.dig('data', 'serviceDeliveryReview', 'classOfServiceChartData').pluck('label')).to eq(['Padrão', 'Expedição', 'Data Fixa'])
       end
     end
@@ -1904,10 +1911,6 @@ RSpec.describe Types::QueryType do
               yAxisProjectsNames
               yAxisHours
             }
-            teamMemberConsolidationList {
-              consolidationDate
-              hourValueRealized
-            }
             memberThroughputData(numberOfWeeks: 3)
           }
         })
@@ -2056,7 +2059,6 @@ RSpec.describe Types::QueryType do
                                                            'yAxisHours' => [170.0],
                                                            'yAxisProjectsNames' => [project.name]
                                                          },
-                                                         'teamMemberConsolidationList' => [{ 'consolidationDate' => '2021-04-01', 'hourValueRealized' => 1000.0 }, { 'consolidationDate' => '2021-05-01', 'hourValueRealized' => 1000.0 }, { 'consolidationDate' => '2021-06-01', 'hourValueRealized' => 1000.0 }, { 'consolidationDate' => '2021-07-01', 'hourValueRealized' => 1000.0 }, { 'consolidationDate' => '2021-08-01', 'hourValueRealized' => 1000.0 }, { 'consolidationDate' => '2021-09-01', 'hourValueRealized' => 1000.0 }, { 'consolidationDate' => '2021-10-01', 'hourValueRealized' => 1000.0 }, { 'consolidationDate' => '2021-11-01', 'hourValueRealized' => 1000.0 }, { 'consolidationDate' => '2021-12-01', 'hourValueRealized' => 1000.0 }, { 'consolidationDate' => '2022-01-01', 'hourValueRealized' => 1000.0 }, { 'consolidationDate' => '2022-02-01', 'hourValueRealized' => 1000.0 }, { 'consolidationDate' => '2022-03-01', 'hourValueRealized' => 10.0 }, { 'consolidationDate' => '2022-04-01', 'hourValueRealized' => 10.0 }],
                                                          'memberThroughputData' => [0, 0, 0, 2],
                                                          'demandEfforts' => [{
                                                            'finishTimeToComputation' => '2022-05-03T10:00:00-03:00'

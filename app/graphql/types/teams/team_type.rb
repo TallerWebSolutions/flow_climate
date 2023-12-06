@@ -36,10 +36,13 @@ module Types
       field :lead_time_p80, Float, null: true
       field :lead_time_p95, Float, null: true
       field :max_work_in_progress, Int, null: false
+      field :membership_hour_value_chart_list_type, [Types::Teams::MembershipHourValueChartListType] do
+        argument :end_date, GraphQL::Types::ISO8601Date, required: false
+        argument :start_date, GraphQL::Types::ISO8601Date, required: false
+      end
       field :memberships, [Types::Teams::MembershipType] do
         argument :active, Boolean, required: false
       end
-
       field :name, String, null: false
       field :number_of_demands_delivered, Int, null: true
       field :projects, [Types::ProjectType], null: true
@@ -58,8 +61,6 @@ module Types
       end
       field :throughput_data, [Int], null: true
       field :work_in_progress, Int, null: true
-
-      field :team_members_hourly_rate_list, [Types::TeamMembersHourlyRateType], null: true
 
       delegate :projects, to: :object
 
@@ -144,7 +145,7 @@ module Types
         weekly_team_consolidations = object.team_consolidations.weekly_data.order(:consolidation_date)
 
         consolidations = Consolidations::TeamConsolidation
-                         .where(id: weekly_team_consolidations.map(&:id) + [last_consolidation&.id])
+                           .where(id: weekly_team_consolidations.map(&:id) + [last_consolidation&.id])
         consolidations = consolidations.where('consolidation_date >= :limit_date', limit_date: start_date) if start_date.present?
         consolidations = consolidations.where('consolidation_date <= :limit_date', limit_date: end_date) if end_date.present?
         consolidations.order(:consolidation_date)
@@ -159,10 +160,7 @@ module Types
         array_of_months.each do |date|
           total_cost_per_week.append(object.realized_money_in_month(date).round(2) - object.monthly_investment(date).round(2))
         end
-        {
-          x_axis: array_of_months,
-          y_axis: total_cost_per_week
-        }
+        { x_axis: array_of_months, y_axis: total_cost_per_week }
       end
 
       def team_member_efficiency(month: Time.zone.today.month, year: Time.zone.today.year)
@@ -170,6 +168,21 @@ module Types
         end_date = start_date.end_of_month
 
         TeamService.instance.compute_memberships_realized_hours(object, start_date, end_date)
+      end
+
+      def membership_hour_value_chart_list_type(start_date: 6.months.ago, end_date: Time.zone.now)
+        months = TimeService.instance.months_between_of(start_date, end_date)
+
+        memberships_hour_value_list = []
+        object.memberships.active.billable_member.each do |membership|
+          membership_hour_value_chart_data = []
+          months.each do |month|
+            membership_hour_value_chart_data.push({ date: month, hour_value_expected: membership.expected_hour_value(month), hour_value_realized: membership.realized_hour_value(month) })
+          end
+          memberships_hour_value_list.push({ membership: membership, membership_hour_value_chart_data: membership_hour_value_chart_data })
+        end
+
+        memberships_hour_value_list
       end
 
       def memberships(active: nil)

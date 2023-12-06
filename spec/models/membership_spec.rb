@@ -17,24 +17,22 @@ RSpec.describe Membership do
     it { is_expected.to validate_presence_of :start_date }
 
     context 'unique active membership for team member' do
-      let(:team) { Fabricate :team }
-      let(:team_member) { Fabricate :team_member }
-      let(:other_team_member) { Fabricate :team_member }
+      it 'refuses duplicated members' do
+        team = Fabricate :team
+        team_member = Fabricate :team_member
 
-      let!(:membership) { Fabricate :membership, team: team, team_member: team_member, end_date: nil }
-      let!(:duplicated_membership) { Fabricate.build :membership, team: team, team_member: team_member, end_date: nil }
-      let!(:second_valid_membership) { Fabricate.build :membership, team_member: team_member, end_date: nil }
-      let!(:third_valid_membership) { Fabricate.build :membership, team: team, end_date: nil }
-      let!(:fourth_valid_membership) { Fabricate.build :membership, team_member: team_member, team: team, end_date: Time.zone.today }
-
-      before { duplicated_membership.valid? }
-
-      it { expect(membership.valid?).to be true }
-      it { expect(second_valid_membership.valid?).to be true }
-      it { expect(third_valid_membership.valid?).to be true }
-      it { expect(fourth_valid_membership.valid?).to be true }
-
-      it { expect(duplicated_membership.errors_on(:team_member)).to eq [I18n.t('activerecord.errors.models.membership.team_member.already_existent_active')] }
+        membership = Fabricate :membership, team: team, team_member: team_member, end_date: nil
+        duplicated_membership = Fabricate.build :membership, team: team, team_member: team_member, end_date: nil
+        second_valid_membership = Fabricate.build :membership, team_member: team_member, end_date: nil
+        third_valid_membership = Fabricate.build :membership, team: team, end_date: nil
+        fourth_valid_membership = Fabricate.build :membership, team_member: team_member, team: team, end_date: Time.zone.today
+        expect(duplicated_membership).not_to be_valid
+        expect(duplicated_membership.errors_on(:team_member)).to eq [I18n.t('activerecord.errors.models.membership.team_member.already_existent_active')]
+        expect(membership).to be_valid
+        expect(second_valid_membership).to be_valid
+        expect(third_valid_membership).to be_valid
+        expect(fourth_valid_membership).to be_valid
+      end
     end
   end
 
@@ -414,6 +412,43 @@ RSpec.describe Membership do
           membership = Fabricate :membership, team: team
 
           expect(membership.avg_hours_per_demand(start_date, end_date)).to eq 0
+        end
+      end
+    end
+  end
+
+  describe '#realized_hour_value' do
+    context 'with efforts' do
+      it 'returns the realized effort' do
+        travel_to Time.zone.local(2023, 4, 13, 10) do
+          start_date = Time.zone.today.beginning_of_month.to_date
+          end_date = start_date.end_of_month
+
+          team = Fabricate :team
+          demand = Fabricate :demand, team: team
+          other_demand = Fabricate :demand, team: team
+          team_member = Fabricate :team_member, monthly_payment: 7000, hours_per_month: 160
+          membership = Fabricate :membership, team: team, team_member: team_member, hours_per_month: 120
+          assignment = Fabricate :item_assignment, membership: membership, demand: demand
+          other_assignment = Fabricate :item_assignment, membership: membership, demand: other_demand
+          Fabricate :demand_effort, demand: demand, item_assignment: assignment, start_time_to_computation: 1.day.ago, finish_time_to_computation: Time.zone.now, effort_value: 100
+          Fabricate :demand_effort, demand: other_demand, item_assignment: other_assignment, start_time_to_computation: 1.day.ago, finish_time_to_computation: Time.zone.now, effort_value: 100
+
+          expect(membership.realized_hour_value(end_date).to_f).to eq 26.25
+        end
+      end
+    end
+
+    context 'without efforts' do
+      it 'returns zero' do
+        travel_to Time.zone.local(2023, 4, 13, 10) do
+          start_date = Time.zone.today.beginning_of_month.to_date
+          end_date = start_date.end_of_month
+
+          team = Fabricate :team
+          membership = Fabricate :membership, team: team
+
+          expect(membership.realized_hour_value(end_date)).to eq 0
         end
       end
     end

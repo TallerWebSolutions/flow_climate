@@ -52,8 +52,6 @@ module Types
         argument :sort_direction, Types::Enums::SortDirection, required: false
       end
 
-      field :team_member_consolidation_list, [Types::TeamMemberConsolidationType], null: true
-
       field :average_pull_interval_data, Types::Charts::SimpleDateChartDataType, null: true
       field :lead_time_control_chart_data, Types::Charts::ControlChartType, null: true
       field :lead_time_histogram_chart_data, Types::Charts::LeadTimeHistogramDataType, null: true
@@ -83,15 +81,6 @@ module Types
         return demands if limit.blank?
 
         demands.limit(limit)
-      end
-
-      # TODO: Fix logic
-      def team_member_consolidation_list
-        membership = object
-        members_value_per_hour = []
-        (1..13).reverse_each { |month| members_value_per_hour << build_member_value_per_hour(month, membership) }
-
-        members_value_per_hour
       end
 
       def demand_efforts_list(from_date: nil, until_date: nil, page_number: nil)
@@ -177,11 +166,6 @@ module Types
 
       private
 
-      # TODO: Fix Logic
-      def build_member_value_per_hour(month, membership)
-        { 'consolidation_date' => month.month.ago.beginning_of_month, 'hour_value_realized' => compute_hours_per_month(membership.monthly_payment, membership.demand_efforts.to_dates(month.month.ago.beginning_of_month, month.month.ago.end_of_month).sum(&:effort_value).to_f) }
-      end
-
       def operations_dashboards
         @operations_dashboards ||= Dashboards::OperationsDashboard.where(
           team_member: object,
@@ -189,8 +173,13 @@ module Types
         ).where('operations_dashboards.dashboard_date > :limit_date', limit_date: 6.months.ago.beginning_of_day).order(:dashboard_date)
       end
 
-      def member_effort_data_interval = 6.months.ago.at_beginning_of_month.beginning_of_day
-      def member_effort_daily_interval = 30.days.ago.beginning_of_day
+      def member_effort_data_interval
+        6.months.ago.at_beginning_of_month.beginning_of_day
+      end
+
+      def member_effort_daily_interval
+        30.days.ago.beginning_of_day
+      end
 
       def first_day_of_six_months_hash
         accumulator = Hash.new { |hash, key| hash[key] = 0 }

@@ -184,6 +184,8 @@ export const MEMBER_EFFICIENCY_TABLE_QUERY = gql`
           realizedMoneyInMonth
           memberCapacityValue
           cardsCount
+          hourValueRealized
+          hourValueExpected
         }
       }
     }

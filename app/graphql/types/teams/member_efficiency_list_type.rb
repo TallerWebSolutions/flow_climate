@@ -5,6 +5,7 @@ module Types
     class MemberEfficiencyListType < Types::BaseObject
       field :avg_hours_per_member, Float, null: false
       field :avg_money_per_member, Float, null: false
+      field :date, GraphQL::Types::ISO8601Date, null: false
       field :members_efficiency, [Types::Teams::MemberEfficiencyDataType], null: false
       field :team_capacity_hours, Integer, null: false
       field :total_hours_produced, Float, null: false

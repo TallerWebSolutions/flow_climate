@@ -1496,11 +1496,14 @@ RSpec.describe Project do
     let(:project) { Fabricate :project }
 
     context 'with project consolidations' do
-      let!(:first_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago, project_throughput: 10 }
-      let!(:second_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 2.days.ago, project_throughput: 5 }
-      let!(:third_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 2.days.ago, project_throughput: 1 }
-
-      it { expect(project.last_weekly_throughput(10)).to eq [4, 5] }
+      it 'returns the throughtput' do
+        travel_to Time.zone.local(2020, 12, 2, 10, 0, 0) do
+          Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago, project_throughput: 10
+          Fabricate :project_consolidation, project: project, consolidation_date: 2.days.ago, project_throughput: 5
+          Fabricate :project_consolidation, project: project, consolidation_date: 2.days.ago, project_throughput: 1
+          expect(project.last_weekly_throughput(10)).to eq [4, 5]
+        end
+      end
     end
 
     context 'with no consolidations' do

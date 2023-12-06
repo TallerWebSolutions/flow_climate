@@ -37,6 +37,7 @@ class Membership < ApplicationRecord
   has_many :membership_available_hours_histories, class_name: 'History::MembershipAvailableHoursHistory', dependent: :destroy
 
   validates :start_date, :member_role, presence: true
+  validate :active_team_member_unique
 
   scope :active, -> { where('memberships.end_date' => nil) }
   scope :inactive, -> { where.not('memberships.end_date' => nil) }
@@ -48,7 +49,6 @@ class Membership < ApplicationRecord
   delegate :company, to: :team
   delegate :projects, to: :team_member
 
-  before_create :active_team_member_unique
   before_update :save_hours_history
 
   def to_hash
@@ -107,6 +107,14 @@ class Membership < ApplicationRecord
     return 0 if current_hours_per_month.zero?
 
     monthly_payment(date) / current_hours_per_month
+  end
+
+  def realized_hour_value(date = Time.zone.now)
+    realized_effort = effort_in_period(date.beginning_of_month, date.end_of_month)
+
+    return 0 if realized_effort.zero?
+
+    monthly_payment(date) / realized_effort
   end
 
   def monthly_payment(date = Time.zone.now)
