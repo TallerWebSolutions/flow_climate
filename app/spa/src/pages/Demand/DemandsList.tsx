@@ -26,6 +26,7 @@ import { secondsToReadbleDate } from "../../lib/date"
 import DateLocale from "../../components/ui/DateLocale"
 import { MessagesContext } from "../../contexts/MessageContext"
 import Modal from "@mui/material/Modal"
+import { formattedRelativeDate } from "../../utils/formatRelativeDate"
 
 const DEMAND_FRAGMENT = gql`
   fragment demandsList on DemandsList {
@@ -186,6 +187,8 @@ const normalizeQueryStringFilters = (filters: FieldValues) =>
       return { ...acc, [el]: filters[el] }
     }, {})
 
+ 
+
 const DemandsListPage = () => {
   const { t } = useTranslation("demand")
   const { me } = useContext(MeContext)
@@ -199,8 +202,10 @@ const DemandsListPage = () => {
     demandStatus: searchParams.get("demandStatus") || "ALL_DEMANDS",
     sortDirection: "DESC",
     orderField: "end_date",
-    startDate: searchParams.get("startDate"),
-    endDate: searchParams.get("endDate"),
+    startDate: searchParams.get("startDate") || formattedRelativeDate.format({
+      offsetDays: -30
+    }),
+    endDate: searchParams.get("endDate") || formattedRelativeDate.format() ,
     pageNumber: Number(searchParams.get("pageNumber") || 1),
     perPage: 20,
     demandType: searchParams.get("demandType"),

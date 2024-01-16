@@ -28,6 +28,7 @@ import { Demand } from "../../modules/demand/demand.types"
 import TeamBasicPage from "../../modules/team/components/TeamBasicPage"
 import { Team } from "../../modules/team/team.types"
 import MemberGeneralInfo from "./MemberGeneralInfo"
+import { formattedRelativeDate } from "../../utils/formatRelativeDate"
 
 const TEAM_DASHBOARD_QUERY = gql`
   query TeamDashboard($teamId: ID!, $startDate: ISO8601Date, $endDate: ISO8601Date) {
@@ -77,7 +78,7 @@ const TEAM_DASHBOARD_QUERY = gql`
         yAxis
       }
 
-      membershipHourValueChartList {
+      membershipHourValueChartList(startDate: $startDate, endDate: $endDate) {
         membership {
           id
           teamMemberName
@@ -115,8 +116,10 @@ const TeamDashboard = () => {
   const { teamId, companySlug } = useParams()
   const { me } = useContext(MeContext)
   const [searchParams] = useSearchParams()
-  const startDate = searchParams.get("startDate")
-  const endDate = searchParams.get("endDate")
+  const startDate = searchParams.get("startDate") || formattedRelativeDate.format({
+    offsetDays: -30
+  })
+  const endDate = searchParams.get("endDate") || formattedRelativeDate.format()
   const { data, loading } = useQuery<TeamDashboardDTO>(TEAM_DASHBOARD_QUERY, {
     variables: {
       teamId: Number(teamId),
@@ -287,7 +290,7 @@ const TeamDashboard = () => {
               <Input
                 {...register("startDate")}
                 type="date"
-                defaultValue={searchParams.get("startDate")}
+                defaultValue={startDate}
               />
             </FormElement>
             <FormElement>
@@ -297,7 +300,7 @@ const TeamDashboard = () => {
               <Input
                 {...register("endDate")}
                 type="date"
-                defaultValue={searchParams.get("endDate")}
+                defaultValue={endDate}
               />
             </FormElement>
             <FormElement>
