@@ -151,16 +151,6 @@ const TeamMemberDashboardCharts = ({
           />
         </ChartGridItem>
       )}
-      {projectHoursData && (
-        <ChartGridItem title={t("charts.hoursPerProject")}>
-          <BarChart
-            data={projectHoursGroups}
-            keys={projectHoursNames}
-            indexBy="key"
-            groupMode="grouped"
-          />
-        </ChartGridItem>
-      )}
       {lineChartTeamMemberHourValueData && (
         <ChartGridItem title={t("charts.valuePerHour")}>
           <LineChart
@@ -173,6 +163,24 @@ const TeamMemberDashboardCharts = ({
                 <LineChartTooltip slice={slice} />
               ),
             }}
+          />
+        </ChartGridItem>
+      )}
+      {projectHoursData && (
+        <ChartGridItem title={t("charts.hoursPerProject")} columns={12}>
+          <BarChart
+            data={projectHoursGroups}
+            keys={projectHoursNames}
+            indexBy="key"
+            groupMode="grouped"
+            legendAnchor="top-right"
+            legendItemWidth={25}
+            legendTranslateX={40}
+            legendTranslateY={0}
+            legendDirection="column"
+            marginTop={0}
+            marginLeft={0}
+            marginRight={350}
           />
         </ChartGridItem>
       )}

@@ -19,9 +19,15 @@ type BarChartProps = {
   padding?: number
   groupMode?: "stacked" | "grouped"
   showLegends?: boolean
+  legendTranslateX?: number
+  legendTranslateY?: number
+  legendItemWidth?: number
+  legendItemHeight?: number
   height?: number
+  marginTop?: number
   marginBottom?: number
   marginLeft?: number
+  marginRight?: number
 }
 
 export const BarChart = ({
@@ -36,20 +42,26 @@ export const BarChart = ({
   padding,
   groupMode = "stacked",
   showLegends = true,
+  legendTranslateX = 0,
+  legendTranslateY = -25,
+  legendItemWidth = 125,
+  legendItemHeight = 20,
   height = 420,
+  marginTop = 50,
   marginBottom = 80,
   marginLeft = 60,
+  marginRight = 50,
 }: BarChartProps) => {
   const chartData = Array.isArray(data) ? data : keyValueToHistogramData(data)
 
   return (
     <Box height={height}>
       <ResponsiveBar
-        legendLabel={legendLabel ? () => legendLabel : undefined}
+        legendLabel={legendLabel ? () => legendLabel  : undefined}
         data={chartData}
         indexBy={indexBy}
         keys={keys}
-        margin={{ top: 50, right: 50, bottom: marginBottom, left: marginLeft }}
+        margin={{ top: marginTop, right: marginRight, bottom: marginBottom, left: marginLeft }}
         groupMode={groupMode}
         padding={Number.isNaN(padding) ? 0.3 : padding}
         colors={{ scheme: "paired" }}
@@ -88,12 +100,12 @@ export const BarChart = ({
                   direction: legendDirection,
                   toggleSerie: true,
                   justify: false,
-                  translateX: 0,
-                  translateY: -25,
+                  translateX: legendTranslateX,
+                  translateY: legendTranslateY,
                   itemsSpacing: 0,
                   itemDirection: "left-to-right",
-                  itemWidth: 125,
-                  itemHeight: 20,
+                  itemWidth: legendItemWidth,
+                  itemHeight: legendItemHeight,
                   itemOpacity: 0.75,
                   symbolSize: 12,
                   symbolShape: "circle",
