@@ -1,4 +1,5 @@
 import { ResponsiveLine, Serie } from "@nivo/line"
+import { LegendAnchor, LegendDirection } from "@nivo/legends"
 import { Box } from "@mui/material"
 
 export const normalizeCfdData = (data: Serie[]): Serie[] =>
@@ -21,6 +22,16 @@ export type LineGraphProps = {
   axisLeftLegend: string
   axisBottomLegend?: string
   props?: object
+  marginTop?: number
+  marginBottom?: number
+  marginLeft?: number
+  marginRight?: number
+  legendAnchor?: LegendAnchor
+  legendDirection?: LegendDirection
+  legendTranslateX?: number
+  legendTranslateY?: number
+  legendItemWidth?: number
+  legendItemHeight?: number
 }
 
 export const LineChart = ({
@@ -28,13 +39,23 @@ export const LineChart = ({
   axisLeftLegend,
   axisBottomLegend,
   props,
+  marginTop = 25,
+  marginBottom = 80,
+  marginLeft = 80,
+  marginRight = 20,
+  legendAnchor = "top",
+  legendDirection = "row",
+  legendTranslateX = 0,
+  legendTranslateY = -25,
+  legendItemWidth = 125,
+  legendItemHeight = 20,
 }: LineGraphProps) => {
   return (
     <Box height={420}>
       <ResponsiveLine
         data={data}
         colors={{ scheme: "category10" }}
-        margin={{ left: 80, right: 20, top: 25, bottom: 80 }}
+        margin={{ left: marginLeft, right: marginRight, top: marginTop, bottom: marginBottom }}
         yScale={{ type: "linear", min: "auto", max: "auto" }}
         axisLeft={{
           legend: axisLeftLegend,
@@ -53,15 +74,15 @@ export const LineChart = ({
         legends={[
           {
             toggleSerie: true,
-            anchor: "top",
-            direction: "row",
+            anchor: legendAnchor,
+            direction: legendDirection,
             justify: false,
-            translateX: 0,
-            translateY: -25,
+            translateX: legendTranslateX,
+            translateY: legendTranslateY,
             itemsSpacing: 0,
             itemDirection: "left-to-right",
-            itemWidth: 125,
-            itemHeight: 20,
+            itemWidth: legendItemWidth,
+            itemHeight: legendItemHeight,
             itemOpacity: 0.75,
             symbolSize: 12,
             symbolShape: "circle",

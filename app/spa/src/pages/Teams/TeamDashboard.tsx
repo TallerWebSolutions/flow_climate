@@ -362,20 +362,28 @@ const TeamDashboard = () => {
           />
         </ChartGridItem>
 
-        <ChartGridItem title={t("charts.hourValueRealized")}>
+        <ChartGridItem title={t("charts.hourValueRealized")} columns={12}>
           <LineChart
             data={lineChartMembershipHourRealizedValueData}
             axisLeftLegend={t("charts.valueInReal")}
             props={{
               enableSlices: "x",
               sliceTooltip: ({ slice }: SliceTooltipProps) => (
-                <LineChartTooltip slice={slice} />
+                <LineChartTooltip slice={slice}  />
               ),
             }}
+            legendAnchor="top-right"
+            legendItemWidth={25}
+            legendTranslateX={40}
+            legendTranslateY={0}
+            legendDirection="column"
+            marginTop={0}
+            marginLeft={0}
+            marginRight={350}
           />
         </ChartGridItem>
 
-        <ChartGridItem title={t("charts.hoursExpected")}>
+        <ChartGridItem title={t("charts.hoursExpected")} columns={12}>
           <LineChart
             data={lineChartMembershipHoursExpectedValueData}
             axisLeftLegend={t("charts.valueInReal")}
@@ -385,6 +393,14 @@ const TeamDashboard = () => {
                 <LineChartTooltip slice={slice} />
               ),
             }}
+            legendAnchor="top-right"
+            legendItemWidth={25}
+            legendTranslateX={40}
+            legendTranslateY={0}
+            legendDirection="column"
+            marginTop={0}
+            marginLeft={0}
+            marginRight={350}
           />
         </ChartGridItem>
       </Grid>
