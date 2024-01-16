@@ -61,7 +61,7 @@ const ProjectsSearchForm = ({ projectsFilters }: ProjectsSearchFormProps) => {
               </InputLabel>
               <Input
                 type="date"
-                defaultValue={projectsFilters.endDate}
+                defaultValue={projectsFilters.startDate}
                 {...register("startDate")}
               />
             </FormElement>
