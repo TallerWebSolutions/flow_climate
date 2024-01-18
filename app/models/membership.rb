@@ -43,7 +43,8 @@ class Membership < ApplicationRecord
   scope :inactive, -> { where.not('memberships.end_date' => nil) }
   scope :active_for_date, ->(limit_date) { where('start_date <= :limit_date AND (end_date IS NULL OR end_date >= :limit_date)', limit_date: limit_date.to_date) }
   scope :billable_member, -> { joins(:team_member).where('team_members.billable = true') }
-
+  scope :monthly_payment, -> { joins(:team_member).where('team_members.monthly_payment IS NOT NULL') }
+  
   delegate :name, to: :team_member, prefix: true
   delegate :jira_account_id, to: :team_member
   delegate :company, to: :team
