@@ -87,6 +87,7 @@ const TEAM_DASHBOARD_QUERY = gql`
           date
           hourValueRealized
           hourValueExpected
+          hoursPerMonth
         }
       }
     }
@@ -251,6 +252,24 @@ const TeamDashboard = () => {
       }
     }) ?? []
 
+  const lineChartMembershipMonthlyRealValueData =
+    team?.membershipHourValueChartList?.map((membershipHourValueList) => {
+      return {
+        id: membershipHourValueList.membership?.teamMemberName ?? "",
+        data:
+          membershipHourValueList.memberHourValueChartData?.map(
+            (memberHourValueChartData) => {
+
+              const monthlyValue = (memberHourValueChartData.hourValueRealized ?? 0) * (memberHourValueChartData.hoursPerMonth ?? 0)
+              return {
+                x: String(memberHourValueChartData.date || ""),
+                y: monthlyValue.toFixed(2),
+              }
+            }
+          ) ?? [],
+      }
+    }) ?? []
+
   return (
     <TeamBasicPage
       breadcrumbsLinks={breadcrumbsLinks}
@@ -386,6 +405,27 @@ const TeamDashboard = () => {
         <ChartGridItem title={t("charts.hoursExpected")} columns={12}>
           <LineChart
             data={lineChartMembershipHoursExpectedValueData}
+            axisLeftLegend={t("charts.valueInReal")}
+            props={{
+              enableSlices: "x",
+              sliceTooltip: ({ slice }: SliceTooltipProps) => (
+                <LineChartTooltip slice={slice} />
+              ),
+            }}
+            legendAnchor="top-right"
+            legendItemWidth={25}
+            legendTranslateX={40}
+            legendTranslateY={0}
+            legendDirection="column"
+            marginTop={0}
+            marginLeft={0}
+            marginRight={350}
+          />
+        </ChartGridItem>
+
+        <ChartGridItem title={t("charts.montlhyValueRealized")} columns={12}>
+          <LineChart
+            data={lineChartMembershipMonthlyRealValueData}
             axisLeftLegend={t("charts.valueInReal")}
             props={{
               enableSlices: "x",

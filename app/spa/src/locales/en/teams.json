@@ -78,6 +78,7 @@
     "financialPerformanceYLabel": "Amount",
     "hourValueRealized": "Hour Value Realized",
     "hoursExpected": "Hour Value Expected",
+    "montlhyValueRealized": "Monthly Value Realized",
     "valueInReal": "Value per Hour - ( R$ )"
   },
   "actions": {

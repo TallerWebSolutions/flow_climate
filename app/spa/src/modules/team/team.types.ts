@@ -74,6 +74,7 @@ export type MemberHourValueChartData = {
   date?: string
   hourValueExpected?: number
   hourValueRealized?: number
+  hoursPerMonth?: number
 }
 
 export type Membership = {
