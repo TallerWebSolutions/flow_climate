@@ -177,7 +177,7 @@ module Types
         object.memberships.active.billable_member.each do |membership|
           member_hour_value_chart_data = []
           months.each do |month|
-            member_hour_value_chart_data.push({ date: month, hour_value_expected: membership.expected_hour_value(month), hour_value_realized: membership.realized_hour_value(month) })
+            member_hour_value_chart_data.push({ date: month, hour_value_expected: membership.expected_hour_value(month), hour_value_realized: membership.realized_hour_value(month), hours_per_month: membership.current_hours_per_month(month) })
           end
           memberships_hour_value_list.push({ membership: membership, member_hour_value_chart_data: member_hour_value_chart_data })
         end
