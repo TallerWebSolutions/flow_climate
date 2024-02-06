@@ -28,7 +28,7 @@ module Demandable
   end
 
   def upstream_demands(limit_date = Time.zone.now)
-    demands.not_discarded_until(limit_date).not_committed(limit_date) - demands.not_discarded_until(limit_date).not_started(limit_date)
+    demands.not_discarded_until(limit_date).not_committed(limit_date)
   end
 
   ##
