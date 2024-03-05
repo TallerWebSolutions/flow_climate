@@ -6,6 +6,7 @@
 #
 #  id                                  :bigint           not null, primary key
 #  consolidation_date                  :date             not null
+#  consumed_hours                      :float            default(0.0)
 #  design_consumed_hours               :decimal(, )      default(0.0), not null
 #  design_consumed_hours_in_month      :decimal(, )      default(0.0), not null
 #  development_consumed_hours          :decimal(, )      default(0.0), not null

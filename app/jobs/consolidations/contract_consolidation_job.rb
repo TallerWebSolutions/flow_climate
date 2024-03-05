@@ -21,19 +21,26 @@ module Consolidations
           risk_to_date = 1 - Stats::StatisticsService.instance.compute_odds_to_deadline(contract.remaining_weeks(end_of_month), contract_based_montecarlo_durations)
 
           demands_finished = contract.demands.kept.finished_after_date(contract_start).finished_until_date(start_date)
+          total_effort_in_demands = demands_finished.map(&:total_effort).compact.sum
+
           real_hours_per_demand = if demands_finished.count.positive?
-                                    demands_finished.map(&:total_effort).compact.sum / demands_finished.count
+                                    total_effort_in_demands / demands_finished.count
                                   else
                                     0
                                   end
 
+          total_additional_hours = ProjectAdditionalHour.where(project_id: contract.customer.projects.select(:id)).sum(:hours)
+
           consolidation = Consolidations::ContractConsolidation.find_or_initialize_by(contract: contract, consolidation_date: end_of_month)
+          consumed_hours = total_additional_hours + total_effort_in_demands
+
           consolidation.update(operational_risk_value: risk_to_date,
                                min_monte_carlo_weeks: contract_based_montecarlo_durations.min || 0,
                                max_monte_carlo_weeks: contract_based_montecarlo_durations.max || 0,
                                monte_carlo_duration_p80_weeks: Stats::StatisticsService.instance.percentile(80, contract_based_montecarlo_durations) || 0,
                                real_hours_per_demand: real_hours_per_demand,
-                               estimated_hours_per_demand: contract.hours_per_demand_to_date(start_date))
+                               estimated_hours_per_demand: contract.hours_per_demand_to_date(start_date),
+                               consumed_hours: consumed_hours)
         else
           consolidation = Consolidations::ContractConsolidation.find_or_initialize_by(contract: contract, consolidation_date: end_of_month)
           consolidation.update(operational_risk_value: 1,
@@ -41,7 +48,8 @@ module Consolidations
                                max_monte_carlo_weeks: 0,
                                monte_carlo_duration_p80_weeks: 0,
                                real_hours_per_demand: 0,
-                               estimated_hours_per_demand: contract.hours_per_demand_to_date(start_date))
+                               estimated_hours_per_demand: contract.hours_per_demand_to_date(start_date),
+                               consumed_hours: consumed_hours)
         end
 
         start_date += 1.month

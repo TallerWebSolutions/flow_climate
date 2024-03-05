@@ -20,8 +20,13 @@ module Consolidations
       lead_time_p80 = Stats::StatisticsService.instance.percentile(80, demands_lead_time)
       lead_time_p80_in_month = Stats::StatisticsService.instance.percentile(80, demands_lead_time_in_month)
 
-      total_hours_delivered_accumulated = demands_finished.map(&:total_effort).compact.sum + demands_discarded.map(&:total_effort).compact.sum
-      total_hours_delivered_month = demands_finished_in_month.map(&:total_effort).compact.sum + demands_discarded_in_month.map(&:total_effort).compact.sum
+      total_additional_hours = ProjectAdditionalHour.where(project_id: customer.projects.select(:id)).sum(:hours)
+      total_additional_hours_in_month = ProjectAdditionalHour.where(project_id: customer.projects.select(:id))
+                                                             .where('event_date BETWEEN :start_date AND :end_date', start_date: cache_date.beginning_of_month, end_date: cache_date)
+                                                             .sum(:hours)
+
+      total_hours_delivered_accumulated = demands_finished.map(&:total_effort).compact.sum + demands_discarded.map(&:total_effort).compact.sum + total_additional_hours
+      total_hours_delivered_month = demands_finished_in_month.map(&:total_effort).compact.sum + demands_discarded_in_month.map(&:total_effort).compact.sum + total_additional_hours_in_month
 
       hours_per_demand = 0
       value_per_demand = 0
