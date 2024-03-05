@@ -720,6 +720,8 @@ pt-BR:
         total_value: Valor Total
         automatic_renewal: Renovação Automática
         hours_per_demand: HpD
+        consumed_hours: Produzidas
+        remaining_hours: Restantes
         enums:
           renewal_period:
             monthly: Mensalmente

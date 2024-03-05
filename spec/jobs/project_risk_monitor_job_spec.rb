@@ -83,7 +83,7 @@ RSpec.describe ProjectRiskMonitorJob, type: :active_job do
           let!(:first_project) { Fabricate :project, company: company, customers: [customer], status: :executing, start_date: Time.zone.today }
           let!(:first_risk_config) { Fabricate :project_risk_config, project: first_project, risk_type: :no_money_to_deadline, low_yellow_value: 10, high_yellow_value: 30 }
 
-          it 'will not create the new alert and will update the existent one' do
+          it 'does not create the new alert and will update the existent one' do
             ProjectRiskAlert.create(created_at: Time.zone.today, project: first_project, project_risk_config: first_risk_config, alert_color: :green, alert_value: 30)
             allow_any_instance_of(Project).to receive(:money_per_deadline).and_return(40)
 

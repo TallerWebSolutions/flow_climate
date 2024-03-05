@@ -131,9 +131,9 @@ RSpec.describe Contract do
       Fabricate :demand, customer: customer, contract: contract, project: other_project, work_item_type: bug_type, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago, effort_downstream: 43, effort_upstream: 49
       Fabricate :demand, customer: other_customer, contract: other_contract, project: other_project, work_item_type: bug_type, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago, effort_downstream: 38, effort_upstream: 15
 
-      expect(contract.remaining_work).to eq 3
-      expect(contract.remaining_work(3.weeks.ago)).to eq 6
-      expect(other_contract.remaining_work).to eq 2
+      expect(contract.remaining_work).to eq 0.9473684210526314
+      expect(contract.remaining_work(3.weeks.ago)).to eq 3.9473684210526314
+      expect(other_contract.remaining_work).to eq 0.8867924528301887
       expect(no_data_contract.remaining_work).to eq 5
     end
   end
@@ -240,6 +240,54 @@ RSpec.describe Contract do
           expect(contract.avg_hours_per_month).to eq 0
         end
       end
+    end
+  end
+
+  describe '#consumed_hours' do
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+
+    it 'sums the consumed total' do
+      contract = Fabricate :contract, customer: customer, start_date: 2.months.ago, end_date: 3.weeks.from_now, hours_per_demand: 10
+      empty_contract = Fabricate :contract, customer: customer, start_date: 2.months.ago, end_date: 3.weeks.from_now
+
+      Fabricate :contract_consolidation, contract: contract, consumed_hours: 150, consolidation_date: Time.zone.today
+      Fabricate :contract_consolidation, contract: contract, consumed_hours: 100, consolidation_date: 1.day.ago
+
+      expect(contract.consumed_hours).to eq 150
+      expect(empty_contract.consumed_hours).to eq 0
+    end
+  end
+
+  describe '#remaining_hours' do
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+
+    it 'sums the consumed total' do
+      contract = Fabricate :contract, customer: customer, start_date: 2.months.ago, end_date: 3.weeks.from_now, hours_per_demand: 10
+      empty_contract = Fabricate :contract, customer: customer, start_date: 2.months.ago, end_date: 3.weeks.from_now
+
+      Fabricate :contract_consolidation, contract: contract, consumed_hours: 150, consolidation_date: Time.zone.today
+      Fabricate :contract_consolidation, contract: contract, consumed_hours: 100, consolidation_date: 1.day.ago
+
+      expect(contract.remaining_hours).to eq(-115)
+      expect(empty_contract.remaining_hours).to eq 35
+    end
+  end
+
+  describe '#consumed_percentage' do
+    let(:company) { Fabricate :company }
+    let(:customer) { Fabricate :customer, company: company }
+
+    it 'sums the consumed total' do
+      contract = Fabricate :contract, customer: customer, start_date: 2.months.ago, end_date: 3.weeks.from_now, hours_per_demand: 10, total_hours: 400
+      empty_contract = Fabricate :contract, customer: customer, start_date: 2.months.ago, end_date: 3.weeks.from_now
+
+      Fabricate :contract_consolidation, contract: contract, consumed_hours: 150, consolidation_date: Time.zone.today
+      Fabricate :contract_consolidation, contract: contract, consumed_hours: 100, consolidation_date: 1.day.ago
+
+      expect(contract.consumed_percentage).to eq 0.375
+      expect(empty_contract.consumed_percentage).to eq 0
     end
   end
 end

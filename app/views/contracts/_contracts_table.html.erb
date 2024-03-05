@@ -8,6 +8,8 @@
         <th><%= Contract.human_attribute_name :end_date %></th>
         <th><%= Contract.human_attribute_name :total_hours %></th>
         <th><%= Contract.human_attribute_name :total_value %></th>
+        <th><%= Contract.human_attribute_name :consumed_hours %></th>
+        <th><%= Contract.human_attribute_name :remaining_hours %></th>
         <th>
           <%= Contract.human_attribute_name :hours_per_demand %>
           <i class="far fa-question-circle" title="<%= I18n.t('general.hours_per_demand') %>"></i>
@@ -28,6 +30,8 @@
           <td><%= I18n.l(contract.end_date) if contract.end_date.present? %></td>
           <td><%= I18n.t('general.hours_text', count: contract.total_hours) %></td>
           <td><%= number_to_currency(contract.total_value, precision: 2) %></td>
+          <td><%= "#{number_with_precision(contract.consumed_hours, precision: 2)} (#{number_to_percentage(contract.consumed_percentage * 100, precision: 1)})" %></td>
+          <td><%= number_with_precision(contract.remaining_hours, precision: 2) %></td>
           <td><%= I18n.t('general.hours_text', count: contract.hours_per_demand) %></td>
           <td><%= I18n.t('general.hours_text', count: number_with_precision(contract.current_hours_per_demand, precision: 2)) %></td>
           <td><%= number_to_percentage(contract.current_estimate_gap * 100, precision: 2) %></td>

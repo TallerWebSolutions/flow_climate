@@ -56,7 +56,13 @@ class Contract < ApplicationRecord
   end
 
   def estimated_scope
-    total_hours / hours_per_demand
+    hpd = if current_hours_per_demand.positive?
+            current_hours_per_demand
+          else
+            hours_per_demand
+          end
+
+    (total_hours / hpd).to_f
   end
 
   def current_hours_per_demand
@@ -105,6 +111,18 @@ class Contract < ApplicationRecord
     months = TimeService.instance.months_between_of(start_date, end_date)
 
     demands.kept.finished_until_date(Time.zone.now).sum(&:total_effort) / months.count
+  end
+
+  def consumed_hours
+    contract_consolidations.order(:consolidation_date).last&.consumed_hours || 0
+  end
+
+  def remaining_hours
+    total_hours - consumed_hours
+  end
+
+  def consumed_percentage
+    consumed_hours / total_hours
   end
 
   private

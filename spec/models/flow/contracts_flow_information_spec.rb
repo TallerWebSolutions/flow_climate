@@ -42,7 +42,7 @@ RSpec.describe Flow::ContractsFlowInformation do
           expect(contract_flow.build_financial_burnup).to eq([{ name: I18n.t('charts.burnup.scope'), data: [1_000_000, 1_000_000, 1_000_000, 1_000_000, 1_000_000] }, { name: I18n.t('charts.burnup.current'), data: [0.0, 0.0, 0.0, 7_500.0] }, { name: I18n.t('charts.burnup.ideal'), data: [200_000, 400_000, 600_000, 800_000, 1_000_000] }])
 
           expect(contract_flow.delivered_demands_count).to eq 1
-          expect(contract_flow.remaining_backlog_count).to eq 665
+          expect(contract_flow.remaining_backlog_count).to eq 132.33333333333334
           expect(contract_flow.consumed_hours).to eq 150
           expect(contract_flow.remaining_hours).to eq 19_850
         end
@@ -127,7 +127,7 @@ RSpec.describe Flow::ContractsFlowInformation do
 
           contract_flow = described_class.new(contract)
 
-          expect(contract_flow.build_scope_burnup).to eq([{ name: I18n.t('charts.burnup.scope'), data: [66, 66, 66, 66, 66] }, { name: I18n.t('charts.burnup.current'), data: [1, 1, 2, 3] }, { name: I18n.t('charts.burnup.ideal'), data: [13.2, 26.4, 39.599999999999994, 52.8, 66.0] }])
+          expect(contract_flow.build_scope_burnup).to eq([{ name: I18n.t('charts.burnup.scope'), data: [42.857142857142854, 42.857142857142854, 42.857142857142854, 42.857142857142854, 42.857142857142854] }, { name: I18n.t('charts.burnup.current'), data: [1, 1, 2, 3] }, { name: I18n.t('charts.burnup.ideal'), data: [8.571428571428571, 17.142857142857142, 25.714285714285715, 34.285714285714285, 42.857142857142854] }])
         end
       end
     end

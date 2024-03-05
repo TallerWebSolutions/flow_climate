@@ -93,7 +93,7 @@ module Jira
 
     def process_labels(demand, jira_issue_changelog)
       labels_field = jira_issue_changelog.map { |inside_hash| inside_hash['items'].select { |h| h['field'] == 'labels' } }.compact_blank.flatten
-      new_labels_to_demand = labels_field.map { |label_field| label_field['toString']&.split(' ') }
+      new_labels_to_demand = labels_field.map { |label_field| label_field['toString']&.split }
       demand.update(demand_tags: new_labels_to_demand.flatten.uniq)
     end
 
