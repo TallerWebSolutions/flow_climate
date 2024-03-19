@@ -22,3 +22,4 @@ production:
   database: flowcontrol_production
   username: flowcontrol
   password: <%= Figaro.env.flowcontrol_database_password %>
+  pool: <%= ENV["DB_POOL"] || ENV['RAILS_MAX_THREADS'] || 5 %>
