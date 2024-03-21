@@ -11,4 +11,4 @@ queues:
 
 limits:
   default: 5
-  low: 10
+  low: 5
