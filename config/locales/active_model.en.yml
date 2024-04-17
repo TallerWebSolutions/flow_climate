@@ -156,6 +156,7 @@ en:
           waiting_deploy_window: Waiting Deploy Window
           infrastructure: Infrastructure
           scope_changed: Scope Changed
+          waiting_approval: Waiting Approval
       demand:
         enums:
           class_of_service:
