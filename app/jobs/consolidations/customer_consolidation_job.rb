@@ -11,9 +11,7 @@ module Consolidations
 
       demands = customer.exclusives_demands.where('demands.created_date <= :analysed_date', analysed_date: end_of_day)
       demands_finished = demands.not_discarded_until(end_of_day).finished_until_date(end_of_day).order(end_date: :asc)
-      demands_discarded = demands.where('discarded_at <= :limit_date', limit_date: cache_date)
       demands_finished_in_month = demands.to_end_dates(cache_date.beginning_of_month, cache_date)
-      demands_discarded_in_month = demands.where('discarded_at BETWEEN :start_date AND :end_date', start_date: cache_date.beginning_of_month, end_date: cache_date )
       demands_lead_time = demands_finished.map(&:leadtime).flatten.compact
       demands_lead_time_in_month = demands_finished_in_month.map(&:leadtime).flatten.compact
 
@@ -25,8 +23,10 @@ module Consolidations
                                                              .where('event_date BETWEEN :start_date AND :end_date', start_date: cache_date.beginning_of_month, end_date: cache_date)
                                                              .sum(:hours)
 
-      total_hours_delivered_accumulated = demands_finished.map(&:total_effort).compact.sum + demands_discarded.map(&:total_effort).compact.sum + total_additional_hours
-      total_hours_delivered_month = demands_finished_in_month.map(&:total_effort).compact.sum + demands_discarded_in_month.map(&:total_effort).compact.sum + total_additional_hours_in_month
+      efforts_acc = DemandEffort.where(demand_id: demands.select(:id))
+      total_hours_delivered_accumulated = efforts_acc.sum(:effort_value) + total_additional_hours
+      efforts_in_month = efforts_acc.to_dates(cache_date.beginning_of_month, cache_date)
+      total_hours_delivered_month = efforts_in_month.sum(:effort_value) + total_additional_hours_in_month
 
       hours_per_demand = 0
       value_per_demand = 0

@@ -21,18 +21,22 @@ module Consolidations
           risk_to_date = 1 - Stats::StatisticsService.instance.compute_odds_to_deadline(contract.remaining_weeks(end_of_month), contract_based_montecarlo_durations)
 
           demands_finished = contract.demands.kept.finished_after_date(contract_start).finished_until_date(start_date)
-          total_effort_in_demands = demands_finished.map(&:total_effort).compact.sum
+
+          efforts_acc = DemandEffort.where(demand_id: demands.select(:id))
+                                    .where('start_time_to_computation > :limit_date', limit_date: contract_start)
+          total_hours_delivered_accumulated = efforts_acc.sum(:effort_value)
+
+          total_additional_hours = ProjectAdditionalHour.where(project_id: contract.customer.projects.select(:id)).sum(:hours)
 
           real_hours_per_demand = if demands_finished.count.positive?
-                                    total_effort_in_demands / demands_finished.count
+                                    total_hours_delivered_accumulated / demands_finished.count
                                   else
                                     0
                                   end
 
-          total_additional_hours = ProjectAdditionalHour.where(project_id: contract.customer.projects.select(:id)).sum(:hours)
 
           consolidation = Consolidations::ContractConsolidation.find_or_initialize_by(contract: contract, consolidation_date: end_of_month)
-          consumed_hours = total_additional_hours + total_effort_in_demands
+          consumed_hours = total_additional_hours + total_hours_delivered_accumulated
 
           consolidation.update(operational_risk_value: risk_to_date,
                                min_monte_carlo_weeks: contract_based_montecarlo_durations.min || 0,
