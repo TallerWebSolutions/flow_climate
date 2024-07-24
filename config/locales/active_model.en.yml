@@ -157,6 +157,7 @@ en:
           infrastructure: Infrastructure
           scope_changed: Scope Changed
           waiting_approval: Waiting Approval
+          negotiating: Negotiating
       demand:
         enums:
           class_of_service:
