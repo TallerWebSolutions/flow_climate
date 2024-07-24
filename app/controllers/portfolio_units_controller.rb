@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'csv'
+
 class PortfolioUnitsController < AuthenticatedController
   before_action :assign_product, except: :index
   before_action :assign_portfolio_unit, only: %i[show destroy edit update]
