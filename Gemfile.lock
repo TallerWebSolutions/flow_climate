@@ -282,7 +282,6 @@ GEM
     net-protocol (0.2.2)
       timeout
     net-smtp (0.4.0.1)
-      net-protocol
     netrc (0.11.0)
     newrelic_rpm (9.7.1)
     nio4r (2.7.0)
@@ -606,7 +605,7 @@ DEPENDENCIES
   yui-compressor
 
 RUBY VERSION
-   ruby 3.2.2p53
+   ruby 3.3.4p94
 
 BUNDLED WITH
    2.3.14
