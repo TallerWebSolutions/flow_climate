@@ -49,7 +49,7 @@ class DemandTransition < ApplicationRecord
   scope :queue_transitions, -> { joins(:stage).where('stages.queue = true AND stages.end_point = false AND stages.stage_stream = :downstream', downstream: Stage.stage_streams[:downstream]) }
   scope :before_date_after_stage, ->(limit_date, base_order) { joins(:stage).where('last_time_in <= :limit_date AND stages.order >= :stage_order', limit_date: limit_date, stage_order: base_order) }
   scope :for_demands_ids, ->(demands_ids) { where(demand_id: demands_ids) }
-  scope :after_date, ->(date) { where('last_time_in >= :limit_date', limit_date: date) }
+  scope :after_date, ->(date) { where(last_time_in: date..) }
   scope :for_date, ->(date) { where('(last_time_in <= :limit_date AND (last_time_out IS NULL OR last_time_out >= :limit_date)) OR (last_time_in > :limit_date AND (last_time_out IS NULL OR last_time_out <= :limit_date))', limit_date: date) }
 
   validates :last_time_in, presence: true

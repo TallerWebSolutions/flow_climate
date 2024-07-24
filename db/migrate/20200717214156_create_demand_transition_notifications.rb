@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class CreateDemandTransitionNotifications < ActiveRecord::Migration[6.0]
+  # rubocop:disable Rails/BulkChangeTable
   def change
     create_table :demand_transition_notifications do |t|
       t.integer :demand_id, index: true, null: false
@@ -17,4 +18,5 @@ class CreateDemandTransitionNotifications < ActiveRecord::Migration[6.0]
     change_column_null :slack_configurations, :notification_hour, true
     change_column_null :slack_configurations, :notification_minute, true
   end
+  # rubocop:enable Rails/BulkChangeTable
 end

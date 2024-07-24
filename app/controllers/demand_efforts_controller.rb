@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'csv'
+
 class DemandEffortsController < AuthenticatedController
   before_action :assign_demand
 

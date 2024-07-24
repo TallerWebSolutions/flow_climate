@@ -11,7 +11,7 @@ class ProjectsSummaryData
   def discovered_scope
     return {} if @projects.blank?
 
-    discovered_after_project_starts = demands.where('created_date >= :start_date', start_date: min_date)
+    discovered_after_project_starts = demands.where(created_date: min_date..)
 
     discovered_before_project_starts = demands - discovered_after_project_starts
 

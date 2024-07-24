@@ -84,9 +84,8 @@ class Membership < ApplicationRecord
   def pairing_members(date)
     return [] if demands_for_role.blank?
 
-    pairing_members = []
     same_team_demands = demands_for_role.where(team: team).where('end_date <= :limit_date', limit_date: date.end_of_day)
-    same_team_demands.each { |demand| pairing_members << pairing_members_in_demand(demand) }
+    pairing_members = same_team_demands.map { |demand| pairing_members_in_demand(demand) }
 
     pairing_members.flatten
   end
@@ -160,19 +159,15 @@ class Membership < ApplicationRecord
   private
 
   def pairing_members_in_demand(demand)
-    pairing_members = []
-
     assignments_for_member = demand.item_assignments.where(membership: self)
-    assignments_for_member.each do |member_assignment|
-      pairing_members << demand.item_assignments
-                               .joins(:membership)
-                               .where(memberships: { member_role: member_role })
-                               .for_dates(member_assignment.start_time, member_assignment.finish_time)
-                               .not_for_membership(self)
-                               .map(&:membership)
+    assignments_for_member.map do |member_assignment|
+      demand.item_assignments
+            .joins(:membership)
+            .where(memberships: { member_role: member_role })
+            .for_dates(member_assignment.start_time, member_assignment.finish_time)
+            .not_for_membership(self)
+            .map(&:membership)
     end
-
-    pairing_members
   end
 
   def active_team_member_unique

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class CreateWorkItemTypes < ActiveRecord::Migration[7.0]
+  # rubocop:disable Rails/BulkChangeTable
   def up
     create_table :work_item_types do |t|
       t.integer :company_id, index: true, null: false
@@ -50,4 +51,5 @@ class CreateWorkItemTypes < ActiveRecord::Migration[7.0]
     remove_column :tasks, :work_item_type_id
     drop_table :work_item_types
   end
+  # rubocop:enable Rails/BulkChangeTable
 end

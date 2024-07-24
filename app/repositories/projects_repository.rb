@@ -10,7 +10,7 @@ class ProjectsRepository
   end
 
   def projects_ending_after(projects, limit_date)
-    projects.where('end_date >= :limit_date', limit_date: limit_date)
+    projects.where(end_date: limit_date..)
   end
 
   def finish_project(project, finish_date = Time.zone.now)
@@ -31,7 +31,7 @@ class ProjectsRepository
 
   def search_projects(projects, project_status, start_date, end_date)
     projects = projects.where(status: project_status) if project_status.present?
-    projects = projects.where('start_date >= :start_date', start_date: start_date) if start_date.present?
+    projects = projects.where(start_date: start_date..) if start_date.present?
     projects = projects.where('end_date <= :end_date', end_date: end_date) if end_date.present?
     projects.order(end_date: :desc)
   end
@@ -39,13 +39,11 @@ class ProjectsRepository
   def search_by_name(projects, project_name)
     return projects if project_name.blank?
 
-    projects_result_ids = []
-
     names_array = project_name.split(',')
 
     return projects if names_array.blank?
 
-    names_array.each { |name| projects_result_ids << projects.where('name ILIKE :project_name', project_name: "%#{name}%").map(&:id) }
+    projects_result_ids = names_array.map { |name| projects.where('name ILIKE :project_name', project_name: "%#{name}%").map(&:id) }
 
     Project.where(id: projects_result_ids.flatten)
   end

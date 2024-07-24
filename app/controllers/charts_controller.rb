@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'csv'
+
 class ChartsController < AuthenticatedController
   before_action :assign_projects
   before_action :assign_target_name

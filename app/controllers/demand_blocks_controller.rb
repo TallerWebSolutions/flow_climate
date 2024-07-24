@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'csv'
+
 class DemandBlocksController < AuthenticatedController
   before_action :assign_project, except: %i[index demand_blocks_csv search]
   before_action :assign_demand, except: %i[index demand_blocks_csv search]

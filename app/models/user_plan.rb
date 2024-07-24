@@ -64,7 +64,7 @@ class UserPlan < ApplicationRecord
   private
 
   def user_plan_uniqueness
-    existent_user_plans = UserPlan.where(user: user, plan: plan).where('finish_at >= :finish_at', finish_at: finish_at)
+    existent_user_plans = UserPlan.where(user: user, plan: plan).where(finish_at: finish_at..)
     return if existent_user_plans == [self]
 
     errors.add(:user, I18n.t('user_plan.validations.user_plan_active')) if existent_user_plans.present?

@@ -7,7 +7,7 @@ module Highchart
                 :demands_by_type
 
     def initialize(demands, start_date, end_date, chart_period_interval)
-      super(demands, start_date, end_date, chart_period_interval)
+      super
 
       return if demands.blank?
 

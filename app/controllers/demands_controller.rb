@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'csv'
+
 class DemandsController < DemandsListController
   before_action :user_gold_check
 

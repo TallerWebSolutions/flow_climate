@@ -23,19 +23,13 @@ module ViewCharts
     def tasks_by_type
       tasks_grouped = Task.where(id: tasks_in_chart.map(&:id)).joins(:work_item_type).group('work_item_types.name').count.sort_by { |_key, value| value }.reverse.to_h
 
-      tasks_by_type = []
-      tasks_grouped.each { |type_grouped, group_count| tasks_by_type << { label: type_grouped, value: group_count } }
-
-      tasks_by_type
+      tasks_grouped.map { |type_grouped, group_count| { label: type_grouped, value: group_count } }
     end
 
     def tasks_by_project
       tasks_grouped = Task.where(id: tasks_in_chart.map(&:id)).joins(demand: :project).group('projects.name').count.sort_by { |_key, value| value }.reverse.to_h
 
-      tasks_by_project = []
-      tasks_grouped.each { |type_grouped, group_count| tasks_by_project << { label: type_grouped, value: group_count } }
-
-      tasks_by_project
+      tasks_grouped.map { |type_grouped, group_count| { label: type_grouped, value: group_count } }
     end
 
     private

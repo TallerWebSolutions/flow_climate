@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class ChangeBlockerStringToTeamMember < ActiveRecord::Migration[5.2]
+  # rubocop:disable Rails/BulkChangeTable
   def up
     change_table :demand_blocks, bulk: true do |t|
       t.integer :blocker_id, index: true
@@ -38,4 +39,5 @@ class ChangeBlockerStringToTeamMember < ActiveRecord::Migration[5.2]
       t.string :unblocker_username
     end
   end
+  # rubocop:enable Rails/BulkChangeTable
 end

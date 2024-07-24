@@ -6,7 +6,7 @@ module Flow
                 :average_queue_time, :average_touch_time
 
     def initialize(demands)
-      super(demands)
+      super
       start_attributes_values
     end
 

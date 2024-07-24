@@ -31,9 +31,8 @@ module Flow
     end
 
     def compute_effort_for_assignment(assignment)
-      efforts_in_assignment = []
-      assignment.stages_during_assignment.each do |stage|
-        efforts_in_assignment << sum_efforts_in_demand_transitions(assignment, stage)
+      efforts_in_assignment = assignment.stages_during_assignment.map do |stage|
+        sum_efforts_in_demand_transitions(assignment, stage)
       end
 
       efforts_in_assignment.flatten.sum

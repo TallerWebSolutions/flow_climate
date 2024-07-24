@@ -5,7 +5,7 @@ module Flow
     attr_reader :blocks_count, :blocks_time
 
     def initialize(demands)
-      super(demands)
+      super
 
       @blocks_count = []
       @blocks_time = []

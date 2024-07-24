@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class RemoveCustomerInProductNotNull < ActiveRecord::Migration[6.1]
+  # rubocop:disable Rails/BulkChangeTable
   def change
     change_column_null :products, :customer_id, true
 
@@ -16,4 +17,5 @@ class RemoveCustomerInProductNotNull < ActiveRecord::Migration[6.1]
 
     change_column_null :products, :company_id, false
   end
+  # rubocop:enable Rails/BulkChangeTable
 end

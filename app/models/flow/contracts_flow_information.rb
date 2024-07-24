@@ -133,7 +133,7 @@ module Flow
     def add_value_to_quality_chart(date, demands_delivered_to_date)
       return if date > @limit_date
 
-      bugs_opened_in_the_contract_count = @demands.kept.bug.where('created_date >= :start_date AND created_date <= :end_date', start_date: @contract.start_date, end_date: date).count
+      bugs_opened_in_the_contract_count = @demands.kept.bug.where(created_date: @contract.start_date..date).count
       @quality_info << if bugs_opened_in_the_contract_count.zero?
                          0
                        else
@@ -144,7 +144,7 @@ module Flow
     def add_value_to_quality_in_month_chart(date, demands_delivered_to_date_in_month)
       return if date > @limit_date
 
-      bugs_opened_in_the_month_count = @demands.kept.bug.where('created_date >= :start_date AND created_date <= :end_date', start_date: date.beginning_of_month, end_date: date.end_of_month).count
+      bugs_opened_in_the_month_count = @demands.kept.bug.where(created_date: date.all_month).count
       @quality_info_month << if bugs_opened_in_the_month_count.zero?
                                0
                              else

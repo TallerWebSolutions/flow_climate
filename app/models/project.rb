@@ -82,7 +82,7 @@ class Project < ApplicationRecord
   scope :running, -> { where('(projects.status = 1 OR projects.status = 2) AND projects.start_date <= :limit_date', limit_date: Time.zone.today) }
   scope :active, -> { where('(projects.status = 0 OR projects.status = 1 OR  projects.status = 2) AND projects.end_date >= :limit_date', limit_date: Time.zone.today) }
   scope :active_in_period, ->(start_period, end_period) { where('(projects.start_date BETWEEN :start_period AND :end_period) OR (projects.end_date BETWEEN :start_period AND :end_period)', start_period: start_period, end_period: end_period) }
-  scope :finishing_after, ->(date) { where('projects.end_date >= :end_date', end_date: date) }
+  scope :finishing_after, ->(date) { where(projects: { end_date: date.. }) }
   scope :not_cancelled, -> { where.not(status: :cancelled) }
 
   after_save :remove_outdated_consolidations

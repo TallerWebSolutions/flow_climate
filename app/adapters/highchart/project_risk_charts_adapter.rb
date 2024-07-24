@@ -13,11 +13,9 @@ module Highchart
     end
 
     def mount_data_to_chart(grouped_risk_alerts)
-      data_to_chart = []
-      grouped_risk_alerts.each do |risk_color, count|
-        data_to_chart.push(name: I18n.t("activerecord.attributes.project_risk_alert.enums.alert_color.#{risk_color}"), y: count, color: define_color_hex(risk_color))
+      grouped_risk_alerts.map do |risk_color, count|
+        { name: I18n.t("activerecord.attributes.project_risk_alert.enums.alert_color.#{risk_color}"), y: count, color: define_color_hex(risk_color) }
       end
-      data_to_chart
     end
 
     private

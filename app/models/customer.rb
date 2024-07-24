@@ -103,7 +103,7 @@ class Customer < ApplicationRecord
     if number_of_weeks <= 0
       demands.kept.finished_with_leadtime.order(leadtime: :desc).first(number_of_records)
     else
-      demands.kept.finished_with_leadtime.where('end_date >= :limit_date', limit_date: number_of_weeks.weeks.ago).order(leadtime: :desc).first(number_of_records)
+      demands.kept.finished_with_leadtime.where(end_date: number_of_weeks.weeks.ago..).order(leadtime: :desc).first(number_of_records)
     end
   end
 

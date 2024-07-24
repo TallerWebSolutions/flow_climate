@@ -57,7 +57,7 @@ class RiskReview < ApplicationRecord
   end
 
   def outlier_demands
-    demands.finished_with_leadtime.where('leadtime >= :outlier_value', outlier_value: lead_time_outlier_limit * 1.day.to_i)
+    demands.finished_with_leadtime.where(leadtime: (lead_time_outlier_limit * 1.day.to_i)..)
   end
 
   def blocks_per_demand

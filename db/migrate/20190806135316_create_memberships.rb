@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class CreateMemberships < ActiveRecord::Migration[5.2]
+  # rubocop:disable Rails/BulkChangeTable
   def up
     change_table :team_members, bulk: true do |t|
       t.integer :company_id, index: true
@@ -43,4 +44,5 @@ class CreateMemberships < ActiveRecord::Migration[5.2]
 
     drop_table :memberships
   end
+  # rubocop:enable Rails/BulkChangeTable
 end

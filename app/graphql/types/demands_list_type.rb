@@ -71,7 +71,7 @@ module Types
     end
 
     def demands
-      Demand.where(id: object['demands'].map(&:id)).where('created_date >= :limit_date', limit_date: 1.year.ago).order(created_date: :asc)
+      Demand.where(id: object['demands'].map(&:id)).where(created_date: 1.year.ago..).order(created_date: :asc)
     end
   end
 end

@@ -86,7 +86,7 @@ module Consolidations
 
     scope :weekly_data, -> { where(last_data_in_week: true) }
     scope :for_project, ->(project) { where(project: project) }
-    scope :after_date, ->(date) { where('consolidation_date >= :limit_date', limit_date: date) }
+    scope :after_date, ->(date) { where(consolidation_date: date..) }
 
     def lead_time_range
       return 0 if lead_time_max.nil? || lead_time_min.nil?

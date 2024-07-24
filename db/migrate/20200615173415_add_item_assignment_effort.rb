@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class AddItemAssignmentEffort < ActiveRecord::Migration[6.0]
+  # rubocop:disable Rails/BulkChangeTable
   def up
     change_table :item_assignments, bulk: true do |t|
       t.decimal :item_assignment_effort, default: 0, null: false
@@ -34,4 +35,5 @@ class AddItemAssignmentEffort < ActiveRecord::Migration[6.0]
       t.remove :membership_id
     end
   end
+  # rubocop:enable Rails/BulkChangeTable
 end

@@ -66,7 +66,7 @@ module Types
 
       def latest_deliveries(order_field: 'end_date', sort_direction: :desc, limit: 5, start_date: '')
         demands = object.demands.finished_until_date(Time.zone.now).where.not(leadtime: nil).limit(limit).order(order_field => sort_direction)
-        demands = demands.where('end_date >= :limit_date', limit_date: start_date) if start_date.present?
+        demands = demands.where(end_date: start_date..) if start_date.present?
         demands
       end
 
@@ -146,7 +146,7 @@ module Types
 
         consolidations = Consolidations::TeamConsolidation
                          .where(id: weekly_team_consolidations.map(&:id) + [last_consolidation&.id])
-        consolidations = consolidations.where('consolidation_date >= :limit_date', limit_date: start_date) if start_date.present?
+        consolidations = consolidations.where(consolidation_date: start_date..) if start_date.present?
         consolidations = consolidations.where('consolidation_date <= :limit_date', limit_date: end_date) if end_date.present?
         consolidations.order(:consolidation_date)
       end
@@ -155,10 +155,8 @@ module Types
         start_date = [object.start_date, start_date].max
         end_date = [object.end_date, end_date].min
         array_of_months = TimeService.instance.months_between_of(start_date, end_date)
-        total_cost_per_week = []
-
-        array_of_months.each do |date|
-          total_cost_per_week.append(object.realized_money_in_month(date).round(2) - object.monthly_investment(date).round(2))
+        total_cost_per_week = array_of_months.map do |date|
+          object.realized_money_in_month(date).round(2) - object.monthly_investment(date).round(2)
         end
         { x_axis: array_of_months, y_axis: total_cost_per_week }
       end
@@ -175,9 +173,8 @@ module Types
 
         memberships_hour_value_list = []
         object.memberships.active.billable_member.each do |membership|
-          member_hour_value_chart_data = []
-          months.each do |month|
-            member_hour_value_chart_data.push({ date: month, hour_value_expected: membership.expected_hour_value(month), hour_value_realized: membership.realized_hour_value(month), hours_per_month: membership.current_hours_per_month(month) })
+          member_hour_value_chart_data = months.map do |month|
+            { date: month, hour_value_expected: membership.expected_hour_value(month), hour_value_realized: membership.realized_hour_value(month), hours_per_month: membership.current_hours_per_month(month) }
           end
           memberships_hour_value_list.push({ membership: membership, member_hour_value_chart_data: member_hour_value_chart_data })
         end

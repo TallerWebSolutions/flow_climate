@@ -16,7 +16,7 @@ class DemandBlocksRepository
                .active
                .joins(demand: :project)
                .where(projects: { id: projects.map(&:id) })
-               .where('demand_blocks.block_time >= :start_date AND demand_blocks.block_time <= :end_date', start_date: start_date.beginning_of_day, end_date: end_date.end_of_day)
+               .where(demand_blocks: { block_time: start_date.beginning_of_day..end_date.end_of_day })
   end
 
   def accumulated_blocks_to_date(projects, end_date)

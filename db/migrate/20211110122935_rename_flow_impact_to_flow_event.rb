@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class RenameFlowImpactToFlowEvent < ActiveRecord::Migration[6.1]
+  # rubocop:disable Rails/BulkChangeTable
   def change
     rename_table :flow_impacts, :flow_events
 
@@ -24,4 +25,5 @@ class RenameFlowImpactToFlowEvent < ActiveRecord::Migration[6.1]
 
     change_column_null :flow_events, :company_id, false
   end
+  # rubocop:enable Rails/BulkChangeTable
 end
