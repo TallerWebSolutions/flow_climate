@@ -539,7 +539,7 @@ RSpec.describe DemandBlocksController do
                 second_block = Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: other_team_member, block_reason: 'second_block', block_time: 3.days.ago, unblock_time: 2.days.ago, active: true
                 third_block = Fabricate :demand_block, demand: second_demand, block_type: :specification_needed, blocker: other_team_member, unblocker: other_team_member, block_reason: 'third_block', block_time: 5.days.ago, unblock_time: 4.days.ago, active: true
                 fourth_block = Fabricate :demand_block, demand: first_demand, block_type: :specification_needed, blocker: other_team_member, unblocker: other_team_member, block_reason: 'fourth_block', block_time: 4.days.ago, unblock_time: Time.zone.yesterday, active: true
-                Fabricate :demand_block, demand: first_demand, block_type: :waiting_external_supplier, blocker: other_team_member, unblocker: team_member, block_reason: 'fifth_block', block_time: 5.days.ago, unblock_time: 3.days.ago, active: true
+                fifth_block = Fabricate :demand_block, demand: first_demand, block_type: :waiting_external_supplier, blocker: other_team_member, unblocker: team_member, block_reason: 'fifth_block', block_time: 5.days.ago, unblock_time: 3.days.ago, active: true
                 Fabricate :demand_block, demand: second_demand, block_type: :waiting_external_supplier, blocker: team_member, unblocker: team_member, block_reason: 'sixth_block', block_time: 6.days.ago, unblock_time: 5.days.ago, active: true
                 Fabricate :demand_block, demand: second_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'seventh_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: Time.zone.today
                 Fabricate :demand_block, demand: third_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'eigth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: nil
@@ -550,7 +550,7 @@ RSpec.describe DemandBlocksController do
 
                 post :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_team_member: other_team_member.id }
                 expect(response).to render_template 'demand_blocks/index'
-                expect(assigns(:demand_blocks)).to eq [second_block, fourth_block, third_block]
+                expect(assigns(:demand_blocks)).to eq [second_block, fourth_block, third_block, fifth_block]
                 expect(assigns(:demands_count)).to eq 2
               end
             end
@@ -739,7 +739,7 @@ RSpec.describe DemandBlocksController do
                 second_block = Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: other_team_member, block_reason: 'second_block', block_time: 3.days.ago, unblock_time: 2.days.ago, active: true
                 third_block = Fabricate :demand_block, demand: second_demand, block_type: :specification_needed, blocker: other_team_member, unblocker: other_team_member, block_reason: 'third_block', block_time: 5.days.ago, unblock_time: 4.days.ago, active: true
                 fourth_block = Fabricate :demand_block, demand: first_demand, block_type: :specification_needed, blocker: other_team_member, unblocker: other_team_member, block_reason: 'fourth_block', block_time: 4.days.ago, unblock_time: Time.zone.yesterday, active: true
-                Fabricate :demand_block, demand: first_demand, block_type: :waiting_external_supplier, blocker: other_team_member, unblocker: team_member, block_reason: 'fifth_block', block_time: 5.days.ago, unblock_time: 3.days.ago, active: true
+                fifth_block = Fabricate :demand_block, demand: first_demand, block_type: :waiting_external_supplier, blocker: other_team_member, unblocker: team_member, block_reason: 'fifth_block', block_time: 5.days.ago, unblock_time: 3.days.ago, active: true
                 Fabricate :demand_block, demand: second_demand, block_type: :waiting_external_supplier, blocker: team_member, unblocker: team_member, block_reason: 'sixth_block', block_time: 6.days.ago, unblock_time: 5.days.ago, active: true
                 Fabricate :demand_block, demand: second_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'seventh_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: Time.zone.today
                 Fabricate :demand_block, demand: third_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'eigth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: nil
@@ -750,7 +750,7 @@ RSpec.describe DemandBlocksController do
 
                 post :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_team_member: other_team_member.id, blocks_ordering: :member_name }
                 expect(response).to have_http_status :ok
-                expect(assigns(:demand_blocks)).to match_array [second_block, third_block, fourth_block]
+                expect(assigns(:demand_blocks)).to match_array [second_block, third_block, fourth_block, fifth_block]
                 expect(response).to render_template 'demand_blocks/index'
               end
             end
@@ -771,7 +771,7 @@ RSpec.describe DemandBlocksController do
                 second_block = Fabricate :demand_block, demand: first_demand, block_type: :coding_needed, blocker: team_member, unblocker: other_team_member, block_reason: 'second_block', block_time: 3.days.ago, unblock_time: 2.days.ago, active: true
                 third_block = Fabricate :demand_block, demand: second_demand, block_type: :specification_needed, blocker: other_team_member, unblocker: other_team_member, block_reason: 'third_block', block_time: 5.days.ago, unblock_time: 4.days.ago, active: true
                 fourth_block = Fabricate :demand_block, demand: first_demand, block_type: :specification_needed, blocker: other_team_member, unblocker: other_team_member, block_reason: 'fourth_block', block_time: 4.days.ago, unblock_time: Time.zone.yesterday, active: true
-                Fabricate :demand_block, demand: first_demand, block_type: :waiting_external_supplier, blocker: other_team_member, unblocker: team_member, block_reason: 'fifth_block', block_time: 5.days.ago, unblock_time: 3.days.ago, active: true
+                fifth_block = Fabricate :demand_block, demand: first_demand, block_type: :waiting_external_supplier, blocker: other_team_member, unblocker: team_member, block_reason: 'fifth_block', block_time: 5.days.ago, unblock_time: 3.days.ago, active: true
                 Fabricate :demand_block, demand: second_demand, block_type: :waiting_external_supplier, blocker: team_member, unblocker: team_member, block_reason: 'sixth_block', block_time: 6.days.ago, unblock_time: 5.days.ago, active: true
                 Fabricate :demand_block, demand: second_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'seventh_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: Time.zone.today
                 Fabricate :demand_block, demand: third_demand, block_type: :coding_needed, blocker: team_member, unblocker: team_member, block_reason: 'eigth_block', block_time: 7.days.ago, unblock_time: 6.days.ago, active: true, discarded_at: nil
@@ -782,7 +782,7 @@ RSpec.describe DemandBlocksController do
 
                 post :search, params: { company_id: company, demand_blocks_ids: DemandBlock.all.map(&:id).join(','), blocks_team_member: other_team_member.id, blocks_ordering: :block_time }
                 expect(response).to have_http_status :ok
-                expect(assigns(:demand_blocks)).to eq [second_block, fourth_block, third_block]
+                expect(assigns(:demand_blocks)).to eq [second_block, fourth_block, third_block, fifth_block]
                 expect(response).to render_template 'demand_blocks/index'
               end
             end

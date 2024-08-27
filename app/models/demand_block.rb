@@ -43,7 +43,7 @@ class DemandBlock < ApplicationRecord
   belongs_to :demand
   belongs_to :stage, optional: true
   belongs_to :blocker, class_name: 'TeamMember', inverse_of: :demand_blocks
-  belongs_to :unblocker, class_name: 'TeamMember', inverse_of: :demand_blocks, optional: true
+  belongs_to :unblocker, class_name: 'TeamMember', inverse_of: :demand_unblocks, optional: true
   belongs_to :risk_review, optional: true
 
   has_many :demand_block_notifications, dependent: :destroy, class_name: 'Notifications::DemandBlockNotification'
