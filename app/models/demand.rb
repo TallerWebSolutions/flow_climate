@@ -75,7 +75,7 @@ class Demand < ApplicationRecord
   extend FriendlyId
   friendly_id :external_id, use: :slugged
 
-  enum class_of_service: { standard: 0, expedite: 1, fixed_date: 2, intangible: 3 }
+  enum :class_of_service, { standard: 0, expedite: 1, fixed_date: 2, intangible: 3 }
 
   belongs_to :work_item_type
   belongs_to :company

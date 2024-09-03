@@ -21,7 +21,7 @@
 #  fk_rails_383aa02a04  (score_matrix_id => score_matrices.id)
 #
 class ScoreMatrixQuestion < ApplicationRecord
-  enum question_type: { customer_dimension: 0, service_provider_dimension: 1 }
+  enum :question_type, { customer_dimension: 0, service_provider_dimension: 1 }
 
   belongs_to :score_matrix
 

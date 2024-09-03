@@ -22,7 +22,7 @@
 
 module Notifications
   class DemandBlockNotification < ApplicationRecord
-    enum block_state: { blocked: 0, unblocked: 1 }
+    enum :block_state, { blocked: 0, unblocked: 1 }
 
     belongs_to :demand_block
   end

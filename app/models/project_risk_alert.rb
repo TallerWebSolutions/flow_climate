@@ -24,7 +24,7 @@
 #
 
 class ProjectRiskAlert < ApplicationRecord
-  enum alert_color: { green: 0, yellow: 1, red: 2 }
+  enum :alert_color, { green: 0, yellow: 1, red: 2 }
   belongs_to :project
   belongs_to :project_risk_config
 

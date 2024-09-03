@@ -18,8 +18,8 @@
 #
 
 class Plan < ApplicationRecord
-  enum plan_type: { trial: 0, lite: 1, gold: 3 }
-  enum plan_period: { monthly: 0, yearly: 1 }
+  enum :plan_type, { trial: 0, lite: 1, gold: 3 }
+  enum :plan_period, { monthly: 0, yearly: 1 }
 
   has_many :user_plans, dependent: :destroy
 

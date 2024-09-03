@@ -24,7 +24,7 @@
 #  fk_rails_51a0d1b6fa  (project_id => projects.id)
 #
 class ProjectAdditionalHour < ApplicationRecord
-  enum hours_type: { meeting: 0 }
+  enum :hours_type, { meeting: 0 }
 
   belongs_to :project
 

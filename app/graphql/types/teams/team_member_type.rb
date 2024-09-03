@@ -133,7 +133,7 @@ module Types
         accumulator = first_day_of_six_months_hash
         object
           .demand_efforts.select("sum(effort_value) as effort_value_sum, date_trunc('month', start_time_to_computation) as month")
-          .where('start_time_to_computation >= TIMESTAMP WITH TIME ZONE :date', date: member_effort_data_interval.iso8601)
+          .where('start_time_to_computation >=  :date::timestamp', date: member_effort_data_interval.iso8601)
           .group('month').each do |item|
           accumulator[item.month.to_date.to_s] += item.effort_value_sum.round(2)
         end
@@ -142,7 +142,7 @@ module Types
 
       def member_effort_daily_data
         accumulator = last_30_days_hash
-        object.demand_efforts.where('start_time_to_computation >= TIMESTAMP WITH TIME ZONE :date', date: member_effort_daily_interval.iso8601).find_each do |effort|
+        object.demand_efforts.where('start_time_to_computation >= :date::timestamp', date: member_effort_daily_interval.iso8601).find_each do |effort|
           accumulator[effort.start_time_to_computation.beginning_of_day.to_date.to_s] += effort.effort_value.round(2)
         end
         { x_axis: accumulator.keys, y_axis: accumulator.values }

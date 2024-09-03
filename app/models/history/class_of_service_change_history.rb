@@ -24,8 +24,8 @@
 
 module History
   class ClassOfServiceChangeHistory < ApplicationRecord
-    enum from_class_of_service: { from_standard: 0, from_expedite: 1, from_fixed_date: 2, from_intangible: 3 }
-    enum to_class_of_service: { to_standard: 0, to_expedite: 1, to_fixed_date: 2, to_intangible: 3 }
+    enum :from_class_of_service, { from_standard: 0, from_expedite: 1, from_fixed_date: 2, from_intangible: 3 }
+    enum :to_class_of_service, { to_standard: 0, to_expedite: 1, to_fixed_date: 2, to_intangible: 3 }
 
     belongs_to :demand
 

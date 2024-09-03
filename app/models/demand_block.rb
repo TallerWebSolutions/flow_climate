@@ -38,7 +38,7 @@
 class DemandBlock < ApplicationRecord
   include Discard::Model
 
-  enum block_type: { coding_needed: 0, specification_needed: 1, waiting_external_supplier: 2, customer_low_urgency: 3, integration_needed: 4, customer_unavailable: 5, other_demand_dependency: 6, external_dependency: 7, other_demand_priority: 8, waiting_for_code_review: 9, budget_approval: 10, waiting_deploy_window: 11, infrastructure: 12, scope_changed: 13, waiting_approval: 14, negotiating: 15 }
+  enum :block_type, { coding_needed: 0, specification_needed: 1, waiting_external_supplier: 2, customer_low_urgency: 3, integration_needed: 4, customer_unavailable: 5, other_demand_dependency: 6, external_dependency: 7, other_demand_priority: 8, waiting_for_code_review: 9, budget_approval: 10, waiting_deploy_window: 11, infrastructure: 12, scope_changed: 13, waiting_approval: 14, negotiating: 15 }
 
   belongs_to :demand
   belongs_to :stage, optional: true

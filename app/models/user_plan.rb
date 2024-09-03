@@ -28,7 +28,7 @@
 #
 
 class UserPlan < ApplicationRecord
-  enum plan_billing_period: { monthly: 0, yearly: 1 }
+  enum :plan_billing_period, { monthly: 0, yearly: 1 }
 
   belongs_to :user
   belongs_to :plan

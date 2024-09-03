@@ -26,8 +26,8 @@
 #  fk_rails_b2aa9bf2c0  (company_id => companies.id)
 #
 class UserInvite < ApplicationRecord
-  enum invite_status: { pending: 0, accepted: 1, cancelled: 2 }
-  enum invite_type: { company: 0, customer: 1, product: 2, project: 3 }
+  enum :invite_status, { pending: 0, accepted: 1, cancelled: 2 }
+  enum :invite_type, { company: 0, customer: 1, product: 2, project: 3 }
 
   belongs_to :company
 

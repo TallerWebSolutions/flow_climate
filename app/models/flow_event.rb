@@ -37,8 +37,8 @@ class FlowEvent < ApplicationRecord
   include Discard::Model
   include Rails.application.routes.url_helpers
 
-  enum event_type: { other_team_dependency: 0, api_not_ready: 1, customer_not_available: 2, other_demand_dependency: 3, fixes_out_of_scope: 4, external_service_unavailable: 5, day_off: 6 }
-  enum event_size: { small: 0, medium: 1, large: 2 }
+  enum :event_type, { other_team_dependency: 0, api_not_ready: 1, customer_not_available: 2, other_demand_dependency: 3, fixes_out_of_scope: 4, external_service_unavailable: 5, day_off: 6 }
+  enum :event_size, { small: 0, medium: 1, large: 2 }
 
   belongs_to :company
   belongs_to :user

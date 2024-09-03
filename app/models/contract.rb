@@ -31,7 +31,7 @@
 #  fk_rails_d9e2e7cf99  (product_id => products.id)
 #
 class Contract < ApplicationRecord
-  enum renewal_period: { monthly: 0, yearly: 1 }
+  enum :renewal_period, { monthly: 0, yearly: 1 }
 
   belongs_to :customer
   belongs_to :product

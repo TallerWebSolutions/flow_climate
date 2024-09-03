@@ -28,7 +28,7 @@
 #
 
 class Initiative < ApplicationRecord
-  enum target_quarter: { q1: 1, q2: 2, q3: 3, q4: 4 }
+  enum :target_quarter, { q1: 1, q2: 2, q3: 3, q4: 4 }
 
   belongs_to :company
 

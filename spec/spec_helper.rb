@@ -20,7 +20,11 @@ require 'webmock/rspec'
 require 'jira-ruby'
 require 'redis'
 
-Dir[Rails.root.join('spec/support/*.rb')].each { |f| require f }
+require 'sidekiq/testing'
+Sidekiq::Testing.fake!
+ActiveJob::Base.queue_adapter = :test
+
+Rails.root.glob('spec/support/*.rb').each { |f| require f }
 
 Rails.logger.level = 4
 Devise.stretches = 1
@@ -84,6 +88,6 @@ RSpec.configure do |config|
   end
 
   config.after(:all) do
-    FileUtils.rm_rf(Dir[Rails.public_path.join('uploads/tmp/*')]) if Rails.env.test?
+    FileUtils.rm_rf(Rails.public_path.glob('uploads/tmp/*')) if Rails.env.test?
   end
 end

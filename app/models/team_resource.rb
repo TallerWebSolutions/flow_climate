@@ -23,7 +23,7 @@
 #
 
 class TeamResource < ApplicationRecord
-  enum resource_type: { cloud: 0, continuous_integration: 1, library_manager: 2, code_hosting_platform: 3 }
+  enum :resource_type, { cloud: 0, continuous_integration: 1, library_manager: 2, code_hosting_platform: 3 }
 
   belongs_to :company
   has_many :team_resource_allocations, dependent: :destroy
