@@ -30,6 +30,10 @@ module Types
     field :responsibles, [Types::Teams::TeamMemberType], null: true
     field :team, Types::Teams::TeamType, null: false
 
+    def demand_efforts
+      object.demand_efforts.order(start_time_to_computation: :asc)
+    end
+
     def responsibles
       object.memberships.map(&:team_member).uniq
     end

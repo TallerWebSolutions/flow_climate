@@ -1162,13 +1162,19 @@ RSpec.describe Types::QueryType do
   describe '#demand' do
     context 'with valid ID' do
       it 'returns the demand' do
+        now = DateTime.current
         demand = Fabricate :demand
+        demand_effort = Fabricate :demand_effort, demand: demand, start_time_to_computation: now - 1.hour
+        other_demand_effort = Fabricate :demand_effort, demand: demand, start_time_to_computation: now - 2.hours
 
         query =
           %(
           query {
             demand(externalId: "#{demand.external_id}") {
               id
+              demandEfforts {
+                id
+              }
             }
           }
         )
@@ -1182,6 +1188,7 @@ RSpec.describe Types::QueryType do
         result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
 
         expect(result.dig('data', 'demand')['id']).to eq demand.id.to_s
+        expect(result.dig('data', 'demand', 'demandEfforts')).to eq [{ 'id' => other_demand_effort.id.to_s }, { 'id' => demand_effort.id.to_s }]
       end
     end
 
