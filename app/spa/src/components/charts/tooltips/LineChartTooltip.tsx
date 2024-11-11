@@ -9,7 +9,7 @@ type Slice = {
   x: number | string | Date
   y0: number
   y: number
-  points: Point[]
+  points: readonly Point[]
 }
 
 type ChartTooltipProps = {

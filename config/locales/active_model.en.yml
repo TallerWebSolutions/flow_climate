@@ -142,22 +142,23 @@ en:
         block_duration: Block Duration
         active: Active?
         enums:
-          coding_needed: Coding Needed
-          specification_needed: Specification Needed
-          waiting_external_supplier: Waiting for External Supplier
-          customer_low_urgency: Customer Low Urgency
-          integration_needed: Integration Needed
-          customer_unavailable: Customer Unavailable
-          other_demand_dependency: Other Demand Dependency
-          external_dependency: External Dependency
-          other_demand_priority: Other Demand Priority
-          waiting_for_code_review: Waiting for Code Review
-          budget_approval: Budget Approval
-          waiting_deploy_window: Waiting Deploy Window
-          infrastructure: Infrastructure
-          scope_changed: Scope Changed
-          waiting_approval: Waiting Approval
-          negotiating: Negotiating
+          block_type:
+            specification_needed: Specification Needed
+            waiting_external_supplier: Waiting for External Supplier
+            customer_low_urgency: Customer Low Urgency
+            integration_needed: Integration Needed
+            customer_unavailable: Customer Unavailable
+            other_demand_dependency: Other Demand Dependency
+            external_dependency: External Dependency
+            other_demand_priority: Other Demand Priority
+            waiting_for_code_review: Waiting for Code Review
+            budget_approval: Budget Approval
+            waiting_deploy_window: Waiting Deploy Window
+            infrastructure: Infrastructure
+            scope_changed: Scope Changed
+            waiting_approval: Waiting Approval
+            negotiating: Negotiating
+            coding_needed: Coding Needed
       demand:
         enums:
           class_of_service:
@@ -220,6 +221,10 @@ en:
       team_member:
         validations:
           name_unique: "Only one name by company and jira account id is allowed"
+      user_company_role:
+        enums:
+          user_role:
+            manager: Manager
       jira/jira_custom_field_machine_name:
         enums:
           custom_field_type:
