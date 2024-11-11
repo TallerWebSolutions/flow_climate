@@ -14,9 +14,9 @@ import {
   Collapse,
   IconButton,
 } from "@mui/material"
-import { KeyboardArrowUp, KeyboardArrowDown } from "@material-ui/icons"
 
 import { ReactElement, ReactNode, useState } from "react"
+import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material"
 
 type Cell = ReactNode
 

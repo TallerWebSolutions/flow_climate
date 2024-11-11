@@ -7,8 +7,8 @@ import Table from "./ui/Table"
 import { secondsToDays } from "../lib/date"
 import DateLocale from "./ui/DateLocale"
 import { FormElement } from "./ui/Form"
-import { GridSearchIcon } from "@material-ui/data-grid"
 import { FieldValues, useForm } from "react-hook-form"
+import SearchIcon from "@mui/icons-material/Search"
 
 type TeamMemberDashboardTablesProps = {
   teamMember: TeamMember
@@ -224,7 +224,7 @@ const TeamMemberDashboardTables = ({
 
               <FormElement>
                 <Button sx={{ alignSelf: "flex-start" }} type="submit">
-                  <GridSearchIcon fontSize="large" color="primary" />
+                  <SearchIcon fontSize="large" color="primary" />
                 </Button>
               </FormElement>
             </Grid>

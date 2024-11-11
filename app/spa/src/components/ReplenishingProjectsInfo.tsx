@@ -9,11 +9,11 @@ import {
   Collapse,
   Link,
 } from "@mui/material"
-import { KeyboardArrowUp, KeyboardArrowDown } from "@material-ui/icons"
 import { Box } from "@mui/system"
 import { Fragment, useState } from "react"
 import { Project } from "../modules/project/project.types"
 import { secondsToReadbleDate } from "../lib/date"
+import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material"
 
 type ReplenishingProjectsInfoProps = {
   projects: Project[]

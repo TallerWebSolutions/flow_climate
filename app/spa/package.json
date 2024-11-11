@@ -8,9 +8,6 @@
     "@babel/plugin-proposal-private-property-in-object": "",
     "@emotion/react": "^11.7.0",
     "@emotion/styled": "^11.6.0",
-    "@material-ui/core": "^4.12.3",
-    "@material-ui/data-grid": "^4.0.0-alpha.37",
-    "@material-ui/icons": "^4.11.2",
     "@mui/icons-material": "^5.2.5",
     "@mui/lab": "^5.0.0-alpha.74",
     "@mui/material": "^5.2.3",
@@ -58,7 +55,7 @@
     "watch": "npm-watch"
   },
   "engines": {
-    "node": "18"
+    "node": "20"
   },
   "lint-staged": {
     "*.@(ts|tsx)": [
