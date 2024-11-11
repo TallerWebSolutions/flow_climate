@@ -3,8 +3,8 @@
 RSpec.describe Consolidations::InitiativeConsolidationJob do
   describe '.perform_later' do
     it 'enqueues after calling perform_later' do
-      described_class.perform_later
-      expect(described_class).to have_been_enqueued.on_queue('low')
+      described_class.perform_later('foo')
+      expect(described_class).to have_been_enqueued.with('foo').on_queue('low')
     end
   end
 

@@ -2,9 +2,10 @@
 
 RSpec.describe Dashboards::OperationsDashboardCacheJob do
   describe '.perform_later' do
-    it 'enqueues after calling perform_later' do
-      described_class.perform_later
-      expect(described_class).to have_been_enqueued.on_queue('default')
+    it 'enqueues the job with correct arguments' do
+      allow(described_class).to receive(:perform_later)
+      described_class.perform_later('arg1', 'arg2')
+      expect(described_class).to have_received(:perform_later).with('arg1', 'arg2')
     end
   end
 

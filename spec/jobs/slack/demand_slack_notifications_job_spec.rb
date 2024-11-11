@@ -2,9 +2,10 @@
 
 RSpec.describe Slack::DemandSlackNotificationsJob, type: :active_job do
   describe '.perform_later' do
-    it 'enqueues after calling perform_later' do
-      described_class.perform_later
-      expect(described_class).to have_been_enqueued.on_queue('default')
+    it 'enqueues after calling perform_later with correct params' do
+      team = Fabricate(:team)
+      described_class.perform_later(team)
+      expect(described_class).to have_been_enqueued.with(team).on_queue('default')
     end
   end
 

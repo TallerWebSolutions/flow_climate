@@ -3,6 +3,7 @@ require:
   - rubocop-performance
   - rubocop-rspec
   - rubocop-graphql
+  - rubocop-rspec_rails
 
 AllCops:
   TargetRubyVersion: 3.0

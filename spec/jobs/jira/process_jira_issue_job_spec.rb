@@ -3,8 +3,9 @@
 RSpec.describe Jira::ProcessJiraIssueJob, type: :active_job do
   describe '.perform_later' do
     it 'enqueues after calling perform_later' do
-      described_class.perform_later(bla: 'foo')
-      expect(described_class).to have_been_enqueued.on_queue('critical')
+      described_class.perform_later('value1', 'value2', 'value3', 'value4', 'value5', 'value6')
+
+      expect(described_class).to have_been_enqueued.with('value1', 'value2', 'value3', 'value4', 'value5', 'value6').on_queue('critical')
     end
   end
 

@@ -121,7 +121,7 @@ Rails.application.routes.draw do
       post :generate_cache, on: :member
     end
 
-    resources :tasks, only: %i[index show charts] do
+    resources :tasks, only: %i[index show] do
       collection do
         get 'charts', action: :charts, as: 'charts'
       end

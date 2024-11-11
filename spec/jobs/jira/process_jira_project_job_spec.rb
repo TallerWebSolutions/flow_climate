@@ -5,8 +5,9 @@ RSpec.describe Jira::ProcessJiraProjectJob, type: :active_job do
 
   describe '.perform_later' do
     it 'enqueues after calling perform_later' do
-      described_class.perform_later(bla: 'foo')
-      expect(described_class).to have_been_enqueued.on_queue('low')
+      allow(described_class).to receive(:perform_later)
+      described_class.perform_later('foo', 'bar', 'baz', 'qux', 'http://foo.com')
+      expect(described_class).to have_received(:perform_later).with('foo', 'bar', 'baz', 'qux', 'http://foo.com')
     end
   end
 

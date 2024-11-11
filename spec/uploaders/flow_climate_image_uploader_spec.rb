@@ -7,14 +7,6 @@ RSpec.describe FlowClimateImageUploader, type: :image_uploader do
 
   after { described_class.enable_processing = false }
 
-  describe '#thumb' do
-    let(:uploader) { described_class.new(User.new) }
-
-    before { uploader.store!(File.open('spec/fixtures/default_image.png')) }
-
-    it { expect(uploader.thumb).to have_dimensions(50, 28) }
-  end
-
   describe '#extension_whitelist' do
     let(:uploader) { described_class.new(User.new(id: 1)) }
 

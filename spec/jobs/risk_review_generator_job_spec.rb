@@ -2,9 +2,12 @@
 
 RSpec.describe RiskReviewGeneratorJob, type: :active_job do
   describe '.perform_later' do
-    it 'enqueues after calling perform_later' do
-      described_class.perform_later
-      expect(described_class).to have_been_enqueued.on_queue('default')
+    it 'enqueues after calling perform_later with correct params' do
+      product = Fabricate(:product)
+      risk_review = Fabricate(:risk_review, product: product)
+      user = Fabricate(:user)
+      described_class.perform_later(product, risk_review, user.email, user.full_name, risk_review.id, 'http://foo.com')
+      expect(described_class).to have_been_enqueued.with(product, risk_review, user.email, user.full_name, risk_review.id, 'http://foo.com').on_queue('default')
     end
   end
 

@@ -2,9 +2,10 @@
 
 RSpec.describe ServiceDeliveryReviewGeneratorJob, type: :active_job do
   describe '.perform_later' do
-    it 'enqueues after calling perform_later' do
-      described_class.perform_later
-      expect(described_class).to have_been_enqueued.on_queue('default')
+    it 'enqueues after calling perform_later with correct params' do
+      product = Fabricate(:product)
+      described_class.perform_later(product, Fabricate(:service_delivery_review), 'foo', 'bar@foo.com', '123', 'http://foo.com.br')
+      expect(described_class).to have_been_enqueued.with(product, an_instance_of(ServiceDeliveryReview), 'foo', 'bar@foo.com', '123', 'http://foo.com.br').on_queue('default')
     end
   end
 

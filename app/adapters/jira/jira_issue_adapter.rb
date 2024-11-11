@@ -206,7 +206,7 @@ module Jira
     end
 
     def responsible_string_processment(responsible_string)
-      responsible_string&.delete(']')&.delete('[')&.split(',')&.map(&:strip)
+      responsible_string.to_s.gsub('[,]', '').split(',').map(&:strip)
     end
 
     def read_unassigned_responsibles(demand, history_date, from_name)

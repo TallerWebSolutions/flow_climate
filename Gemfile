@@ -2,9 +2,7 @@
 
 source 'https://rubygems.org'
 
-ruby '3.3.4'
-
-gem 'rails'
+ruby '3.3.6'
 
 gem 'bundler', require: false
 
@@ -30,6 +28,7 @@ gem 'net-pop'
 gem 'net-smtp'
 gem 'oj'
 gem 'pg'
+gem 'rails', '~> 8.0'
 gem 'redis'
 gem 'rollbar'
 gem 'sidekiq', '= 6.5.7'
@@ -40,7 +39,6 @@ gem 'uglifier'
 gem 'yui-compressor'
 
 group :test, :development do
-  gem 'bullet'
   gem 'database_cleaner'
   gem 'fabrication'
   gem 'faker'
@@ -48,11 +46,11 @@ group :test, :development do
   gem 'rails-controller-testing'
   gem 'rspec-collection_matchers'
   gem 'rspec-rails'
-  gem 'rubocop'
   gem 'rubocop-graphql', require: false
   gem 'rubocop-performance', require: false
   gem 'rubocop-rails', require: false
   gem 'rubocop-rspec', require: false
+  gem 'rubocop-rspec_rails', require: false
   gem 'shoulda-matchers'
   gem 'simplecov'
   gem 'webmock'

@@ -2,9 +2,10 @@
 
 RSpec.describe Consolidations::CustomerConsolidationJob, type: :active_job do
   describe '.perform_later' do
-    it 'enqueues after calling perform_later' do
-      described_class.perform_later
-      expect(described_class).to have_been_enqueued.on_queue('low')
+    it 'enqueues after calling perform_later with correct params' do
+      customer = Fabricate(:customer)
+      described_class.perform_later(customer)
+      expect(described_class).to have_been_enqueued.with(customer).on_queue('low')
     end
   end
 

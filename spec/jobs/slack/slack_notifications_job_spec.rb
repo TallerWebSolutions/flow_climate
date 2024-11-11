@@ -4,9 +4,11 @@ RSpec.describe Slack::SlackNotificationsJob, type: :active_job do
   include ActionView::Helpers::NumberHelper
 
   describe '.perform_later' do
-    it 'enqueues after calling perform_later' do
-      described_class.perform_later
-      expect(described_class).to have_been_enqueued.on_queue('default')
+    it 'enqueues after calling perform_later with correct params' do
+      project = Fabricate(:project)
+      user = Fabricate(:user)
+      described_class.perform_later(project, user)
+      expect(described_class).to have_been_enqueued.with(project, user).on_queue('default')
     end
   end
 
