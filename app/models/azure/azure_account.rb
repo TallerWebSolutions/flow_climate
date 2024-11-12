@@ -4,19 +4,20 @@
 #
 # Table name: azure_accounts
 #
-#  id                    :bigint           not null, primary key
-#  azure_organization    :string           not null
-#  azure_work_item_query :string
-#  encrypted_password    :string           not null
+#  id                    :integer          not null, primary key
+#  company_id            :integer          not null
 #  username              :string           not null
+#  encrypted_password    :string           not null
+#  azure_organization    :string           not null
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
-#  company_id            :bigint           not null
+#  azure_work_item_query :string
 #
 # Indexes
 #
 #  index_azure_accounts_on_company_id  (company_id)
 #
+
 module Azure
   class AzureAccount < ApplicationRecord
     belongs_to :company

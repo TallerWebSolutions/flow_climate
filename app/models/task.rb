@@ -4,16 +4,16 @@
 #
 # Table name: tasks
 #
-#  id                  :bigint           not null, primary key
+#  id                  :integer          not null, primary key
+#  demand_id           :integer          not null
 #  created_date        :datetime         not null
-#  discarded_at        :datetime
-#  end_date            :datetime
-#  seconds_to_complete :integer
 #  title               :string           not null
+#  external_id         :integer
+#  seconds_to_complete :integer
+#  end_date            :datetime
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
-#  demand_id           :integer          not null
-#  external_id         :integer
+#  discarded_at        :datetime
 #  work_item_type_id   :integer          not null
 #
 # Indexes
@@ -22,11 +22,7 @@
 #  index_tasks_on_discarded_at       (discarded_at)
 #  index_tasks_on_work_item_type_id  (work_item_type_id)
 #
-# Foreign Keys
-#
-#  fk_rails_615c6769c9  (work_item_type_id => work_item_types.id)
-#  fk_rails_ae3913c114  (demand_id => demands.id)
-#
+
 class Task < ApplicationRecord
   include Discard::Model
 

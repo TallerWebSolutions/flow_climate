@@ -199,14 +199,14 @@ module Jira
     def responsible_item_processment(demand, history_hash)
       to_array = responsible_string_processment(history_hash['toString'])
       from_array = responsible_string_processment(history_hash['fromString'])
-      unassigment_history = from_array.try(:-, to_array)
+      unassigment_history = from_array.try(:-, to_array) || []
 
       to_array.each { |to_responsible| read_assigned_responsibles(demand, history_hash['created'].to_datetime, to_responsible.strip) } if to_array.present?
       unassigment_history.each { |from_responsible| read_unassigned_responsibles(demand, history_hash['created'].to_datetime, from_responsible.strip) } if unassigment_history.present?
     end
 
     def responsible_string_processment(responsible_string)
-      responsible_string.to_s.gsub('[,]', '').split(',').map(&:strip)
+      responsible_string.to_s.delete('[').delete(']').split(',').map(&:strip)
     end
 
     def read_unassigned_responsibles(demand, history_date, from_name)

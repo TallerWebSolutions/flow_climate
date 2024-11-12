@@ -4,22 +4,18 @@
 #
 # Table name: team_resources
 #
-#  id            :bigint           not null, primary key
-#  resource_name :string           not null
+#  id            :integer          not null, primary key
+#  company_id    :integer          not null
 #  resource_type :integer          not null
+#  resource_name :string           not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
-#  company_id    :integer          not null
 #
 # Indexes
 #
 #  index_team_resources_on_company_id     (company_id)
 #  index_team_resources_on_resource_name  (resource_name)
 #  index_team_resources_on_resource_type  (resource_type)
-#
-# Foreign Keys
-#
-#  fk_rails_0e82f4e026  (company_id => companies.id)
 #
 
 class TeamResource < ApplicationRecord

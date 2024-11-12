@@ -4,22 +4,18 @@
 #
 # Table name: class_of_service_change_histories
 #
-#  id                    :bigint           not null, primary key
+#  id                    :integer          not null, primary key
+#  demand_id             :integer          not null
 #  change_date           :datetime         not null
 #  from_class_of_service :integer
 #  to_class_of_service   :integer          not null
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
-#  demand_id             :integer          not null
 #
 # Indexes
 #
 #  cos_history_unique                                    (demand_id,change_date) UNIQUE
 #  index_class_of_service_change_histories_on_demand_id  (demand_id)
-#
-# Foreign Keys
-#
-#  fk_rails_b150af85df  (demand_id => demands.id)
 #
 
 module History

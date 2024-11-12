@@ -41,7 +41,7 @@ class TeamMember < ApplicationRecord
   has_many :demand_comments, dependent: :nullify
   has_many :demand_blocks, inverse_of: :blocker, dependent: :restrict_with_error, foreign_key: :blocker_id
   has_many :demand_unblocks, class_name: 'DemandBlock', inverse_of: :unblocker, dependent: :destroy, foreign_key: :unblocker_id
-  has_many :demand_transitions, dependent: :restrict_with_error
+  has_many :demand_transitions, dependent: :destroy
 
   has_many :demands, -> { distinct }, through: :memberships
   has_many :projects, -> { distinct }, through: :demands

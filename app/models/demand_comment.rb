@@ -4,23 +4,18 @@
 #
 # Table name: demand_comments
 #
-#  id             :bigint           not null, primary key
+#  id             :integer          not null, primary key
+#  demand_id      :integer          not null
 #  comment_date   :datetime         not null
 #  comment_text   :string           not null
-#  discarded_at   :datetime
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
-#  demand_id      :integer          not null
 #  team_member_id :integer
+#  discarded_at   :datetime
 #
 # Indexes
 #
 #  index_demand_comments_on_demand_id  (demand_id)
-#
-# Foreign Keys
-#
-#  fk_rails_b68ee35cab  (team_member_id => team_members.id)
-#  fk_rails_dc14d53db5  (demand_id => demands.id)
 #
 
 class DemandComment < ApplicationRecord

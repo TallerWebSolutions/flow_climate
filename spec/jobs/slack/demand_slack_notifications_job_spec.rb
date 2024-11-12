@@ -69,15 +69,13 @@ RSpec.describe Slack::DemandSlackNotificationsJob, type: :active_job do
     end
 
     context 'with assignments' do
-      context 'when it has notified' do
-        it 'calls the notification method for the assignments not notified yet' do
-          Fabricate :item_assignment, demand: demand, assignment_notified: false
-          Fabricate :item_assignment, demand: demand, assignment_notified: false
-          Fabricate :item_assignment, demand: demand, assignment_notified: true
+      it 'calls the notification method for the assignments not notified yet' do
+        Fabricate :item_assignment, demand: demand, assignment_notified: false
+        Fabricate :item_assignment, demand: demand, assignment_notified: false
+        Fabricate :item_assignment, demand: demand, assignment_notified: true
 
-          expect_any_instance_of(Slack::SlackNotificationService).to receive(:notify_item_assigned).twice
-          described_class.perform_now(team)
-        end
+        expect_any_instance_of(Slack::SlackNotificationService).to receive(:notify_item_assigned).twice
+        described_class.perform_now(team)
       end
     end
   end

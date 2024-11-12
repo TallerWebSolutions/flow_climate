@@ -4,21 +4,17 @@
 #
 # Table name: jira_custom_field_mappings
 #
-#  id                        :bigint           not null, primary key
-#  custom_field_machine_name :string           not null
+#  id                        :integer          not null, primary key
+#  jira_account_id           :integer          not null
 #  custom_field_type         :integer          not null
+#  custom_field_machine_name :string           not null
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null
-#  jira_account_id           :integer          not null
 #
 # Indexes
 #
 #  index_jira_custom_field_mappings_on_jira_account_id  (jira_account_id)
 #  unique_custom_field_to_jira_account                  (jira_account_id,custom_field_type) UNIQUE
-#
-# Foreign Keys
-#
-#  fk_rails_1c34addc50  (jira_account_id => jira_accounts.id)
 #
 
 module Jira

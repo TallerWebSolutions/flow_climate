@@ -4993,6 +4993,20 @@ CREATE UNIQUE INDEX idx_demand_score_answers_unique ON public.score_matrix_answe
 
 
 --
+-- Name: idx_on_demand_id_membership_id_start_time_573dd337cc; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_on_demand_id_membership_id_start_time_573dd337cc ON public.item_assignments USING btree (demand_id, membership_id, start_time);
+
+
+--
+-- Name: idx_on_item_assignment_id_demand_transition_id_star_ae07e90298; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_on_item_assignment_id_demand_transition_id_star_ae07e90298 ON public.demand_efforts USING btree (item_assignment_id, demand_transition_id, start_time_to_computation);
+
+
+--
 -- Name: idx_portfolio_unit_name; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -7327,6 +7341,7 @@ ALTER TABLE ONLY public.stages
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20241112185524'),
 ('20240305001433'),
 ('20231205130509'),
 ('20230920134031'),

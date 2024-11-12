@@ -4,14 +4,14 @@
 #
 # Table name: portfolio_units
 #
-#  id                  :bigint           not null, primary key
+#  id                  :integer          not null, primary key
+#  product_id          :integer          not null
+#  parent_id           :integer
 #  name                :string           not null
 #  portfolio_unit_type :integer          not null
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
 #  external_id         :string
-#  parent_id           :integer
-#  product_id          :integer          not null
 #
 # Indexes
 #
@@ -21,11 +21,6 @@
 #  index_portfolio_units_on_parent_id            (parent_id)
 #  index_portfolio_units_on_portfolio_unit_type  (portfolio_unit_type)
 #  index_portfolio_units_on_product_id           (product_id)
-#
-# Foreign Keys
-#
-#  fk_rails_111d0b277b  (product_id => products.id)
-#  fk_rails_2af43d471c  (parent_id => portfolio_units.id)
 #
 
 class PortfolioUnit < ApplicationRecord

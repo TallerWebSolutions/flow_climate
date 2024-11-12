@@ -4,11 +4,11 @@
 #
 # Table name: customers_devise_customers
 #
-#  id                 :bigint           not null, primary key
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
+#  id                 :integer          not null, primary key
 #  customer_id        :integer          not null
 #  devise_customer_id :integer          not null
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
 #
 # Indexes
 #
@@ -16,11 +16,7 @@
 #  index_customers_devise_customers_on_customer_id         (customer_id)
 #  index_customers_devise_customers_on_devise_customer_id  (devise_customer_id)
 #
-# Foreign Keys
-#
-#  fk_rails_49f9a1ee28  (customer_id => customers.id)
-#  fk_rails_9c6f3519a8  (devise_customer_id => devise_customers.id)
-#
+
 class CustomersDeviseCustomer < ApplicationRecord
   belongs_to :customer
   belongs_to :devise_customer

@@ -4,22 +4,19 @@
 #
 # Table name: score_matrix_answers
 #
-#  id                       :bigint           not null, primary key
-#  answer_value             :integer          not null
+#  id                       :integer          not null, primary key
+#  score_matrix_question_id :integer          not null
 #  description              :string           not null
+#  answer_value             :integer          not null
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
-#  score_matrix_question_id :integer          not null
 #
 # Indexes
 #
 #  idx_demand_score_answers_unique                         (answer_value,score_matrix_question_id) UNIQUE
 #  index_score_matrix_answers_on_score_matrix_question_id  (score_matrix_question_id)
 #
-# Foreign Keys
-#
-#  fk_rails_0429e0abf2  (score_matrix_question_id => score_matrix_questions.id)
-#
+
 class ScoreMatrixAnswer < ApplicationRecord
   belongs_to :score_matrix_question
 

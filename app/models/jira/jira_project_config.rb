@@ -4,22 +4,17 @@
 #
 # Table name: jira_project_configs
 #
-#  id                     :bigint           not null, primary key
-#  fix_version_name       :string           not null
+#  id                     :integer          not null, primary key
+#  project_id             :integer          not null
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
+#  fix_version_name       :string           not null
 #  jira_product_config_id :integer          not null
-#  project_id             :integer          not null
 #
 # Indexes
 #
 #  index_jira_project_configs_on_project_id  (project_id)
 #  unique_fix_version_to_jira_product        (jira_product_config_id,fix_version_name) UNIQUE
-#
-# Foreign Keys
-#
-#  fk_rails_039cb02c5a  (jira_product_config_id => jira_product_configs.id)
-#  fk_rails_5de62c9ca2  (project_id => projects.id)
 #
 
 module Jira
