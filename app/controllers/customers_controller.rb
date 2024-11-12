@@ -10,12 +10,13 @@ class CustomersController < AuthenticatedController
   def show
     @customers = [@customer]
 
-    @customer_consolidations = @customer.customer_consolidations.monthly_data.order(:consolidation_date)
+    @customer_consolidations = build_customer_consolidations(@customer)
     @unscored_demands = @customer.exclusives_demands.unscored_demands.order(external_id: :asc)
     @demands_blocks = @customer.demand_blocks.active.order(block_time: :asc)
     @user_invite = UserInvite.new(invite_object_id: @customer.id, invite_type: :customer)
     @contracts = @customer.contracts.includes([:product]).order(end_date: :desc)
     @contract = Contract.new(customer: @customer)
+
     build_pressure_and_speed
   end
 
@@ -78,6 +79,11 @@ class CustomersController < AuthenticatedController
   end
 
   private
+
+  def build_customer_consolidations(customer)
+    customer_last_data_point = customer.customer_consolidations.order(:consolidation_date).last
+    customer.customer_consolidations.monthly_data.or(customer.customer_consolidations.where(id: customer_last_data_point.id)).distinct.order(:consolidation_date)
+  end
 
   def build_pressure_and_speed
     @flow_pressure = @customer_consolidations.last&.flow_pressure || @customer.total_flow_pressure
