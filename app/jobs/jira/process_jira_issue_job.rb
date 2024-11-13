@@ -4,7 +4,7 @@ module Jira
   class ProcessJiraIssueJob < ApplicationJob
     queue_as :critical
 
-    def perform(jira_account, project, issue_key, user_email, user_name, demand_url)
+    def perform(issue_key, jira_account, project, user_email, user_name, demand_url)
       return unless jira_account.company.active?
 
       started_time = Time.zone.now

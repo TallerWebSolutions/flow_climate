@@ -8,6 +8,6 @@ class ContractService
 
     jira_account = contract.company.jira_accounts.first
 
-    contract_demands.each { |demand| Jira::ProcessJiraIssueJob.perform_later(jira_account, demand.project, demand.external_id, '', '', '') }
+    contract_demands.each { |demand| Jira::ProcessJiraIssueJob.perform_later(demand.external_id, jira_account, demand.project, '', '', '') }
   end
 end

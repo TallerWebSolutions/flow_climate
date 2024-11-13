@@ -10,7 +10,7 @@ namespace :demands do
       jira_account = demand.company.jira_accounts.first
 
       if jira_account.present?
-        Jira::ProcessJiraIssueJob.perform_later(jira_account, demand.project, demand.external_id, '', '', '')
+        Jira::ProcessJiraIssueJob.perform_later(demand.external_id, jira_account, demand.project, '', '', '')
       else
         demand.discard
       end

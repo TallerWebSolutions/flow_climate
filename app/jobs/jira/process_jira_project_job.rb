@@ -14,14 +14,14 @@ module Jira
         jira_issue_key = jira_issue.attrs['key']
         next if jira_issue_key.blank?
 
-        Jira::ProcessJiraIssueJob.perform_later(jira_account, jira_project_config.project, jira_issue_key, nil, nil, nil)
+        Jira::ProcessJiraIssueJob.perform_later(jira_issue_key, jira_account, jira_project_config.project, nil, nil, nil)
         processed_keys << jira_issue_key
       end
 
       demands_not_processed = jira_project_config.project.demands.map(&:external_id) - processed_keys
 
       jira_project_config.project.demands.where(external_id: demands_not_processed).each do |demand|
-        Jira::ProcessJiraIssueJob.perform_later(jira_account, jira_project_config.project, demand.external_id, nil, nil, nil)
+        Jira::ProcessJiraIssueJob.perform_later(demand.external_id, jira_account, jira_project_config.project, nil, nil, nil)
       end
 
       finished_time = Time.zone.now

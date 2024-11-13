@@ -10,7 +10,7 @@ class WebhookIntegrationsController < ApplicationController
   before_action :valid_jira_call?
 
   def jira_webhook
-    Jira::ProcessJiraIssueJob.perform_later(jira_account, project, Jira::JiraReader.instance.read_demand_key(jira_issue_attrs), nil, nil, nil)
+    Jira::ProcessJiraIssueJob.perform_later(Jira::JiraReader.instance.read_demand_key(jira_issue_attrs), jira_account, project, nil, nil, nil)
 
     head :ok
   end

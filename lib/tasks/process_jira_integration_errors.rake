@@ -10,7 +10,7 @@ namespace :jira_errors do
       else
         jira_account = demand.company.jira_accounts.first
         project = demand.project
-        Jira::ProcessJiraIssueJob.perform_later(jira_account, project, demand.external_id, '', '', '')
+        Jira::ProcessJiraIssueJob.perform_later(demand.external_id, jira_account, project, '', '', '')
 
         jira_error.update(processed: true)
       end

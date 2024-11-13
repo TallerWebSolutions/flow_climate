@@ -34,7 +34,7 @@ RSpec.describe Jira::ProcessJiraIssueJob, type: :active_job do
 
           expect(Jira::JiraIssueAdapter.instance).to(receive(:process_issue).once { demand })
           expect(Jira::JiraIssueAdapter.instance).to(receive(:process_jira_issue_changelog).once)
-          described_class.perform_now(jira_account, project, 'foo', 'foo@bar.com', 'Foo Bar', 'http://foo.com.br')
+          described_class.perform_now('foo', jira_account, project, 'foo@bar.com', 'Foo Bar', 'http://foo.com.br')
         end
       end
 
@@ -52,7 +52,7 @@ RSpec.describe Jira::ProcessJiraIssueJob, type: :active_job do
 
           expect(Jira::JiraIssueAdapter.instance).to(receive(:process_issue).once { demand })
           expect(Jira::JiraIssueAdapter.instance).to(receive(:process_jira_issue_changelog).twice)
-          described_class.perform_now(jira_account, project, 'foo', 'foo@bar.com', 'Foo Bar', 'http://foo.com.br')
+          described_class.perform_now('foo', jira_account, project, 'foo@bar.com', 'Foo Bar', 'http://foo.com.br')
         end
       end
     end
@@ -64,7 +64,7 @@ RSpec.describe Jira::ProcessJiraIssueJob, type: :active_job do
         expect(DemandEffortService.instance).to(receive(:build_efforts_to_demand).with(demand)).once
         expect(UserNotifierMailer).not_to receive(:async_activity_finished)
 
-        described_class.perform_now(jira_account, project, demand.external_id, 'foo@bar.com', 'Foo Bar', 'http://foo.com.br')
+        described_class.perform_now(demand.external_id, jira_account, project, 'foo@bar.com', 'Foo Bar', 'http://foo.com.br')
       end
     end
 
@@ -77,7 +77,7 @@ RSpec.describe Jira::ProcessJiraIssueJob, type: :active_job do
 
           expect(Jira::JiraIssueAdapter.instance).not_to(receive(:process_issue))
           expect(Jira::JiraIssueAdapter.instance).not_to(receive(:process_jira_issue_changelog))
-          described_class.perform_now(jira_account, project, 'foo', 'foo@bar.com', 'Foo Bar', 'http://foo.com.br')
+          described_class.perform_now('foo', jira_account, project, 'foo@bar.com', 'Foo Bar', 'http://foo.com.br')
         end
       end
     end

@@ -47,7 +47,7 @@ class DemandsController < DemandsListController
   def synchronize_jira
     jira_account = @company.jira_accounts.first
     demand_url = company_demand_url(@demand.project.company, @demand)
-    Jira::ProcessJiraIssueJob.perform_later(jira_account, @demand.project, @demand.external_id, current_user.email, current_user.full_name, demand_url)
+    Jira::ProcessJiraIssueJob.perform_later(@demand.external_id, jira_account, @demand.project, current_user.email, current_user.full_name, demand_url)
     flash[:notice] = I18n.t('general.enqueued')
     redirect_to company_demand_path(@company, @demand)
   end
