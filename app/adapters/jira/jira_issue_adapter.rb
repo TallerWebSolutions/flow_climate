@@ -243,9 +243,9 @@ module Jira
         item_assignment.update(finish_time: nil)
       else
         item_assignment = demand.item_assignments.create(membership: membership, start_time: history_date)
-        demand_url = company_demand_url(demand.company, demand)
+        company_demand_url(demand.company, demand)
 
-        Slack::SlackNotificationService.instance.notify_item_assigned(item_assignment, demand_url)
+        # Slack::SlackNotificationService.instance.notify_item_assigned(item_assignment, demand_url)
       end
 
       item_assignment.id

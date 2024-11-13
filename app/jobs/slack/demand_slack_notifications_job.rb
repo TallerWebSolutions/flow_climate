@@ -28,7 +28,7 @@ module Slack
 
       demand.item_assignments.reload.where(assignment_notified: false).each do |assignment|
         demand_url = company_demand_url(demand.company, demand)
-        # Slack::SlackNotificationService.instance.notify_item_assigned(assignment, demand_url)
+        Slack::SlackNotificationService.instance.notify_item_assigned(assignment, demand_url)
         ItemAssignment.transaction { assignment.update(assignment_notified: true) }
       end
     end
