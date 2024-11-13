@@ -31,7 +31,8 @@ RSpec.describe WebhookIntegrationsController do
 
           it 'enqueues the job' do
             request.headers['Content-Type'] = 'application/json'
-            expect(Jira::ProcessJiraIssueJob).to receive(:perform_later).once
+            allow(Sidekiq::Queue).to receive(:new).with('critical')
+            allow(Jira::ProcessJiraIssueJob).to receive(:perform_later).once
             post :jira_webhook, params: { issue: jira_issue.attrs }
             expect(response).to have_http_status :ok
           end
@@ -42,6 +43,7 @@ RSpec.describe WebhookIntegrationsController do
 
           it 'enqueues the job' do
             request.headers['Content-Type'] = 'application/json'
+            allow(Sidekiq::Queue).to receive(:new).with('critical')
             expect(Jira::ProcessJiraIssueJob).to receive(:perform_later).once
             post :jira_webhook, params: { issue: jira_issue.attrs }
             expect(response).to have_http_status :ok

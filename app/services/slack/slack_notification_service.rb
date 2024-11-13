@@ -192,7 +192,7 @@ module Slack
       demand_transition.update(transition_notified: true)
     end
 
-    def notify_item_assigned(item_assignment, _demand_url)
+    def notify_item_assigned(item_assignment, demand_url)
       return if item_assignment.valid? == false
 
       slack_configurations = slack_configurations(item_assignment.demand, :item_assigned)
@@ -204,10 +204,19 @@ module Slack
 
       return if item_assignment.assignment_notified?
 
-      # slack_configurations.each do |config|
-      #   slack_notifier = Slack::Notifier.new(config.room_webhook)
-      #   slack_notifier.post(blocks: [info_block, divider_block])
-      # end
+      demand_title = "*<#{demand_url}|#{item_assignment.demand.external_id} - #{item_assignment.demand.demand_title}>*"
+      assign_message = "#{item_assignment.team_member_name} puxou a demanda em _#{item_assignment.assigned_at&.name || 'sem etapa'}_ às #{I18n.l(item_assignment.start_time, format: :short)}"
+      message_previous_pull = "Anterior: #{item_assignment.previous_assignment&.demand&.external_id}"
+      message_ongoing = ":computer: #{item_assignment.membership_open_assignments.map(&:demand).flatten.map { |demand| "#{demand.external_id} (#{demand.current_stage_name})" }.join(', ')}"
+      message_idle = ":zzz: #{time_distance_in_words(item_assignment.pull_interval)} :zzz: :busts_in_silhouette: #{number_to_percentage(item_assignment.membership.team.percentage_idle_members * 100, precision: 0)}"
+
+      info_block = { type: 'section', text: { type: 'mrkdwn', text: ">#{demand_title}\n>#{assign_message}\n>#{message_previous_pull}\n>#{message_ongoing}\n>#{message_idle}" } }
+      divider_block = { type: 'divider' }
+
+      slack_configurations.each do |config|
+        slack_notifier = Slack::Notifier.new(config.room_webhook)
+        slack_notifier.post(blocks: [info_block, divider_block])
+      end
 
       ItemAssignment.transaction { item_assignment.update(assignment_notified: true) }
     end
