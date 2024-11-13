@@ -82,7 +82,7 @@ class CustomersController < AuthenticatedController
 
   def build_customer_consolidations(customer)
     customer_last_data_point = customer.customer_consolidations.order(:consolidation_date).last
-    customer.customer_consolidations.monthly_data.or(customer.customer_consolidations.where(id: customer_last_data_point.id)).distinct.order(:consolidation_date)
+    customer.customer_consolidations.monthly_data.or(customer.customer_consolidations.where(id: customer_last_data_point&.id)).distinct.order(:consolidation_date)
   end
 
   def build_pressure_and_speed
