@@ -10,7 +10,9 @@ class WebhookIntegrationsController < ApplicationController
   before_action :valid_jira_call?
 
   def jira_webhook
-    Jira::ProcessJiraIssueJob.perform_later(Jira::JiraReader.instance.read_demand_key(jira_issue_attrs), jira_account, project, nil, nil, nil)
+    issue_id = Jira::JiraReader.instance.read_demand_key(jira_issue_attrs)
+
+    Jira::ProcessJiraIssueJob.perform_later(issue_id, jira_account, project, nil, nil, nil) unless already_in_the_queue?(issue_id)
 
     head :ok
   end
@@ -25,6 +27,11 @@ class WebhookIntegrationsController < ApplicationController
   end
 
   private
+
+  def already_in_the_queue?(issue_id)
+    critical_queue = Sidekiq::Queue.new('critical')
+    critical_queue.map { |job| job['args'][0]['arguments'][0] }.any?(issue_id)
+  end
 
   def valid_jira_call?
     return head :ok if jira_issue_attrs.blank?
