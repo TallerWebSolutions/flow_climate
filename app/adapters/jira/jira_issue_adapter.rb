@@ -182,18 +182,24 @@ module Jira
       responsibles_custom_field_name = jira_account.responsibles_custom_field&.custom_field_machine_name
       return if responsibles_custom_field_name.blank?
 
+      assignments_ids = []
+
       sort_histories_fields(jira_issue_changelog, responsibles_custom_field_name).each do |history_hash|
         next if history_hash.blank?
 
-        responsible_hash_processment(demand, history_hash)
+        assignments_ids << responsible_hash_processment(demand, history_hash)
       end
+
+      demand.item_assignments.where.not(id: assignments_ids.flatten.uniq).find_each(&:destroy)
     end
 
     def responsible_hash_processment(demand, history_hash)
-      responsible_item_processment(demand, history_hash)
+      assignments_ids = responsible_item_processment(demand, history_hash)
 
       # due to a bug when a user is deactivated in the Jira
       demand.item_assignments.open_assignments.each { |open_assignment| open_assignment.update(finish_time: open_assignment.membership.end_date.beginning_of_day) if open_assignment.membership.end_date.present? }
+
+      assignments_ids
     end
 
     def responsible_item_processment(demand, history_hash)
@@ -201,8 +207,15 @@ module Jira
       from_array = responsible_string_processment(history_hash['fromString'])
       unassigment_history = from_array.try(:-, to_array) || []
 
-      to_array.each { |to_responsible| read_assigned_responsibles(demand, history_hash['created'].to_datetime, to_responsible.strip) } if to_array.present?
+      assignments_ids = []
+
+      to_array&.each do |to_responsible|
+        assignments_ids << read_assigned_responsibles(demand, history_hash['created'].to_datetime, to_responsible.strip)
+      end
+
       unassigment_history.each { |from_responsible| read_unassigned_responsibles(demand, history_hash['created'].to_datetime, from_responsible.strip) } if unassigment_history.present?
+
+      assignments_ids
     end
 
     def responsible_string_processment(responsible_string)
@@ -220,18 +233,22 @@ module Jira
     def read_assigned_responsibles(demand, history_date, responsible_name)
       membership = MembershipsRepository.instance.find_or_create_by_name(demand.team, responsible_name, :developer, history_date)
 
-      ItemAssignment.transaction do
-        already_assigned = demand.item_assignments.where(membership: membership, finish_time: nil)
+      already_assigned = demand.item_assignments.where(membership: membership, finish_time: nil)
 
-        if already_assigned.blank?
-          item_assignment = demand.item_assignments.where(membership: membership, start_time: history_date).first_or_create
-          item_assignment.update(finish_time: nil)
+      return already_assigned.first.id if already_assigned.present?
 
-          demand_url = company_demand_url(demand.company, demand)
+      item_assignment = demand.item_assignments.where(membership: membership, start_time: history_date).first
 
-          Slack::SlackNotificationService.instance.notify_item_assigned(item_assignment, demand_url)
-        end
+      if item_assignment.present?
+        item_assignment.update(finish_time: nil)
+      else
+        item_assignment = demand.item_assignments.create(membership: membership, start_time: history_date)
+        demand_url = company_demand_url(demand.company, demand)
+
+        Slack::SlackNotificationService.instance.notify_item_assigned(item_assignment, demand_url)
       end
+
+      item_assignment.id
     end
 
     def read_portfolio_unit(demand, jira_issue)

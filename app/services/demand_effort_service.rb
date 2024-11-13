@@ -90,8 +90,8 @@ class DemandEffortService
                     .demand_efforts
                     .where(demand_transition: transition, item_assignment: assignment)
                     .where('start_time_to_computation BETWEEN :start_time AND :end_time',
-                           start_time: effort_start_time.beginning_of_day,
-                           end_time: effort_start_time.end_of_day).first_or_initialize
+                           start_time: effort_start_time,
+                           end_time: effort_start_time).first_or_initialize
 
     return demand_effort.id unless demand_effort.automatic_update?
 
