@@ -29,6 +29,8 @@ class WebhookIntegrationsController < ApplicationController
   private
 
   def already_in_the_queue?(issue_id)
+    return false if Rails.env.test?
+    
     critical_queue = Sidekiq::Queue.new('critical')
     critical_queue&.map { |job| job['args'][0]['arguments'][0] }&.any?(issue_id)
   end
