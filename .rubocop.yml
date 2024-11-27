@@ -63,7 +63,6 @@ Metrics/MethodLength:
     - 'db/migrate/**/*'
     - 'app/adapters/highchart/finances_charts_adapter.rb'
     - 'app/services/slack/slack_notification_service.rb'
-    - 'app/services/azure/**/*'
     - 'app/models/flow/contracts_flow_information.rb'
     - 'app/controllers/graphql_controller.rb'
     - 'app/controllers/concerns/**/*'

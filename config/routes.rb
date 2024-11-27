@@ -7,30 +7,6 @@ Rails.application.routes.draw do
   options '/graphql', to: 'graphql#execute'
   post '/graphql', to: 'graphql#execute'
 
-  namespace 'api' do
-    namespace 'v1' do
-      resources :companies, only: :show do
-        get :active_projects, on: :member
-      end
-
-      resources :teams, only: [] do
-        member do
-          get :average_demand_cost
-          get :items_in_wip
-          get :items_delivered_last_week
-        end
-      end
-
-      resources :projects, only: :show
-
-      resources :demands, only: :show
-
-      resources :flow_events, only: %i[new create] do
-        get :opened_events, on: :collection
-      end
-    end
-  end
-
   controller :webhook_integrations do
     post 'jira_webhook'
     post 'jira_delete_card_webhook'
@@ -117,24 +93,6 @@ Rails.application.routes.draw do
       get :risks_tab
     end
 
-    resources :initiatives, only: %i[index show new create edit] do
-      post :generate_cache, on: :member
-    end
-
-    resources :tasks, only: %i[index show] do
-      collection do
-        get 'charts', action: :charts, as: 'charts'
-      end
-    end
-
-    resources :azure_accounts, only: %i[edit update show], module: 'azure' do
-      post :synchronize_azure, on: :collection
-
-      resources :azure_custom_fields, only: :create
-    end
-
-    resources :azure_custom_fields, only: :destroy, module: 'azure'
-
     resources :teams, except: %i[create update destroy] do
       resources :memberships, except: %i[new create update destroy] do
         get :efficiency_table, on: :collection
@@ -212,8 +170,6 @@ Rails.application.routes.draw do
 
     resources :projects do
       member do
-        get :tasks_tab
-
         get :risk_drill_down
         get :status_report_dashboard
         get :lead_time_dashboard
@@ -283,7 +239,6 @@ Rails.application.routes.draw do
         get :score_research
         get :demand_efforts
         put :synchronize_jira
-        put :synchronize_azure
       end
 
       collection do

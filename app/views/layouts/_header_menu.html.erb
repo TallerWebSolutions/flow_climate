@@ -9,12 +9,8 @@
     <span class="top-nav-bar-text"><%= link_to TeamMember.model_name.human(count: 2), company_team_members_path(company), class: 'nav-link top-nav-bar-item' %> | </span>
     <span class="top-nav-bar-text"><%= link_to I18n.t('navbar.customers_list'), company_customers_path(company), class: 'nav-link top-nav-bar-item' %> | </span>
     <span class="top-nav-bar-text"><%= link_to I18n.t('navbar.products_list'), company_products_path(company), class: 'nav-link top-nav-bar-item' %> | </span>
-    <span class="top-nav-bar-text"><%= link_to I18n.t('navbar.initiatives_list'), company_initiatives_path(company), class: 'nav-link top-nav-bar-item' %> | </span>
     <span class="top-nav-bar-text"><%= link_to I18n.t('navbar.projects_list'), company_projects_path(company), class: 'nav-link top-nav-bar-item' %> | </span>
     <span class="top-nav-bar-text"><%= link_to Demand.model_name.human(count: 2), company_demands_path(company), class: 'nav-link top-nav-bar-item' %> | </span>
-    <% if company.use_tasks? %>
-      <span class="top-nav-bar-text"><%= link_to Task.model_name.human(count: 2), company_tasks_path(company), class: 'nav-link top-nav-bar-item' %> | </span>
-    <% end %>
     <span class="top-nav-bar-text"><%= link_to DemandBlock.model_name.human(count: 2), company_demand_blocks_path(company), class: 'nav-link top-nav-bar-item' %> | </span>
     <span class="top-nav-bar-text"><%= link_to I18n.t('flow_events.index.title'), company_flow_events_path(company), class: 'nav-link top-nav-bar-item' %></span>
   <% end %>

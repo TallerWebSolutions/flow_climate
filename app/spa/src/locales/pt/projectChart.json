@@ -1,8 +1,7 @@
 {
   "charts": "Gráficos",
   "tabs": {
-    "demands": "Demandas",
-    "tasks": "Tarefas"
+    "demands": "Demandas"
   },
   "details": {
     "generalInfo": "Informações Gerais",

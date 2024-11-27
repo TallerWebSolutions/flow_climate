@@ -24,10 +24,11 @@
 #
 # Indexes
 #
-#  idx_demand_efforts_unique                     (item_assignment_id,demand_transition_id,start_time_to_computation) UNIQUE
-#  index_demand_efforts_on_demand_id             (demand_id)
-#  index_demand_efforts_on_demand_transition_id  (demand_transition_id)
-#  index_demand_efforts_on_item_assignment_id    (item_assignment_id)
+#  idx_demand_efforts_unique                                       (item_assignment_id,demand_transition_id,start_time_to_computation) UNIQUE
+#  idx_on_item_assignment_id_demand_transition_id_star_ae07e90298  (item_assignment_id,demand_transition_id,start_time_to_computation) UNIQUE
+#  index_demand_efforts_on_demand_id                               (demand_id)
+#  index_demand_efforts_on_demand_transition_id                    (demand_transition_id)
+#  index_demand_efforts_on_item_assignment_id                      (item_assignment_id)
 #
 # Foreign Keys
 #

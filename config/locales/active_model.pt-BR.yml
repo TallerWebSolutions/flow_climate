@@ -139,12 +139,6 @@ pt-BR:
       portfolio_unit:
         one: Unidade do Portfólio
         other: Unidades do Portfólio
-      azure/azure_account:
-        one: Conta no Azure Devops
-        other: Contas no Azure Devops
-      azure/azure_product_config:
-        one: Configuração de Produto no Azure
-        other: Configurações de Produto no Azure
       jira/jira_account:
         one: Conta do Jira
         other: Contas do Jira
@@ -205,16 +199,6 @@ pt-BR:
       demand_effort:
         one: Esforço de Demanda
         other: Esforços de Demanda
-      task:
-        one: Tarefa
-        other: Tarefas
-      initiative:
-        one: Iniciativa
-        other: Iniciativas
-      azure/azure_custom_field:
-        zero: Campo Customizado
-        one: Campo Customizado
-        other: Campos Customizados
       work_item_type:
         zero: Tipo de Item
         one: Tipo de Item
@@ -590,18 +574,9 @@ pt-BR:
             responsibles: Responsáveis
             customer: Cliente
             contract: Contrato
-      azure/azure_account:
-        azure_organization: Organização
-        username: Nome de Usuário
-        azure_work_item_query: Query para Consultar os Work Items no Azure
-      azure/azure_team:
-        azure_product_config: Config de Produto no Azure
       consolidations/project_consolidation:
         operational_risk: Risco
-        tasks_based_operational_risk: Risco (Tarefas)
         last_8_throughput_per_week_data: Throughput das últimas 8 Semanas
-      consolidations/initiative_consolidation:
-        tasks_operational_risk: Risco Operacional para Tarefas
       membership:
         team_member: Membro de Time
         member_role: Função
@@ -763,39 +738,6 @@ pt-BR:
         stage: "Etapa"
         who: "Quem"
         member_role: "Função"
-      task:
-        external_id: "Id da Tarefa"
-        demand: "Demanda"
-        title: "Título"
-        created_date: "Dt Criação"
-        end_date: "Dt Entrega"
-        seconds_to_complete: "Segundos para Finalizar"
-        completion_time: "Tempo para Concluir"
-      initiative:
-        company: "Empresa"
-        projects: "Projetos"
-        name: "Nome"
-        demands: "Demandas"
-        tasks: "Tarefas"
-        start_date: "Dt Início"
-        end_date: "Dt Fim"
-        target_quarter: "Trimestre"
-        target_year: "Ano"
-        enums:
-          target_quarter:
-            q1: "1º Trimestre"
-            q2: "2º Trimestre"
-            q3: "3º Trimestre"
-            q4: "4º Trimestre"
-      azure/azure_custom_field:
-        custom_field_name: Nome de Máquina do Campo
-        custom_field_type: Tipo do Campo
-        field_order: Ordem
-        enums:
-          custom_field_type:
-            project_name: Nome do Projeto
-            team_name: Nome do Time
-            epic_name: Nome do Épico
       work_item_type:
         name: Nome
         item_level: Nível do Item

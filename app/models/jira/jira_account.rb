@@ -4,20 +4,24 @@
 #
 # Table name: jira_accounts
 #
-#  id                  :integer          not null, primary key
-#  company_id          :integer          not null
-#  username            :string           not null
-#  encrypted_api_token :string           not null
+#  id                  :bigint           not null, primary key
 #  base_uri            :string           not null
 #  customer_domain     :string           not null
+#  encrypted_api_token :string           not null
+#  username            :string           not null
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
+#  company_id          :integer          not null
 #
 # Indexes
 #
 #  index_jira_accounts_on_base_uri         (base_uri) UNIQUE
 #  index_jira_accounts_on_company_id       (company_id)
 #  index_jira_accounts_on_customer_domain  (customer_domain) UNIQUE
+#
+# Foreign Keys
+#
+#  fk_rails_b16d2de302  (company_id => companies.id)
 #
 
 module Jira

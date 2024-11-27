@@ -32,7 +32,6 @@ class Team < ApplicationRecord
   has_many :team_members, through: :memberships
   has_many :projects, dependent: :restrict_with_error
   has_many :demands, dependent: :restrict_with_error
-  has_many :tasks, through: :demands
   has_many :demand_efforts, through: :demands
   has_many :slack_configurations, dependent: :destroy
   has_many :team_resource_allocations, dependent: :destroy

@@ -47,7 +47,6 @@ const DemandsPage = ({
   const company = me?.currentCompany
   const companySlug = company?.slug
 
-  const initiatives = me?.currentCompany?.initiatives
   const projects = me?.currentCompany?.projects
   const teams = me?.currentCompany?.teams
   const { pathname, search } = useLocation()
@@ -160,32 +159,6 @@ const DemandsPage = ({
                 </option>
               </Select>
             </FormElement>
-            {!!initiatives?.length && (
-              <FormElement>
-                <InputLabel
-                  htmlFor="initiative"
-                  sx={{ backgroundColor: "white" }}
-                  shrink
-                >
-                  {t("list.form.initiative")}
-                </InputLabel>
-                <Select
-                  native
-                  {...register("initiative")}
-                  defaultValue={filters.initiative}
-                >
-                  <option value="">{t("list.form.common.placeholder")}</option>
-                  {initiatives.map((initiative, index) => (
-                    <option
-                      value={initiative.id}
-                      key={`${initiative.id}--${index}`}
-                    >
-                      {initiative.name}
-                    </option>
-                  ))}
-                </Select>
-              </FormElement>
-            )}
             {!!projects?.length && (
               <FormElement>
                 <InputLabel

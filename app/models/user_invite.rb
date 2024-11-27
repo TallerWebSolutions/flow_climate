@@ -4,14 +4,14 @@
 #
 # Table name: user_invites
 #
-#  id               :integer          not null, primary key
-#  company_id       :integer          not null
+#  id               :bigint           not null, primary key
+#  invite_email     :string           not null
 #  invite_status    :integer          not null
 #  invite_type      :integer          not null
-#  invite_object_id :integer          not null
-#  invite_email     :string           not null
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
+#  company_id       :integer          not null
+#  invite_object_id :integer          not null
 #
 # Indexes
 #
@@ -20,6 +20,10 @@
 #  index_user_invites_on_invite_object_id  (invite_object_id)
 #  index_user_invites_on_invite_status     (invite_status)
 #  index_user_invites_on_invite_type       (invite_type)
+#
+# Foreign Keys
+#
+#  fk_rails_b2aa9bf2c0  (company_id => companies.id)
 #
 
 class UserInvite < ApplicationRecord

@@ -45,12 +45,6 @@
       <span class="help-block"><%= project.errors[:team].join(', ') %></span>
     </div>
 
-    <div class='col-xs-3 form-group'>
-      <%= f.label :initiative, class: 'control-label' %>
-      <%= f.select :initiative_id, company.initiatives.map { |initiative| [initiative.name, initiative.id] }, {include_blank: I18n.t('general.select'), selected: project.initiative_id}, class: 'form-control' %>
-      <span class="help-block"><%= project.errors[:initiative].join(', ') %></span>
-    </div>
-
     <div class='col-xs-3 form-group <%= 'has-error' if project.errors[:initial_scope].present? %>'>
       <%= f.label :initial_scope, class: 'control-label required' %>
       <%= f.number_field :initial_scope, value: project.initial_scope, class: 'form-control', step: 1 %>

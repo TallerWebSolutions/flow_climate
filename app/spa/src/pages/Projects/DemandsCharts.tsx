@@ -61,7 +61,6 @@ const PROJECT_CHART_QUERY = gql`
         projectQuality
         consolidationDate
         operationalRisk
-        tasksBasedOperationalRisk
         codeNeededBlocksCount
         codeNeededBlocksPerDemand
         flowEfficiency
@@ -120,12 +119,6 @@ const PROJECT_CHART_QUERY = gql`
         }
       }
       hoursBurnup {
-        scope
-        xAxis
-        idealBurn
-        currentBurn
-      }
-      tasksBurnup {
         scope
         xAxis
         idealBurn

@@ -1,8 +1,7 @@
 {
   "charts": "Charts",
   "tabs": {
-    "demands": "Demands",
-    "tasks": "Tasks"
+    "demands": "Demands"
   },
   "details": {
     "generalInfo": "General Info",

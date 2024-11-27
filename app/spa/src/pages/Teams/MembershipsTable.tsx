@@ -175,7 +175,7 @@ export const MEMBERSHIPS_TABLE_QUERY = gql`
         memberRole
         memberRoleDescription
         realizedHourValue
-      	expectedHourValue
+        expectedHourValue
       }
     }
   }

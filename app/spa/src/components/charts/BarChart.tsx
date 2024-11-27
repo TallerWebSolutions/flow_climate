@@ -57,11 +57,16 @@ export const BarChart = ({
   return (
     <Box height={height}>
       <ResponsiveBar
-        legendLabel={legendLabel ? () => legendLabel  : undefined}
+        legendLabel={legendLabel ? () => legendLabel : undefined}
         data={chartData}
         indexBy={indexBy}
         keys={keys}
-        margin={{ top: marginTop, right: marginRight, bottom: marginBottom, left: marginLeft }}
+        margin={{
+          top: marginTop,
+          right: marginRight,
+          bottom: marginBottom,
+          left: marginLeft,
+        }}
         groupMode={groupMode}
         padding={Number.isNaN(padding) ? 0.3 : padding}
         colors={{ scheme: "paired" }}

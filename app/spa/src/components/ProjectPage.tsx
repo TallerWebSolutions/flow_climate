@@ -158,16 +158,6 @@ export const ProjectPage = ({
       href: `/companies/${companySlug}/projects/${projectId}/stage_project_configs`,
     },
   ]
-  const taskTabs = [
-    {
-      label: t("tabs.demands"),
-      to: `/companies/${companySlug}/projects/${projectId}`,
-    },
-    {
-      label: t("tabs.tasks"),
-      to: `/companies/${companySlug}/projects/${projectId}/tasks_tab`,
-    },
-  ]
 
   return (
     <BasicPage
@@ -208,19 +198,6 @@ export const ProjectPage = ({
         >
           <Tabs tabs={projectTabs} currentPath={pathname} />
         </Box>
-        {dashboard && (
-          <Box
-            sx={{
-              mt: 2,
-              mb: 6,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Tabs tabs={taskTabs} currentPath={pathname} />
-          </Box>
-        )}
         {children}
       </>
     </BasicPage>

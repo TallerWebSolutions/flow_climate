@@ -69,10 +69,8 @@ const Header = () => {
     { name: t("team_members"), href: `/companies/${companySlug}/team_members` },
     { name: t("customers"), href: `/companies/${companySlug}/customers` },
     { name: t("products"), href: `/companies/${companySlug}/products` },
-    { name: t("initiatives"), href: `/companies/${companySlug}/initiatives` },
     { name: t("projects"), href: `/companies/${companySlug}/projects` },
     { name: t("demands"), href: `/companies/${companySlug}/demands` },
-    { name: t("tasks"), href: `/companies/${companySlug}/tasks` },
     {
       name: t("demand_blocks"),
       href: `/companies/${companySlug}/demand_blocks`,

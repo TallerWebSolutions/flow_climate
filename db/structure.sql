@@ -683,173 +683,6 @@ CREATE TABLE public.ar_internal_metadata (
 
 
 --
--- Name: azure_accounts; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.azure_accounts (
-    id bigint NOT NULL,
-    company_id bigint NOT NULL,
-    username character varying NOT NULL,
-    encrypted_password character varying NOT NULL,
-    azure_organization character varying NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    azure_work_item_query character varying
-);
-
-
---
--- Name: azure_accounts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.azure_accounts_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: azure_accounts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.azure_accounts_id_seq OWNED BY public.azure_accounts.id;
-
-
---
--- Name: azure_custom_fields; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.azure_custom_fields (
-    id bigint NOT NULL,
-    azure_account_id integer NOT NULL,
-    custom_field_type integer DEFAULT 0 NOT NULL,
-    custom_field_name character varying NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    field_order integer DEFAULT 0 NOT NULL
-);
-
-
---
--- Name: azure_custom_fields_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.azure_custom_fields_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: azure_custom_fields_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.azure_custom_fields_id_seq OWNED BY public.azure_custom_fields.id;
-
-
---
--- Name: azure_product_configs; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.azure_product_configs (
-    id bigint NOT NULL,
-    product_id bigint NOT NULL,
-    azure_account_id bigint NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: azure_product_configs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.azure_product_configs_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: azure_product_configs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.azure_product_configs_id_seq OWNED BY public.azure_product_configs.id;
-
-
---
--- Name: azure_projects; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.azure_projects (
-    id bigint NOT NULL,
-    azure_team_id integer NOT NULL,
-    project_id character varying NOT NULL,
-    project_name character varying NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: azure_projects_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.azure_projects_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: azure_projects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.azure_projects_id_seq OWNED BY public.azure_projects.id;
-
-
---
--- Name: azure_teams; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.azure_teams (
-    id bigint NOT NULL,
-    azure_product_config_id integer NOT NULL,
-    team_id character varying NOT NULL,
-    team_name character varying NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: azure_teams_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.azure_teams_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: azure_teams_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.azure_teams_id_seq OWNED BY public.azure_teams.id;
-
-
---
 -- Name: class_of_service_change_histories; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1669,85 +1502,6 @@ ALTER SEQUENCE public.friendly_id_slugs_id_seq OWNED BY public.friendly_id_slugs
 
 
 --
--- Name: initiative_consolidations; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.initiative_consolidations (
-    id bigint NOT NULL,
-    initiative_id integer NOT NULL,
-    consolidation_date date NOT NULL,
-    last_data_in_week boolean DEFAULT false,
-    last_data_in_month boolean DEFAULT false,
-    last_data_in_year boolean DEFAULT false,
-    tasks_delivered integer,
-    tasks_delivered_in_month integer,
-    tasks_delivered_in_week integer,
-    tasks_operational_risk numeric,
-    tasks_scope integer,
-    tasks_completion_time_p80 numeric,
-    tasks_completion_time_p80_in_month numeric,
-    tasks_completion_time_p80_in_week numeric,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: initiative_consolidations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.initiative_consolidations_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: initiative_consolidations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.initiative_consolidations_id_seq OWNED BY public.initiative_consolidations.id;
-
-
---
--- Name: initiatives; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.initiatives (
-    id bigint NOT NULL,
-    company_id integer NOT NULL,
-    name character varying NOT NULL,
-    start_date date NOT NULL,
-    end_date date NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    target_quarter integer DEFAULT 1 NOT NULL,
-    target_year integer DEFAULT 2022 NOT NULL
-);
-
-
---
--- Name: initiatives_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.initiatives_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: initiatives_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.initiatives_id_seq OWNED BY public.initiatives.id;
-
-
---
 -- Name: integration_errors; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2440,7 +2194,6 @@ CREATE TABLE public.project_consolidations (
     team_based_monte_carlo_weeks_max integer DEFAULT 0,
     team_based_monte_carlo_weeks_std_dev numeric DEFAULT 0,
     team_based_monte_carlo_weeks_p80 numeric DEFAULT 0.0,
-    team_based_operational_risk numeric DEFAULT 0.0,
     lead_time_min numeric DEFAULT 0.0,
     lead_time_max numeric DEFAULT 0.0,
     lead_time_p25 numeric DEFAULT 0.0,
@@ -2479,10 +2232,9 @@ CREATE TABLE public.project_consolidations (
     project_throughput_hours_development_in_month numeric DEFAULT 0.0 NOT NULL,
     project_throughput_hours_design_in_month numeric DEFAULT 0.0 NOT NULL,
     project_throughput_hours_management_in_month numeric DEFAULT 0.0 NOT NULL,
-    tasks_based_operational_risk numeric DEFAULT 0.0,
-    tasks_based_deadline_p80 numeric DEFAULT 0.0,
     project_throughput_hours_additional double precision,
-    project_throughput_hours_additional_in_month double precision
+    project_throughput_hours_additional_in_month double precision,
+    team_based_operational_risk numeric
 );
 
 
@@ -2595,8 +2347,7 @@ CREATE TABLE public.projects (
     percentage_effort_to_bugs integer DEFAULT 0 NOT NULL,
     team_id integer NOT NULL,
     max_work_in_progress numeric DEFAULT 1.0 NOT NULL,
-    company_id integer NOT NULL,
-    initiative_id integer
+    company_id integer NOT NULL
 );
 
 
@@ -3111,44 +2862,6 @@ ALTER SEQUENCE public.stages_teams_id_seq OWNED BY public.stages_teams.id;
 
 
 --
--- Name: tasks; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.tasks (
-    id bigint NOT NULL,
-    demand_id integer NOT NULL,
-    created_date timestamp without time zone NOT NULL,
-    title character varying NOT NULL,
-    external_id integer,
-    seconds_to_complete integer,
-    end_date timestamp without time zone,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    discarded_at timestamp without time zone,
-    work_item_type_id integer NOT NULL
-);
-
-
---
--- Name: tasks_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.tasks_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: tasks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.tasks_id_seq OWNED BY public.tasks.id;
-
-
---
 -- Name: team_consolidations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3618,41 +3331,6 @@ ALTER TABLE ONLY hdb_catalog.remote_schemas ALTER COLUMN id SET DEFAULT nextval(
 
 
 --
--- Name: azure_accounts id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.azure_accounts ALTER COLUMN id SET DEFAULT nextval('public.azure_accounts_id_seq'::regclass);
-
-
---
--- Name: azure_custom_fields id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.azure_custom_fields ALTER COLUMN id SET DEFAULT nextval('public.azure_custom_fields_id_seq'::regclass);
-
-
---
--- Name: azure_product_configs id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.azure_product_configs ALTER COLUMN id SET DEFAULT nextval('public.azure_product_configs_id_seq'::regclass);
-
-
---
--- Name: azure_projects id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.azure_projects ALTER COLUMN id SET DEFAULT nextval('public.azure_projects_id_seq'::regclass);
-
-
---
--- Name: azure_teams id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.azure_teams ALTER COLUMN id SET DEFAULT nextval('public.azure_teams_id_seq'::regclass);
-
-
---
 -- Name: class_of_service_change_histories id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3797,20 +3475,6 @@ ALTER TABLE ONLY public.flow_events ALTER COLUMN id SET DEFAULT nextval('public.
 --
 
 ALTER TABLE ONLY public.friendly_id_slugs ALTER COLUMN id SET DEFAULT nextval('public.friendly_id_slugs_id_seq'::regclass);
-
-
---
--- Name: initiative_consolidations id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.initiative_consolidations ALTER COLUMN id SET DEFAULT nextval('public.initiative_consolidations_id_seq'::regclass);
-
-
---
--- Name: initiatives id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.initiatives ALTER COLUMN id SET DEFAULT nextval('public.initiatives_id_seq'::regclass);
 
 
 --
@@ -4066,13 +3730,6 @@ ALTER TABLE ONLY public.stages_teams ALTER COLUMN id SET DEFAULT nextval('public
 
 
 --
--- Name: tasks id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.tasks ALTER COLUMN id SET DEFAULT nextval('public.tasks_id_seq'::regclass);
-
-
---
 -- Name: team_consolidations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4286,46 +3943,6 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 
 --
--- Name: azure_accounts azure_accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.azure_accounts
-    ADD CONSTRAINT azure_accounts_pkey PRIMARY KEY (id);
-
-
---
--- Name: azure_custom_fields azure_custom_fields_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.azure_custom_fields
-    ADD CONSTRAINT azure_custom_fields_pkey PRIMARY KEY (id);
-
-
---
--- Name: azure_product_configs azure_product_configs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.azure_product_configs
-    ADD CONSTRAINT azure_product_configs_pkey PRIMARY KEY (id);
-
-
---
--- Name: azure_projects azure_projects_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.azure_projects
-    ADD CONSTRAINT azure_projects_pkey PRIMARY KEY (id);
-
-
---
--- Name: azure_teams azure_teams_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.azure_teams
-    ADD CONSTRAINT azure_teams_pkey PRIMARY KEY (id);
-
-
---
 -- Name: class_of_service_change_histories class_of_service_change_histories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4491,22 +4108,6 @@ ALTER TABLE ONLY public.flow_events
 
 ALTER TABLE ONLY public.friendly_id_slugs
     ADD CONSTRAINT friendly_id_slugs_pkey PRIMARY KEY (id);
-
-
---
--- Name: initiative_consolidations initiative_consolidations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.initiative_consolidations
-    ADD CONSTRAINT initiative_consolidations_pkey PRIMARY KEY (id);
-
-
---
--- Name: initiatives initiatives_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.initiatives
-    ADD CONSTRAINT initiatives_pkey PRIMARY KEY (id);
 
 
 --
@@ -4806,14 +4407,6 @@ ALTER TABLE ONLY public.stages_teams
 
 
 --
--- Name: tasks tasks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.tasks
-    ADD CONSTRAINT tasks_pkey PRIMARY KEY (id);
-
-
---
 -- Name: team_consolidations team_consolidations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5025,41 +4618,6 @@ CREATE UNIQUE INDEX idx_replenishing_unique ON public.replenishing_consolidation
 --
 
 CREATE UNIQUE INDEX idx_transitions_unique ON public.demand_transitions USING btree (demand_id, stage_id, last_time_in);
-
-
---
--- Name: index_azure_accounts_on_company_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_azure_accounts_on_company_id ON public.azure_accounts USING btree (company_id);
-
-
---
--- Name: index_azure_product_configs_on_azure_account_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_azure_product_configs_on_azure_account_id ON public.azure_product_configs USING btree (azure_account_id);
-
-
---
--- Name: index_azure_product_configs_on_product_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_azure_product_configs_on_product_id ON public.azure_product_configs USING btree (product_id);
-
-
---
--- Name: index_azure_projects_on_azure_team_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_azure_projects_on_azure_team_id ON public.azure_projects USING btree (azure_team_id);
-
-
---
--- Name: index_azure_teams_on_azure_product_config_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_azure_teams_on_azure_product_config_id ON public.azure_teams USING btree (azure_product_config_id);
 
 
 --
@@ -5424,55 +4982,6 @@ CREATE UNIQUE INDEX index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope
 --
 
 CREATE INDEX index_friendly_id_slugs_on_sluggable_type_and_sluggable_id ON public.friendly_id_slugs USING btree (sluggable_type, sluggable_id);
-
-
---
--- Name: index_initiative_consolidations_on_consolidation_date; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_initiative_consolidations_on_consolidation_date ON public.initiative_consolidations USING btree (consolidation_date);
-
-
---
--- Name: index_initiative_consolidations_on_initiative_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_initiative_consolidations_on_initiative_id ON public.initiative_consolidations USING btree (initiative_id);
-
-
---
--- Name: index_initiatives_on_company_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_initiatives_on_company_id ON public.initiatives USING btree (company_id);
-
-
---
--- Name: index_initiatives_on_company_id_and_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_initiatives_on_company_id_and_name ON public.initiatives USING btree (company_id, name);
-
-
---
--- Name: index_initiatives_on_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_initiatives_on_name ON public.initiatives USING btree (name);
-
-
---
--- Name: index_initiatives_on_target_quarter; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_initiatives_on_target_quarter ON public.initiatives USING btree (target_quarter);
-
-
---
--- Name: index_initiatives_on_target_year; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_initiatives_on_target_year ON public.initiatives USING btree (target_year);
 
 
 --
@@ -5980,27 +5489,6 @@ CREATE INDEX index_stages_teams_on_team_id ON public.stages_teams USING btree (t
 
 
 --
--- Name: index_tasks_on_demand_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_tasks_on_demand_id ON public.tasks USING btree (demand_id);
-
-
---
--- Name: index_tasks_on_discarded_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_tasks_on_discarded_at ON public.tasks USING btree (discarded_at);
-
-
---
--- Name: index_tasks_on_work_item_type_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_tasks_on_work_item_type_id ON public.tasks USING btree (work_item_type_id);
-
-
---
 -- Name: index_team_consolidations_on_last_data_in_month; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6229,13 +5717,6 @@ CREATE INDEX index_work_item_types_on_item_level ON public.work_item_types USING
 --
 
 CREATE INDEX index_work_item_types_on_quality_indicator_type ON public.work_item_types USING btree (quality_indicator_type);
-
-
---
--- Name: initiative_consolidation_unique; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX initiative_consolidation_unique ON public.initiative_consolidations USING btree (initiative_id, consolidation_date);
 
 
 --
@@ -6615,14 +6096,6 @@ ALTER TABLE ONLY public.score_matrix_questions
 
 
 --
--- Name: initiative_consolidations fk_rails_3a60bcdf90; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.initiative_consolidations
-    ADD CONSTRAINT fk_rails_3a60bcdf90 FOREIGN KEY (initiative_id) REFERENCES public.initiatives(id);
-
-
---
 -- Name: demand_efforts fk_rails_3a63adbf96; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6727,14 +6200,6 @@ ALTER TABLE ONLY public.customers
 
 
 --
--- Name: azure_custom_fields fk_rails_4fe176e72d; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.azure_custom_fields
-    ADD CONSTRAINT fk_rails_4fe176e72d FOREIGN KEY (azure_account_id) REFERENCES public.azure_accounts(id);
-
-
---
 -- Name: project_additional_hours fk_rails_51a0d1b6fa; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6772,14 +6237,6 @@ ALTER TABLE ONLY public.jira_project_configs
 
 ALTER TABLE ONLY public.team_resource_allocations
     ADD CONSTRAINT fk_rails_600e78ae6c FOREIGN KEY (team_resource_id) REFERENCES public.team_resources(id);
-
-
---
--- Name: tasks fk_rails_615c6769c9; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.tasks
-    ADD CONSTRAINT fk_rails_615c6769c9 FOREIGN KEY (work_item_type_id) REFERENCES public.work_item_types(id);
 
 
 --
@@ -6887,14 +6344,6 @@ ALTER TABLE ONLY public.project_broken_wip_logs
 
 
 --
--- Name: azure_teams fk_rails_79d4db23c4; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.azure_teams
-    ADD CONSTRAINT fk_rails_79d4db23c4 FOREIGN KEY (azure_product_config_id) REFERENCES public.azure_product_configs(id);
-
-
---
 -- Name: project_change_deadline_histories fk_rails_7e0b9bce8f; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6924,14 +6373,6 @@ ALTER TABLE ONLY public.work_item_types
 
 ALTER TABLE ONLY public.stages_teams
     ADD CONSTRAINT fk_rails_8d8a97b7b3 FOREIGN KEY (team_id) REFERENCES public.teams(id);
-
-
---
--- Name: initiatives fk_rails_8fd87a6ae5; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.initiatives
-    ADD CONSTRAINT fk_rails_8fd87a6ae5 FOREIGN KEY (company_id) REFERENCES public.companies(id);
 
 
 --
@@ -7004,14 +6445,6 @@ ALTER TABLE ONLY public.stages
 
 ALTER TABLE ONLY public.memberships
     ADD CONSTRAINT fk_rails_ae2aedcfaf FOREIGN KEY (team_id) REFERENCES public.teams(id);
-
-
---
--- Name: tasks fk_rails_ae3913c114; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.tasks
-    ADD CONSTRAINT fk_rails_ae3913c114 FOREIGN KEY (demand_id) REFERENCES public.demands(id);
 
 
 --
@@ -7295,22 +6728,6 @@ ALTER TABLE ONLY public.customers
 
 
 --
--- Name: azure_projects fk_rails_f1091df050; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.azure_projects
-    ADD CONSTRAINT fk_rails_f1091df050 FOREIGN KEY (azure_team_id) REFERENCES public.azure_teams(id);
-
-
---
--- Name: projects fk_rails_f78e8f0103; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.projects
-    ADD CONSTRAINT fk_rails_f78e8f0103 FOREIGN KEY (initiative_id) REFERENCES public.initiatives(id);
-
-
---
 -- Name: demands fk_rails_fcc44c0e5d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7341,6 +6758,10 @@ ALTER TABLE ONLY public.stages
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20241127165114'),
+('20241127161643'),
+('20241127151940'),
+('20241127142153'),
 ('20241112185524'),
 ('20240305001433'),
 ('20231205130509'),

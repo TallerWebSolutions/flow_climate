@@ -86,18 +86,6 @@ const ProjectDemandsCharts = ({
     },
   ]
 
-  const operationalTeamRiskChartData = [
-    {
-      id: t("charts_tab.project_charts.operationalRisk"),
-      data: projectConsolidationsWeekly.map(
-        ({ consolidationDate, tasksBasedOperationalRisk }) => ({
-          x: consolidationDate,
-          y: tasksBasedOperationalRisk * 100,
-        })
-      ),
-    },
-  ]
-
   const projectBugsChartData: BarDatum[] = projectConsolidationsWeekly.map(
     ({ bugsOpened, bugsClosed, consolidationDate }) => {
       return {
@@ -428,38 +416,6 @@ const ProjectDemandsCharts = ({
                 slice={slice}
                 xLabel={t(
                   "charts_tab.project_charts.operational_math_risk_evolution_tooltip_label"
-                )}
-              />
-            ),
-          }}
-        />
-      </ChartGridItem>
-      <ChartGridItem
-        title={t(
-          "charts_tab.project_charts.operational_math_risk_evolution_team_data_chart"
-        )}
-      >
-        <LineChart
-          data={operationalTeamRiskChartData}
-          axisLeftLegend={`${t(
-            "charts_tab.project_charts.operational_math_risk_evolution_team_data_y_label"
-          )} (%)`}
-          props={{
-            margin: { left: 80, right: 20, top: 25, bottom: 65 },
-            axisBottom: {
-              tickSize: 5,
-              tickPadding: 5,
-              legendPosition: "middle",
-              legendOffset: 60,
-              tickRotation: -40,
-            },
-            yFormat: (value: number) => value,
-            enableSlices: "x",
-            sliceTooltip: ({ slice }: SliceTooltipProps) => (
-              <LineChartTooltip
-                slice={slice}
-                xLabel={t(
-                  "charts_tab.project_charts.operational_math_risk_evolution_team_data_tooltip_label"
                 )}
               />
             ),

@@ -379,21 +379,6 @@ const ShowProductsRiskReview = () => {
 
                   <FormElement>
                     <InputLabel
-                      htmlFor="initiative"
-                      sx={{ backgroundColor: "white" }}
-                      shrink
-                    >
-                      {t("list.form.initiative")}
-                    </InputLabel>
-                    <Select native {...register("initiative")} defaultValue={0}>
-                      <option value="">
-                        {t("list.form.common.placeholder")}
-                      </option>
-                    </Select>
-                  </FormElement>
-
-                  <FormElement>
-                    <InputLabel
                       htmlFor="team"
                       sx={{ backgroundColor: "white" }}
                       shrink

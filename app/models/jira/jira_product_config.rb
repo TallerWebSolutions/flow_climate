@@ -4,18 +4,23 @@
 #
 # Table name: jira_product_configs
 #
-#  id               :integer          not null, primary key
-#  company_id       :integer          not null
-#  product_id       :integer          not null
+#  id               :bigint           not null, primary key
 #  jira_product_key :string           not null
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
+#  company_id       :integer          not null
+#  product_id       :integer          not null
 #
 # Indexes
 #
 #  index_jira_product_configs_on_company_id                       (company_id)
 #  index_jira_product_configs_on_company_id_and_jira_product_key  (company_id,jira_product_key) UNIQUE
 #  index_jira_product_configs_on_product_id                       (product_id)
+#
+# Foreign Keys
+#
+#  fk_rails_3b969f1e33  (company_id => companies.id)
+#  fk_rails_c55dd7e748  (product_id => products.id)
 #
 
 module Jira

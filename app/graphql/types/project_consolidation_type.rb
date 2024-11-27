@@ -53,7 +53,6 @@ module Types
     field :project_throughput_hours_management, Float, null: false
     field :project_throughput_hours_management_in_month, Float, null: false
     field :project_throughput_hours_upstream, Float, null: false
-    field :tasks_based_operational_risk, Float, null: false
     field :team_based_operational_risk, Float, null: true
     field :total, [Int], null: false
     field :weeks_by_little_law, Float, null: false

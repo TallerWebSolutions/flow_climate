@@ -93,12 +93,6 @@ RSpec.describe ProjectsController do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
-
-    describe 'GET #tasks_tab' do
-      before { get :tasks_tab, params: { company_id: 'foo', id: 'bar' } }
-
-      it { expect(response).to redirect_to new_user_session_path }
-    end
   end
 
   context 'authenticated' do
@@ -882,16 +876,6 @@ RSpec.describe ProjectsController do
             expect(response).to render_template 'spa-build/index'
           end
         end
-      end
-    end
-
-    describe 'GET #tasks_tab' do
-      let!(:project) { Fabricate :project, company: company }
-
-      it 'renders spa' do
-        get :tasks_tab, params: { company_id: company, id: project }
-
-        expect(response).to render_template 'spa-build/index'
       end
     end
   end

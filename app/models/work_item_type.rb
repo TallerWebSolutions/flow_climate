@@ -24,11 +24,10 @@
 #  fk_rails_8c3c9d6119  (company_id => companies.id)
 #
 class WorkItemType < ApplicationRecord
-  enum :item_level, { demand: 0, task: 1 }
+  enum :item_level, { demand: 0 }
 
   belongs_to :company
   has_many :demands, dependent: :restrict_with_error
-  has_many :tasks, dependent: :restrict_with_error
 
   validates :item_level, :name, presence: true
 

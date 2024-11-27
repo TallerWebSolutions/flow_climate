@@ -38,12 +38,6 @@ RSpec.describe DemandsController do
       it { expect(response).to redirect_to new_user_session_path }
     end
 
-    describe 'PUT #synchronize_azure' do
-      before { put :synchronize_azure, params: { company_id: 'foo', id: 'bla' } }
-
-      it { expect(response).to redirect_to new_user_session_path }
-    end
-
     describe 'GET #demands_csv' do
       before { get :demands_csv, params: { company_id: 'xpto' }, format: :csv }
 
@@ -287,10 +281,6 @@ RSpec.describe DemandsController do
           let!(:other_demand_effort) { Fabricate :demand_effort, demand_transition: transition, demand: first_demand, start_time_to_computation: 2.days.ago }
           let!(:out_demand_effort) { Fabricate :demand_effort, start_time_to_computation: 2.days.ago }
 
-          let!(:task) { Fabricate :task, demand: first_demand, created_date: 1.day.ago }
-          let!(:other_task) { Fabricate :task, demand: first_demand, created_date: Time.zone.now }
-          let!(:out_task) { Fabricate :task }
-
           before { get :show, params: { company_id: company, id: first_demand } }
 
           it 'assigns the instance variable and renders the template' do
@@ -304,8 +294,6 @@ RSpec.describe DemandsController do
             expect(assigns(:downstream_percentage)).to eq 100
             expect(assigns(:demand_comments)).to eq [other_demand_comment, demand_comment]
             expect(assigns(:demand_efforts)).to eq [other_demand_effort, demand_effort]
-            expect(assigns(:tasks_list)).to eq [other_task, task]
-            expect(assigns(:paged_tasks)).to eq [other_task, task]
             expect(assigns(:lead_time_breakdown)).to eq({ stage.name => [transition] })
           end
         end
@@ -422,54 +410,6 @@ RSpec.describe DemandsController do
             let(:company) { Fabricate :company, users: [] }
 
             before { put :synchronize_jira, params: { company_id: company, id: first_demand } }
-
-            it { expect(response).to have_http_status :not_found }
-          end
-        end
-      end
-    end
-
-    describe 'PUT #synchronize_azure' do
-      let(:product) { Fabricate :product, company: company }
-
-      context 'passing valid parameters' do
-        context 'when there is no project change' do
-          it 'calls the services and the reader' do
-            azure_product_config = Fabricate :azure_product_config, product: product
-            azure_team = Fabricate :azure_team, azure_product_config: azure_product_config, team_name: 'FlowClimate Team', team_id: '75359256-f8b4-4108-8f9c-4dbfb8975548'
-            Fabricate :azure_project, azure_team: azure_team, project_name: 'FlowClimate', project_id: '19dd7898-d318-4896-8797-afaf2320dcd3'
-
-            demand = Fabricate :demand, company: company, product: product
-
-            expect(Azure::AzureItemSyncJob).to receive(:perform_later)
-            put :synchronize_azure, params: { company_id: company, id: demand }
-            expect(response).to redirect_to company_demand_path(company, demand)
-            expect(flash[:notice]).to eq I18n.t('general.enqueued')
-          end
-        end
-      end
-
-      context 'invalid' do
-        context 'demand' do
-          before { put :synchronize_azure, params: { company_id: company, id: 'foo' } }
-
-          it { expect(response).to have_http_status :not_found }
-        end
-
-        context 'company' do
-          context 'non-existent' do
-            let(:demand) { Fabricate :demand, external_id: 4, company: company, product: product }
-
-            before { put :synchronize_azure, params: { company_id: 'foo', id: demand } }
-
-            it { expect(response).to have_http_status :not_found }
-          end
-
-          context 'not-permitted' do
-            let(:company) { Fabricate :company, users: [] }
-            let(:demand) { Fabricate :demand, external_id: 4, company: company, product: product }
-
-            before { put :synchronize_azure, params: { company_id: company, id: demand } }
 
             it { expect(response).to have_http_status :not_found }
           end

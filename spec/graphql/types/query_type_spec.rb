@@ -495,16 +495,8 @@ RSpec.describe Types::QueryType do
 
           Fabricate :demand, company: company, project: project, team: team
 
-          first_task = Fabricate :task, created_date: 3.weeks.ago, end_date: 2.weeks.ago
-          second_task = Fabricate :task, created_date: 3.weeks.ago, end_date: 1.week.ago
-          third_task = Fabricate :task, created_date: 2.weeks.ago, end_date: Time.zone.now
-          fourth_task = Fabricate :task, created_date: 3.weeks.ago, end_date: nil
-          fifth_task = Fabricate :task, created_date: 1.week.ago, end_date: Time.zone.now
-          sixth_task = Fabricate :task, created_date: 1.week.ago, end_date: Time.zone.now
-          Fabricate :task, created_date: 1.week.ago, end_date: nil
-
-          first_finished_demand = Fabricate :demand, project: project, tasks: [first_task, second_task, third_task], effort_downstream: 200, effort_upstream: 10, end_date: Time.zone.local(2022, 4, 24, 12, 30)
-          second_finished_demand = Fabricate :demand, project: project, tasks: [fourth_task, fifth_task, sixth_task], work_item_type: bug_type, created_date: Time.zone.local(2022, 4, 2, 13, 30), commitment_date: Time.zone.local(2022, 4, 3, 10, 30), end_date: Time.zone.local(2022, 4, 5, 17, 30), effort_downstream: 15, effort_upstream: 30
+          first_finished_demand = Fabricate :demand, project: project, effort_downstream: 200, effort_upstream: 10, end_date: Time.zone.local(2022, 4, 24, 12, 30)
+          second_finished_demand = Fabricate :demand, project: project, work_item_type: bug_type, created_date: Time.zone.local(2022, 4, 2, 13, 30), commitment_date: Time.zone.local(2022, 4, 3, 10, 30), end_date: Time.zone.local(2022, 4, 5, 17, 30), effort_downstream: 15, effort_upstream: 30
 
           project_consolidation = Fabricate :project_consolidation, project: project, consolidation_date: 1.month.ago, last_data_in_week: true, monte_carlo_weeks_min: 3, monte_carlo_weeks_max: 20, monte_carlo_weeks_std_dev: 8, team_based_operational_risk: 2.5, project_throughput_hours_additional: 14, project_throughput_hours_additional_in_month: 100, project_throughput_hours: 20, project_scope_hours: 200, project_scope: 41, project_throughput: 20
           other_project_consolidation = Fabricate :project_consolidation, project: project, consolidation_date: Time.zone.local(2022, 4, 24), last_data_in_week: true, monte_carlo_weeks_min: 9, monte_carlo_weeks_max: 85, monte_carlo_weeks_std_dev: 7, team_based_operational_risk: 0.5, project_throughput_hours_additional: 17, project_throughput_hours_additional_in_month: 60, project_throughput_hours: 30, project_scope_hours: 250, project_scope: 61, project_throughput: 10
@@ -628,12 +620,6 @@ RSpec.describe Types::QueryType do
                 projectMembers {
                   demandsCount
                   memberName
-                }
-                tasksBurnup {
-                  xAxis
-                  idealBurn
-                  currentBurn
-                  scope
                 }
                 demandsBurnup {
                   xAxis
@@ -775,12 +761,6 @@ RSpec.describe Types::QueryType do
                                                           'demandsCount' => 2,
                                                           'memberName' => 'foo'
                                                         }],
-                                                        'tasksBurnup' => {
-                                                          'xAxis' => TimeService.instance.weeks_between_of(project.start_date, project.end_date).map(&:iso8601),
-                                                          'idealBurn' => [1.2, 2.4, 3.5999999999999996, 4.8, 6.0],
-                                                          'currentBurn' => [0, 0, 1, 2, 5],
-                                                          'scope' => [0, 3, 4, 6, 6]
-                                                        },
                                                         'demandsBurnup' => {
                                                           'xAxis' => TimeService.instance.weeks_between_of(project.start_date, project.end_date).map(&:iso8601),
                                                           'idealBurn' => [12.2, 24.4, 36.599999999999994, 48.8, 61.0],
@@ -1336,300 +1316,6 @@ RSpec.describe Types::QueryType do
     end
   end
 
-  describe '#initiatives' do
-    let(:company) { Fabricate :company }
-
-    let(:query) do
-      %(query {
-        initiatives(companyId: #{company.id}) {
-          id
-          name
-          startDate
-          endDate
-          currentTasksOperationalRisk
-          projectsCount
-          demandsCount
-          tasksCount
-          tasksFinishedCount
-          remainingBacklogTasksPercentage
-        }
-      })
-    end
-
-    context 'when list initiatives' do
-      it 'returns initiatives' do
-        user = Fabricate :user
-
-        context = {
-          current_user: user
-        }
-
-        initiative = Fabricate :initiative, company: company, start_date: 16.days.ago
-        other_initiative = Fabricate :initiative, company: company, start_date: 12.days.ago
-
-        result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
-        expect(result.dig('data', 'initiatives')).to eq([{
-                                                          'id' => other_initiative.id.to_s,
-                                                          'name' => other_initiative.name,
-                                                          'startDate' => other_initiative.start_date.to_date.to_s,
-                                                          'endDate' => other_initiative.end_date.to_date.to_s,
-                                                          'currentTasksOperationalRisk' => other_initiative.current_tasks_operational_risk,
-                                                          'projectsCount' => other_initiative.projects.count,
-                                                          'demandsCount' => other_initiative.demands.count,
-                                                          'tasksCount' => other_initiative.tasks.count,
-                                                          'tasksFinishedCount' => other_initiative.tasks.finished.count,
-                                                          'remainingBacklogTasksPercentage' => other_initiative.remaining_backlog_tasks_percentage
-                                                        },
-                                                         {
-                                                           'id' => initiative.id.to_s,
-                                                           'name' => initiative.name,
-                                                           'startDate' => initiative.start_date.to_date.to_s,
-                                                           'endDate' => initiative.end_date.to_date.to_s,
-                                                           'currentTasksOperationalRisk' => initiative.current_tasks_operational_risk,
-                                                           'projectsCount' => initiative.projects.count,
-                                                           'demandsCount' => initiative.demands.count,
-                                                           'tasksCount' => initiative.tasks.count,
-                                                           'tasksFinishedCount' => initiative.tasks.finished.count,
-                                                           'remainingBacklogTasksPercentage' => initiative.remaining_backlog_tasks_percentage
-                                                         }])
-      end
-    end
-  end
-
-  describe '#initiative' do
-    let(:initiative) { Fabricate :initiative }
-    let(:query) do
-      %(query {
-        initiative(initiativeId: #{initiative.id}) {
-          id
-        }
-      })
-    end
-
-    it 'returns an initiative given an id' do
-      result = FlowClimateSchema.execute(query).as_json
-      expect(result.dig('data', 'initiative', 'id')).to eq initiative.id.to_s
-    end
-  end
-
-  describe '#tasks' do
-    let(:company) { Fabricate :company }
-    let(:team) { Fabricate :team, company: company }
-    let(:initiative) { Fabricate :initiative, company: company }
-    let(:project) { Fabricate :project, company: company, initiative: initiative, team: team, name: 'foo' }
-    let(:other_project) { Fabricate :project, company: company, initiative: initiative, team: team, name: 'bar' }
-
-    let(:first_demand) { Fabricate :demand, company: company, project: project, team: team }
-    let(:second_demand) { Fabricate :demand, company: company, project: other_project, team: team }
-
-    let(:query) do
-      %(query {
-        tasksList(pageNumber: 1, limit: 3, title: "bar") {
-          totalCount
-          totalDeliveredCount
-          lastPage
-          totalPages
-          deliveredLeadTimeP65
-          deliveredLeadTimeP80
-          deliveredLeadTimeP95
-          inProgressLeadTimeP65
-          inProgressLeadTimeP80
-          inProgressLeadTimeP95
-          tasks {
-            id
-            taskType
-            title
-            delivered
-            initiative {
-              id
-            }
-            project {
-              id
-            }
-            demand {
-              id
-              demandTitle
-            }
-            team {
-              id
-            }
-            company {
-              id
-            }
-          }
-          tasksCharts {
-            xAxis
-            creationArray
-            throughputArray
-            completionPercentilesOnTimeArray
-            accumulatedCompletionPercentilesOnTimeArray
-          }
-          completiontimeHistogramChartData {
-            keys
-            values
-          }
-          tasksByType {
-            label
-            value
-          }
-          tasksByProject {
-            label
-            value
-          }
-          controlChart {
-            xAxis
-            leadTimes
-            leadTimeP65
-            leadTimeP80
-            leadTimeP95
-          }
-        }
-      })
-    end
-
-    context 'when the user has no a last company setted' do
-      it 'returns nothing' do
-        user = Fabricate :user
-
-        context = {
-          current_user: user
-        }
-
-        result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
-        expect(result.dig('data', 'tasksList')).to eq(
-          {
-            'deliveredLeadTimeP65' => 0,
-            'deliveredLeadTimeP80' => 0,
-            'deliveredLeadTimeP95' => 0,
-            'inProgressLeadTimeP65' => 0,
-            'inProgressLeadTimeP80' => 0,
-            'inProgressLeadTimeP95' => 0,
-            'lastPage' => false,
-            'tasks' => [],
-            'totalCount' => 0,
-            'totalDeliveredCount' => 0,
-            'totalPages' => 0,
-            'tasksCharts' => {
-              'xAxis' => [],
-              'creationArray' => [],
-              'throughputArray' => [],
-              'completionPercentilesOnTimeArray' => [],
-              'accumulatedCompletionPercentilesOnTimeArray' => []
-            },
-            'completiontimeHistogramChartData' => { 'keys' => [], 'values' => [] },
-            'tasksByType' => [],
-            'controlChart' => { 'leadTimeP65' => 0.0, 'leadTimeP80' => 0.0, 'leadTimeP95' => 0.0, 'leadTimes' => [], 'xAxis' => [] },
-            'tasksByProject' => []
-          }
-        )
-      end
-    end
-
-    context 'when the user has last company setted' do
-      it 'returns the tasks' do
-        travel_to Time.zone.local(2022, 3, 25, 10, 0, 0) do
-          user = Fabricate :user, companies: [company], last_company_id: company.id
-
-          context = {
-            current_user: user
-          }
-
-          work_item_type = Fabricate :work_item_type, name: 'aaa'
-          other_work_item_type = Fabricate :work_item_type, name: 'bbb'
-
-          first_task = Fabricate :task, demand: first_demand, work_item_type: work_item_type, title: 'foo BaR', external_id: '555', created_date: 2.days.ago, end_date: 2.days.ago
-          second_task = Fabricate :task, demand: second_demand, work_item_type: work_item_type, title: 'BaR', external_id: '123', created_date: 1.day.ago, end_date: 1.hour.ago
-          third_task = Fabricate :task, demand: second_demand, work_item_type: other_work_item_type, title: 'BaR', external_id: '111', created_date: 1.day.ago, end_date: nil
-          Fabricate :task, demand: second_demand, title: 'BaRco', external_id: '444', work_item_type: work_item_type, created_date: 3.days.ago, end_date: nil
-
-          result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
-
-          expect(result.dig('data', 'tasksList')['totalCount']).to eq 4
-          expect(result.dig('data', 'tasksList')['totalDeliveredCount']).to eq 2
-          expect(result.dig('data', 'tasksList')['lastPage']).to be false
-          expect(result.dig('data', 'tasksList')['totalPages']).to eq 2
-          expect(result.dig('data', 'tasksList')['deliveredLeadTimeP65']).to eq 53_820
-          expect(result.dig('data', 'tasksList')['deliveredLeadTimeP80']).to eq 66_240
-          expect(result.dig('data', 'tasksList')['deliveredLeadTimeP95']).to eq 78_660
-          expect(result.dig('data', 'tasksList')['inProgressLeadTimeP65']).to eq 198_720
-          expect(result.dig('data', 'tasksList')['inProgressLeadTimeP80']).to eq 224_640
-          expect(result.dig('data', 'tasksList')['inProgressLeadTimeP95']).to eq 250_560
-          expect(result.dig('data', 'tasksList')['tasksCharts']).to match_array(
-            {
-              'accumulatedCompletionPercentilesOnTimeArray' => [66_240.0],
-              'completionPercentilesOnTimeArray' => [66_240.0],
-              'creationArray' => [3],
-              'throughputArray' => [2],
-              'xAxis' => ['2022-03-27']
-            }
-          )
-
-          expect(result.dig('data', 'tasksList')['tasksByType']).to match_array([{ 'label' => 'aaa', 'value' => 2 }, { 'label' => 'bbb', 'value' => 1 }])
-          expect(result.dig('data', 'tasksList')['tasksByProject']).to match_array([{ 'label' => 'bar', 'value' => 2 }, { 'label' => 'foo', 'value' => 1 }])
-          expect(result.dig('data', 'tasksList')['controlChart']).to eq({ 'leadTimeP65' => 53_820.0, 'leadTimeP80' => 66_240.0, 'leadTimeP95' => 78_660.0, 'leadTimes' => [0.0, 82_800.0], 'xAxis' => %w[555 123] })
-
-          expect(result.dig('data', 'tasksList', 'tasks')).to match_array(
-            [first_task, second_task, third_task].map do |task|
-              {
-                'id' => task.id.to_s,
-                'title' => task.title,
-                'taskType' => task.task_type,
-                'delivered' => task.end_date.present?,
-                'initiative' => {
-                  'id' => task.demand.project.initiative.id.to_s
-                },
-                'project' => {
-                  'id' => task.demand.project.id.to_s
-                },
-                'demand' => {
-                  'id' => task.demand.id.to_s,
-                  'demandTitle' => task.demand.demand_title
-                },
-                'team' => {
-                  'id' => task.demand.team.id.to_s
-                },
-                'company' => {
-                  'id' => task.demand.company.id.to_s
-                }
-              }
-            end
-          )
-        end
-      end
-    end
-
-    context 'with search' do
-      let(:search_query) do
-        %(query {
-          tasksList(pageNumber: 1, limit: 3, taskType: "ooh") {
-            tasks {
-              id
-            }
-          }
-        })
-      end
-
-      it 'returns the tasks using the query' do
-        Fabricate :work_item_type, name: 'OOH', item_level: :demand
-
-        work_item_type = Fabricate :work_item_type, company: company, name: 'OOH', item_level: :task
-        other_work_item_type = Fabricate :work_item_type, company: company, name: 'bbb', item_level: :task
-
-        first_task = Fabricate :task, demand: first_demand, work_item_type: work_item_type, title: 'foo BaR'
-        Fabricate :task, demand: second_demand, work_item_type: other_work_item_type, title: 'BaR'
-
-        user = Fabricate :user, companies: [company], last_company_id: company.id
-        context = {
-          current_user: user
-        }
-
-        result = FlowClimateSchema.execute(search_query, variables: nil, context: context).as_json
-        expect(result.dig('data', 'tasksList', 'tasks').count).to eq 1
-        expect(result.dig('data', 'tasksList', 'tasks').first['id']).to eq first_task.id.to_s
-      end
-    end
-  end
-
   describe '#team_members' do
     let(:company) { Fabricate :company }
 
@@ -2083,7 +1769,6 @@ RSpec.describe Types::QueryType do
       company = Fabricate :company
       Fabricate :work_item_type, company: company, name: 'Cornojob', item_level: :demand
       Fabricate :work_item_type, company: company, name: 'Beltrano', item_level: :demand
-      Fabricate :work_item_type, company: company, name: 'Abreu', item_level: :task
       user = Fabricate :user, companies: [company], last_company_id: company.id
 
       context = {
@@ -2092,7 +1777,7 @@ RSpec.describe Types::QueryType do
 
       result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
 
-      expect(result.dig('data', 'workItemTypes').pluck('name')).to eq %w[Beltrano Cornojob Abreu]
+      expect(result.dig('data', 'workItemTypes').pluck('name')).to eq %w[Beltrano Cornojob]
     end
   end
 

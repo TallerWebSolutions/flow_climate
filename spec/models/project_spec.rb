@@ -9,12 +9,10 @@ RSpec.describe Project do
   context 'associations' do
     it { is_expected.to belong_to :company }
     it { is_expected.to belong_to :team }
-    it { is_expected.to belong_to(:initiative).optional }
 
     it { is_expected.to have_many(:project_risk_configs).dependent(:destroy) }
     it { is_expected.to have_many(:project_risk_alerts).dependent(:destroy) }
     it { is_expected.to have_many(:demands).dependent(:restrict_with_error) }
-    it { is_expected.to have_many(:tasks).through(:demands) }
     it { is_expected.to have_many(:demand_blocks).through(:demands) }
     it { is_expected.to have_many(:demand_efforts).through(:demands) }
     it { is_expected.to have_many(:memberships).through(:demands) }
@@ -1288,22 +1286,6 @@ RSpec.describe Project do
     end
   end
 
-  describe '#tasks_based_current_risk_to_deadline' do
-    context 'with project consolidations' do
-      let(:project) { Fabricate :project, end_date: 2.weeks.from_now }
-      let!(:project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago, tasks_based_operational_risk: 10 }
-      let!(:other_project_consolidation) { Fabricate :project_consolidation, project: project, consolidation_date: 2.days.ago, tasks_based_operational_risk: 2 }
-
-      it { expect(project.tasks_based_current_risk_to_deadline).to eq 10 }
-    end
-
-    context 'without project consolidations' do
-      let(:project) { Fabricate :project }
-
-      it { expect(project.tasks_based_current_risk_to_deadline).to eq 1 }
-    end
-  end
-
   describe '#consolidations_last_update' do
     context 'with project consolidations' do
       let(:project) { Fabricate :project }
@@ -1578,35 +1560,6 @@ RSpec.describe Project do
       end
 
       context 'with no consolidations' do
-        let(:project) { Fabricate :project }
-
-        before { project.remove_outdated_consolidations }
-
-        it { expect(project.project_consolidations.reload.count).to eq 0 }
-      end
-    end
-
-    describe '#update_initiative' do
-      context 'with initiative' do
-        it 'updates the initiative with the new date information if the dates are sooner or later than the other projects date' do
-          company = Fabricate :company
-          initiative = Fabricate :initiative, company: company, start_date: 4.weeks.ago, end_date: 2.weeks.from_now
-          project = Fabricate :project, company: company, start_date: 4.weeks.ago, end_date: 2.weeks.from_now, initiative: initiative
-          other_project = Fabricate :project, company: company, start_date: 3.weeks.ago, end_date: 1.week.from_now, initiative: initiative
-
-          other_project.update(start_date: 1.month.ago, end_date: 1.month.from_now)
-
-          initiative_reloaded = initiative.reload
-          expect(initiative_reloaded.start_date).to eq other_project.start_date
-          expect(initiative_reloaded.end_date).to eq other_project.end_date
-
-          other_project.update(start_date: 3.weeks.ago, end_date: 1.week.from_now)
-          expect(initiative_reloaded.start_date).to eq project.start_date
-          expect(initiative_reloaded.end_date).to eq project.end_date
-        end
-      end
-
-      context 'without initiative' do
         let(:project) { Fabricate :project }
 
         before { project.remove_outdated_consolidations }

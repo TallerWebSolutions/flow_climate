@@ -55,7 +55,12 @@ export const LineChart = ({
       <ResponsiveLine
         data={data}
         colors={{ scheme: "category10" }}
-        margin={{ left: marginLeft, right: marginRight, top: marginTop, bottom: marginBottom }}
+        margin={{
+          left: marginLeft,
+          right: marginRight,
+          top: marginTop,
+          bottom: marginBottom,
+        }}
         yScale={{ type: "linear", min: "auto", max: "auto" }}
         axisLeft={{
           legend: axisLeftLegend,

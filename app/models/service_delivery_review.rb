@@ -4,26 +4,31 @@
 #
 # Table name: service_delivery_reviews
 #
-#  id                                :integer          not null, primary key
-#  company_id                        :integer          not null
-#  product_id                        :integer          not null
-#  meeting_date                      :date             not null
-#  lead_time_top_threshold           :decimal(, )      not null
-#  lead_time_bottom_threshold        :decimal(, )      not null
-#  quality_top_threshold             :decimal(, )      not null
-#  quality_bottom_threshold          :decimal(, )      not null
-#  expedite_max_pull_time_sla        :integer          not null
-#  delayed_expedite_top_threshold    :decimal(, )      not null
+#  id                                :bigint           not null, primary key
+#  bugs_ids                          :integer          is an Array
 #  delayed_expedite_bottom_threshold :decimal(, )      not null
+#  delayed_expedite_top_threshold    :decimal(, )      not null
+#  expedite_max_pull_time_sla        :integer          not null
+#  lead_time_bottom_threshold        :decimal(, )      not null
+#  lead_time_top_threshold           :decimal(, )      not null
+#  meeting_date                      :date             not null
+#  quality_bottom_threshold          :decimal(, )      not null
+#  quality_top_threshold             :decimal(, )      not null
 #  created_at                        :datetime         not null
 #  updated_at                        :datetime         not null
-#  bugs_ids                          :integer          is an Array
+#  company_id                        :integer          not null
+#  product_id                        :integer          not null
 #
 # Indexes
 #
 #  index_service_delivery_reviews_on_company_id                   (company_id)
 #  index_service_delivery_reviews_on_meeting_date_and_product_id  (meeting_date,product_id) UNIQUE
 #  index_service_delivery_reviews_on_product_id                   (product_id)
+#
+# Foreign Keys
+#
+#  fk_rails_2ee3d597b3  (product_id => products.id)
+#  fk_rails_bfbae75414  (company_id => companies.id)
 #
 
 class ServiceDeliveryReview < ApplicationRecord

@@ -25,7 +25,6 @@ const DEMANDS_CHART_QUERY = gql`
     $startDate: ISO8601Date
     $endDate: ISO8601Date
     $demandStatus: DemandStatuses
-    $initiative: ID
     $team: ID
     $sortDirection: SortDirection
     $demandType: String
@@ -38,7 +37,6 @@ const DEMANDS_CHART_QUERY = gql`
         startDate: $startDate
         endDate: $endDate
         demandStatus: $demandStatus
-        iniciativeId: $initiative
         teamId: $team
         searchText: $searchText
         orderField: $orderField
@@ -82,7 +80,6 @@ const DemandsCharts = () => {
   const [searchParams] = useSearchParams()
 
   const [filters, setFilters] = useState<FieldValues>({
-    initiative: searchParams.get("initiative"),
     team: searchParams.get("team"),
     project: searchParams.get("project"),
     searchText: searchParams.get("searchText"),

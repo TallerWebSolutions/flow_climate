@@ -18,17 +18,14 @@ RSpec.describe Company do
     it { is_expected.to have_many(:jira_product_configs).through(:products) }
     it { is_expected.to have_many(:demands) }
     it { is_expected.to have_many(:demand_blocks).through(:demands) }
-    it { is_expected.to have_many(:tasks).through(:demands) }
     it { is_expected.to have_many(:team_members) }
     it { is_expected.to have_many(:memberships).through(:team_members) }
     it { is_expected.to have_many(:teams).dependent(:restrict_with_error) }
     it { is_expected.to have_one(:company_settings).dependent(:destroy) }
     it { is_expected.to have_many(:jira_accounts).dependent(:destroy) }
-    it { is_expected.to have_one(:azure_account).dependent(:destroy).class_name('Azure::AzureAccount') }
     it { is_expected.to have_many(:stages).dependent(:restrict_with_error) }
     it { is_expected.to have_many(:team_resources).dependent(:destroy) }
     it { is_expected.to have_many(:flow_events).dependent(:destroy) }
-    it { is_expected.to have_many(:initiatives).dependent(:destroy) }
     it { is_expected.to have_many(:work_item_types).dependent(:destroy) }
   end
 
@@ -66,41 +63,12 @@ RSpec.describe Company do
     end
   end
 
-  describe '#azure?' do
-    it 'returns true with an azure company' do
-      company = Fabricate :company
-      Fabricate :azure_account, company: company
-
-      expect(company.reload.azure?).to be true
-    end
-
-    it 'returns false with a jira company' do
-      jira_account = Fabricate :jira_account
-      company = Fabricate :company, jira_accounts: [jira_account]
-
-      expect(company.reload.azure?).to be false
-    end
-
-    it 'returns false with a company without integrations' do
-      company = Fabricate :company
-
-      expect(company.reload.azure?).to be false
-    end
-  end
-
   describe '#jira?' do
     it 'returns true with a jira company' do
       jira_account = Fabricate :jira_account
       company = Fabricate :company, jira_accounts: [jira_account]
 
       expect(company.reload.jira?).to be true
-    end
-
-    it 'returns false with an azure company' do
-      company = Fabricate :company
-      Fabricate :azure_account, company: company
-
-      expect(company.reload.jira?).to be false
     end
 
     it 'returns false with a company without integrations' do
@@ -760,26 +728,6 @@ RSpec.describe Company do
                    waiting_projects_count: company.waiting_projects_count, active_projects_count: company.active_projects_count }
 
       expect(company.to_hash).to eq expected
-    end
-  end
-
-  describe '#use_tasks?' do
-    context 'with tasks' do
-      it 'returns true' do
-        company = Fabricate :company
-        demand = Fabricate :demand, company: company
-        Fabricate :task, demand: demand
-
-        expect(company.use_tasks?).to be true
-      end
-    end
-
-    context 'without tasks' do
-      it 'returns true' do
-        company = Fabricate :company
-
-        expect(company.use_tasks?).to be false
-      end
     end
   end
 end

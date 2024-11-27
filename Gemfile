@@ -57,7 +57,7 @@ group :test, :development do
 end
 
 group :development do
-  gem 'annotate'
+  gem 'annotaterb'
   gem 'flamegraph'
   gem 'listen'
   gem 'memory_profiler'

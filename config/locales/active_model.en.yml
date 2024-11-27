@@ -67,10 +67,6 @@ en:
       demand_comment:
         one: Demand Comment
         other: Demands Comments
-      azure/azure_custom_field:
-        zero: Azure Custom Field
-        one: Azure Custom Field
-        other: Azure Custom Fields
       work_item_type:
         one: Work Item Type
         other: Work Item Types
@@ -287,22 +283,6 @@ en:
             service_provider_dimension: "Service Provider Dimension"
       contract:
         hours_per_demand: Hours per Demand (HpD)
-      azure/azure_custom_field:
-        custom_field_name: Field Machine Name
-        custom_field_type: Field Type
-        field_order: Order
-        enums:
-          custom_field_type:
-            project_name: Project Name
-            team_name: Team Name
-            epic_name: Epic Name
-      initiative:
-        enums:
-          target_quarter:
-            q1: "1º Quarter"
-            q2: "2º Quarter"
-            q3: "3º Quarter"
-            q4: "4º Quarter"
       work_item_type:
         name: Name
         item_level: Item Lvel

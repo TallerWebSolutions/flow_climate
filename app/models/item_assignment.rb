@@ -20,8 +20,9 @@
 #
 # Indexes
 #
-#  index_item_assignments_on_demand_id      (demand_id)
-#  index_item_assignments_on_membership_id  (membership_id)
+#  idx_on_demand_id_membership_id_start_time_573dd337cc  (demand_id,membership_id,start_time) UNIQUE
+#  index_item_assignments_on_demand_id                   (demand_id)
+#  index_item_assignments_on_membership_id               (membership_id)
 #
 # Foreign Keys
 #

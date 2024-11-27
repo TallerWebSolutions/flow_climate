@@ -56,13 +56,6 @@ module Consolidations
         code_needed_blocks_per_demand = code_needed_blocks_count.to_f / demands_finished.count
       end
 
-      tasks = project.tasks.not_discarded_until(end_of_day).where('tasks.created_date <= :limit_date', limit_date: end_of_day)
-      tasks_finished = Task.where(id: project.tasks.not_discarded_until(end_of_day).where('tasks.end_date <= :limit_date', limit_date: end_of_day).order('tasks.end_date').map(&:id))
-      tasks_not_finished = tasks - tasks_finished
-      tasks_throughputs = tasks_finished.group('EXTRACT(week FROM tasks.end_date)').group('EXTRACT(isoyear FROM tasks.end_date)').count
-
-      tasks_based_montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(tasks_not_finished.count, tasks_throughputs.values.last(12), 500)
-
       if project.remaining_work(end_of_day).positive?
         operational_risk = 1 - Stats::StatisticsService.instance.compute_odds_to_deadline(project.remaining_weeks(end_of_day.to_date), project_based_montecarlo_durations)
         team_operational_risk = 1 - Stats::StatisticsService.instance.compute_odds_to_deadline(project.remaining_weeks(end_of_day.to_date), team_based_montecarlo_durations)
@@ -132,9 +125,6 @@ module Consolidations
                            project_throughput_hours_development_in_month: demand_efforts.developer_efforts.sum(&:effort_value),
                            project_throughput_hours_design_in_month: demand_efforts.designer_efforts.sum(&:effort_value),
                            project_throughput_hours_management_in_month: demand_efforts.manager_efforts.sum(&:effort_value),
-                           tasks_based_deadline_p80: Stats::StatisticsService.instance.percentile(80, tasks_based_montecarlo_durations),
-                           tasks_based_operational_risk: 1 - Stats::StatisticsService.instance.compute_odds_to_deadline(project.remaining_weeks(end_of_day.to_date), tasks_based_montecarlo_durations),
-                          
       )
 
       update_additional_hours(project, consolidation, cache_date)

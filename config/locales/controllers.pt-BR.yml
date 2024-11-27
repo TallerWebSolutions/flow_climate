@@ -825,7 +825,6 @@ pt-BR:
       memberships:
         blank: 'Sem papel no time %{team_name}'
       efforts_tab: 'Esforços'
-      tasks_tab: 'Tarefas'
     sync:
       enqueued: 'Sua solicitação foi colocada na fila. Será processada em breve.'
       done: 'Sua sincronização foi realizada.'
@@ -952,9 +951,6 @@ pt-BR:
     portfolio_units: 'Unidades do Portfólio'
     risk_reviews: 'Revisões de Risco'
     service_delivery_reviews: 'Service Delivery Review'
-    azure: 'Azure'
-    initiatives_list: 'Iniciativas'
-    tasks: 'Tarefas'
   charts:
     xlabel:
       months: 'Meses'
@@ -1078,8 +1074,6 @@ pt-BR:
     risk_evolution:
       ytitle: 'Risco (%)'
     in_week: 'Na Semana'
-    initiatives_completed:
-      title: 'Tarefas Terminadas'
     hours_per_stage:
       title: 'Horas por Etapa'
   finances_params:
@@ -1496,48 +1490,6 @@ pt-BR:
       title: 'Esforços'
     edit:
       title: "Editar Esforço"
-  azure_accounts:
-    update:
-      title: 'Sincronizar empresa com o Azure Devops'
-    edit:
-      title: 'Editar Conta no Azure'
-      success: 'Conta no azure foi atualizada.'
-      failure: 'Problemas foram encontrados no salvamento da conta. Verifique os campos.'
-  tasks:
-    index:
-      title: 'Tarefas'
-      count: '%{count} Tarefas'
-      search:
-        placeholder: 'buscar pelo nome da tarefa'
-        helpers:
-          date: 'Se estiver buscando por tarefas fechadas, a busca será feita pela data de entrega, senão será feita pela data de criação.'
-      finished:
-        count: '%{count} finalizadas'
-    charts:
-      completion_time:
-        title: 'Tempo para Finalizar (P80)'
-        ytitle: 'dias'
-      completion_control_chart:
-        title: 'Gráfico de Dispersão do Tempo de Resolução'
-        ylabel: 'Dias'
-      risk:
-        ytitle: 'Risco Operacional (%)'
-        title: 'Evolução do Risco Operacional'
-      scope:
-        ytitle: 'Tarefas'
-      throughput:
-        title: 'Vazão'
-      tasks: 'Tarefas'
-      wip_completion_control_chart:
-        title: 'Tempos Parciais para Tarefas em Progresso.'
-  initiatives:
-    index:
-      title: 'Iniciativas'
-    create:
-      success: 'Initiative created.'
-      error: 'A iniciativa não foi salva. Verifique o formulário para mais informações.'
-    new:
-      title: 'Nova Iniciativa'
   dashboard:
     home:
       greetings: "Olá, %{name}"

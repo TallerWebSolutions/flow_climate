@@ -19,9 +19,7 @@ import RiskDrill from "./pages/Projects/RiskDrill"
 import Statistics from "./pages/Projects/Statistics"
 import StatusReport from "./pages/Projects/StatusReport"
 import CreateProjectAditionalHours from "./pages/Projects/CreateProjectAditionalHours"
-import TasksPage from "./pages/Tasks/TasksPage"
 import DemandsPage from "./pages/Demand/DemandsList"
-import TasksCharts from "./modules/task/components/TasksCharts"
 import CreateTeam from "./pages/Teams/CreateTeam"
 import EditTeam from "./pages/Teams/EditTeam"
 import Teams from "./pages/Teams/Teams"
@@ -29,9 +27,6 @@ import TeamMembers from "./pages/TeamMembers/TeamMembers"
 import TeamMemberDashboard from "./pages/TeamMembers/TeamMemberDashboard"
 import EditTeamMember from "./pages/TeamMembers/EditTeamMember"
 import User from "./modules/user/user.types"
-import InitiativesList from "./pages/Initiatives/InitiativesList"
-import EditInitiative from "./pages/Initiatives/EditInitiative"
-import ProjectTasksCharts from "./pages/Projects/ProjectTasksCharts"
 import DemandsCharts from "./pages/Demand/DemandsCharts"
 import CreateWorkItemType from "./pages/WorkItemTypes/CreateWorkItemType"
 import ListWorkItemTypes from "./pages/WorkItemTypes/ListWorkItemTypes"
@@ -64,10 +59,6 @@ export const ME_QUERY = gql`
         name
         slug
         workItemTypes {
-          id
-          name
-        }
-        initiatives {
           id
           name
         }
@@ -168,10 +159,6 @@ const App = () => {
               element={<EditPortfolioUnits />}
             />
             <Route
-              path="/companies/:companySlug/projects/:projectId/tasks_tab"
-              element={<ProjectTasksCharts />}
-            />
-            <Route
               path="/companies/:companySlug/projects/:projectId/status_report_dashboard"
               element={<StatusReport />}
             />
@@ -223,22 +210,6 @@ const App = () => {
             <Route
               path="/companies/:companySlug/teams/:teamId/replenishing_consolidations"
               element={<Replenishing />}
-            />
-            <Route
-              path="/companies/:companySlug/tasks"
-              element={<TasksPage />}
-            />
-            <Route
-              path="/companies/:companySlug/tasks/charts"
-              element={<TasksCharts />}
-            />
-            <Route
-              path="/companies/:companySlug/initiatives"
-              element={<InitiativesList />}
-            />
-            <Route
-              path="/companies/:companySlug/initiatives/:initiativeId/edit"
-              element={<EditInitiative />}
             />
             <Route
               path="/companies/:companySlug/projects"

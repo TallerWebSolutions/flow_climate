@@ -49,7 +49,6 @@
         "discarded": "Discarded",
         "notDiscarded": "Not discarded"
       },
-      "initiative": "Initiative",
       "project": "Project",
       "team": "Team",
       "prepareCSVFile": "Prepare CSV",

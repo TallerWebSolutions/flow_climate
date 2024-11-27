@@ -18,7 +18,6 @@ RSpec.describe Product do
     it { is_expected.to have_many(:contracts).dependent(:restrict_with_error) }
     it { is_expected.to have_many(:jira_product_configs).class_name('Jira::JiraProductConfig').dependent(:destroy) }
     it { is_expected.to have_one(:score_matrix).dependent(:destroy) }
-    it { is_expected.to have_one(:azure_product_config).class_name('Azure::AzureProductConfig').dependent(:destroy) }
   end
 
   context 'validations' do

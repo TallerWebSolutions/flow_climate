@@ -117,9 +117,11 @@ const TeamDashboard = () => {
   const { teamId, companySlug } = useParams()
   const { me } = useContext(MeContext)
   const [searchParams] = useSearchParams()
-  const startDate = searchParams.get("startDate") || formattedRelativeDate.format({
-    offsetDays: -30
-  })
+  const startDate =
+    searchParams.get("startDate") ||
+    formattedRelativeDate.format({
+      offsetDays: -30,
+    })
   const endDate = searchParams.get("endDate") || formattedRelativeDate.format()
   const { data, loading } = useQuery<TeamDashboardDTO>(TEAM_DASHBOARD_QUERY, {
     variables: {
@@ -259,8 +261,9 @@ const TeamDashboard = () => {
         data:
           membershipHourValueList.memberHourValueChartData?.map(
             (memberHourValueChartData) => {
-
-              const monthlyValue = (memberHourValueChartData.hourValueRealized ?? 0) * (memberHourValueChartData.hoursPerMonth ?? 0)
+              const monthlyValue =
+                (memberHourValueChartData.hourValueRealized ?? 0) *
+                (memberHourValueChartData.hoursPerMonth ?? 0)
               return {
                 x: String(memberHourValueChartData.date || ""),
                 y: monthlyValue.toFixed(2),
@@ -388,7 +391,7 @@ const TeamDashboard = () => {
             props={{
               enableSlices: "x",
               sliceTooltip: ({ slice }: SliceTooltipProps) => (
-                <LineChartTooltip slice={slice}  />
+                <LineChartTooltip slice={slice} />
               ),
             }}
             legendAnchor="top-right"

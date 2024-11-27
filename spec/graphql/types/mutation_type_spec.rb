@@ -628,7 +628,7 @@ RSpec.describe Types::MutationType do
       %(mutation {
           createWorkItemType(
             name: "Fire Supression"
-            itemLevel: TASK
+            itemLevel: DEMAND
             qualityIndicatorType: true
           ) {
             workItemType {
@@ -644,9 +644,9 @@ RSpec.describe Types::MutationType do
       result = FlowClimateSchema.execute(mutation, variables: nil, context: context).as_json
       created_work_item_type = WorkItemType.last
       expect(result['data']['createWorkItemType']['workItemType']['name']).to eq('Fire Supression')
-      expect(result['data']['createWorkItemType']['workItemType']['itemLevel']).to eq('TASK')
+      expect(result['data']['createWorkItemType']['workItemType']['itemLevel']).to eq('DEMAND')
       expect(created_work_item_type.name).to eq 'Fire Supression'
-      expect(created_work_item_type).to be_a_task
+      expect(created_work_item_type).to be_a_demand
     end
   end
 
@@ -728,44 +728,6 @@ RSpec.describe Types::MutationType do
         allow_any_instance_of(Demand).to(receive(:destroy)).and_return(false)
         result = FlowClimateSchema.execute(mutation).as_json
         expect(result['data']['deleteDemand']['statusMessage']).to eq('FAIL')
-      end
-    end
-  end
-
-  describe '#update_initiative' do
-    let(:initiative) { Fabricate :initiative }
-    let(:mutation) do
-      %(mutation {
-          updateInitiative(
-            initiativeId: #{initiative.id}
-            name: "test"
-            startDate: "2021-01-01"
-            endDate: "2022-08-03"
-            targetQuarter: q3
-            targetYear: 2022
-          ) {
-            statusMessage
-          }
-        })
-    end
-
-    context 'valid data' do
-      it 'updates the fields from mutation input' do
-        result = FlowClimateSchema.execute(mutation).as_json
-        expect(result['data']['updateInitiative']['statusMessage']).to eq('SUCCESS')
-        expect(initiative.reload.name).to eq 'test'
-        expect(initiative.reload.start_date.iso8601).to eq '2021-01-01'
-        expect(initiative.reload.end_date.iso8601).to eq '2022-08-03'
-        expect(initiative.reload.target_quarter).to eq 'q3'
-        expect(initiative.reload.target_year).to eq 2022
-      end
-    end
-
-    context 'when the object is not valid' do
-      it 'fails to update' do
-        allow_any_instance_of(Initiative).to(receive(:update)).and_return(false)
-        result = FlowClimateSchema.execute(mutation).as_json
-        expect(result['data']['updateInitiative']['statusMessage']).to eq('FAIL')
       end
     end
   end

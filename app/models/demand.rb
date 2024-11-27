@@ -100,7 +100,6 @@ class Demand < ApplicationRecord
   has_many :demand_score_matrices, dependent: :destroy
   has_many :jira_api_errors, dependent: :destroy, class_name: 'Jira::JiraApiError'
   has_many :class_of_service_change_histories, class_name: 'History::ClassOfServiceChangeHistory', dependent: :destroy
-  has_many :tasks, dependent: :destroy
   has_many :operations_dashboards, class_name: 'Dashboards::OperationsDashboard', dependent: :nullify, inverse_of: :first_delivery, foreign_key: :first_delivery_id
 
   validates :created_date, :external_id, :class_of_service, :assignees_count, presence: true
@@ -308,7 +307,6 @@ class Demand < ApplicationRecord
     demand_blocks.update(discarded_at: date)
     demand_comments.update(discarded_at: date)
     item_assignments.update(discarded_at: date)
-    tasks.update(discarded_at: date)
   end
 
   private
@@ -353,7 +351,6 @@ class Demand < ApplicationRecord
     demand_blocks.discard_all
     demand_comments.discard_all
     item_assignments.discard_all
-    tasks.discard_all
   end
 
   def undiscard_dependencies
@@ -361,7 +358,6 @@ class Demand < ApplicationRecord
     demand_blocks.undiscard_all
     demand_comments.undiscard_all
     item_assignments.undiscard_all
-    tasks.undiscard_all
   end
 
   def decrease_uncertain_scope

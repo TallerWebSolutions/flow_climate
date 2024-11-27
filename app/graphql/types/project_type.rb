@@ -36,7 +36,6 @@ module Types
     end
     field :id, ID, null: false
     field :initial_scope, Int, null: false
-    field :initiative, Types::InitiativeType, null: true
     field :last_project_consolidations_weekly, Types::ProjectConsolidationType, null: true
     field :lead_time_breakdown, Types::Charts::LeadTimeBreakdownType, null: true
     field :lead_time_p65, Float, null: false
@@ -91,7 +90,6 @@ module Types
     field :lead_time_histogram_data, Types::Charts::LeadTimeHistogramDataType, null: true
     field :project_members, [Types::ProjectMemberType], null: true
     field :quality, Float, null: true
-    field :tasks_burnup, Types::Charts::BurnupType, null: true
 
     delegate :remaining_backlog, to: :object
     delegate :remaining_weeks, to: :object
@@ -256,10 +254,6 @@ module Types
       end
 
       project_members_list
-    end
-
-    def tasks_burnup
-      Highchart::BurnupAdapter.new(Task.where(id: object.tasks.map(&:id)), object.start_date, object.end_date)
     end
 
     def demands_burnup

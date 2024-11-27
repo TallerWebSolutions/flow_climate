@@ -77,7 +77,6 @@ const DEMANDS_QUERY = gql`
     $startDate: ISO8601Date
     $endDate: ISO8601Date
     $demandStatus: DemandStatuses
-    $initiative: ID
     $team: ID
     $sortDirection: SortDirection
     $demandType: String
@@ -90,7 +89,6 @@ const DEMANDS_QUERY = gql`
         startDate: $startDate
         endDate: $endDate
         demandStatus: $demandStatus
-        iniciativeId: $initiative
         teamId: $team
         searchText: $searchText
         orderField: $orderField
@@ -113,7 +111,6 @@ const DEMANDS_CSV_QUERY = gql`
     $startDate: ISO8601Date
     $endDate: ISO8601Date
     $demandStatus: DemandStatuses
-    $initiative: ID
     $team: ID
     $sortDirection: SortDirection
     $demandType: String
@@ -124,7 +121,6 @@ const DEMANDS_CSV_QUERY = gql`
         startDate: $startDate
         endDate: $endDate
         demandStatus: $demandStatus
-        iniciativeId: $initiative
         teamId: $team
         searchText: $searchText
         orderField: $orderField
@@ -187,25 +183,24 @@ const normalizeQueryStringFilters = (filters: FieldValues) =>
       return { ...acc, [el]: filters[el] }
     }, {})
 
- 
-
 const DemandsListPage = () => {
   const { t } = useTranslation("demand")
   const { me } = useContext(MeContext)
   const companySlug = me?.currentCompany?.slug
   const [searchParams, setSearchParams] = useSearchParams()
   const filters: FieldValues = {
-    initiative: searchParams.get("initiative"),
     team: searchParams.get("team"),
     project: searchParams.get("project"),
     searchText: searchParams.get("searchText") || "",
     demandStatus: searchParams.get("demandStatus") || "ALL_DEMANDS",
     sortDirection: "DESC",
     orderField: "end_date",
-    startDate: searchParams.get("startDate") || formattedRelativeDate.format({
-      offsetDays: -30
-    }),
-    endDate: searchParams.get("endDate") || formattedRelativeDate.format() ,
+    startDate:
+      searchParams.get("startDate") ||
+      formattedRelativeDate.format({
+        offsetDays: -30,
+      }),
+    endDate: searchParams.get("endDate") || formattedRelativeDate.format(),
     pageNumber: Number(searchParams.get("pageNumber") || 1),
     perPage: 20,
     demandType: searchParams.get("demandType"),

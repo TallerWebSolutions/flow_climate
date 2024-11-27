@@ -17,15 +17,10 @@
 
 <div class="row bottom-spaced-component">
   <div class="col-xs-6">
-    <% if @company.jira? %>
-      <%= link_to synchronize_jira_company_demand_path(@company, @demand), method: :put do %>
-        <span class="btn btn-sm"><i class="fas fa-sync-alt"></i></span><span><%= I18n.t('demands.show.sync_jira') %></span>
-      <% end %>
-    <% elsif @company.azure? %>
-      <%= link_to synchronize_azure_company_demand_path(@company, @demand), method: :put do %>
-        <span class="btn btn-sm"><i class="fas fa-sync-alt"></i></span><span><%= I18n.t('demands.show.sync_jira') %></span>
-      <% end %>
+    <%= link_to synchronize_jira_company_demand_path(@company, @demand), method: :put do %>
+      <span class="btn btn-sm"><i class="fas fa-sync-alt"></i></span><span><%= I18n.t('demands.show.sync_jira') %></span>
     <% end %>
+
 
     <span class="detailed"><%= "(#{t('general.last_update.text', last_update: I18n.l(@demand.updated_at, format: :short))})" %></span>
   </div>
@@ -42,9 +37,6 @@
       <button class="tablinks demand-tab" onclick="openTab(event, 'content-transitions', 'tablinks', 'tabcontent')"><%= I18n.t('demands.show.transitions_tab') %></button>
       <%= link_to demand_efforts_company_demand_path(@company, @demand) do %>
         <button><%= I18n.t('demands.show.efforts_tab') %></button>
-      <% end %>
-      <% if @demand.tasks.count.positive? %>
-        <button class="tablinks demand-tab" onclick="openTab(event, 'content-demand-tasks', 'tablinks', 'tabcontent')"><%= I18n.t('demands.show.tasks_tab') %></button>
       <% end %>
     </div>
   </div>
@@ -144,10 +136,6 @@
 
 <div id="content-demand-efforts" class="tabcontent">
   <%= render 'demand_efforts/demand_efforts_table', company: @company, demand: @demand, demand_efforts_list: @demand_efforts %>
-</div>
-
-<div id="content-demand-tasks" class="tabcontent">
-  <%= render 'tasks/tasks_table', company: @company, demand: @demand, tasks_list: @tasks_list, paged_tasks: @paged_tasks, finished_tasks: @tasks_list.finished %>
 </div>
 
 <div class="modal fade" id="edit-block-form" tabindex="-1" role="dialog" aria-labelledby="edit-block-form" aria-hidden="true"></div>

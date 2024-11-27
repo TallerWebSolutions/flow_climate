@@ -25,7 +25,6 @@ export type ProjectConsolidation = {
   projectQuality: number
   consolidationDate: string
   operationalRisk: number
-  tasksBasedOperationalRisk: number
   codeNeededBlocksCount: number
   codeNeededBlocksPerDemand: number
   flowEfficiency: number
@@ -44,5 +43,4 @@ export type ProjectConsolidation = {
   projectThroughputHoursUpstream: number
   projectThroughputHoursDownstream: number
   projectThroughputHoursAdditional?: number
-  projectTasksThroughput: number
 }

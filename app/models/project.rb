@@ -20,7 +20,6 @@
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null
 #  company_id                :integer          not null
-#  initiative_id             :integer
 #  team_id                   :integer          not null
 #
 # Indexes
@@ -31,7 +30,6 @@
 #
 #  fk_rails_44a549d7b3  (company_id => companies.id)
 #  fk_rails_ecc227a0c2  (team_id => teams.id)
-#  fk_rails_f78e8f0103  (initiative_id => initiatives.id)
 #
 
 class Project < ApplicationRecord
@@ -44,7 +42,6 @@ class Project < ApplicationRecord
 
   belongs_to :company
   belongs_to :team
-  belongs_to :initiative, optional: true
 
   has_many :customers_projects, dependent: :destroy
   has_many :customers, through: :customers_projects, dependent: :destroy
@@ -57,7 +54,6 @@ class Project < ApplicationRecord
   has_many :project_risk_configs, dependent: :destroy
   has_many :project_risk_alerts, dependent: :destroy
   has_many :demands, dependent: :restrict_with_error
-  has_many :tasks, through: :demands
   has_many :demand_blocks, through: :demands
   has_many :demand_efforts, through: :demands
   has_many :memberships, -> { distinct }, through: :demands
@@ -86,7 +82,6 @@ class Project < ApplicationRecord
   scope :not_cancelled, -> { where.not(status: :cancelled) }
 
   after_save :remove_outdated_consolidations
-  after_save :update_initiative_dates
 
   def to_hash
     { id: id, name: name, start_date: start_date, end_date: end_date, remaining_backlog: remaining_backlog,
@@ -382,12 +377,6 @@ class Project < ApplicationRecord
     last_project_consolidation.operational_risk
   end
 
-  def tasks_based_current_risk_to_deadline
-    return 1 if last_project_consolidation.blank?
-
-    last_project_consolidation.tasks_based_operational_risk
-  end
-
   def consolidations_last_update
     last_project_consolidation&.updated_at
   end
@@ -579,15 +568,5 @@ class Project < ApplicationRecord
     return 0 if end_date_for_from_date < start_date_limit
 
     (end_date_for_from_date - start_date_limit) + 1
-  end
-
-  def update_initiative_dates
-    return if initiative.blank?
-
-    initiative_reloaded = initiative.reload
-    start_date = initiative_reloaded.projects.map(&:start_date).min
-    end_date = initiative_reloaded.projects.map(&:end_date).max
-
-    initiative_reloaded.update(start_date: start_date, end_date: end_date)
   end
 end

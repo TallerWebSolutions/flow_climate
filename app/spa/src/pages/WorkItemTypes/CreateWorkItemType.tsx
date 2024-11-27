@@ -84,7 +84,6 @@ const CreateWorkItemType = () => {
             </InputLabel>
             <Select native {...register("itemLevel")}>
               <option value="DEMAND">{t("form.demand")}</option>
-              <option value="TASK">{t("form.task")}</option>
             </Select>
           </FormControl>
           <FormControlLabel

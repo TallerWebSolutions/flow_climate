@@ -734,7 +734,6 @@ en:
       memberships:
         blank: "No role in the team %{team_name}"
       efforts_tab: "Efforts"
-      tasks_tab: "TasksList"
     sync:
       enqueued: "Your request was enqueued. It will be processed soon."
       done: "The sync is done."
@@ -861,9 +860,6 @@ en:
     portfolio_units: "Portfolio Units"
     risk_reviews: "Risk Reviews"
     service_delivery_reviews: "Service Delivery Review"
-    azure: "Azure"
-    initiatives_list: "Initiatives"
-    tasks: "TasksList"
   charts:
     xlabel:
       months: "Months"
@@ -987,8 +983,6 @@ en:
     risk_evolution:
       ytitle: "Risk (%)"
     in_week: "In Week"
-    initiatives_completed:
-      title: "TasksList Completed"
     hours_per_stage:
       title: "Hours Per Stage"
   finances_params:
@@ -1501,48 +1495,6 @@ en:
       title: "Efforts"
     edit:
       title: "Edit Effort"
-  azure_accounts:
-    update:
-      title: "Sync company with Azure Devops"
-    edit:
-      title: "Edit Azure Account"
-      success: "Azure account was updated."
-      failure: "Problems were found while saving the account. Check the fields."
-  tasks:
-    index:
-      title: "TasksList"
-      count: "%{count} TasksList"
-      search:
-        placeholder: "search by task name"
-        helpers:
-          date: "When searching by finished tasks it will search by the delivered date, else it will search by the created date."
-      finished:
-        count: "%{count} finished"
-    charts:
-      completion_time:
-        title: "Completion Time (P80)"
-        ytitle: "days"
-      completion_control_chart:
-        title: "Control Chart to Completion Time"
-        ylabel: "Days"
-      risk:
-        ytitle: "Operational Risk (%)"
-        title: "Operational Risk Evolution"
-      scope:
-        ytitle: "TasksList"
-      throughput:
-        title: "Throughput"
-      tasks: "TasksList"
-      wip_completion_control_chart:
-        title: "Current Partial Times to TasksList in Progress"
-  initiatives:
-    index:
-      title: "Initiatives"
-    create:
-      success: "Iniciativa criada."
-      error: "The initiative was not saved. Check the form for further information."
-    new:
-      title: "New Initiative"
   dashboard:
     home:
       greetings: "Hello, %{name}"

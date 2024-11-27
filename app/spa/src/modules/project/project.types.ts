@@ -103,8 +103,6 @@ export type Project = {
     yAxis: SimpleListChartData[]
   }
   leadTimeHistogramData: KeyValueData
-  currentWeeklyTasksScopeIdealBurnup: number[]
-  tasksBurnup?: Burnup
   demandsBurnup?: Burnup
   hoursBurnup?: Burnup
 }

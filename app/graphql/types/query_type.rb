@@ -34,20 +34,6 @@ module Types
       argument :id, ID
     end
 
-    field :tasks_list, Types::TasksListType, null: true, description: 'A list of tasks using the arguments as search parameters' do
-      argument :from_date, GraphQL::Types::ISO8601Date, required: false
-      argument :initiative_id, ID, required: false
-      argument :limit, Int, required: false
-      argument :page_number, Int, required: false
-      argument :portfolio_unit, String, required: false
-      argument :project_id, ID, required: false
-      argument :status, String, required: false
-      argument :task_type, String, required: false
-      argument :team_id, ID, required: false
-      argument :title, String, required: false
-      argument :until_date, GraphQL::Types::ISO8601Date, required: false
-    end
-
     # TODO: this should be get inside the Project query
     field :project_consolidations, [Types::ProjectConsolidationType], null: true, description: 'Project consolidations' do
       argument :last_data_in_week, Boolean, required: false
@@ -67,14 +53,6 @@ module Types
     end
 
     field :me, Types::UserType, null: false
-
-    field :initiatives, [Types::InitiativeType] do
-      argument :company_id, Int, required: true
-    end
-
-    field :initiative, Types::InitiativeType do
-      argument :initiative_id, ID, required: true
-    end
 
     field :projects, [Types::ProjectType], null: false, description: 'A list of projects using the arguments as search parameters' do
       argument :company_id, Int, required: true
@@ -176,15 +154,6 @@ module Types
       Membership.joins(:team_member).where(team_id: team_id).order('team_members.name')
     end
 
-    def tasks_list(page_number: 1, limit: 0, title: nil, status: nil, initiative_id: nil, project_id: nil, team_id: nil, from_date: nil, until_date: nil, portfolio_unit: nil, task_type: nil)
-      return TasksList.new(0, 0, false, 0, []) if me.last_company.blank?
-
-      TasksRepository.instance.search(me.last_company_id, page_number, limit,
-                                      title: title, status: status, initiative_id: initiative_id,
-                                      project_id: project_id, team_id: team_id, from_date: from_date,
-                                      until_date: until_date, portfolio_unit_name: portfolio_unit, task_type: task_type)
-    end
-
     def demands_list(search_options:)
       demands = base_demands(search_options)
 
@@ -223,15 +192,6 @@ module Types
 
     def me
       context[:current_user]
-    end
-
-    def initiatives(company_id:)
-      company = Company.find(company_id)
-      company.initiatives.order(start_date: :desc)
-    end
-
-    def initiative(initiative_id:)
-      Initiative.find(initiative_id)
     end
 
     def projects(company_id:, name: nil, status: nil, start_date: nil, end_date: nil)

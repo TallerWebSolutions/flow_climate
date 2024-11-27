@@ -5,7 +5,7 @@ require 'csv'
 class DemandsController < DemandsListController
   before_action :user_gold_check
 
-  before_action :assign_demand, only: %i[edit update show synchronize_jira synchronize_azure destroy destroy_physically score_research]
+  before_action :assign_demand, only: %i[edit update show synchronize_jira destroy destroy_physically score_research]
 
   def index
     prepend_view_path Rails.public_path
@@ -48,15 +48,6 @@ class DemandsController < DemandsListController
     jira_account = @company.jira_accounts.first
     demand_url = company_demand_url(@demand.project.company, @demand)
     Jira::ProcessJiraIssueJob.perform_later(@demand.external_id, jira_account, @demand.project, current_user.email, current_user.full_name, demand_url)
-    flash[:notice] = I18n.t('general.enqueued')
-    redirect_to company_demand_path(@company, @demand)
-  end
-
-  def synchronize_azure
-    azure_account = @company.azure_account
-    demand_url = company_demand_url(@demand.project.company, @demand)
-    azure_project = @demand.product.azure_product_config.azure_team.azure_project
-    Azure::AzureItemSyncJob.perform_later(@demand.external_id, azure_account, azure_project, current_user.email, current_user.full_name, demand_url)
     flash[:notice] = I18n.t('general.enqueued')
     redirect_to company_demand_path(@company, @demand)
   end
@@ -118,12 +109,6 @@ class DemandsController < DemandsListController
     @demand_transitions = @demand.demand_transitions.includes([:stage]).order(:last_time_in)
     @demand_comments = @demand.demand_comments.includes([:team_member]).order(:comment_date)
     @demand_efforts = @demand.demand_efforts.order(:start_time_to_computation)
-    read_tasks
-  end
-
-  def read_tasks
-    @tasks_list = @demand.tasks.kept.order(created_date: :desc)
-    @paged_tasks = @tasks_list.page(params['page'])
   end
 
   # rubocop:disable Metrics/AbcSize

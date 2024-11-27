@@ -36,13 +36,11 @@ class Company < ApplicationRecord
   has_many :products, dependent: :restrict_with_error
   has_many :portfolio_units, -> { distinct }, through: :products
   has_many :contracts, through: :customers
-  has_many :initiatives, dependent: :destroy
   has_many :projects, counter_cache: true, dependent: :restrict_with_error
   has_many :jira_project_configs, through: :projects
   has_many :jira_product_configs, through: :products
   has_many :demands, dependent: :restrict_with_error
   has_many :demand_blocks, -> { distinct }, through: :demands
-  has_many :tasks, -> { distinct }, through: :demands
   has_many :teams, dependent: :restrict_with_error
   has_many :team_members, dependent: :destroy
   has_many :memberships, through: :team_members
@@ -52,7 +50,6 @@ class Company < ApplicationRecord
   has_many :work_item_types, dependent: :destroy
 
   has_many :jira_accounts, class_name: 'Jira::JiraAccount', dependent: :destroy, inverse_of: :company
-  has_one :azure_account, class_name: 'Azure::AzureAccount', dependent: :destroy, inverse_of: :company
 
   has_one :company_settings, dependent: :destroy
 
@@ -73,10 +70,6 @@ class Company < ApplicationRecord
 
   def add_user(user)
     users << user unless users.include?(user)
-  end
-
-  def azure?
-    azure_account.present?
   end
 
   def jira?
@@ -168,10 +161,6 @@ class Company < ApplicationRecord
 
   def active_products
     projects.joins([:products_projects]).includes([:products]).active.map(&:products).flatten.uniq
-  end
-
-  def use_tasks?
-    tasks.present?
   end
 
   private

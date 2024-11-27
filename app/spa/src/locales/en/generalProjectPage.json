@@ -25,7 +25,6 @@
     "risk_settings": "Risk Settings"
   },
   "tabs": {
-    "demands": "Demands",
-    "tasks": "Tasks"
+    "demands": "Demands"
   }
 }
