@@ -22,6 +22,7 @@
 #  reset_password_token   :string
 #  sign_in_count          :integer          default(0), not null
 #  user_money_credits     :decimal(, )      default(0.0), not null
+#  user_role              :integer          default(0), not null
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  last_company_id        :integer
@@ -40,6 +41,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
 
   mount_uploader :avatar, FlowClimateImageUploader
+
+  enum :user_role, { user: 0, manager: 1, admin: 10 }
 
   has_many :user_company_roles, dependent: :destroy
   has_many :companies, through: :user_company_roles
@@ -62,6 +65,11 @@ class User < ApplicationRecord
   scope :admins, -> { where admin: true }
 
   delegate :pairing_members, to: :team_member, allow_nil: true
+
+  # Overrided just for the transition from boolean to enum
+  def admin?
+    admin
+  end
 
   def active_access_to_company?(company)
     active_companies = companies.joins(:user_company_roles).where(user_company_roles: { end_date: nil })
@@ -106,9 +114,9 @@ class User < ApplicationRecord
   end
 
   def toggle_admin
-    return update(admin: false) if admin?
+    return update(admin: false, user_role: :user) if admin
 
-    update(admin: true)
+    update(admin: true, user_role: :admin)
   end
 
   def role_in_company(company)

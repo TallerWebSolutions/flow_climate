@@ -46,6 +46,8 @@ class Product < ApplicationRecord
   has_many :risk_reviews, dependent: :destroy
   has_many :service_delivery_reviews, dependent: :destroy
   has_many :contracts, dependent: :restrict_with_error
+  has_many :product_users, dependent: :destroy
+  has_many :users, through: :product_users
   has_one :score_matrix, dependent: :destroy
 
   validates :name, presence: true
@@ -109,9 +111,17 @@ class Product < ApplicationRecord
     projects.map(&:end_date).min || Time.zone.today
   end
 
+  def add_user(user)
+    product_user = ProductUser.find_by(user: user, product: self)
+
+    product_user || ProductUser.create(user: user, product: self)
+  end
+
   private
 
   def define_slug
-    self.slug = name&.parameterize
+    return if name.blank?
+
+    self.slug = name.parameterize
   end
 end

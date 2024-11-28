@@ -1997,6 +1997,38 @@ ALTER SEQUENCE public.portfolio_units_id_seq OWNED BY public.portfolio_units.id;
 
 
 --
+-- Name: product_users; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.product_users (
+    id bigint NOT NULL,
+    product_id integer NOT NULL,
+    user_id integer NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: product_users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.product_users_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: product_users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.product_users_id_seq OWNED BY public.product_users.id;
+
+
+--
 -- Name: products; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3265,7 +3297,8 @@ CREATE TABLE public.users (
     email_notifications boolean DEFAULT false NOT NULL,
     user_money_credits numeric DEFAULT 0 NOT NULL,
     avatar character varying,
-    language character varying DEFAULT 'pt-BR'::character varying NOT NULL
+    language character varying DEFAULT 'pt-BR'::character varying NOT NULL,
+    user_role integer DEFAULT 0 NOT NULL
 );
 
 
@@ -3573,6 +3606,13 @@ ALTER TABLE ONLY public.plans ALTER COLUMN id SET DEFAULT nextval('public.plans_
 --
 
 ALTER TABLE ONLY public.portfolio_units ALTER COLUMN id SET DEFAULT nextval('public.portfolio_units_id_seq'::regclass);
+
+
+--
+-- Name: product_users id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.product_users ALTER COLUMN id SET DEFAULT nextval('public.product_users_id_seq'::regclass);
 
 
 --
@@ -4220,6 +4260,14 @@ ALTER TABLE ONLY public.plans
 
 ALTER TABLE ONLY public.portfolio_units
     ADD CONSTRAINT portfolio_units_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: product_users product_users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.product_users
+    ADD CONSTRAINT product_users_pkey PRIMARY KEY (id);
 
 
 --
@@ -5160,6 +5208,27 @@ CREATE INDEX index_portfolio_units_on_product_id ON public.portfolio_units USING
 
 
 --
+-- Name: index_product_users_on_product_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_product_users_on_product_id ON public.product_users USING btree (product_id);
+
+
+--
+-- Name: index_product_users_on_product_id_and_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_product_users_on_product_id_and_user_id ON public.product_users USING btree (product_id, user_id);
+
+
+--
+-- Name: index_product_users_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_product_users_on_user_id ON public.product_users USING btree (user_id);
+
+
+--
 -- Name: index_products_on_company_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5984,6 +6053,14 @@ ALTER TABLE ONLY public.project_change_deadline_histories
 
 
 --
+-- Name: product_users fk_rails_24c98a63d7; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.product_users
+    ADD CONSTRAINT fk_rails_24c98a63d7 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
 -- Name: products fk_rails_252452a41b; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6197,6 +6274,14 @@ ALTER TABLE ONLY public.user_project_roles
 
 ALTER TABLE ONLY public.customers
     ADD CONSTRAINT fk_rails_4f8eb9d458 FOREIGN KEY (customer_id) REFERENCES public.customers(id);
+
+
+--
+-- Name: product_users fk_rails_4ffaf81a97; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.product_users
+    ADD CONSTRAINT fk_rails_4ffaf81a97 FOREIGN KEY (product_id) REFERENCES public.products(id);
 
 
 --
@@ -6758,6 +6843,8 @@ ALTER TABLE ONLY public.stages
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20241128032914'),
+('20241128032149'),
 ('20241127165114'),
 ('20241127161643'),
 ('20241127151940'),

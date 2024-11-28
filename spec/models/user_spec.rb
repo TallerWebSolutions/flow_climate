@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe User do
-  context 'associations' do
+  context 'with enums' do
+    it { is_expected.to define_enum_for(:user_role).with_values({ user: 0, manager: 1, admin: 10 }) }
+  end
+
+  context 'with associations' do
     it { is_expected.to have_many(:companies).through(:user_company_roles) }
     it { is_expected.to have_many(:user_company_roles) }
     it { is_expected.to belong_to(:last_company).class_name('Company').optional }
@@ -27,7 +31,7 @@ RSpec.describe User do
     end
   end
 
-  context 'validations' do
+  context 'with validations' do
     it { is_expected.to validate_presence_of :first_name }
     it { is_expected.to validate_presence_of :last_name }
     it { is_expected.to validate_presence_of :email }

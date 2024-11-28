@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Product do
-  context 'associations' do
+  context 'with associations' do
     it { is_expected.to belong_to :company }
     it { is_expected.to belong_to(:customer).optional }
 
@@ -18,17 +18,19 @@ RSpec.describe Product do
     it { is_expected.to have_many(:contracts).dependent(:restrict_with_error) }
     it { is_expected.to have_many(:jira_product_configs).class_name('Jira::JiraProductConfig').dependent(:destroy) }
     it { is_expected.to have_one(:score_matrix).dependent(:destroy) }
+    it { is_expected.to have_many(:product_users).dependent(:destroy) }
+    it { is_expected.to have_many(:users).through(:product_users) }
   end
 
-  context 'validations' do
-    context 'simple ones' do
+  context 'with validations' do
+    context 'for simple ones' do
       it { is_expected.to validate_presence_of :name }
     end
 
-    context 'complex ones' do
+    context 'for complex ones' do
       let(:customer) { Fabricate :customer }
 
-      context 'uniqueness' do
+      context 'for uniqueness' do
         context 'same name in same customer' do
           let(:company) { Fabricate :company }
           let!(:product) { Fabricate :product, company: company, customer: customer, name: 'zzz' }
@@ -236,6 +238,26 @@ RSpec.describe Product do
           expect(product.end_date).to eq Time.zone.today
         end
       end
+    end
+  end
+
+  describe '#add_user' do
+    let(:user) { Fabricate :user }
+
+    context 'when the product does not have the user yet' do
+      let(:product) { Fabricate :product }
+
+      before { product.add_user(user) }
+
+      it { expect(product.reload.users).to eq [user] }
+    end
+
+    context 'when the product has the user' do
+      let(:product) { Fabricate :product, users: [user] }
+
+      before { product.add_user(user) }
+
+      it { expect(product.reload.users).to eq [user] }
     end
   end
 end
