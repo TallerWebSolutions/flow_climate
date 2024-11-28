@@ -13,7 +13,7 @@ import Breadcrumbs, { BreadcrumbsLink } from "./Breadcrumbs"
 import { MessagesContext } from "../contexts/MessageContext"
 
 export type BasicPageProps = {
-  breadcrumbsLinks: BreadcrumbsLink[]
+  breadcrumbsLinks?: BreadcrumbsLink[]
   title?: string
   children?: ReactNode
   actions?: ReactNode
@@ -39,7 +39,7 @@ const BasicPage = ({
     <>
       <Header />
       <Container maxWidth="xl">
-        <Breadcrumbs links={breadcrumbsLinks} />
+        {breadcrumbsLinks && <Breadcrumbs links={breadcrumbsLinks} />}
         <Box
           sx={{
             marginBottom: 3,
@@ -56,7 +56,7 @@ const BasicPage = ({
         {children}
         <MessagesBox messages={messages} />
       </Container>
-      <Box sx={{ backgroundColor: "primary.main", py: 7, mt: 11 }}>
+      <Box sx={{ backgroundColor: "primary.main", py: 2, mt: 11 }}>
         <Container maxWidth="xl">
           <Link href="/" sx={{ display: "block" }}>
             <img

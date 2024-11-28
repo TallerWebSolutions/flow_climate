@@ -55,6 +55,7 @@ Rails.application.routes.draw do
 
     member do
       get :companies
+      get :manager_home
       patch :toggle_admin
     end
 

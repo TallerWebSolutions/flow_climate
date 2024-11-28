@@ -36,7 +36,8 @@ module SpaHelper
       { controller: 'portfolio_units', action: 'index' },
       { controller: 'portfolio_units', action: 'new' },
       { controller: 'jira/jira_project_configs', action: 'edit' },
-      { controller: 'jira/jira_project_configs', action: 'index'}
+      { controller: 'jira/jira_project_configs', action: 'index'},
+      { controller: "users", action: "manager_home" }
     ]
   end
 end

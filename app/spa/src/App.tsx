@@ -48,12 +48,25 @@ import ServiceDeliveryReviews from "./pages/Products/ServiceDeliveryReviews"
 import ServiceDeliveryReview from "./pages/Products/ServiceDeliveryReview"
 import EditJiraProjectConfig from "./pages/Jira/EditJiraProjectConfig"
 import JiraProjectConfigList from "./pages/Jira/JiraProjectConfigList"
+import ManagerDashboard from "./pages/Users/ManagerDashboard"
 
 export const ME_QUERY = gql`
   query Me {
     me {
       id
       language
+      userIsManager
+      projectsActive {
+        id
+        name
+
+        demandsBurnup {
+          scope
+          xAxis
+          idealBurn
+          currentBurn
+        }
+      }
       currentCompany {
         id
         name
@@ -250,6 +263,10 @@ const App = () => {
             <Route
               path="/companies/:company_id/jira/projects/:project_id/jira_project_configs"
               element={<JiraProjectConfigList />}
+            />
+            <Route
+              path="/users/:userId/manager_home"
+              element={<ManagerDashboard />}
             />
           </Routes>
         </BrowserRouter>

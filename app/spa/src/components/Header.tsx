@@ -95,6 +95,7 @@ const Header = () => {
             />
           </Link>
           {company &&
+            !me?.userIsManager &&
             buildLinks(company.slug).map((link, index) => (
               <Link
                 sx={{ textDecoration: "none" }}

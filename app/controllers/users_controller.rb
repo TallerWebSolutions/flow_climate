@@ -51,7 +51,14 @@ class UsersController < AuthenticatedController
     @user = current_user
     build_page_objects
 
+    return redirect_to manager_home_user_path(@user) if @user.manager?
+
     render 'users/show'
+  end
+
+  def manager_home
+    prepend_view_path Rails.public_path
+    render 'spa-build/index'
   end
 
   private

@@ -1,4 +1,5 @@
 import { gql, useQuery } from "@apollo/client"
+import { Box } from "@mui/material"
 import { useParams } from "react-router-dom"
 import {
   ProjectPage,
@@ -41,7 +42,9 @@ const StatusReport = () => {
 
   return (
     <ProjectPage pageName={"Status Report"} loading={loading}>
-      <>{project && <ProjectBurnup project={project} />}</>
+      <Box sx={{ width: "50%" }}>
+        {project && <ProjectBurnup project={project} />}
+      </Box>
     </ProjectPage>
   )
 }

@@ -1782,9 +1782,10 @@ RSpec.describe Types::QueryType do
   end
 
   describe '#me' do
-    it 'retrieves current logged in user' do
-      query =
-        %(query {
+    context 'without projects search' do
+      it 'retrieves current logged in user' do
+        query =
+          %(query {
           me {
             id
             currentCompany {
@@ -1793,22 +1794,76 @@ RSpec.describe Types::QueryType do
                 id
               }
             }
+            projects {
+              id
+            }
+            projectsActive {
+              id
+            }
           }
         })
 
-      company = Fabricate :company
-      work_item_type = Fabricate :work_item_type, company: company, name: 'Cornojob', item_level: :demand
-      user = Fabricate :user, companies: [company], last_company_id: company.id
+        company = Fabricate :company
+        work_item_type = Fabricate :work_item_type, company: company, name: 'Cornojob', item_level: :demand
+        first_product = Fabricate :product, company: company
+        second_product = Fabricate :product, company: company
+        third_product = Fabricate :product, company: company
 
-      context = {
-        current_user: user
-      }
+        first_project = Fabricate :project, status: :executing, products: [first_product], end_date: 2.days.from_now, name: 'zzz'
+        second_project = Fabricate :project, status: :executing, products: [second_product], end_date: 2.days.from_now, name: 'aaa'
+        Fabricate :project, status: :finished, products: [second_product], end_date: 2.days.from_now, name: 'ccc'
+        Fabricate :project, status: :executing, products: [second_product], end_date: 2.days.ago, name: 'ddd'
+        Fabricate :project, status: :executing, products: [third_product], end_date: 2.days.from_now, name: 'bbb'
 
-      result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
+        user = Fabricate :user, companies: [company], products: [first_product, second_product], last_company_id: company.id
 
-      expect(result.dig('data', 'me', 'id')).to eq user.id.to_s
-      expect(result.dig('data', 'me', 'currentCompany', 'id')).to eq company.id.to_s
-      expect(result.dig('data', 'me', 'currentCompany', 'workItemTypes')).to eq [{ 'id' => work_item_type.id.to_s }]
+        context = {
+          current_user: user
+        }
+
+        result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
+
+        expect(result.dig('data', 'me', 'id')).to eq user.id.to_s
+        expect(result.dig('data', 'me', 'currentCompany', 'id')).to eq company.id.to_s
+        expect(result.dig('data', 'me', 'projects').pluck('id')).to eq [second_project.id.to_s, first_project.id.to_s]
+        expect(result.dig('data', 'me', 'projectsActive').pluck('id')).to eq [second_project.id.to_s, first_project.id.to_s]
+        expect(result.dig('data', 'me', 'currentCompany', 'workItemTypes')).to eq [{ 'id' => work_item_type.id.to_s }]
+      end
+    end
+    context 'with projects search' do
+      it 'retrieves current logged in user' do
+        query =
+          %(query {
+          me {
+            id
+            projects(name: "ddd") {
+              id
+            }
+          }
+        })
+
+        company = Fabricate :company
+        first_product = Fabricate :product, company: company
+        second_product = Fabricate :product, company: company
+        third_product = Fabricate :product, company: company
+
+        Fabricate :project, status: :executing, products: [first_product], end_date: 2.days.from_now, name: 'zzz'
+        Fabricate :project, status: :executing, products: [second_product], end_date: 2.days.from_now, name: 'aaa'
+        Fabricate :project, status: :finished, products: [second_product], end_date: 2.days.from_now, name: 'ccc'
+        project = Fabricate :project, status: :executing, products: [second_product], end_date: 2.days.ago, name: 'ddd'
+        Fabricate :project, status: :executing, products: [third_product], end_date: 2.days.from_now, name: 'bbb'
+
+        user = Fabricate :user, products: [first_product, second_product]
+
+        context = {
+          current_user: user
+        }
+
+        result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
+
+        expect(result.dig('data', 'me', 'id')).to eq user.id.to_s
+        expect(result.dig('data', 'me', 'projects').pluck('id')).to eq [project.id.to_s]
+      end
     end
   end
 

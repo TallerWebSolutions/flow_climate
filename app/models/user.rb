@@ -49,13 +49,15 @@ class User < ApplicationRecord
   belongs_to :last_company, class_name: 'Company', optional: true
 
   has_many :user_project_roles, dependent: :destroy
-  has_many :projects, through: :user_project_roles
 
   has_one :team_member, dependent: :restrict_with_error
 
   has_many :memberships, through: :team_member
   has_many :item_assignments, through: :memberships
   has_many :demands, -> { distinct }, through: :item_assignments
+  has_many :product_users, dependent: :destroy
+  has_many :products, through: :product_users
+  has_many :projects, through: :products
 
   has_many :user_plans, dependent: :destroy
 
