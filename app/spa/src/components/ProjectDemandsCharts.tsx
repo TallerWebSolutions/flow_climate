@@ -9,50 +9,20 @@ import { normalizeCfdData } from "./charts/LineChart"
 import { ScatterChart } from "./charts/ScatterChart"
 import LineChartTooltip from "./charts/tooltips/LineChartTooltip"
 import { secondsToDays } from "../lib/date"
-import { Burnup, Project } from "../modules/project/project.types"
+import { Project } from "../modules/project/project.types"
 import { Grid } from "@mui/material"
 import { useContext } from "react"
 import { MeContext } from "../contexts/MeContext"
 import { ChartAxisData } from "../modules/charts/charts.types"
 import { cfdChartData } from "../lib/charts"
 import { useNavigate } from "react-router-dom"
+import { buildBurnupData } from "../utils/charts"
+import ProjectBurnup from "../pages/Projects/ProjectBurnup"
 
 type ProjectDemandsChartsProps = {
   project: Project
   hoursPerCoordinationStageChartData?: ChartAxisData
 }
-
-const buildBurnupData = (
-  scopeLabel: string,
-  idealLabel: string,
-  deliveredLabel: string,
-  data?: Burnup
-) => [
-  {
-    id: scopeLabel,
-    data:
-      data?.scope.map((scope, index) => ({
-        x: data.xAxis?.[index],
-        y: scope,
-      })) || [],
-  },
-  {
-    id: idealLabel,
-    data:
-      data?.idealBurn.map((idealScope, index) => ({
-        x: data.xAxis?.[index],
-        y: idealScope.toFixed(2),
-      })) || [],
-  },
-  {
-    id: deliveredLabel,
-    data:
-      data?.currentBurn.map((projectThroughput, index) => ({
-        x: data.xAxis?.[index],
-        y: projectThroughput,
-      })) || [],
-  },
-]
 
 const ProjectDemandsCharts = ({
   project,
@@ -146,13 +116,6 @@ const ProjectDemandsCharts = ({
         }
       })
     : []
-
-  const projectDemandsBurnupChartData = buildBurnupData(
-    t("charts_tab.project_charts.demands_burn_up_label_scope"),
-    t("charts_tab.project_charts.demands_burn_up_label_ideal"),
-    t("charts_tab.project_charts.demands_burn_up_label_delivered"),
-    project.demandsBurnup
-  )
 
   const projectHoursBurnupChartData = buildBurnupData(
     t("charts_tab.project_charts.hours_burn_up_label_scope"),
@@ -448,24 +411,9 @@ const ProjectDemandsCharts = ({
           groupMode="grouped"
         />
       </ChartGridItem>
-      <ChartGridItem
-        title={t("charts_tab.project_charts.demands_burn_up_chart", {
-          projectName: project.name,
-        })}
-      >
-        <LineChart
-          data={projectDemandsBurnupChartData}
-          axisLeftLegend={t(
-            "charts_tab.project_charts.demands_burn_up_y_label"
-          )}
-          props={{
-            enableSlices: "x",
-            sliceTooltip: ({ slice }: SliceTooltipProps) => (
-              <LineChartTooltip slice={slice} />
-            ),
-          }}
-        />
-      </ChartGridItem>
+
+      <ProjectBurnup project={project} />
+
       <ChartGridItem
         title={t("charts_tab.project_charts.hours_burn_up_chart", {
           projectName: project.name,
