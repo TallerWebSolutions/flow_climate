@@ -28,6 +28,10 @@ type UpdateJiraProjectConfigDTO = {
   }
 }
 
+type FormValues = {
+  fixVersionName: string
+}
+
 const EditJiraProjectConfig = () => {
   const { t } = useTranslation(["jiraProjectConfig"])
   const { pushMessage } = useContext(MessagesContext)
@@ -65,7 +69,7 @@ const EditJiraProjectConfig = () => {
     }
   )
 
-  const { register, handleSubmit } = useForm<JiraProjectConfig>()
+  const { register, handleSubmit } = useForm<FormValues>()
 
   const handleJiraProjectConfigEdit = (data: JiraProjectConfig) => {
     const { fixVersionName } = data

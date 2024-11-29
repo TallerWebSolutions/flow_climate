@@ -15,6 +15,7 @@ module Types
     field :flow_events, [Types::FlowEventType], null: true
     field :id, ID, null: false
     field :latest_deliveries, [Types::DemandType], null: true
+    field :leadtime_evolution_data, Types::Charts::LeadtimeEvolutionType, null: true
     field :leadtime_p65, Integer
     field :leadtime_p80, Integer
     field :leadtime_p95, Integer
@@ -27,8 +28,17 @@ module Types
     field :slug, String, null: false
     field :unscored_demands_count, Integer
     field :upstream_demands_count, Integer
+    field :users, [Types::UserType], null: true
+    field :users_count, Integer, null: true
+    field :users_outside, [Types::UserType], null: true
 
-    field :leadtime_evolution_data, Types::Charts::LeadtimeEvolutionType, null: true
+    def users_outside
+      User.where.not(id: object.users.pluck(:id)).order(:first_name, :last_name)
+    end
+
+    def users_count
+      object.users.count
+    end
 
     def latest_deliveries
       finished_demands.order(end_date: :desc).limit(15)

@@ -377,10 +377,6 @@ ul.breadcrumb li a:hover {
     padding-top: 8px;
     position: absolute;
 }
-
-.azure-list-actions {
-    width: 70px;
-}
 .tab {
     overflow: hidden;
     /*border: 1px solid #ccc;*/
@@ -780,6 +776,16 @@ ul.breadcrumb li a:hover {
     display: -webkit-flex;
     flex-wrap: wrap;
 }
+
+.truncated-table-column {
+    white-space: nowrap;
+    text-overflow:ellipsis;
+    overflow: hidden;
+}
+
+.cell-small {
+    max-width: 130px;
+}
 /* Add a black background color to the top navigation */
 .topnav {
     background-color: #333;
@@ -830,4 +836,12 @@ ul.breadcrumb li a:hover {
 
 .user-avatar {
     border-radius: 50%;
+}
+
+.mb-5 {
+    margin-bottom: 50px;
+}
+
+.mb-3 {
+    margin-bottom: 30px;
 }

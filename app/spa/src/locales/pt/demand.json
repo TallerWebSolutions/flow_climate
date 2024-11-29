@@ -84,13 +84,14 @@
       "discardedDemands": "Descartadas",
       "unscoredDemands": "Não pontuadas",
       "flowPressure": "Pressão do Fluxo",
-      "averageSpeed": "Velocidade Média: {{numberOfDemandsPerDay}} Deliverables/day",
+      "averageSpeed": "Velocidade Média: {{numberOfDemandsPerDay}} demands/day",
       "averageQueueTime": "Tempo médio de fila: {{time}} horas",
       "averageWorkTime": "Tempo médio de trabalho: {{time}} horas",
       "leadTime": "Lead time",
       "leadTimeP65": "LT p65: {{days}} dias",
       "leadTimeP80": "LT p80: {{days}} dias",
       "leadTimeP95": "LT p95: {{days}} dias",
+      "usersCount": "Usuários: {{usersCount}}",
       "portfolioUnits": "Un. de Portfólio"
     },
     "infoTables": {

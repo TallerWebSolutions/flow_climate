@@ -893,4 +893,65 @@ RSpec.describe Types::MutationType do
       end
     end
   end
+
+  describe '#toggle_product_user' do
+    context 'with valid data' do
+      context 'when the user is not in product yet' do
+        it 'adds the user to the product' do
+          product = Fabricate :product
+          user = Fabricate :user
+          mutation = %(mutation {
+            toggleProductUser(productId: #{product.id}, userId: #{user.id}) {
+              statusMessage
+            }
+          })
+          result = FlowClimateSchema.execute(mutation).as_json
+          expect(result['data']['toggleProductUser']['statusMessage']).to eq('SUCCESS')
+          expect(product.users.exists?(user.id)).to be true
+        end
+      end
+
+      context 'when the user is already in product' do
+        it 'removes the user from the product' do
+          product = Fabricate :product
+          user = Fabricate :user
+          product.users << user
+          mutation = %(mutation {
+            toggleProductUser(productId: #{product.id}, userId: #{user.id}) {
+              statusMessage
+            }
+          })
+          result = FlowClimateSchema.execute(mutation).as_json
+          expect(result['data']['toggleProductUser']['statusMessage']).to eq('SUCCESS')
+          expect(product.users.exists?(user.id)).to be false
+        end
+      end
+    end
+
+    context 'when the product does not exist' do
+      it 'fails' do
+        user = Fabricate :user
+        mutation = %(mutation {
+            toggleProductUser(productId: "foo", userId: #{user.id}) {
+              statusMessage
+            }
+          })
+        result = FlowClimateSchema.execute(mutation).as_json
+        expect(result['data']['toggleProductUser']['statusMessage']).to eq('NOT_FOUND')
+      end
+    end
+
+    context 'when the user does not exist' do
+      it 'fails' do
+        product = Fabricate :product
+        mutation = %(mutation {
+            toggleProductUser(productId: #{product.id}, userId: "foo") {
+              statusMessage
+            }
+          })
+        result = FlowClimateSchema.execute(mutation).as_json
+        expect(result['data']['toggleProductUser']['statusMessage']).to eq('NOT_FOUND')
+      end
+    end
+  end
 end

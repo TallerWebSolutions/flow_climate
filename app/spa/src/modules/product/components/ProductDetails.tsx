@@ -89,6 +89,8 @@ const ProductDetails = ({
 ProductDetails.fragments = gql`
   fragment productDetails on Product {
     name
+    slug
+    usersCount
     createdDemandsCount
     deliveredDemandsCount
     remainingBacklogCount

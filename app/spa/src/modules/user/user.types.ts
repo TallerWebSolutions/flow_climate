@@ -6,8 +6,8 @@ type Avatar = {
   imageSource: string
 }
 
-type User = {
-  id?: string
+export type User = {
+  id: string
   language?: string
   currentCompany?: Company
   fullName?: string
@@ -21,5 +21,3 @@ type User = {
   admin?: boolean
   userIsManager?: boolean
 }
-
-export default User

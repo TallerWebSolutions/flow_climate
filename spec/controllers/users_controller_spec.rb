@@ -55,6 +55,12 @@ RSpec.describe UsersController do
 
       it { expect(response).to redirect_to new_user_session_path }
     end
+
+    describe 'GET #manager_home' do
+      before { get :manager_home, params: { id: 'foo' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
   end
 
   context 'authenticated as admin' do
@@ -170,20 +176,6 @@ RSpec.describe UsersController do
             travel_to Time.zone.local(2020, 1, 16, 14, 0, 0) do
               Fabricate :project_consolidation, project: project, consolidation_date: 1.day.ago, lead_time_min: 5, lead_time_max: 10, project_quality: 0.85, last_data_in_week: true, lead_time_p80: 2.3, operational_risk: 0.4, project_scope: 20, value_per_demand: 123, flow_pressure: 0.4
               Fabricate :project_consolidation, project: other_project, consolidation_date: 2.days.ago, lead_time_min: 5, lead_time_max: 10, project_quality: 0.6, last_data_in_week: true, lead_time_p80: 4.1, operational_risk: 0.7, project_scope: 10, value_per_demand: 32, flow_pressure: 0.7
-
-              # first_demand = Fabricate :demand, team: team, commitment_date: 4.months.ago, end_date: 3.months.ago
-              # second_demand = Fabricate :demand, team: team, commitment_date: 3.months.ago, end_date: 3.weeks.ago
-              # third_demand = Fabricate :demand, team: team, commitment_date: 2.months.ago, end_date: 1.month.ago
-              # fourth_demand = Fabricate :demand, team: team, commitment_date: 1.month.ago, end_date: 3.days.ago
-              # fifth_demand = Fabricate :demand, team: team, commitment_date: 9.weeks.ago, end_date: 2.weeks.ago
-              # sixth_demand = Fabricate :demand, team: team, commitment_date: 9.days.ago, end_date: nil
-
-              # Fabricate :item_assignment, demand: first_demand, membership: first_membership
-              # Fabricate :item_assignment, demand: second_demand, membership: first_membership
-              # Fabricate :item_assignment, demand: third_demand, membership: first_membership
-              # Fabricate :item_assignment, demand: fourth_demand, membership: first_membership
-              # Fabricate :item_assignment, demand: fifth_demand
-              # Fabricate :item_assignment, demand: sixth_demand, membership: first_membership
 
               allow_any_instance_of(Membership).to(receive(:demands_ids).and_return(Demand.all.map(&:id)))
 
@@ -404,6 +396,14 @@ RSpec.describe UsersController do
             expect(response).to render_template 'users/show'
           end
         end
+      end
+    end
+
+    describe 'GET #manager_home' do
+      it 'renders spa page' do
+        get :manager_home, params: { id: user }
+
+        expect(response).to render_template 'spa-build/index'
       end
     end
   end

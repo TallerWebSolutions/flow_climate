@@ -5,6 +5,7 @@ import { PortfolioUnit } from "./portfolioUnit.types"
 import { Membership } from "../team/team.types"
 import { Stage } from "../stage/stage.types"
 import { FlowEvent } from "../flowEvent/flowEvent.types"
+import { User } from "../user/user.types"
 
 export type RiskReview = {
   id: string
@@ -60,29 +61,32 @@ export type ServiceDeliveryReview = {
 
 export type Product = {
   id: string
-  name: string
-  slug: string
+  name?: string
+  slug?: string
   company?: Company
   latestDeliveries?: Demand[]
   demands?: Demand[]
   riskReviews?: RiskReview[]
   portfolioUnits?: PortfolioUnit[]
-  remainingBacklogCount: number
-  createdDemandsCount: number
-  deliveredDemandsCount: number
-  upstreamDemandsCount: number
-  downstreamDemandsCount: number
-  discardedDemandsCount: number
-  unscoredDemandsCount: number
-  demandsBlocksCount: number
-  portfolioUnitsCount: number
+  remainingBacklogCount?: number
+  createdDemandsCount?: number
+  deliveredDemandsCount?: number
+  upstreamDemandsCount?: number
+  downstreamDemandsCount?: number
+  discardedDemandsCount?: number
+  unscoredDemandsCount?: number
+  demandsBlocksCount?: number
+  portfolioUnitsCount?: number
   averageSpeed?: number
-  averageQueueTime: number
-  averageTouchTime: number
-  leadtimeP95: number
-  leadtimeP80: number
-  leadtimeP65: number
+  averageQueueTime?: number
+  averageTouchTime?: number
+  leadtimeP95?: number
+  leadtimeP80?: number
+  leadtimeP65?: number
   leadtimeEvolutionData?: LeadtimeEvolutionChart
   flowEvents?: FlowEvent[]
   memberships?: Membership[]
+  usersCount?: number
+  users?: User[]
+  usersOutside?: User[]
 }

@@ -16,6 +16,7 @@ import { useTranslation } from "react-i18next"
 import { secondsToDays } from "../../../lib/date"
 import { ReadMoreButton } from "../../../components/ReadMoreButton"
 import { Product } from "../product.types"
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined"
 
 const Row = (props: TableRowProps) => (
   <TableRow
@@ -46,6 +47,7 @@ const ProductGeneralInfoTable = ({ product }: ProductGeneralInfoTableProps) => {
   const company = product?.company
   const companySlug = company?.slug || ""
   const productId = product?.id || ""
+  const productSlug = product?.slug || ""
 
   return (
     <TableContainer component={Paper} sx={{ background: "white", marginY: 4 }}>
@@ -242,6 +244,27 @@ const ProductGeneralInfoTable = ({ product }: ProductGeneralInfoTableProps) => {
               {tDemands("list.demandsTable.leadTimeP65", {
                 days: secondsToDays(product.leadtimeP65).toFixed(2),
               })}
+            </Cell>
+          </Row>
+          <Row>
+            <Cell>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                {tDemands("list.demandsTable.usersCount", {
+                  usersCount: product.usersCount,
+                })}
+                <Link
+                  href={`/companies/${companySlug}/products/${productSlug}/product_users`}
+                  sx={{ color: "info.dark", textDecoration: "none" }}
+                >
+                  <EditOutlinedIcon />
+                </Link>
+              </Box>
             </Cell>
           </Row>
         </Table>

@@ -811,13 +811,17 @@ RSpec.describe Types::QueryType do
           other_unit = Fabricate :portfolio_unit, product: product, parent: unit, portfolio_unit_type: :epic
           another_unit = Fabricate :portfolio_unit, product: product, parent: nil, name: 'aaa', portfolio_unit_type: :theme
 
-          user = Fabricate :user, last_company: company
-          project = Fabricate :project, products: [product], start_date: 1.month.ago
+          user = Fabricate :user, last_company: company, first_name: 'zzz'
 
-          demand = Fabricate :demand, project: project, product: product, customer: customer
-          Fabricate :demand, project: project, product: product, customer: customer
+          first_user = Fabricate :user
+          second_user = Fabricate :user
 
-          Fabricate :demand_block, demand: demand
+          product.users << first_user
+          product.users << second_user
+
+          first_outside = Fabricate :user, first_name: 'aaa', last_name: 'bbb'
+          second_outside = Fabricate :user, first_name: 'aaa', last_name: 'aaa'
+          third_outside = Fabricate :user, first_name: 'bbb', last_name: 'aaa'
 
           graphql_context = {
             current_user: user
@@ -845,6 +849,11 @@ RSpec.describe Types::QueryType do
                   leadtimeP95
                   leadtimeP80
                   leadtimeP65
+                  usersCount
+
+                  usersOutside {
+                    id
+                  }
 
                   memberships{
                     id
@@ -898,6 +907,8 @@ RSpec.describe Types::QueryType do
           expect(result.dig('data', 'product')['id']).to eq product.id.to_s
           expect(result.dig('data', 'product')['portfolioUnitsCount']).to eq 3
           expect(result.dig('data', 'product')['portfolioUnits'].pluck('id')).to eq [another_unit.id.to_s, unit.id.to_s, other_unit.id.to_s]
+          expect(result.dig('data', 'product')['usersCount']).to eq 2
+          expect(result.dig('data', 'product')['usersOutside'].pluck('id')).to eq([second_outside, first_outside, third_outside, user].map { |u| u.id.to_s })
           expect(result.dig('data', 'product')['portfolioUnits'].pluck('portfolioUnitTypeName')).to eq %w[Tema Tema Épico]
         end
       end
@@ -1830,6 +1841,7 @@ RSpec.describe Types::QueryType do
         expect(result.dig('data', 'me', 'currentCompany', 'workItemTypes')).to eq [{ 'id' => work_item_type.id.to_s }]
       end
     end
+
     context 'with projects search' do
       it 'retrieves current logged in user' do
         query =

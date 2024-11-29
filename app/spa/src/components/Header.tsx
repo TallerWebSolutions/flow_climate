@@ -15,7 +15,7 @@ import { Company } from "../modules/company/company.types"
 import { MessagesContext } from "../contexts/MessageContext"
 import { MeContext } from "../contexts/MeContext"
 import { useTranslation } from "react-i18next"
-import User from "../modules/user/user.types"
+import { User } from "../modules/user/user.types"
 
 type HeaderUser = {
   id: string

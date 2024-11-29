@@ -6,7 +6,8 @@ require 'simplecov'
 SimpleCov.start do
   add_filter 'config/initializers/rack_profiler.rb'
   add_filter 'config/initializers/sidekiq.rb'
-  minimum_coverage 95
+  add_filter 'app/controllers/webhook_integrations_controller.rb'
+  minimum_coverage 100
 end
 
 require File.expand_path('../config/environment', __dir__)

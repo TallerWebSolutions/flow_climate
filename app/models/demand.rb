@@ -301,14 +301,6 @@ class Demand < ApplicationRecord
     end
   end
 
-  def discard_with_date(date)
-    update(discarded_at: date)
-    demand_transitions.update(discarded_at: date)
-    demand_blocks.update(discarded_at: date)
-    demand_comments.update(discarded_at: date)
-    item_assignments.update(discarded_at: date)
-  end
-
   private
 
   def commitment_transition

@@ -167,6 +167,8 @@ Rails.application.routes.draw do
       resources :score_matrix_questions, except: :index do
         resources :score_matrix_answers, only: %i[create destroy]
       end
+
+      resources :product_users, only: :index
     end
 
     resources :projects do

@@ -20,7 +20,7 @@ import BasicPage from "../../components/BasicPage"
 import { MessagesContext } from "../../contexts/MessageContext"
 import { MeContext } from "../../contexts/MeContext"
 import { Team } from "../../modules/team/team.types"
-import User from "../../modules/user/user.types"
+import { User } from "../../modules/user/user.types"
 import * as amplitude from "../../amplitude/amplitudeEvents"
 import { trackPageView } from "../../amplitude/amplitudeEvents"
 

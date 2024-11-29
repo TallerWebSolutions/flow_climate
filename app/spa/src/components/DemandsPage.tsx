@@ -24,6 +24,9 @@ import { Tabs } from "./Tabs"
 import { useLocation } from "react-router-dom"
 import { FormElement } from "./ui/Form"
 import { trackPageView } from "../amplitude/amplitudeEvents"
+import { Project } from "../modules/project/project.types"
+import { Team } from "../modules/team/team.types"
+import { WorkItemType } from "../modules/company/company.types"
 
 export type DemandsSearchDTO = {
   demandsTableData: DemandsList
@@ -174,7 +177,7 @@ const DemandsPage = ({
                   defaultValue={filters.project}
                 >
                   <option value="">{t("list.form.common.placeholder")}</option>
-                  {projects.map((project, index) => (
+                  {projects.map((project: Project, index: number) => (
                     <option value={project.id} key={`${project.id}--${index}`}>
                       {project.name}
                     </option>
@@ -197,7 +200,7 @@ const DemandsPage = ({
                   defaultValue={filters.team}
                 >
                   <option value="">{t("list.form.common.placeholder")}</option>
-                  {teams.map((team, index) => (
+                  {teams.map((team: Team, index: number) => (
                     <option value={team.id} key={`${team.id}--${index}`}>
                       {team.name}
                     </option>
@@ -219,11 +222,13 @@ const DemandsPage = ({
                 defaultValue={filters.demandType}
               >
                 <option value="">{t("list.form.common.placeholder")}</option>
-                {company?.workItemTypes?.map((type, index) => (
-                  <option value={type.name} key={`${type.id}--${index}`}>
-                    {type.name}
-                  </option>
-                ))}
+                {company?.workItemTypes?.map(
+                  (type: WorkItemType, index: number) => (
+                    <option value={type.name} key={`${type.id}--${index}`}>
+                      {type.name}
+                    </option>
+                  )
+                )}
               </Select>
             </FormElement>
             <FormElement>

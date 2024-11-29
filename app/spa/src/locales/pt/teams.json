@@ -67,7 +67,7 @@
     "flowDataCommitted_to": "Commited To",
     "flowDataPullTransactions": "PullTransactions",
     "flowDataDelivered": "Delivered",
-    "flowDataYLabel": "Deliverables",
+    "flowDataYLabel": "Demandas",
     "flowDataXLabel": "Period",
     "leadTimeHistogramChart": "Lead Time Histogram Chart",
     "leadTimeHistogramChartXLabel": "Days",

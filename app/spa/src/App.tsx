@@ -26,7 +26,7 @@ import Teams from "./pages/Teams/Teams"
 import TeamMembers from "./pages/TeamMembers/TeamMembers"
 import TeamMemberDashboard from "./pages/TeamMembers/TeamMemberDashboard"
 import EditTeamMember from "./pages/TeamMembers/EditTeamMember"
-import User from "./modules/user/user.types"
+import { User } from "./modules/user/user.types"
 import DemandsCharts from "./pages/Demand/DemandsCharts"
 import CreateWorkItemType from "./pages/WorkItemTypes/CreateWorkItemType"
 import ListWorkItemTypes from "./pages/WorkItemTypes/ListWorkItemTypes"
@@ -49,6 +49,7 @@ import ServiceDeliveryReview from "./pages/Products/ServiceDeliveryReview"
 import EditJiraProjectConfig from "./pages/Jira/EditJiraProjectConfig"
 import JiraProjectConfigList from "./pages/Jira/JiraProjectConfigList"
 import ManagerDashboard from "./pages/Users/ManagerDashboard"
+import ProductUsersPage from "./pages/Products/ProductUsersPage"
 
 export const ME_QUERY = gql`
   query Me {
@@ -267,6 +268,10 @@ const App = () => {
             <Route
               path="/users/:userId/manager_home"
               element={<ManagerDashboard />}
+            />
+            <Route
+              path="/companies/:companySlug/products/:productSlug/product_users"
+              element={<ProductUsersPage />}
             />
           </Routes>
         </BrowserRouter>

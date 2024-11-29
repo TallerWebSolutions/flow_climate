@@ -1,7 +1,7 @@
 import { Project } from "../project/project.types"
 import { Team } from "../team/team.types"
 
-type WorkItemType = {
+export type WorkItemType = {
   id: string
   name: string
 }
