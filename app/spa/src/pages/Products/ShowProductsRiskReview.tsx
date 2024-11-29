@@ -450,7 +450,7 @@ const ShowProductsRiskReview = () => {
           <TableRow
             sx={{
               borderBottom: "1px solid",
-              borderBottomColor: "grey.200",
+              borderBottomColor: "grwy.200",
             }}
           >
             <TableCell>
@@ -477,7 +477,7 @@ const ShowProductsRiskReview = () => {
               <TableRow
                 sx={{
                   borderBottom: "1px solid",
-                  borderBottomColor: "grey.200",
+                  borderBottomColor: "grwy.200",
                 }}
               >
                 <TableCell>

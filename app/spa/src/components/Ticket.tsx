@@ -21,7 +21,7 @@ const Separator = ({ last }: SeparatorProps) => (
       height: 4,
       mx: 1,
       borderRadius: "100%",
-      backgroundColor: "grey.200",
+      backgroundColor: "grwy.200",
     }}
   />
 )
@@ -57,7 +57,7 @@ const Ticket = ({ title, value, unity, sx }: TicketProps) => {
                 >
                   <Typography
                     fontSize="2.125rem"
-                    color="grey.600"
+                    color="grwy.600"
                     lineHeight={1}
                   >
                     {data}
@@ -68,12 +68,12 @@ const Ticket = ({ title, value, unity, sx }: TicketProps) => {
             )
           })
         ) : (
-          <Typography fontSize="2.125rem" color="grey.600" lineHeight={1}>
+          <Typography fontSize="2.125rem" color="grwy.600" lineHeight={1}>
             {value}
           </Typography>
         )}
 
-        <Typography color="grey.600" pl={1} fontWeight={400}>
+        <Typography color="grwy.600" pl={1} fontWeight={400}>
           {unity}
         </Typography>
       </Box>

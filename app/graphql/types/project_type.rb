@@ -9,7 +9,9 @@ module Types
     field :average_touch_time, Float, null: true
     field :backlog_count_for, Int, null: true
     field :company, Types::CompanyType, null: false
+    field :consumed_active_contracts_hours, Int, null: false
     field :consumed_hours, Float, null: false
+    field :cumulative_flow_chart_data, Types::Charts::CumulativeFlowChartType, null: true
     field :current_cost, Float, null: true
     field :current_monte_carlo_weeks_max, Int, null: true
     field :current_monte_carlo_weeks_min, Int, null: true
@@ -22,7 +24,9 @@ module Types
     field :days_difference_between_first_and_last_deadlines, Int, null: true
     field :deadlines_change_count, Int, null: true
     field :demand_blocks, [Types::DemandType], null: true
+    field :demands_burnup, Types::Charts::BurnupType, null: true
     field :demands_finished_with_leadtime, [Types::DemandType], null: true
+    field :demands_flow_chart_data, Types::Charts::DemandsFlowChartDataType, null: true
     field :discarded_demands, [Types::DemandType], null: true
     field :discovered_scope, Int, null: true
     field :end_date, GraphQL::Types::ISO8601Date, null: true
@@ -31,6 +35,7 @@ module Types
     field :flow_pressure, Float, null: false
     field :flow_pressure_percentage, Float, null: false
     field :general_leadtime, Float, null: true
+    field :hours_burnup, Types::Charts::BurnupType, null: true
     field :hours_per_stage_chart_data, Types::Charts::HoursPerStageChartType, null: true do
       argument :stage_level, String, required: false
     end
@@ -38,6 +43,7 @@ module Types
     field :initial_scope, Int, null: false
     field :last_project_consolidations_weekly, Types::ProjectConsolidationType, null: true
     field :lead_time_breakdown, Types::Charts::LeadTimeBreakdownType, null: true
+    field :lead_time_histogram_data, Types::Charts::LeadTimeHistogramDataType, null: true
     field :lead_time_p65, Float, null: false
     field :lead_time_p80, Float, null: false
     field :lead_time_p95, Float, null: false
@@ -58,10 +64,13 @@ module Types
     field :project_consolidations, [Types::ProjectConsolidationType], null: true
     field :project_consolidations_last_month, [Types::ProjectConsolidationType], null: true
     field :project_consolidations_weekly, [Types::ProjectConsolidationType], null: true
+    field :project_members, [Types::ProjectMemberType], null: true
     field :project_weeks, [GraphQL::Types::ISO8601Date], null: true
     field :qty_hours, Float, null: false
     field :qty_in_progress, Int, null: false
     field :qty_selected, Int, null: false
+    field :quality, Float, null: true
+    field :remaining_active_contracts_hours, Int, null: false
     field :remaining_backlog, Int, null: false
     field :remaining_days, Int, null: true
     field :remaining_weeks, Int, null: false
@@ -76,20 +85,13 @@ module Types
     field :team_monte_carlo_weeks_max, Float, null: false
     field :team_monte_carlo_weeks_min, Float, null: false
     field :team_monte_carlo_weeks_std_dev, Float, null: false
+    field :total_active_contracts_hours, Int, null: false
     field :total_scope, Int, null: false
     field :total_throughput, Int, null: true
     field :unscored_demands, [Types::DemandType], null: true
     field :upstream_demands, [Types::DemandType], null: true
     field :value, Float, null: true
     field :weekly_throughputs, [Int], null: false
-
-    field :cumulative_flow_chart_data, Types::Charts::CumulativeFlowChartType, null: true
-    field :demands_burnup, Types::Charts::BurnupType, null: true
-    field :demands_flow_chart_data, Types::Charts::DemandsFlowChartDataType, null: true
-    field :hours_burnup, Types::Charts::BurnupType, null: true
-    field :lead_time_histogram_data, Types::Charts::LeadTimeHistogramDataType, null: true
-    field :project_members, [Types::ProjectMemberType], null: true
-    field :quality, Float, null: true
 
     delegate :remaining_backlog, to: :object
     delegate :remaining_weeks, to: :object

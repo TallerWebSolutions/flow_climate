@@ -3,11 +3,13 @@ import Ticket, { TicketProps } from "./Ticket"
 
 type TicketGroupProps = {
   title: string
+  // Using it because the responsibility for spacing should be on the parent component
+  spaced?: boolean
   data: TicketProps[]
 }
 
-const TicketGroup = ({ title, data }: TicketGroupProps) => (
-  <Box paddingTop={2} paddingBottom={6}>
+const TicketGroup = ({ title, data, spaced = true }: TicketGroupProps) => (
+  <Box paddingTop={spaced ? 2 : 0} paddingBottom={spaced ? 6 : 0}>
     <Typography component="h2" variant="h5" mb={3}>
       {title}
     </Typography>

@@ -1,0 +1,8 @@
+{
+  "contract": {
+    "title": "Quantidade de Horas em Contratos Ativos",
+    "total": "Totais",
+    "consumed": "Consumidas",
+    "remaining": "Restantes"
+  }
+}

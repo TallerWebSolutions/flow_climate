@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe Project do
-  context 'enums' do
+  context 'with enums' do
     it { is_expected.to define_enum_for(:status).with_values(waiting: 0, executing: 1, maintenance: 2, finished: 3, cancelled: 4, negotiating: 5) }
     it { is_expected.to define_enum_for(:project_type).with_values(outsourcing: 0, consulting: 1, training: 2, domestic_product: 3, marketing: 4) }
   end
 
-  context 'associations' do
+  context 'with associations' do
     it { is_expected.to belong_to :company }
     it { is_expected.to belong_to :team }
 
@@ -31,13 +31,14 @@ RSpec.describe Project do
     it { is_expected.to have_many(:users).through(:user_project_roles) }
 
     it { is_expected.to have_many(:customers_projects).dependent(:destroy) }
-    it { is_expected.to have_many(:customers).through(:customers_projects).dependent(:destroy) }
+    it { is_expected.to have_many(:customers).through(:customers_projects) }
+    it { is_expected.to have_many(:contracts).through(:customers) }
     it { is_expected.to have_many(:products_projects).dependent(:destroy) }
     it { is_expected.to have_many(:products).through(:products_projects).dependent(:destroy) }
   end
 
-  context 'validations' do
-    context 'simple ones' do
+  context 'with validations' do
+    context 'for simple ones' do
       it { is_expected.to validate_presence_of :project_type }
       it { is_expected.to validate_presence_of :name }
       it { is_expected.to validate_presence_of :status }
@@ -49,8 +50,8 @@ RSpec.describe Project do
       it { is_expected.to validate_presence_of :max_work_in_progress }
     end
 
-    context 'complex ones' do
-      context 'values' do
+    context 'with complex ones' do
+      context 'for values' do
         context 'with both value and hour value null' do
           let(:project) { Fabricate.build :project, value: nil, hour_value: nil }
 
@@ -105,7 +106,7 @@ RSpec.describe Project do
     end
   end
 
-  context 'scopes' do
+  context 'with scopes' do
     before { travel_to Time.zone.local(2019, 10, 24, 10, 0, 0) }
 
     let!(:first_project) { Fabricate :project, status: :waiting, start_date: Time.zone.today, end_date: Time.zone.tomorrow }
@@ -1886,6 +1887,50 @@ RSpec.describe Project do
 
         expect(project.customers_names).to eq ''
       end
+    end
+  end
+
+  describe '#total_active_contracts_hours' do
+    it 'returns the remaining active contract hours' do
+      customer = Fabricate :customer
+      project = Fabricate :project, customers: [customer]
+      Fabricate :contract, customer: customer, start_date: 1.day.ago, end_date: 1.day.from_now, total_hours: 200
+      Fabricate :contract, customer: customer, start_date: 1.day.ago, end_date: 2.days.from_now, total_hours: 400
+      Fabricate :contract, customer: customer, start_date: 3.days.ago, end_date: 2.days.ago, total_hours: 400
+
+      expect(project.total_active_contracts_hours).to eq 600
+    end
+  end
+
+  describe '#consumed_active_contracts_hours' do
+    it 'returns the consumed active contract hours' do
+      customer = Fabricate :customer
+      project = Fabricate :project, customers: [customer]
+      first_contract = Fabricate :contract, customer: customer, start_date: 1.day.ago, end_date: 1.day.from_now, total_hours: 200
+      second_contract = Fabricate :contract, customer: customer, start_date: 1.day.ago, end_date: 2.days.from_now, total_hours: 400
+      third_contract = Fabricate :contract, customer: customer, start_date: 3.days.ago, end_date: 2.days.ago, total_hours: 400
+
+      Fabricate :contract_consolidation, contract: first_contract, consumed_hours: 200
+      Fabricate :contract_consolidation, contract: second_contract, consumed_hours: 400
+      Fabricate :contract_consolidation, contract: third_contract, consumed_hours: 1000
+
+      expect(project.consumed_active_contracts_hours).to eq 600
+    end
+  end
+
+  describe '#remaining_active_contracts_hours' do
+    it 'returns the remaining active contract hours subtract the consumed active contract hours' do
+      customer = Fabricate :customer
+      project = Fabricate :project, customers: [customer]
+      first_contract = Fabricate :contract, customer: customer, start_date: 1.day.ago, end_date: 1.day.from_now, total_hours: 200
+      second_contract = Fabricate :contract, customer: customer, start_date: 1.day.ago, end_date: 2.days.from_now, total_hours: 900
+      third_contract = Fabricate :contract, customer: customer, start_date: 3.days.ago, end_date: 2.days.ago, total_hours: 400
+
+      Fabricate :contract_consolidation, contract: first_contract, consumed_hours: 200
+      Fabricate :contract_consolidation, contract: second_contract, consumed_hours: 400
+      Fabricate :contract_consolidation, contract: third_contract, consumed_hours: 1000
+
+      expect(project.remaining_active_contracts_hours).to eq 500
     end
   end
 end

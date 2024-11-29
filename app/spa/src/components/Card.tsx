@@ -55,7 +55,7 @@ const CustomCardContent = ({
     <Typography
       variant="body2"
       component="span"
-      color="grey.600"
+      color="grwy.600"
       mb={1}
       display="block"
     >

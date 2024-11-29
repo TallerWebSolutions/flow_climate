@@ -150,7 +150,7 @@ const ProjectsTable = ({ projectsFilters }: ProjectsTableProps) => {
             <Typography
               variant="subtitle2"
               component="span"
-              sx={{ color: "gray.600" }}
+              sx={{ color: "grwy.600" }}
             >
               {`${project.consumedHours.toFixed(2)}h ${t(
                 "projectsTable.row_consumed"

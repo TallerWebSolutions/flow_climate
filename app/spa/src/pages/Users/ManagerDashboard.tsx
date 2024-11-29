@@ -19,11 +19,13 @@ import { useTranslation } from "react-i18next"
 import { gql, useQuery } from "@apollo/client"
 import { Project } from "../../modules/project/project.types"
 import { PROJECT_STANDARD_FRAGMENT } from "../../components/ProjectPage"
+import ActiveContractsHoursTicket from "../../modules/contracts/ActiveContractsHoursTicket"
 
 const ManagerDashboard = () => {
   const { me } = useContext(MeContext)
   const { register } = useForm()
   const { t } = useTranslation("demand")
+  const { t: tProject } = useTranslation("projects")
 
   const [searchParams] = useSearchParams()
 
@@ -37,15 +39,15 @@ const ManagerDashboard = () => {
   )
 
   const projects = data?.me?.projects || []
-  const project = projects[0]
-  const defaultProject = project || me?.projectsActive?.[0]
+  const loadedProject = projects[0]
+  const project = loadedProject || me?.projectsActive?.[0]
 
   return (
     <BasicPage title={""} loading={loading}>
       <Box sx={{ display: "flex" }}>
         <Box sx={{ width: "50%" }}>
           <Typography sx={{ fontSize: "34px", fontWeight: 400 }}>
-            {`${project?.name} | Visão Geral`}
+            {`${loadedProject?.name} | Visão Geral`}
           </Typography>
         </Box>
         <Box sx={{ width: "50%" }}>
@@ -72,13 +74,16 @@ const ManagerDashboard = () => {
           </form>
         </Box>
       </Box>
-      <Box sx={{ width: "50%" }}>
-        {defaultProject ? (
-          <ProjectBurnup project={defaultProject} />
-        ) : (
-          <Typography>Sem projetos para mostrar</Typography>
-        )}
-      </Box>
+      {project ? (
+        <Box sx={{ padding: 4 }}>
+          <ActiveContractsHoursTicket project={project} />
+          <Box sx={{ width: "50%" }}>
+            <ProjectBurnup project={project} />
+          </Box>
+        </Box>
+      ) : (
+        <Typography>{tProject("projectsTable.emptyProjects")}</Typography>
+      )}
     </BasicPage>
   )
 }
@@ -94,6 +99,10 @@ const MANAGER_DASHBOARD_QUERY = gql`
     me {
       projects(name: $name) {
         ...ProjectStandardFragment
+
+        totalActiveContractsHours
+        consumedActiveContractsHours
+        remainingActiveContractsHours
 
         demandsBurnup {
           scope

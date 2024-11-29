@@ -67,7 +67,7 @@ const ProductsRiskReviews = () => {
           <TableRow
             sx={{
               borderBottom: "1px solid",
-              borderBottomColor: "grey.200",
+              borderBottomColor: "grwy.200",
             }}
           >
             <TableCell>{t("riskReviews.riskReviewID")}</TableCell>
@@ -83,7 +83,7 @@ const ProductsRiskReviews = () => {
               <TableRow
                 sx={{
                   borderBottom: "1px solid",
-                  borderBottomColor: "grey.200",
+                  borderBottomColor: "grwy.200",
                 }}
               >
                 <TableCell>

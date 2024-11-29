@@ -20,6 +20,7 @@
     "row_consumed": "consumed",
     "value": "Value",
     "maxWorkInProgress": "WiP Limit",
+    "emptyProjects": "No projects found",
     "filter": {
       "projectName": "Project Name",
       "projectNamePlaceholder": "Search by the project name",

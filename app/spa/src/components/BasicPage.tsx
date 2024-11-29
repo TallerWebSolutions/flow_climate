@@ -38,7 +38,7 @@ const BasicPage = ({
   return (
     <>
       <Header />
-      <Container maxWidth="xl">
+      <Container maxWidth="xl" sx={{ backgroundColor: "grey.100" }}>
         {breadcrumbsLinks && <Breadcrumbs links={breadcrumbsLinks} />}
         <Box
           sx={{
@@ -56,7 +56,7 @@ const BasicPage = ({
         {children}
         <MessagesBox messages={messages} />
       </Container>
-      <Box sx={{ backgroundColor: "primary.main", py: 2, mt: 11 }}>
+      <Box sx={{ py: 2, mt: 11 }}>
         <Container maxWidth="xl">
           <Link href="/" sx={{ display: "block" }}>
             <img

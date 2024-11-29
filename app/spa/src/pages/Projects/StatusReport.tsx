@@ -7,11 +7,15 @@ import {
 } from "../../components/ProjectPage"
 import { Project } from "../../modules/project/project.types"
 import ProjectBurnup from "./ProjectBurnup"
+import ActiveContractsHoursTicket from "../../modules/contracts/ActiveContractsHoursTicket"
 
 export const QUERY = gql`
   query ProjectStatusReport($id: ID!) {
     project(id: $id) {
       ...ProjectStandardFragment
+      totalActiveContractsHours
+      consumedActiveContractsHours
+      remainingActiveContractsHours
 
       demandsBurnup {
         scope
@@ -42,8 +46,12 @@ const StatusReport = () => {
 
   return (
     <ProjectPage pageName={"Status Report"} loading={loading}>
-      <Box sx={{ width: "50%" }}>
-        {project && <ProjectBurnup project={project} />}
+      <Box sx={{ padding: 4 }}>
+        {project && <ActiveContractsHoursTicket project={project} />}
+
+        <Box sx={{ width: "50%" }}>
+          {project && <ProjectBurnup project={project} />}
+        </Box>
       </Box>
     </ProjectPage>
   )

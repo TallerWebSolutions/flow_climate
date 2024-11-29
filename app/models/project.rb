@@ -44,7 +44,8 @@ class Project < ApplicationRecord
   belongs_to :team
 
   has_many :customers_projects, dependent: :destroy
-  has_many :customers, through: :customers_projects, dependent: :destroy
+  has_many :customers, through: :customers_projects
+  has_many :contracts, through: :customers
 
   has_many :products_projects, dependent: :destroy
   has_many :products, through: :products_projects, dependent: :destroy
@@ -182,6 +183,10 @@ class Project < ApplicationRecord
     demands.kept.finished_until_date(Time.zone.now).sum(&:total_effort)
   end
 
+  def consumed_active_contracts_hours
+    contracts.active(Time.zone.now).sum(&:consumed_hours)
+  end
+
   def percentage_hours_delivered
     return 0 unless qty_hours.positive?
 
@@ -272,6 +277,14 @@ class Project < ApplicationRecord
 
   def remaining_hours
     qty_hours - consumed_hours
+  end
+
+  def total_active_contracts_hours
+    contracts.active(Time.zone.now).sum(&:total_hours)
+  end
+
+  def remaining_active_contracts_hours
+    total_active_contracts_hours - consumed_active_contracts_hours
   end
 
   def risk_color

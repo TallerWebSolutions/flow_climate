@@ -105,6 +105,10 @@ export type Project = {
   leadTimeHistogramData: KeyValueData
   demandsBurnup?: Burnup
   hoursBurnup?: Burnup
+
+  totalActiveContractsHours?: number
+  consumedActiveContractsHours?: number
+  remainingActiveContractsHours?: number
 }
 
 export type Burnup = {

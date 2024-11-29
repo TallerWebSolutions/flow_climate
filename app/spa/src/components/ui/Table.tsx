@@ -49,7 +49,7 @@ const TableRowWithCollapse = ({ row, index }: TableRowWithCollapseProps) => {
         key={`${row.rowInfo[0]}--${index}`}
         sx={{
           borderBottom: "1px solid",
-          borderBottomColor: "grey.200",
+          borderBottomColor: "grwy.200",
         }}
       >
         <TableCell width={52}>
@@ -72,9 +72,9 @@ const TableRowWithCollapse = ({ row, index }: TableRowWithCollapseProps) => {
           <Collapse in={open} timeout="auto" unmountOnExit>
             <MUITable
               sx={{
-                backgroundColor: "grey.A100",
+                backgroundColor: "grwy.A100",
                 borderBottom: "1px solid",
-                borderBottomColor: "grey.400",
+                borderBottomColor: "grwy.400",
               }}
             >
               <TableBody>
@@ -180,7 +180,7 @@ const Table = ({
                   key={`${row[0]}--${index}`}
                   sx={{
                     borderBottom: "1px solid",
-                    borderBottomColor: "grey.200",
+                    borderBottomColor: "grwy.200",
                   }}
                 >
                   {row.map((cell, index) => (

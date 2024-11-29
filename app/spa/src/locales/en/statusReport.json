@@ -1,0 +1,8 @@
+{
+  "contract": {
+    "title": "Hours in Contract",
+    "total": "Total",
+    "consumed": "Consumed",
+    "remaining": "Remaining"
+  }
+}

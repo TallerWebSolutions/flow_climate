@@ -65,7 +65,7 @@ const ServiceDeliveryReviewsTable = ({
         <TableRow
           sx={{
             borderBottom: "1px solid",
-            borderBottomColor: "grey.200",
+            borderBottomColor: "grwy.200",
           }}
         >
           <TableCell>{t("table.revisionDate")}</TableCell>
@@ -89,7 +89,7 @@ const ServiceDeliveryReviewsTable = ({
             <TableRow
               sx={{
                 borderBottom: "1px solid",
-                borderBottomColor: "grey.200",
+                borderBottomColor: "grwy.200",
               }}
             >
               <TableCell>
