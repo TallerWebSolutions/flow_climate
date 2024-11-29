@@ -24,6 +24,12 @@ Have the ultimate management tools in your hands!
 - RSpec as test framework
 - Fabrication as factory for specs
 - Faker to generate fake data
+- Devise for authentication
+- Rubocop for linting
+- PostgreSQL
+- React
+- GraphQL
+- Material UI - https://v5-0-6.mui.com/customization/default-theme/
 
 ## How to build the environment
 
