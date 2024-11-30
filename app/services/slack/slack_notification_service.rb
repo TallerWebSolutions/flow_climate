@@ -193,7 +193,7 @@ module Slack
     end
 
     def notify_item_assigned(item_assignment, demand_url)
-      return if item_assignment.valid? == false
+      return if item_assignment.valid? == false || item_assignment.start_time < 1.hour.ago
 
       slack_configurations = slack_configurations(item_assignment.demand, :item_assigned)
 

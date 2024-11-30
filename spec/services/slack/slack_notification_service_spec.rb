@@ -399,7 +399,7 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
         demand = Fabricate :demand, team: team
         team_member = Fabricate :team_member
         membership = Fabricate :membership, team_member: team_member
-        item_assignment = Fabricate :item_assignment, membership: membership, demand: demand, assignment_notified: false
+        item_assignment = Fabricate :item_assignment, membership: membership, demand: demand, assignment_notified: false, start_time: 1.minute.ago
 
         Fabricate :slack_configuration, team: team, info_type: :item_assigned, active: true
 
@@ -429,7 +429,7 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
 
     context 'without slack configuration' do
       it 'just marks the assignment as notified' do
-        item_assignment = Fabricate :item_assignment, assignment_notified: false
+        item_assignment = Fabricate :item_assignment, assignment_notified: false, start_time: 1.minute.ago
 
         described_class.instance.notify_item_assigned(item_assignment, 'htto://foo.bar/baz')
 
