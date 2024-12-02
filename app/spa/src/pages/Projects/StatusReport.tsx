@@ -54,18 +54,23 @@ const StatusReport = () => {
 
   return (
     <ProjectPage pageName={"Status Report"} loading={loading}>
-      <Box sx={{ padding: 4 }}>
-        {project && <ActiveContractsHoursTicket project={project} />}
-
-        <Box sx={{ display: "flex" }}>
-          <Box sx={{ width: "50%" }}>
-            {project && <ProjectBurnup project={project} />}
+      <>
+        {project && (
+          <Box sx={{ padding: 4, gap: 4 }}>
+            <Box sx={{ width: "50%" }}>
+              <ActiveContractsHoursTicket project={project} />
+            </Box>
+            <Box sx={{ display: "flex" }}>
+              <Box sx={{ width: "50%" }}>
+                <ProjectBurnup project={project} />
+              </Box>
+              <Box sx={{ width: "50%" }}>
+                <ProjectHoursBurnup project={project} />
+              </Box>
+            </Box>
           </Box>
-          <Box sx={{ width: "50%" }}>
-            {project && <ProjectHoursBurnup project={project} />}
-          </Box>
-        </Box>
-      </Box>
+        )}
+      </>
     </ProjectPage>
   )
 }

@@ -46,8 +46,8 @@ const ManagerDashboard = () => {
   return (
     <BasicPage title={""} loading={loading}>
       <Box sx={{ display: "flex" }}>
-        <Box sx={{ width: "50%" }}>
-          <Typography sx={{ fontSize: "34px", fontWeight: 400 }}>
+        <Box sx={{ width: "50%", paddingX: 4 }}>
+          <Typography variant={"h4"}>
             {`${loadedProject?.name} | Visão Geral`}
           </Typography>
         </Box>
@@ -77,12 +77,16 @@ const ManagerDashboard = () => {
       </Box>
       {project ? (
         <Box sx={{ padding: 4 }}>
-          <ActiveContractsHoursTicket project={project} />
+          <Box sx={{ width: "50%", marginBottom: 4 }}>
+            <ActiveContractsHoursTicket project={project} />
+          </Box>
           <Box sx={{ display: "flex" }}>
-            <Box>
+            <Box sx={{ width: "50%" }}>
               <ProjectBurnup project={project} />
             </Box>
-            <Box>{project && <ProjectHoursBurnup project={project} />}</Box>
+            <Box sx={{ width: "50%" }}>
+              <ProjectHoursBurnup project={project} />
+            </Box>
           </Box>
         </Box>
       ) : (

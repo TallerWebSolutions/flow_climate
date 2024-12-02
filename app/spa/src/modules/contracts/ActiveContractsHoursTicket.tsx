@@ -43,8 +43,7 @@ const ActiveContractsHoursTicket = ({
     <Box
       sx={{
         backgroundColor: "white",
-        padding: 4,
-        width: "50%",
+        padding: 2,
         borderRadius: 2,
       }}
     >
