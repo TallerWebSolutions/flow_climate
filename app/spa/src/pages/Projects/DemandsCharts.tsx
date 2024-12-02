@@ -2,9 +2,9 @@ import { gql, useQuery } from "@apollo/client"
 import { Backdrop, CircularProgress } from "@mui/material"
 import { useParams } from "react-router-dom"
 
-import { PROJECT_STANDARD_FRAGMENT } from "../../components/ProjectPage"
+import { PROJECT_STANDARD_FRAGMENT } from "../../components/Projects/ProjectPage"
 import { Project } from "../../modules/project/project.types"
-import ProjectDemandsCharts from "../../components/ProjectDemandsCharts"
+import ProjectDemandsCharts from "../../components/Projects/ProjectDemandsCharts"
 
 const LIMIT_DEMANDS_PER_PAGE = 10
 

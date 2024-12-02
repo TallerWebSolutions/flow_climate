@@ -3,12 +3,12 @@ import { Box } from "@mui/material"
 import { ReactElement, useContext } from "react"
 import { useTranslation } from "react-i18next"
 import { useLocation, useParams } from "react-router-dom"
-import { MessagesContext } from "../contexts/MessageContext"
-import useProjectInfo from "../hooks/useProjectInfo"
-import BasicPage from "./BasicPage"
-import Card, { CardType } from "./Card"
-import ActionMenu from "./menu/ActionMenu"
-import { Tabs } from "./Tabs"
+import Card, { CardType } from "../Card"
+import { MessagesContext } from "../../contexts/MessageContext"
+import useProjectInfo from "../../hooks/useProjectInfo"
+import ActionMenu from "../menu/ActionMenu"
+import BasicPage from "../BasicPage"
+import { Tabs } from "../Tabs"
 
 export const PROJECT_STANDARD_FRAGMENT = gql`
   fragment ProjectStandardFragment on Project {

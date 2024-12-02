@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next"
-import { ProjectChartsTable } from "../../components/ProjectChartsTable"
-import { ProjectPage } from "../../components/ProjectPage"
+import ProjectChartsTable from "../../components/Projects/ProjectChartsTable"
+import { ProjectPage } from "../../components/Projects/ProjectPage"
 import DemandsCharts from "./DemandsCharts"
 
 const Project = () => {

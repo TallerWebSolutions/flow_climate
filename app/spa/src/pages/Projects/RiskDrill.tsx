@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom"
 import {
   ProjectPage,
   PROJECT_STANDARD_FRAGMENT,
-} from "../../components/ProjectPage"
+} from "../../components/Projects/ProjectPage"
 import TicketGroup from "../../components/TicketGroup"
 import { Project } from "../../modules/project/project.types"
 

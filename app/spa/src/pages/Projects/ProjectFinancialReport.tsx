@@ -3,7 +3,7 @@ import { Container, Link, Button } from "@mui/material"
 import { gql, useQuery } from "@apollo/client"
 import { useTranslation } from "react-i18next"
 
-import { ProjectPage } from "../../components/ProjectPage"
+import { ProjectPage } from "../../components/Projects/ProjectPage"
 import Table from "../../components/ui/Table"
 import { formatCurrency } from "../../lib/currency"
 import { formatDate } from "../../lib/date"

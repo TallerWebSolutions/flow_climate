@@ -4,10 +4,11 @@ import { useParams } from "react-router-dom"
 import {
   ProjectPage,
   PROJECT_STANDARD_FRAGMENT,
-} from "../../components/ProjectPage"
+} from "../../components/Projects/ProjectPage"
 import { Project } from "../../modules/project/project.types"
-import ProjectBurnup from "./ProjectBurnup"
 import ActiveContractsHoursTicket from "../../modules/contracts/ActiveContractsHoursTicket"
+import ProjectBurnup from "./Charts/ProjectBurnup"
+import ProjectHoursBurnup from "./Charts/ProjectHoursBurnup"
 
 export const QUERY = gql`
   query ProjectStatusReport($id: ID!) {
@@ -18,6 +19,13 @@ export const QUERY = gql`
       remainingActiveContractsHours
 
       demandsBurnup {
+        scope
+        xAxis
+        idealBurn
+        currentBurn
+      }
+
+      hoursBurnup {
         scope
         xAxis
         idealBurn
@@ -49,8 +57,13 @@ const StatusReport = () => {
       <Box sx={{ padding: 4 }}>
         {project && <ActiveContractsHoursTicket project={project} />}
 
-        <Box sx={{ width: "50%" }}>
-          {project && <ProjectBurnup project={project} />}
+        <Box sx={{ display: "flex" }}>
+          <Box sx={{ width: "50%" }}>
+            {project && <ProjectBurnup project={project} />}
+          </Box>
+          <Box sx={{ width: "50%" }}>
+            {project && <ProjectHoursBurnup project={project} />}
+          </Box>
         </Box>
       </Box>
     </ProjectPage>

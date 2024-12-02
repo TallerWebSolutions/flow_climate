@@ -1,4 +1,3 @@
-import ProjectBurnup from "../Projects/ProjectBurnup"
 import { useContext } from "react"
 import { MeContext } from "../../contexts/MeContext"
 import {
@@ -18,8 +17,10 @@ import { useSearchParams } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 import { gql, useQuery } from "@apollo/client"
 import { Project } from "../../modules/project/project.types"
-import { PROJECT_STANDARD_FRAGMENT } from "../../components/ProjectPage"
 import ActiveContractsHoursTicket from "../../modules/contracts/ActiveContractsHoursTicket"
+import ProjectBurnup from "../Projects/Charts/ProjectBurnup"
+import { PROJECT_STANDARD_FRAGMENT } from "../../components/Projects/ProjectPage"
+import ProjectHoursBurnup from "../Projects/Charts/ProjectHoursBurnup"
 
 const ManagerDashboard = () => {
   const { me } = useContext(MeContext)
@@ -77,8 +78,11 @@ const ManagerDashboard = () => {
       {project ? (
         <Box sx={{ padding: 4 }}>
           <ActiveContractsHoursTicket project={project} />
-          <Box sx={{ width: "50%" }}>
-            <ProjectBurnup project={project} />
+          <Box sx={{ display: "flex" }}>
+            <Box>
+              <ProjectBurnup project={project} />
+            </Box>
+            <Box>{project && <ProjectHoursBurnup project={project} />}</Box>
           </Box>
         </Box>
       ) : (
@@ -110,11 +114,25 @@ const MANAGER_DASHBOARD_QUERY = gql`
           idealBurn
           currentBurn
         }
+
+        hoursBurnup {
+          scope
+          xAxis
+          idealBurn
+          currentBurn
+        }
       }
       projectsActive {
         ...ProjectStandardFragment
 
         demandsBurnup {
+          scope
+          xAxis
+          idealBurn
+          currentBurn
+        }
+
+        hoursBurnup {
           scope
           xAxis
           idealBurn

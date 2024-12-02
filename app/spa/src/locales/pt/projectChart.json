@@ -10,8 +10,8 @@
     "initialScope": "Escopo inicial",
     "flowPressure": "Pressão do fluxo"
   },
-  "charts_tab": {
-    "project_charts": {
+  "chartsTab": {
+    "projectCharts": {
       "flow_efficiency_chart": "Eficiência do Fluxo",
       "flow_efficiency_tooltip_label": "Período",
       "operational_math_risk_evolution_chart": "Evolução do Risco Matemático de Operação",
@@ -26,8 +26,8 @@
       "bugs_y_label": "Bugs",
       "bugs_openned": "Bugs Abertos",
       "bugs_closed": "Bugs Fechados",
-      "demands_burn_up_chart": "Burn Up de Demandas para {{projectName}}",
-      "demands_burn_up_y_label": "Demandas",
+      "demandsBurnupChart": "Burn Up de Demandas para {{projectName}}",
+      "demandsBurnupYLabel": "Demandas",
       "demands_burn_up_label_scope": "Escopo",
       "demands_burn_up_label_delivered": "Entregues",
       "demands_burn_up_label_ideal": "Ideal",
@@ -43,7 +43,7 @@
       "quality_bugs_for_coding_per_demand_y_label": "Bloqueios por Demanda",
       "quality_bugs_for_coding_per_demand_x_label": "Semana",
       "quality_bugs_for_coding_per_demand_tooltip_label": "Período",
-      "hours_per_demand_chart": "Horas por Demanda",
+      "hoursPerDemandChart": "Horas por Demanda",
       "hours_per_demand_y_label": "Horas",
       "hours_per_demand_x_label": "Semana",
       "hours_per_demand_tooltip_label": "Período",
@@ -75,11 +75,11 @@
       "lead_time_p80_chart": "Lead Time (P80)",
       "lead_time_p80_y_label": "Dias",
       "lead_time_p80_x_label": "Semana",
-      "hours_burn_up_chart": "Burn Up de Horas para {{projectName}}",
-      "hours_burn_up_y_label": "Horas",
-      "hours_burn_up_label_scope": "Escopo",
-      "hours_burn_up_label_delivered": "Entregues",
-      "hours_burn_up_label_ideal": "Ideal",
+      "hoursBurnUpChart": "Burn Up de Horas para {{projectName}}",
+      "hoursBurnUpYLabel": "Horas",
+      "hoursBurnUpLabelScope": "Escopo",
+      "hoursBurnUpLabelDelivered": "Entregues",
+      "hoursBurnUpLabelIdeal": "Ideal",
       "flow_data_chart": "Dados do Fluxo",
       "flow_data_y_label": "Demandas",
       "flow_data_x_label": "Período",

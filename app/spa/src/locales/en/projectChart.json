@@ -10,8 +10,8 @@
     "initialScope": "Initial Scope",
     "flowPressure": "Flow pressure"
   },
-  "charts_tab": {
-    "project_charts": {
+  "chartsTab": {
+    "projectCharts": {
       "flow_efficiency_chart": "Flow Efficiency",
       "flow_efficiency_tooltip_label": "Period",
       "operational_math_risk_evolution_chart": "Operational Math Risk Evolution",
@@ -26,8 +26,8 @@
       "bugs_y_label": "Bugs",
       "bugs_openned": "Bugs Openned",
       "bugs_closed": "Bugs Closed",
-      "demands_burn_up_chart": "Demands Burnup for {{projectName}}",
-      "demands_burn_up_y_label": "Demands",
+      "demandsBurnupChart": "Demands Burnup for {{projectName}}",
+      "demandsBurnupYLabel": "Demands",
       "demands_burn_up_label_scope": "Scope",
       "demands_burn_up_label_delivered": "Delivered",
       "demands_burn_up_label_ideal": "Ideal",
@@ -43,7 +43,7 @@
       "quality_bugs_for_coding_per_demand_y_label": "Blocks per Demand",
       "quality_bugs_for_coding_per_demand_x_label": "Week",
       "quality_bugs_for_coding_per_demand_tooltip_label": "Period",
-      "hours_per_demand_chart": "Hours per Demand",
+      "hoursPerDemandChart": "Hours per Demand",
       "hours_per_demand_y_label": "Hours",
       "hours_per_demand_x_label": "Week",
       "hours_per_demand_tooltip_label": "Period",
@@ -75,11 +75,11 @@
       "lead_time_p80_chart": "Lead Time (P80)",
       "lead_time_p80_y_label": "Days",
       "lead_time_p80_x_label": "Week",
-      "hours_burn_up_chart": "Hours Burnup for {{projectName}}",
-      "hours_burn_up_y_label": "Hours",
-      "hours_burn_up_label_scope": "Scope",
-      "hours_burn_up_label_delivered": "Delivered",
-      "hours_burn_up_label_ideal": "Ideal",
+      "hoursBurnUpChart": "Hours Burnup for {{projectName}}",
+      "hoursBurnUpYLabel": "Hours",
+      "hoursBurnUpLabelScope": "Scope",
+      "hoursBurnUpLabelDelivered": "Delivered",
+      "hoursBurnUpLabelIdeal": "Ideal",
       "flow_data_chart": "Flow Data",
       "flow_data_y_label": "Demands",
       "flow_data_x_label": "Period",

@@ -12,7 +12,7 @@ import { FieldValues, useForm } from "react-hook-form"
 import { gql, useMutation } from "@apollo/client"
 import { Link, useParams, useNavigate } from "react-router-dom"
 
-import { ProjectPage } from "../../components/ProjectPage"
+import { ProjectPage } from "../../components/Projects/ProjectPage"
 import { FINANCIAL_REPORT_QUERY } from "./ProjectFinancialReport"
 
 const CREATE_ADITIONAL_HOURS_MUTATION = gql`

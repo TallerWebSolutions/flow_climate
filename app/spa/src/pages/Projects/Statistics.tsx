@@ -6,7 +6,7 @@ import { LineChart } from "../../components/charts/LineChart"
 import {
   ProjectPage,
   PROJECT_STANDARD_FRAGMENT,
-} from "../../components/ProjectPage"
+} from "../../components/Projects/ProjectPage"
 import { Project } from "../../modules/project/project.types"
 import { ProjectConsolidation } from "../../modules/project/projectConsolidation.types"
 

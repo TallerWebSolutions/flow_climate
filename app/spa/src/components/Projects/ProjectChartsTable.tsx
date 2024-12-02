@@ -16,12 +16,12 @@ import { gql, useQuery } from "@apollo/client"
 import { useTranslation } from "react-i18next"
 import { useParams } from "react-router-dom"
 import { Backdrop, CircularProgress } from "@mui/material"
-import { formatDate, secondsToDays } from "../lib/date"
-import { DemandsList } from "../modules/demand/demand.types"
-import { Project } from "../modules/project/project.types"
-import { ReadMoreButton } from "./ReadMoreButton"
+import { formatDate, secondsToDays } from "../../lib/date"
+import { DemandsList } from "../../modules/demand/demand.types"
+import { Project } from "../../modules/project/project.types"
+import { ReadMoreButton } from "../ReadMoreButton"
 import { PROJECT_STANDARD_FRAGMENT } from "./ProjectPage"
-import LatestDeliveriesTable from "../modules/demand/components/LatestDeliveriesTable"
+import LatestDeliveriesTable from "../../modules/demand/components/LatestDeliveriesTable"
 
 const LIMIT_DEMANDS_PER_PAGE = 10
 
@@ -137,7 +137,7 @@ const Cell = (props: TableCellProps) => (
   />
 )
 
-export const ProjectChartsTable = () => {
+const ProjectChartsTable = () => {
   const { t } = useTranslation(["projectChart"])
   const { t: tDemands } = useTranslation(["demand"])
   const [readMore, setReadMore] = useState(true)
@@ -405,3 +405,5 @@ export const ProjectChartsTable = () => {
     </Grid>
   )
 }
+
+export default ProjectChartsTable

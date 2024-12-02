@@ -20,7 +20,7 @@ const TicketGroup = ({ title, data, spaced = true }: TicketGroupProps) => (
         <Ticket
           key={`${key}-${item.title}`}
           {...item}
-          sx={{ flex: "1 0 21%", mb: 4 }}
+          sx={{ flex: "1 0 21%", mb: spaced ? 4 : 0 }}
         />
       ))}
     </Box>
