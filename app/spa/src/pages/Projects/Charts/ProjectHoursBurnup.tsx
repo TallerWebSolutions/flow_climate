@@ -22,13 +22,13 @@ const ProjectHoursBurnup = ({ project }: ProjectBurnupProps) => {
 
   return (
     <ChartGridItem
-      title={t("chartsTab.projectCharts.hoursBurnupChart", {
+      title={t("chartsTab.projectCharts.hoursBurnUpChart", {
         projectName: project.name,
       })}
     >
       <LineChart
         data={projectHoursBurnupChartData}
-        axisLeftLegend={t("chartsTab.projectCharts.hoursBurnupYLabel")}
+        axisLeftLegend={t("chartsTab.projectCharts.hoursBurnUpYLabel")}
         props={{
           enableSlices: "x",
           sliceTooltip: ({ slice }: SliceTooltipProps) => (
