@@ -53,23 +53,26 @@ const ManagerDashboard = () => {
         </Box>
         <Box sx={{ width: "50%" }}>
           <form>
-            <FormGroup>
-              <Grid container>
-                <FormElement>
+            <FormGroup style={{ width: "100%" }}>
+              <Grid container spacing={2} alignItems="center">
+                {/* Input Field */}
+                <Grid item xs={10}>
                   <InputLabel htmlFor="searchText">
                     {t("list.form.search")}
                   </InputLabel>
                   <Input
                     {...register("searchText")}
                     defaultValue={searchText}
+                    fullWidth // Material-UI's built-in prop for full-width input
                   />
-                </FormElement>
+                </Grid>
 
-                <FormElement>
-                  <Button sx={{ alignSelf: "flex-start" }} type="submit">
+                {/* Submit Button */}
+                <Grid item xs={2}>
+                  <Button type="submit">
                     <SearchIcon fontSize="large" color="primary" />
                   </Button>
-                </FormElement>
+                </Grid>
               </Grid>
             </FormGroup>
           </form>
