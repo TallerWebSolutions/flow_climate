@@ -18,14 +18,16 @@ module Consolidations
       lead_time_p80 = Stats::StatisticsService.instance.percentile(80, demands_lead_time)
       lead_time_p80_in_month = Stats::StatisticsService.instance.percentile(80, demands_lead_time_in_month)
 
-      total_additional_hours = ProjectAdditionalHour.where(project_id: customer.projects.select(:id)).sum(:hours)
+      total_additional_hours = ProjectAdditionalHour.where(project_id: customer.projects.select(:id))
+                                                    .where(event_date: cache_date.beginning_of_month..cache_date)
+                                                    .sum(:hours)
       total_additional_hours_in_month = ProjectAdditionalHour.where(project_id: customer.projects.select(:id))
-                                                             .where('event_date BETWEEN :start_date AND :end_date', start_date: cache_date.beginning_of_month, end_date: cache_date)
+                                                             .where(event_date: cache_date.beginning_of_month..cache_date)
                                                              .sum(:hours)
 
-      efforts_acc = DemandEffort.where(demand_id: demands.select(:id))
+      efforts_acc = DemandEffort.joins(demand: :customer).where(start_time_to_computation: ..end_of_day, demands: { customer: customer })
       total_hours_delivered_accumulated = efforts_acc.sum(:effort_value) + total_additional_hours
-      efforts_in_month = efforts_acc.to_dates(cache_date.beginning_of_month, cache_date)
+      efforts_in_month = efforts_acc.to_dates(cache_date.beginning_of_month, end_of_day)
       total_hours_delivered_month = efforts_in_month.sum(:effort_value) + total_additional_hours_in_month
 
       hours_per_demand = 0
