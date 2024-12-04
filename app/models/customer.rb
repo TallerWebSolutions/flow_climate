@@ -116,7 +116,8 @@ class Customer < ApplicationRecord
   end
 
   def start_date
-    exclusives_demands.kept.order(:end_date).first&.end_date&.to_date || Time.zone.today
+    additional_hours_first_date = ProjectAdditionalHour.where(project_id: projects.select(:id)).pluck(:event_date).min
+    [exclusives_demands.kept.order(:end_date).first&.end_date&.to_date, additional_hours_first_date, Time.zone.today].compact.min
   end
 
   def end_date
