@@ -383,11 +383,19 @@ RSpec.describe DemandsController do
           let(:first_card_response) { { data: { card: { id: '5140999', assignees: [{ id: '101381', username: 'xpto' }, { id: '101381', username: 'xpto' }, { id: '101382', username: 'bla' }, { id: '101321', username: 'mambo' }], comments: [{ created_at: '2018-02-22T18:39:46-03:00', author: { username: 'sbbrubles' }, text: '[BLOCKED]: xpto of bla having foo.' }], fields: [{ name: 'Descrição da pesquisa', value: 'teste' }, { name: 'Title', value: 'Página dos colunistas' }, { name: 'Type', value: 'bUG' }, { name: 'JiraKey', value: 'PD-46' }, { name: 'Class of Service', value: 'Padrão' }, { name: 'Project', value: project.name }], phases_history: [{ phase: { id: '2481595' }, firstTimeIn: '2018-02-22T17:09:58-03:00', lastTimeOut: '2018-02-26T17:09:58-03:00' }, { phase: { id: '3481595' }, firstTimeIn: '2018-02-15T17:10:40-03:00', lastTimeOut: '2018-02-17T17:10:40-03:00' }, { phase: { id: '2481597' }, firstTimeIn: '2018-02-27T17:09:58-03:00', lastTimeOut: nil }], pipe: { id: '356355' }, url: 'http://app.jira.com/pipes/356355#cards/5140999' } } }.with_indifferent_access }
 
           it 'calls the services and the reader' do
+            first_assignment = Fabricate :item_assignment, demand: first_demand
+            second_assignment = Fabricate :item_assignment, demand: first_demand
+            first_effort = Fabricate :demand_effort, demand: first_demand
+            other_effort = Fabricate :demand_effort, demand: first_demand
+
             expect(Jira::ProcessJiraIssueJob).to receive(:perform_later)
             put :synchronize_jira, params: { company_id: company, id: first_demand }
             expect(response).to redirect_to company_demand_path(company, first_demand)
             expect(first_demand.reload.project).to eq project
             expect(flash[:notice]).to eq I18n.t('general.enqueued')
+
+            expect(first_demand.reload.item_assignments).not_to include(first_assignment, second_assignment)
+            expect(first_demand.demand_efforts).not_to include(first_effort, other_effort)
           end
         end
       end
