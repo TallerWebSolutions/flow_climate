@@ -32,6 +32,7 @@ class Customer < ApplicationRecord
 
   has_many :products, dependent: :restrict_with_error
   has_many :demands, dependent: :nullify
+  has_many :demand_efforts, through: :demands
   has_many :demand_blocks, -> { distinct }, through: :demands
   has_many :contracts, dependent: :restrict_with_error
   has_many :customer_consolidations, dependent: :destroy, class_name: 'Consolidations::CustomerConsolidation'

@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe Customer do
-  context 'associations' do
+  context 'with associations' do
     it { is_expected.to belong_to :company }
     it { is_expected.to belong_to(:customer).optional }
     it { is_expected.to have_many :products }
     it { is_expected.to have_many(:demands).dependent(:nullify) }
+    it { is_expected.to have_many(:demand_efforts).through(:demands) }
     it { is_expected.to have_many(:contracts).dependent(:restrict_with_error) }
     it { is_expected.to have_many(:demand_blocks).through(:demands) }
     it { is_expected.to have_many(:customer_consolidations).dependent(:destroy).class_name('Consolidations::CustomerConsolidation') }
@@ -16,7 +17,7 @@ RSpec.describe Customer do
     it { is_expected.to have_many(:slack_configurations).dependent(:destroy) }
   end
 
-  context 'validations' do
+  context 'with validations' do
     context 'simple ones' do
       it { is_expected.to validate_presence_of :name }
     end
