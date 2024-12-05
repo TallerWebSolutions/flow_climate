@@ -5,11 +5,9 @@ module Consolidations
     queue_as :low
 
     def perform(customer, cache_date = Time.zone.today)
-      return if cache_date < 2.years.ago
-
       end_of_day = cache_date.end_of_day
 
-      demands = customer.exclusives_demands.where('demands.created_date <= :analysed_date', analysed_date: end_of_day)
+      demands = customer.exclusives_demands.where(created_date: ..end_of_day)
       demands_finished = demands.not_discarded_until(end_of_day).finished_until_date(end_of_day).order(end_date: :asc)
       demands_finished_in_month = demands.to_end_dates(cache_date.beginning_of_month, cache_date)
       demands_lead_time = demands_finished.map(&:leadtime).flatten.compact
@@ -18,17 +16,19 @@ module Consolidations
       lead_time_p80 = Stats::StatisticsService.instance.percentile(80, demands_lead_time)
       lead_time_p80_in_month = Stats::StatisticsService.instance.percentile(80, demands_lead_time_in_month)
 
-      total_additional_hours = ProjectAdditionalHour.where(project_id: customer.projects.select(:id))
-                                                    .where(event_date: cache_date.beginning_of_month..cache_date)
-                                                    .sum(:hours)
-      total_additional_hours_in_month = ProjectAdditionalHour.where(project_id: customer.projects.select(:id))
-                                                             .where(event_date: cache_date.beginning_of_month..cache_date)
-                                                             .sum(:hours)
+      additional_hours_for_customer = ProjectAdditionalHour.joins(project: :customers).where(projects: { customers: customer })
+      accumulated_additional_hours = additional_hours_for_customer
+                                       .where(event_date: ..cache_date)
+                                       .sum(:hours)
+      additional_hours_in_month = additional_hours_for_customer
+                                    .where(event_date: cache_date.beginning_of_month..end_of_day)
+                                    .sum(:hours)
 
-      efforts_acc = DemandEffort.joins(demand: :customer).where(start_time_to_computation: ..end_of_day, demands: { customer: customer })
-      total_hours_delivered_accumulated = efforts_acc.sum(:effort_value) + total_additional_hours
-      efforts_in_month = efforts_acc.to_dates(cache_date.beginning_of_month, end_of_day)
-      total_hours_delivered_month = efforts_in_month.sum(:effort_value) + total_additional_hours_in_month
+      efforts_for_customer = DemandEffort.joins(demand: :customer).where(demands: { customer: customer })
+      efforts_acc = efforts_for_customer.where(start_time_to_computation: ..end_of_day)
+      total_hours_delivered_accumulated = efforts_acc.sum(:effort_value) + accumulated_additional_hours
+      efforts_in_month = efforts_for_customer.to_dates(cache_date.beginning_of_month, end_of_day)
+      total_hours_delivered_month = efforts_in_month.sum(:effort_value) + additional_hours_in_month
 
       hours_per_demand = 0
       value_per_demand = 0

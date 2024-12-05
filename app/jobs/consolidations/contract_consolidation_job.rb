@@ -22,13 +22,15 @@ module Consolidations
 
           demands_finished = contract.demands.kept.finished_after_date(contract_start).finished_until_date(start_date)
 
-          efforts_acc = DemandEffort.where(demand_id: demands.select(:id))
-                                    .where(start_time_to_computation: ..end_date)
+          efforts_for_customer = DemandEffort.joins(demand: :customer).where(demands: { customer: contract.customer })
+          efforts_acc = efforts_for_customer.where(start_time_to_computation: ..end_of_month)
           total_hours_delivered_accumulated = efforts_acc.sum(:effort_value)
 
-          total_additional_hours = ProjectAdditionalHour.where(project_id: contract.customer.projects.select(:id))
-                                                        .where(event_date: start_date.beginning_of_month..end_date)
-                                                        .sum(:hours)
+          additional_hours_for_customer = ProjectAdditionalHour.joins(project: :customers).where(projects: { customers: contract.customer })
+
+          total_additional_hours = additional_hours_for_customer
+                                     .where(event_date: ..end_of_month)
+                                     .sum(:hours)
 
           real_hours_per_demand = if demands_finished.count.positive?
                                     total_hours_delivered_accumulated / demands_finished.count
