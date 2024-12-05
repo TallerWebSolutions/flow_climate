@@ -53,7 +53,7 @@ class DemandEffort < ApplicationRecord
   scope :designer_efforts, -> { joins(item_assignment: :membership).where(memberships: { member_role: :designer }) }
   scope :manager_efforts, -> { joins(item_assignment: :membership).where(memberships: { member_role: :manager }) }
 
-  scope :previous_in_day, ->(limit_time) { where(start_time_to_computation: start_time..limit_time) }
+  scope :previous_in_day, ->(limit_time) { where(start_time_to_computation: limit_time.beginning_of_day..limit_time) }
   scope :to_dates, ->(start_date = 1.month.ago, end_date = Time.zone.today) { where(start_time_to_computation: start_date..end_date) }
   scope :until_date, ->(limit_date) { where('start_time_to_computation <= :limit_date', limit_date: limit_date) }
 
