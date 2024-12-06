@@ -47,6 +47,7 @@ class TeamMember < ApplicationRecord
   has_many :projects, -> { distinct }, through: :demands
   has_many :item_assignments, -> { distinct }, through: :memberships
   has_many :demand_efforts, -> { distinct }, through: :item_assignments
+  has_many :dashboards_operations_dashboard_pairings, class_name: 'Dashboards::OperationsDashboardPairing', dependent: :destroy, inverse_of: :pair
 
   has_many :operations_dashboards, class_name: 'Dashboards::OperationsDashboard', dependent: :destroy
 

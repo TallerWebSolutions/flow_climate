@@ -22,7 +22,7 @@
 #  reset_password_token   :string
 #  sign_in_count          :integer          default(0), not null
 #  user_money_credits     :decimal(, )      default(0.0), not null
-#  user_role              :integer          default(0), not null
+#  user_role              :integer          default("user"), not null
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  last_company_id        :integer

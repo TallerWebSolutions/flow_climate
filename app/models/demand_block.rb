@@ -16,7 +16,7 @@
 #  unblock_time                :datetime
 #  created_at                  :datetime         not null
 #  updated_at                  :datetime         not null
-#  blocker_id                  :integer          not null
+#  blocker_id                  :integer
 #  demand_id                   :integer          not null
 #  risk_review_id              :integer
 #  stage_id                    :integer

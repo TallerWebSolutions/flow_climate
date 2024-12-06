@@ -1105,7 +1105,7 @@ CREATE TABLE public.demand_blocks (
     discarded_at timestamp without time zone,
     stage_id integer,
     block_reason character varying,
-    blocker_id integer NOT NULL,
+    blocker_id integer,
     unblocker_id integer,
     unblock_reason character varying,
     risk_review_id integer,
@@ -1852,7 +1852,7 @@ ALTER SEQUENCE public.memberships_id_seq OWNED BY public.memberships.id;
 CREATE TABLE public.operations_dashboard_pairings (
     id bigint NOT NULL,
     operations_dashboard_id integer NOT NULL,
-    pair_id integer NOT NULL,
+    pair_id integer,
     pair_times integer NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
@@ -2226,6 +2226,7 @@ CREATE TABLE public.project_consolidations (
     team_based_monte_carlo_weeks_max integer DEFAULT 0,
     team_based_monte_carlo_weeks_std_dev numeric DEFAULT 0,
     team_based_monte_carlo_weeks_p80 numeric DEFAULT 0.0,
+    team_based_operational_risk numeric DEFAULT 0.0,
     lead_time_min numeric DEFAULT 0.0,
     lead_time_max numeric DEFAULT 0.0,
     lead_time_p25 numeric DEFAULT 0.0,
@@ -2265,8 +2266,7 @@ CREATE TABLE public.project_consolidations (
     project_throughput_hours_design_in_month numeric DEFAULT 0.0 NOT NULL,
     project_throughput_hours_management_in_month numeric DEFAULT 0.0 NOT NULL,
     project_throughput_hours_additional double precision,
-    project_throughput_hours_additional_in_month double precision,
-    team_based_operational_risk numeric
+    project_throughput_hours_additional_in_month double precision
 );
 
 
@@ -6843,6 +6843,7 @@ ALTER TABLE ONLY public.stages
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20241206200836'),
 ('20241128032914'),
 ('20241128032149'),
 ('20241127165114'),

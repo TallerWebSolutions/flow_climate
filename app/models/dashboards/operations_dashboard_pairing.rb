@@ -9,7 +9,7 @@
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
 #  operations_dashboard_id :integer          not null
-#  pair_id                 :integer          not null
+#  pair_id                 :integer
 #
 # Indexes
 #
@@ -26,7 +26,7 @@
 module Dashboards
   class OperationsDashboardPairing < ApplicationRecord
     belongs_to :operations_dashboard
-    belongs_to :pair, class_name: 'TeamMember'
+    belongs_to :pair, class_name: 'TeamMember', optional: true
 
     validates :pair_times, presence: true
 

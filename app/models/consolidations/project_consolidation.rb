@@ -63,7 +63,7 @@
 #  team_based_monte_carlo_weeks_min              :integer          default(0)
 #  team_based_monte_carlo_weeks_p80              :decimal(, )      default(0.0)
 #  team_based_monte_carlo_weeks_std_dev          :decimal(, )      default(0.0)
-#  team_based_operational_risk                   :decimal(, )
+#  team_based_operational_risk                   :decimal(, )      default(0.0)
 #  value_per_demand                              :decimal(, )      default(0.0)
 #  weeks_by_little_law                           :decimal(, )      default(0.0)
 #  wip_limit                                     :integer

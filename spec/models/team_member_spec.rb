@@ -18,6 +18,7 @@ RSpec.describe TeamMember do
     it { is_expected.to have_many(:projects).through(:demands) }
     it { is_expected.to have_many(:item_assignments).through(:memberships) }
     it { is_expected.to have_many(:operations_dashboards).dependent(:destroy) }
+    it { is_expected.to have_many(:dashboards_operations_dashboard_pairings).dependent(:destroy) }
   end
 
   context 'validations' do
