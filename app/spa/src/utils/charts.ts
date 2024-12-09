@@ -9,7 +9,7 @@ export const buildBurnupData = (
   {
     id: scopeLabel,
     data:
-      data?.scope.map((scope, index) => ({
+      data?.scope?.map((scope, index) => ({
         x: data.xAxis?.[index],
         y: scope,
       })) || [],
@@ -17,7 +17,7 @@ export const buildBurnupData = (
   {
     id: idealLabel,
     data:
-      data?.idealBurn.map((idealScope, index) => ({
+      data?.idealBurn?.map((idealScope, index) => ({
         x: data.xAxis?.[index],
         y: idealScope.toFixed(2),
       })) || [],
@@ -25,7 +25,7 @@ export const buildBurnupData = (
   {
     id: deliveredLabel,
     data:
-      data?.currentBurn.map((projectThroughput, index) => ({
+      data?.currentBurn?.map((projectThroughput, index) => ({
         x: data.xAxis?.[index],
         y: projectThroughput,
       })) || [],

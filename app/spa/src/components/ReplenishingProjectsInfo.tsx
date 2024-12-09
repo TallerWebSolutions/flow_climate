@@ -1,13 +1,13 @@
 import {
+  Collapse,
+  IconButton,
+  Link,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow as MaterialTableRow,
-  IconButton,
-  Collapse,
-  Link,
 } from "@mui/material"
 import { Box } from "@mui/system"
 import { Fragment, useState } from "react"
@@ -63,31 +63,31 @@ const TableRow = ({ project, companySlug }: TableRowProps) => {
               height: "24px",
               borderRadius: "50%",
               backgroundColor: getCustomerHappinessColor(
-                project.customerHappiness
+                project.customerHappiness || 0
               ),
             }}
           />
         </TableCell>
         <TableCell>{project.remainingBacklog} demandas</TableCell>
-        <TableCell>{project.flowPressurePercentage.toFixed(2)}%</TableCell>
-        <TableCell>{secondsToReadbleDate(project.leadTimeP80)}</TableCell>
+        <TableCell>{project.flowPressurePercentage?.toFixed(2)}%</TableCell>
+        <TableCell>{secondsToReadbleDate(project.leadTimeP80 || 0)}</TableCell>
         <TableCell>{project.qtyInProgress} demandas</TableCell>
         <TableCell>{project.startDate}</TableCell>
         <TableCell>{project.endDate}</TableCell>
-        <TableCell>{project.monteCarloP80.toFixed(2)}</TableCell>
+        <TableCell>{project.monteCarloP80?.toFixed(2)}</TableCell>
       </MaterialTableRow>
-      <MaterialTableRow sx={{ td: { color: "grwy.600" } }}>
+      <MaterialTableRow sx={{ td: { color: "grey.600" } }}>
         <TableCell width={52} />
         <TableCell>
-          {project.customers.map(({ name, id }) => (
+          {project.customers?.map(({ name, id }) => (
             <Link href={`/companies/${companySlug}/customers/${id}`}>
               {name}
             </Link>
           ))}
         </TableCell>
-        <TableCell>{project.customerHappiness.toFixed(2)}</TableCell>
+        <TableCell>{project.customerHappiness?.toFixed(2)}</TableCell>
         <TableCell />
-        <TableCell>{project.flowPressure.toFixed(2)}</TableCell>
+        <TableCell>{project.flowPressure?.toFixed(2)}</TableCell>
         <TableCell />
         <TableCell>Limite de WiP: {project.maxWorkInProgress}</TableCell>
         <TableCell>Idade: {project.aging} dias</TableCell>
@@ -95,9 +95,9 @@ const TableRow = ({ project, companySlug }: TableRowProps) => {
       </MaterialTableRow>
       <MaterialTableRow
         sx={{
-          backgroundColor: "grwy.A100",
+          backgroundColor: "grey.A100",
           borderBottom: "1px solid",
-          borderBottomColor: "grwy.400",
+          borderBottomColor: "grey.400",
         }}
       >
         <TableCell style={{ padding: 0 }} colSpan={10}>
@@ -106,8 +106,8 @@ const TableRow = ({ project, companySlug }: TableRowProps) => {
               <TableBody>
                 <MaterialTableRow>
                   <TableCell width={52} />
-                  <TableCell sx={{ color: "grwy.600" }}>
-                    {project.products.map(({ name, id }) => (
+                  <TableCell sx={{ color: "grey.600" }}>
+                    {project.products?.map(({ name, id }) => (
                       <Link href={`/companies/${companySlug}/products/${id}`}>
                         {name}
                       </Link>
@@ -119,38 +119,38 @@ const TableRow = ({ project, companySlug }: TableRowProps) => {
                   <TableCell sx={{ color: "primary.main" }}>
                     Dados do time:
                   </TableCell>
-                  <TableCell colSpan={2} sx={{ color: "grwy.600" }}>
+                  <TableCell colSpan={2} sx={{ color: "grey.600" }}>
                     Mín: {project.teamMonteCarloWeeksMin}
                   </TableCell>
-                  <TableCell sx={{ color: "grwy.600" }}>
+                  <TableCell sx={{ color: "grey.600" }}>
                     Monte Carlo 80%: {project.teamMonteCarloP80}
                   </TableCell>
                 </MaterialTableRow>
                 <MaterialTableRow>
                   <TableCell />
                   <TableCell />
-                  <TableCell colSpan={4} sx={{ color: "grwy.600" }}>
-                    Throughputs: ({project.weeklyThroughputs.join(", ")})
+                  <TableCell colSpan={4} sx={{ color: "grey.600" }}>
+                    Throughputs: ({project.weeklyThroughputs?.join(", ")})
                   </TableCell>
                   <TableCell />
-                  <TableCell colSpan={2} sx={{ color: "grwy.600" }}>
+                  <TableCell colSpan={2} sx={{ color: "grey.600" }}>
                     Máx: {project.teamMonteCarloWeeksMax}
                   </TableCell>
-                  <TableCell sx={{ color: "grwy.600" }}>
+                  <TableCell sx={{ color: "grey.600" }}>
                     Desvio padrão:{" "}
-                    {project.teamMonteCarloWeeksStdDev.toFixed(2)}
+                    {project.teamMonteCarloWeeksStdDev?.toFixed(2)}
                   </TableCell>
                 </MaterialTableRow>
                 <MaterialTableRow>
                   <TableCell />
                   <TableCell />
                   <TableCell />
-                  <TableCell colSpan={5} sx={{ color: "grwy.600" }}>
+                  <TableCell colSpan={5} sx={{ color: "grey.600" }}>
                     Selecionadas: {project.qtySelected}
                   </TableCell>
-                  <TableCell sx={{ color: "grwy.600" }}>
+                  <TableCell sx={{ color: "grey.600" }}>
                     Chances da data:{" "}
-                    {(project.teamBasedOddsToDeadline * 100).toFixed(2)}%
+                    {((project.teamBasedOddsToDeadline || 0) * 100).toFixed(2)}%
                   </TableCell>
                 </MaterialTableRow>
               </TableBody>

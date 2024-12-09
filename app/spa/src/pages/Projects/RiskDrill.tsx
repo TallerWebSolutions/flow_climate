@@ -1,8 +1,8 @@
 import { gql, useQuery } from "@apollo/client"
 import { useParams } from "react-router-dom"
 import {
-  ProjectPage,
   PROJECT_STANDARD_FRAGMENT,
+  ProjectPage,
 } from "../../components/Projects/ProjectPage"
 import TicketGroup from "../../components/TicketGroup"
 import { Project } from "../../modules/project/project.types"
@@ -107,12 +107,12 @@ export const RiskDrill = () => {
     },
     {
       title: "Percentil 80",
-      value: data?.project.monteCarloP80.toFixed(2),
+      value: data?.project.monteCarloP80?.toFixed(2),
       unity: "semanas",
     },
     {
       title: "Desvio padrão",
-      value: data?.project.currentMonteCarloWeeksStdDev.toFixed(2),
+      value: data?.project.currentMonteCarloWeeksStdDev?.toFixed(2),
       unity: "semanas",
     },
   ]
@@ -130,12 +130,12 @@ export const RiskDrill = () => {
     },
     {
       title: "Percentil 80",
-      value: data?.project.teamMonteCarloP80.toFixed(2),
+      value: data?.project.teamMonteCarloP80?.toFixed(2),
       unity: "semanas",
     },
     {
       title: "Desvio padrão",
-      value: data?.project.teamMonteCarloWeeksStdDev.toFixed(2),
+      value: data?.project.teamMonteCarloWeeksStdDev?.toFixed(2),
       unity: "semanas",
     },
   ]

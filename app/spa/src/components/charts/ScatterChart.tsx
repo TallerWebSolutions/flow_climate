@@ -52,7 +52,7 @@ export const ScatterChart = ({
   const chartData = Array.isArray(data)
     ? data
     : axisDataToScatter(data, "Demands")
-  const bottomAxisTicks = chartData[0].data.map((item) => item.x)
+  const bottomAxisTicks = chartData[0]?.data.map((item) => item.x)
   const chartMarkers: NivoMarker[] =
     markers?.map(({ value, legend }) => ({
       axis: "y",
@@ -122,9 +122,9 @@ export const ScatterChart = ({
         markers={chartMarkers}
         tooltip={({ node }) => (
           <Paper elevation={3} sx={{ padding: 1 }}>
-            {node.data.x}
+            {node?.data.x}
             <br />
-            Lead time: {node.data.y} {t("days")}
+            Lead time: {node?.data.y} {t("days")}
           </Paper>
         )}
         enableGridX={false}

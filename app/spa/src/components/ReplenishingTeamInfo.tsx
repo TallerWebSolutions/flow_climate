@@ -1,4 +1,4 @@
-import { Typography, Grid, Divider } from "@mui/material"
+import { Divider, Grid, Typography } from "@mui/material"
 import { Box } from "@mui/system"
 import { Fragment } from "react"
 import { Project } from "../modules/project/project.types"
@@ -22,7 +22,7 @@ type ReplenishmentTeamInfoProps = {
 }
 
 export const getWipLimits = (projects: Project[]): number[] =>
-  projects.map(({ maxWorkInProgress }) => maxWorkInProgress)
+  projects.map(({ maxWorkInProgress }) => maxWorkInProgress || 0)
 
 export const isTeamWipLimitSurpassed = (
   projects: Project[],

@@ -20,6 +20,8 @@ import ActiveContractsHoursTicket from "../../modules/contracts/ActiveContractsH
 import ProjectBurnup from "../Projects/Charts/ProjectBurnup"
 import { PROJECT_STANDARD_FRAGMENT } from "../../components/Projects/ProjectPage"
 import ProjectHoursBurnup from "../Projects/Charts/ProjectHoursBurnup"
+import ProjectLeadTime from "../Projects/Charts/ProjectLeadTime"
+import ProjectLeadTimeControlChart from "../Projects/Charts/ProjectLeadTimeControlChart"
 
 const ManagerDashboard = () => {
   const { me } = useContext(MeContext)
@@ -81,14 +83,12 @@ const ManagerDashboard = () => {
             <Box sx={{ width: "50%", marginBottom: 4 }}>
               <ActiveContractsHoursTicket project={project} />
             </Box>
-            <Box sx={{ display: "flex" }}>
-              <Box sx={{ width: "50%" }}>
-                <ProjectBurnup project={project} />
-              </Box>
-              <Box sx={{ width: "50%" }}>
-                <ProjectHoursBurnup project={project} />
-              </Box>
-            </Box>
+            <Grid container spacing={2} rowSpacing={8}>
+              <ProjectBurnup project={project} />
+              <ProjectHoursBurnup project={project} />
+              <ProjectLeadTime project={project} />
+              <ProjectLeadTimeControlChart project={project} />
+            </Grid>
           </Box>
         </>
       ) : (
@@ -109,44 +109,64 @@ const MANAGER_DASHBOARD_QUERY = gql`
     me {
       projects(name: $name) {
         ...ProjectStandardFragment
-
+        ...ProjectChartsFragment
         totalActiveContractsHours
         consumedActiveContractsHours
         remainingActiveContractsHours
-
-        demandsBurnup {
-          scope
-          xAxis
-          idealBurn
-          currentBurn
-        }
-
-        hoursBurnup {
-          scope
-          xAxis
-          idealBurn
-          currentBurn
-        }
       }
       projectsActive {
         ...ProjectStandardFragment
-
-        demandsBurnup {
-          scope
-          xAxis
-          idealBurn
-          currentBurn
-        }
-
-        hoursBurnup {
-          scope
-          xAxis
-          idealBurn
-          currentBurn
-        }
+        ...ProjectChartsFragment
       }
     }
   }
+
+  fragment ProjectChartsFragment on Project {
+    demandsBurnup {
+      scope
+      xAxis
+      idealBurn
+      currentBurn
+    }
+
+    hoursBurnup {
+      scope
+      xAxis
+      idealBurn
+      currentBurn
+    }
+    demandsFinishedWithLeadtime {
+      id
+      leadtime
+      externalId
+    }
+    lastProjectConsolidationsWeekly {
+      leadTimeP65
+      leadTimeP80
+      leadTimeP95
+    }
+    projectConsolidationsWeekly {
+      leadTimeP80
+      projectQuality
+      consolidationDate
+      operationalRisk
+      codeNeededBlocksCount
+      codeNeededBlocksPerDemand
+      flowEfficiency
+      hoursPerDemand
+      projectThroughput
+      projectThroughputHours
+      projectThroughputHoursAdditional
+      bugsOpened
+      bugsClosed
+      projectThroughputHoursManagement
+      projectThroughputHoursDevelopment
+      projectThroughputHoursDesign
+      projectThroughputHoursUpstream
+      projectThroughputHoursDownstream
+    }
+  }
+
   ${PROJECT_STANDARD_FRAGMENT}
 `
 

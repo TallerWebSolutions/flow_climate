@@ -24,7 +24,7 @@
       "operationalRisk": "Operational Risk (%)",
       "bugs_chart": "Bugs",
       "bugs_y_label": "Bugs",
-      "bugs_openned": "Bugs Openned",
+      "bugs_opened": "Bugs Openned",
       "bugs_closed": "Bugs Closed",
       "demandsBurnupChart": "Demands Burnup for {{projectName}}",
       "demandsBurnupYLabel": "Demands",

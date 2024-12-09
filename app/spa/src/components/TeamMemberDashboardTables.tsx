@@ -158,8 +158,8 @@ const TeamMemberDashboardTables = ({
       >
         {project.name}
       </Link>,
-      <DateLocale date={project.startDate} />,
-      <DateLocale date={project.endDate} />,
+      <DateLocale date={project.startDate || ""} />,
+      <DateLocale date={project.endDate || ""} />,
       `${((project.currentRiskToDeadline || 0) * 100).toFixed(2)}%`,
       `${((project.quality || 0) * 100).toFixed(2)}%`,
       `${secondsToDays(project.leadTimeP80)} ${t("dashboard.days")}`,

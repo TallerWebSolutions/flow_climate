@@ -2,12 +2,12 @@ import { gql, useQuery } from "@apollo/client"
 import { useTranslation } from "react-i18next"
 import {
   Backdrop,
-  CircularProgress,
   Box,
+  CircularProgress,
   LinearProgress,
-  styled,
   linearProgressClasses,
   Link,
+  styled,
   Typography,
 } from "@mui/material"
 
@@ -124,8 +124,8 @@ const ProjectsTable = ({ projectsFilters }: ProjectsTableProps) => {
           {project.team?.name}
         </Link>,
         project.status,
-        <DateLocale date={project.startDate} />,
-        <DateLocale date={project.endDate} />,
+        <DateLocale date={project.startDate || ""} />,
+        <DateLocale date={project.endDate || ""} />,
         `${project.numberOfDemands} ${t("projectsTable.row_demands")}`,
         `${project.remainingDays} ${t("projectsTable.row_days")}`,
         `${project.numberOfDemandsDelivered} ${t(
@@ -145,14 +145,14 @@ const ProjectsTable = ({ projectsFilters }: ProjectsTableProps) => {
           >
             <BorderLinearProgress
               variant="determinate"
-              value={project.percentageHoursDelivered * 100}
+              value={(project.percentageHoursDelivered || 0) * 100}
             />
             <Typography
               variant="subtitle2"
               component="span"
               sx={{ color: "grwy.600" }}
             >
-              {`${project.consumedHours.toFixed(2)}h ${t(
+              {`${project.consumedHours?.toFixed(2)}h ${t(
                 "projectsTable.row_consumed"
               )}`}
             </Typography>
@@ -168,7 +168,7 @@ const ProjectsTable = ({ projectsFilters }: ProjectsTableProps) => {
         ],
         collapseBody: [
           project.customersNames,
-          formatCurrency(project.value),
+          formatCurrency(project.value || 0),
           project.maxWorkInProgress,
         ],
       },

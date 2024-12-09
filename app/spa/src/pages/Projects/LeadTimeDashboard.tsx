@@ -1,8 +1,8 @@
 import { gql, useQuery } from "@apollo/client"
 import { useParams } from "react-router-dom"
 import {
-  ProjectPage,
   PROJECT_STANDARD_FRAGMENT,
+  ProjectPage,
 } from "../../components/Projects/ProjectPage"
 import TicketGroup from "../../components/TicketGroup"
 import { secondsToReadbleDate } from "../../lib/date"
@@ -55,7 +55,7 @@ const LeadTimeDashboard = () => {
     }
   )
 
-  const lastProjectConsolidation = data?.project.projectConsolidations.pop()
+  const lastProjectConsolidation = data?.project.projectConsolidations?.pop()
 
   const currentLeadTime = [
     {

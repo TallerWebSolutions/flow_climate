@@ -142,8 +142,8 @@ const PROJECT_CHART_QUERY = gql`
 `
 
 type ProjectChartResult = {
-  project: Project
-  hoursPerCoordinationStageChartData: Pick<Project, "hoursPerStageChartData">
+  project?: Project
+  hoursPerCoordinationStageChartData?: Pick<Project, "hoursPerStageChartData">
 }
 
 type ProjectChartDTO = ProjectChartResult | undefined
@@ -166,7 +166,7 @@ const DemandsCharts = () => {
 
   const project = data?.project
   const hoursPerCoordinationStageChartData =
-    data?.hoursPerCoordinationStageChartData.hoursPerStageChartData
+    data?.hoursPerCoordinationStageChartData?.hoursPerStageChartData
 
   return project ? (
     <ProjectDemandsCharts

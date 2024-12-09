@@ -1,6 +1,8 @@
 import { useState } from "react"
 import {
+  Backdrop,
   Box,
+  CircularProgress,
   Grid,
   Link,
   Paper,
@@ -15,7 +17,6 @@ import {
 import { gql, useQuery } from "@apollo/client"
 import { useTranslation } from "react-i18next"
 import { useParams } from "react-router-dom"
-import { Backdrop, CircularProgress } from "@mui/material"
 import { formatDate, secondsToDays } from "../../lib/date"
 import { DemandsList } from "../../modules/demand/demand.types"
 import { Project } from "../../modules/project/project.types"
@@ -192,7 +193,7 @@ const ProjectChartsTable = () => {
                 <Cell>{t("details.start")}</Cell>
                 <Cell align="right">
                   {formatDate({
-                    date: project.startDate,
+                    date: project.startDate || "",
                     format: "dd/MM/yyyy",
                   })}
                 </Cell>
@@ -202,7 +203,10 @@ const ProjectChartsTable = () => {
                   <Box component="span">{t("details.end")}</Box>
                 </Cell>
                 <Cell align="right">
-                  {formatDate({ date: project.endDate, format: "dd/MM/yyyy" })}
+                  {formatDate({
+                    date: project.endDate || "",
+                    format: "dd/MM/yyyy",
+                  })}
                 </Cell>
               </Row>
               <Row>
@@ -279,7 +283,7 @@ const ProjectChartsTable = () => {
                     })}
                     sx={{ color: "info.dark", textDecoration: "none" }}
                   >
-                    {project.upstreamDemands.length}
+                    {project.upstreamDemands?.length}
                   </Link>
                 </Cell>
               </Row>
@@ -313,7 +317,7 @@ const ProjectChartsTable = () => {
                     })}
                     sx={{ color: "info.dark", textDecoration: "none" }}
                   >
-                    {project.discardedDemands.length}
+                    {project.discardedDemands?.length}
                   </Link>
                 </Cell>
               </Row>
@@ -328,7 +332,7 @@ const ProjectChartsTable = () => {
                     })}
                     sx={{ color: "info.dark", textDecoration: "none" }}
                   >
-                    {project.unscoredDemands.length}
+                    {project.unscoredDemands?.length}
                   </Link>
                 </Cell>
               </Row>
@@ -339,18 +343,18 @@ const ProjectChartsTable = () => {
                     href={`/companies/${companySlug}/demand_blocks`}
                     sx={{ color: "info.dark", textDecoration: "none" }}
                   >
-                    {project.demandBlocks.length}
+                    {project.demandBlocks?.length}
                   </Link>
                 </Cell>
               </Row>
               <Row>
                 <Cell>{t("details.flowPressure")}</Cell>
-                <Cell align="right">{project.flowPressure.toFixed(2)}</Cell>
+                <Cell align="right">{project.flowPressure?.toFixed(2)}</Cell>
               </Row>
               <Row>
                 <Cell>
                   {tDemands("list.demandsTable.averageSpeed", {
-                    numberOfDemandsPerDay: project.averageSpeed.toFixed(2),
+                    numberOfDemandsPerDay: project.averageSpeed?.toFixed(2),
                   })}
                 </Cell>
               </Row>
