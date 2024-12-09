@@ -44,53 +44,53 @@ const ManagerDashboard = () => {
 
   return (
     <BasicPage title={""} loading={loading}>
-      <Box sx={{ display: "flex" }}>
-        <Box sx={{ width: "50%", paddingX: 4 }}>
-          <Typography variant={"h4"}>
-            {`${loadedProject?.name} | Visão Geral`}
-          </Typography>
-        </Box>
-        <Box sx={{ width: "50%" }}>
-          <form>
-            <FormGroup style={{ width: "100%" }}>
-              <Grid container spacing={2} alignItems="center">
-                {/* Input Field */}
-                <Grid item xs={10}>
-                  <InputLabel htmlFor="searchText">
-                    {t("list.form.search")}
-                  </InputLabel>
-                  <Input
-                    {...register("searchText")}
-                    defaultValue={searchText}
-                    fullWidth // Material-UI's built-in prop for full-width input
-                  />
-                </Grid>
-
-                {/* Submit Button */}
-                <Grid item xs={2}>
-                  <Button type="submit">
-                    <SearchIcon fontSize="large" color="primary" />
-                  </Button>
-                </Grid>
-              </Grid>
-            </FormGroup>
-          </form>
-        </Box>
-      </Box>
       {project ? (
-        <Box sx={{ padding: 4 }}>
-          <Box sx={{ width: "50%", marginBottom: 4 }}>
-            <ActiveContractsHoursTicket project={project} />
-          </Box>
+        <>
           <Box sx={{ display: "flex" }}>
-            <Box sx={{ width: "50%" }}>
-              <ProjectBurnup project={project} />
+            <Box sx={{ width: "50%", paddingX: 4 }}>
+              <Typography variant={"h4"}>
+                {`${project?.name} | Visão Geral`}
+              </Typography>
             </Box>
             <Box sx={{ width: "50%" }}>
-              <ProjectHoursBurnup project={project} />
+              <form>
+                <FormGroup style={{ width: "100%" }}>
+                  <Grid container spacing={2} alignItems="center">
+                    <Grid item xs={10}>
+                      <InputLabel htmlFor="searchText">
+                        {t("list.form.search")}
+                      </InputLabel>
+                      <Input
+                        {...register("searchText")}
+                        defaultValue={searchText}
+                        fullWidth
+                      />
+                    </Grid>
+
+                    <Grid item xs={2}>
+                      <Button type="submit">
+                        <SearchIcon fontSize="large" color="primary" />
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </FormGroup>
+              </form>
             </Box>
           </Box>
-        </Box>
+          <Box sx={{ padding: 4 }}>
+            <Box sx={{ width: "50%", marginBottom: 4 }}>
+              <ActiveContractsHoursTicket project={project} />
+            </Box>
+            <Box sx={{ display: "flex" }}>
+              <Box sx={{ width: "50%" }}>
+                <ProjectBurnup project={project} />
+              </Box>
+              <Box sx={{ width: "50%" }}>
+                <ProjectHoursBurnup project={project} />
+              </Box>
+            </Box>
+          </Box>
+        </>
       ) : (
         <Typography>{tProject("projectsTable.emptyProjects")}</Typography>
       )}
