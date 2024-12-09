@@ -293,7 +293,7 @@ const ProjectDemandsCharts = ({
     : []
 
   return (
-    <Grid container spacing={2} rowSpacing={8} sx={{ marginTop: 4 }}>
+    <Grid container spacing={2} rowSpacing={8}>
       <ChartGridItem
         title={t(
           "chartsTab.projectCharts.operational_math_risk_evolution_chart"

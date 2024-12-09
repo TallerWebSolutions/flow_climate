@@ -1,14 +1,16 @@
 import { gql, useQuery } from "@apollo/client"
-import { Box } from "@mui/material"
+import { Box, Grid } from "@mui/material"
 import { useParams } from "react-router-dom"
 import {
-  ProjectPage,
   PROJECT_STANDARD_FRAGMENT,
+  ProjectPage,
 } from "../../components/Projects/ProjectPage"
 import { Project } from "../../modules/project/project.types"
 import ActiveContractsHoursTicket from "../../modules/contracts/ActiveContractsHoursTicket"
 import ProjectBurnup from "./Charts/ProjectBurnup"
 import ProjectHoursBurnup from "./Charts/ProjectHoursBurnup"
+import ProjectLeadTime from "./Charts/ProjectLeadTime"
+import ProjectLeadTimeControlChart from "./Charts/ProjectLeadTimeControlChart"
 
 export const QUERY = gql`
   query ProjectStatusReport($id: ID!) {
@@ -30,6 +32,37 @@ export const QUERY = gql`
         xAxis
         idealBurn
         currentBurn
+      }
+
+      demandsFinishedWithLeadtime {
+        id
+        leadtime
+        externalId
+      }
+      lastProjectConsolidationsWeekly {
+        leadTimeP65
+        leadTimeP80
+        leadTimeP95
+      }
+      projectConsolidationsWeekly {
+        leadTimeP80
+        projectQuality
+        consolidationDate
+        operationalRisk
+        codeNeededBlocksCount
+        codeNeededBlocksPerDemand
+        flowEfficiency
+        hoursPerDemand
+        projectThroughput
+        projectThroughputHours
+        projectThroughputHoursAdditional
+        bugsOpened
+        bugsClosed
+        projectThroughputHoursManagement
+        projectThroughputHoursDevelopment
+        projectThroughputHoursDesign
+        projectThroughputHoursUpstream
+        projectThroughputHoursDownstream
       }
     }
   }
@@ -56,18 +89,16 @@ const StatusReport = () => {
     <ProjectPage pageName={"Status Report"} loading={loading}>
       <>
         {project && (
-          <Box sx={{ padding: 4, gap: 4 }}>
-            <Box sx={{ width: "50%" }}>
+          <Box sx={{ padding: 4 }}>
+            <Box sx={{ width: "50%", marginBottom: 6 }}>
               <ActiveContractsHoursTicket project={project} />
             </Box>
-            <Box sx={{ display: "flex" }}>
-              <Box sx={{ width: "50%" }}>
-                <ProjectBurnup project={project} />
-              </Box>
-              <Box sx={{ width: "50%" }}>
-                <ProjectHoursBurnup project={project} />
-              </Box>
-            </Box>
+            <Grid container spacing={2} rowSpacing={8}>
+              <ProjectBurnup project={project} />
+              <ProjectHoursBurnup project={project} />
+              <ProjectLeadTime project={project} />
+              <ProjectLeadTimeControlChart project={project} />
+            </Grid>
           </Box>
         )}
       </>
