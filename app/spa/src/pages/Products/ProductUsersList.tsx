@@ -31,7 +31,9 @@ const ProductUsersList = ({
             borderRadius: 2,
           }}
         >
-          <Typography key={index}>{user.fullName}</Typography>
+          <Typography key={index}>
+            {user.fullName} ({user.email})
+          </Typography>
           <Button
             onClick={() =>
               toggleUserMutation({
@@ -60,10 +62,12 @@ export const PRODUCT_USER_FRAGMENT = gql`
     users {
       id
       fullName
+      email
     }
     usersOutside {
       id
       fullName
+      email
     }
   }
 `

@@ -8,6 +8,7 @@ type Avatar = {
 
 export type User = {
   id: string
+  email?: string
   language?: string
   currentCompany?: Company
   fullName?: string
