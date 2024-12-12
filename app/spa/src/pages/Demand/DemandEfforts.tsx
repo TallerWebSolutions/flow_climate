@@ -39,6 +39,12 @@ const DEMAND_QUERY = gql`
         memberRole
         automaticUpdate
         membershipEffortPercentage
+        itemAssignment {
+          id
+          membership {
+            id
+          }
+        }
       }
     }
   }
@@ -78,7 +84,7 @@ const DemandEfforts = () => {
   const tableRows =
     demand?.demandEfforts?.map((effort) => [
       effort.id,
-      effort.who || "",
+      `${effort.who} \n Membership ID: ${effort.itemAssignment?.membership?.id}`,
       effort.memberRole || "",
       effort.stage || "",
       effort.effortValue ? Number(effort.effortValue).toFixed(2) : 0,
@@ -97,7 +103,7 @@ const DemandEfforts = () => {
       (Number(effort.pairingPercentage || 0) * 100).toFixed(2),
       (Number(effort.managementPercentage || 0) * 100).toFixed(2),
       Number(effort.membershipEffortPercentage || 0).toFixed(2),
-      effort.totalBlocked || 0,
+      effort.totalBlocked?.toFixed(2) || 0,
       effort.mainEffortInTransition ? <CheckIcon color="primary" /> : "",
       effort.automaticUpdate ? <CheckIcon color="primary" /> : "",
       <Link

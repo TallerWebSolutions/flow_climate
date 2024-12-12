@@ -216,6 +216,24 @@ RSpec.describe Jira::JiraIssueAdapter, type: :service do
               expect(updated_demand.item_assignments.open_assignments).to eq []
             end
           end
+
+          it 'only adds new assignment if there is not one running already' do
+            travel_to Time.zone.local(2020, 8, 24, 10) do
+              demand = Fabricate :demand, company: company, team: team, external_id: 'CRE-726'
+              other_company_team_member = Fabricate :team_member, jira_account_user_email: 'bar', jira_account_id: 'xpto'
+
+              membership = Fabricate :membership, team: demand.team, team_member: team_member, member_role: :developer, start_date: 1.month.ago, end_date: nil
+              Fabricate :membership, team: team, team_member: other_company_team_member, hours_per_month: 120, start_date: 2.months.ago, end_date: nil
+
+              overlapping_assignment = Fabricate :item_assignment, demand: demand, membership: membership, start_time: 2.hours.ago, finish_time: 1.hour.ago
+
+              jira_issue_changelog = file_fixture('issue_changelog_paginated_page_one.json').read
+              described_class.instance.process_jira_issue_changelog(jira_account, JSON.parse(jira_issue_changelog), demand, team_member)
+
+              expect(ItemAssignment.count).to eq 2
+              expect(demand.item_assignments).to include(overlapping_assignment)
+            end
+          end
         end
 
         context 'when the members do not exist yet' do

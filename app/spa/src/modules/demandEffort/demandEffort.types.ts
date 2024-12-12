@@ -1,4 +1,4 @@
-import { Team } from "../team/team.types"
+import { Membership, Team } from "../team/team.types"
 
 export type DemandEffort = {
   id: string
@@ -21,4 +21,10 @@ export type DemandEffort = {
   team?: Team
   demandId?: number
   demandExternalId?: string
+  itemAssignment?: ItemAssignment
+}
+
+type ItemAssignment = {
+  id: number
+  membership?: Membership
 }

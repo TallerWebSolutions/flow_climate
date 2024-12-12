@@ -232,20 +232,30 @@ module Jira
 
     def read_assigned_responsibles(demand, history_date, responsible_name)
       membership = MembershipsRepository.instance.find_or_create_by_name(demand.team, responsible_name, :developer, history_date)
+      dedup_assignment_id = duplicated_assignment(demand, history_date, membership)
 
-      already_assigned = demand.item_assignments.where(membership: membership, finish_time: nil)
-
-      return already_assigned.first.id if already_assigned.present?
-
-      item_assignment = demand.item_assignments.where(membership: membership, start_time: history_date).first
-
-      return item_assignment.id if item_assignment.present?
+      return dedup_assignment_id if dedup_assignment_id.present?
 
       item_assignment = demand.item_assignments.create(membership: membership, start_time: history_date)
 
       Slack::SlackNotificationService.instance.notify_item_assigned(item_assignment, company_demand_url(demand.company, demand))
 
       item_assignment.id
+    end
+
+    def duplicated_assignment(demand, history_date, membership)
+      already_assigned = demand.item_assignments.where(membership: membership, finish_time: nil)
+
+      return already_assigned.first.id if already_assigned.present?
+
+      overlapping_assignment = demand.item_assignments.where(membership: membership).where('finish_time <= :history_date', history_date: history_date)
+      return overlapping_assignment.first.id if overlapping_assignment.present?
+
+      item_assignment = demand.item_assignments.where(membership: membership, start_time: history_date).first
+
+      return item_assignment.id if item_assignment.present?
+
+      nil
     end
 
     def read_portfolio_unit(demand, jira_issue)

@@ -32,7 +32,7 @@ const BasicPage = ({
   return (
     <>
       {loading && (
-        <Backdrop open>
+        <Backdrop open sx={{ zIndex: 10 }}>
           <CircularProgress color="secondary" />
         </Backdrop>
       )}

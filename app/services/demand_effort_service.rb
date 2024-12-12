@@ -28,6 +28,7 @@ class DemandEffortService
 
     demand.demand_efforts.where.not(id: demand_effort_ids).map(&:destroy)
   end
+
   # rubocop:enable Metrics/AbcSize
 
   def update_demand_effort_caches(demand)
@@ -162,6 +163,7 @@ class DemandEffortService
 
     effort_in_hours
   end
+
   # rubocop:enable Metrics/MethodLength
 
   def day_off?(day_to_effort, demand)

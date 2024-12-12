@@ -10,6 +10,7 @@ module Types
     field :effort_value, Float, null: false
     field :finish_time_to_computation, GraphQL::Types::ISO8601DateTime, null: false
     field :id, ID, null: false
+    field :item_assignment, Types::ItemAssignmentType, null: false
     field :main_effort_in_transition, Boolean, null: false
     field :management_percentage, Float, null: false
     field :member_role, String, null: true
