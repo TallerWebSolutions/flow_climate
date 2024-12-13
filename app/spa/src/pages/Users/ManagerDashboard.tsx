@@ -17,11 +17,8 @@ import { useTranslation } from "react-i18next"
 import { gql, useQuery } from "@apollo/client"
 import { Project } from "../../modules/project/project.types"
 import ActiveContractsHoursTicket from "../../modules/contracts/ActiveContractsHoursTicket"
-import ProjectBurnup from "../Projects/Charts/ProjectBurnup"
 import { PROJECT_STANDARD_FRAGMENT } from "../../components/Projects/ProjectPage"
-import ProjectHoursBurnup from "../Projects/Charts/ProjectHoursBurnup"
-import ProjectLeadTime from "../Projects/Charts/ProjectLeadTime"
-import ProjectLeadTimeControlChart from "../Projects/Charts/ProjectLeadTimeControlChart"
+import ProjectStatusReportCharts from "../Projects/Charts/ProjectStatusReportCharts"
 
 const ManagerDashboard = () => {
   const { me } = useContext(MeContext)
@@ -83,12 +80,7 @@ const ManagerDashboard = () => {
             <Box sx={{ width: "50%", marginBottom: 4 }}>
               <ActiveContractsHoursTicket project={project} />
             </Box>
-            <Grid container spacing={2} rowSpacing={8}>
-              <ProjectBurnup project={project} />
-              <ProjectHoursBurnup project={project} />
-              <ProjectLeadTime project={project} />
-              <ProjectLeadTimeControlChart project={project} />
-            </Grid>
+            <ProjectStatusReportCharts project={project} />
           </Box>
         </>
       ) : (
@@ -164,6 +156,13 @@ const MANAGER_DASHBOARD_QUERY = gql`
       projectThroughputHoursDesign
       projectThroughputHoursUpstream
       projectThroughputHoursDownstream
+    }
+    cumulativeFlowChartData {
+      xAxis
+      yAxis {
+        name
+        data
+      }
     }
   }
 

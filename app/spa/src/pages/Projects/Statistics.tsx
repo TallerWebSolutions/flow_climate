@@ -12,32 +12,6 @@ import { ProjectConsolidation } from "../../modules/project/projectConsolidation
 
 const ONE_DAY_IN_SECONDS = 60 * 60 * 24
 
-export const PROJECT_STATISTICS_QUERY = gql`
-  query ProjectStatistics($id: ID!) {
-    project(id: $id) {
-      ...ProjectStandardFragment
-
-      currentRiskToDeadline
-      currentTeamBasedRisk
-      remainingDays
-      running
-    }
-
-    projectConsolidations(projectId: $id, lastDataInWeek: true) {
-      leadTimeRangeMonth
-      leadTimeMinMonth
-      leadTimeMaxMonth
-      histogramRange
-      leadTimeHistogramBinMin
-      leadTimeHistogramBinMax
-      interquartileRange
-      leadTimeP25
-      leadTimeP75
-    }
-  }
-  ${PROJECT_STANDARD_FRAGMENT}
-`
-
 type ProjectStatisticsDTO = {
   project?: Project
   projectConsolidations?: ProjectConsolidation[]
@@ -239,5 +213,31 @@ const Statistics = () => {
     </ProjectPage>
   )
 }
+
+export const PROJECT_STATISTICS_QUERY = gql`
+  query ProjectStatistics($id: ID!) {
+    project(id: $id) {
+      ...ProjectStandardFragment
+
+      currentRiskToDeadline
+      currentTeamBasedRisk
+      remainingDays
+      running
+    }
+
+    projectConsolidations(projectId: $id, lastDataInWeek: true) {
+      leadTimeRangeMonth
+      leadTimeMinMonth
+      leadTimeMaxMonth
+      histogramRange
+      leadTimeHistogramBinMin
+      leadTimeHistogramBinMax
+      interquartileRange
+      leadTimeP25
+      leadTimeP75
+    }
+  }
+  ${PROJECT_STANDARD_FRAGMENT}
+`
 
 export default Statistics

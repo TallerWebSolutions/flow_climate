@@ -1,5 +1,5 @@
 import { gql, useQuery } from "@apollo/client"
-import { Box, Grid } from "@mui/material"
+import { Box } from "@mui/material"
 import { useParams } from "react-router-dom"
 import {
   PROJECT_STANDARD_FRAGMENT,
@@ -7,12 +7,7 @@ import {
 } from "../../components/Projects/ProjectPage"
 import { Project } from "../../modules/project/project.types"
 import ActiveContractsHoursTicket from "../../modules/contracts/ActiveContractsHoursTicket"
-import ProjectBurnup from "./Charts/ProjectBurnup"
-import ProjectHoursBurnup from "./Charts/ProjectHoursBurnup"
-import ProjectLeadTime from "./Charts/ProjectLeadTime"
-import ProjectLeadTimeControlChart from "./Charts/ProjectLeadTimeControlChart"
-import ProjectBugsPercentage from "./Charts/ProjectBugsPercentage"
-import ProjectCumulativeFlowData from "./Charts/ProjectCumulativeFlowData"
+import ProjectStatusReportCharts from "./Charts/ProjectStatusReportCharts"
 
 const StatusReport = () => {
   const { projectId } = useParams()
@@ -32,14 +27,7 @@ const StatusReport = () => {
             <Box sx={{ width: "50%", marginBottom: 6 }}>
               <ActiveContractsHoursTicket project={project} />
             </Box>
-            <Grid container spacing={2} rowSpacing={8}>
-              <ProjectBurnup project={project} />
-              <ProjectHoursBurnup project={project} />
-              <ProjectLeadTime project={project} />
-              <ProjectLeadTimeControlChart project={project} />
-              <ProjectBugsPercentage project={project} />
-              <ProjectCumulativeFlowData project={project} />
-            </Grid>
+            <ProjectStatusReportCharts project={project} />
           </Box>
         )}
       </>

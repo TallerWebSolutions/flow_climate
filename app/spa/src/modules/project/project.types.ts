@@ -90,7 +90,7 @@ export type Project = {
   averageTouchTime?: number
   value?: number
 
-  projectMembers: {
+  projectMembers?: {
     demandsCount?: number
     memberName?: string
   }[]
