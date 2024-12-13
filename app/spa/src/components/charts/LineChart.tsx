@@ -3,7 +3,7 @@ import { LegendAnchor, LegendDirection } from "@nivo/legends"
 import { Box } from "@mui/material"
 
 export const normalizeCfdData = (data: Serie[]): Serie[] =>
-  data.map((step, stepIndex) => ({
+  data?.map((step, stepIndex) => ({
     ...step,
     data: step.data?.map((dot, index) => {
       const previousY: number =
@@ -15,7 +15,7 @@ export const normalizeCfdData = (data: Serie[]): Serie[] =>
         y: newY,
       }
     }),
-  }))
+  })) || []
 
 export type LineChartProps = {
   data: Serie[]

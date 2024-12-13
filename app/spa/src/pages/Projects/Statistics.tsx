@@ -64,15 +64,15 @@ const Statistics = () => {
   const leadTimeAmplitudeVariationDataGraph = [
     {
       id: "Amplitude Total do Lead Time",
-      data: totalLeadTimeMonthRange!,
+      data: totalLeadTimeMonthRange || [],
     },
     {
       id: "Lead Time menor",
-      data: shorterLeadTimeMonth!,
+      data: shorterLeadTimeMonth || [],
     },
     {
       id: "Lead Time maior",
-      data: longerLeadTimeMonth!,
+      data: longerLeadTimeMonth || [],
     },
   ]
 
@@ -106,15 +106,15 @@ const Statistics = () => {
   const leadTimeAmplitudeHistogramDataGraph = [
     {
       id: "Amplitude Total",
-      data: amplitudeTotalHistogram!,
+      data: amplitudeTotalHistogram || [],
     },
     {
       id: "Bin Min",
-      data: amplitudeBinMinHistogram!,
+      data: amplitudeBinMinHistogram || [],
     },
     {
       id: "Bin Max",
-      data: amplitudeBinMaxHistogram!,
+      data: amplitudeBinMaxHistogram || [],
     },
   ]
 
@@ -148,15 +148,15 @@ const Statistics = () => {
   const leadTimeAmplitudeInterquartileDataGraph = [
     {
       id: "Amplitude Total",
-      data: amplitudeTotalInterquartile!,
+      data: amplitudeTotalInterquartile || [],
     },
     {
       id: "Percentil 25",
-      data: amplitudePercentile25Interquartile!,
+      data: amplitudePercentile25Interquartile || [],
     },
     {
       id: "Percentil 75",
-      data: amplitudePercentile75Interquartile!,
+      data: amplitudePercentile75Interquartile || [],
     },
   ]
 
