@@ -15,6 +15,7 @@ import { buildBurnupData } from "../../utils/charts"
 import ProjectBurnup from "../../pages/Projects/Charts/ProjectBurnup"
 import ProjectLeadTime from "../../pages/Projects/Charts/ProjectLeadTime"
 import ProjectLeadTimeControlChart from "../../pages/Projects/Charts/ProjectLeadTimeControlChart"
+import ProjectBugsPercentage from "../../pages/Projects/Charts/ProjectBugsPercentage"
 
 type ProjectDemandsChartsProps = {
   project: Project
@@ -119,19 +120,6 @@ const ProjectDemandsCharts = ({
     t("chartsTab.projectCharts.hoursBurnUpLabelDelivered"),
     project.hoursBurnup
   )
-
-  const projectQualityChartData = [
-    {
-      id: project.name || "",
-      data:
-        projectConsolidationsWeekly?.map(
-          ({ consolidationDate, projectQuality }) => ({
-            x: consolidationDate,
-            y: (1 - projectQuality) * 100,
-          })
-        ) || [],
-    },
-  ]
 
   const projectQualityForCodingChartData = [
     {
@@ -443,31 +431,8 @@ const ProjectDemandsCharts = ({
         </ChartGridItem>
       )}
 
-      <ChartGridItem title={t("chartsTab.projectCharts.quality_bugs_chart")}>
-        <LineChart
-          data={projectQualityChartData}
-          axisLeftLegend="%"
-          props={{
-            margin: { left: 80, right: 20, top: 25, bottom: 65 },
-            axisBottom: {
-              tickSize: 5,
-              tickPadding: 5,
-              legendPosition: "middle",
-              legendOffset: 60,
-              tickRotation: -40,
-              legend: t("chartsTab.projectCharts.quality_bugs_x_label"),
-            },
-            yFormat: (value: number) => `${value.toFixed(2)}%`,
-            enableSlices: "x",
-            sliceTooltip: ({ slice }: SliceTooltipProps) => (
-              <LineChartTooltip
-                slice={slice}
-                xLabel={t("chartsTab.projectCharts.quality_bugs_tooltip_label")}
-              />
-            ),
-          }}
-        />
-      </ChartGridItem>
+      <ProjectBugsPercentage project={project} />
+
       <ChartGridItem
         title={t("chartsTab.projectCharts.quality_bugs_for_coding_chart")}
       >

@@ -4,15 +4,14 @@ import { ReactElement } from "react"
 import { useParams } from "react-router-dom"
 import { LineChart } from "../../components/charts/LineChart"
 import {
-  ProjectPage,
   PROJECT_STANDARD_FRAGMENT,
+  ProjectPage,
 } from "../../components/Projects/ProjectPage"
 import { Project } from "../../modules/project/project.types"
 import { ProjectConsolidation } from "../../modules/project/projectConsolidation.types"
 
 const ONE_DAY_IN_SECONDS = 60 * 60 * 24
 
-// @TODO: projectConsolidations should exist inside project field.
 export const PROJECT_STATISTICS_QUERY = gql`
   query ProjectStatistics($id: ID!) {
     project(id: $id) {
@@ -39,12 +38,10 @@ export const PROJECT_STATISTICS_QUERY = gql`
   ${PROJECT_STANDARD_FRAGMENT}
 `
 
-type ProjectStatisticsResult = {
-  project: Project
-  projectConsolidations: ProjectConsolidation[]
+type ProjectStatisticsDTO = {
+  project?: Project
+  projectConsolidations?: ProjectConsolidation[]
 }
-
-type ProjectStatisticsDTO = ProjectStatisticsResult | undefined
 
 type GraphBoxProps = {
   title: string

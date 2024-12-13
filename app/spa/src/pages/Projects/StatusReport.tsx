@@ -11,6 +11,7 @@ import ProjectBurnup from "./Charts/ProjectBurnup"
 import ProjectHoursBurnup from "./Charts/ProjectHoursBurnup"
 import ProjectLeadTime from "./Charts/ProjectLeadTime"
 import ProjectLeadTimeControlChart from "./Charts/ProjectLeadTimeControlChart"
+import ProjectBugsPercentage from "./Charts/ProjectBugsPercentage"
 
 export const QUERY = gql`
   query ProjectStatusReport($id: ID!) {
@@ -98,6 +99,7 @@ const StatusReport = () => {
               <ProjectHoursBurnup project={project} />
               <ProjectLeadTime project={project} />
               <ProjectLeadTimeControlChart project={project} />
+              <ProjectBugsPercentage project={project} />
             </Grid>
           </Box>
         )}
