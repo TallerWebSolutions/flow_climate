@@ -6,6 +6,7 @@ import ProjectBugsPercentage from "./ProjectBugsPercentage"
 import ProjectCumulativeFlowData from "./ProjectCumulativeFlowData"
 import { Grid } from "@mui/material"
 import { Project } from "../../../modules/project/project.types"
+import ProjectOperationalRiskEvolution from "./ProjectOperationalRiskEvolution"
 
 const ProjectStatusReportCharts = ({
   project,
@@ -18,6 +19,7 @@ const ProjectStatusReportCharts = ({
       <ProjectLeadTimeControlChart project={project} />
       <ProjectBugsPercentage project={project} />
       <ProjectCumulativeFlowData project={project} />
+      <ProjectOperationalRiskEvolution project={project} />
     </Grid>
   )
 }

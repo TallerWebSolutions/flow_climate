@@ -7,7 +7,7 @@ export const normalizeCfdData = (data: Serie[]): Serie[] =>
     ...step,
     data: step.data?.map((dot, index) => {
       const previousY: number =
-        stepIndex > 0 ? Number(data[stepIndex - 1].data[index].y) : 0
+        stepIndex > 0 ? Number(data[stepIndex - 1].data?.[index].y) : 0
       const newY = (Number(dot?.y) || 0) - (previousY || 0)
 
       return {
@@ -17,7 +17,7 @@ export const normalizeCfdData = (data: Serie[]): Serie[] =>
     }),
   }))
 
-export type LineGraphProps = {
+export type LineChartProps = {
   data: Serie[]
   axisLeftLegend: string
   axisBottomLegend?: string
@@ -49,7 +49,7 @@ export const LineChart = ({
   legendTranslateY = -25,
   legendItemWidth = 125,
   legendItemHeight = 20,
-}: LineGraphProps) => {
+}: LineChartProps) => {
   return (
     <Box height={420}>
       <ResponsiveLine

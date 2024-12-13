@@ -1,46 +1,20 @@
 import { gql, useQuery } from "@apollo/client"
-import { Box, Typography } from "@mui/material"
-import { ReactElement } from "react"
 import { useParams } from "react-router-dom"
-import { LineChart } from "../../components/charts/LineChart"
 import {
   PROJECT_STANDARD_FRAGMENT,
   ProjectPage,
 } from "../../components/Projects/ProjectPage"
 import { Project } from "../../modules/project/project.types"
 import { ProjectConsolidation } from "../../modules/project/projectConsolidation.types"
+import { LineChart } from "../../components/charts/LineChart"
+import { ChartGridItem } from "../../components/charts/ChartGridItem"
+import { Grid } from "@mui/material"
 
 const ONE_DAY_IN_SECONDS = 60 * 60 * 24
 
 type ProjectStatisticsDTO = {
   project?: Project
   projectConsolidations?: ProjectConsolidation[]
-}
-
-type GraphBoxProps = {
-  title: string
-  children: ReactElement | ReactElement[]
-}
-
-const GraphBox = ({ title, children }: GraphBoxProps) => {
-  return (
-    <Box
-      sx={{
-        flex: "1 0 40%",
-        display: "flex",
-        alignItems: "center",
-        flexDirection: "column",
-        height: 350,
-        padding: 2,
-        my: 5,
-      }}
-    >
-      <Typography component="h3" variant="h6" my={2}>
-        {title}
-      </Typography>
-      <Box sx={{ width: "100%" }}>{children}</Box>
-    </Box>
-  )
 }
 
 const secondsToDays = (seconds: number) => {
@@ -188,28 +162,28 @@ const Statistics = () => {
 
   return (
     <ProjectPage pageName={"Statistics"} loading={loading}>
-      <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-        <GraphBox title={"Variação da Amplitude do Lead Time no Tempo"}>
+      <Grid container spacing={2} rowSpacing={8}>
+        <ChartGridItem title={"Variação da Amplitude do Lead Time no Tempo"}>
           <LineChart
             data={leadTimeAmplitudeVariationDataGraph}
             axisLeftLegend={"Dias"}
           />
-        </GraphBox>
+        </ChartGridItem>
 
-        <GraphBox title={"Amplitude do Histograma do Lead Time"}>
+        <ChartGridItem title={"Amplitude do Histograma do Lead Time"}>
           <LineChart
             data={leadTimeAmplitudeHistogramDataGraph}
             axisLeftLegend={"Bins"}
           />
-        </GraphBox>
+        </ChartGridItem>
 
-        <GraphBox title={"Amplitude do Interquartil do Lead Time"}>
+        <ChartGridItem title={"Amplitude do Interquartil do Lead Time"}>
           <LineChart
             data={leadTimeAmplitudeInterquartileDataGraph}
             axisLeftLegend={"Dias"}
           />
-        </GraphBox>
-      </Box>
+        </ChartGridItem>
+      </Grid>
     </ProjectPage>
   )
 }
@@ -226,6 +200,7 @@ export const PROJECT_STATISTICS_QUERY = gql`
     }
 
     projectConsolidations(projectId: $id, lastDataInWeek: true) {
+      id
       leadTimeRangeMonth
       leadTimeMinMonth
       leadTimeMaxMonth

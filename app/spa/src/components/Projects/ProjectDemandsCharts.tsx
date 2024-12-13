@@ -16,6 +16,7 @@ import ProjectLeadTime from "../../pages/Projects/Charts/ProjectLeadTime"
 import ProjectLeadTimeControlChart from "../../pages/Projects/Charts/ProjectLeadTimeControlChart"
 import ProjectBugsPercentage from "../../pages/Projects/Charts/ProjectBugsPercentage"
 import ProjectCumulativeFlowData from "../../pages/Projects/Charts/ProjectCumulativeFlowData"
+import ProjectOperationalRiskEvolution from "../../pages/Projects/Charts/ProjectOperationalRiskEvolution"
 
 type ProjectDemandsChartsProps = {
   project: Project
@@ -35,21 +36,6 @@ const ProjectDemandsCharts = ({
   const leadTimeHistogramData = project.leadTimeHistogramData
   const leadTimeBreakdownData = project.leadTimeBreakdown
   const hoursPerStageChartData = project.hoursPerStageChartData
-
-  const operationalRiskChartData = [
-    {
-      id: t("chartsTab.projectCharts.operational_math_risk_evolution_chart"),
-      data:
-        projectConsolidationsWeekly?.map(
-          ({ consolidationDate, operationalRisk }) => {
-            return {
-              x: consolidationDate || "",
-              y: (operationalRisk || 0) * 100,
-            }
-          }
-        ) || [],
-    },
-  ]
 
   const projectBugsChartData: BarDatum[] =
     projectConsolidationsWeekly?.map(
@@ -264,38 +250,8 @@ const ProjectDemandsCharts = ({
 
   return (
     <Grid container spacing={2} rowSpacing={8}>
-      <ChartGridItem
-        title={t(
-          "chartsTab.projectCharts.operational_math_risk_evolution_chart"
-        )}
-      >
-        <LineChart
-          data={operationalRiskChartData}
-          axisLeftLegend={`${t(
-            "chartsTab.projectCharts.operational_math_risk_evolution_y_label"
-          )} (%)`}
-          props={{
-            margin: { left: 80, right: 20, top: 25, bottom: 65 },
-            axisBottom: {
-              tickSize: 5,
-              tickPadding: 5,
-              legendPosition: "middle",
-              legendOffset: 60,
-              tickRotation: -40,
-            },
-            enableSlices: "x",
-            yFormat: (value: number) => `${value.toFixed(2)}%`,
-            sliceTooltip: ({ slice }: SliceTooltipProps) => (
-              <LineChartTooltip
-                slice={slice}
-                xLabel={t(
-                  "chartsTab.projectCharts.operational_math_risk_evolution_tooltip_label"
-                )}
-              />
-            ),
-          }}
-        />
-      </ChartGridItem>
+      <ProjectOperationalRiskEvolution project={project} />
+
       <ChartGridItem title={t("chartsTab.projectCharts.bugs_chart")}>
         <BarChart
           data={projectBugsChartData}
