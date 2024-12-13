@@ -10,8 +10,8 @@ export type LeadtimeEvolutionChart = {
 }
 
 export type ChartAxisData = {
-  xAxis: (string | number)[]
-  yAxis: (string | number)[]
+  xAxis?: (string | number)[]
+  yAxis?: (string | number)[]
   leadTimeP65?: number
   leadTimeP80?: number
   leadTimeP95?: number

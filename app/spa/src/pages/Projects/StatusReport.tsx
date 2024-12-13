@@ -12,6 +12,40 @@ import ProjectHoursBurnup from "./Charts/ProjectHoursBurnup"
 import ProjectLeadTime from "./Charts/ProjectLeadTime"
 import ProjectLeadTimeControlChart from "./Charts/ProjectLeadTimeControlChart"
 import ProjectBugsPercentage from "./Charts/ProjectBugsPercentage"
+import ProjectCumulativeFlowData from "./Charts/ProjectCumulativeFlowData"
+
+const StatusReport = () => {
+  const { projectId } = useParams()
+  const { data, loading } = useQuery<ProjectStatusReportDTO>(QUERY, {
+    variables: {
+      id: Number(projectId),
+    },
+  })
+
+  const project = data?.project
+
+  return (
+    <ProjectPage pageName={"Status Report"} loading={loading}>
+      <>
+        {project && (
+          <Box sx={{ padding: 4 }}>
+            <Box sx={{ width: "50%", marginBottom: 6 }}>
+              <ActiveContractsHoursTicket project={project} />
+            </Box>
+            <Grid container spacing={2} rowSpacing={8}>
+              <ProjectBurnup project={project} />
+              <ProjectHoursBurnup project={project} />
+              <ProjectLeadTime project={project} />
+              <ProjectLeadTimeControlChart project={project} />
+              <ProjectBugsPercentage project={project} />
+              <ProjectCumulativeFlowData project={project} />
+            </Grid>
+          </Box>
+        )}
+      </>
+    </ProjectPage>
+  )
+}
 
 export const QUERY = gql`
   query ProjectStatusReport($id: ID!) {
@@ -20,6 +54,14 @@ export const QUERY = gql`
       totalActiveContractsHours
       consumedActiveContractsHours
       remainingActiveContractsHours
+
+      cumulativeFlowChartData {
+        xAxis
+        yAxis {
+          name
+          data
+        }
+      }
 
       demandsBurnup {
         scope
@@ -70,42 +112,8 @@ export const QUERY = gql`
   ${PROJECT_STANDARD_FRAGMENT}
 `
 
-type ProjectStatusReportResult = {
-  project: Project
-}
-
-type ProjectStatusReportDTO = ProjectStatusReportResult | undefined
-
-const StatusReport = () => {
-  const { projectId } = useParams()
-  const { data, loading } = useQuery<ProjectStatusReportDTO>(QUERY, {
-    variables: {
-      id: Number(projectId),
-    },
-  })
-
-  const project = data?.project
-
-  return (
-    <ProjectPage pageName={"Status Report"} loading={loading}>
-      <>
-        {project && (
-          <Box sx={{ padding: 4 }}>
-            <Box sx={{ width: "50%", marginBottom: 6 }}>
-              <ActiveContractsHoursTicket project={project} />
-            </Box>
-            <Grid container spacing={2} rowSpacing={8}>
-              <ProjectBurnup project={project} />
-              <ProjectHoursBurnup project={project} />
-              <ProjectLeadTime project={project} />
-              <ProjectLeadTimeControlChart project={project} />
-              <ProjectBugsPercentage project={project} />
-            </Grid>
-          </Box>
-        )}
-      </>
-    </ProjectPage>
-  )
+type ProjectStatusReportDTO = {
+  project?: Project
 }
 
 export default StatusReport

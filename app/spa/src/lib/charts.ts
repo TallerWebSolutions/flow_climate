@@ -17,16 +17,17 @@ export const axisDataToScatter = (
 ): ScatterPlotRawSerie<ScatterPlotDatum>[] => [
   {
     id: pointLegend,
-    data: data.yAxis.map((y, index) => ({
-      x: index,
-      y,
-    })),
+    data:
+      data.yAxis?.map((y, index) => ({
+        x: index,
+        y,
+      })) || [],
   },
 ]
 
 export const axisDataToKeyValue = (data: ChartAxisData): KeyValueData => ({
-  keys: data.xAxis,
-  values: data.yAxis,
+  keys: data.xAxis || [],
+  values: data.yAxis || [],
 })
 
 export const keyValueToAxisData = (data: KeyValueData): ChartAxisData => ({

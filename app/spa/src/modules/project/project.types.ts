@@ -94,14 +94,14 @@ export type Project = {
     demandsCount?: number
     memberName?: string
   }[]
-  hoursPerStageChartData: ChartAxisData
-  leadTimeBreakdown: NumberChartData
-  demandsFlowChartData: DemandsFlowChartData
+  hoursPerStageChartData?: ChartAxisData
+  leadTimeBreakdown?: NumberChartData
+  demandsFlowChartData?: DemandsFlowChartData
   cumulativeFlowChartData?: {
-    xAxis: string[]
-    yAxis: SimpleListChartData[]
+    xAxis?: string[]
+    yAxis?: SimpleListChartData[]
   }
-  leadTimeHistogramData: KeyValueData
+  leadTimeHistogramData?: KeyValueData
   demandsBurnup?: Burnup
   hoursBurnup?: Burnup
 

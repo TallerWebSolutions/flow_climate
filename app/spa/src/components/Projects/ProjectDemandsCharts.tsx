@@ -4,18 +4,18 @@ import { useTranslation } from "react-i18next"
 
 import { ChartGridItem } from "../charts/ChartGridItem"
 import { BarChart } from "../charts/BarChart"
-import { LineChart, normalizeCfdData } from "../charts/LineChart"
+import { LineChart } from "../charts/LineChart"
 import LineChartTooltip from "./../charts/tooltips/LineChartTooltip"
 import { secondsToDays } from "../../lib/date"
 import { Project } from "../../modules/project/project.types"
 import { Grid } from "@mui/material"
 import { ChartAxisData } from "../../modules/charts/charts.types"
-import { cfdChartData } from "../../lib/charts"
 import { buildBurnupData } from "../../utils/charts"
 import ProjectBurnup from "../../pages/Projects/Charts/ProjectBurnup"
 import ProjectLeadTime from "../../pages/Projects/Charts/ProjectLeadTime"
 import ProjectLeadTimeControlChart from "../../pages/Projects/Charts/ProjectLeadTimeControlChart"
 import ProjectBugsPercentage from "../../pages/Projects/Charts/ProjectBugsPercentage"
+import ProjectCumulativeFlowData from "../../pages/Projects/Charts/ProjectCumulativeFlowData"
 
 type ProjectDemandsChartsProps = {
   project: Project
@@ -35,7 +35,6 @@ const ProjectDemandsCharts = ({
   const leadTimeHistogramData = project.leadTimeHistogramData
   const leadTimeBreakdownData = project.leadTimeBreakdown
   const hoursPerStageChartData = project.hoursPerStageChartData
-  const cumulativeFlowChartData = project.cumulativeFlowChartData
 
   const operationalRiskChartData = [
     {
@@ -63,32 +62,17 @@ const ProjectDemandsCharts = ({
       }
     ) || []
 
-  const cfdXaxis = cumulativeFlowChartData?.xAxis || []
-  const cfdYaxis = cumulativeFlowChartData?.yAxis.reverse() || []
-  const projectStages = cfdYaxis.map((item) => item.name)
-  const projectCumulativeFlowChartData = cfdChartData(
-    projectStages,
-    cfdXaxis,
-    cfdYaxis
-  )
-
   const committedChartData = demandsFlowChartData?.committedChartData
   const projectFlowChartData: BarDatum[] =
     committedChartData?.map((_, index) => {
-      const creationChartData = demandsFlowChartData.creationChartData
-        ? demandsFlowChartData.creationChartData
-        : []
-
-      const pullTransactionRate = demandsFlowChartData.pullTransactionRate
-        ? demandsFlowChartData.pullTransactionRate
-        : []
-
-      const throughputChartData = demandsFlowChartData.throughputChartData
-        ? demandsFlowChartData.throughputChartData
-        : []
+      const creationChartData = demandsFlowChartData?.creationChartData || []
+      const pullTransactionRate =
+        demandsFlowChartData?.pullTransactionRate || []
+      const throughputChartData =
+        demandsFlowChartData?.throughputChartData || []
 
       return {
-        index: demandsFlowChartData.xAxis?.[index] || index,
+        index: demandsFlowChartData?.xAxis?.[index] || index,
         [t("chartsTab.projectCharts.flow_data_created")]:
           creationChartData[index],
         [t("chartsTab.projectCharts.flow_data_committed_to")]:
@@ -253,14 +237,13 @@ const ProjectDemandsCharts = ({
       }
     ) || []
 
-  const projectHoursPerStage = hoursPerStageChartData.xAxis.map(
-    (xValue, index: number) => {
+  const projectHoursPerStage =
+    hoursPerStageChartData?.xAxis?.map((xValue, index: number) => {
       return {
         index: index,
-        [xValue]: hoursPerStageChartData.yAxis[index],
+        [xValue]: hoursPerStageChartData.yAxis?.[index] || 0,
       }
-    }
-  )
+    }) || []
 
   const projectLeadTimeBreakdown = leadTimeBreakdownData
     ? leadTimeBreakdownData.xAxis.map((xValue, index: number) => {
@@ -271,14 +254,13 @@ const ProjectDemandsCharts = ({
       })
     : []
 
-  const projectHoursPerCoordinationStage = hoursPerCoordinationStageChartData
-    ? hoursPerCoordinationStageChartData.xAxis.map((xValue, index: number) => {
-        return {
-          index: index,
-          [xValue]: hoursPerCoordinationStageChartData.yAxis[index],
-        }
-      })
-    : []
+  const projectHoursPerCoordinationStage =
+    hoursPerCoordinationStageChartData?.xAxis?.map((xValue, index: number) => {
+      return {
+        index: index,
+        [xValue]: hoursPerCoordinationStageChartData.yAxis?.[index] || 0,
+      }
+    }) || []
 
   return (
     <Grid container spacing={2} rowSpacing={8}>
@@ -395,41 +377,7 @@ const ProjectDemandsCharts = ({
         />
       </ChartGridItem>
 
-      {projectCumulativeFlowChartData && (
-        <ChartGridItem
-          title={t("chartsTab.projectCharts.cumulative_flow_chart", {
-            projectName: project.name,
-          })}
-        >
-          <LineChart
-            data={normalizeCfdData(projectCumulativeFlowChartData)}
-            axisLeftLegend={t(
-              "chartsTab.projectCharts.cumulative_flow_y_label"
-            )}
-            props={{
-              yScale: {
-                type: "linear",
-                stacked: true,
-              },
-              areaOpacity: 1,
-              enableArea: true,
-              enableSlices: "x",
-              sliceTooltip: ({ slice }: SliceTooltipProps) => (
-                <LineChartTooltip slice={slice} />
-              ),
-              margin: { left: 80, right: 20, top: 25, bottom: 65 },
-              axisBottom: {
-                tickSize: 5,
-                tickPadding: 5,
-                legendPosition: "middle",
-                legendOffset: 60,
-                tickRotation: -40,
-                legend: t("chartsTab.projectCharts.cumulative_flow_x_label"),
-              },
-            }}
-          />
-        </ChartGridItem>
-      )}
+      <ProjectCumulativeFlowData project={project} />
 
       <ProjectBugsPercentage project={project} />
 
@@ -624,7 +572,7 @@ const ProjectDemandsCharts = ({
       <ChartGridItem title={t("chartsTab.projectCharts.hours_per_stage_chart")}>
         <BarChart
           data={projectHoursPerStage}
-          keys={hoursPerStageChartData?.xAxis.map(String) || []}
+          keys={hoursPerStageChartData?.xAxis?.map(String) || []}
           indexBy="index"
           axisLeftLegend={t("chartsTab.projectCharts.hours_per_stage_y_label")}
         />
@@ -635,7 +583,7 @@ const ProjectDemandsCharts = ({
       >
         <BarChart
           data={projectHoursPerCoordinationStage}
-          keys={hoursPerCoordinationStageChartData?.xAxis.map(String) || []}
+          keys={hoursPerCoordinationStageChartData?.xAxis?.map(String) || []}
           indexBy="index"
           axisLeftLegend={t(
             "chartsTab.projectCharts.hours_per_coordination_stage_y_label"

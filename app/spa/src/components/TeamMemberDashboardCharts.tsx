@@ -52,7 +52,7 @@ const TeamMemberDashboardCharts = ({
   const memberEffortData = {
     ...teamMember.memberEffortData,
     xAxis:
-      teamMember.memberEffortData?.xAxis.map((dateStr) =>
+      teamMember.memberEffortData?.xAxis?.map((dateStr) =>
         formatDate({
           date: dateStr as string,
           format: t("charts.memberEffort_x_date_format"),

@@ -5,7 +5,7 @@ import { Box } from "@mui/material"
 export const normalizeCfdData = (data: Serie[]): Serie[] =>
   data.map((step, stepIndex) => ({
     ...step,
-    data: step.data.map((dot, index) => {
+    data: step.data?.map((dot, index) => {
       const previousY: number =
         stepIndex > 0 ? Number(data[stepIndex - 1].data[index].y) : 0
       const newY = (Number(dot?.y) || 0) - (previousY || 0)
