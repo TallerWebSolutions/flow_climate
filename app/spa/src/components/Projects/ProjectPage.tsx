@@ -26,7 +26,6 @@ type ProjectPageProps = {
   pageName: string
   children: ReactElement | ReactElement[]
   loading?: boolean
-  dashboard?: boolean
 }
 
 const cardTypeByRisk = (risk: number) => {
@@ -59,7 +58,6 @@ export const ProjectPage = ({
   pageName,
   children,
   loading,
-  dashboard = false,
 }: ProjectPageProps) => {
   const { pathname } = useLocation()
   const { t } = useTranslation(["generalProjectPage"])

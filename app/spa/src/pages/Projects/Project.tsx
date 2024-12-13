@@ -7,7 +7,7 @@ const Project = () => {
   const { t } = useTranslation(["projects"])
 
   return (
-    <ProjectPage pageName={t("charts")} dashboard>
+    <ProjectPage pageName={t("charts")}>
       <ProjectChartsTable />
       <DemandsCharts />
     </ProjectPage>

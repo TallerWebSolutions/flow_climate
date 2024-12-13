@@ -122,9 +122,11 @@ export const ScatterChart = ({
         markers={chartMarkers}
         tooltip={({ node }) => (
           <Paper elevation={3} sx={{ padding: 1 }}>
-            {node?.data.x}
-            <br />
-            Lead time: {node?.data.y} {t("days")}
+            <>
+              {node?.data.x}
+              <br />
+              Lead time: {node?.data.y} {t("days")}
+            </>
           </Paper>
         )}
         enableGridX={false}
