@@ -16,7 +16,7 @@ const ProjectBugsPercentage = ({ project }: ProjectBugsPercentageProps) => {
         projectConsolidationsWeekly?.map(
           ({ consolidationDate, projectQuality }) => ({
             x: consolidationDate,
-            y: (1 - projectQuality) * 100,
+            y: (1 - (projectQuality || 0)) * 100,
           })
         ) || [],
     },

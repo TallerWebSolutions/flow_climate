@@ -90,7 +90,7 @@ const Statistics = () => {
     ({ leadTimeRangeMonth }, index) => {
       return {
         x: index,
-        y: secondsToDays(leadTimeRangeMonth),
+        y: secondsToDays(leadTimeRangeMonth || 0),
       }
     }
   )
@@ -99,7 +99,7 @@ const Statistics = () => {
     ({ leadTimeMinMonth }, index) => {
       return {
         x: index,
-        y: secondsToDays(leadTimeMinMonth),
+        y: secondsToDays(leadTimeMinMonth || 0),
       }
     }
   )
@@ -108,7 +108,7 @@ const Statistics = () => {
     ({ leadTimeMaxMonth }, index) => {
       return {
         x: index,
-        y: secondsToDays(leadTimeMaxMonth),
+        y: secondsToDays(leadTimeMaxMonth || 0),
       }
     }
   )
@@ -132,7 +132,7 @@ const Statistics = () => {
     ({ histogramRange }, index) => {
       return {
         x: index,
-        y: secondsToDays(histogramRange),
+        y: secondsToDays(histogramRange || 0),
       }
     }
   )
@@ -141,7 +141,7 @@ const Statistics = () => {
     ({ leadTimeHistogramBinMin }, index) => {
       return {
         x: index,
-        y: secondsToDays(leadTimeHistogramBinMin),
+        y: secondsToDays(leadTimeHistogramBinMin || 0),
       }
     }
   )
@@ -150,7 +150,7 @@ const Statistics = () => {
     ({ leadTimeHistogramBinMax }, index) => {
       return {
         x: index,
-        y: secondsToDays(leadTimeHistogramBinMax),
+        y: secondsToDays(leadTimeHistogramBinMax || 0),
       }
     }
   )
@@ -174,7 +174,7 @@ const Statistics = () => {
     ({ interquartileRange }, index) => {
       return {
         x: index,
-        y: secondsToDays(interquartileRange),
+        y: secondsToDays(interquartileRange || 0),
       }
     }
   )
@@ -183,7 +183,7 @@ const Statistics = () => {
     ({ leadTimeP25 }, index) => {
       return {
         x: index,
-        y: secondsToDays(leadTimeP25),
+        y: secondsToDays(leadTimeP25 || 0),
       }
     }
   )
@@ -192,7 +192,7 @@ const Statistics = () => {
     ({ leadTimeP75 }, index) => {
       return {
         x: index,
-        y: secondsToDays(leadTimeP75),
+        y: secondsToDays(leadTimeP75 || 0),
       }
     }
   )

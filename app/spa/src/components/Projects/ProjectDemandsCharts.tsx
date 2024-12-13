@@ -56,9 +56,9 @@ const ProjectDemandsCharts = ({
     projectConsolidationsWeekly?.map(
       ({ bugsOpened, bugsClosed, consolidationDate }) => {
         return {
-          index: consolidationDate,
-          [t("chartsTab.projectCharts.bugs_opened")]: bugsOpened,
-          [t("chartsTab.projectCharts.bugs_closed")]: bugsClosed,
+          index: consolidationDate || "",
+          [t("chartsTab.projectCharts.bugs_opened")]: bugsOpened || 0,
+          [t("chartsTab.projectCharts.bugs_closed")]: bugsClosed || 0,
         }
       }
     ) || []
@@ -170,14 +170,14 @@ const ProjectDemandsCharts = ({
           ({ consolidationDate, hoursPerDemand }) => {
             return {
               x: consolidationDate,
-              y: hoursPerDemand.toFixed(2),
+              y: hoursPerDemand?.toFixed(2),
             }
           }
         ) || [],
     },
   ]
 
-  const projectHoursConsummed =
+  const projectHoursConsumed =
     projectConsolidationsWeekly?.map(
       ({
         consolidationDate,
@@ -188,15 +188,15 @@ const ProjectDemandsCharts = ({
       }) => {
         return {
           [t("chartsTab.projectCharts.hours_consumed_x_label")]:
-            consolidationDate,
+            consolidationDate || "",
           [t("chartsTab.projectCharts.hours_consumed_upstream")]:
-            projectThroughputHoursUpstream.toFixed(2),
+            projectThroughputHoursUpstream?.toFixed(2) || 0,
           [t("chartsTab.projectCharts.hours_consumed_downstream")]:
-            projectThroughputHoursDownstream.toFixed(2),
+            projectThroughputHoursDownstream?.toFixed(2) || 0,
           [t("chartsTab.projectCharts.additional_hours_consumed")]:
             projectThroughputHoursAdditional?.toFixed(2) || 0,
           [t("chartsTab.projectCharts.hours_consumed_total_throughput")]:
-            projectThroughputHours.toFixed(2),
+            projectThroughputHours?.toFixed(2) || 0,
         }
       }
     ) || []
@@ -211,17 +211,17 @@ const ProjectDemandsCharts = ({
         projectThroughputHoursDesign,
       }) => {
         return {
-          period: consolidationDate,
+          period: consolidationDate || "",
           [t("chartsTab.projectCharts.consumed_hours_by_role_design_effort")]:
-            projectThroughputHoursDesign.toFixed(2),
+            projectThroughputHoursDesign?.toFixed(2) || 0,
           [t(
             "chartsTab.projectCharts.consumed_hours_by_role_development_effort"
-          )]: projectThroughputHoursDevelopment.toFixed(2),
+          )]: projectThroughputHoursDevelopment?.toFixed(2) || 0,
           [t(
             "chartsTab.projectCharts.consumed_hours_by_role_management_effort"
-          )]: projectThroughputHoursManagement.toFixed(2),
+          )]: projectThroughputHoursManagement?.toFixed(2) || 0,
           [t("chartsTab.projectCharts.consumed_hours_by_role_total_effort")]:
-            projectThroughputHours.toFixed(2),
+            projectThroughputHours?.toFixed(2) || 0,
         }
       }
     ) || []
@@ -236,19 +236,19 @@ const ProjectDemandsCharts = ({
         projectThroughputHoursDesignInMonth,
       }) => {
         return {
-          period: consolidationDate,
+          period: consolidationDate || "",
           [t(
             "chartsTab.projectCharts.consumed_hours_by_role_in_month_design_effort"
-          )]: projectThroughputHoursDesignInMonth.toFixed(2),
+          )]: projectThroughputHoursDesignInMonth?.toFixed(2) || 0,
           [t(
             "chartsTab.projectCharts.consumed_hours_by_role_in_month_development_effort"
-          )]: projectThroughputHoursDevelopmentInMonth.toFixed(2),
+          )]: projectThroughputHoursDevelopmentInMonth?.toFixed(2) || 0,
           [t(
             "chartsTab.projectCharts.consumed_hours_by_role_in_month_management_effort"
-          )]: projectThroughputHoursManagementInMonth.toFixed(2),
+          )]: projectThroughputHoursManagementInMonth?.toFixed(2) || 0,
           [t(
             "chartsTab.projectCharts.consumed_hours_by_role_in_month_total_effort"
-          )]: projectThroughputHoursInMonth.toFixed(2),
+          )]: projectThroughputHoursInMonth?.toFixed(2) || 0,
         }
       }
     ) || []
@@ -555,7 +555,7 @@ const ProjectDemandsCharts = ({
       </ChartGridItem>
       <ChartGridItem title={t("chartsTab.projectCharts.hours_consumed_chart")}>
         <BarChart
-          data={projectHoursConsummed}
+          data={projectHoursConsumed}
           keys={[
             t("chartsTab.projectCharts.hours_consumed_upstream"),
             t("chartsTab.projectCharts.hours_consumed_downstream"),

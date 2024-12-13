@@ -18,6 +18,7 @@ export const LEAD_TIME_DASHBOARD_QUERY = gql`
       remainingDays
       running
       projectConsolidations {
+        id
         leadTimeMin
         leadTimeMax
         leadTimeP80
@@ -92,7 +93,7 @@ const LeadTimeDashboard = () => {
     },
     {
       title: "Tamanho da amostra",
-      value: lastProjectConsolidation?.demandsFinishedIds.length,
+      value: lastProjectConsolidation?.demandsFinishedIds?.length,
       unity: "demandas",
     },
   ]
