@@ -65,6 +65,10 @@ module Types
     field :project_consolidations_last_month, [Types::ProjectConsolidationType], null: true
     field :project_consolidations_weekly, [Types::ProjectConsolidationType], null: true
     field :project_members, [Types::ProjectMemberType], null: true
+    field :project_simulation, Types::ProjectSimulationType, null: true do
+      argument :remaining_work, Int, required: true
+      argument :throughputs, [Int], required: true
+    end
     field :project_weeks, [GraphQL::Types::ISO8601Date], null: true
     field :qty_hours, Float, null: false
     field :qty_in_progress, Int, null: false
@@ -92,7 +96,6 @@ module Types
     field :upstream_demands, [Types::DemandType], null: true
     field :value, Float, null: true
     field :weekly_throughputs, [Int], null: false
-    field :project_simulation, Types::ProjectSimulationType, null: true
 
     delegate :remaining_backlog, to: :object
     delegate :remaining_weeks, to: :object
@@ -107,10 +110,14 @@ module Types
       object.demands.kept.unscored_demands
     end
 
-    def project_simulation
+    def project_simulation(remaining_work:, throughputs:)
+      montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(remaining_work, throughputs, 100)
+
       {
-        id: Time.zone.now.to_i,
-        weekly_throughputs: weekly_throughputs
+        team_monte_carlo_p80: Stats::StatisticsService.instance.percentile(80, montecarlo_durations),
+        team_monte_carlo_weeks_max: montecarlo_durations.max,
+        team_monte_carlo_weeks_min: montecarlo_durations.min,
+        team_monte_carlo_weeks_std_dev: Stats::StatisticsService.instance.standard_deviation(throughputs)
       }
     end
 

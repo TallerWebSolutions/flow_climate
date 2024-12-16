@@ -108,6 +108,16 @@ export type Project = {
   totalActiveContractsHours?: number
   consumedActiveContractsHours?: number
   remainingActiveContractsHours?: number
+
+  projectSimulation?: ProjectSimulation
+}
+
+type ProjectSimulation = {
+  id: string
+  teamMonteCarloWeeksMin?: number
+  teamMonteCarloWeeksMax?: number
+  teamMonteCarloP80?: number
+  teamMonteCarloWeeksStdDev?: number
 }
 
 export type Burnup = {

@@ -7,6 +7,8 @@ import {
 import TicketGroup from "../../components/TicketGroup"
 import { Project } from "../../modules/project/project.types"
 import ProjectRiskSimulation from "../../modules/project/components/ProjectRiskSimulation"
+import ProjectMonteCarloData from "../../modules/project/components/ProjectMonteCarloData"
+import ProjectMonteCarloTeamData from "../../modules/project/components/ProjectMonteCarloTeamData"
 
 export const RiskDrill = () => {
   const { projectId } = useParams()
@@ -61,67 +63,32 @@ export const RiskDrill = () => {
     },
   ]
 
-  const monteCarloProject = [
-    {
-      title: "Mínimo",
-      value: project?.currentMonteCarloWeeksMin,
-      unity: "semanas",
-    },
-    {
-      title: "Máximo",
-      value: project?.currentMonteCarloWeeksMax,
-      unity: "semanas",
-    },
-    {
-      title: "Percentil 80",
-      value: project?.monteCarloP80?.toFixed(2),
-      unity: "semanas",
-    },
-    {
-      title: "Desvio padrão",
-      value: project?.currentMonteCarloWeeksStdDev?.toFixed(2),
-      unity: "semanas",
-    },
-  ]
-
-  const monteCarloTeam = [
-    {
-      title: "Mínimo",
-      value: project?.teamMonteCarloWeeksMin,
-      unity: "semanas",
-    },
-    {
-      title: "Máximo",
-      value: project?.teamMonteCarloWeeksMax,
-      unity: "semanas",
-    },
-    {
-      title: "Percentil 80",
-      value: project?.teamMonteCarloP80?.toFixed(2),
-      unity: "semanas",
-    },
-    {
-      title: "Desvio padrão",
-      value: project?.teamMonteCarloWeeksStdDev?.toFixed(2),
-      unity: "semanas",
-    },
-  ]
-
   return (
     <ProjectPage pageName={"Risk Drill"} loading={loading}>
-      {project && <ProjectRiskSimulation project={project} />}
-      <TicketGroup
-        title="Fluxo das últimas 10 semanas"
-        data={flowLastFewWeeks}
-      />
-      <TicketGroup title="Escopo e prazo" data={scopeAndDeadline} />
-      <TicketGroup title="Monte Carlo (Projeto)" data={monteCarloProject} />
-      <TicketGroup title="Monte Carlo (Time)" data={monteCarloTeam} />
+      {project && (
+        <>
+          <ProjectRiskSimulation project={project} />
+
+          <TicketGroup
+            title="Fluxo das últimas 10 semanas"
+            data={flowLastFewWeeks}
+          />
+          <TicketGroup title="Escopo e prazo" data={scopeAndDeadline} />
+
+          <ProjectMonteCarloData project={project} />
+          <ProjectMonteCarloTeamData
+            teamMonteCarloWeeksMin={project.teamMonteCarloWeeksMin || 0}
+            teamMonteCarloWeeksMax={project.teamMonteCarloWeeksMax || 0}
+            teamMonteCarloP80={project.teamMonteCarloP80 || 0}
+            teamMonteCarloWeeksStdDev={project.teamMonteCarloWeeksStdDev || 0}
+          />
+        </>
+      )}
     </ProjectPage>
   )
 }
 
-export const PROJECT_RISK_DRILL_QUERY = gql`
+const PROJECT_RISK_DRILL_QUERY = gql`
   query ProjectRiskDrill($id: ID!) {
     project(id: $id) {
       ...ProjectStandardFragment
@@ -145,11 +112,6 @@ export const PROJECT_RISK_DRILL_QUERY = gql`
       teamMonteCarloWeeksMin
       teamMonteCarloWeeksMax
       teamMonteCarloWeeksStdDev
-
-      projectSimulation {
-        id
-        weeklyThroughputs
-      }
     }
   }
   ${PROJECT_STANDARD_FRAGMENT}

@@ -2,8 +2,9 @@
 
 module Types
   class ProjectSimulationType < Types::BaseObject
-    field :id, ID, null: false
-    field :weekly_throughputs, [Integer], null: false
-    field :max_work_in_progress, Float, null: false
+    field :team_monte_carlo_p80, Float, null: true
+    field :team_monte_carlo_weeks_max, Float, null: true
+    field :team_monte_carlo_weeks_min, Float, null: true
+    field :team_monte_carlo_weeks_std_dev, Float, null: true
   end
 end

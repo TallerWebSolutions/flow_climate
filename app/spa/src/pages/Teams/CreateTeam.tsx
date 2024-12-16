@@ -14,28 +14,6 @@ import { MessagesContext } from "../../contexts/MessageContext"
 import { MeContext } from "../../contexts/MeContext"
 import { useNavigate } from "react-router-dom"
 
-type CreateTeamDTO = {
-  createTeam: {
-    id: number
-    statusMessage: string
-    company: {
-      slug: string
-    }
-  }
-}
-
-const CREATE_TEAM_MUTATION = gql`
-  mutation CreateTeam($name: String!, $wip: Int!) {
-    createTeam(name: $name, maxWorkInProgress: $wip) {
-      id
-      statusMessage
-      company {
-        slug
-      }
-    }
-  }
-`
-
 const CreateTeam = () => {
   const { t } = useTranslation(["teams"])
   const { pushMessage } = useContext(MessagesContext)
@@ -43,9 +21,9 @@ const CreateTeam = () => {
   const navigate = useNavigate()
   const [createTeam] = useMutation<CreateTeamDTO>(CREATE_TEAM_MUTATION, {
     update: (_, { data }) => {
-      const newTeamID = data?.createTeam.id
-      const companySlug = data?.createTeam.company.slug
-      const mutationResult = data?.createTeam.statusMessage === "SUCCESS"
+      const newTeamID = data?.createTeam?.id
+      const companySlug = data?.createTeam?.company?.slug
+      const mutationResult = data?.createTeam?.statusMessage === "SUCCESS"
 
       pushMessage({
         text: mutationResult
@@ -119,5 +97,27 @@ const CreateTeam = () => {
     </BasicPage>
   )
 }
+
+type CreateTeamDTO = {
+  createTeam?: {
+    id: number
+    statusMessage: string
+    company?: {
+      slug: string
+    }
+  }
+}
+
+const CREATE_TEAM_MUTATION = gql`
+  mutation CreateTeam($name: String!, $wip: Int!) {
+    createTeam(name: $name, maxWorkInProgress: $wip) {
+      id
+      statusMessage
+      company {
+        slug
+      }
+    }
+  }
+`
 
 export default CreateTeam
