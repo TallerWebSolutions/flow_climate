@@ -92,6 +92,7 @@ module Types
     field :upstream_demands, [Types::DemandType], null: true
     field :value, Float, null: true
     field :weekly_throughputs, [Int], null: false
+    field :project_simulation, Types::ProjectSimulationType, null: true
 
     delegate :remaining_backlog, to: :object
     delegate :remaining_weeks, to: :object
@@ -104,6 +105,13 @@ module Types
 
     def unscored_demands
       object.demands.kept.unscored_demands
+    end
+
+    def project_simulation
+      {
+        id: Time.zone.now.to_i,
+        weekly_throughputs: weekly_throughputs
+      }
     end
 
     def discarded_demands

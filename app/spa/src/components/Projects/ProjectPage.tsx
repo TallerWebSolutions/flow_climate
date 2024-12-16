@@ -1,6 +1,6 @@
 import { gql, useMutation } from "@apollo/client"
 import { Box } from "@mui/material"
-import { ReactElement, useContext } from "react"
+import { ReactNode, useContext } from "react"
 import { useTranslation } from "react-i18next"
 import { useLocation, useParams } from "react-router-dom"
 import Card, { CardType } from "../Card"
@@ -24,7 +24,7 @@ export const PROJECT_STANDARD_FRAGMENT = gql`
 
 type ProjectPageProps = {
   pageName: string
-  children: ReactElement | ReactElement[]
+  children: ReactNode
   loading?: boolean
 }
 
@@ -46,13 +46,11 @@ const GENERATE_PROJECT_CACHE_MUTATION = gql`
   }
 `
 
-type ProjectCacheResult = {
-  generateProjectCache: {
+type ProjectCacheDTO = {
+  generateProjectCache?: {
     statusMessage: string
   }
 }
-
-type ProjectCacheDTO = ProjectCacheResult | undefined
 
 export const ProjectPage = ({
   pageName,
