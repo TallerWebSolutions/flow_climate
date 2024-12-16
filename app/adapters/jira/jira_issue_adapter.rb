@@ -248,7 +248,7 @@ module Jira
 
       return already_assigned.first.id if already_assigned.present?
 
-      overlapping_assignment = demand.item_assignments.where(membership: membership).where('finish_time <= :history_date', history_date: history_date)
+      overlapping_assignment = demand.item_assignments.where(membership: membership).where('start_time <= :history_date AND finish_time >= :history_date', history_date: history_date)
       return overlapping_assignment.first.id if overlapping_assignment.present?
 
       item_assignment = demand.item_assignments.where(membership: membership, start_time: history_date).first
