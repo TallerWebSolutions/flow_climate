@@ -117,7 +117,7 @@ const App = () => {
       <Helmet>
         <title>Flow Climate - Mastering the flow management</title>
       </Helmet>
-      <MeContext.Provider value={{ me: data?.me }}>
+      <MeContext.Provider value={{ me: data?.me, loading }}>
         <BrowserRouter>
           <Routes>
             <Route

@@ -40,7 +40,13 @@ const ProjectRiskSimulation = ({ project }: ProjectRiskSimulationProps) => {
   )
 
   return (
-    <Box marginY={4}>
+    <Box
+      sx={{
+        backgroundColor: "grey.200",
+        margin: 4,
+        padding: 4,
+      }}
+    >
       <Typography variant="h4" component="h2" lineHeight={2}>
         Simulação de risco
       </Typography>

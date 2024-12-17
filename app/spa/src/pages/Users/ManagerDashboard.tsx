@@ -15,13 +15,14 @@ import { useForm } from "react-hook-form"
 import { useSearchParams } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 import { gql, useQuery } from "@apollo/client"
-import { Project } from "../../modules/project/project.types"
 import ActiveContractsHoursTicket from "../../modules/contracts/ActiveContractsHoursTicket"
 import { PROJECT_STANDARD_FRAGMENT } from "../../components/Projects/ProjectPage"
 import ProjectStatusReportCharts from "../Projects/Charts/ProjectStatusReportCharts"
+import { User } from "../../modules/user/user.types"
+import ProjectRiskSimulation from "../../modules/project/components/ProjectRiskSimulation"
 
 const ManagerDashboard = () => {
-  const { me } = useContext(MeContext)
+  const { me, loading: meLoading } = useContext(MeContext)
   const { register } = useForm()
   const { t } = useTranslation("demand")
   const { t: tProject } = useTranslation("projects")
@@ -82,6 +83,10 @@ const ManagerDashboard = () => {
             </Box>
             <ProjectStatusReportCharts project={project} />
           </Box>
+
+          {!loading && !meLoading && (
+            <ProjectRiskSimulation project={project} />
+          )}
         </>
       ) : (
         <Typography>{tProject("projectsTable.emptyProjects")}</Typography>
@@ -91,9 +96,7 @@ const ManagerDashboard = () => {
 }
 
 type MANAGER_DASHBOARD_DTO = {
-  me: {
-    projects: Project[]
-  }
+  me?: User
 }
 
 const MANAGER_DASHBOARD_QUERY = gql`
@@ -105,10 +108,14 @@ const MANAGER_DASHBOARD_QUERY = gql`
         totalActiveContractsHours
         consumedActiveContractsHours
         remainingActiveContractsHours
+        remainingWork
+        weeklyThroughputs
       }
       projectsActive {
         ...ProjectStandardFragment
         ...ProjectChartsFragment
+        remainingWork
+        weeklyThroughputs
       }
     }
   }

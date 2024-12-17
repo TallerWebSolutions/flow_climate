@@ -37,20 +37,17 @@ const theme = createTheme({
   },
   typography: {
     body1: {
-      fontFamily: "'Roboto'",
       fontWeight: 400,
       fontSize: "16px",
       lineHeight: 1.5,
       color: "#29172E",
     },
     body2: {
-      fontFamily: "'Roboto'",
       fontWeight: 400,
       fontSize: ".875rem",
       lineHeight: 1.43,
     },
     h4: {
-      fontFamily: "Roboto",
       color: "#666",
       fontSize: "34px",
       fontStyle: "normal",
@@ -58,7 +55,6 @@ const theme = createTheme({
       lineHeight: "42px",
     },
     h6: {
-      fontFamily: "Roboto",
       color: "primary.main",
       fontSize: "20px",
       fontStyle: "normal",
@@ -67,14 +63,12 @@ const theme = createTheme({
       letterSpacing: "0.12px",
     },
     subtitle1: {
-      fontFamily: "'Roboto'",
       fontWeight: 500,
       fontSize: "1rem",
       lineHeight: 1.75,
       color: "black",
     },
     subtitle2: {
-      fontFamily: "'Roboto'",
       fontWeight: 500,
       fontSize: ".875rem",
       lineHeight: 1.57,
@@ -128,7 +122,9 @@ const theme = createTheme({
 
 const ThemeProvider = ({ children }: { children: ReactElement }) => (
   <MaterialThemeProvider theme={theme}>
-    <GlobalStyles styles={{ body: { padding: 0, margin: 0 } }} />
+    <GlobalStyles
+      styles={{ body: { padding: 0, margin: 0, fontFamily: "Roboto" } }}
+    />
     {children}
   </MaterialThemeProvider>
 )

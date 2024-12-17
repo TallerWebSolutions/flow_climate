@@ -67,8 +67,6 @@ export const RiskDrill = () => {
     <ProjectPage pageName={"Risk Drill"} loading={loading}>
       {project && (
         <>
-          <ProjectRiskSimulation project={project} />
-
           <TicketGroup
             title="Fluxo das últimas 10 semanas"
             data={flowLastFewWeeks}
@@ -89,6 +87,8 @@ export const RiskDrill = () => {
             teamMonteCarloP80={project.teamMonteCarloP80 || 0}
             teamMonteCarloWeeksStdDev={project.teamMonteCarloWeeksStdDev || 0}
           />
+
+          <ProjectRiskSimulation project={project} />
         </>
       )}
     </ProjectPage>
