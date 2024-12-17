@@ -138,6 +138,9 @@ export const PROJECT_STANDARD_FRAGMENT = gql`
     id
     name
     endDate
+    remainingDays
+    currentRiskToDeadline
+    currentTeamBasedRisk
     company {
       id
       name

@@ -15,8 +15,11 @@ import ProjectMonteCarloData from "./ProjectMonteCarloData"
 import ProjectMonteCarloTeamData from "./ProjectMonteCarloTeamData"
 import ProjectRiskCards from "./ProjectRiskCards"
 import { differenceInDays, parseISO } from "date-fns"
+import { useTranslation } from "react-i18next"
 
 const ProjectRiskSimulation = ({ project }: ProjectRiskSimulationProps) => {
+  const { t } = useTranslation(["projects"])
+
   const { register, handleSubmit } = useForm()
 
   const [simulateProjectRisk, { data, variables }] =
@@ -48,14 +51,14 @@ const ProjectRiskSimulation = ({ project }: ProjectRiskSimulationProps) => {
       }}
     >
       <Typography variant="h4" component="h2" lineHeight={2}>
-        Simulação de risco
+        {t("riskSimulation.title")}
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormGroup>
           <Grid container spacing={5}>
             <FormElement>
               <InputLabel htmlFor="endDate" shrink>
-                End Date
+                {t("riskSimulation.form.endDate")}
               </InputLabel>
               <Input
                 type="date"
@@ -64,7 +67,9 @@ const ProjectRiskSimulation = ({ project }: ProjectRiskSimulationProps) => {
               />
             </FormElement>
             <FormElement>
-              <InputLabel htmlFor="remainingWork">End Date</InputLabel>
+              <InputLabel htmlFor="remainingWork">
+                {t("riskSimulation.form.remainingWork")}
+              </InputLabel>
               <Input
                 type="number"
                 {...register("remainingWork")}
@@ -72,15 +77,21 @@ const ProjectRiskSimulation = ({ project }: ProjectRiskSimulationProps) => {
               />
             </FormElement>
             <FormElement>
-              <InputLabel htmlFor="throughputs">End Date</InputLabel>
+              <InputLabel htmlFor="throughputs">
+                {t("riskSimulation.form.throughputs")}
+              </InputLabel>
               <Input
                 {...register("throughputs")}
                 defaultValue={project.weeklyThroughputs?.join(",")}
               />
             </FormElement>
             <FormElement>
-              <Button sx={{ alignSelf: "flex-start" }} type="submit">
-                Simular
+              <Button
+                sx={{ alignSelf: "flex-start" }}
+                type="submit"
+                variant="outlined"
+              >
+                {t("riskSimulation.form.submit")}
               </Button>
             </FormElement>
           </Grid>

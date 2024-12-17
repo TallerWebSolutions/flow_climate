@@ -39,5 +39,14 @@
     "button": {
       "title": "Novo projeto"
     }
+  },
+  "riskSimulation": {
+    "title": "Simulação de Risco",
+    "form": {
+      "endDate": "Data final",
+      "remainingWork": "Escopo restante",
+      "throughputs": "Throughputs",
+      "submit": "Simular"
+    }
   }
 }

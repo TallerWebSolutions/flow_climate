@@ -20,6 +20,7 @@ import { PROJECT_STANDARD_FRAGMENT } from "../../components/Projects/ProjectPage
 import ProjectStatusReportCharts from "../Projects/Charts/ProjectStatusReportCharts"
 import { User } from "../../modules/user/user.types"
 import ProjectRiskSimulation from "../../modules/project/components/ProjectRiskSimulation"
+import ProjectRiskCards from "../../modules/project/components/ProjectRiskCards"
 
 const ManagerDashboard = () => {
   const { me, loading: meLoading } = useContext(MeContext)
@@ -78,9 +79,14 @@ const ManagerDashboard = () => {
             </Box>
           </Box>
           <Box sx={{ padding: 4 }}>
-            <Box sx={{ width: "50%", marginBottom: 4 }}>
+            <Grid>
               <ActiveContractsHoursTicket project={project} />
-            </Box>
+              <ProjectRiskCards
+                remainingDays={project.remainingDays || 0}
+                currentOperationalRisk={project.currentRiskToDeadline || 0}
+                currentTeamRisk={project.currentTeamBasedRisk || 0}
+              />
+            </Grid>
             <ProjectStatusReportCharts project={project} />
           </Box>
 
