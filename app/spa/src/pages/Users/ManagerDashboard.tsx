@@ -85,6 +85,7 @@ const ManagerDashboard = () => {
                 remainingDays={project.remainingDays || 0}
                 currentOperationalRisk={project.currentRiskToDeadline || 0}
                 currentTeamRisk={project.currentTeamBasedRisk || 0}
+                displaySimulationButton
               />
             </Grid>
             <ProjectStatusReportCharts project={project} />

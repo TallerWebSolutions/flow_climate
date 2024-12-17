@@ -44,6 +44,7 @@ const ProjectRiskSimulation = ({ project }: ProjectRiskSimulationProps) => {
 
   return (
     <Box
+      id="project-risk-simulation"
       sx={{
         backgroundColor: "grey.200",
         margin: 4,

@@ -48,5 +48,8 @@
       "throughputs": "Throughputs",
       "submit": "Simulate"
     }
+  },
+  "riskCards": {
+    "trySimulation": "Try out the risk simulator"
   }
 }

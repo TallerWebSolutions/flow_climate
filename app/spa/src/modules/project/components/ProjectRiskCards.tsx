@@ -1,13 +1,16 @@
 import Card, { CardType } from "../../../components/Card"
-import { Box } from "@mui/material"
+import { Box, Button } from "@mui/material"
 import { useTranslation } from "react-i18next"
+import KeyboardDoubleArrowDownIcon from "@mui/icons-material/KeyboardDoubleArrowDown"
 
 const ProjectRiskCards = ({
   remainingDays,
   currentOperationalRisk,
   currentTeamRisk,
+  displaySimulationButton = false,
 }: ProjectRiskCardsProps) => {
   const { t } = useTranslation(["generalProjectPage"])
+  const { t: projectsT } = useTranslation(["projects"])
 
   const currentRiskToDeadlinePercentage = (
     currentOperationalRisk * 100
@@ -17,26 +20,41 @@ const ProjectRiskCards = ({
   const cardTypeOperationalRisk = cardTypeByRisk(currentOperationalRisk)
 
   return (
-    <Box sx={{ display: "flex", my: 2 }}>
-      <Card
-        style={{ width: "350px", marginRight: "20px" }}
-        title={t("cards.operational_risk")}
-        subtitle={t("cards.operational_risk_message", {
-          days: remainingDays,
-          percentage: currentRiskToDeadlinePercentage,
-        })}
-        type={cardTypeOperationalRisk}
-      />
+    <>
+      <Box sx={{ display: "flex", my: 2 }}>
+        <Card
+          style={{ width: "350px", marginRight: "20px" }}
+          title={t("cards.operational_risk")}
+          subtitle={t("cards.operational_risk_message", {
+            days: remainingDays,
+            percentage: currentRiskToDeadlinePercentage,
+          })}
+          type={cardTypeOperationalRisk}
+        />
 
-      <Card
-        style={{ width: "350px" }}
-        title={t("cards.operational_risk_team_data")}
-        subtitle={t("cards.operational_risk_team_data_message", {
-          risk: currentTeamRiskPercentage,
-        })}
-        type={cardTypeTeamRisk}
-      />
-    </Box>
+        <Card
+          style={{ width: "350px" }}
+          title={t("cards.operational_risk_team_data")}
+          subtitle={t("cards.operational_risk_team_data_message", {
+            risk: currentTeamRiskPercentage,
+          })}
+          type={cardTypeTeamRisk}
+        />
+      </Box>
+
+      {displaySimulationButton && (
+        <Button
+          onClick={() => {
+            const simulator = document.getElementById("project-risk-simulation")
+            simulator?.scrollIntoView({ behavior: "smooth" })
+          }}
+          sx={{ marginBottom: 4 }}
+        >
+          {projectsT("riskCards.trySimulation")}
+          <KeyboardDoubleArrowDownIcon />
+        </Button>
+      )}
+    </>
   )
 }
 
@@ -44,6 +62,7 @@ type ProjectRiskCardsProps = {
   remainingDays: number
   currentOperationalRisk: number
   currentTeamRisk: number
+  displaySimulationButton?: boolean
 }
 
 const cardTypeByRisk = (risk: number) => {

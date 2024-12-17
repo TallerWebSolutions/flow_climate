@@ -31,6 +31,7 @@ export const ProjectPage = ({
   const params = useParams()
   const projectId = params.projectId || ""
   const { projectInfo, loading: queryLoading } = useProjectInfo(projectId)
+  const location = useLocation()
 
   if (!projectInfo && !queryLoading) return <strong>No project found</strong>
 
@@ -116,6 +117,9 @@ export const ProjectPage = ({
             remainingDays={projectInfo.remainingDays || 0}
             currentOperationalRisk={projectInfo.currentRiskToDeadline || 0}
             currentTeamRisk={projectInfo.currentTeamBasedRisk || 0}
+            displaySimulationButton={location.pathname.includes(
+              "risk_drill_down"
+            )}
           />
         )}
         <Box
