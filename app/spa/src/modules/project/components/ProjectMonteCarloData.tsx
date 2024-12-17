@@ -1,26 +1,30 @@
 import TicketGroup from "../../../components/TicketGroup"
-import { Project } from "../project.types"
 
-const ProjectMonteCarloData = ({ project }: ProjectMonteCarloDataProps) => {
+const ProjectMonteCarloData = ({
+  currentMonteCarloWeeksMin,
+  currentMonteCarloWeeksMax,
+  monteCarloP80,
+  currentMonteCarloWeeksStdDev,
+}: ProjectMonteCarloDataProps) => {
   const monteCarloProject = [
     {
       title: "Mínimo",
-      value: project?.currentMonteCarloWeeksMin,
+      value: currentMonteCarloWeeksMin,
       unity: "semanas",
     },
     {
       title: "Máximo",
-      value: project?.currentMonteCarloWeeksMax,
+      value: currentMonteCarloWeeksMax,
       unity: "semanas",
     },
     {
       title: "Percentil 80",
-      value: project?.monteCarloP80?.toFixed(2),
+      value: monteCarloP80?.toFixed(2),
       unity: "semanas",
     },
     {
       title: "Desvio padrão",
-      value: project?.currentMonteCarloWeeksStdDev?.toFixed(2),
+      value: currentMonteCarloWeeksStdDev?.toFixed(2),
       unity: "semanas",
     },
   ]
@@ -28,8 +32,12 @@ const ProjectMonteCarloData = ({ project }: ProjectMonteCarloDataProps) => {
   return <TicketGroup title="Monte Carlo (Projeto)" data={monteCarloProject} />
 }
 
+// Receiving each prop instead of Project because a ProjectSimulation can also be used.
 type ProjectMonteCarloDataProps = {
-  project: Project
+  currentMonteCarloWeeksMin: number
+  currentMonteCarloWeeksMax: number
+  monteCarloP80: number
+  currentMonteCarloWeeksStdDev: number
 }
 
 export default ProjectMonteCarloData

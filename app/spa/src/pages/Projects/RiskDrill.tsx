@@ -75,7 +75,14 @@ export const RiskDrill = () => {
           />
           <TicketGroup title="Escopo e prazo" data={scopeAndDeadline} />
 
-          <ProjectMonteCarloData project={project} />
+          <ProjectMonteCarloData
+            currentMonteCarloWeeksMin={project.currentMonteCarloWeeksMin || 0}
+            currentMonteCarloWeeksMax={project.currentMonteCarloWeeksMax || 0}
+            monteCarloP80={project.monteCarloP80 || 0}
+            currentMonteCarloWeeksStdDev={
+              project.currentMonteCarloWeeksStdDev || 0
+            }
+          />
           <ProjectMonteCarloTeamData
             teamMonteCarloWeeksMin={project.teamMonteCarloWeeksMin || 0}
             teamMonteCarloWeeksMax={project.teamMonteCarloWeeksMax || 0}

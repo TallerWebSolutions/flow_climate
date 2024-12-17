@@ -111,13 +111,19 @@ module Types
     end
 
     def project_simulation(remaining_work:, throughputs:)
-      montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(remaining_work, throughputs, 100)
+      project_based_montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(remaining_work, throughputs, 500)
+      team_based_montecarlo_durations = compute_team_monte_carlo_weeks(remaining_work, throughputs)
 
       {
-        team_monte_carlo_p80: Stats::StatisticsService.instance.percentile(80, montecarlo_durations),
-        team_monte_carlo_weeks_max: montecarlo_durations.max,
-        team_monte_carlo_weeks_min: montecarlo_durations.min,
-        team_monte_carlo_weeks_std_dev: Stats::StatisticsService.instance.standard_deviation(throughputs)
+        monte_carlo_p80: Stats::StatisticsService.instance.percentile(80, project_based_montecarlo_durations),
+        current_monte_carlo_weeks_max: project_based_montecarlo_durations.max,
+        current_monte_carlo_weeks_min: project_based_montecarlo_durations.min,
+        current_monte_carlo_weeks_std_dev: Stats::StatisticsService.instance.standard_deviation(project_based_montecarlo_durations),
+
+        team_monte_carlo_p80: Stats::StatisticsService.instance.percentile(80, team_based_montecarlo_durations),
+        team_monte_carlo_weeks_max: team_based_montecarlo_durations.max,
+        team_monte_carlo_weeks_min: team_based_montecarlo_durations.min,
+        team_monte_carlo_weeks_std_dev: Stats::StatisticsService.instance.standard_deviation(team_based_montecarlo_durations)
       }
     end
 
@@ -297,6 +303,17 @@ module Types
     end
 
     private
+
+    def compute_team_monte_carlo_weeks(remaining_work, throughputs)
+      team = object.team
+
+      project_wip = object.max_work_in_progress || 1
+      team_wip = team.max_work_in_progress || 1
+      project_share_in_team_flow = project_wip.to_f / team_wip
+
+      project_share_team_throughput_data = throughputs.map { |throughput| throughput * project_share_in_team_flow }
+      Stats::StatisticsService.instance.run_montecarlo(remaining_work, project_share_team_throughput_data, 500)
+    end
 
     def weekly_consolidations
       weekly_consolidations_ids = object.project_consolidations.weekly_data.order(:consolidation_date).map(&:id)
