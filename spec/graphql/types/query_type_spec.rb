@@ -797,6 +797,39 @@ RSpec.describe Types::QueryType do
         end
       end
     end
+
+    context 'with project simulation' do
+      it 'returns the project simulation given the constraints' do
+        team = Fabricate :team, max_work_in_progress: 2
+        project = Fabricate :project, team: team
+        remaining_work = 100
+        throughputs = [5, 10, 15, 20, 10]
+
+        query =
+          %(query {
+            project(id: #{project.id}) {
+              id
+              projectSimulation(remainingWork: #{remaining_work}, throughputs: #{throughputs}, endDate: "2022-12-31") {
+                operationalRisk
+                teamOperationalRisk
+                monteCarloP80
+                currentMonteCarloWeeksMax
+                currentMonteCarloWeeksMin
+                currentMonteCarloWeeksStdDev
+                teamMonteCarloP80
+                teamMonteCarloWeeksMax
+                teamMonteCarloWeeksMin
+                teamMonteCarloWeeksStdDev
+              }
+            }
+          })
+
+        expect(Stats::StatisticsService.instance).to(receive(:run_montecarlo)).once.with(remaining_work, [12.5, 25.0, 37.5, 50.0, 25.0], 500).and_return([])
+        expect(Stats::StatisticsService.instance).to(receive(:run_montecarlo)).once.with(remaining_work, throughputs, 500).and_return([])
+
+        FlowClimateSchema.execute(query, variables: nil, context: nil).as_json
+      end
+    end
   end
 
   describe '#product' do

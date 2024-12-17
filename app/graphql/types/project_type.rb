@@ -66,6 +66,7 @@ module Types
     field :project_consolidations_weekly, [Types::ProjectConsolidationType], null: true
     field :project_members, [Types::ProjectMemberType], null: true
     field :project_simulation, Types::ProjectSimulationType, null: true do
+      argument :end_date, GraphQL::Types::ISO8601Date, required: true
       argument :remaining_work, Int, required: true
       argument :throughputs, [Int], required: true
     end
@@ -110,11 +111,16 @@ module Types
       object.demands.kept.unscored_demands
     end
 
-    def project_simulation(remaining_work:, throughputs:)
+    def project_simulation(remaining_work:, throughputs:, end_date:)
       project_based_montecarlo_durations = Stats::StatisticsService.instance.run_montecarlo(remaining_work, throughputs, 500)
       team_based_montecarlo_durations = compute_team_monte_carlo_weeks(remaining_work, throughputs)
 
+      operational_risk, team_operational_risk = operational_risk_info(end_date, project_based_montecarlo_durations, team_based_montecarlo_durations)
+
       {
+        operational_risk: operational_risk,
+        team_operational_risk: team_operational_risk,
+
         monte_carlo_p80: Stats::StatisticsService.instance.percentile(80, project_based_montecarlo_durations),
         current_monte_carlo_weeks_max: project_based_montecarlo_durations.max,
         current_monte_carlo_weeks_min: project_based_montecarlo_durations.min,
@@ -304,11 +310,19 @@ module Types
 
     private
 
+    def operational_risk_info(end_date, project_based_montecarlo_durations, team_based_montecarlo_durations)
+      remaining_weeks = ((end_date - Time.zone.today) / 7).ceil
+      operational_risk = 1 - Stats::StatisticsService.instance.compute_odds_to_deadline(remaining_weeks, project_based_montecarlo_durations)
+      team_operational_risk = 1 - Stats::StatisticsService.instance.compute_odds_to_deadline(remaining_weeks, team_based_montecarlo_durations)
+
+      [operational_risk, team_operational_risk]
+    end
+
     def compute_team_monte_carlo_weeks(remaining_work, throughputs)
       team = object.team
 
-      project_wip = object.max_work_in_progress || 1
-      team_wip = team.max_work_in_progress || 1
+      project_wip = [object.max_work_in_progress, 1].max
+      team_wip = [team.max_work_in_progress, 1].max || 1
       project_share_in_team_flow = project_wip.to_f / team_wip
 
       project_share_team_throughput_data = throughputs.map { |throughput| throughput * project_share_in_team_flow }

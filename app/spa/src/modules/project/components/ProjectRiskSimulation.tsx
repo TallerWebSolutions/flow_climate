@@ -13,13 +13,14 @@ import { FieldValues, useForm } from "react-hook-form"
 import { gql, useLazyQuery } from "@apollo/client"
 import ProjectMonteCarloData from "./ProjectMonteCarloData"
 import ProjectMonteCarloTeamData from "./ProjectMonteCarloTeamData"
+import ProjectRiskCards from "./ProjectRiskCards"
+import { differenceInDays, parseISO } from "date-fns"
 
 const ProjectRiskSimulation = ({ project }: ProjectRiskSimulationProps) => {
   const { register, handleSubmit } = useForm()
 
-  const [simulateProjectRisk, { data }] = useLazyQuery<ProjectSimulationDTO>(
-    PROJECT_SIMULATION_QUERY
-  )
+  const [simulateProjectRisk, { data, variables }] =
+    useLazyQuery<ProjectSimulationDTO>(PROJECT_SIMULATION_QUERY)
 
   const onSubmit = (values: FieldValues) => {
     simulateProjectRisk({
@@ -27,11 +28,16 @@ const ProjectRiskSimulation = ({ project }: ProjectRiskSimulationProps) => {
         projectId: project.id,
         remainingWork: Number(values.remainingWork || 0),
         throughputs: values.throughputs.split(",").map(Number),
+        endDate: values.endDate,
       },
     })
   }
 
   const projectSimulation = data?.project?.projectSimulation
+  const remainingDays = differenceInDays(
+    parseISO(variables?.endDate),
+    new Date()
+  )
 
   return (
     <Box marginY={4}>
@@ -77,12 +83,22 @@ const ProjectRiskSimulation = ({ project }: ProjectRiskSimulationProps) => {
 
       {projectSimulation && project && (
         <>
+          <ProjectRiskCards
+            remainingDays={remainingDays}
+            currentOperationalRisk={projectSimulation.operationalRisk || 0}
+            currentTeamRisk={projectSimulation.teamOperationalRisk || 0}
+          />
+
           <ProjectMonteCarloData
-            currentMonteCarloWeeksMin={project.currentMonteCarloWeeksMin || 0}
-            currentMonteCarloWeeksMax={project.currentMonteCarloWeeksMax || 0}
-            monteCarloP80={project.monteCarloP80 || 0}
+            currentMonteCarloWeeksMin={
+              projectSimulation.currentMonteCarloWeeksMin || 0
+            }
+            currentMonteCarloWeeksMax={
+              projectSimulation.currentMonteCarloWeeksMax || 0
+            }
+            monteCarloP80={projectSimulation.monteCarloP80 || 0}
             currentMonteCarloWeeksStdDev={
-              project.currentMonteCarloWeeksStdDev || 0
+              projectSimulation.currentMonteCarloWeeksStdDev || 0
             }
           />
 
@@ -113,13 +129,18 @@ const PROJECT_SIMULATION_QUERY = gql`
     $projectId: ID!
     $remainingWork: Int!
     $throughputs: [Int!]!
+    $endDate: ISO8601Date!
   ) {
     project(id: $projectId) {
       id
       projectSimulation(
         remainingWork: $remainingWork
         throughputs: $throughputs
+        endDate: $endDate
       ) {
+        operationalRisk
+        teamOperationalRisk
+
         currentMonteCarloWeeksMin
         currentMonteCarloWeeksMax
         monteCarloP80

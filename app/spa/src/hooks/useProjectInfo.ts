@@ -1,4 +1,5 @@
 import { gql, useQuery } from "@apollo/client"
+import { Project } from "../modules/project/project.types"
 
 export const PROJECT_QUERY = gql`
   query ProjectInfo($projectId: ID!) {
@@ -9,6 +10,7 @@ export const PROJECT_QUERY = gql`
       remainingDays
       currentTeamBasedRisk
       running
+      endDate
       company {
         id
         name
@@ -18,23 +20,9 @@ export const PROJECT_QUERY = gql`
   }
 `
 
-type ProjectInfo = {
-  project: {
-    id: number
-    name: string
-    currentRiskToDeadline: number
-    remainingDays: number
-    currentTeamBasedRisk: number
-    running: boolean
-    company: {
-      id: string
-      name: string
-      slug: string
-    }
-  }
+type ProjectInfoDTO = {
+  project?: Project
 }
-
-type ProjectInfoDTO = ProjectInfo | undefined
 
 const useProjectInfo = (projectId: string) => {
   const { data, loading, error } = useQuery<ProjectInfoDTO>(PROJECT_QUERY, {

@@ -3,54 +3,12 @@ import { Box } from "@mui/material"
 import { ReactNode, useContext } from "react"
 import { useTranslation } from "react-i18next"
 import { useLocation, useParams } from "react-router-dom"
-import Card, { CardType } from "../Card"
 import { MessagesContext } from "../../contexts/MessageContext"
 import useProjectInfo from "../../hooks/useProjectInfo"
 import ActionMenu from "../menu/ActionMenu"
 import BasicPage from "../BasicPage"
 import { Tabs } from "../Tabs"
-
-export const PROJECT_STANDARD_FRAGMENT = gql`
-  fragment ProjectStandardFragment on Project {
-    id
-    name
-    company {
-      id
-      name
-      slug
-    }
-  }
-`
-
-type ProjectPageProps = {
-  pageName: string
-  children: ReactNode
-  loading?: boolean
-}
-
-const cardTypeByRisk = (risk: number) => {
-  if (risk > 0.5 && risk <= 0.7) {
-    return CardType.WARNING
-  } else if (risk > 0.7) {
-    return CardType.ERROR
-  }
-
-  return CardType.SUCCESS
-}
-
-const GENERATE_PROJECT_CACHE_MUTATION = gql`
-  mutation GenerateProjectCache($projectId: ID!) {
-    generateProjectCache(projectId: $projectId) {
-      statusMessage
-    }
-  }
-`
-
-type ProjectCacheDTO = {
-  generateProjectCache?: {
-    statusMessage: string
-  }
-}
+import ProjectRiskCards from "../../modules/project/components/ProjectRiskCards"
 
 export const ProjectPage = ({
   pageName,
@@ -123,16 +81,6 @@ export const ProjectPage = ({
     },
   ]
 
-  const currentOperationalRisk = projectInfo?.currentRiskToDeadline || 0
-  const currentRiskToDeadlinePercentage = (
-    currentOperationalRisk * 100
-  ).toFixed(2)
-  const remainingDays = projectInfo?.remainingDays
-  const currentTeamRisk = projectInfo?.currentTeamBasedRisk || 0
-  const currentTeamRiskPercentage = (currentTeamRisk * 100).toFixed(2)
-  const cardTypeTeamRisk = cardTypeByRisk(currentTeamRisk)
-  const cardTypeOperationalRisk = cardTypeByRisk(currentOperationalRisk)
-
   const actions = [
     {
       name: t("settings_actions.update_cache"),
@@ -163,27 +111,12 @@ export const ProjectPage = ({
       loading={loading || queryLoading}
     >
       <>
-        {projectIsRunning && (
-          <Box sx={{ display: "flex", my: 2 }}>
-            <Card
-              style={{ width: "350px", marginRight: "20px" }}
-              title={t("cards.operational_risk")}
-              subtitle={t("cards.operational_risk_message", {
-                days: remainingDays,
-                percentage: currentRiskToDeadlinePercentage,
-              })}
-              type={cardTypeOperationalRisk}
-            />
-
-            <Card
-              style={{ width: "350px" }}
-              title={t("cards.operational_risk_team_data")}
-              subtitle={t("cards.operational_risk_team_data_message", {
-                risk: currentTeamRiskPercentage,
-              })}
-              type={cardTypeTeamRisk}
-            />
-          </Box>
+        {projectIsRunning && projectInfo && (
+          <ProjectRiskCards
+            remainingDays={projectInfo.remainingDays || 0}
+            currentOperationalRisk={projectInfo.currentRiskToDeadline || 0}
+            currentTeamRisk={projectInfo.currentTeamBasedRisk || 0}
+          />
         )}
         <Box
           sx={{
@@ -198,4 +131,37 @@ export const ProjectPage = ({
       </>
     </BasicPage>
   )
+}
+
+export const PROJECT_STANDARD_FRAGMENT = gql`
+  fragment ProjectStandardFragment on Project {
+    id
+    name
+    endDate
+    company {
+      id
+      name
+      slug
+    }
+  }
+`
+
+type ProjectPageProps = {
+  pageName: string
+  children: ReactNode
+  loading?: boolean
+}
+
+const GENERATE_PROJECT_CACHE_MUTATION = gql`
+  mutation GenerateProjectCache($projectId: ID!) {
+    generateProjectCache(projectId: $projectId) {
+      statusMessage
+    }
+  }
+`
+
+type ProjectCacheDTO = {
+  generateProjectCache?: {
+    statusMessage: string
+  }
 }

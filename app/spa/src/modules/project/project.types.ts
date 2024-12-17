@@ -113,7 +113,12 @@ export type Project = {
 }
 
 type ProjectSimulation = {
-  id: string
+  operationalRisk?: number
+  teamOperationalRisk?: number
+  currentMonteCarloWeeksMin?: number
+  currentMonteCarloWeeksMax?: number
+  monteCarloP80?: number
+  currentMonteCarloWeeksStdDev?: number
   teamMonteCarloWeeksMin?: number
   teamMonteCarloWeeksMax?: number
   teamMonteCarloP80?: number
