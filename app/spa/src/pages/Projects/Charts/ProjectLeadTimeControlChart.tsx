@@ -23,8 +23,8 @@ const ProjectLeadTimeControlChart = ({
           const leadTimeInDays = secondsToDays(leadtime)
 
           return {
-            x: externalId,
-            y: leadTimeInDays,
+            x: externalId || "",
+            y: leadTimeInDays || 0,
           }
         }) || [],
     },

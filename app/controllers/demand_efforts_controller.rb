@@ -15,6 +15,11 @@ class DemandEffortsController < AuthenticatedController
     respond_to { |format| format.csv { send_data efforts_csv, filename: "demand-#{@demand.external_id}-efforts-#{Time.zone.now}.csv" } }
   end
 
+  def new
+    prepend_view_path Rails.public_path
+    render 'spa-build/index'
+  end
+
   def edit
     @demand_effort = DemandEffort.find(params[:id])
   end

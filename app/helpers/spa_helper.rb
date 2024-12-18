@@ -26,6 +26,7 @@ module SpaHelper
       { controller: 'demands', action: 'index' },
       { controller: 'demands', action: 'demands_charts' },
       { controller: 'demands', action: 'demand_efforts' },
+      { controller: 'demand_efforts', action: 'new' },
       { controller: 'work_item_types', action: 'new' },
       { controller: 'work_item_types', action: 'index' },
       { controller: 'devise_customers/customer_demands', action: 'show' },
@@ -36,7 +37,7 @@ module SpaHelper
       { controller: 'portfolio_units', action: 'index' },
       { controller: 'portfolio_units', action: 'new' },
       { controller: 'jira/jira_project_configs', action: 'edit' },
-      { controller: 'jira/jira_project_configs', action: 'index'},
+      { controller: 'jira/jira_project_configs', action: 'index' },
       { controller: "users", action: "manager_home" },
       { controller: "product_users", action: "index" }
     ]

@@ -2,7 +2,7 @@
 
 class FlowClimateSchema < GraphQL::Schema
   max_complexity 1000
-  max_depth 13
+  max_depth 15
 
   mutation(Types::MutationType)
   query(Types::QueryType)

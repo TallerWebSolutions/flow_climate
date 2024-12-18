@@ -99,7 +99,7 @@ const ProjectRiskSimulation = ({ project }: ProjectRiskSimulationProps) => {
         </FormGroup>
       </form>
 
-      {projectSimulation && project && (
+      {projectSimulation && (
         <>
           <ProjectRiskCards
             remainingDays={remainingDays}

@@ -17,5 +17,8 @@
       "automaticUpdate": "Automatic?",
       "stage": "Stage"
     }
+  },
+  "new": {
+    "title": "Add New Effort"
   }
 }

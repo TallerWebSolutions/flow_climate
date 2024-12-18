@@ -1,58 +1,14 @@
 import { gql, useQuery } from "@apollo/client"
 import { useTranslation } from "react-i18next"
-import { useParams } from "react-router-dom"
+import { Link as RouterLink, useParams } from "react-router-dom"
 import EditIcon from "@mui/icons-material/Edit"
 import CheckIcon from "@mui/icons-material/Check"
-import { Link } from "@mui/material"
+import { Box, Button, Link } from "@mui/material"
 
 import DateLocale from "../../components/ui/DateLocale"
 import Table from "../../components/ui/Table"
 import DemandBasicPage from "../../modules/demand/components/DemandBasicPage"
-import { Demand as DemandType } from "../../modules/demand/demand.types"
-
-const DEMAND_QUERY = gql`
-  query Demand($externalId: String!) {
-    demand(externalId: $externalId) {
-      id
-      demandTitle
-      externalId
-      effortUpstream
-      effortDownstream
-      costToProject
-      costToProject
-      createdDate
-      commitmentDate
-      endDate
-      demandEfforts {
-        id
-        effortValue
-        effortMoney
-        startTimeToComputation
-        finishTimeToComputation
-        stagePercentage
-        pairingPercentage
-        managementPercentage
-        totalBlocked
-        mainEffortInTransition
-        stage
-        who
-        memberRole
-        automaticUpdate
-        membershipEffortPercentage
-        itemAssignment {
-          id
-          membership {
-            id
-          }
-        }
-      }
-    }
-  }
-`
-
-type DemandDTO = {
-  demand?: DemandType
-}
+import { Demand } from "../../modules/demand/demand.types"
 
 const DemandEfforts = () => {
   const params = useParams()
@@ -115,9 +71,62 @@ const DemandEfforts = () => {
 
   return demand ? (
     <DemandBasicPage demand={demand} loading={loading}>
+      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+        <Button
+          component={RouterLink}
+          to={`/companies/taller/demands/a10-2636/demand_efforts/new`}
+          variant="contained"
+        >
+          {t("new.title")}
+        </Button>
+      </Box>
       <Table headerCells={tableHeader} rows={tableRows} />
     </DemandBasicPage>
   ) : null
+}
+
+const DEMAND_QUERY = gql`
+  query Demand($externalId: String!) {
+    demand(externalId: $externalId) {
+      id
+      demandTitle
+      externalId
+      effortUpstream
+      effortDownstream
+      costToProject
+      costToProject
+      createdDate
+      commitmentDate
+      endDate
+      demandEfforts {
+        id
+        effortValue
+        effortMoney
+        startTimeToComputation
+        finishTimeToComputation
+        stagePercentage
+        pairingPercentage
+        managementPercentage
+        totalBlocked
+        mainEffortInTransition
+        stage
+        who
+        memberRole
+        automaticUpdate
+        membershipEffortPercentage
+        itemAssignment {
+          id
+          membership {
+            id
+          }
+        }
+      }
+    }
+  }
+`
+
+type DemandDTO = {
+  demand?: Demand
 }
 
 export default DemandEfforts

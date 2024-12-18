@@ -53,7 +53,7 @@ const LatestDeliveriesTable = ({
             format: "dd/MM/yyyy' 'HH:mm:ss",
           })
         : "",
-      secondsToReadbleDate(demand.leadtime),
+      secondsToReadbleDate(demand.leadtime || 0),
       demand.demandBlocksCount,
     ]
   })

@@ -6,33 +6,35 @@ import { DemandsFlowChartData, NumberChartData } from "../charts/charts.types"
 import { Product } from "../product/product.types"
 import { Customer } from "../customer/customer.types"
 import { DemandEffort } from "../demandEffort/demandEffort.types"
+import { Team } from "../team/team.types"
 
 export type Demand = {
   id: string
   demandTitle?: string
   demandType: string
   endDate?: string
-  classOfService: string
-  currentStageName: String
+  classOfService?: string
+  currentStageName?: String
   commitmentDate?: string
-  createdDate: string
+  createdDate?: string
   product?: Product
   customer?: Customer
   responsibles?: TeamMember[]
-  externalId: string
-  leadtime: number
+  externalId?: string
+  leadtime?: number
   project?: Project
   company?: Company
   costToProject?: number
   effortUpstream?: number
   effortDownstream?: number
   portfolioUnit?: PortfolioUnit
-  portfolioUnitName: String
-  projectName: string
-  productName: string
-  demandBlocksCount: number
+  portfolioUnitName?: String
+  projectName?: string
+  productName?: string
+  demandBlocksCount?: number
   demandEfforts?: DemandEffort[]
   discardedAt?: string
+  team?: Team
 }
 
 type PortfolioUnit = {

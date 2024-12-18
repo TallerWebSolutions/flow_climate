@@ -1,4 +1,4 @@
-import { ReactElement } from "react"
+import { ReactNode } from "react"
 import { useTranslation } from "react-i18next"
 import { useLocation, useParams } from "react-router-dom"
 
@@ -10,15 +10,17 @@ import { Demand } from "../demand.types"
 import DateLocale from "../../../components/ui/DateLocale"
 
 type DemandBasicPageProps = {
-  demand: Demand
   loading: boolean
-  children?: ReactElement
+  demand?: Demand
+  children?: ReactNode
+  displayTabs?: boolean
 }
 
 const DemandBasicPage = ({
   demand,
   loading,
   children,
+  displayTabs = true,
 }: DemandBasicPageProps) => {
   const { t } = useTranslation("demand")
   const { pathname } = useLocation()
@@ -96,7 +98,7 @@ const DemandBasicPage = ({
       loading={loading}
     >
       <Table headerCells={headerCells} rows={rows} />
-      <Tabs currentPath={pathname} tabs={tabs} />
+      {displayTabs && <Tabs currentPath={pathname} tabs={tabs} />}
       {children}
     </BasicPage>
   )

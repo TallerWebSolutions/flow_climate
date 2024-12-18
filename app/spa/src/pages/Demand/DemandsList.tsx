@@ -16,7 +16,7 @@ import { FieldValues } from "react-hook-form"
 import EditIcon from "@mui/icons-material/Edit"
 import DeleteIcon from "@mui/icons-material/Delete"
 import { formatISO } from "date-fns"
-import { useSearchParams, Link as RouterLink } from "react-router-dom"
+import { Link as RouterLink, useSearchParams } from "react-router-dom"
 
 import { Demand, DemandsList } from "../../modules/demand/demand.types"
 import Table, { RowWithCollapse } from "../../components/ui/Table"
@@ -391,7 +391,7 @@ const DemandsListPage = () => {
           ""
         ),
         demand.endDate ? <DateLocale time date={demand.endDate} /> : "",
-        secondsToReadbleDate(demand.leadtime),
+        secondsToReadbleDate(demand.leadtime || 0),
         <ButtonGroup>
           <Button
             variant="text"
