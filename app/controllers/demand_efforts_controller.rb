@@ -3,7 +3,7 @@
 require 'csv'
 
 class DemandEffortsController < AuthenticatedController
-  before_action :assign_demand
+  before_action :assign_demand, except: [:new]
 
   def index
     demand_efforts = DemandEffort.where(demand_id: @demand.id).order(start_time_to_computation: :desc)

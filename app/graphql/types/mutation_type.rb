@@ -2,6 +2,7 @@
 
 module Types
   class MutationType < Types::BaseObject
+    field :create_demand_effort, mutation: Mutations::CreateDemandEffort
     field :create_portfolio_unit, mutation: Mutations::CreatePortfolioUnitMutation
     field :create_product_risk_review, mutation: Mutations::CreateProductRiskReview
     field :create_project_additional_hours, mutation: Mutations::CreateProjectAdditionalHoursMutation

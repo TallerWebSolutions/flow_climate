@@ -954,4 +954,79 @@ RSpec.describe Types::MutationType do
       end
     end
   end
+
+  describe '#create_demand_effort' do
+    context 'with invalid demand external id' do
+      it 'returns not found error' do
+        demand_transition = Fabricate :demand_transition
+        item_assignment = Fabricate :item_assignment
+
+        mutation = %(mutation {
+            createDemandEffort(demandExternalId: "foo", demandTransitionId: #{demand_transition.id}, startDate: "#{11.hours.ago.iso8601}", endDate: "#{2.hours.ago.iso8601}", itemAssignmentId: #{item_assignment.id}) {
+              statusMessage
+            }
+          })
+
+        result = FlowClimateSchema.execute(mutation).as_json
+
+        expect(result.dig('data', 'createDemandEffort', 'statusMessage')).to eq 'NOT_FOUND'
+      end
+    end
+
+    context 'with invalid item assignment id' do
+      it 'returns not found error' do
+        demand = Fabricate :demand
+        demand_transition = Fabricate :demand_transition
+
+        mutation = %(mutation {
+            createDemandEffort(demandExternalId: #{demand.external_id}, startDate: "#{11.hours.ago.iso8601}", endDate: "#{2.hours.ago.iso8601}", demandTransitionId: #{demand_transition.id}, itemAssignmentId: "foo") {
+              statusMessage
+            }
+          })
+
+        result = FlowClimateSchema.execute(mutation).as_json
+
+        expect(result.dig('data', 'createDemandEffort', 'statusMessage')).to eq 'NOT_FOUND'
+      end
+    end
+
+    context 'with invalid demand transition id' do
+      it 'returns not found error' do
+        demand = Fabricate :demand
+        item_assignment = Fabricate :item_assignment
+
+        mutation = %(mutation {
+            createDemandEffort(demandExternalId: #{demand.external_id}, startDate: "#{11.hours.ago.iso8601}", endDate: "#{2.hours.ago.iso8601}", demandTransitionId: "foo", itemAssignmentId: #{item_assignment.id}) {
+              statusMessage
+            }
+          })
+
+        result = FlowClimateSchema.execute(mutation).as_json
+
+        expect(result.dig('data', 'createDemandEffort', 'statusMessage')).to eq 'NOT_FOUND'
+      end
+    end
+
+    context 'with valid arguments' do
+      it 'creates the effort and assigns it to de demand' do
+        demand = Fabricate :demand
+        demand_transition = Fabricate :demand_transition
+        item_assignment = Fabricate :item_assignment
+
+        mutation = %(mutation {
+          createDemandEffort(demandExternalId: #{demand.external_id}, startDate: "#{11.hours.ago.iso8601}", endDate: "#{2.hours.ago.iso8601}", demandTransitionId: #{demand_transition.id}, itemAssignmentId: #{item_assignment.id}) {
+            statusMessage
+            demandEffort {
+              automaticUpdate
+            }
+          }
+        })
+
+        result = FlowClimateSchema.execute(mutation).as_json
+
+        expect(result.dig('data', 'createDemandEffort', 'statusMessage')).to eq 'SUCCESS'
+        expect(result.dig('data', 'createDemandEffort', 'demandEffort', 'automaticUpdate')).to be false
+      end
+    end
+  end
 end

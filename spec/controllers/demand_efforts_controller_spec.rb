@@ -14,6 +14,12 @@ RSpec.describe DemandEffortsController do
       it { expect(response).to redirect_to new_user_session_path }
     end
 
+    describe 'GET #new' do
+      before { get :new, params: { company_id: 'foo', demand_id: 'bar', id: 'xpto' } }
+
+      it { expect(response).to redirect_to new_user_session_path }
+    end
+
     describe 'PATCH #update' do
       before { patch :update, params: { company_id: 'foo', demand_id: 'bar', id: 'xpto' } }
 
@@ -199,6 +205,26 @@ RSpec.describe DemandEffortsController do
             it { expect(response).to have_http_status :not_found }
           end
         end
+      end
+    end
+  end
+
+  context 'authenticated as gold' do
+    before { travel_to Time.zone.local(2024, 12, 18, 10, 0, 0) }
+
+    let(:plan) { Fabricate :plan, plan_type: :gold }
+    let(:user) { Fabricate :user, first_name: 'zzz', user_role: :manager }
+    let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true, paid: true, finish_at: 1.week.from_now }
+
+    before { sign_in user }
+
+    describe 'GET #new' do
+      it 'renders the spa template' do
+        company = Fabricate :company, users: [user]
+        demand = Fabricate :demand, company: company
+
+        get :new, params: { company_id: company, demand_id: demand }
+        expect(response).to render_template 'spa-build/index'
       end
     end
   end

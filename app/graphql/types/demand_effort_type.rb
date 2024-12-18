@@ -6,6 +6,7 @@ module Types
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :demand_external_id, String, null: false
     field :demand_id, Integer, null: false
+    field :demand_transition, Types::DemandTransitionType
     field :effort_money, String, null: true
     field :effort_value, Float, null: false
     field :finish_time_to_computation, GraphQL::Types::ISO8601DateTime, null: false
