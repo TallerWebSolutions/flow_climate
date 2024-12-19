@@ -385,8 +385,10 @@ RSpec.describe DemandsController do
           it 'calls the services and the reader' do
             first_assignment = Fabricate :item_assignment, demand: first_demand
             second_assignment = Fabricate :item_assignment, demand: first_demand
-            first_effort = Fabricate :demand_effort, demand: first_demand
-            other_effort = Fabricate :demand_effort, demand: first_demand
+            manual_assignment = Fabricate :item_assignment, demand: first_demand
+            first_effort = Fabricate :demand_effort, demand: first_demand, automatic_update: true, item_assignment: first_assignment
+            other_effort = Fabricate :demand_effort, demand: first_demand, automatic_update: true, item_assignment: second_assignment
+            manual_effort = Fabricate :demand_effort, demand: first_demand, automatic_update: false, item_assignment: manual_assignment
 
             expect(Jira::ProcessJiraIssueJob).to receive(:perform_later)
             put :synchronize_jira, params: { company_id: company, id: first_demand }
@@ -396,6 +398,8 @@ RSpec.describe DemandsController do
 
             expect(first_demand.reload.item_assignments).not_to include(first_assignment, second_assignment)
             expect(first_demand.demand_efforts).not_to include(first_effort, other_effort)
+            expect(first_demand.demand_efforts).to include(manual_effort)
+            expect(first_demand.item_assignments).to include(manual_assignment)
           end
         end
       end
