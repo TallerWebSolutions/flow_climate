@@ -38,7 +38,6 @@ const CreateDemandEffort = () => {
   const demand = data?.demand
 
   const onSubmit = (values: FieldValues) => {
-    console.log({ values })
     createDemandEffort({
       variables: {
         ...values,
