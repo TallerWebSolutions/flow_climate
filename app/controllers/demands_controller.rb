@@ -106,7 +106,7 @@ class DemandsController < DemandsListController
 
   def clean_assignments_efforts
     @demand.item_assignments.destroy_all
-    @demand.demand_efforts.destroy_all
+    @demand.demand_efforts.where(automatic_update: true).destroy_all
   end
 
   def read_demand_children
