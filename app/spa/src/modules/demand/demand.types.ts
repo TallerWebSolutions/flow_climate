@@ -35,6 +35,16 @@ export type Demand = {
   demandEfforts?: DemandEffort[]
   discardedAt?: string
   team?: Team
+  itemAssignments?: ItemAssignment[]
+  demandTransitions?: DemandTransition[]
+}
+
+type ItemAssignment = {
+  id: string
+}
+
+type DemandTransition = {
+  id: string
 }
 
 type PortfolioUnit = {

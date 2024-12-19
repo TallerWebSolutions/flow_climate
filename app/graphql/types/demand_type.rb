@@ -13,6 +13,7 @@ module Types
     field :demand_blocks_count, Int, null: false
     field :demand_efforts, [Types::DemandEffortType], null: true
     field :demand_title, String, null: true
+    field :demand_transitions, [Types::DemandTransitionType], null: true
     field :demand_type, String, null: false
     field :discarded_at, GraphQL::Types::ISO8601DateTime, null: true
     field :effort_downstream, Float, null: true
@@ -20,6 +21,7 @@ module Types
     field :end_date, GraphQL::Types::ISO8601DateTime, null: true
     field :external_id, String, null: false
     field :id, ID, null: false
+    field :item_assignments, [Types::ItemAssignmentType], null: true
     field :leadtime, Float, null: true
     field :portfolio_unit, Types::PortfolioUnitType, null: true
     field :portfolio_unit_name, String

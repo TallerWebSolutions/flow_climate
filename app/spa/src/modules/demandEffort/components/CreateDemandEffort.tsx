@@ -4,6 +4,7 @@ import { Demand } from "../../demand/demand.types"
 import DemandBasicPage from "../../demand/components/DemandBasicPage"
 import { useParams } from "react-router-dom"
 import {
+  Button,
   FormGroup,
   Grid,
   Input,
@@ -40,20 +41,33 @@ const CreateDemandEffort = () => {
         <FormGroup>
           <Grid container spacing={5}>
             <FormElement>
-              <InputLabel htmlFor="membership" shrink>
-                {commonT("membership")}
+              <InputLabel htmlFor="itemAssignment" shrink>
+                {commonT("itemAssignment")}
               </InputLabel>
-              <Select native {...register("membership")}>
-                {team?.memberships?.map((membership, index) => {
-                  return (
-                    <option
-                      value={membership.id}
-                      key={`${membership.id}--${index}`}
-                    >
-                      {membership.teamMemberName}
-                    </option>
-                  )
-                })}
+              <Select native {...register("itemAssignment")}>
+                {demand?.itemAssignments?.map((itemAssignment, index) => (
+                  <option
+                    key={`${itemAssignment.id}--${index}`}
+                    value={itemAssignment.id}
+                  >
+                    {itemAssignment.id}
+                  </option>
+                ))}
+              </Select>
+            </FormElement>
+            <FormElement>
+              <InputLabel htmlFor="demandTransition" shrink>
+                {commonT("demandTransition")}
+              </InputLabel>
+              <Select native {...register("demandTransition")}>
+                {demand?.demandTransitions?.map((demandTransition, index) => (
+                  <option
+                    key={`${demandTransition.id}--${index}`}
+                    value={demandTransition.id}
+                  >
+                    {demandTransition.id}
+                  </option>
+                ))}
               </Select>
             </FormElement>
             <FormElement>
@@ -61,7 +75,7 @@ const CreateDemandEffort = () => {
                 {commonT("startDate")}
               </InputLabel>
               <Input
-                type="date"
+                type="datetime-local"
                 defaultValue={new Date()}
                 {...register("startDate")}
               />
@@ -71,10 +85,19 @@ const CreateDemandEffort = () => {
                 {commonT("endDate")}
               </InputLabel>
               <Input
-                type="date"
+                type="datetime-local"
                 defaultValue={new Date()}
                 {...register("endDate")}
               />
+            </FormElement>
+            <FormElement>
+              <Button
+                sx={{ alignSelf: "flex-start" }}
+                type="submit"
+                variant="outlined"
+              >
+                {t("new.title")}
+              </Button>
             </FormElement>
           </Grid>
         </FormGroup>
@@ -97,12 +120,12 @@ const CREATE_DEMAND_EFFORT_QUERY = gql`
       commitmentDate
       endDate
 
-      team {
+      itemAssignments {
         id
-        memberships {
-          id
-          teamMemberName
-        }
+      }
+
+      demandTransitions {
+        id
       }
     }
   }
