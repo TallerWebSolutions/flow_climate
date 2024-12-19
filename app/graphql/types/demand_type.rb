@@ -39,5 +39,9 @@ module Types
     def responsibles
       object.memberships.map(&:team_member).uniq
     end
+
+    def item_assignments
+      object.item_assignments.where(id: object.item_assignments.group(:membership_id).maximum(:id).values)
+    end
   end
 end
