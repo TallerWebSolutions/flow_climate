@@ -2,5 +2,7 @@
   "days": "Days",
   "startDate": "Start Date",
   "endDate": "End Date",
-  "membership": "Membership"
+  "membership": "Membership",
+  "itemAssignment": "Item Assignment",
+  "demandTransition": "Demand Transition"
 }

@@ -17,5 +17,8 @@
       "automaticUpdate": "Automatico?",
       "stage": "Etapa"
     }
+  },
+  "new": {
+    "title": "Adicionar Novo Esforço"
   }
 }
