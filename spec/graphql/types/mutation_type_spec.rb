@@ -1014,10 +1014,11 @@ RSpec.describe Types::MutationType do
         item_assignment = Fabricate :item_assignment
 
         mutation = %(mutation {
-          createDemandEffort(demandExternalId: #{demand.external_id}, startDate: "#{11.hours.ago.iso8601}", endDate: "#{2.hours.ago.iso8601}", demandTransitionId: #{demand_transition.id}, itemAssignmentId: #{item_assignment.id}) {
+          createDemandEffort(demandExternalId: #{demand.external_id}, startDate: "#{8.hours.ago.iso8601}", endDate: "#{2.hours.ago.iso8601}", demandTransitionId: #{demand_transition.id}, itemAssignmentId: #{item_assignment.id}) {
             statusMessage
             demandEffort {
               automaticUpdate
+              effortValue
             }
           }
         })
@@ -1026,6 +1027,7 @@ RSpec.describe Types::MutationType do
 
         expect(result.dig('data', 'createDemandEffort', 'statusMessage')).to eq 'SUCCESS'
         expect(result.dig('data', 'createDemandEffort', 'demandEffort', 'automaticUpdate')).to be false
+        expect(result.dig('data', 'createDemandEffort', 'demandEffort', 'effortValue')).to eq 6
       end
     end
   end

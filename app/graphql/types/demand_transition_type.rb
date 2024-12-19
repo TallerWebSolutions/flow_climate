@@ -10,6 +10,7 @@ module Types
     field :last_time_out, GraphQL::Types::ISO8601DateTime
     field :lock_version, Integer
     field :stage, Types::StageType, null: false
+    field :stage_name, String
     field :team_member, Types::Teams::TeamMemberType
     field :transition_notified, Boolean, null: false
     field :transition_time_in_sec, Integer

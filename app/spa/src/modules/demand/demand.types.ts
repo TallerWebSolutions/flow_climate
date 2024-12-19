@@ -41,10 +41,12 @@ export type Demand = {
 
 type ItemAssignment = {
   id: string
+  teamMemberName?: string
 }
 
 type DemandTransition = {
   id: string
+  stageName?: string
 }
 
 type PortfolioUnit = {

@@ -18,7 +18,8 @@ module Mutations
 
       return { status_message: 'NOT_FOUND' } if demand.blank? || item_assignment.blank? || demand_transition.blank?
 
-      demand_effort = DemandEffort.create(demand: demand, demand_transition: demand_transition, item_assignment: item_assignment, start_time_to_computation: start_date, finish_time_to_computation: end_date, automatic_update: false)
+      effort_value = (end_date - start_date) / 3600
+      demand_effort = DemandEffort.create(demand: demand, demand_transition: demand_transition, item_assignment: item_assignment, start_time_to_computation: start_date, finish_time_to_computation: end_date, automatic_update: false, effort_value: effort_value)
 
       return { status_message: 'FAIL' } unless demand_effort.valid?
 

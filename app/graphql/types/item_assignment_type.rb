@@ -14,6 +14,7 @@ module Types
     field :membership, Types::Teams::MembershipType, null: false
     field :pull_interval, Float
     field :start_time, GraphQL::Types::ISO8601DateTime, null: false
+    field :team_member_name, String
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
   end
 end
