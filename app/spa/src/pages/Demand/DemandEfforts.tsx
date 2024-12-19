@@ -9,10 +9,13 @@ import DateLocale from "../../components/ui/DateLocale"
 import Table from "../../components/ui/Table"
 import DemandBasicPage from "../../modules/demand/components/DemandBasicPage"
 import { Demand } from "../../modules/demand/demand.types"
+import { useContext } from "react"
+import { MeContext } from "../../contexts/MeContext"
 
 const DemandEfforts = () => {
   const params = useParams()
   const { t } = useTranslation("demandEffort")
+  const { me } = useContext(MeContext)
 
   const { data, loading } = useQuery<DemandDTO>(DEMAND_QUERY, {
     variables: { externalId: params?.demand },
@@ -74,7 +77,7 @@ const DemandEfforts = () => {
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
         <Button
           component={RouterLink}
-          to={`/companies/taller/demands/a10-2636/demand_efforts/new`}
+          to={`/companies/${me?.currentCompany?.slug}/demands/${demand.externalId}/demand_efforts/new`}
           variant="contained"
         >
           {t("new.title")}
