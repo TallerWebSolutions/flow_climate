@@ -53,17 +53,17 @@ RSpec.describe Types::QueryType do
 
           result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
           expect(result.dig('data', 'teams')).to match_array(
-            company.teams.map do |team|
-              {
-                'id' => team.id.to_s,
-                'name' => team.name,
-                'company' => {
-                  'id' => company.id.to_s,
-                  'name' => company.name
-                }
-              }
-            end
-          )
+                                                   company.teams.map do |team|
+                                                     {
+                                                       'id' => team.id.to_s,
+                                                       'name' => team.name,
+                                                       'company' => {
+                                                         'id' => company.id.to_s,
+                                                         'name' => company.name
+                                                       }
+                                                     }
+                                                   end
+                                                 )
         end
       end
     end
@@ -334,15 +334,15 @@ RSpec.describe Types::QueryType do
                                                      }
                                                    })
             expect(result.dig('data', 'serviceDeliveryReviews')).to eq([{
-                                                                         'id' => service_delivery_review.id.to_s,
-                                                                         'delayedExpediteBottomThreshold' => 1.0,
-                                                                         'delayedExpediteTopThreshold' => 1.0,
-                                                                         'expediteMaxPullTimeSla' => 1,
-                                                                         'leadTimeTopThreshold' => 1.0,
-                                                                         'leadTimeBottomThreshold' => 1.0,
-                                                                         'qualityBottomThreshold' => 1.0,
-                                                                         'qualityTopThreshold' => 1.0
-                                                                       }])
+                                                                          'id' => service_delivery_review.id.to_s,
+                                                                          'delayedExpediteBottomThreshold' => 1.0,
+                                                                          'delayedExpediteTopThreshold' => 1.0,
+                                                                          'expediteMaxPullTimeSla' => 1,
+                                                                          'leadTimeTopThreshold' => 1.0,
+                                                                          'leadTimeBottomThreshold' => 1.0,
+                                                                          'qualityBottomThreshold' => 1.0,
+                                                                          'qualityTopThreshold' => 1.0
+                                                                        }])
             expect(result.dig('data', 'team')).to eq({
                                                        'id' => team.id.to_s,
                                                        'name' => team.name,
@@ -489,9 +489,9 @@ RSpec.describe Types::QueryType do
           customer = Fabricate :customer, company: company
           product = Fabricate :product, company: company, customer: customer
           project = Fabricate :project, company: company, customers: [customer], products: [product], team: team, name: 'zzz', initial_scope: 20,
-                                        status: :executing, start_date: 31.days.ago, end_date: 1.day.from_now, max_work_in_progress: 2, qty_hours: 500
+                              status: :executing, start_date: 31.days.ago, end_date: 1.day.from_now, max_work_in_progress: 2, qty_hours: 500
           other_project = Fabricate :project, company: company, customers: [customer], products: [product], team: team, name: 'aaa', initial_scope: 20,
-                                              status: :executing, start_date: 31.days.ago, end_date: 1.day.from_now, max_work_in_progress: 2, qty_hours: 500
+                                    status: :executing, start_date: 31.days.ago, end_date: 1.day.from_now, max_work_in_progress: 2, qty_hours: 500
 
           Fabricate :demand, company: company, project: project, team: team
 
@@ -701,28 +701,28 @@ RSpec.describe Types::QueryType do
                                                           'name' => company.name
                                                         },
                                                         'projectConsolidations' => [{
-                                                          'id' => project_consolidation.id.to_s,
-                                                          'interquartileRange' => 0.0,
-                                                          'leadTimeHistogramBinMax' => 0.0,
-                                                          'leadTimeHistogramBinMin' => 0.0,
-                                                          'leadTimeMaxMonth' => 0.0,
-                                                          'leadTimeMinMonth' => 0.0,
-                                                          'leadTimeP25' => project_consolidation.lead_time_p65,
-                                                          'leadTimeP75' => project_consolidation.lead_time_p75,
-                                                          'projectThroughputHoursAdditional' => project_consolidation.project_throughput_hours_additional,
-                                                          'projectThroughputHoursAdditionalInMonth' => project_consolidation.project_throughput_hours_additional_in_month
-                                                        }, {
-                                                          'id' => other_project_consolidation.id.to_s,
-                                                          'interquartileRange' => 0.0,
-                                                          'leadTimeHistogramBinMax' => 0.0,
-                                                          'leadTimeHistogramBinMin' => 0.0,
-                                                          'leadTimeMaxMonth' => 0.0,
-                                                          'leadTimeMinMonth' => 0.0,
-                                                          'leadTimeP25' => other_project_consolidation.lead_time_p65,
-                                                          'leadTimeP75' => other_project_consolidation.lead_time_p75,
-                                                          'projectThroughputHoursAdditional' => other_project_consolidation.project_throughput_hours_additional,
-                                                          'projectThroughputHoursAdditionalInMonth' => other_project_consolidation.project_throughput_hours_additional_in_month
-                                                        }],
+                                                                                      'id' => project_consolidation.id.to_s,
+                                                                                      'interquartileRange' => 0.0,
+                                                                                      'leadTimeHistogramBinMax' => 0.0,
+                                                                                      'leadTimeHistogramBinMin' => 0.0,
+                                                                                      'leadTimeMaxMonth' => 0.0,
+                                                                                      'leadTimeMinMonth' => 0.0,
+                                                                                      'leadTimeP25' => project_consolidation.lead_time_p65,
+                                                                                      'leadTimeP75' => project_consolidation.lead_time_p75,
+                                                                                      'projectThroughputHoursAdditional' => project_consolidation.project_throughput_hours_additional,
+                                                                                      'projectThroughputHoursAdditionalInMonth' => project_consolidation.project_throughput_hours_additional_in_month
+                                                                                    }, {
+                                                                                      'id' => other_project_consolidation.id.to_s,
+                                                                                      'interquartileRange' => 0.0,
+                                                                                      'leadTimeHistogramBinMax' => 0.0,
+                                                                                      'leadTimeHistogramBinMin' => 0.0,
+                                                                                      'leadTimeMaxMonth' => 0.0,
+                                                                                      'leadTimeMinMonth' => 0.0,
+                                                                                      'leadTimeP25' => other_project_consolidation.lead_time_p65,
+                                                                                      'leadTimeP75' => other_project_consolidation.lead_time_p75,
+                                                                                      'projectThroughputHoursAdditional' => other_project_consolidation.project_throughput_hours_additional,
+                                                                                      'projectThroughputHoursAdditionalInMonth' => other_project_consolidation.project_throughput_hours_additional_in_month
+                                                                                    }],
                                                         'demandsFinishedWithLeadtime' => [{ 'id' => second_finished_demand.id.to_s }],
                                                         'discardedDemands' => [],
                                                         'unscoredDemands' => project.demands.kept.unscored_demands.map do |unscored_demand|
@@ -758,9 +758,9 @@ RSpec.describe Types::QueryType do
                                                           'values' => [1]
                                                         },
                                                         'projectMembers' => [{
-                                                          'demandsCount' => 2,
-                                                          'memberName' => 'foo'
-                                                        }],
+                                                                               'demandsCount' => 2,
+                                                                               'memberName' => 'foo'
+                                                                             }],
                                                         'demandsBurnup' => {
                                                           'xAxis' => TimeService.instance.weeks_between_of(project.start_date, project.end_date).map(&:iso8601),
                                                           'idealBurn' => [12.2, 24.4, 36.599999999999994, 48.8, 61.0],
@@ -776,24 +776,24 @@ RSpec.describe Types::QueryType do
                                                       })
 
           expect(result.dig('data', 'projectConsolidations')).to match_array([{
-                                                                               'id' => project_consolidation.id.to_s,
-                                                                               'interquartileRange' => 0.0,
-                                                                               'leadTimeHistogramBinMax' => 0.0,
-                                                                               'leadTimeHistogramBinMin' => 0.0,
-                                                                               'leadTimeMaxMonth' => 0.0,
-                                                                               'leadTimeMinMonth' => 0.0,
-                                                                               'leadTimeP25' => 0.0,
-                                                                               'leadTimeP75' => 0.0
-                                                                             }, {
-                                                                               'id' => other_project_consolidation.id.to_s,
-                                                                               'interquartileRange' => 0.0,
-                                                                               'leadTimeHistogramBinMax' => 0.0,
-                                                                               'leadTimeHistogramBinMin' => 0.0,
-                                                                               'leadTimeMaxMonth' => 0.0,
-                                                                               'leadTimeMinMonth' => 0.0,
-                                                                               'leadTimeP25' => 0.0,
-                                                                               'leadTimeP75' => 0.0
-                                                                             }])
+                                                                                'id' => project_consolidation.id.to_s,
+                                                                                'interquartileRange' => 0.0,
+                                                                                'leadTimeHistogramBinMax' => 0.0,
+                                                                                'leadTimeHistogramBinMin' => 0.0,
+                                                                                'leadTimeMaxMonth' => 0.0,
+                                                                                'leadTimeMinMonth' => 0.0,
+                                                                                'leadTimeP25' => 0.0,
+                                                                                'leadTimeP75' => 0.0
+                                                                              }, {
+                                                                                'id' => other_project_consolidation.id.to_s,
+                                                                                'interquartileRange' => 0.0,
+                                                                                'leadTimeHistogramBinMax' => 0.0,
+                                                                                'leadTimeHistogramBinMin' => 0.0,
+                                                                                'leadTimeMaxMonth' => 0.0,
+                                                                                'leadTimeMinMonth' => 0.0,
+                                                                                'leadTimeP25' => 0.0,
+                                                                                'leadTimeP75' => 0.0
+                                                                              }])
         end
       end
     end
@@ -1199,6 +1199,9 @@ RSpec.describe Types::QueryType do
               demandEfforts {
                 id
               }
+              itemAssignments {
+                id
+              }
             }
           }
         )
@@ -1327,20 +1330,20 @@ RSpec.describe Types::QueryType do
 
         result = FlowClimateSchema.execute(query, variables: nil, context: context).as_json
         expect(result.dig('data', 'projects')).to eq([{
-                                                       'id' => first_project.id.to_s,
-                                                       'name' => first_project.name,
-                                                       'team' => {
-                                                         'id' => first_project.team.id.to_s,
-                                                         'name' => first_project.team.name
-                                                       },
-                                                       'status' => first_project.status,
-                                                       'numberOfDemands' => first_project.demands.kept.count,
-                                                       'remainingDays' => first_project.remaining_days,
-                                                       'numberOfDemandsDelivered' => first_project.demands.kept.finished_until_date(Time.zone.now).count,
-                                                       'qtyHours' => first_project.qty_hours,
-                                                       'consumedHours' => first_project.consumed_hours,
-                                                       'currentRiskToDeadline' => first_project.current_risk_to_deadline
-                                                     },
+                                                        'id' => first_project.id.to_s,
+                                                        'name' => first_project.name,
+                                                        'team' => {
+                                                          'id' => first_project.team.id.to_s,
+                                                          'name' => first_project.team.name
+                                                        },
+                                                        'status' => first_project.status,
+                                                        'numberOfDemands' => first_project.demands.kept.count,
+                                                        'remainingDays' => first_project.remaining_days,
+                                                        'numberOfDemandsDelivered' => first_project.demands.kept.finished_until_date(Time.zone.now).count,
+                                                        'qtyHours' => first_project.qty_hours,
+                                                        'consumedHours' => first_project.consumed_hours,
+                                                        'currentRiskToDeadline' => first_project.current_risk_to_deadline
+                                                      },
                                                       {
                                                         'id' => second_project.id.to_s,
                                                         'name' => second_project.name,
@@ -1709,8 +1712,8 @@ RSpec.describe Types::QueryType do
                                                            'totalCount' => 2,
                                                            'totalPages' => 2,
                                                            'projects' => [{
-                                                             'id' => other_project.id.to_s
-                                                           }]
+                                                                            'id' => other_project.id.to_s
+                                                                          }]
                                                          },
                                                          'demandsFinished' => [{ 'id' => demand_finished.id.to_s }, { 'id' => other_demand_finished.id.to_s }],
                                                          'bugs' => [{ 'id' => other_demand_finished.id.to_s }, { 'id' => bug.id.to_s }, { 'id' => other_bug.id.to_s }],
