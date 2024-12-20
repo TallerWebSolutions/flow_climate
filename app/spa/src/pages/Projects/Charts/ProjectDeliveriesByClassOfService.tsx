@@ -15,12 +15,20 @@ const ProjectDeliveriesByClassOfService = ({
       )
     ),
   ]
-  const deliveriesByClassOfServiceChartData = classesOfService.map((cos) => ({
-    label: cos,
-    value: project.demandsFinishedWithLeadtime?.filter(
-      (d) => d.classOfService === cos
-    ).length,
-  }))
+  const deliveriesByClassOfServiceChartData = classesOfService.map((cos) => {
+    const demandsAmount =
+      project.demandsFinishedWithLeadtime?.filter(
+        (d) => d.classOfService === cos
+      ).length || 0
+
+    return {
+      label: `${cos} ${(
+        (demandsAmount / (project.demandsFinishedWithLeadtime?.length || 1)) *
+        100
+      ).toFixed(2)}%`,
+      value: demandsAmount,
+    }
+  })
 
   return (
     <ChartGridItem
