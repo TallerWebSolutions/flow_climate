@@ -8,6 +8,7 @@ import { Grid } from "@mui/material"
 import { Project } from "../../../modules/project/project.types"
 import ProjectOperationalRiskEvolution from "./ProjectOperationalRiskEvolution"
 import ProjectDeliveriesByClassOfService from "./ProjectDeliveriesByClassOfService"
+import ProjectFlowEfficiency from "./ProjectFlowEfficiency"
 
 const ProjectStatusReportCharts = ({
   project,
@@ -22,6 +23,7 @@ const ProjectStatusReportCharts = ({
       <ProjectCumulativeFlowData project={project} />
       <ProjectOperationalRiskEvolution project={project} />
       <ProjectDeliveriesByClassOfService project={project} />
+      <ProjectFlowEfficiency project={project} />
     </Grid>
   )
 }

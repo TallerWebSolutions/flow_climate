@@ -90,7 +90,7 @@
       ],
       "max-statements": [
         "error",
-        44
+        27
       ]
     }
   },

@@ -109,7 +109,7 @@ const TEAM_DASHBOARD_QUERY = gql`
 `
 
 type TeamDashboardDTO = {
-  team: Team
+  team?: Team
 }
 
 const TeamDashboard = () => {
@@ -132,8 +132,7 @@ const TeamDashboard = () => {
   })
   const { register } = useForm()
 
-  const company = me?.currentCompany
-  const companyName = company?.name
+  const companyName = me?.currentCompany?.name
   const companyUrl = `/companies/${companySlug}`
   const team = data?.team
   const breadcrumbsLinks = [
