@@ -69,6 +69,7 @@ export const QUERY = gql`
         id
         leadtime
         externalId
+        classOfService
       }
       lastProjectConsolidationsWeekly {
         leadTimeP65

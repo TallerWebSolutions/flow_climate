@@ -145,6 +145,7 @@ const MANAGER_DASHBOARD_QUERY = gql`
       id
       leadtime
       externalId
+      classOfService
     }
     lastProjectConsolidationsWeekly {
       leadTimeP65

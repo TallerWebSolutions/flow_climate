@@ -25,7 +25,7 @@ const ProjectFinancialReport = () => {
   )
 
   const finishedDemandsRows = data?.finishedDemands
-    ? data.finishedDemands.demands.map((demand) => [
+    ? data.finishedDemands.demands?.map((demand) => [
         <Link href={`/companies/${companySlug}/demands/${demand.externalId}`}>
           {demand.externalId}
         </Link>,
@@ -44,19 +44,19 @@ const ProjectFinancialReport = () => {
 
   const totalFinishedDemandsCost =
     data?.finishedDemands?.demands
-      .map((demand) => demand.costToProject || 0)
+      ?.map((demand) => demand.costToProject || 0)
       .reduce(sum, 0) || 0
   const totalFinishedDemandsUpstreamEffort =
     data?.finishedDemands?.demands
-      .map((demand) => demand.effortUpstream || 0)
+      ?.map((demand) => demand.effortUpstream || 0)
       .reduce(sum, 0) || 0
   const totalFinishedDemandsDownstreamEffort =
     data?.finishedDemands?.demands
-      .map((demand) => demand.effortDownstream || 0)
+      ?.map((demand) => demand.effortDownstream || 0)
       .reduce(sum, 0) || 0
   const finishedDemandsFooter = [
     t("footer.total"),
-    `${finishedDemandsRows.length} ${t("footer.demands")}`,
+    `${finishedDemandsRows?.length} ${t("footer.demands")}`,
     "",
     formatCurrency(totalFinishedDemandsCost),
     totalFinishedDemandsUpstreamEffort.toFixed(2),
@@ -83,15 +83,15 @@ const ProjectFinancialReport = () => {
 
   const totalDiscardedDemandsCost =
     data?.discardedDemands?.demands
-      .map((demand) => demand.costToProject || 0)
+      ?.map((demand) => demand.costToProject || 0)
       .reduce(sum, 0) || 0
   const totalDiscardedDemandsUpstreamEffort =
     data?.discardedDemands?.demands
-      .map((demand) => demand.effortUpstream || 0)
+      ?.map((demand) => demand.effortUpstream || 0)
       .reduce(sum, 0) || 0
   const totalDiscardedDemandsDownstreamEffort =
     data?.discardedDemands?.demands
-      .map((demand) => demand.effortDownstream || 0)
+      ?.map((demand) => demand.effortDownstream || 0)
       .reduce(sum, 0) || 0
 
   const discardedDemandsFooter = [
@@ -147,7 +147,7 @@ const ProjectFinancialReport = () => {
             t("finishedDemands.effortDownstream").toString(),
             t("finishedDemands.totalEffort").toString(),
           ]}
-          rows={finishedDemandsRows}
+          rows={finishedDemandsRows || []}
           footerCells={finishedDemandsFooter}
         />
         <Table

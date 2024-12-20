@@ -51,20 +51,20 @@ type DemandTransition = {
 
 type PortfolioUnit = {
   id: string
-  name: string
+  name?: string
 }
 
 export type DemandsList = {
-  demands: Demand[]
-  lastPage: boolean
-  totalCount: number
-  totalPages: number
+  demands?: Demand[]
+  lastPage?: boolean
+  totalCount?: number
+  totalPages?: number
   totalEffort?: number
-  controlChart: ControlChart
-  leadTimeBreakdown: NumberChartData
-  flowData: DemandsFlowChartData
-  flowEfficiency: NumberChartData
-  leadTimeEvolutionP80: NumberChartData
+  controlChart?: ControlChart
+  leadTimeBreakdown?: NumberChartData
+  flowData?: DemandsFlowChartData
+  flowEfficiency?: NumberChartData
+  leadTimeEvolutionP80?: NumberChartData
 }
 
 export type DemandBlock = {

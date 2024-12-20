@@ -104,7 +104,8 @@
       "demandsCountByTeamMember": "Demands by Team Member",
       "demandsCount": "Demands Count",
       "hours_per_coordination_stage_chart": "Hours per Coordination Stage",
-      "hours_per_coordination_stage_y_label": "Hours"
+      "hours_per_coordination_stage_y_label": "Hours",
+      "deliveriesByClassOfService": "Deliveries by Class of Service"
     }
   }
 }

@@ -468,10 +468,10 @@ const DemandsListPage = () => {
   const demandsCount = data?.demandsTableData.totalCount || 0
   const totalEffort = data?.demandsTableData.totalEffort?.toFixed(2) || 0
   const tableRows: RowWithCollapse[] =
-    data?.demandsTableData.demands.map(normalizeTableRow) || []
+    data?.demandsTableData.demands?.map(normalizeTableRow) || []
 
   const csvRows =
-    csvData?.demandsCsvData.demands.map(normalizeCsvTableRow) || []
+    csvData?.demandsCsvData.demands?.map(normalizeCsvTableRow) || []
 
   const csvFileReady = csvQueryCalled && !csvLoading
 

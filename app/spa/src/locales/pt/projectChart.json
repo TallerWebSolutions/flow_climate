@@ -104,7 +104,8 @@
       "demandsCountByTeamMember": "Demandas por Membros do Time",
       "demandsCount": "Demandas",
       "hours_per_coordination_stage_chart": "Horas por Etapa de Coordenação",
-      "hours_per_coordination_stage_y_label": "Horas"
+      "hours_per_coordination_stage_y_label": "Horas",
+      "deliveriesByClassOfService": "Entregas por Classe de Serviço"
     }
   }
 }
