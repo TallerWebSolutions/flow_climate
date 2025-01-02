@@ -16,12 +16,13 @@ import { SliceTooltipProps } from "@nivo/line"
 import LineChartTooltip from "../../components/charts/tooltips/LineChartTooltip"
 
 const DEMANDS_CHART_QUERY = gql`
-  query DemandsSearch(
+  query DemandsSearchCharts(
     $orderField: String!
     $searchText: String
     $pageNumber: Int
     $perPage: Int
     $project: ID
+    $product: ID
     $startDate: ISO8601Date
     $endDate: ISO8601Date
     $demandStatus: DemandStatuses
@@ -34,6 +35,7 @@ const DEMANDS_CHART_QUERY = gql`
         pageNumber: $pageNumber
         perPage: $perPage
         projectId: $project
+        productId: $product
         startDate: $startDate
         endDate: $endDate
         demandStatus: $demandStatus
