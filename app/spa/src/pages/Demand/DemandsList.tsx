@@ -110,6 +110,7 @@ const DEMANDS_CSV_QUERY = gql`
     $orderField: String!
     $searchText: String
     $project: ID
+    $product: ID
     $startDate: ISO8601Date
     $endDate: ISO8601Date
     $demandStatus: DemandStatuses
@@ -120,6 +121,7 @@ const DEMANDS_CSV_QUERY = gql`
     demandsCsvData: demandsList(
       searchOptions: {
         projectId: $project
+        productId: $product
         startDate: $startDate
         endDate: $endDate
         demandStatus: $demandStatus
@@ -176,14 +178,15 @@ interface DemandOptionsModalProps {
   onDeleteDemand: (demandId: string) => void
 }
 
-const normalizeQueryStringFilters = (filters: FieldValues) =>
-  Object.keys(filters)
+const normalizeQueryStringFilters = (filters: FieldValues) => {
+  return Object.keys(filters)
     .filter((key) => {
       return String(filters[key]).length > 0 && filters[key] !== "null"
     })
     .reduce<Record<string, string>>((acc, el) => {
       return { ...acc, [el]: filters[el] }
     }, {})
+}
 
 const DemandsListPage = () => {
   const { t } = useTranslation("demand")
@@ -377,7 +380,7 @@ const DemandsListPage = () => {
                   sx={{ width: "25px", height: "25px", fontSize: ".875rem" }}
                   src={
                     responsible.user?.avatar?.imageSource ||
-                    process.env.PUBLIC_URL + "default.png"
+                    process.env.PUBLIC_URL + "/default.png"
                   }
                   children={
                     !responsible.user?.avatar?.imageSource &&
