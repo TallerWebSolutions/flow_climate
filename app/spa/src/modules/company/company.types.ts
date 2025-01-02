@@ -1,5 +1,6 @@
 import { Project } from "../project/project.types"
 import { Team } from "../team/team.types"
+import { Product } from "../product/product.types"
 
 export type WorkItemType = {
   id: string
@@ -8,9 +9,10 @@ export type WorkItemType = {
 
 export type Company = {
   id: string
-  name: string
-  slug: string
+  name?: string
+  slug?: string
   projects?: Project[]
+  products?: Product[]
   teams?: Team[]
   workItemTypes?: WorkItemType[]
 }

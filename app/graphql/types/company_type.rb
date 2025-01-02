@@ -4,6 +4,7 @@ module Types
   class CompanyType < Types::BaseObject
     field :id, ID, null: false
     field :name, String, null: false
+    field :products, [Types::ProductType], null: false
     field :projects, [Types::ProjectType], null: false
     field :slug, String, null: false
     field :teams, [Types::Teams::TeamType], null: false
@@ -15,6 +16,10 @@ module Types
 
     def projects
       object.projects.order(:name)
+    end
+
+    def products
+      object.products.order(:name)
     end
   end
 end

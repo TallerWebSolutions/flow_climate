@@ -1,11 +1,11 @@
 import {
-  FormGroup,
-  InputLabel,
-  Input,
-  Select,
-  Grid,
-  Button,
   Box,
+  Button,
+  FormGroup,
+  Grid,
+  Input,
+  InputLabel,
+  Select,
 } from "@mui/material"
 import SearchIcon from "@mui/icons-material/Search"
 import { useTranslation } from "react-i18next"
@@ -24,8 +24,6 @@ import { Tabs } from "./Tabs"
 import { useLocation } from "react-router-dom"
 import { FormElement } from "./ui/Form"
 import { trackPageView } from "../amplitude/amplitudeEvents"
-import { Project } from "../modules/project/project.types"
-import { Team } from "../modules/team/team.types"
 import { WorkItemType } from "../modules/company/company.types"
 
 export type DemandsSearchDTO = {
@@ -50,13 +48,14 @@ const DemandsPage = ({
   const company = me?.currentCompany
   const companySlug = company?.slug
 
-  const projects = me?.currentCompany?.projects
-  const teams = me?.currentCompany?.teams
+  const projects = company?.projects
+  const products = company?.products
+  const teams = company?.teams
   const { pathname, search } = useLocation()
   const amplitudeUser = {
     id: me?.id,
     fullName: me?.fullName,
-    companySlug: me?.currentCompany?.slug,
+    companySlug: company?.slug,
   }
 
   useEffect(() => {
@@ -162,52 +161,67 @@ const DemandsPage = ({
                 </option>
               </Select>
             </FormElement>
-            {!!projects?.length && (
-              <FormElement>
-                <InputLabel
-                  htmlFor="project"
-                  sx={{ backgroundColor: "white" }}
-                  shrink
-                >
-                  {t("list.form.project")}
-                </InputLabel>
-                <Select
-                  native
-                  {...register("project")}
-                  defaultValue={filters.project}
-                >
-                  <option value="">{t("list.form.common.placeholder")}</option>
-                  {projects.map((project: Project, index: number) => (
-                    <option value={project.id} key={`${project.id}--${index}`}>
-                      {project.name}
-                    </option>
-                  ))}
-                </Select>
-              </FormElement>
-            )}
-            {!!teams?.length && (
-              <FormElement>
-                <InputLabel
-                  htmlFor="team"
-                  sx={{ backgroundColor: "white" }}
-                  shrink
-                >
-                  {t("list.form.team")}
-                </InputLabel>
-                <Select
-                  native
-                  {...register("team")}
-                  defaultValue={filters.team}
-                >
-                  <option value="">{t("list.form.common.placeholder")}</option>
-                  {teams.map((team: Team, index: number) => (
-                    <option value={team.id} key={`${team.id}--${index}`}>
-                      {team.name}
-                    </option>
-                  ))}
-                </Select>
-              </FormElement>
-            )}
+
+            <FormElement>
+              <InputLabel
+                htmlFor="product"
+                shrink
+                sx={{ backgroundColor: "white" }}
+              >
+                {t("list.form.product")}
+              </InputLabel>
+              <Select
+                native
+                {...register("product")}
+                defaultValue={filters.product}
+              >
+                <option value="">{t("list.form.common.placeholder")}</option>
+                {products?.map((product, index) => (
+                  <option value={product.id} key={`${product.id}--${index}`}>
+                    {product.name}
+                  </option>
+                ))}
+              </Select>
+            </FormElement>
+
+            <FormElement>
+              <InputLabel
+                htmlFor="project"
+                sx={{ backgroundColor: "white" }}
+                shrink
+              >
+                {t("list.form.project")}
+              </InputLabel>
+              <Select
+                native
+                {...register("project")}
+                defaultValue={filters.project}
+              >
+                <option value="">{t("list.form.common.placeholder")}</option>
+                {projects?.map((project, index) => (
+                  <option value={project.id} key={`${project.id}--${index}`}>
+                    {project.name}
+                  </option>
+                ))}
+              </Select>
+            </FormElement>
+            <FormElement>
+              <InputLabel
+                htmlFor="team"
+                sx={{ backgroundColor: "white" }}
+                shrink
+              >
+                {t("list.form.team")}
+              </InputLabel>
+              <Select native {...register("team")} defaultValue={filters.team}>
+                <option value="">{t("list.form.common.placeholder")}</option>
+                {teams?.map((team, index) => (
+                  <option value={team.id} key={`${team.id}--${index}`}>
+                    {team.name}
+                  </option>
+                ))}
+              </Select>
+            </FormElement>
             <FormElement>
               <InputLabel
                 htmlFor="demandType"

@@ -1,4 +1,4 @@
-import { useContext } from "react"
+import { useContext, useState } from "react"
 import {
   Avatar,
   Box,
@@ -8,7 +8,6 @@ import {
   Menu,
   MenuItem,
 } from "@mui/material"
-import { useState } from "react"
 import { gql, useMutation } from "@apollo/client"
 
 import { Company } from "../modules/company/company.types"
@@ -96,7 +95,7 @@ const Header = () => {
           </Link>
           {company &&
             !me?.userIsManager &&
-            buildLinks(company.slug).map((link, index) => (
+            buildLinks(company.slug || "").map((link, index) => (
               <Link
                 sx={{ textDecoration: "none" }}
                 px={2}

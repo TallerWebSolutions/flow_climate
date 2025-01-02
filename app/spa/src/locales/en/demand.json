@@ -50,6 +50,7 @@
         "notDiscarded": "Not discarded"
       },
       "project": "Project",
+      "product": "Product",
       "team": "Team",
       "prepareCSVFile": "Prepare CSV",
       "downloadCsv": "Download CSV"

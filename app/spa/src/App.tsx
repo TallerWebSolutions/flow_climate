@@ -42,6 +42,10 @@ export const ME_QUERY = gql`
           id
           name
         }
+        products {
+          id
+          name
+        }
         teams {
           id
           name

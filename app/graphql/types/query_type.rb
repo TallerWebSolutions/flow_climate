@@ -205,17 +205,21 @@ module Types
     private
 
     def base_demands(search_options)
-      demands = if search_options.project_id.blank?
-                  current_user.last_company.demands
-                else
-                  Project.find(search_options.project_id).demands
-                end
+      demands = user_demands(project_id: search_options.project_id, product_id: search_options.product_id)
 
       DemandService.instance.search_engine(
         demands, search_options.start_date, search_options.end_date, search_options.search_text,
         search_options.demand_status, search_options.demand_type, search_options.demand_class_of_service, search_options.demand_tags,
         search_options.team_id
       )
+    end
+
+    def user_demands(project_id:, product_id:)
+      demands = current_user.last_company.demands
+      demands = demands.for_project(project_id) if project_id.present?
+      demands = demands.for_product(product_id) if product_id.present?
+
+      demands
     end
   end
 end

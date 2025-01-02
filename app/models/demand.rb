@@ -131,6 +131,8 @@ class Demand < ApplicationRecord
   scope :bug, -> { joins(:work_item_type).where(work_item_type: { quality_indicator_type: true }) }
   scope :chore, -> { joins(:work_item_type).where(work_item_type: { name: 'Chore' }) }
   scope :feature, -> { joins(:work_item_type).where(work_item_type: { name: 'Feature' }) }
+  scope :for_project, ->(project) { where(project_id: project) }
+  scope :for_product, ->(product) { where(product_id: product) }
 
   delegate :name, to: :project, prefix: true, allow_nil: true
   delegate :name, to: :product, prefix: true, allow_nil: true

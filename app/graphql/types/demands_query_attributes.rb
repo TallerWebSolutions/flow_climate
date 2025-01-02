@@ -4,6 +4,7 @@ module Types
   class DemandsQueryAttributes < Types::BaseInputObject
     description 'Attributes to query demands'
 
+    argument :product_id, ID, required: false
     argument :project_id, ID, required: false
 
     argument :order_field, String, required: true

@@ -74,6 +74,7 @@ const DEMANDS_QUERY = gql`
     $pageNumber: Int
     $perPage: Int
     $project: ID
+    $product: ID
     $startDate: ISO8601Date
     $endDate: ISO8601Date
     $demandStatus: DemandStatuses
@@ -86,6 +87,7 @@ const DEMANDS_QUERY = gql`
         pageNumber: $pageNumber
         perPage: $perPage
         projectId: $project
+        productId: $product
         startDate: $startDate
         endDate: $endDate
         demandStatus: $demandStatus
@@ -191,6 +193,7 @@ const DemandsListPage = () => {
   const filters: FieldValues = {
     team: searchParams.get("team"),
     project: searchParams.get("project"),
+    product: searchParams.get("product"),
     searchText: searchParams.get("searchText") || "",
     demandStatus: searchParams.get("demandStatus") || "ALL_DEMANDS",
     sortDirection: "DESC",
