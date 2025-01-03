@@ -168,6 +168,8 @@ const PORTFOLIO_UNITS_QUERY = gql`
   ) {
     product(slug: $slug) {
       id
+      name
+      slug
       portfolioUnits {
         id
         name
