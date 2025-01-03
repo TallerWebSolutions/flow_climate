@@ -104,11 +104,21 @@ RSpec.describe PortfolioUnit do
     end
 
     context 'with demands' do
-      let!(:portfolio_unit_demands) { Fabricate.times(5, :demand, project: project, portfolio_unit: portfolio_unit, end_date: nil, effort_upstream: 100, effort_downstream: 200) }
+      let!(:portfolio_unit_demands) { Fabricate.times(5, :demand, project: project, portfolio_unit: portfolio_unit, effort_upstream: 100, effort_downstream: 200, end_date: 1.day.ago) }
       let!(:child_portfolio_unit_demands) { Fabricate.times(7, :demand, project: project, portfolio_unit: child_portfolio_unit, end_date: 1.day.from_now, effort_upstream: 300, effort_downstream: 250) }
       let!(:other_child_portfolio_unit_demands) { Fabricate.times(3, :demand, project: project, portfolio_unit: other_child_portfolio_unit, end_date: nil, effort_upstream: 140, effort_downstream: 20) }
 
-      it { expect(portfolio_unit.total_cost).to eq 583_000 }
+      context 'without period filter' do
+        it { expect(portfolio_unit.total_cost).to eq 583_000 }
+      end
+
+      context 'with period filter' do
+        it 'brings cost only for the period' do
+          travel_to Time.zone.local(2025, 1, 3, 11) do
+            expect(portfolio_unit.total_cost(2.days.ago, Time.zone.today)).to eq 150_000
+          end
+        end
+      end
     end
   end
 
@@ -122,13 +132,23 @@ RSpec.describe PortfolioUnit do
     end
 
     context 'with demands' do
-      let!(:portfolio_unit_demands) { Fabricate.times(5, :demand, portfolio_unit: portfolio_unit, end_date: nil) }
+      let!(:portfolio_unit_demands) { Fabricate.times(5, :demand, portfolio_unit: portfolio_unit, end_date: 1.day.ago) }
       let!(:child_portfolio_unit_demands) { Fabricate.times(7, :demand, portfolio_unit: child_portfolio_unit, end_date: 1.day.from_now) }
       let!(:other_child_portfolio_unit_demands) { Fabricate.times(3, :demand, portfolio_unit: other_child_portfolio_unit, end_date: nil) }
 
-      it { expect(other_child_portfolio_unit.total_portfolio_demands).to match_array other_child_portfolio_unit_demands }
-      it { expect(child_portfolio_unit.total_portfolio_demands).to match_array child_portfolio_unit_demands }
-      it { expect(portfolio_unit.total_hours).to eq 1350 }
+      context 'without period filter' do
+        it { expect(other_child_portfolio_unit.total_portfolio_demands).to match_array other_child_portfolio_unit_demands }
+        it { expect(child_portfolio_unit.total_portfolio_demands).to match_array child_portfolio_unit_demands }
+        it { expect(portfolio_unit.total_hours).to eq 1350 }
+      end
+
+      context 'with period filter' do
+        it 'brings cost only for the period' do
+          travel_to Time.zone.local(2025, 1, 3, 11) do
+            expect(portfolio_unit.total_hours(2.days.ago, Time.zone.today)).to eq 450
+          end
+        end
+      end
     end
   end
 

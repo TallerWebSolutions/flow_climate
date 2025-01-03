@@ -33,18 +33,6 @@ export const PRODUCT_QUERY = gql`
         createdAt
       }
 
-      portfolioUnits {
-        id
-        name
-        totalCost
-        totalHours
-        portfolioUnitTypeName
-        parent {
-          id
-          name
-        }
-      }
-
       latestDeliveries {
         id
         externalId

@@ -73,12 +73,20 @@ class PortfolioUnit < ApplicationRecord
     total_portfolio_demands.kept.finished_until_date(Time.zone.now).count.to_f / total_portfolio_demands.count
   end
 
-  def total_cost
-    total_portfolio_demands.sum(&:cost_to_project)
+  def total_cost(start_date = nil, end_date = nil)
+    demands = total_portfolio_demands
+    demands = demands.finished_after_date(start_date) if start_date.present?
+    demands = demands.finished_until_date(end_date) if end_date.present?
+
+    demands.sum(&:cost_to_project)
   end
 
-  def total_hours
-    total_portfolio_demands.sum(&:total_effort)
+  def total_hours(start_date = nil, end_date = nil)
+    demands = total_portfolio_demands
+    demands = demands.finished_after_date(start_date) if start_date.present?
+    demands = demands.finished_until_date(end_date) if end_date.present?
+
+    demands.sum(&:total_effort)
   end
 
   def percentage_concluded

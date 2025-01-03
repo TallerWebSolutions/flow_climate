@@ -1,8 +1,9 @@
 import {
-  Backdrop,
   Box,
   Button,
-  CircularProgress,
+  FormGroup,
+  Input,
+  InputLabel,
   Table,
   TableBody,
   TableCell,
@@ -10,17 +11,31 @@ import {
   TableRow,
 } from "@mui/material"
 import BasicPage from "../../components/BasicPage"
-import { useParams } from "react-router-dom"
+import { Link as RouterLink, useParams } from "react-router-dom"
 import { useTranslation } from "react-i18next"
-import useProductQuery from "../../hooks/useProductQuery"
 import { formatCurrency } from "../../lib/currency"
-import { Link as RouterLink } from "react-router-dom"
+import { gql, useQuery } from "@apollo/client"
+import { Product } from "../../modules/product/product.types"
+import { FormElement } from "../../components/ui/Form"
+import { FieldValues, useForm } from "react-hook-form"
+import SearchIcon from "@mui/icons-material/Search"
 
 const PortfolioUnitsPage = () => {
   const params = useParams()
   const { t } = useTranslation(["products"])
+  const { t: commonT } = useTranslation(["common"])
+  const { register, handleSubmit } = useForm()
+
   const productSlug = params.productSlug || ""
-  const { product, loading } = useProductQuery(productSlug)
+  const { data, loading, variables, refetch } = useQuery<PortfolioUnitsDTO>(
+    PORTFOLIO_UNITS_QUERY,
+    {
+      variables: { slug: productSlug },
+      notifyOnNetworkStatusChange: true,
+    }
+  )
+
+  const product = data?.product
   const productName = product?.name || ""
   const company = product?.company
   const companyName = company?.name || ""
@@ -38,20 +53,57 @@ const PortfolioUnitsPage = () => {
     },
   ]
 
-  if (loading)
-    return (
-      <Backdrop open>
-        <CircularProgress color="secondary" />
-      </Backdrop>
-    )
+  const setCostPeriod = (data: FieldValues) =>
+    refetch({
+      ...variables,
+      startDate: data.startDate.length ? data.startDate : null,
+      endDate: data.endDate.length ? data.endDate : null,
+    })
 
   return (
     <BasicPage
       breadcrumbsLinks={breadcrumbsLinks}
       title={t("portfolioUnits.title")}
+      loading={loading}
     >
       <Box>
-        <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 3, mr: 3 }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            mb: 3,
+            mr: 3,
+          }}
+        >
+          <form onSubmit={handleSubmit(setCostPeriod)}>
+            <FormGroup sx={{ display: "flex", gap: 2, flexDirection: "row" }}>
+              <FormElement>
+                <InputLabel htmlFor="startDate" shrink>
+                  {commonT("startDate")}
+                </InputLabel>
+                <Input
+                  type="date"
+                  defaultValue={variables?.startDate}
+                  {...register("startDate")}
+                />
+              </FormElement>
+              <FormElement>
+                <InputLabel htmlFor="endDate" shrink>
+                  {commonT("endDate")}
+                </InputLabel>
+                <Input
+                  type="date"
+                  defaultValue={variables?.endtDate}
+                  {...register("endDate")}
+                />
+              </FormElement>
+              <FormElement>
+                <Button sx={{ alignSelf: "flex-start" }} type="submit">
+                  <SearchIcon fontSize="large" color="primary" />
+                </Button>
+              </FormElement>
+            </FormGroup>
+          </form>
           <Button
             component={RouterLink}
             to={`/companies/${companySlug}/products/${productSlug}/portfolio_units/new`}
@@ -106,6 +158,33 @@ const PortfolioUnitsPage = () => {
       </Box>
     </BasicPage>
   )
+}
+
+const PORTFOLIO_UNITS_QUERY = gql`
+  query PortfolioUnits(
+    $slug: String!
+    $startDate: ISO8601Date
+    $endDate: ISO8601Date
+  ) {
+    product(slug: $slug) {
+      id
+      portfolioUnits {
+        id
+        name
+        totalCost(startDate: $startDate, endDate: $endDate)
+        totalHours(startDate: $startDate, endDate: $endDate)
+        portfolioUnitTypeName
+        parent {
+          id
+          name
+        }
+      }
+    }
+  }
+`
+
+type PortfolioUnitsDTO = {
+  product?: Product
 }
 
 export default PortfolioUnitsPage
