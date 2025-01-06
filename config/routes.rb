@@ -3,6 +3,8 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
+  resource :session
+  resources :passwords, param: :token
   mount GraphiQL::Rails::Engine, at: '/graphiql', graphql_path: '/graphql'
   options '/graphql', to: 'graphql#execute'
   post '/graphql', to: 'graphql#execute'

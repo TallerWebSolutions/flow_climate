@@ -27,7 +27,6 @@ ActiveJob::Base.queue_adapter = :test
 Rails.root.glob('spec/support/*.rb').each { |f| require f }
 
 Rails.logger.level = 4
-Devise.stretches = 1
 
 Shoulda::Matchers.configure do |config|
   config.integrate do |with|
@@ -46,8 +45,6 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   config.render_views
 
-  config.include Devise::Test::ControllerHelpers, type: :controller
-  config.include Devise::Test::ControllerHelpers, type: :view
   config.include ActiveSupport::Testing::TimeHelpers
   config.include Warden::Test::Helpers
   Warden.test_mode!

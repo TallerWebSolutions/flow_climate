@@ -1,49 +1,13 @@
 # frozen_string_literal: true
 
-# == Schema Information
-#
-# Table name: users
-#
-#  id                     :integer          not null, primary key
-#  admin                  :boolean          default(FALSE), not null
-#  avatar                 :string
-#  current_sign_in_at     :datetime
-#  current_sign_in_ip     :inet
-#  email                  :string           not null
-#  email_notifications    :boolean          default(FALSE), not null
-#  encrypted_password     :string           not null
-#  first_name             :string           not null
-#  language               :string           default("pt-BR"), not null
-#  last_name              :string           not null
-#  last_sign_in_at        :datetime
-#  last_sign_in_ip        :inet
-#  remember_created_at    :datetime
-#  reset_password_sent_at :datetime
-#  reset_password_token   :string
-#  sign_in_count          :integer          default(0), not null
-#  user_money_credits     :decimal(, )      default(0.0), not null
-#  user_role              :integer          default("user"), not null
-#  created_at             :datetime         not null
-#  updated_at             :datetime         not null
-#  last_company_id        :integer
-#
-# Indexes
-#
-#  index_users_on_email                 (email) UNIQUE
-#  index_users_on_reset_password_token  (reset_password_token) UNIQUE
-#
-# Foreign Keys
-#
-#  fk_rails_971bf2d9a1  (last_company_id => companies.id)
-#
-
 class User < ApplicationRecord
-  devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
+  has_secure_password
 
   mount_uploader :avatar, FlowClimateImageUploader
 
   enum :user_role, { user: 0, manager: 1, admin: 10 }
 
+  has_many :sessions, dependent: :destroy
   has_many :user_company_roles, dependent: :destroy
   has_many :companies, through: :user_company_roles
   belongs_to :last_company, class_name: 'Company', optional: true

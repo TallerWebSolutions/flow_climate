@@ -580,6 +580,7 @@ DEPENDENCIES
   addressable
   annotaterb
   barnes
+  bcrypt (~> 3.1)
   bundler
   carrierwave
   cloudinary

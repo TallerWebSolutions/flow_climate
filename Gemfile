@@ -79,3 +79,5 @@ group :production do
   gem 'puma_worker_killer'
   gem 'rails_12factor'
 end
+
+gem 'bcrypt', '~> 3.1'

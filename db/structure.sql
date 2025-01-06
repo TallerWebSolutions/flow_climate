@@ -2716,8 +2716,9 @@ ALTER SEQUENCE public.service_delivery_reviews_id_seq OWNED BY public.service_de
 
 CREATE TABLE public.sessions (
     id bigint NOT NULL,
-    session_id character varying NOT NULL,
-    data text,
+    user_id bigint NOT NULL,
+    ip_address character varying,
+    user_agent character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -3281,7 +3282,7 @@ CREATE TABLE public.users (
     first_name character varying NOT NULL,
     last_name character varying NOT NULL,
     email character varying NOT NULL,
-    encrypted_password character varying NOT NULL,
+    encrypted_password character varying,
     reset_password_token character varying,
     reset_password_sent_at timestamp without time zone,
     remember_created_at timestamp without time zone,
@@ -3298,7 +3299,8 @@ CREATE TABLE public.users (
     user_money_credits numeric DEFAULT 0 NOT NULL,
     avatar character varying,
     language character varying DEFAULT 'pt-BR'::character varying NOT NULL,
-    user_role integer DEFAULT 0 NOT NULL
+    user_role integer DEFAULT 0 NOT NULL,
+    password_digest character varying
 );
 
 
@@ -5453,17 +5455,10 @@ CREATE INDEX index_service_delivery_reviews_on_product_id ON public.service_deli
 
 
 --
--- Name: index_sessions_on_session_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_sessions_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_sessions_on_session_id ON public.sessions USING btree (session_id);
-
-
---
--- Name: index_sessions_on_updated_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_sessions_on_updated_at ON public.sessions USING btree (updated_at);
+CREATE INDEX index_sessions_on_user_id ON public.sessions USING btree (user_id);
 
 
 --
@@ -6413,6 +6408,14 @@ ALTER TABLE ONLY public.user_project_roles
 
 
 --
+-- Name: sessions fk_rails_758836b4f0; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sessions
+    ADD CONSTRAINT fk_rails_758836b4f0 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
 -- Name: membership_available_hours_histories fk_rails_76a71f84ba; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6843,6 +6846,7 @@ ALTER TABLE ONLY public.stages
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20250106193537'),
 ('20241206200836'),
 ('20241128032914'),
 ('20241128032149'),
