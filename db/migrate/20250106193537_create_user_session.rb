@@ -12,8 +12,13 @@ class CreateUserSession < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    change_table :users do |t|
+    change_table :users, bulk: true do |t|
       t.string :password_digest, null: true
+      t.string :email_address, null: true, index: true
+    end
+
+    User.find_each do |user|
+      user.update(email_address: user.email)
     end
 
     change_column_null :users, :encrypted_password, true
@@ -33,6 +38,7 @@ class CreateUserSession < ActiveRecord::Migration[8.0]
 
     change_table :users, bulk: true do |t|
       t.remove :password_digest
+      t.remove :email_address
       t.string :encrypted_password, null: false
     end
   end

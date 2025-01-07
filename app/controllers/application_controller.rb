@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class ApplicationController < ActionController::Base
-  include Authentication
   rescue_from ActiveRecord::RecordNotFound, with: :not_found
 
   before_action :redirect_subdomain
@@ -30,11 +29,10 @@ class ApplicationController < ActionController::Base
   end
 
   def set_language
-    if current_user.blank? || current_user.language.blank?
+    if Current.user.blank? || Current.user.language.blank?
       header_based_i18n
-
     else
-      I18n.locale = current_user.language
+      I18n.locale = Current.user.language
     end
   end
 

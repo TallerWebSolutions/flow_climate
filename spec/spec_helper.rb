@@ -38,6 +38,8 @@ end
 ActiveRecord::Migration.maintain_test_schema!
 
 RSpec.configure do |config|
+  config.include AuthenticationHelper, type: :controller
+
   config.order = :random
   config.profile_examples = 10
   config.use_transactional_fixtures = true
@@ -46,8 +48,6 @@ RSpec.configure do |config|
   config.render_views
 
   config.include ActiveSupport::Testing::TimeHelpers
-  config.include Warden::Test::Helpers
-  Warden.test_mode!
 
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true

@@ -14,7 +14,6 @@ Rails.application.routes.draw do
     post 'jira_delete_card_webhook'
   end
 
-  devise_for :users, controllers: { registrations: 'devise_custom/users/registrations' }
   devise_for :devise_customers, controllers: { registrations: 'devise_custom/devise_customers/registrations' }
 
   authenticated :user do

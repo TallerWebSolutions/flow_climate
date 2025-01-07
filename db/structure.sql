@@ -3300,7 +3300,8 @@ CREATE TABLE public.users (
     avatar character varying,
     language character varying DEFAULT 'pt-BR'::character varying NOT NULL,
     user_role integer DEFAULT 0 NOT NULL,
-    password_digest character varying
+    password_digest character varying,
+    email_address character varying
 );
 
 

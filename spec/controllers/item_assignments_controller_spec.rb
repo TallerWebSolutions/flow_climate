@@ -5,7 +5,7 @@ RSpec.describe ItemAssignmentsController do
     describe 'DELETE #destroy' do
       before { delete :destroy, params: { company_id: 'bar', demand_id: 'xpto', id: 'foo' }, xhr: true }
 
-      it { expect(response).to have_http_status :unauthorized }
+      it { expect(response).to redirect_to new_session_path }
     end
   end
 
@@ -13,7 +13,7 @@ RSpec.describe ItemAssignmentsController do
     let(:user) { Fabricate :user }
     let(:company) { Fabricate :company, users: [user] }
 
-    before { sign_in user }
+    before { login_as user }
 
     describe 'DELETE #destroy' do
       context 'with valid parameters' do
@@ -23,6 +23,7 @@ RSpec.describe ItemAssignmentsController do
         it 'deletes the item assignment and renders the template' do
           delete :destroy, params: { company_id: company.id, demand_id: demand.id, id: item_assignment.id }, xhr: true
 
+          expect(response).to have_http_status :ok
           expect(ItemAssignment.where(id: item_assignment.id).count).to eq 0
           expect(response).to render_template 'item_assignments/destroy'
         end

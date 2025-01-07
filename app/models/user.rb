@@ -1,5 +1,43 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: users
+#
+#  id                     :integer          not null, primary key
+#  admin                  :boolean          default(FALSE), not null
+#  avatar                 :string
+#  current_sign_in_at     :datetime
+#  current_sign_in_ip     :inet
+#  email                  :string           not null
+#  email_address          :string
+#  email_notifications    :boolean          default(FALSE), not null
+#  encrypted_password     :string
+#  first_name             :string           not null
+#  language               :string           default("pt-BR"), not null
+#  last_name              :string           not null
+#  last_sign_in_at        :datetime
+#  last_sign_in_ip        :inet
+#  password_digest        :string
+#  remember_created_at    :datetime
+#  reset_password_sent_at :datetime
+#  reset_password_token   :string
+#  sign_in_count          :integer          default(0), not null
+#  user_money_credits     :decimal(, )      default(0.0), not null
+#  user_role              :integer          default("user"), not null
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  last_company_id        :integer
+#
+# Indexes
+#
+#  index_users_on_email                 (email) UNIQUE
+#  index_users_on_reset_password_token  (reset_password_token) UNIQUE
+#
+# Foreign Keys
+#
+#  fk_rails_971bf2d9a1  (last_company_id => companies.id)
+#
 class User < ApplicationRecord
   has_secure_password
 
@@ -31,6 +69,8 @@ class User < ApplicationRecord
   scope :admins, -> { where admin: true }
 
   delegate :pairing_members, to: :team_member, allow_nil: true
+
+  normalizes :email_address, with: ->(e) { e.strip.downcase }
 
   # Overrided just for the transition from boolean to enum
   def admin?

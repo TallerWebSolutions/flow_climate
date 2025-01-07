@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class AuthenticatedController < ApplicationController
-  before_action :authenticate_user!
+  include Authentication
+
   before_action :assign_company
 
   private
@@ -17,7 +18,7 @@ class AuthenticatedController < ApplicationController
 
   def assign_company
     @company = Company.friendly.find(params[:company_id]&.downcase)
-    not_found unless current_user.active_access_to_company?(@company)
+    not_found unless Current.user.active_access_to_company?(@company)
   end
 
   def assign_customers
