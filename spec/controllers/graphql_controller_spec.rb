@@ -5,7 +5,7 @@ RSpec.describe GraphqlController do
     describe 'POST #execute' do
       before { post :execute, params: { format: :json, query: '' } }
 
-      it { expect(response).to have_http_status :unauthorized }
+      it { expect(response).to redirect_to new_session_path }
     end
   end
 

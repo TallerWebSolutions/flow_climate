@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-class GraphqlController < AuthenticatedController
+class GraphqlController < ApplicationController
+  include Authentication
+
   before_action :authenticate_spa
 
   def execute
@@ -17,7 +19,7 @@ class GraphqlController < AuthenticatedController
   def authenticate_spa
     require_authentication
     @context = {
-      current_user: current_user
+      current_user: Current.user
     }
   end
 end
