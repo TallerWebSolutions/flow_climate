@@ -48,7 +48,7 @@ RSpec.describe ApplicationController do
 
         it 'uses the en locale' do
           routes.draw { get 'index' => 'anonymous#index' }
-          sign_in user
+          login_as user
 
           get :index
           expect(I18n.locale).to eq :en

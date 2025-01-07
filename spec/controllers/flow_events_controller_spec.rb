@@ -5,49 +5,49 @@ RSpec.describe FlowEventsController do
     describe 'GET #new' do
       before { get :new, params: { company_id: 'bar', project_id: 'foo' } }
 
-      it { is_expected.to redirect_to new_user_session_path }
+      it { is_expected.to redirect_to new_session_path }
     end
 
     describe 'POST #create' do
       before { post :create, params: { company_id: 'bar', project_id: 'foo' } }
 
-      it { is_expected.to redirect_to new_user_session_path }
+      it { is_expected.to redirect_to new_session_path }
     end
 
     describe 'DELETE #destroy' do
       before { delete :destroy, params: { company_id: 'bar', project_id: 'bla', id: 'xpto' } }
 
-      it { is_expected.to redirect_to new_user_session_path }
+      it { is_expected.to redirect_to new_session_path }
     end
 
     describe 'GET #edit' do
       before { get :edit, params: { company_id: 'bar', project_id: 'bla', id: 'xpto' } }
 
-      it { is_expected.to redirect_to new_user_session_path }
+      it { is_expected.to redirect_to new_session_path }
     end
 
     describe 'PUT #update' do
       before { put :update, params: { company_id: 'bar', project_id: 'bla', id: 'xpto' } }
 
-      it { is_expected.to redirect_to new_user_session_path }
+      it { is_expected.to redirect_to new_session_path }
     end
 
     describe 'GET #show' do
       before { get :show, params: { company_id: 'foo', project_id: 'bla', id: 'bar' } }
 
-      it { is_expected.to redirect_to new_user_session_path }
+      it { is_expected.to redirect_to new_session_path }
     end
 
     describe 'GET #index' do
       before { get :index, params: { company_id: 'foo', project_id: 'bla' } }
 
-      it { is_expected.to redirect_to new_user_session_path }
+      it { is_expected.to redirect_to new_session_path }
     end
   end
 
   context 'authenticated' do
     let(:user) { Fabricate :user }
-    before { sign_in user }
+    before { login_as user }
 
     let(:company) { Fabricate :company, users: [user] }
     let(:other_company) { Fabricate :company, users: [user] }

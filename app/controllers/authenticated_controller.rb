@@ -8,9 +8,9 @@ class AuthenticatedController < ApplicationController
   private
 
   def user_gold_check
-    return true if current_user.admin?
+    return true if Current.user.admin?
 
-    user_plan = current_user.current_user_plan
+    user_plan = Current.user.current_user_plan
     return true unless user_plan.blank? || user_plan.lite? || user_plan.trial?
 
     no_plan_to_access(:gold)
@@ -40,11 +40,11 @@ class AuthenticatedController < ApplicationController
     flash[:alert] = I18n.t('plans.validations.no_lite_plan')
 
     flash.now[:alert] = I18n.t('plans.validations.no_gold_plan') if plan_type == :gold
-    redirect_to user_path(current_user)
+    redirect_to user_path(Current.user)
   end
 
   def check_admin
-    return true if current_user.admin?
+    return true if Current.user.admin?
 
     redirect_to root_path
   end

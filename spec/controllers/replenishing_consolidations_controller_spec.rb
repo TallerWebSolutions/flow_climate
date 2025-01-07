@@ -5,14 +5,14 @@ RSpec.describe ReplenishingConsolidationsController do
     describe 'GET #index' do
       before { get :index, params: { company_id: 'foo', team_id: 'bar' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
   end
 
   context 'authenticated' do
     let(:user) { Fabricate :user }
 
-    before { sign_in user }
+    before { login_as user }
 
     describe 'GET #index' do
       let(:company) { Fabricate :company, users: [user] }

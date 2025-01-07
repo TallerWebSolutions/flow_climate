@@ -5,19 +5,19 @@ RSpec.describe RiskReviewActionItemsController do
     describe 'GET #new' do
       before { get :new, params: { company_id: 'bar', product_id: 'foo', risk_review_id: 'bla' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'POST #create' do
       before { post :create, params: { company_id: 'bar', product_id: 'foo', risk_review_id: 'bla' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'DELETE #destroy' do
       before { delete :destroy, params: { company_id: 'foo', product_id: 'bar', risk_review_id: 'sbbrubles', id: 'xpto' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
   end
 
@@ -49,7 +49,7 @@ RSpec.describe RiskReviewActionItemsController do
       let!(:inactive_membership) { Fabricate :membership, team_member: other_team_member, team: team, end_date: Time.zone.yesterday }
     end
 
-    before { sign_in user }
+    before { login_as user }
 
     describe 'GET #new' do
       context 'valid parameters' do

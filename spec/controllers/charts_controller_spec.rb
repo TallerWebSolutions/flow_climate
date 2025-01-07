@@ -5,7 +5,7 @@ RSpec.describe ChartsController do
     describe 'GET #build_strategic_charts' do
       before { get :build_strategic_charts, params: { company_id: 'foo' }, xhr: true }
 
-      it { expect(response).to have_http_status :unauthorized }
+      it { expect(response).to redirect_to new_session_path }
     end
   end
 
@@ -13,7 +13,7 @@ RSpec.describe ChartsController do
     before { travel_to Time.zone.local(2018, 4, 6, 10, 0, 0) }
 
     let(:user) { Fabricate :user }
-    before { sign_in user }
+    before { login_as user }
 
     let(:company) { Fabricate :company, users: [user] }
     let(:team) { Fabricate :team, company: company }

@@ -8,10 +8,10 @@
   <div class="col-xs-3">
     <%= link_to "Work Item Types", company_work_item_types_path(company), class: 'btn btn-primary btn-block' %>
   </div>
-  <% if current_user.admin? || current_user.gold? %>
-    <% if current_user.last_company.present? %>
+  <% if Current.user.admin? || Current.user.gold? %>
+    <% if Current.user.last_company.present? %>
       <div class="col-xs-3">
-        <%= link_to I18n.t('users.index.slack_configurations'), company_slack_configurations_path(current_user.last_company), class: 'btn btn-primary btn-block' %>
+        <%= link_to I18n.t('users.index.slack_configurations'), company_slack_configurations_path(Current.user.last_company), class: 'btn btn-primary btn-block' %>
       </div>
     <% end %>
   <% end %>

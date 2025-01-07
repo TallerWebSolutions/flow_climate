@@ -1,51 +1,51 @@
 <table class="table table-striped">
   <thead>
-    <tr>
-      <th><%= User.human_attribute_name(:first_name) %></th>
-      <th><%= User.human_attribute_name(:email) %></th>
-      <th><%= User.human_attribute_name(:created_at) %></th>
-      <th><%= UserPlan.human_attribute_name(:finish_at) %></th>
-      <th><%= User.human_attribute_name(:user_money_credits) %></th>
-      <th><%= User.human_attribute_name(:sign_in_count) %></th>
-      <th><%= Company.model_name.human(count: 2) %></th>
-      <th><%= User.human_attribute_name(:projects) %></th>
-      <th class="center"><%= User.human_attribute_name(:admin) %></th>
-    </tr>
+  <tr>
+    <th><%= User.human_attribute_name(:first_name) %></th>
+    <th><%= User.human_attribute_name(:email) %></th>
+    <th><%= User.human_attribute_name(:created_at) %></th>
+    <th><%= UserPlan.human_attribute_name(:finish_at) %></th>
+    <th><%= User.human_attribute_name(:user_money_credits) %></th>
+    <th><%= User.human_attribute_name(:sign_in_count) %></th>
+    <th><%= Company.model_name.human(count: 2) %></th>
+    <th><%= User.human_attribute_name(:projects) %></th>
+    <th class="center"><%= User.human_attribute_name(:admin) %></th>
+  </tr>
   </thead>
 
   <tbody>
-    <% users_list.each do |user| %>
-      <tr>
-        <td><%= link_to user.full_name, user_path(user) %></td>
-        <td><%= user.email %></td>
-        <td><%= I18n.l(user.created_at, format: :short) %></td>
-        <td><%= I18n.l(user.user_plans.valid_plans.last&.finish_at, format: :short) if user.user_plans.valid_plans.last&.finish_at.present? %></td>
-        <td><%= number_to_currency(user.user_money_credits) %></td>
-        <td><%= user.sign_in_count %></td>
-        <td>
-          <% user.companies.each do |company| %>
-            <%= link_to company.abbreviation, company_path(company) %>
-          <% end %>
-        </td>
-        <td><%= user.projects.count %></td>
-        <td class="center">
-          <% if current_user.admin? %>
-            <%= link_to toggle_admin_user_path(user), method: :patch do %>
-              <% if user.admin? %>
-                <i class="fas fa-toggle-on fa-2x"></i>
-              <% else %>
-                <i class="fas fa-toggle-off fa-2x"></i>
-              <% end %>
-            <% end %>
-          <% else %>
+  <% users_list.each do |user| %>
+    <tr>
+      <td><%= link_to user.full_name, user_path(user) %></td>
+      <td><%= user.email %></td>
+      <td><%= I18n.l(user.created_at, format: :short) %></td>
+      <td><%= I18n.l(user.user_plans.valid_plans.last&.finish_at, format: :short) if user.user_plans.valid_plans.last&.finish_at.present? %></td>
+      <td><%= number_to_currency(user.user_money_credits) %></td>
+      <td><%= user.sign_in_count %></td>
+      <td>
+        <% user.companies.each do |company| %>
+          <%= link_to company.abbreviation, company_path(company) %>
+        <% end %>
+      </td>
+      <td><%= user.projects.count %></td>
+      <td class="center">
+        <% if Current.user.admin? %>
+          <%= link_to toggle_admin_user_path(user), method: :patch do %>
             <% if user.admin? %>
               <i class="fas fa-toggle-on fa-2x"></i>
             <% else %>
               <i class="fas fa-toggle-off fa-2x"></i>
             <% end %>
           <% end %>
-        </td>
-      </tr>
-    <% end %>
+        <% else %>
+          <% if user.admin? %>
+            <i class="fas fa-toggle-on fa-2x"></i>
+          <% else %>
+            <i class="fas fa-toggle-off fa-2x"></i>
+          <% end %>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
   </tbody>
 </table>

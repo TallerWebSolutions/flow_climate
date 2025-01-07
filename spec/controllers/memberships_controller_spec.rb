@@ -5,19 +5,19 @@ RSpec.describe MembershipsController do
     describe 'GET #edit' do
       before { get :edit, params: { company_id: 'xpto', team_id: 'bar', id: 'foo' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'GET #index' do
       before { get :index, params: { company_id: 'bar', team_id: 'foo' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'GET #efficiency_table' do
       before { get :efficiency_table, params: { company_id: 'bar', team_id: 'foo' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
   end
 
@@ -26,7 +26,7 @@ RSpec.describe MembershipsController do
     let(:user) { Fabricate :user, first_name: 'zzz' }
     let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true, paid: true, finish_at: 1.week.from_now }
 
-    before { sign_in user }
+    before { login_as user }
 
     let(:company) { Fabricate :company, users: [user] }
     let(:team) { Fabricate :team, company: company }

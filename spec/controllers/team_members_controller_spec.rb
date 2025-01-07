@@ -5,26 +5,26 @@ RSpec.describe TeamMembersController do
     describe 'GET #index' do
       before { get :index, params: { company_id: 'xpto' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'GET #edit' do
       before { get :edit, params: { company_id: 'xpto', id: 'bar' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'GET #show' do
       before { get :show, params: { company_id: 'xpto', id: 'bar' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
   end
 
   context 'authenticated' do
     let(:user) { Fabricate :user, first_name: 'zzz' }
 
-    before { sign_in user }
+    before { login_as user }
 
     let(:company) { Fabricate :company, users: [user] }
 

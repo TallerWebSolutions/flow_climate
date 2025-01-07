@@ -5,25 +5,25 @@ RSpec.describe DemandEffortsController do
     describe 'GET #index' do
       before { get :index, params: { company_id: 'foo', demand_id: 'bar' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'GET #edit' do
       before { get :edit, params: { company_id: 'foo', demand_id: 'bar', id: 'xpto' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'GET #new' do
       before { get :new, params: { company_id: 'foo', demand_id: 'bar', id: 'xpto' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'PATCH #update' do
       before { patch :update, params: { company_id: 'foo', demand_id: 'bar', id: 'xpto' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
   end
 
@@ -31,7 +31,7 @@ RSpec.describe DemandEffortsController do
     let(:user) { Fabricate :user }
     let(:company) { Fabricate :company, users: [user] }
 
-    before { sign_in user }
+    before { login_as user }
 
     describe 'GET #index' do
       context 'with valid params' do
@@ -216,7 +216,7 @@ RSpec.describe DemandEffortsController do
     let(:user) { Fabricate :user, first_name: 'zzz', user_role: :manager }
     let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true, paid: true, finish_at: 1.week.from_now }
 
-    before { sign_in user }
+    before { login_as user }
 
     describe 'GET #new' do
       it 'renders the spa template' do

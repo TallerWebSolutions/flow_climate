@@ -5,49 +5,49 @@ RSpec.describe TeamsController do
     describe 'GET #show' do
       before { get :show, params: { company_id: 'bar', id: 'foo' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'GET #new' do
       before { get :new, params: { company_id: 'bar' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'GET #edit' do
       before { get :new, params: { company_id: 'bar', id: 'foo' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'GET #team_projects_tab' do
       before { get :team_projects_tab, params: { company_id: 'bar', id: 'foo' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'GET #dashboard_tab' do
       before { get :dashboard_tab, params: { company_id: 'bar', id: 'foo' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'GET #dashboard_page_two' do
       before { get :dashboard_page_two, params: { company_id: 'bar', id: 'foo' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'GET #dashboard_page_three' do
       before { get :dashboard_page_three, params: { company_id: 'bar', id: 'foo' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'GET #dashboard_page_four' do
       before { get :dashboard_page_four, params: { company_id: 'bar', id: 'foo' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
   end
 
@@ -58,7 +58,7 @@ RSpec.describe TeamsController do
     let(:user) { Fabricate :user, first_name: 'zzz' }
     let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true, paid: true, finish_at: 1.week.from_now }
 
-    before { sign_in user }
+    before { login_as user }
 
     let(:company) { Fabricate :company, users: [user] }
     let(:feature_type) { Fabricate :work_item_type, company: company, name: 'Feature' }

@@ -5,25 +5,25 @@ RSpec.describe ScoreMatricesController do
     describe 'GET #show' do
       before { get :show, params: { company_id: 'bar', id: 'foo' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'GET #customer_dimension' do
       before { get :customer_dimension, params: { company_id: 'bar', id: 'foo' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'GET #service_provider_dimension' do
       before { get :service_provider_dimension, params: { company_id: 'bar', id: 'foo' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'GET #ordered_demands_list' do
       before { get :ordered_demands_list, params: { company_id: 'bar', id: 'foo' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
   end
 
@@ -31,7 +31,7 @@ RSpec.describe ScoreMatricesController do
     let(:user) { Fabricate :user }
     let(:company) { Fabricate :company, users: [user] }
 
-    before { sign_in user }
+    before { login_as user }
 
     describe 'GET #show' do
       let(:product) { Fabricate :product, company: company }

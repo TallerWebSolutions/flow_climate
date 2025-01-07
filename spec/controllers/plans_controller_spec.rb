@@ -5,13 +5,13 @@ RSpec.describe PlansController do
     describe 'GET #no_plan' do
       before { get :no_plan }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'POST #plan_choose' do
       before { post :plan_choose }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
   end
 
@@ -19,7 +19,7 @@ RSpec.describe PlansController do
     let!(:admin_user) { Fabricate :user, admin: true }
     let(:user) { Fabricate :user }
 
-    before { sign_in user }
+    before { login_as user }
 
     describe 'GET #no_plan' do
       context 'no no_plan' do

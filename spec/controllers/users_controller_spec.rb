@@ -5,68 +5,68 @@ RSpec.describe UsersController do
     describe 'PATCH #activate_email_notifications' do
       before { patch :activate_email_notifications }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'PATCH #deactivate_email_notifications' do
       before { patch :deactivate_email_notifications }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'PATCH #toggle_admin' do
       before { patch :toggle_admin, params: { id: 'foo' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'GET #show' do
       before { get :show, params: { id: 'foo' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'PUT #update' do
       before { put :update, params: { id: 'foo' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'GET #admin_dashboard' do
       before { get :admin_dashboard }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'GET #edit' do
       before { get :edit, params: { id: 'foo' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'GET #companies' do
       before { get :companies, params: { id: 'foo' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'GET #home' do
       before { get :home }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'GET #manager_home' do
       before { get :manager_home, params: { id: 'foo' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
   end
 
   context 'authenticated as admin' do
     let(:user) { Fabricate :user, admin: true, first_name: 'rrr', last_name: 'vvv' }
 
-    before { sign_in user }
+    before { login_as user }
 
     describe 'PATCH #toggle_admin' do
       let(:tested_user) { Fabricate :user, admin: true }
@@ -97,7 +97,7 @@ RSpec.describe UsersController do
   context 'authenticated as normal user' do
     let(:user) { Fabricate :user, admin: false }
 
-    before { sign_in user }
+    before { login_as user }
 
     describe 'PATCH #activate_email_notifications' do
       context 'with valid parameters' do

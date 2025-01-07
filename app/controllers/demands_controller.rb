@@ -48,7 +48,7 @@ class DemandsController < DemandsListController
     jira_account = @company.jira_accounts.first
     demand_url = company_demand_url(@demand.project.company, @demand)
     clean_assignments_efforts
-    Jira::ProcessJiraIssueJob.perform_later(@demand.external_id, jira_account, @demand.project, current_user.email, current_user.full_name, demand_url)
+    Jira::ProcessJiraIssueJob.perform_later(@demand.external_id, jira_account, @demand.project, Current.user.email, Current.user.full_name, demand_url)
     flash[:notice] = I18n.t('general.enqueued')
     redirect_to company_demand_path(@company, @demand)
   end
@@ -73,7 +73,7 @@ class DemandsController < DemandsListController
   def score_research
     ScoreMatrix.create(product: @demand.product) if @demand.product.score_matrix.blank?
 
-    @demand_score_matrix = DemandScoreMatrix.new(user: current_user, demand: @demand)
+    @demand_score_matrix = DemandScoreMatrix.new(user: Current.user, demand: @demand)
     @percentage_answered = DemandScoreMatrixService.instance.percentage_answered(@demand)
     @current_position_in_backlog = "#{DemandScoreMatrixService.instance.current_position_in_backlog(@demand)}º"
     @backlog_total = DemandScoreMatrixService.instance.demands_list(@demand).count

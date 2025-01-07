@@ -6,7 +6,7 @@ class CompaniesController < AuthenticatedController
   before_action :assign_stages_list, only: %i[show update_settings]
 
   def index
-    @companies = current_user.companies.order(:name)
+    @companies = Current.user.companies.order(:name)
   end
 
   def show
@@ -20,7 +20,7 @@ class CompaniesController < AuthenticatedController
 
     build_query_dates
 
-    current_user.update(last_company_id: @company.id)
+    Current.user.update(last_company_id: @company.id)
   end
 
   def new
@@ -33,7 +33,7 @@ class CompaniesController < AuthenticatedController
 
   def create
     @company = Company.new(company_params)
-    @company.add_user(current_user)
+    @company.add_user(Current.user)
     return redirect_to company_path(@company) if @company.save
 
     render :new
@@ -56,7 +56,7 @@ class CompaniesController < AuthenticatedController
   end
 
   def send_company_bulletin
-    mail_sent = UserNotifierMailer.company_weekly_bulletin(User.where(id: current_user.id), @company).deliver
+    mail_sent = UserNotifierMailer.company_weekly_bulletin(User.where(id: Current.user.id), @company)&.deliver
     if mail_sent.instance_of?(Mail::Message)
       flash[:notice] = I18n.t('companies.send_company_bulletin.sent')
     else
@@ -137,7 +137,7 @@ class CompaniesController < AuthenticatedController
 
   def assign_company
     @company = Company.friendly.find(params[:id])
-    not_found unless current_user.companies.include?(@company)
+    not_found unless Current.user.companies.include?(@company)
   end
 
   def company_params

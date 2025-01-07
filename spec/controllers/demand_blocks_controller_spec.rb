@@ -5,43 +5,43 @@ RSpec.describe DemandBlocksController do
     describe 'PATCH #activate' do
       before { patch :activate, params: { company_id: 'xpto', project_id: 'bar', demand_id: 'foo', id: 'sbbrubles' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'PATCH #deactivate' do
       before { patch :deactivate, params: { company_id: 'xpto', project_id: 'bar', demand_id: 'foo', id: 'sbbrubles' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'GET #edit' do
       before { get :edit, params: { company_id: 'xpto', project_id: 'bar', demand_id: 'foo', id: 'sbbrubles' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'PUT #update' do
       before { put :update, params: { company_id: 'xpto', project_id: 'bar', demand_id: 'foo', id: 'sbbrubles' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'GET #index' do
       before { put :index, params: { company_id: 'xpto', project_id: 'bar' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'GET #demand_blocks_csv' do
       before { get :demand_blocks_csv, params: { company_id: 'foo' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'POST #search' do
       before { post :search, params: { company_id: 'foo' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
   end
 
@@ -50,7 +50,7 @@ RSpec.describe DemandBlocksController do
     let(:user) { Fabricate :user, first_name: 'zzz' }
     let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true, paid: true, start_at: 1.week.ago, finish_at: 1.week.from_now }
 
-    before { sign_in user }
+    before { login_as user }
 
     describe 'PATCH #activate' do
       let(:company) { Fabricate :company, users: [user] }

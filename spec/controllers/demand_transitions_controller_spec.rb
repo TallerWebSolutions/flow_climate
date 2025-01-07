@@ -5,31 +5,31 @@ RSpec.describe DemandTransitionsController do
     describe 'DELETE #destroy' do
       before { delete :destroy, params: { company_id: 'foo', stage_id: 'bar', id: 'sbbrubles' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'GET #new' do
       before { get :new, params: { company_id: 'bar', demand_id: 'foo' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'POST #create' do
       before { post :create, params: { company_id: 'bar', demand_id: 'foo' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'GET #edit' do
       before { get :edit, params: { company_id: 'bar', demand_id: 'foo', id: 'xpto' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'PUT #update' do
       before { put :update, params: { company_id: 'bar', demand_id: 'foo', id: 'xpto' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
   end
 
@@ -45,7 +45,7 @@ RSpec.describe DemandTransitionsController do
     let!(:demand) { Fabricate :demand, company: company, project: project, team: team }
     let!(:stage) { Fabricate :stage, company: company, projects: [project] }
 
-    before { sign_in user }
+    before { login_as user }
 
     describe 'DELETE #destroy' do
       let!(:demand_transition) { Fabricate :demand_transition, demand: demand, stage: stage }

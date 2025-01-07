@@ -140,7 +140,7 @@ class ProjectsController < AuthenticatedController
   def check_change_in_deadline!
     return if project_params[:end_date].blank? || @project.end_date == Date.parse(project_params[:end_date])
 
-    ProjectChangeDeadlineHistory.create!(user: current_user, project: @project, previous_date: @project.end_date, new_date: project_params[:end_date])
+    ProjectChangeDeadlineHistory.create!(user: Current.user, project: @project, previous_date: @project.end_date, new_date: project_params[:end_date])
   end
 
   def project_params

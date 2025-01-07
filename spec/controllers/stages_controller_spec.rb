@@ -5,73 +5,73 @@ RSpec.describe StagesController do
     describe 'GET #new' do
       before { get :new, params: { company_id: 'foo' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'POST #create' do
       before { post :create, params: { company_id: 'foo' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'GET #edit' do
       before { get :edit, params: { company_id: 'foo', id: 'sbbrubles', xhr: true } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'PUT #update' do
       before { put :update, params: { company_id: 'foo', id: 'sbbrubles', xhr: true } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'DELETE #destroy' do
       before { delete :destroy, params: { company_id: 'foo', id: 'bar' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'GET #show' do
       before { get :show, params: { company_id: 'foo', id: 'sbbrubles' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'PATCH #associate_project' do
       before { patch :associate_project, params: { company_id: 'foo', id: 'sbbrubles', project_id: 'bla' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'PATCH #dissociate_project' do
       before { patch :dissociate_project, params: { company_id: 'foo', id: 'sbbrubles', project_id: 'bla' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'PATCH #associate_team' do
       before { patch :associate_team, params: { company_id: 'foo', id: 'sbbrubles', team_id: 'bla' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'PATCH #dissociate_team' do
       before { patch :dissociate_team, params: { company_id: 'foo', id: 'sbbrubles', team_id: 'bla' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'PATCH #copy_projects_from' do
       before { patch :copy_projects_from, params: { company_id: 'foo', id: 'sbbrubles', provider_stage_id: 'bla' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'POST #import_from_jira' do
       before { post :import_from_jira, params: { company_id: 'foo' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
   end
 
@@ -84,7 +84,7 @@ RSpec.describe StagesController do
 
     let(:team) { Fabricate :team, company: company }
 
-    before { sign_in user }
+    before { login_as user }
 
     describe 'GET #new' do
       context 'valid parameters' do

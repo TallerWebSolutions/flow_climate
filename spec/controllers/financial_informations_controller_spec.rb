@@ -5,31 +5,31 @@ RSpec.describe FinancialInformationsController do
     describe 'GET #new' do
       before { get :new, params: { company_id: 'foo' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'POST #create' do
       before { post :create, params: { company_id: 'foo' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'GET #edit' do
       before { get :edit, params: { company_id: 'xpto', id: 'foo' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'PUT #update' do
       before { put :update, params: { company_id: 'xpto', id: 'foo' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'DELETE #destroy' do
       before { delete :destroy, params: { company_id: 'foo', id: 'bar' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
   end
 
@@ -40,7 +40,7 @@ RSpec.describe FinancialInformationsController do
 
     let(:company) { Fabricate :company, users: [user] }
 
-    before { sign_in user }
+    before { login_as user }
 
     describe 'GET #new' do
       context 'valid parameters' do

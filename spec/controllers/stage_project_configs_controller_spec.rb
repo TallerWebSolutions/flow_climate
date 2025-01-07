@@ -5,25 +5,25 @@ RSpec.describe StageProjectConfigsController do
     describe 'GET #edit' do
       before { get :edit, params: { company_id: 'xpto', stage_id: 'foo', id: 'bar' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'PUT #update' do
       before { put :update, params: { company_id: 'xpto', stage_id: 'foo', id: 'bar' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'GET #index' do
       before { get :index, params: { company_id: 'xpto', project_id: 'foo' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'DELETE #destroy' do
       before { delete :destroy, params: { company_id: 'xpto', project_id: 'foo', id: 'bar' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
   end
 
@@ -37,7 +37,7 @@ RSpec.describe StageProjectConfigsController do
     let(:customer) { Fabricate :customer, company: company }
     let(:project) { Fabricate :project, customers: [customer] }
 
-    before { sign_in user }
+    before { login_as user }
 
     describe 'GET #edit' do
       let!(:stage_project_config) { Fabricate :stage_project_config, stage: stage, project: project }

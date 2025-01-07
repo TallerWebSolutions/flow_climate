@@ -5,7 +5,7 @@ RSpec.describe ProjectRiskAlertsController do
     describe 'GET #index' do
       before { put :index, params: { company_id: 'xpto', project_id: 'bar' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
   end
 
@@ -13,7 +13,7 @@ RSpec.describe ProjectRiskAlertsController do
     let(:plan) { Fabricate :plan, plan_type: :gold }
     let(:user) { Fabricate :user, first_name: 'zzz' }
 
-    before { sign_in user }
+    before { login_as user }
 
     describe 'GET #index' do
       let(:company) { Fabricate :company, users: [user] }

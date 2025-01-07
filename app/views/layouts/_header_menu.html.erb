@@ -3,23 +3,31 @@
 </div>
 
 <div class="col-xs-8 header-nav">
-  <% if company.present? && company.persisted? && user_signed_in? %>
-    <span class="top-nav-bar-text"><%= link_to company.abbreviation.capitalize, company_path(company), class: 'nav-link top-nav-bar-item' %> | </span>
-    <span class="top-nav-bar-text"><%= link_to Team.model_name.human(count: 2), company_teams_path(company), class: 'nav-link top-nav-bar-item' %> | </span>
-    <span class="top-nav-bar-text"><%= link_to TeamMember.model_name.human(count: 2), company_team_members_path(company), class: 'nav-link top-nav-bar-item' %> | </span>
-    <span class="top-nav-bar-text"><%= link_to I18n.t('navbar.customers_list'), company_customers_path(company), class: 'nav-link top-nav-bar-item' %> | </span>
-    <span class="top-nav-bar-text"><%= link_to I18n.t('navbar.products_list'), company_products_path(company), class: 'nav-link top-nav-bar-item' %> | </span>
-    <span class="top-nav-bar-text"><%= link_to I18n.t('navbar.projects_list'), company_projects_path(company), class: 'nav-link top-nav-bar-item' %> | </span>
-    <span class="top-nav-bar-text"><%= link_to Demand.model_name.human(count: 2), company_demands_path(company), class: 'nav-link top-nav-bar-item' %> | </span>
-    <span class="top-nav-bar-text"><%= link_to DemandBlock.model_name.human(count: 2), company_demand_blocks_path(company), class: 'nav-link top-nav-bar-item' %> | </span>
+  <% if company.present? && company.persisted? && Current.user.present? %>
+    <span class="top-nav-bar-text"><%= link_to company.abbreviation.capitalize, company_path(company), class: 'nav-link top-nav-bar-item' %>
+      | </span>
+    <span class="top-nav-bar-text"><%= link_to Team.model_name.human(count: 2), company_teams_path(company), class: 'nav-link top-nav-bar-item' %>
+      | </span>
+    <span class="top-nav-bar-text"><%= link_to TeamMember.model_name.human(count: 2), company_team_members_path(company), class: 'nav-link top-nav-bar-item' %>
+      | </span>
+    <span class="top-nav-bar-text"><%= link_to I18n.t('navbar.customers_list'), company_customers_path(company), class: 'nav-link top-nav-bar-item' %>
+      | </span>
+    <span class="top-nav-bar-text"><%= link_to I18n.t('navbar.products_list'), company_products_path(company), class: 'nav-link top-nav-bar-item' %>
+      | </span>
+    <span class="top-nav-bar-text"><%= link_to I18n.t('navbar.projects_list'), company_projects_path(company), class: 'nav-link top-nav-bar-item' %>
+      | </span>
+    <span class="top-nav-bar-text"><%= link_to Demand.model_name.human(count: 2), company_demands_path(company), class: 'nav-link top-nav-bar-item' %>
+      | </span>
+    <span class="top-nav-bar-text"><%= link_to DemandBlock.model_name.human(count: 2), company_demand_blocks_path(company), class: 'nav-link top-nav-bar-item' %>
+      | </span>
     <span class="top-nav-bar-text"><%= link_to I18n.t('flow_events.index.title'), company_flow_events_path(company), class: 'nav-link top-nav-bar-item' %></span>
   <% end %>
 </div>
 
 <div class="col-xs-2 pull-right">
   <div class="dropdown topnav-right">
-    <% if current_user.present? && current_user.avatar.present? %>
-      <%= image_tag current_user.avatar.url, size: '50x50', class: 'user-avatar dropdown-toggle', 'data-toggle' => 'dropdown' %>
+    <% if Current.user.avatar&.present? %>
+      <%= image_tag Current.user.avatar.url, size: '50x50', class: 'user-avatar dropdown-toggle', 'data-toggle' => 'dropdown' %>
     <% else %>
       <%= image_tag 'https://res.cloudinary.com/taller-digital/image/upload/v1599220842/user_default.png', size: '50x50', class: 'user-avatar dropdown-toggle', 'data-toggle' => 'dropdown' %>
     <% end %>

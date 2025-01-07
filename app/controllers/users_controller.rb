@@ -11,12 +11,12 @@ class UsersController < AuthenticatedController
   end
 
   def activate_email_notifications
-    current_user.update(email_notifications: true)
+    Current.user.update(email_notifications: true)
     respond_to { |format| format.js { render 'users/reload_notifications' } }
   end
 
   def deactivate_email_notifications
-    current_user.update(email_notifications: false)
+    Current.user.update(email_notifications: false)
     respond_to { |format| format.js { render 'users/reload_notifications' } }
   end
 
@@ -48,7 +48,7 @@ class UsersController < AuthenticatedController
   end
 
   def home
-    @user = current_user
+    @user = Current.user
     build_page_objects
 
     return redirect_to manager_home_user_path(@user) if @user.manager?

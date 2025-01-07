@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class GraphqlController < ApplicationController
+class GraphqlController < AuthenticatedController
   before_action :authenticate_spa
 
   def execute
@@ -15,18 +15,9 @@ class GraphqlController < ApplicationController
   private
 
   def authenticate_spa
-    user_profile = request.headers['userprofile']
-
-    if user_profile == 'customer'
-      authenticate_devise_customer!
-      @context = {
-        current_user: current_devise_customer
-      }
-    else
-      authenticate_user!
-      @context = {
-        current_user: current_user
-      }
-    end
+    require_authentication
+    @context = {
+      current_user: current_user
+    }
   end
 end

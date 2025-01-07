@@ -18,7 +18,7 @@ class FlowEventsController < AuthenticatedController
   end
 
   def create
-    @flow_event = FlowEvent.new(flow_event_params.merge(company: @company, user: current_user))
+    @flow_event = FlowEvent.new(flow_event_params.merge(company: @company, user: Current.user))
 
     if @flow_event.save
       flash[:notice] = I18n.t('flow_events.create.success')

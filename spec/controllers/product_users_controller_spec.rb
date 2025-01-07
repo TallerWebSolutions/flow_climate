@@ -5,7 +5,7 @@ RSpec.describe ProductUsersController do
     describe 'GET #index' do
       before { get :index, params: { company_id: 'foo', product_id: 'foo' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
   end
 
@@ -14,7 +14,7 @@ RSpec.describe ProductUsersController do
     let(:company) { Fabricate :company }
     let(:product) { Fabricate :product, company: company }
 
-    before { sign_in user }
+    before { login_as user }
 
     describe 'GET #index' do
       context 'passing a valid ID' do

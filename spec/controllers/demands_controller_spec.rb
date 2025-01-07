@@ -5,73 +5,73 @@ RSpec.describe DemandsController do
     describe 'DELETE #destroy' do
       before { delete :destroy, params: { company_id: 'foo', id: 'sbbrubles' }, xhr: true }
 
-      it { expect(response).to have_http_status :unauthorized }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'GET #edit' do
       before { get :edit, params: { company_id: 'foo', project_id: 'bar', id: 'sbbrubles' }, xhr: true }
 
-      it { expect(response).to have_http_status :unauthorized }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'PUT #update' do
       before { put :update, params: { company_id: 'foo', project_id: 'bar', id: 'sbbrubles' }, xhr: true }
 
-      it { expect(response).to have_http_status :unauthorized }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'GET #show' do
       before { get :show, params: { company_id: 'foo', id: 'sbbrubles' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'GET #index' do
       before { get :index, params: { company_id: 'foo' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'PUT #synchronize_jira' do
       before { put :synchronize_jira, params: { company_id: 'foo', id: 'bla' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'GET #demands_csv' do
       before { get :demands_csv, params: { company_id: 'xpto' }, format: :csv }
 
-      it { expect(response).to have_http_status :unauthorized }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'DELETE #destroy_physically' do
       before { delete :destroy_physically, params: { company_id: 'foo', id: 'sbbrubles' }, xhr: true }
 
-      it { expect(response).to have_http_status :unauthorized }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'GET #score_research' do
       before { get :score_research, params: { company_id: 'foo', id: 'bar' }, xhr: true }
 
-      it { expect(response).to have_http_status :unauthorized }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'GET #demands_list_by_ids' do
       before { get :demands_list_by_ids, params: { company_id: 'foo', session_demands_key: 'bar' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'GET #demands_charts' do
       before { get :demands_charts, params: { company_id: 'foo', session_demands_key: 'bar' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'GET #demand_efforts' do
       before { get :demand_efforts, params: { company_id: 'foo', id: 'bar' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
   end
 
@@ -104,7 +104,7 @@ RSpec.describe DemandsController do
     end
 
     before do
-      sign_in user
+      login_as user
 
       allow_any_instance_of(User).to receive(:current_user_plan).and_return(user_plan)
     end

@@ -7,7 +7,7 @@
   </div>
 </div>
 
-<% if current_user.admin? %>
+<% if Current.user.admin? %>
   <%= link_to I18n.t('companies.new.title'), new_company_path, class: 'btn btn-sm btn-success bottom-spaced-component pull-right' %>
 <% end %>
 
@@ -16,22 +16,22 @@
 <% else %>
   <table class="table">
     <thead>
-      <tr>
-        <th><%= Company.human_attribute_name :name %></th>
-        <th><%= I18n.t('general.table.actions') %></th>
-      </tr>
+    <tr>
+      <th><%= Company.human_attribute_name :name %></th>
+      <th><%= I18n.t('general.table.actions') %></th>
+    </tr>
     </thead>
     <tbody>
-      <% @companies.each do |company| %>
-        <tr>
-          <td><%= link_to company.name, company_path(company) %></td>
-          <td>
-            <%= link_to edit_company_path(company) do %>
-              <i class="fas fa-edit"></i>
-            <% end %>
-          </td>
-        </tr>
-      <% end %>
+    <% @companies.each do |company| %>
+      <tr>
+        <td><%= link_to company.name, company_path(company) %></td>
+        <td>
+          <%= link_to edit_company_path(company) do %>
+            <i class="fas fa-edit"></i>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
     </tbody>
   </table>
 <% end %>

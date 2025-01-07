@@ -46,7 +46,7 @@ class DemandScoreMatricesController < AuthenticatedController
 
     answers = read_answers_in_params
 
-    answers.each { |answer_id| DemandScoreMatrix.create(user: current_user, demand: @demand, score_matrix_answer_id: answer_id) }
+    answers.each { |answer_id| DemandScoreMatrix.create(user: Current.user, demand: @demand, score_matrix_answer_id: answer_id) }
 
     update_demand_score
   end

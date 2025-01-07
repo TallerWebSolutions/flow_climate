@@ -5,25 +5,25 @@ RSpec.describe DemandScoreMatricesController do
     describe 'POST #create' do
       before { post :create, params: { company_id: 'bar', demand_id: 'foo' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'POST #create_from_sheet' do
       before { post :create_from_sheet, params: { company_id: 'bar', demand_id: 'foo' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'DELETE #destroy' do
       before { delete :destroy, params: { company_id: 'bar', id: 'foo' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'DELETE #destroy_from_sheet' do
       before { delete :destroy_from_sheet, params: { company_id: 'bar', id: 'foo' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
   end
 
@@ -34,7 +34,7 @@ RSpec.describe DemandScoreMatricesController do
     let!(:demand) { Fabricate :demand, company: company, product: product }
     let!(:score_matrix) { Fabricate :score_matrix, product: product }
 
-    before { sign_in user }
+    before { login_as user }
 
     describe 'POST #create' do
       context 'with valid data' do

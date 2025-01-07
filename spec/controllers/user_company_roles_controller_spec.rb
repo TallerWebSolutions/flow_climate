@@ -5,13 +5,13 @@ RSpec.describe UserCompanyRolesController do
     describe 'GET #edit' do
       before { get :edit, params: { user_id: 'bla', company_id: 'xpto', id: 'foo' } }
 
-      it { is_expected.to redirect_to new_user_session_path }
+      it { is_expected.to redirect_to new_session_path }
     end
 
     describe 'PUT #update' do
       before { put :update, params: { user_id: 'bla', company_id: 'xpto', id: 'foo' } }
 
-      it { is_expected.to redirect_to new_user_session_path }
+      it { is_expected.to redirect_to new_session_path }
     end
   end
 
@@ -19,7 +19,7 @@ RSpec.describe UserCompanyRolesController do
     let(:user) { Fabricate :user }
     let(:company) { Fabricate :company }
 
-    before { sign_in user }
+    before { login_as user }
 
     describe 'GET #edit' do
       let(:user_company_role) { Fabricate :user_company_role, user: user, company: company }

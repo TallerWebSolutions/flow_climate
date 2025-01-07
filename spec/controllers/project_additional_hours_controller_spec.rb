@@ -6,7 +6,7 @@ RSpec.describe ProjectAdditionalHoursController do
       it 'redirects to the new session path' do
         get :new, params: { company_id: 'xpto', project_id: 'bar' }
 
-        expect(response).to redirect_to new_user_session_path
+        expect(response).to redirect_to new_session_path
       end
     end
   end
@@ -16,7 +16,7 @@ RSpec.describe ProjectAdditionalHoursController do
     let(:company) { Fabricate :company, users: [user] }
     let(:project) { Fabricate :project, company: company }
 
-    before { sign_in user }
+    before { login_as user }
 
     describe 'GET #new' do
       context 'valid parameters' do

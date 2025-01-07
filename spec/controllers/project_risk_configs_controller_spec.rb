@@ -5,31 +5,31 @@ RSpec.describe ProjectRiskConfigsController do
     describe 'GET #new' do
       before { get :new, params: { company_id: 'xpto', project_id: 'bar' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'POST #create' do
       before { post :create, params: { company_id: 'xpto', project_id: 'bar' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'PATCH #activate' do
       before { patch :activate, params: { company_id: 'xpto', project_id: 'bar', id: 'sbbrubles' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'PATCH #deactivate' do
       before { patch :deactivate, params: { company_id: 'xpto', project_id: 'bar', id: 'sbbrubles' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'DELETE #destroy' do
       before { delete :destroy, params: { company_id: 'foo', project_id: 'xpto', id: 'bar' } }
 
-      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(response).to redirect_to new_session_path }
     end
   end
 
@@ -38,7 +38,7 @@ RSpec.describe ProjectRiskConfigsController do
     let(:user) { Fabricate :user, first_name: 'zzz' }
     let!(:user_plan) { Fabricate :user_plan, user: user, plan: plan, active: true, paid: true, finish_at: 1.week.from_now }
 
-    before { sign_in user }
+    before { login_as user }
 
     describe 'GET #new' do
       let(:company) { Fabricate :company, users: [user] }
