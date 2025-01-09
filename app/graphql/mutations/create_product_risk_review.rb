@@ -19,7 +19,7 @@ module Mutations
       risk_review_url = company_product_risk_review_path(product.company, product, risk_review) if product.present?
 
       if risk_review.valid?
-        RiskReviewGeneratorJob.perform_later(product, risk_review, current_user.email, current_user.full_name, risk_review.id, risk_review_url)
+        RiskReviewGeneratorJob.perform_later(product, risk_review, current_user.email_address, current_user.full_name, risk_review.id, risk_review_url)
         { status_message: 'SUCCESS', risk_review: risk_review }
       else
         { status_message: 'FAIL' }

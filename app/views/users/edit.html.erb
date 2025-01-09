@@ -17,7 +17,7 @@
           <%= image_tag 'img-empty.png', size: '200x200', class: 'user-avatar dropdown-toggle', 'data-toggle' => 'dropdown' %>
         <% end %>
       </p>
-      <p class="center user-info"><%= @user.email %></p>
+      <p class="center user-info"><%= @user.email_address %></p>
       <p><%= form.file_field :avatar, class: 'form-control' %></p>
     </div>
     <div class="col-xs-10">

@@ -48,7 +48,6 @@ class DemandEffortsController < ApplicationController
 
     Consolidations::ProjectConsolidationJob.perform_later(project)
     Consolidations::TeamConsolidationJob.perform_later(team)
-    Consolidations::CustomerConsolidationJob.perform_later(customer) if customer.present?
     Consolidations::ContractConsolidationJob.perform_later(contract) if contract.present?
 
     update_operations_dashboard_cache

@@ -10,7 +10,7 @@ module Mutations
       company = Company.find(company_id)
 
       if current_user.present?
-        UserNotifierMailer.send_auth_token(company, current_user.email).deliver_now
+        UserNotifierMailer.send_auth_token(company, current_user.email_address).deliver_now
         { status_message: 'SUCCESS' }
       else
         { status_message: 'FAIL' }

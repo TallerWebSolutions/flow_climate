@@ -38,7 +38,7 @@ RSpec.describe UserNotifierMailer do
           Fabricate(:project_risk_alert, created_at: Time.zone.today, project: first_project, project_risk_config: first_risk_config, alert_color: :red, alert_value: 30)
 
           expect(mail.subject).to eq I18n.t('projects.portfolio_bulletin.subject')
-          expect(mail.to).to match_array [first_user.email, second_user.email]
+          expect(mail.to).to match_array [first_user.email_address, second_user.email_address]
           expect(mail.from).to eq(['no-reply@taller.net.br'])
           expect(mail.body.encoded).to match first_project.name
           expect(mail.body.encoded).to match second_project.name
@@ -84,7 +84,7 @@ RSpec.describe UserNotifierMailer do
         mail = described_class.notify_new_red_alert(first_project, first_risk_config, 'green', 30.0).deliver_now
 
         expect(mail.subject).to eq I18n.t('projects.red_alert.subject', target_name: first_project.name)
-        expect(mail.to).to match_array [first_user.email, second_user.email]
+        expect(mail.to).to match_array [first_user.email_address, second_user.email_address]
         expect(mail.from).to eq(['no-reply@taller.net.br'])
         expect(mail.body.encoded).to match first_project.name
         expect(mail.body.encoded).to match I18n.t("activerecord.attributes.project_risk_config.enums.risk_type.#{first_risk_config.risk_type}")

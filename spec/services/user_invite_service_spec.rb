@@ -9,8 +9,8 @@ RSpec.describe UserInviteService, type: :service do
 
     context 'remove customer with an existent user' do
       it 'remove the user to the customer' do
-        devise_customer = Fabricate :devise_customer, email: user.email
-        Fabricate :user_invite, company: company, invite_email: user.email
+        devise_customer = Fabricate :devise_customer, email: user.email_address
+        Fabricate :user_invite, company: company, invite_email: user.email_address
         CustomersDeviseCustomer.create(customer_id: customer.id, devise_customer_id: devise_customer.id)
 
         described_class.instance.invite_customer(company, customer.id, devise_customer.email, 'xpto.com.br/bla')
@@ -47,7 +47,7 @@ RSpec.describe UserInviteService, type: :service do
         expect(DeviseCustomer).to(receive(:find_by).once { user_stubbed })
         expect_any_instance_of(Customer).to(receive(:add_user).with(user_stubbed))
 
-        invite_customer_message = described_class.instance.invite_customer(company, customer.id, user.email, 'xpto.com.br/bla')
+        invite_customer_message = described_class.instance.invite_customer(company, customer.id, user.email_address, 'xpto.com.br/bla')
 
         expect(invite_customer_message).to eq I18n.t('customers.add_user_to_customer.success')
         expect(UserInvite.count).to eq 0

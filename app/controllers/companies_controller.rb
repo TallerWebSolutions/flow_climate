@@ -48,7 +48,7 @@ class CompaniesController < ApplicationController
   end
 
   def add_user
-    user = User.find_by(email: params[:user_email])
+    user = User.find_by(email_address: params[:user_email])
     return redirect_to(edit_company_path(@company), error: I18n.t('general.user_not_found')) if user.blank?
 
     @company.add_user(user)

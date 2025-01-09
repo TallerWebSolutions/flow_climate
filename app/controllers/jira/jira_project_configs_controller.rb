@@ -31,7 +31,7 @@ module Jira
       jira_account = @company.jira_accounts.first
 
       project_url = company_project_url(@company, @project)
-      Jira::ProcessJiraProjectJob.perform_later(jira_account, @jira_project_config, Current.user.email, Current.user.full_name, project_url)
+      Jira::ProcessJiraProjectJob.perform_later(jira_account, @jira_project_config, Current.user.email_address, Current.user.full_name, project_url)
       flash.now[:notice] = I18n.t('general.enqueued')
 
       respond_to { |format| format.js { render 'jira/jira_project_configs/synchronize_jira' } }

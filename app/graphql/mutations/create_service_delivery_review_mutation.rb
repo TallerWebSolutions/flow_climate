@@ -25,7 +25,7 @@ module Mutations
       if service_delivery_review.valid?
         ServiceDeliveryReviewGeneratorJob.perform_later(product,
                                                         service_delivery_review,
-                                                        current_user.email,
+                                                        current_user.email_address,
                                                         current_user.full_name,
                                                         service_delivery_review.id,
                                                         service_delivery_review_url(product.company, product, service_delivery_review))

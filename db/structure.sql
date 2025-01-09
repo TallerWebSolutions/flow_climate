@@ -3281,8 +3281,8 @@ CREATE TABLE public.users (
     id integer NOT NULL,
     first_name character varying NOT NULL,
     last_name character varying NOT NULL,
-    email character varying NOT NULL,
-    encrypted_password character varying,
+    email_address character varying NOT NULL,
+    password_digest character varying NOT NULL,
     reset_password_token character varying,
     reset_password_sent_at timestamp without time zone,
     remember_created_at timestamp without time zone,
@@ -3299,9 +3299,7 @@ CREATE TABLE public.users (
     user_money_credits numeric DEFAULT 0 NOT NULL,
     avatar character varying,
     language character varying DEFAULT 'pt-BR'::character varying NOT NULL,
-    user_role integer DEFAULT 0 NOT NULL,
-    password_digest character varying,
-    email_address character varying
+    user_role integer DEFAULT 0 NOT NULL
 );
 
 
@@ -5743,17 +5741,10 @@ CREATE UNIQUE INDEX index_user_project_roles_on_user_id_and_project_id ON public
 
 
 --
--- Name: index_users_on_email; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_users_on_email ON public.users USING btree (email);
-
-
---
 -- Name: index_users_on_email_address; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_users_on_email_address ON public.users USING btree (email_address);
+CREATE UNIQUE INDEX index_users_on_email_address ON public.users USING btree (email_address);
 
 
 --

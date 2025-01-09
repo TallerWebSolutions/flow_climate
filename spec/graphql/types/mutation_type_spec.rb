@@ -73,9 +73,8 @@ RSpec.describe Types::MutationType do
 
         it 'succeeds' do
           user = Fabricate :user
-          context = {
-            current_user: user
-          }
+          context = { current_user: user }
+
           result = FlowClimateSchema.execute(mutation, variables: nil, context: context).as_json
           expect(result['data']['sendAuthToken']['statusMessage']).to eq('SUCCESS')
         end

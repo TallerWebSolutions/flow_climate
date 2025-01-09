@@ -21,7 +21,7 @@ RSpec.describe ServiceDeliveryReviewGeneratorJob, type: :active_job do
       expect(ServiceDeliveryReviewService.instance).to(receive(:associate_demands_data).with(product, service_delivery_review).once)
       expect(UserNotifierMailer).to(receive(:async_activity_finished).once)
 
-      described_class.perform_now(product, service_delivery_review, first_user.email, first_user.full_name, service_delivery_review.id, 'http://foo.com')
+      described_class.perform_now(product, service_delivery_review, first_user.email_address, first_user.full_name, service_delivery_review.id, 'http://foo.com')
     end
   end
 end

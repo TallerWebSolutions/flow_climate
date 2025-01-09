@@ -2,7 +2,6 @@
 
 Fabricator(:demand) do
   work_item_type
-  customer
   product
   project
   company

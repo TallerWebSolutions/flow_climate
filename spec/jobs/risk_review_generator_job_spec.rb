@@ -6,8 +6,8 @@ RSpec.describe RiskReviewGeneratorJob, type: :active_job do
       product = Fabricate(:product)
       risk_review = Fabricate(:risk_review, product: product)
       user = Fabricate(:user)
-      described_class.perform_later(product, risk_review, user.email, user.full_name, risk_review.id, 'http://foo.com')
-      expect(described_class).to have_been_enqueued.with(product, risk_review, user.email, user.full_name, risk_review.id, 'http://foo.com').on_queue('default')
+      described_class.perform_later(product, risk_review, user.email_address, user.full_name, risk_review.id, 'http://foo.com')
+      expect(described_class).to have_been_enqueued.with(product, risk_review, user.email_address, user.full_name, risk_review.id, 'http://foo.com').on_queue('default')
     end
   end
 
@@ -23,7 +23,7 @@ RSpec.describe RiskReviewGeneratorJob, type: :active_job do
       expect(RiskReviewService.instance).to(receive(:associate_demands_data).with(product, risk_review).once)
       expect(UserNotifierMailer).to(receive(:async_activity_finished).once)
 
-      described_class.perform_now(product, risk_review, first_user.email, first_user.full_name, risk_review.id, 'http://foo.com')
+      described_class.perform_now(product, risk_review, first_user.email_address, first_user.full_name, risk_review.id, 'http://foo.com')
     end
   end
 end

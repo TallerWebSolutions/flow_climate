@@ -48,7 +48,7 @@ class DemandsController < DemandsListController
     jira_account = @company.jira_accounts.first
     demand_url = company_demand_url(@demand.project.company, @demand)
     clean_assignments_efforts
-    Jira::ProcessJiraIssueJob.perform_later(@demand.external_id, jira_account, @demand.project, Current.user.email, Current.user.full_name, demand_url)
+    Jira::ProcessJiraIssueJob.perform_later(@demand.external_id, jira_account, @demand.project, Current.user.email_address, Current.user.full_name, demand_url)
     flash[:notice] = I18n.t('general.enqueued')
     redirect_to company_demand_path(@company, @demand)
   end

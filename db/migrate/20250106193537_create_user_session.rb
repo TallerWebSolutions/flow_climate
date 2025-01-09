@@ -13,15 +13,9 @@ class CreateUserSession < ActiveRecord::Migration[8.0]
     end
 
     change_table :users, bulk: true do |t|
-      t.string :password_digest, null: true
-      t.string :email_address, null: true, index: true
+      t.rename :email, :email_address
+      t.rename :encrypted_password, :password_digest
     end
-
-    User.find_each do |user|
-      user.update(email_address: user.email)
-    end
-
-    change_column_null :users, :encrypted_password, true
   end
 
   def down
@@ -37,9 +31,8 @@ class CreateUserSession < ActiveRecord::Migration[8.0]
     add_index :sessions, :updated_at
 
     change_table :users, bulk: true do |t|
-      t.remove :password_digest
-      t.remove :email_address
-      t.string :encrypted_password, null: false
+      t.rename :email_address, :email
+      t.rename :password_digest, :encrypted_password
     end
   end
 end

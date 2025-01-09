@@ -272,7 +272,7 @@ RSpec.describe CompaniesController do
 
       context 'passing valid parameters' do
         context 'and the user is not in the company users list' do
-          before { patch :add_user, params: { id: company, user_email: other_user.email } }
+          before { patch :add_user, params: { id: company, user_email: other_user.email_address } }
 
           it 'adds the user and redirects to the edit page' do
             expect(company.reload.users).to match_array [user, other_user]
@@ -281,7 +281,7 @@ RSpec.describe CompaniesController do
         end
 
         context 'and the user is already in the company users list' do
-          before { patch :add_user, params: { id: company, user_email: user.email } }
+          before { patch :add_user, params: { id: company, user_email: user.email_address } }
 
           it 'does not add the repeated user' do
             expect(company.reload.users).to eq [user]
@@ -292,7 +292,7 @@ RSpec.describe CompaniesController do
 
       context 'passing invalid' do
         context 'non-existent company' do
-          before { patch :add_user, params: { id: 'foo', user_email: user.email } }
+          before { patch :add_user, params: { id: 'foo', user_email: user.email_address } }
 
           it { expect(response).to have_http_status :not_found }
         end
@@ -300,7 +300,7 @@ RSpec.describe CompaniesController do
         context 'unpermitted company' do
           let(:company) { Fabricate :company, users: [] }
 
-          before { put :update, params: { id: company, user_email: user.email } }
+          before { put :update, params: { id: company, user_email: user.email_address } }
 
           it { expect(response).to have_http_status :not_found }
         end

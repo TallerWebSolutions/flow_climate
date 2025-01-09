@@ -9,16 +9,14 @@
 #  avatar                 :string
 #  current_sign_in_at     :datetime
 #  current_sign_in_ip     :inet
-#  email                  :string           not null
-#  email_address          :string
+#  email_address          :string           not null
 #  email_notifications    :boolean          default(FALSE), not null
-#  encrypted_password     :string
 #  first_name             :string           not null
 #  language               :string           default("pt-BR"), not null
 #  last_name              :string           not null
 #  last_sign_in_at        :datetime
 #  last_sign_in_ip        :inet
-#  password_digest        :string
+#  password_digest        :string           not null
 #  remember_created_at    :datetime
 #  reset_password_sent_at :datetime
 #  reset_password_token   :string
@@ -31,8 +29,7 @@
 #
 # Indexes
 #
-#  index_users_on_email                 (email) UNIQUE
-#  index_users_on_email_address         (email_address)
+#  index_users_on_email_address         (email_address) UNIQUE
 #  index_users_on_reset_password_token  (reset_password_token) UNIQUE
 #
 # Foreign Keys
@@ -64,7 +61,7 @@ class User < ApplicationRecord
 
   has_many :user_plans, dependent: :destroy
 
-  validates :first_name, :last_name, :email, presence: true
+  validates :first_name, :last_name, :email_address, presence: true
 
   scope :to_notify_email, -> { where email_notifications: true }
   scope :admins, -> { where admin: true }

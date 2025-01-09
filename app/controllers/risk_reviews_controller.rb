@@ -25,7 +25,7 @@ class RiskReviewsController < ApplicationController
 
     if @risk_review.valid?
       flash.now[:notice] = I18n.t('risk_reviews.update.enqueued_associations')
-      RiskReviewGeneratorJob.perform_later(@product, @risk_review, Current.user.email, Current.user.full_name, @risk_review.id, risk_review_url)
+      RiskReviewGeneratorJob.perform_later(@product, @risk_review, Current.user.email_address, Current.user.full_name, @risk_review.id, risk_review_url)
       risk_reviews
     end
 
@@ -35,7 +35,7 @@ class RiskReviewsController < ApplicationController
   def update
     @risk_review.update(risk_review_params)
     if @risk_review.valid?
-      RiskReviewGeneratorJob.perform_later(@product, @risk_review, Current.user.email, Current.user.full_name, @risk_review.id, risk_review_url)
+      RiskReviewGeneratorJob.perform_later(@product, @risk_review, Current.user.email_address, Current.user.full_name, @risk_review.id, risk_review_url)
       flash.now[:notice] = I18n.t('risk_reviews.update.enqueued_associations')
       risk_reviews
     end

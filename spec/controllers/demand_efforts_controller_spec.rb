@@ -156,7 +156,6 @@ RSpec.describe DemandEffortsController do
             effort = Fabricate :demand_effort, demand: demand, item_assignment: assignment, demand_transition: transition, automatic_update: true, start_time_to_computation: 28.days.ago, effort_value: 10
 
             expect(Consolidations::ProjectConsolidationJob).to(receive(:perform_later).with(project)).once
-            expect(Consolidations::CustomerConsolidationJob).to(receive(:perform_later).with(customer)).once
             expect(Consolidations::ContractConsolidationJob).to(receive(:perform_later).with(contract)).once
             expect(Consolidations::TeamConsolidationJob).to(receive(:perform_later).with(team)).once
             expect(DemandEffortService.instance).to(receive(:update_demand_effort_caches).with(demand)).once

@@ -55,7 +55,7 @@
       <% @users_in_company.each do |user_company_role| %>
         <tr>
           <td><%= user_company_role.full_name %></td>
-          <td><%= user_company_role.email %></td>
+          <td><%= user_company_role.email_address %></td>
           <td>
             <%= I18n.l(user_company_role.start_date) if user_company_role.start_date.present? %>
           </td>

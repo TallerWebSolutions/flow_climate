@@ -404,8 +404,8 @@ RSpec.describe CustomersController do
       let(:user) { Fabricate :user }
 
       it 'remove user invite' do
-        devise_customer = Fabricate :devise_customer, email: user.email
-        Fabricate :user_invite, company: company, invite_email: user.email
+        devise_customer = Fabricate :devise_customer, email: user.email_address
+        Fabricate :user_invite, company: company, invite_email: user.email_address
         CustomersDeviseCustomer.create(customer_id: customer.id, devise_customer_id: devise_customer.id)
         delete :remove_user_to_customer, params: { company_id: company, id: customer, user_id: devise_customer.id }
         expect(flash[:notice]).to eq I18n.t('user_invites.delete.success')
