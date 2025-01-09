@@ -54,6 +54,10 @@ const ProductDetails = ({
       label: t("products.serviceDeliveryReview"),
       to: `/companies/${companySlug}/products/${productSlug}/service_delivery_reviews_tab`,
     },
+    {
+      label: t("products.bvp"),
+      to: `/companies/${companySlug}/products/${productSlug}/bvp`,
+    },
   ]
 
   return (

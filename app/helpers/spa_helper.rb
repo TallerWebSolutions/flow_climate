@@ -12,6 +12,7 @@ module SpaHelper
       { controller: 'products', action: 'show' },
       { controller: 'products', action: 'risk_reviews_tab' },
       { controller: 'products', action: 'service_delivery_reviews_tab' },
+      { controller: 'products', action: 'bvp' },
       { controller: 'risk_reviews', action: 'new' },
       { controller: 'risk_reviews', action: 'show' },
       { controller: 'service_delivery_reviews', action: 'show' },

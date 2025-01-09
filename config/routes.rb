@@ -149,6 +149,7 @@ Rails.application.routes.draw do
         get :portfolio_charts_tab
         get :risk_reviews_tab
         get :service_delivery_reviews_tab
+        get :bvp
       end
 
       get 'products_for_customer/(:customer_id)', action: :products_for_customer, on: :collection

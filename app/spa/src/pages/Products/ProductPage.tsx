@@ -10,6 +10,7 @@ const ProductPage = () => {
   const productSlug = params.productSlug || ""
   const { data, loading } = useQuery<ProductPageDTO>(PRODUCT_PAGE_QUERY, {
     variables: { productSlug },
+    notifyOnNetworkStatusChange: true,
   })
 
   const product = data?.product

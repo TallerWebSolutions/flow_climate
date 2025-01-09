@@ -91,6 +91,11 @@ class ProductsController < ApplicationController
     render 'spa-build/index'
   end
 
+  def bvp
+    prepend_view_path Rails.public_path
+    render 'spa-build/index'
+  end
+
   private
 
   def assign_demands

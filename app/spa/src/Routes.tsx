@@ -42,6 +42,7 @@ import ManagerDashboard from "./pages/Users/ManagerDashboard"
 import ProductUsersPage from "./pages/Products/ProductUsersPage"
 import ServiceDeliveryReview from "./pages/Products/ServiceDeliveryReview"
 import CreateDemandEffort from "./modules/demandEffort/components/CreateDemandEffort"
+import ProductBVPTab from "./modules/product/components/ProductBVPTab"
 
 const Routes = () => {
   return (
@@ -74,6 +75,10 @@ const Routes = () => {
         <Route
           path="/companies/:companySlug/products/:productSlug/service_delivery_reviews_tab"
           element={<ServiceDeliveryReviews />}
+        />
+        <Route
+          path="/companies/:companySlug/products/:productSlug/bvp"
+          element={<ProductBVPTab />}
         />
         <Route
           path="/companies/:companySlug/products/:productSlug/service_delivery_reviews/:reviewId"
