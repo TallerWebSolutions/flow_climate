@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jira
-  class JiraCustomFieldMappingsController < AuthenticatedController
+  class JiraCustomFieldMappingsController < ApplicationController
     before_action :user_gold_check
 
     before_action :assign_jira_account

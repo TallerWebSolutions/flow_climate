@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class DemandTransitionsController < AuthenticatedController
+class DemandTransitionsController < ApplicationController
   before_action :user_gold_check
 
   before_action :assign_stage, except: %i[new create edit update]
@@ -64,5 +64,9 @@ class DemandTransitionsController < AuthenticatedController
 
   def demand_transitions
     @demand_transitions ||= @demand.demand_transitions.order(:last_time_in)
+  end
+
+  def assign_demand
+    @demand = @company.demands.friendly.find(params[:demand_id]&.downcase)
   end
 end

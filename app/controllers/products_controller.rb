@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ProductsController < AuthenticatedController
+class ProductsController < ApplicationController
   before_action :user_gold_check
 
   before_action :assign_product, only: %i[edit update destroy portfolio_units_tab projects_tab portfolio_charts_tab service_delivery_reviews_tab]
@@ -117,5 +117,12 @@ class ProductsController < AuthenticatedController
 
   def start_date
     params[:start_date]&.to_date || [@demands&.map(&:created_date)&.min, 3.months.ago].compact.max.to_date
+  end
+
+  def render_products_for_customer(render_file, customer_id)
+    @products = []
+    customer = Customer.find_by(id: customer_id)
+    @products = customer.products.order(name: :asc) if customer.present?
+    respond_to { |format| format.js { render render_file } }
   end
 end

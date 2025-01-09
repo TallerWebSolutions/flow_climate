@@ -2,7 +2,7 @@
 
 require 'csv'
 
-class DemandEffortsController < AuthenticatedController
+class DemandEffortsController < ApplicationController
   before_action :assign_demand, except: [:new]
 
   def index
@@ -62,5 +62,9 @@ class DemandEffortsController < AuthenticatedController
 
       Dashboards::OperationsDashboardCacheJob.perform_later(member, start_date, end_date)
     end
+  end
+
+  def assign_demand
+    @demand = @company.demands.friendly.find(params[:demand_id]&.downcase)
   end
 end

@@ -85,7 +85,7 @@ RSpec.describe CompaniesController do
         let(:out_company) { Fabricate :company }
 
         it 'assigns the instance variable and renders the template' do
-          expect_any_instance_of(AuthenticatedController).to(receive(:user_gold_check).once.and_return(true))
+          expect_any_instance_of(Authentication).to(receive(:user_gold_check).once.and_return(true))
           get :index
           expect(response).to render_template :index
           expect(assigns(:companies)).to eq [other_company, company]
@@ -126,7 +126,6 @@ RSpec.describe CompaniesController do
           it 'assigns the instance variable and renders the template' do
             expect(response).to render_template :show
             expect(assigns(:company)).to eq company
-            expect(assigns(:current_user).last_company).to eq company
             expect(assigns(:financial_informations)).to match_array [other_finances, finances]
             expect(assigns(:stages_list)).to eq [third_stage, second_stage, first_stage]
             expect(assigns(:jira_accounts_list)).to eq [second_account, first_account]

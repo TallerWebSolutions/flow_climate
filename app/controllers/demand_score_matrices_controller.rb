@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class DemandScoreMatricesController < AuthenticatedController
+class DemandScoreMatricesController < ApplicationController
   def create
     create_answers
 

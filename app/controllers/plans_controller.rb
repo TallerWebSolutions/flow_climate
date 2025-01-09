@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class PlansController < AuthenticatedController
+class PlansController < ApplicationController
   before_action :inactive_plans_in_period
   skip_before_action :assign_company
 

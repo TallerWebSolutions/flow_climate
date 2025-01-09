@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CompaniesController < AuthenticatedController
+class CompaniesController < ApplicationController
   before_action :user_gold_check
   skip_before_action :assign_company, only: %i[new create index]
   before_action :assign_stages_list, only: %i[show update_settings]
@@ -151,5 +151,9 @@ class CompaniesController < AuthenticatedController
   def build_query_dates
     @start_date = build_limit_date(@projects.map(&:start_date).min)
     @end_date = build_limit_date(@projects.map(&:end_date).max)
+  end
+
+  def build_limit_date(date)
+    [date, 4.weeks.ago].compact.max.to_date
   end
 end

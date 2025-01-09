@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class MembershipsController < AuthenticatedController
+class MembershipsController < ApplicationController
   before_action :user_gold_check
 
   before_action :assign_team

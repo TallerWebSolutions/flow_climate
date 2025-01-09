@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ProjectsController < AuthenticatedController
+class ProjectsController < ApplicationController
   before_action :assign_project, except: %i[show new create index search_projects_by_team status_report_dashboard]
 
   def index

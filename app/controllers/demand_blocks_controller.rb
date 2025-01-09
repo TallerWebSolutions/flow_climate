@@ -2,7 +2,7 @@
 
 require 'csv'
 
-class DemandBlocksController < AuthenticatedController
+class DemandBlocksController < ApplicationController
   before_action :assign_project, except: %i[index demand_blocks_csv search]
   before_action :assign_demand, except: %i[index demand_blocks_csv search]
   before_action :assign_demand_block, except: %i[index demand_blocks_csv search]
@@ -138,5 +138,9 @@ class DemandBlocksController < AuthenticatedController
 
   def assign_demand_block
     @demand_block = @demand.demand_blocks.unscoped.find(params[:id])
+  end
+
+  def assign_demand
+    @demand = @company.demands.friendly.find(params[:demand_id]&.downcase)
   end
 end

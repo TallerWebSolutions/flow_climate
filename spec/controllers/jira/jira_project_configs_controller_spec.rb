@@ -23,7 +23,7 @@ RSpec.describe Jira::JiraProjectConfigsController do
     describe 'PUT #synchronize_jira' do
       before { put :synchronize_jira, params: { company_id: 'foo', project_id: 'xpto', id: 'bar' }, xhr: true }
 
-      it { expect(response).to have_http_status :unauthorized }
+      it { expect(response).to redirect_to new_session_path }
     end
 
     describe 'GET #index' do

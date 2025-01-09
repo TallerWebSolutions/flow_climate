@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class TeamResourceAllocationsController < AuthenticatedController
+class TeamResourceAllocationsController < ApplicationController
   before_action :assign_team
 
   before_action :assign_team_resource_allocation, only: :destroy

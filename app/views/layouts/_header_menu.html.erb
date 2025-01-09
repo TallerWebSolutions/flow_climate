@@ -26,7 +26,7 @@
 
 <div class="col-xs-2 pull-right">
   <div class="dropdown topnav-right">
-    <% if Current.user.avatar&.present? %>
+    <% if Current.user&.avatar&.present? %>
       <%= image_tag Current.user.avatar.url, size: '50x50', class: 'user-avatar dropdown-toggle', 'data-toggle' => 'dropdown' %>
     <% else %>
       <%= image_tag 'https://res.cloudinary.com/taller-digital/image/upload/v1599220842/user_default.png', size: '50x50', class: 'user-avatar dropdown-toggle', 'data-toggle' => 'dropdown' %>

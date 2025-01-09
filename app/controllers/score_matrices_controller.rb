@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ScoreMatricesController < AuthenticatedController
+class ScoreMatricesController < ApplicationController
   before_action :assign_score_matrix
 
   def show

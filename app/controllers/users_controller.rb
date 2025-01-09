@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class UsersController < AuthenticatedController
+class UsersController < ApplicationController
   skip_before_action :assign_company
   before_action :check_admin, only: %i[toggle_admin admin_dashboard]
   before_action :assign_user, only: %i[toggle_admin show edit update companies]
@@ -62,6 +62,16 @@ class UsersController < AuthenticatedController
   end
 
   private
+
+  def build_demands_info(demands)
+    @member_finished_demands = demands.finished_with_leadtime
+    statistics_service = Stats::StatisticsService.instance
+    demands_leadtimes = @member_finished_demands.map(&:leadtime)
+    @member_leadtime65 = statistics_service.percentile(65, demands_leadtimes) / 1.day
+    @member_leadtime80 = statistics_service.percentile(80, demands_leadtimes) / 1.day
+    @member_leadtime95 = statistics_service.percentile(95, demands_leadtimes) / 1.day
+    @member_lead_time_histogram_data = statistics_service.leadtime_histogram_hash(demands_leadtimes)
+  end
 
   def build_page_objects
     @companies_list = @user.companies.order(:name)

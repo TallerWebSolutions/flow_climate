@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class RiskReviewActionItemsController < AuthenticatedController
+class RiskReviewActionItemsController < ApplicationController
   before_action :assign_product
   before_action :assign_risk_review
 
@@ -14,7 +14,7 @@ class RiskReviewActionItemsController < AuthenticatedController
   def create
     @risk_review_action_item = RiskReviewActionItem.create(risk_review_action_item_params.merge(risk_review: @risk_review))
 
-    flash[:notice] = I18n.t('risk_review_action_items.create.success') if @risk_review_action_item.valid?
+    flash.now[:notice] = I18n.t('risk_review_action_items.create.success') if @risk_review_action_item.valid?
 
     memberships
     risk_review_action_items

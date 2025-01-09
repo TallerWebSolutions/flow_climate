@@ -3,7 +3,7 @@
 require 'addressable/uri'
 
 class WebhookIntegrationsController < ApplicationController
-  skip_before_action :verify_authenticity_token
+  allow_unauthenticated_access only: %i[jira_webhook jira_delete_card_webhook]
 
   before_action :check_request
   before_action :assigns_data

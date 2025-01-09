@@ -5,13 +5,30 @@ module Authentication
 
   included do
     before_action :require_authentication
+    before_action :assign_company
     helper_method :authenticated?
   end
 
   class_methods do
     def allow_unauthenticated_access(**options)
       skip_before_action :require_authentication, **options
+      skip_before_action :assign_company, **options
     end
+  end
+
+  def check_admin
+    return true if Current.user.admin?
+
+    redirect_to root_path
+  end
+
+  def user_gold_check
+    return true if Current.user.admin?
+
+    user_plan = Current.user.current_user_plan
+    return true unless user_plan.blank? || user_plan.lite? || user_plan.trial?
+
+    no_plan_to_access(:gold)
   end
 
   private
@@ -51,5 +68,10 @@ module Authentication
   def terminate_session
     Current.session.destroy
     cookies.delete(:session_id)
+  end
+
+  def assign_company
+    @company = Company.friendly.find(params[:company_id]&.downcase)
+    not_found unless Current.user.active_access_to_company?(@company)
   end
 end

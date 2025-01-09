@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class UserCompanyRolesController < AuthenticatedController
+class UserCompanyRolesController < ApplicationController
   before_action :assign_user
   before_action :assign_user_company_role, only: %i[edit update]
 

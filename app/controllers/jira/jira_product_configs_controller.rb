@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jira
-  class JiraProductConfigsController < AuthenticatedController
+  class JiraProductConfigsController < ApplicationController
     before_action :assign_product
 
     def index

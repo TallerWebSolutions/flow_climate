@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class StageProjectConfigsController < AuthenticatedController
+class StageProjectConfigsController < ApplicationController
   before_action :user_gold_check
 
   before_action :assign_stage, except: %i[index destroy]

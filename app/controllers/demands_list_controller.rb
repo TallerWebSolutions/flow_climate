@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class DemandsListController < AuthenticatedController
+class DemandsListController < ApplicationController
   private
 
   def assign_consolidations

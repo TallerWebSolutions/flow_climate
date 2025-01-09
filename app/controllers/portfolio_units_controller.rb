@@ -2,7 +2,7 @@
 
 require 'csv'
 
-class PortfolioUnitsController < AuthenticatedController
+class PortfolioUnitsController < ApplicationController
   before_action :assign_product, except: :index
   before_action :assign_portfolio_unit, only: %i[show destroy edit update]
 

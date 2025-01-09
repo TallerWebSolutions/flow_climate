@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class ApplicationController < ActionController::Base
+  include Authentication
   rescue_from ActiveRecord::RecordNotFound, with: :not_found
 
   before_action :redirect_subdomain
@@ -56,5 +57,9 @@ class ApplicationController < ActionController::Base
     return 'pt-BR' if accepted_languages.include?('pt') || accepted_languages.include?('pt-BR')
 
     'en'
+  end
+
+  def assign_customers
+    @company_customers = @company.customers.order(name: :asc)
   end
 end

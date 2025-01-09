@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ProjectRiskConfigsController < AuthenticatedController
+class ProjectRiskConfigsController < ApplicationController
   before_action :user_gold_check
 
   before_action :assign_project

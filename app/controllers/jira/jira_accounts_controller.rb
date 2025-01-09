@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jira
-  class JiraAccountsController < AuthenticatedController
+  class JiraAccountsController < ApplicationController
     before_action :assign_jira_account, only: %i[destroy show]
 
     def show

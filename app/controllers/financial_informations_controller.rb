@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class FinancialInformationsController < AuthenticatedController
+class FinancialInformationsController < ApplicationController
   before_action :user_gold_check
 
   before_action :assign_financial_information, only: %i[edit update destroy]

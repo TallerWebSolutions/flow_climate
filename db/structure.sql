@@ -5750,6 +5750,13 @@ CREATE UNIQUE INDEX index_users_on_email ON public.users USING btree (email);
 
 
 --
+-- Name: index_users_on_email_address; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_users_on_email_address ON public.users USING btree (email_address);
+
+
+--
 -- Name: index_users_on_reset_password_token; Type: INDEX; Schema: public; Owner: -
 --
 

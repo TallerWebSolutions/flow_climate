@@ -3,6 +3,7 @@
 class GraphqlController < ApplicationController
   include Authentication
 
+  allow_unauthenticated_access only: %i[execute]
   before_action :authenticate_spa
 
   def execute

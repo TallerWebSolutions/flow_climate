@@ -27,12 +27,6 @@
   <% end %>
   <li class="divider"></li>
   <li><%= link_to I18n.t('header.logout'), session_path(:destroy), method: :delete, class: 'nav-link dropdown-item' %></li>
-
-<% elsif devise_customer_signed_in? %>
-  <li><%= link_to I18n.t('users.account.self'), devise_customer_home_path, class: 'nav-link dropdown-item' %></li>
-  <li class="divider"></li>
-  <li><%= link_to I18n.t('header.logout'), destroy_devise_customer_session_path, method: :delete, class: 'nav-link dropdown-item' %></li>
-
 <% else %>
   <li><%= link_to I18n.t('devise.sessions.login'), new_session_path, class: 'nav-link dropdown-item' %></li>
   <li><%= link_to I18n.t('devise.sessions.login_as_customer'), new_devise_customer_session_path, class: 'nav-link dropdown-item' %></li>

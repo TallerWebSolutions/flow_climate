@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jira
-  class JiraProjectConfigsController < AuthenticatedController
+  class JiraProjectConfigsController < ApplicationController
     before_action :assign_project
     before_action :assign_jira_project_config, only: %i[destroy synchronize_jira]
 
@@ -32,7 +32,7 @@ module Jira
 
       project_url = company_project_url(@company, @project)
       Jira::ProcessJiraProjectJob.perform_later(jira_account, @jira_project_config, Current.user.email, Current.user.full_name, project_url)
-      flash[:notice] = I18n.t('general.enqueued')
+      flash.now[:notice] = I18n.t('general.enqueued')
 
       respond_to { |format| format.js { render 'jira/jira_project_configs/synchronize_jira' } }
     end

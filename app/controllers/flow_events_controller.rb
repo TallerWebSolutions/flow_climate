@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class FlowEventsController < AuthenticatedController
+class FlowEventsController < ApplicationController
   before_action :assign_flow_event, only: %i[destroy edit update show]
 
   def index

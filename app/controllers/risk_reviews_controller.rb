@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class RiskReviewsController < AuthenticatedController
+class RiskReviewsController < ApplicationController
   before_action :assign_product
 
   before_action :assign_risk_review, only: %i[show destroy edit update]
@@ -24,7 +24,7 @@ class RiskReviewsController < AuthenticatedController
     @risk_review = RiskReview.create(risk_review_params.merge(company: @company, product: @product))
 
     if @risk_review.valid?
-      flash[:notice] = I18n.t('risk_reviews.update.enqueued_associations')
+      flash.now[:notice] = I18n.t('risk_reviews.update.enqueued_associations')
       RiskReviewGeneratorJob.perform_later(@product, @risk_review, Current.user.email, Current.user.full_name, @risk_review.id, risk_review_url)
       risk_reviews
     end
@@ -36,7 +36,7 @@ class RiskReviewsController < AuthenticatedController
     @risk_review.update(risk_review_params)
     if @risk_review.valid?
       RiskReviewGeneratorJob.perform_later(@product, @risk_review, Current.user.email, Current.user.full_name, @risk_review.id, risk_review_url)
-      flash[:notice] = I18n.t('risk_reviews.update.enqueued_associations')
+      flash.now[:notice] = I18n.t('risk_reviews.update.enqueued_associations')
       risk_reviews
     end
 

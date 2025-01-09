@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ReplenishingConsolidationsController < AuthenticatedController
+class ReplenishingConsolidationsController < ApplicationController
   prepend_view_path Rails.public_path
 
   def index

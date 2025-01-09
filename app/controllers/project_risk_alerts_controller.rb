@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ProjectRiskAlertsController < AuthenticatedController
+class ProjectRiskAlertsController < ApplicationController
   before_action :assign_project
 
   def index

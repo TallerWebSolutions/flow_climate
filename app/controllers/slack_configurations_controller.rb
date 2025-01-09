@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class SlackConfigurationsController < AuthenticatedController
+class SlackConfigurationsController < ApplicationController
   before_action :assign_slack_config, only: %i[edit update toggle_active destroy]
 
   def index

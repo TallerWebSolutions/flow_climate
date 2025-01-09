@@ -2,7 +2,7 @@
 
 require 'csv'
 
-class ChartsController < AuthenticatedController
+class ChartsController < ApplicationController
   before_action :assign_projects
   before_action :assign_target_name
   before_action :assign_filter_parameters_to_charts

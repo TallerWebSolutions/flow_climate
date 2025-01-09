@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ScoreMatrixQuestionsController < AuthenticatedController
+class ScoreMatrixQuestionsController < ApplicationController
   before_action :assign_product
   before_action :assign_score_matrix_question, only: %i[show destroy edit update]
 
