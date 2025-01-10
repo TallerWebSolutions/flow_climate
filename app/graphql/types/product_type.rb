@@ -8,7 +8,11 @@ module Types
     field :company, Types::CompanyType, null: true
     field :created_demands_count, Integer
     field :delivered_demands_count, Integer
-    field :demands, [Types::DemandType]
+    field :demands, [Types::DemandType], null: true do
+      argument :limit, Integer, required: false
+      argument :offset, Integer, required: false
+      argument :sort_criteria, Types::Enums::SortCriteriaType, required: false
+    end
     field :demands_blocks_count, Integer
     field :discarded_demands_count, Integer
     field :downstream_demands_count, Integer
@@ -66,6 +70,13 @@ module Types
 
     def unscored_demands_count
       object.demands.kept.unscored_demands.count
+    end
+
+    def demands(offset: 0, limit: 10, sort_criteria: nil)
+      demands = object.demands
+      demands = demands.order(demand_score: :desc) if sort_criteria == 'DEMAND_SCORE'
+
+      demands.offset(offset).limit(limit)
     end
 
     def demands_blocks_count

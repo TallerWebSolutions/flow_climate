@@ -123,7 +123,10 @@ const theme = createTheme({
 const ThemeProvider = ({ children }: { children: ReactElement }) => (
   <MaterialThemeProvider theme={theme}>
     <GlobalStyles
-      styles={{ body: { padding: 0, margin: 0, fontFamily: "Roboto" } }}
+      styles={{
+        body: { padding: 0, margin: 0, fontFamily: "Roboto" },
+        "th, td": { fontFamily: "Roboto" },
+      }}
     />
     {children}
   </MaterialThemeProvider>

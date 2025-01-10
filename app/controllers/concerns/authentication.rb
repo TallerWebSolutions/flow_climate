@@ -72,6 +72,8 @@ module Authentication
 
   def assign_company
     @company = Company.friendly.find(params[:company_id]&.downcase)
+    return if Current.user.admin?
+
     not_found unless Current.user.active_access_to_company?(@company)
   end
 end

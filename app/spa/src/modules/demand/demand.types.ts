@@ -37,6 +37,25 @@ export type Demand = {
   team?: Team
   itemAssignments?: ItemAssignment[]
   demandTransitions?: DemandTransition[]
+  demandScore?: number
+  demandScoreMatrices?: DemandScoreMatrix[]
+}
+
+type DemandScoreMatrix = {
+  id: string
+  scoreMatrixAnswer?: ScoreMatrixAnswer
+}
+
+type ScoreMatrixAnswer = {
+  id: string
+  description?: string
+  scoreMatrixQuestion?: ScoreMatrixQuestion
+}
+
+type ScoreMatrixQuestion = {
+  id: string
+  description?: string
+  scoreMatrixAnswers?: ScoreMatrixAnswer[]
 }
 
 type ItemAssignment = {

@@ -12,6 +12,8 @@ module Types
     field :customer_name, String, null: true
     field :demand_blocks_count, Int, null: false
     field :demand_efforts, [Types::DemandEffortType], null: true
+    field :demand_score, Float, null: false
+    field :demand_score_matrices, [Types::DemandScoreMatrixType], null: true
     field :demand_title, String, null: true
     field :demand_transitions, [Types::DemandTransitionType], null: true
     field :demand_type, String, null: false

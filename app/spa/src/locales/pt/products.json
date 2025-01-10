@@ -15,13 +15,11 @@
       "jiraProductConfigs": "Jira configs"
     }
   },
-
   "products": {
     "title": "Produtos",
     "riskReview": "Risk review",
     "serviceDeliveryReview": "Service delivery review"
   },
-
   "portfolioUnits": {
     "title": "Lista de Unidades de Portfólio",
     "portfolioUnitType": "Tipo",
@@ -51,5 +49,11 @@
       "save": "Salvar"
     }
   },
-  "create_portfolio_units_button": "Criar Unidade de Portifólio"
+  "create_portfolio_units_button": "Criar Unidade de Portifólio",
+  "bvpTab": {
+    "demands": {
+      "title": "Demanda",
+      "points": "Pontos"
+    }
+  }
 }

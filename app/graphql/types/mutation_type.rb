@@ -2,6 +2,7 @@
 
 module Types
   class MutationType < Types::BaseObject
+    field :update_score_matrix_question, mutation: Mutations::UpdateScoreMatrixQuestion
     field :create_demand_effort, mutation: Mutations::CreateDemandEffort
     field :create_portfolio_unit, mutation: Mutations::CreatePortfolioUnitMutation
     field :create_product_risk_review, mutation: Mutations::CreateProductRiskReview
