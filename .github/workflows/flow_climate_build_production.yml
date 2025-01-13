@@ -1,7 +1,7 @@
 name: FlowClimateBuild
 on:
   push:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
   linters:
@@ -99,7 +99,7 @@ jobs:
 
   deploy-production:
     runs-on: ubuntu-latest
-    needs: [linters, tests, spa]
+    needs: [ linters, tests, spa ]
 
     steps:
       - uses: actions/checkout@v2
@@ -107,5 +107,5 @@ jobs:
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: 'flowclimateapp'
-          heroku_email: 'celso.av.martins@gmail.com'
+          heroku_email: 'luiz.guerra@taller.net.br'
           branch: 'main'
