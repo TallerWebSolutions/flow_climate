@@ -1,14 +1,19 @@
 import ProductDetails from "./ProductDetails"
 import { useParams } from "react-router-dom"
-import { gql, useQuery } from "@apollo/client"
+import { gql, useMutation, useQuery } from "@apollo/client"
 import { Product } from "../product.types"
 import { Fragment } from "react"
 import { Paper, Select, Table, TableContainer } from "@mui/material"
 import { useTranslation } from "react-i18next"
+import { DemandScoreMatrix } from "../../demand/demand.types"
 
 const ProductBVPTab = () => {
   const { t } = useTranslation(["bvpTab"])
   const params = useParams()
+
+  const [updateDemandScoreMatrix] = useMutation<UpdateDemandScoreMatrixDTO>(
+    UPDATE_DEMAND_SCORE_MATRIX_MUTATION
+  )
 
   const productSlug = params.productSlug || ""
   const { data, loading } = useQuery<ProductBVPTabDTO>(PRODUCT_BVP_QUERY, {
@@ -69,17 +74,22 @@ const ProductBVPTab = () => {
                           <td key={`${scoreMatrix.id}-${index}`}>
                             <Select
                               native
-                              defaultValue={
-                                scoreMatrix.scoreMatrixAnswer?.description
+                              defaultValue={scoreMatrix.scoreMatrixAnswer?.id}
+                              onChange={(e) =>
+                                updateDemandScoreMatrix({
+                                  variables: {
+                                    matrixId: scoreMatrix.id,
+                                    answerId: e.target.value,
+                                  },
+                                })
                               }
-                              onChange={() => alert("to be done")}
                             >
                               {scoreMatrix.scoreMatrixAnswer?.scoreMatrixQuestion?.scoreMatrixAnswers?.map(
                                 (scoreMatrixAnswer, index) => {
                                   return (
                                     <option
                                       key={`${scoreMatrixAnswer.id}-${index}`}
-                                      value={scoreMatrixAnswer.description}
+                                      value={scoreMatrixAnswer.id}
                                     >
                                       {scoreMatrixAnswer.description}
                                     </option>
@@ -133,8 +143,30 @@ const PRODUCT_BVP_QUERY = gql`
   ${ProductDetails.fragments}
 `
 
+const UPDATE_DEMAND_SCORE_MATRIX_MUTATION = gql`
+  mutation UpdateDemandScoreMatrix($matrixId: ID!, $answerId: ID!) {
+    updateDemandScoreMatrix(matrixId: $matrixId, answerId: $answerId) {
+      statusMessage
+      demandScoreMatrix {
+        id
+        scoreMatrixAnswer {
+          id
+          description
+        }
+      }
+    }
+  }
+`
+
 type ProductBVPTabDTO = {
   product?: Product
+}
+
+type UpdateDemandScoreMatrixDTO = {
+  updateDemandScoreMatrix: {
+    statusMessage: string
+    demandScoreMatrix?: DemandScoreMatrix
+  }
 }
 
 export default ProductBVPTab

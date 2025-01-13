@@ -1030,4 +1030,46 @@ RSpec.describe Types::MutationType do
       end
     end
   end
+
+  describe '#update_demand_score_matrix' do
+    context 'with invalid arguments' do
+      it 'returns not found error' do
+        mutation = %(mutation {
+          updateDemandScoreMatrix(matrixId: "foo", answerId: "bar") {
+            statusMessage
+          }
+        })
+
+        result = FlowClimateSchema.execute(mutation).as_json
+
+        expect(result.dig('data', 'updateDemandScoreMatrix', 'statusMessage')).to eq 'NOT_FOUND'
+      end
+    end
+
+    context 'with valid arguments' do
+      it 'updates the answer to the score matrix question' do
+        old_answer = Fabricate :score_matrix_answer
+        matrix = Fabricate :demand_score_matrix, score_matrix_answer: old_answer
+        new_answer = Fabricate :score_matrix_answer
+
+        mutation = %(mutation {
+          updateDemandScoreMatrix(matrixId: #{matrix.id}, answerId: #{new_answer.id}) {
+            statusMessage
+            demandScoreMatrix {
+              scoreMatrixAnswer {
+                id
+              }
+            }
+          }
+        })
+
+        expect(matrix.score_matrix_answer).to eq old_answer
+
+        result = FlowClimateSchema.execute(mutation).as_json
+
+        expect(result.dig('data', 'updateDemandScoreMatrix', 'statusMessage')).to eq 'SUCCESS'
+        expect(result.dig('data', 'updateDemandScoreMatrix', 'demandScoreMatrix', 'scoreMatrixAnswer', 'id')).to eq new_answer.id.to_s
+      end
+    end
+  end
 end

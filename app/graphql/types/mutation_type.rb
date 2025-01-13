@@ -2,7 +2,6 @@
 
 module Types
   class MutationType < Types::BaseObject
-    field :update_score_matrix_question, mutation: Mutations::UpdateScoreMatrixQuestion
     field :create_demand_effort, mutation: Mutations::CreateDemandEffort
     field :create_portfolio_unit, mutation: Mutations::CreatePortfolioUnitMutation
     field :create_product_risk_review, mutation: Mutations::CreateProductRiskReview
@@ -25,6 +24,7 @@ module Types
     field :send_auth_token, mutation: Mutations::SendAuthTokenMutation
     field :synchronize_jira_project_config, mutation: Mutations::SynchronizeJiraProjectConfigMutation
     field :toggle_product_user, mutation: Mutations::ToggleProductUserMutation
+    field :update_demand_score_matrix, mutation: Mutations::UpdateDemandScoreMatrix
     field :update_jira_project_config, mutation: Mutations::UpdateJiraProjectConfigMutation
     field :update_portfolio_unit, mutation: Mutations::UpdatePortfolioUnitMutation
     field :update_team, mutation: Mutations::UpdateTeamMutation

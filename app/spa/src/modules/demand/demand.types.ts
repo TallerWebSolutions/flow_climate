@@ -41,7 +41,7 @@ export type Demand = {
   demandScoreMatrices?: DemandScoreMatrix[]
 }
 
-type DemandScoreMatrix = {
+export type DemandScoreMatrix = {
   id: string
   scoreMatrixAnswer?: ScoreMatrixAnswer
 }
