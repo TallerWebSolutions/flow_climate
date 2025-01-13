@@ -102,6 +102,9 @@ jobs:
     needs: [ linters, tests, spa ]
 
     steps:
+      - name: Install Heroku CLI
+          - run: |
+          - curl https://cli-assets.heroku.com/install.sh | sh
       - uses: actions/checkout@v2
       - uses: akhileshns/heroku-deploy@v3.6.8
         with:
