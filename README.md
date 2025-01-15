@@ -100,3 +100,28 @@ When syncing production database this error may occur. Check the following:
 Generate a new token at https://id.atlassian.com/manage-profile/security/api-tokens
 
 Update the corresponding Jira::JiraAccount with the new token in the field `api_token`
+
+## Docker development useful commands
+
+### Start the development environment
+- `docker compose up`
+
+### Stop the development environment
+- `docker compose down`
+
+### Open a shell in the web container
+- `docker compose exec web bash`
+
+### Open a psql shell in the database container
+- `docker compose exec db psql -U postgres -d flowcontrol_development`
+
+### Restore the database from Heroku
+- `heroku pg:backups:capture --app flowclimateapp` - to capture the database
+- `heroku pg:backups:download --app flowclimateapp` - to download the database
+- `docker compose down` - to stop the development environment
+- `docker compose up -d db` - to start the database container
+- `docker compose exec db dropdb -U postgres app_development --if-exists` - to drop the database
+- `docker compose exec db createdb -U postgres app_development` - to create the database
+- `docker compose exec db pg_restore -U postgres -d flowcontrol_development /tmp/latest.dump` - to restore the database
+- `docker compose up -d` - to start the development environment
+- `docker compose run web rails db:migrate` - to run and apply pending migrations

@@ -25,6 +25,7 @@ coverage/*
 
 ./dump.rdb
 dump.rdb
+latest.dump
 
 logfile
 # Ignore application configuration
