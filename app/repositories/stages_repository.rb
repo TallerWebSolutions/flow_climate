@@ -46,25 +46,25 @@ class StagesRepository
 
   private
 
-  def stages_time_to_team_level(limit_date, projects, stream)
+  def stages_time_to_team_level(limit_date, projects, _stream)
     Stage.select('stages.name, SUM(demand_transitions.transition_time_in_sec) AS sum_duration')
          .joins('left join demand_transitions AS demand_transitions on demand_transitions.stage_id = stages.id')
          .joins('left join demands AS demands on demand_transitions.demand_id = demands.id')
          .where(stages: { stage_level: 0 })
          .where(demands: { project_id: projects.map(&:id) })
-         .where('stages.end_point = false AND demand_transitions.last_time_in >= :limit_date AND demand_transitions.last_time_out IS NOT NULL AND stages.stage_stream = :stage_stream',
-                limit_date: limit_date.beginning_of_day, stage_stream: Stage.stage_streams[stream])
+         .where('stages.end_point = false AND demand_transitions.last_time_in >= :limit_date AND demand_transitions.last_time_out IS NOT NULL',
+                limit_date: limit_date.beginning_of_day)
   end
 
-  def stages_time_to_coordination_level(limit_date, projects, stream)
+  def stages_time_to_coordination_level(limit_date, projects, _stream)
     Stage.select('stages.name, SUM(demand_transitions.transition_time_in_sec) AS sum_duration')
          .joins('left join stages as team_stages on stages.id = team_stages.parent_id')
          .joins('left join demand_transitions AS demand_transitions on demand_transitions.stage_id = team_stages.id')
          .joins('left join demands AS demands on demand_transitions.demand_id = demands.id')
          .where(stages: { stage_level: 1 })
          .where(demands: { project_id: projects.map(&:id) })
-         .where('stages.end_point = false AND demand_transitions.last_time_in >= :limit_date AND demand_transitions.last_time_out IS NOT NULL AND stages.stage_stream = :stage_stream',
-                limit_date: limit_date.beginning_of_day, stage_stream: Stage.stage_streams[stream])
+         .where('stages.end_point = false AND demand_transitions.last_time_in >= :limit_date AND demand_transitions.last_time_out IS NOT NULL',
+                limit_date: limit_date.beginning_of_day)
   end
 
   def add_where_to_demand_transitions(stage, transition_date_field)
