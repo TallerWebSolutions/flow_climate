@@ -29,5 +29,4 @@
   <li><%= link_to I18n.t('header.logout'), session_path(:destroy), method: :delete, class: 'nav-link dropdown-item' %></li>
 <% else %>
   <li><%= link_to I18n.t('devise.sessions.login'), new_session_path, class: 'nav-link dropdown-item' %></li>
-  <li><%= link_to I18n.t('devise.sessions.login_as_customer'), new_devise_customer_session_path, class: 'nav-link dropdown-item' %></li>
 <% end %>

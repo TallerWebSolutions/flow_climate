@@ -358,7 +358,7 @@ RSpec.describe CustomersController do
 
       context 'with valid parameters' do
         it 'creates the user invite and sends the email do notify the new user' do
-          expect(UserInviteService.instance).to(receive(:invite_customer).with(company, customer.id, 'foo@bar.com.br', new_devise_customer_registration_url(user_email: 'foo@bar.com.br')).once { I18n.t('user_invites.create.success') })
+          expect(UserInviteService.instance).to(receive(:invite_customer).with(company, customer.id, 'foo@bar.com.br', show_path(user_email: 'foo@bar.com.br')).once { I18n.t('user_invites.create.success') })
 
           post :add_user_to_customer, params: { company_id: company, id: customer, user_invite: { invite_email: 'foo@bar.com.br' } }
           expect(flash[:notice]).to eq I18n.t('user_invites.create.success')
