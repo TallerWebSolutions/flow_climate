@@ -28,7 +28,7 @@ namespace :statistics do
   task consolidate_customers: :environment do
     Company.where(active: true).find_each do |company|
       company.customers.select(&:active?).each do |customer|
-        (3.months.ago.to_date..Time.zone.today).to_a.each do |date|
+        (2.months.ago.to_date..Time.zone.today).to_a.each do |date|
           Consolidations::CustomerConsolidationJob.perform_later(customer, date)
         end
       end
