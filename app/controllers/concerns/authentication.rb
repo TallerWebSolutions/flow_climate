@@ -71,7 +71,8 @@ module Authentication
   end
 
   def assign_company
-    return if params[:action] == 'destroy'
+    return if params[:controller] == 'sessions' && params[:action] == 'destroy'
+
     @company = Company.friendly.find(params[:company_id]&.downcase)
     return if Current.user.admin?
 
