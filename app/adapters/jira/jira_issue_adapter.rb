@@ -258,7 +258,7 @@ module Jira
 
     def read_portfolio_unit(demand, jira_issue)
       product = demand.product
-      portfolio_unit = product.portfolio_units.first
+      portfolio_unit = product.portfolio_units.includes(:jira_portfolio_unit_config).where.not(jira_portfolio_unit_configs: { id: nil }).first
 
       return if portfolio_unit.blank?
 
