@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   mount GraphiQL::Rails::Engine, at: '/graphiql', graphql_path: '/graphql'
   options '/graphql', to: 'graphql#execute'
   post '/graphql', to: 'graphql#execute'
+  mount Sidekiq::Web => '/sidekiq'
 
   controller :webhook_integrations do
     post 'jira_webhook'
@@ -15,8 +16,6 @@ Rails.application.routes.draw do
   end
 
   authenticated :user do
-    mount Sidekiq::Web => '/sidekiq'
-
     root 'users#home', as: :user_home
   end
 
