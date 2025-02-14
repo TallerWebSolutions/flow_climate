@@ -88,7 +88,9 @@ module Types
     end
 
     def portfolio_units
-      object.portfolio_units.order(:portfolio_unit_type, :name)
+      object.portfolio_units
+            .joins('LEFT JOIN portfolio_units parents ON portfolio_units.parent_id = parents.id')
+            .order(:portfolio_unit_type, 'parents.name NULLS FIRST', :name)
     end
 
     def average_speed
