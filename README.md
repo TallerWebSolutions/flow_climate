@@ -120,8 +120,9 @@ Update the corresponding Jira::JiraAccount with the new token in the field `api_
 - `heroku pg:backups:download --app flowclimateapp` - to download the database
 - `docker compose down` - to stop the development environment
 - `docker compose up -d db` - to start the database container
-- `docker compose exec db dropdb -U postgres app_development --if-exists` - to drop the database
-- `docker compose exec db createdb -U postgres app_development` - to create the database
+- `docker compose exec db dropdb -U postgres flowcontrol_development --if-exists` - to drop the database
+- `docker compose exec db createdb -U postgres flowcontrol_development` - to create the database
+- `docker compose cp latest.dump db:/tmp/latest.dump` - to copy the dump to the container
 - `docker compose exec db pg_restore -U postgres -d flowcontrol_development /tmp/latest.dump` - to restore the database
 - `docker compose up -d` - to start the development environment
 - `docker compose run web rails db:migrate` - to run and apply pending migrations
