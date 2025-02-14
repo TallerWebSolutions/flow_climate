@@ -66,7 +66,7 @@ class Contract < ApplicationRecord
   end
 
   def current_hours_per_demand
-    demands_finished = customer.demands.not_discarded_until(end_date).finished_after_date(start_date).finished_until_date(end_date)
+    demands_finished = demands.not_discarded_until(end_date).finished_after_date(start_date).finished_until_date(end_date)
     return 0 if demands_finished.blank?
 
     demands_finished.filter_map(&:total_effort).sum / demands_finished.count

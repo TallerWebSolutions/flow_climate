@@ -69,10 +69,10 @@ RSpec.describe Contract do
       other_contract = Fabricate :contract, customer: other_customer, start_date: 2.months.ago, end_date: 3.weeks.from_now
       no_data_contract = Fabricate :contract, start_date: 2.months.ago, end_date: 3.weeks.from_now
 
-      Fabricate :demand, customer: customer, project: project, work_item_type: feature_type, created_date: 3.weeks.ago, commitment_date: 17.days.ago, end_date: 2.weeks.ago, effort_downstream: 30, effort_upstream: 10
-      Fabricate :demand, customer: customer, project: project, work_item_type: bug_type, created_date: 2.weeks.ago, commitment_date: 18.days.ago, end_date: 1.week.ago, effort_downstream: 2, effort_upstream: 18
-      Fabricate :demand, customer: customer, project: other_project, work_item_type: bug_type, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago, effort_downstream: 43, effort_upstream: 49
-      Fabricate :demand, customer: other_customer, project: other_project, work_item_type: bug_type, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago, effort_downstream: 38, effort_upstream: 15
+      Fabricate :demand, customer: customer, contract: contract, project: project, work_item_type: feature_type, created_date: 3.weeks.ago, commitment_date: 17.days.ago, end_date: 2.weeks.ago, effort_downstream: 30, effort_upstream: 10
+      Fabricate :demand, customer: customer, contract: contract, project: project, work_item_type: bug_type, created_date: 2.weeks.ago, commitment_date: 18.days.ago, end_date: 1.week.ago, effort_downstream: 2, effort_upstream: 18
+      Fabricate :demand, customer: customer, contract: contract, project: other_project, work_item_type: bug_type, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago, effort_downstream: 43, effort_upstream: 49
+      Fabricate :demand, customer: other_customer, contract: other_contract, project: other_project, work_item_type: bug_type, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago, effort_downstream: 38, effort_upstream: 15
 
       expect(contract.current_hours_per_demand).to be_within(0.01).of(50.66)
       expect(other_contract.current_hours_per_demand).to eq 53
@@ -98,10 +98,10 @@ RSpec.describe Contract do
       other_contract = Fabricate :contract, customer: other_customer, start_date: 2.months.ago, end_date: 3.weeks.from_now
       no_data_contract = Fabricate :contract, start_date: 2.months.ago, end_date: 3.weeks.from_now
 
-      Fabricate :demand, customer: customer, project: project, work_item_type: feature_type, created_date: 3.weeks.ago, commitment_date: 17.days.ago, end_date: 2.weeks.ago, effort_downstream: 30, effort_upstream: 10
-      Fabricate :demand, customer: customer, project: project, work_item_type: bug_type, created_date: 2.weeks.ago, commitment_date: 18.days.ago, end_date: 1.week.ago, effort_downstream: 2, effort_upstream: 18
-      Fabricate :demand, customer: customer, project: other_project, work_item_type: bug_type, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago, effort_downstream: 43, effort_upstream: 49
-      Fabricate :demand, customer: other_customer, project: other_project, work_item_type: bug_type, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago, effort_downstream: 38, effort_upstream: 15
+      Fabricate :demand, customer: customer, contract: contract, project: project, work_item_type: feature_type, created_date: 3.weeks.ago, commitment_date: 17.days.ago, end_date: 2.weeks.ago, effort_downstream: 30, effort_upstream: 10
+      Fabricate :demand, customer: customer, contract: contract, project: project, work_item_type: bug_type, created_date: 2.weeks.ago, commitment_date: 18.days.ago, end_date: 1.week.ago, effort_downstream: 2, effort_upstream: 18
+      Fabricate :demand, customer: customer, contract: contract, project: other_project, work_item_type: bug_type, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago, effort_downstream: 43, effort_upstream: 49
+      Fabricate :demand, customer: other_customer, contract: other_contract, project: other_project, work_item_type: bug_type, created_date: 1.week.ago, commitment_date: 4.days.ago, end_date: 2.days.ago, effort_downstream: 38, effort_upstream: 15
 
       expect(contract.current_estimate_gap.to_f).to eq 0.6888888888888889
       expect(other_contract.current_estimate_gap.to_f).to eq 0.7666666666666667

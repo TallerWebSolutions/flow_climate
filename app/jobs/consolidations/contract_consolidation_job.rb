@@ -22,7 +22,7 @@ module Consolidations
 
           demands_finished = contract.demands.kept.finished_after_date(contract_start).finished_until_date(start_date)
 
-          efforts_for_customer = DemandEffort.joins(demand: :customer).where(demands: { customer: contract.customer })
+          efforts_for_customer = DemandEffort.joins(demand: :product).where(demands: { product: contract.product })
           efforts_acc = efforts_for_customer.where(start_time_to_computation: ..end_of_month)
           total_hours_delivered_accumulated = efforts_acc.sum(:effort_value)
 

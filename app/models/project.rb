@@ -184,7 +184,10 @@ class Project < ApplicationRecord
   end
 
   def consumed_active_contracts_hours
-    contracts.active(Time.zone.now).sum(&:consumed_hours)
+    Contract.joins(:product)
+            .where(product_id: products.pluck(:id))
+            .active(Time.zone.now)
+            .sum(&:consumed_hours)
   end
 
   def percentage_hours_delivered
@@ -280,7 +283,10 @@ class Project < ApplicationRecord
   end
 
   def total_active_contracts_hours
-    contracts.active(Time.zone.now).sum(&:total_hours)
+    Contract.joins(:product)
+            .where(product_id: products.pluck(:id))
+            .active(Time.zone.now)
+            .sum(&:total_hours)
   end
 
   def remaining_active_contracts_hours

@@ -1893,10 +1893,11 @@ RSpec.describe Project do
   describe '#total_active_contracts_hours' do
     it 'returns the remaining active contract hours' do
       customer = Fabricate :customer
-      project = Fabricate :project, customers: [customer]
-      Fabricate :contract, customer: customer, start_date: 1.day.ago, end_date: 1.day.from_now, total_hours: 200
-      Fabricate :contract, customer: customer, start_date: 1.day.ago, end_date: 2.days.from_now, total_hours: 400
-      Fabricate :contract, customer: customer, start_date: 3.days.ago, end_date: 2.days.ago, total_hours: 400
+      product = Fabricate :product, customer: customer
+      project = Fabricate :project, customers: [customer], products: [product]
+      Fabricate :contract, customer: customer, product: product, start_date: 1.day.ago, end_date: 1.day.from_now, total_hours: 200
+      Fabricate :contract, customer: customer, product: product, start_date: 1.day.ago, end_date: 2.days.from_now, total_hours: 400
+      Fabricate :contract, customer: customer, product: product, start_date: 3.days.ago, end_date: 2.days.ago, total_hours: 400
 
       expect(project.total_active_contracts_hours).to eq 600
     end
@@ -1905,10 +1906,11 @@ RSpec.describe Project do
   describe '#consumed_active_contracts_hours' do
     it 'returns the consumed active contract hours' do
       customer = Fabricate :customer
-      project = Fabricate :project, customers: [customer]
-      first_contract = Fabricate :contract, customer: customer, start_date: 1.day.ago, end_date: 1.day.from_now, total_hours: 200
-      second_contract = Fabricate :contract, customer: customer, start_date: 1.day.ago, end_date: 2.days.from_now, total_hours: 400
-      third_contract = Fabricate :contract, customer: customer, start_date: 3.days.ago, end_date: 2.days.ago, total_hours: 400
+      product = Fabricate :product, customer: customer
+      project = Fabricate :project, customers: [customer], products: [product]
+      first_contract = Fabricate :contract, customer: customer, product: product, start_date: 1.day.ago, end_date: 1.day.from_now, total_hours: 200
+      second_contract = Fabricate :contract, customer: customer, product: product, start_date: 1.day.ago, end_date: 2.days.from_now, total_hours: 400
+      third_contract = Fabricate :contract, customer: customer, product: product, start_date: 3.days.ago, end_date: 2.days.ago, total_hours: 400
 
       Fabricate :contract_consolidation, contract: first_contract, consumed_hours: 200
       Fabricate :contract_consolidation, contract: second_contract, consumed_hours: 400
@@ -1921,10 +1923,11 @@ RSpec.describe Project do
   describe '#remaining_active_contracts_hours' do
     it 'returns the remaining active contract hours subtract the consumed active contract hours' do
       customer = Fabricate :customer
-      project = Fabricate :project, customers: [customer]
-      first_contract = Fabricate :contract, customer: customer, start_date: 1.day.ago, end_date: 1.day.from_now, total_hours: 200
-      second_contract = Fabricate :contract, customer: customer, start_date: 1.day.ago, end_date: 2.days.from_now, total_hours: 900
-      third_contract = Fabricate :contract, customer: customer, start_date: 3.days.ago, end_date: 2.days.ago, total_hours: 400
+      product = Fabricate :product, customer: customer
+      project = Fabricate :project, customers: [customer], products: [product]
+      first_contract = Fabricate :contract, customer: customer, product: product, start_date: 1.day.ago, end_date: 1.day.from_now, total_hours: 200
+      second_contract = Fabricate :contract, customer: customer, product: product, start_date: 1.day.ago, end_date: 2.days.from_now, total_hours: 900
+      third_contract = Fabricate :contract, customer: customer, product: product, start_date: 3.days.ago, end_date: 2.days.ago, total_hours: 400
 
       Fabricate :contract_consolidation, contract: first_contract, consumed_hours: 200
       Fabricate :contract_consolidation, contract: second_contract, consumed_hours: 400
