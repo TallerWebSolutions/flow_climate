@@ -265,4 +265,8 @@ Rails.application.routes.draw do
       delete :destroy_from_sheet, on: :member
     end
   end
+
+  controller :status_report do
+    get 'statusreport/:product_name', action: :show
+  end
 end
