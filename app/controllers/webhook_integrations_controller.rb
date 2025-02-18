@@ -4,6 +4,7 @@ require 'addressable/uri'
 
 class WebhookIntegrationsController < ApplicationController
   allow_unauthenticated_access only: %i[jira_webhook jira_delete_card_webhook]
+  skip_before_action :verify_authenticity_token, only: %i[jira_webhook jira_delete_card_webhook]
 
   before_action :check_request
   before_action :assigns_data
@@ -11,9 +12,7 @@ class WebhookIntegrationsController < ApplicationController
   before_action :company_active?
 
   def jira_webhook
-    Rails.logger.info('Jira webhook called')
     issue_id = Jira::JiraReader.instance.read_demand_key(jira_issue_attrs)
-    Rails.logger.info("Issue id: #{issue_id}. Sending to job")
     Jira::ProcessJiraIssueJob.perform_later(issue_id, jira_account, project, nil, nil, nil) unless already_in_the_queue?(issue_id)
 
     head :ok
@@ -37,15 +36,10 @@ class WebhookIntegrationsController < ApplicationController
     critical_queue&.map { |job| job['args'][0]['arguments'][0] }&.any?(issue_id)
   end
 
-  def valid_jira_call? # rubocop:disable Metrics/AbcSize
+  def valid_jira_call?
     return head :ok if jira_issue_attrs.blank?
-
-    Rails.logger.info("Jira issue attrs: #{jira_issue_attrs.inspect}")
     return head :ok if jira_account.blank?
 
-    Rails.logger.info("Jira account: #{jira_account.inspect}")
-
-    Rails.logger.info("Project: #{project.inspect}")
     head :ok if project.blank?
   end
 
@@ -77,8 +71,6 @@ class WebhookIntegrationsController < ApplicationController
     jira_account_domain = ActionDispatch::Http::URL.extract_subdomain(uri_host, 1)
 
     @jira_account = Jira::JiraAccount.find_by(customer_domain: jira_account_domain)
-    Rails.logger.info("Jira account found: #{@jira_account.inspect}")
-    @jira_account
   end
 
   def valid_content_type?
