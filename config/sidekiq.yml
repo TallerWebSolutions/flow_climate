@@ -3,12 +3,12 @@ staging:
 development:
   :concurrency: <%= ENV['SIDEKIQ_THREADS'] || 5 %>
 production:
-  :concurrency: <%= ENV['SIDEKIQ_THREADS'] || 5 %>
+  :concurrency: <%= ENV['SIDEKIQ_THREADS'] || 14 %>
 queues:
-  - critical
-  - default
-  - low
+  - [critical, 3]
+  - [default, 2]
+  - [low, 1]
 
 limits:
-  default: 5
-  low: 5
+  default: 8
+  low: 6

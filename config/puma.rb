@@ -23,7 +23,7 @@ environment ENV.fetch('RAILS_ENV', 'development')
 # Workers do not work on JRuby or Windows (both of which do not support
 # processes).
 #
-workers ENV.fetch('WEB_CONCURRENCY', 0)
+workers ENV.fetch('WEB_CONCURRENCY', 3)
 preload_app!
 
 # Use the `preload_app!` method when specifying a `workers` number.
@@ -66,10 +66,10 @@ before_fork do
   Barnes.start # Must have enabled worker mode for this to block to be called
 
   PumaWorkerKiller.config do |config|
-    config.ram           = 1024
-    config.frequency     = 5
-    config.percent_usage = 0.98
-    config.rolling_restart_frequency = 2 * 3600
+    config.ram           = 900
+    config.frequency     = 20
+    config.percent_usage = 0.85
+    config.rolling_restart_frequency = 6 * 3600
     config.reaper_status_logs = true
 
     config.pre_term = ->(worker) { Rails.logger.debug "Worker #{worker.inspect} being killed" }
