@@ -19,6 +19,63 @@ RSpec.describe WebhookIntegrationsController do
     end
 
     context 'when the content type is application/json' do
+      context 'and the company is active' do
+        let!(:jira_account) { Fabricate :jira_account, company: company, base_uri: 'http://foo.bar', username: 'foo', api_token: 'bar', customer_domain: 'bar' }
+        let(:project) { Fabricate :project, company: company, customers: [customer], products: [product] }
+        let!(:jira_product_config) { Fabricate :jira_product_config, product: product, jira_product_key: 'FC' }
+        let!(:jira_project_config) { Fabricate :jira_project_config, project: project, jira_product_config: jira_product_config, fix_version_name: 'foo' }
+
+        before do
+          company.update(active: true)
+          request.headers['Content-Type'] = 'application/json'
+        end
+
+        it 'processes the webhook' do
+          expect(Jira::ProcessJiraIssueJob).to receive(:perform_later)
+          allow(Jira::JiraReader.instance).to receive(:read_project).and_return(project)
+          post :jira_webhook, params: {
+            issue: {
+              fields: {
+                created: '2018-07-02T11:20:18.998-0300',
+                project: {
+                  key: 'FC',
+                  self: 'http://bar.atlassian.com'
+                }
+              }
+            }
+          }
+          expect(response).to have_http_status :ok
+        end
+      end
+
+      context 'and the company is deactivated' do
+        let!(:jira_account) { Fabricate :jira_account, company: company, base_uri: 'http://foo.bar', username: 'foo', api_token: 'bar', customer_domain: 'bar' }
+        let(:project) { Fabricate :project, company: company, customers: [customer], products: [product] }
+        let!(:jira_product_config) { Fabricate :jira_product_config, product: product, jira_product_key: 'FC' }
+        let!(:jira_project_config) { Fabricate :jira_project_config, project: project, jira_product_config: jira_product_config, fix_version_name: 'foo' }
+
+        before do
+          company.update(active: false)
+          request.headers['Content-Type'] = 'application/json'
+        end
+
+        it 'returns forbidden' do
+          allow(Jira::JiraReader.instance).to receive(:read_project).and_return(project)
+          post :jira_webhook, params: {
+            issue: {
+              fields: {
+                created: '2018-07-02T11:20:18.998-0300',
+                project: {
+                  key: 'FC',
+                  self: 'http://bar.atlassian.com'
+                }
+              }
+            }
+          }
+          expect(response).to have_http_status :forbidden
+        end
+      end
+
       context 'and the has a valid project' do
         let!(:jira_account) { Fabricate :jira_account, company: company, base_uri: 'http://foo.bar', username: 'foo', api_token: 'bar', customer_domain: 'bar' }
         let(:project) { Fabricate :project, company: company, customers: [customer], products: [product] }

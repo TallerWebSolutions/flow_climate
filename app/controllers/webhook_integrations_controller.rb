@@ -8,6 +8,7 @@ class WebhookIntegrationsController < ApplicationController
   before_action :check_request
   before_action :assigns_data
   before_action :valid_jira_call?
+  before_action :company_active?
 
   def jira_webhook
     issue_id = Jira::JiraReader.instance.read_demand_key(jira_issue_attrs)
@@ -40,6 +41,10 @@ class WebhookIntegrationsController < ApplicationController
     return head :ok if jira_account.blank?
 
     head :ok if project.blank?
+  end
+
+  def company_active?
+    head :forbidden unless jira_account.company.active?
   end
 
   def project
