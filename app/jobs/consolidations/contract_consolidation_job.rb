@@ -22,15 +22,17 @@ module Consolidations
 
           demands_finished = contract.demands.kept.finished_after_date(contract_start).finished_until_date(start_date)
 
-          efforts_for_customer = DemandEffort.joins(demand: :product).where(demands: { product: contract.product })
-          efforts_acc = efforts_for_customer.where(start_time_to_computation: ..end_of_month)
-          total_hours_delivered_accumulated = efforts_acc.sum(:effort_value)
+          efforts_for_contract = DemandEffort.joins(:demand)
+                                            .where(demands: { contract_id: contract.id })
+                                            .where(start_time_to_computation: contract.start_date..end_of_month)
+          
+          total_hours_delivered_accumulated = efforts_for_contract.sum(:effort_value)
 
-          additional_hours_for_customer = ProjectAdditionalHour.joins(project: :customers).where(projects: { customers: contract.customer })
+          additional_hours_for_customer = ProjectAdditionalHour.joins(project: :customers)
+                                                             .where(projects: { customers: contract.customer })
+                                                             .where(event_date: contract.start_date..end_of_month)
 
-          total_additional_hours = additional_hours_for_customer
-                                     .where(event_date: ..end_of_month)
-                                     .sum(:hours)
+          total_additional_hours = additional_hours_for_customer.sum(:hours)
 
           real_hours_per_demand = if demands_finished.count.positive?
                                     total_hours_delivered_accumulated / demands_finished.count
@@ -57,7 +59,7 @@ module Consolidations
                                monte_carlo_duration_p80_weeks: 0,
                                real_hours_per_demand: 0,
                                estimated_hours_per_demand: contract.hours_per_demand_to_date(start_date),
-                               consumed_hours: consumed_hours)
+                               consumed_hours: consumed_hours || 0)
         end
 
         start_date += 1.month
