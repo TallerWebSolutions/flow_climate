@@ -1260,9 +1260,9 @@ pt-BR:
     webhooks:
       help: 'Podemos ouvir notificações do Jira através de dois webhooks'
       link_form_hint: 'Configuração de webhooks no Jira'
-      help_create_update_card: 'Para inclusão ou alteração de cartões https://flowclimateapp.herokuapp.com/jira_webhook'
+      help_create_update_card: 'Para inclusão ou alteração de cartões https://flowclimateapp.herokuapp.com/v2/jira_webhook'
       link_form_help_hint: 'Exemplo de configuração do webhook'
-      help_delete_card: 'Para exclusão de cartões https://flowclimateapp.herokuapp.com/jira_delete_card_webhook'
+      help_delete_card: 'Para exclusão de cartões https://flowclimateapp.herokuapp.com/v2/jira_delete_card_webhook'
   filters:
     options:
       project_status: 'Status do Projeto'

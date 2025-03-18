@@ -11,8 +11,8 @@ Rails.application.routes.draw do
   mount Sidekiq::Web => '/sidekiq'
 
   controller :webhook_integrations do
-    post 'jira_webhook'
-    post 'jira_delete_card_webhook'
+    post '/v2/jira_webhook', action: :jira_webhook
+    post '/v2/jira_delete_card_webhook', action: :jira_delete_card_webhook
   end
 
   authenticated :user do

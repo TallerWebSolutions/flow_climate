@@ -1275,9 +1275,9 @@ en:
     webhooks:
       help: "We can receive Jira notifications through two webhooks"
       link_form_hint: "Jira webhooks configuration"
-      help_create_update_card: "Add and update card webhook address https://flowclimateapp.herokuapp.com/jira_webhook"
+      help_create_update_card: "Add and update card webhook address https://flowclimateapp.herokuapp.com/v2/jira_webhook"
       link_form_help_hint: "Webhook form config example"
-      help_delete_card: "Webhook exclude card form address https://flowclimateapp.herokuapp.com/jira_delete_card_webhook"
+      help_delete_card: "Webhook exclude card form address https://flowclimateapp.herokuapp.com/v2/jira_delete_card_webhook"
   filters:
     options:
       project_status: "Project Status"
