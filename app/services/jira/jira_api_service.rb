@@ -12,7 +12,12 @@ module Jira
 
     def request_issue(issue_key)
       client.Issue.find(issue_key)
-    rescue JIRA::HTTPError
+    rescue JIRA::HTTPError => e
+      if e.message.include?('Unauthorized')
+        Rails.logger.error("JIRA AUTH ERROR: Credenciais inválidas ou token expirado para issue #{issue_key}. Por favor, renove o token de API do Jira para o usuário #{@connection_parameters[:username]}.")
+      else
+        Rails.logger.error("JIRA HTTP ERROR: #{e.message} for issue #{issue_key}")
+      end
       client.Issue.build
     end
 

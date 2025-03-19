@@ -13,7 +13,10 @@ module Jira
       demand = Demand.find_by(company: jira_account.company, external_id: issue_key)
 
       jira_issue = jira_con.request_issue(issue_key)
-      if jira_issue.attrs.present?
+      if jira_issue.present? && jira_issue.attrs.blank? && jira_issue.instance_variable_get('@expanded').blank?
+        Rails.logger.error("AUTH ERROR: Não foi possível acessar a issue #{issue_key}. Verifique se o token de API do Jira para #{jira_account.username} está válido.")
+        return
+      elsif jira_issue.attrs.present?
         product = Jira::JiraReader.instance.read_product(jira_issue.attrs, jira_account)
         demand = Jira::JiraIssueAdapter.instance.process_issue(jira_account, jira_issue, product, project)
         creator = MembershipsRepository.instance.find_or_create_by_name(demand.team, jira_issue.attrs['fields']['creator']['displayName'])

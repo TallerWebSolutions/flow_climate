@@ -27,6 +27,36 @@ RSpec.describe Jira::JiraApiService, type: :service do
 
         expect(issue_details).to be_an_instance_of JIRA::Resource::Issue
       end
+
+      context 'when unauthorized' do
+        it 'logs the error and returns an empty issue' do
+          response = Net::HTTPResponse.new(1.0, 401, 'Unauthorized')
+          unauthorized_error = JIRA::HTTPError.new(response)
+          allow(unauthorized_error).to receive(:message).and_return('Unauthorized')
+          allow(JIRA::Resource::Issue).to(receive(:find).and_raise(unauthorized_error))
+
+          expect(Rails.logger).to receive(:error).with(/JIRA AUTH ERROR: Credenciais inválidas ou token expirado para issue FC-3/)
+
+          issue_details = described_class.new(jira_account.username, jira_account.api_token, jira_account.base_uri).request_issue('FC-3')
+
+          expect(issue_details).to be_an_instance_of JIRA::Resource::Issue
+        end
+      end
+
+      context 'when other HTTP error' do
+        it 'logs the general error and returns an empty issue' do
+          response = Net::HTTPResponse.new(1.0, 500, 'Internal Server Error')
+          http_error = JIRA::HTTPError.new(response)
+          allow(http_error).to receive(:message).and_return('Internal Server Error')
+          allow(JIRA::Resource::Issue).to(receive(:find).and_raise(http_error))
+
+          expect(Rails.logger).to receive(:error).with(/JIRA HTTP ERROR: Internal Server Error for issue FC-3/)
+
+          issue_details = described_class.new(jira_account.username, jira_account.api_token, jira_account.base_uri).request_issue('FC-3')
+
+          expect(issue_details).to be_an_instance_of JIRA::Resource::Issue
+        end
+      end
     end
   end
 
