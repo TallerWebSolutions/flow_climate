@@ -1278,6 +1278,13 @@ en:
       help_create_update_card: "Add and update card webhook address https://flowclimateapp.herokuapp.com/v2/jira_webhook"
       link_form_help_hint: "Webhook form config example"
       help_delete_card: "Webhook exclude card form address https://flowclimateapp.herokuapp.com/v2/jira_delete_card_webhook"
+    token_status: "Token Status"
+    token_valid: "Valid"
+    token_valid_tooltip: "Token valid for %{days} more days"
+    token_expiring: "Expires in %{days} days"
+    token_expiring_tooltip: "The token expires in %{days} days. Please renew it soon!"
+    token_expired: "Expired"
+    token_expired_tooltip: "The token has expired. Please generate a new Jira API token and update this account."
   filters:
     options:
       project_status: "Project Status"

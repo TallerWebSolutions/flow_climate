@@ -5,15 +5,37 @@
       <th><%= Jira::JiraAccount.human_attribute_name :base_uri %></th>
       <th><%= Jira::JiraAccount.human_attribute_name :username %></th>
       <th><%= Jira::JiraAccount.human_attribute_name :created_at %></th>
+      <th><%= I18n.t('jira_accounts.token_status') %></th>
       <th></th>
     </thead>
     <tbody>
       <% jira_accounts_list.each do |account| %>
+        <% 
+          token_expiration_date = account.updated_at + 1.year
+          days_until_expiration = (token_expiration_date.to_date - Date.current).to_i
+          token_expired = days_until_expiration <= 0
+          token_warning = days_until_expiration <= 30
+        %>
         <tr>
           <td><%= link_to account.customer_domain, company_jira_account_path(company, account) %></td>
           <td><%= account.base_uri %></td>
           <td><%= account.username %></td>
           <td><%= I18n.l(account.created_at, format: :short) %></td>
+          <td>
+            <% if token_expired %>
+              <span class="label label-danger" title="<%= I18n.t('jira_accounts.token_expired_tooltip') %>">
+                <i class="fas fa-exclamation-triangle"></i> <%= I18n.t('jira_accounts.token_expired') %>
+              </span>
+            <% elsif token_warning %>
+              <span class="label label-warning" title="<%= I18n.t('jira_accounts.token_expiring_tooltip', days: days_until_expiration) %>">
+                <i class="fas fa-exclamation-circle"></i> <%= I18n.t('jira_accounts.token_expiring', days: days_until_expiration) %>
+              </span>
+            <% else %>
+              <span class="label label-success" title="<%= I18n.t('jira_accounts.token_valid_tooltip', days: days_until_expiration) %>">
+                <i class="fas fa-check-circle"></i> <%= I18n.t('jira_accounts.token_valid') %>
+              </span>
+            <% end %>
+          </td>
           <td>
             <%= link_to company_jira_account_path(account.company, account), method: :delete, data: { confirm: I18n.t('general.destroy.confirm') }, remote: true do %>
               <i class="fa fa-times" title='<%= I18n.t('jira_accounts.destroy.tooltip') %>'></i>

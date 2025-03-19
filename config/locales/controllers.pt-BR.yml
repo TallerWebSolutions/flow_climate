@@ -1263,6 +1263,13 @@ pt-BR:
       help_create_update_card: 'Para inclusão ou alteração de cartões https://flowclimateapp.herokuapp.com/v2/jira_webhook'
       link_form_help_hint: 'Exemplo de configuração do webhook'
       help_delete_card: 'Para exclusão de cartões https://flowclimateapp.herokuapp.com/v2/jira_delete_card_webhook'
+    token_status: 'Status do Token'
+    token_valid: 'Válido'
+    token_valid_tooltip: 'Token válido por mais %{days} dias'
+    token_expiring: 'Expira em %{days} dias'
+    token_expiring_tooltip: 'O token expira em %{days} dias. Renove-o em breve!'
+    token_expired: 'Expirado'
+    token_expired_tooltip: 'O token expirou. Por favor, gere um novo token de API do Jira e atualize esta conta.'
   filters:
     options:
       project_status: 'Status do Projeto'
