@@ -60,7 +60,11 @@ RSpec.describe Jira::ProcessJiraIssueJob, type: :active_job do
     context 'with a discarded demand' do
       it 'updates the correct fields' do
         demand = Fabricate :demand, company: company, discarded_at: 2.days.ago
-        allow_any_instance_of(Jira::JiraApiService).to(receive(:request_issue).with(demand.external_id).and_return(client.Issue.build))
+
+        jira_issue = client.Issue.build
+        allow(jira_issue).to receive(:instance_variable_get).with('@expanded').and_return(true)
+
+        allow_any_instance_of(Jira::JiraApiService).to(receive(:request_issue).with(demand.external_id).and_return(jira_issue))
         expect(DemandEffortService.instance).to(receive(:build_efforts_to_demand).with(demand)).once
         expect(UserNotifierMailer).not_to receive(:async_activity_finished)
 
@@ -83,7 +87,7 @@ RSpec.describe Jira::ProcessJiraIssueJob, type: :active_job do
 
       context 'and authorization issue' do
         it 'logs error and does not discard the demand' do
-          existing_demand = Fabricate :demand, company: company, external_id: 'auth-issue'
+          existing_demand = Fabricate :demand, company: company, external_id: 'auth-issue', discarded_at: nil
           auth_issue = client.Issue.build
 
           allow(auth_issue).to receive_messages(present?: true, attrs: {})
@@ -92,8 +96,9 @@ RSpec.describe Jira::ProcessJiraIssueJob, type: :active_job do
           allow_any_instance_of(Jira::JiraApiService).to(receive(:request_issue).with('auth-issue') { auth_issue })
 
           expect(Rails.logger).to receive(:error).with(/AUTH ERROR: Não foi possível acessar a issue auth-issue/)
-          expect(existing_demand).not_to receive(:discard)
           expect(DemandEffortService.instance).not_to receive(:build_efforts_to_demand)
+          expect(existing_demand).not_to receive(:discard)
+          expect(existing_demand).not_to receive(:update)
 
           described_class.perform_now('auth-issue', jira_account, project, 'foo@bar.com', 'Foo Bar', 'http://foo.com.br')
 
