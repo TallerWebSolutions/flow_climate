@@ -12,7 +12,9 @@ Rails.application.routes.draw do
 
   controller :webhook_integrations do
     post '/v2/jira_webhook', action: :jira_webhook
+    post '/jira_webhook', to: proc { [204, {}, []] }
     post '/v2/jira_delete_card_webhook', action: :jira_delete_card_webhook
+    post '/jira_delete_card_webhook', to: proc { [204, {}, []] }
   end
 
   authenticated :user do
