@@ -375,8 +375,6 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
         first_config = Fabricate :slack_configuration, team: team, info_type: :demand_state_changed, stages_to_notify_transition: [stage.id]
         second_config = Fabricate :slack_configuration, team: team, info_type: :demand_state_changed, stages_to_notify_transition: [stage.id]
 
-        expect_any_instance_of(Project).to receive(:lead_time_position_percentage_same_type).once.and_return(0.1)
-        expect_any_instance_of(Project).to receive(:lead_time_position_percentage_same_cos).once.and_return(0.3)
         expect_any_instance_of(Project).to receive(:lead_time_position_percentage).once.and_return(0.15)
 
         first_notifier = instance_double(Slack::Notifier, ping: 'bla')

@@ -157,7 +157,7 @@ module Slack
 
       team_member = demand_transition.team_member
 
-      change_state_notify = "*#{demand.external_id} - #{demand.demand_title}*\n:information_source: _#{team_member&.name || 'anônimo'}_ moveu para _#{stage.name}_ em #{I18n.l(demand_transition.last_time_in, format: :short)}"
+      change_state_notify = "*#{demand.external_id} - #{demand.demand_title}*\n_#{team_member&.name || 'anônimo'}_ moveu para _#{stage.name}_ em #{I18n.l(demand_transition.last_time_in, format: :short)}"
 
       change_state_notify += if stage.end_point?
                                " :tada: \n"
@@ -165,8 +165,7 @@ module Slack
                                "\n"
                              end
 
-      change_state_notify += "> #{demand.work_item_type.name} - #{I18n.t("activerecord.attributes.demand.enums.class_of_service.#{demand.class_of_service}")}\n"
-      change_state_notify += "> *Responsáveis:* #{demand.active_memberships.map(&:team_member_name).join(', ')} (_#{demand.team_name}_)\n"
+      change_state_notify += "> #{demand.work_item_type.name}\n"
       change_state_notify += "> *Unidade de portfólio:* #{demand.portfolio_unit&.name}\n" unless demand.portfolio_unit.nil?
       change_state_notify += ":alarm_clock: *Lead time (p80) de demandas similares* | *No Projeto*: #{time_distance_in_words(DemandService.instance.similar_p80_project(demand))} | *No Time:* #{time_distance_in_words(DemandService.instance.similar_p80_team(demand))}\n" if stage.commitment_point?
 
@@ -174,12 +173,8 @@ module Slack
         change_state_notify += "> :alarm_clock: Lead Time: #{time_distance_in_words(demand.reload.leadtime)}\n"
         project = demand.project
         change_state_notify += "> :moneybag: #{number_to_currency(demand.cost_to_project, decimal: 2)} | Upstream: #{number_to_currency(demand.effort_upstream * project.hour_value, decimal: 2)} | Downstream: #{number_to_currency(demand.effort_downstream * project.hour_value, decimal: 2)} \n"
-        team = demand.team
 
         change_state_notify += "> Mais rápida do que *#{number_to_percentage(project.lead_time_position_percentage(demand) * 100, precision: 1)}* das demandas no projeto *#{project.name}*.\n"
-        change_state_notify += "> Mesmo tipo: *#{number_to_percentage(project.lead_time_position_percentage_same_type(demand) * 100, precision: 1)}* | Mesma Classe de Serviço: *#{number_to_percentage(project.lead_time_position_percentage_same_cos(demand) * 100, precision: 1)}*\n"
-        change_state_notify += "> E no time *#{team.name}*, o lead time foi menor que *#{number_to_percentage(team.lead_time_position_percentage(demand) * 100, precision: 1)}* das demandas.\n"
-        change_state_notify += "> Mesmo tipo: *#{number_to_percentage(team.lead_time_position_percentage_same_type(demand) * 100, precision: 1)}* | Mesma Classe de Serviço: *#{number_to_percentage(team.lead_time_position_percentage_same_cos(demand) * 100, precision: 1)}*\n"
       end
 
       slack_configurations.each do |config|
