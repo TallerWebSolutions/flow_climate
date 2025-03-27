@@ -222,15 +222,14 @@ module Slack
                          ':package:'
                        end
 
-      work_item_type = "> #{work_item_icon} #{item_assignment.demand.work_item_type.name}\n"
-      portfolio_unit = "> *Unidade de portfólio:* #{item_assignment.demand.portfolio_unit&.name}\n" unless item_assignment.demand.portfolio_unit.nil?
+      work_item_type = "#{work_item_icon} #{item_assignment.demand.work_item_type.name}"
+      portfolio_unit = "*Unidade de portfólio:* #{item_assignment.demand.portfolio_unit&.name}\n" unless item_assignment.demand.portfolio_unit.nil?
 
       info_block = { type: 'section', text: { type: 'mrkdwn', text: ">#{demand_title}\n>#{assign_message}\n>#{work_item_type}\n>#{portfolio_unit}" } }
-      divider_block = { type: 'divider' }
 
       slack_configurations.each do |config|
         slack_notifier = Slack::Notifier.new(config.room_webhook)
-        slack_notifier.post(blocks: [info_block, divider_block])
+        slack_notifier.post(blocks: [info_block])
       end
 
       ItemAssignment.transaction { item_assignment.update(assignment_notified: true) }
