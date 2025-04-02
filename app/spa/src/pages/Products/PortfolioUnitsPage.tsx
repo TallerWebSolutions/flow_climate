@@ -26,11 +26,31 @@ const PortfolioUnitsPage = () => {
   const { t: commonT } = useTranslation(["common"])
   const { register, handleSubmit } = useForm()
 
+  const getCurrentYear = () => {
+    const today = new Date()
+    return today.getFullYear()
+  }
+
+  const getStartOfYear = () => {
+    const year = getCurrentYear()
+    return `${year}-01-01`
+  }
+
+  const getTomorrow = () => {
+    const today = new Date()
+    today.setDate(today.getDate() + 1)
+    return today.toISOString().split("T")[0]
+  }
+
   const productSlug = params.productSlug || ""
   const { data, loading, variables, refetch } = useQuery<PortfolioUnitsDTO>(
     PORTFOLIO_UNITS_QUERY,
     {
-      variables: { slug: productSlug },
+      variables: {
+        slug: productSlug,
+        startDate: getStartOfYear(),
+        endDate: getTomorrow(),
+      },
       notifyOnNetworkStatusChange: true,
     }
   )
@@ -83,7 +103,7 @@ const PortfolioUnitsPage = () => {
                 </InputLabel>
                 <Input
                   type="date"
-                  defaultValue={variables?.startDate}
+                  defaultValue={variables?.startDate || getStartOfYear()}
                   {...register("startDate")}
                 />
               </FormElement>
@@ -93,7 +113,7 @@ const PortfolioUnitsPage = () => {
                 </InputLabel>
                 <Input
                   type="date"
-                  defaultValue={variables?.endtDate}
+                  defaultValue={variables?.endDate || getTomorrow()}
                   {...register("endDate")}
                 />
               </FormElement>
