@@ -46,6 +46,12 @@ en:
     distance_in_words:
       x_seconds:
         other: "%{count} seconds"
+    am: ''
+    pm: ''
+    formats:
+      default: "%a, %d %B %Y, %H:%M:%S %z"
+      long: "%d %B %Y, %H:%M"
+      short: "%d/%m/%Y %H:%M:%S"
   date:
     abbr_day_names:
       - Sun
@@ -82,30 +88,241 @@ en:
       long: "%A, %d of %B of %Y"
       short: "%d of %B"
       month_year: "%B/%Y"
+    month_names:
+      -
+      - January
+      - February
+      - March
+      - April
+      - May
+      - June
+      - July
+      - August
+      - September
+      - October
+      - November
+      - December
+    order:
+      - :day
+      - :month
+      - :year
 
   general:
+    true: Yes
+    false: No
     connector:
       and: "and"
+    home:
+      title: Home
+    actions:
+      title: Actions
+      new: New
+      edit: Edit
+      delete: Delete
+      save: Save
+      cancel: Cancel
+      back: Back
+      active: Active
+      deactivate: Deactivate
+      confirm: Are you sure?
+    buttons:
+      back: Back
+      show: Show
+      cancel: Cancel
+      save: Save
+      delete: Delete
+      add: Add
+      edit: Edit
+      i_am_done: I'm done
+      send: Send
+      import: Import
+      sign_up: Sign Up
+    table:
+      actions: Actions
+      no_records: No records found
+    messages:
+      confirm_delete: Are you sure you want to delete this record?
+      record_deleted: Record was successfully deleted
+      record_created: Record was successfully created
+      record_updated: Record was successfully updated
   number:
     format:
       separator: "."
+      delimiter: "."
+      precision: 3
+      significant: false
+      strip_insignificant_zeros: false
     currency:
       format:
         unit: "$"
+        delimiter: "."
+        format: "%u %n"
+        precision: 2
+        separator: ","
+        significant: false
+        strip_insignificant_zeros: false
+    human:
+      decimal_units:
+        format: "%n %u"
+        units:
+          billion:
+            one: billion
+            other: billions
+          million:
+            one: million
+            other: millions
+          quadrillion:
+            one: quadrillion
+            other: quadrillions
+          thousand: thousand
+          trillion:
+            one: trillion
+            other: trillions
+          unit: ''
+      format:
+        delimiter: "."
+        precision: 2
+        significant: true
+        strip_insignificant_zeros: true
+      storage_units:
+        format: "%n %u"
+        units:
+          byte:
+            one: Byte
+            other: Bytes
+          gb: GB
+          kb: KB
+          mb: MB
+          tb: TB
+    percentage:
+      format:
+        delimiter: "."
+        format: "%n%"
+    precision:
+      format:
+        delimiter: "."
   datetime:
+    distance_in_words:
+      about_x_hours:
+        one: about 1 hour
+        other: about %{count} hours
+      about_x_months:
+        one: about 1 month
+        other: about %{count} months
+      about_x_years:
+        one: about 1 year
+        other: about %{count} years
+      almost_x_years:
+        one: almost 1 year
+        other: almost %{count} years
+      half_a_minute: half a minute
+      less_than_x_minutes:
+        one: less than a minute
+        other: less than %{count} minutes
+      less_than_x_seconds:
+        one: less than 1 second
+        other: less than %{count} seconds
+      over_x_years:
+        one: over 1 year
+        other: over %{count} years
+      x_days:
+        one: 1 day
+        other: "%{count} days"
+      x_minutes:
+        one: 1 minute
+        other: "%{count} minutes"
+      x_months:
+        one: 1 month
+        other: "%{count} months"
+      x_seconds:
+        one: 1 second
+        other: "%{count} seconds"
+    prompts:
+      day: Day
+      hour: Hour
+      minute: Minute
+      month: Month
+      second: Second
+      year: Year
     date_attributes:
-      second:
-        one: "second"
-        other: "seconds"
-      minute:
-        one: "minute"
-        other: "minutes"
-      hour:
-        one: "hour"
-        other: "hours"
       day:
-        one: "days"
-        other: "days"
+        one: day
+        other: days
+      hour:
+        one: hour
+        other: hours
+      minute:
+        one: minute
+        other: minutes
+      month:
+        one: month
+        other: months
+      second:
+        one: second
+        other: seconds
+      year:
+        one: year
+        other: years
+
+  helpers:
+    select:
+      prompt: Please select
+    submit:
+      create: Create %{model}
+      submit: Save %{model}
+      update: Update %{model}
+
+  support:
+    array:
+      last_word_connector: " and "
+      two_words_connector: " and "
+      words_connector: ", "
+
+  activerecord:
+    models:
+      company_working_hours_config:
+        one: Working Hours Configuration
+        other: Working Hours Configurations
+    attributes:
+      company_working_hours_config:
+        hours_per_day: Hours per Day
+        start_date: Start Date
+        end_date: End Date
+        active: Active
+        company: Company
+        created_at: Created At
+        updated_at: Updated At
+
+  company_working_hours_configs:
+    index:
+      title: Working Hours Configuration
+      new_config: New Configuration
+      hours_per_day: Hours per Day
+      start_date: Start Date
+      end_date: End Date
+      actions: Actions
+      no_configs: No working hours configurations found
+    new:
+      title: New Working Hours Configuration
+    edit:
+      title: Edit Working Hours Configuration
+    form:
+      title: Working Hours Configuration
+      hours_per_day: Hours per Day
+      start_date: Start Date
+      end_date: End Date
+      end_date_help: Leave blank if there is no end date defined
+      submit: Save Configuration
+    create:
+      success: Working hours configuration created successfully
+      error: Error creating working hours configuration
+    update:
+      success: Working hours configuration updated successfully
+      error: Error updating working hours configuration
+    destroy:
+      success: Working hours configuration deactivated successfully
+      error: Error deactivating working hours configuration
+    confirm_delete: Are you sure you want to deactivate this configuration?
 
   slack_notifications:
     demand_state:

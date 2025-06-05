@@ -12,6 +12,14 @@ pt-BR:
       send: Enviar
       import: 'Importar'
       sign_up: 'Assinar'
+    actions:
+      new: 'Novo'
+      edit: 'Editar'
+      title: 'Ações'
+      deactivate: 'Desativar'
+      confirm: 'Tem certeza?'
+    true: 'Sim'
+    false: 'Não'
     no_records: Você ainda não tem %{record}! Que tal criar o seu primeiro?
     messages:
       saved: Salvo!

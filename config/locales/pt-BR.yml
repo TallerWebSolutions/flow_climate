@@ -189,14 +189,69 @@ pt-BR:
       words_connector: ", "
   time:
     am: ''
+    pm: ''
     formats:
       default: "%a, %d de %B de %Y, %H:%M:%S %z"
       long: "%d de %B de %Y, %H:%M"
       short: "%d/%m/%Y %H:%M:%S"
-    pm: ''
+    date_attributes:
+      day:
+        one: dia
+        other: dias
+      hour:
+        one: hora
+        other: horas
+      minute:
+        one: minuto
+        other: minutos
+      month:
+        one: mês
+        other: meses
+      second:
+        one: segundo
+        other: segundos
+      year:
+        one: ano
+        other: anos
+    distance_in_words:
+      x_seconds:
+        other: "%{count} segundos"
   general:
     connector:
       and: "e"
+    home:
+      title: Início
+    actions:
+      title: Ações
+      new: Novo
+      edit: Editar
+      delete: Excluir
+      save: Salvar
+      cancel: Cancelar
+      back: Voltar
+      active: Ativo
+      deactivate: Desativar
+      confirm: Tem certeza?
+    buttons:
+      back: Voltar
+      show: Visualizar
+      cancel: Cancelar
+      save: Salvar
+      delete: Excluir
+      add: Adicionar
+      edit: Editar
+      i_am_done: Concluí
+      send: Enviar
+      import: Importar
+      sign_up: Cadastrar
+    table:
+      actions: Ações
+      no_records: Nenhum registro encontrado
+    messages:
+      confirm_delete: Tem certeza que deseja excluir este registro?
+      record_deleted: Registro excluído com sucesso
+      record_created: Registro criado com sucesso
+      record_updated: Registro atualizado com sucesso
   slack_notifications:
     demand_state:
       moved_to: "Demanda movida para"
@@ -205,3 +260,47 @@ pt-BR:
       faster_than: "Mais rápida do que"
       of_demands_in_project: "das demandas no projeto"
       portfolio_unit: "Unidade de portfólio"
+  activerecord:
+    models:
+      company_working_hours_config:
+        one: Configuração de Horas de Trabalho
+        other: Configurações de Horas de Trabalho
+    attributes:
+      company_working_hours_config:
+        hours_per_day: Horas por Dia
+        start_date: Data de Início
+        end_date: Data de Término
+        active: Ativo
+        company: Empresa
+        created_at: Criado em
+        updated_at: Atualizado em
+  company_working_hours_configs:
+    index:
+      title: Configuração de Horas de Trabalho
+      new_config: Nova Configuração
+      hours_per_day: Horas por Dia
+      start_date: Data de Início
+      end_date: Data de Término
+      actions: Ações
+      no_configs: Nenhuma configuração de horas de trabalho encontrada
+    new:
+      title: Nova Configuração de Horas de Trabalho
+    edit:
+      title: Editar Configuração de Horas de Trabalho
+    form:
+      title: Configuração de Horas de Trabalho
+      hours_per_day: Horas por Dia
+      start_date: Data de Início
+      end_date: Data de Término
+      end_date_help: Deixe em branco se não houver data de término definida
+      submit: Salvar Configuração
+    create:
+      success: Configuração de horas de trabalho criada com sucesso
+      error: Erro ao criar configuração de horas de trabalho
+    update:
+      success: Configuração de horas de trabalho atualizada com sucesso
+      error: Erro ao atualizar configuração de horas de trabalho
+    destroy:
+      success: Configuração de horas de trabalho desativada com sucesso
+      error: Erro ao desativar configuração de horas de trabalho
+    confirm_delete: Tem certeza que deseja desativar esta configuração?

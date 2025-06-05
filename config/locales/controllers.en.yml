@@ -12,6 +12,14 @@ en:
       send: Send
       import: "Import"
       sign_up: "Sign Up"
+    actions:
+      new: 'New'
+      edit: 'Edit'
+      title: 'Actions'
+      deactivate: 'Deactivate'
+      confirm: 'Are you sure?'
+    true: 'Yes'
+    false: 'No'
     no_records: You have no %{record} yet! Why not create your first?
     messages:
       saved: Saved!
