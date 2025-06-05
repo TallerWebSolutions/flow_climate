@@ -298,10 +298,10 @@ module Slack
       message = "*#{demand.external_id} - #{demand.demand_title}*\n"
 
       if is_customer_message
-        message += "Demanda movida para _#{stage.name}_ em #{I18n.l(demand_transition.last_time_in, format: :short)}"
+        message += "#{I18n.t('slack_notifications.demand_state.moved_to')} _#{stage.name}_ em #{I18n.l(demand_transition.last_time_in, format: :short)}"
       else
         team_member = demand_transition.team_member
-        message += "_#{team_member&.name || 'anônimo'}_ moveu para _#{stage.name}_ em #{I18n.l(demand_transition.last_time_in, format: :short)}"
+        message += "_#{team_member&.name || I18n.t('slack_notifications.demand_state.anonymous')}_ #{I18n.t('slack_notifications.demand_state.moved_by')} _#{stage.name}_ em #{I18n.l(demand_transition.last_time_in, format: :short)}"
       end
 
       message += ' :tada:' if stage.end_point?
@@ -318,7 +318,7 @@ module Slack
                        end
 
       message += "\n> #{work_item_icon} #{demand.work_item_type.name}"
-      message += "\n> *Unidade de portfólio:* #{demand.portfolio_unit&.name}" unless demand.portfolio_unit.nil?
+      message += "\n> *#{I18n.t('slack_notifications.demand_state.portfolio_unit')}:* #{demand.portfolio_unit&.name}" unless demand.portfolio_unit.nil?
 
       if stage.end_point?
         message += "\n> :alarm_clock: Lead Time: #{time_distance_in_words(demand.reload.leadtime)}"
@@ -326,7 +326,7 @@ module Slack
         unless is_customer_message
           project = demand.project
           message += "\n> :moneybag: #{number_to_currency(demand.cost_to_project, decimal: 2)} | Upstream: #{number_to_currency(demand.effort_upstream * project.hour_value, decimal: 2)} | Downstream: #{number_to_currency(demand.effort_downstream * project.hour_value, decimal: 2)}"
-          message += "\n> Mais rápida do que *#{number_to_percentage(project.lead_time_position_percentage(demand) * 100, precision: 1)}* das demandas no projeto *#{project.name}*"
+          message += "\n> #{I18n.t('slack_notifications.demand_state.faster_than')} *#{number_to_percentage(project.lead_time_position_percentage(demand) * 100, precision: 1)}* #{I18n.t('slack_notifications.demand_state.of_demands_in_project')} *#{project.name}*"
         end
       end
 

@@ -197,3 +197,11 @@ pt-BR:
   general:
     connector:
       and: "e"
+  slack_notifications:
+    demand_state:
+      moved_to: "Demanda movida para"
+      moved_by: "moveu para"
+      anonymous: "anônimo"
+      faster_than: "Mais rápida do que"
+      of_demands_in_project: "das demandas no projeto"
+      portfolio_unit: "Unidade de portfólio"

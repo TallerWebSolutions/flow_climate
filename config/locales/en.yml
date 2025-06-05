@@ -106,3 +106,12 @@ en:
       day:
         one: "days"
         other: "days"
+
+  slack_notifications:
+    demand_state:
+      moved_to: "Demand moved to"
+      moved_by: "moved to"
+      anonymous: "anonymous"
+      faster_than: "Faster than"
+      of_demands_in_project: "of demands in project"
+      portfolio_unit: "Portfolio Unit"
