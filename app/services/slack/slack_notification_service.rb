@@ -151,47 +151,15 @@ module Slack
 
       unless slack_configurations.present? && stage.present?
         demand_transition.update(transition_notified: true)
-
         return
-      end
-
-      team_member = demand_transition.team_member
-
-      change_state_notify = "*#{demand.external_id} - #{demand.demand_title}*\n_#{team_member&.name || 'anônimo'}_ moveu para _#{stage.name}_ em #{I18n.l(demand_transition.last_time_in, format: :short)}"
-
-      change_state_notify += if stage.end_point?
-                               " :tada: \n"
-                             else
-                               "\n"
-                             end
-
-      work_item_icon = case demand.work_item_type.name.downcase
-                       when /story|feature|funcionalidade/
-                         ':sparkle:'
-                       when /bug|erro|fix/
-                         ':red_circle:'
-                       when /chore|tarefa|melhoria/
-                         ':wrench:'
-                       else
-                         ':package:'
-                       end
-
-      change_state_notify += "> #{work_item_icon} #{demand.work_item_type.name}\n"
-      change_state_notify += "> *Unidade de portfólio:* #{demand.portfolio_unit&.name}\n" unless demand.portfolio_unit.nil?
-
-      if stage.end_point?
-        change_state_notify += "> :alarm_clock: Lead Time: #{time_distance_in_words(demand.reload.leadtime)}\n"
-        project = demand.project
-        change_state_notify += "> :moneybag: #{number_to_currency(demand.cost_to_project, decimal: 2)} | Upstream: #{number_to_currency(demand.effort_upstream * project.hour_value, decimal: 2)} | Downstream: #{number_to_currency(demand.effort_downstream * project.hour_value, decimal: 2)} \n"
-
-        change_state_notify += "> Mais rápida do que *#{number_to_percentage(project.lead_time_position_percentage(demand) * 100, precision: 1)}* das demandas no projeto *#{project.name}*.\n"
       end
 
       slack_configurations.each do |config|
         next unless config.notify_stage?(stage)
 
         slack_notifier = Slack::Notifier.new(config.room_webhook)
-        slack_notifier.ping(change_state_notify)
+        message = build_state_change_message(demand, stage, demand_transition, config.customer?)
+        slack_notifier.ping(message)
       end
 
       demand_transition.update(transition_notified: true)
@@ -324,6 +292,45 @@ module Slack
       else
         ''
       end
+    end
+
+    def build_state_change_message(demand, stage, demand_transition, is_customer_message)
+      message = "*#{demand.external_id} - #{demand.demand_title}*\n"
+
+      if is_customer_message
+        message += "Demanda movida para _#{stage.name}_ em #{I18n.l(demand_transition.last_time_in, format: :short)}"
+      else
+        team_member = demand_transition.team_member
+        message += "_#{team_member&.name || 'anônimo'}_ moveu para _#{stage.name}_ em #{I18n.l(demand_transition.last_time_in, format: :short)}"
+      end
+
+      message += ' :tada:' if stage.end_point?
+
+      work_item_icon = case demand.work_item_type.name.downcase
+                       when /story|feature|funcionalidade/
+                         ':sparkle:'
+                       when /bug|erro|fix/
+                         ':red_circle:'
+                       when /chore|tarefa|melhoria/
+                         ':wrench:'
+                       else
+                         ':package:'
+                       end
+
+      message += "\n> #{work_item_icon} #{demand.work_item_type.name}"
+      message += "\n> *Unidade de portfólio:* #{demand.portfolio_unit&.name}" unless demand.portfolio_unit.nil?
+
+      if stage.end_point?
+        message += "\n> :alarm_clock: Lead Time: #{time_distance_in_words(demand.reload.leadtime)}"
+
+        unless is_customer_message
+          project = demand.project
+          message += "\n> :moneybag: #{number_to_currency(demand.cost_to_project, decimal: 2)} | Upstream: #{number_to_currency(demand.effort_upstream * project.hour_value, decimal: 2)} | Downstream: #{number_to_currency(demand.effort_downstream * project.hour_value, decimal: 2)}"
+          message += "\n> Mais rápida do que *#{number_to_percentage(project.lead_time_position_percentage(demand) * 100, precision: 1)}* das demandas no projeto *#{project.name}*"
+        end
+      end
+
+      message
     end
   end
 end

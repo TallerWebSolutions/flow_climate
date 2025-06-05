@@ -339,14 +339,47 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
         it 'calls slack notification method' do
           stage = Fabricate :stage, end_point: false
           customer = Fabricate :customer
-          demand = Fabricate :demand, team: team, customer: customer
+          demand = Fabricate :demand, team: team, customer: customer, external_id: 'DEM-123', demand_title: 'Test Demand', work_item_type: feature_type
           team_member = Fabricate :team_member
-          demand_transition = Fabricate :demand_transition, stage: stage, demand: demand, team_member: team_member
+          demand_transition = Fabricate :demand_transition, stage: stage, demand: demand, team_member: team_member, last_time_in: Time.zone.now
           Fabricate :slack_configuration, customer: customer, info_type: :demand_state_changed, stages_to_notify_transition: [stage.id], config_type: :customer
 
-          expect_any_instance_of(Slack::Notifier).to receive(:ping).with(/#{team_member.name}/)
+          expected_message = "*DEM-123 - Test Demand*\nDemanda movida para _#{stage.name}_ em #{I18n.l(demand_transition.last_time_in, format: :short)}\n> :sparkle: Feature"
+          expect_any_instance_of(Slack::Notifier).to receive(:ping).with(expected_message)
 
           described_class.instance.notify_demand_state_changed(stage, demand, demand_transition)
+        end
+
+        context 'with customer message format' do
+          it 'sends a different message format for customer config' do
+            stage = Fabricate :stage, end_point: false
+            customer = Fabricate :customer
+            demand = Fabricate :demand, team: team, customer: customer, external_id: 'DEM-123', demand_title: 'Test Demand', work_item_type: feature_type
+            team_member = Fabricate :team_member
+            demand_transition = Fabricate :demand_transition, stage: stage, demand: demand, team_member: team_member, last_time_in: Time.zone.now
+            Fabricate :slack_configuration, customer: customer, info_type: :demand_state_changed, stages_to_notify_transition: [stage.id], config_type: :customer
+
+            expected_message = "*DEM-123 - Test Demand*\nDemanda movida para _#{stage.name}_ em #{I18n.l(demand_transition.last_time_in, format: :short)}\n> :sparkle: Feature"
+            expect_any_instance_of(Slack::Notifier).to receive(:ping).with(expected_message)
+
+            described_class.instance.notify_demand_state_changed(stage, demand, demand_transition)
+          end
+
+          it 'includes lead time and celebration emoji for end point stages' do
+            stage = Fabricate :stage, end_point: true
+            customer = Fabricate :customer
+            demand = Fabricate :demand, team: team, customer: customer, external_id: 'DEM-123', demand_title: 'Test Demand', work_item_type: feature_type
+            team_member = Fabricate :team_member
+            demand_transition = Fabricate :demand_transition, stage: stage, demand: demand, team_member: team_member, last_time_in: Time.zone.now
+            Fabricate :slack_configuration, customer: customer, info_type: :demand_state_changed, stages_to_notify_transition: [stage.id], config_type: :customer
+
+            allow(demand).to receive(:leadtime).and_return(2.days)
+
+            expected_message = "*DEM-123 - Test Demand*\nDemanda movida para _#{stage.name}_ em #{I18n.l(demand_transition.last_time_in, format: :short)} :tada:\n> :sparkle: Feature\n> :alarm_clock: Lead Time: 2 dias"
+            expect_any_instance_of(Slack::Notifier).to receive(:ping).with(expected_message)
+
+            described_class.instance.notify_demand_state_changed(stage, demand, demand_transition)
+          end
         end
       end
 
@@ -354,13 +387,14 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
         stage = Fabricate :stage, end_point: false
         customer = Fabricate :customer
         customer_two = Fabricate :customer
-        demand = Fabricate :demand, team: team, customer: customer
+        demand = Fabricate :demand, team: team, customer: customer, external_id: 'DEM-123', demand_title: 'Test Demand', work_item_type: feature_type
         team_member = Fabricate :team_member
-        demand_transition = Fabricate :demand_transition, stage: stage, demand: demand, team_member: team_member
+        demand_transition = Fabricate :demand_transition, stage: stage, demand: demand, team_member: team_member, last_time_in: Time.zone.now
         Fabricate :slack_configuration, customer: customer, info_type: :demand_state_changed, stages_to_notify_transition: [stage.id], config_type: :customer
         Fabricate :slack_configuration, customer: customer_two, info_type: :demand_state_changed, stages_to_notify_transition: [stage.id], config_type: :customer
 
-        expect_any_instance_of(Slack::Notifier).to receive(:ping).with(/#{team_member.name}/).once
+        expected_message = "*DEM-123 - Test Demand*\nDemanda movida para _#{stage.name}_ em #{I18n.l(demand_transition.last_time_in, format: :short)}\n> :sparkle: Feature"
+        expect_any_instance_of(Slack::Notifier).to receive(:ping).with(expected_message).once
 
         described_class.instance.notify_demand_state_changed(stage, demand, demand_transition)
       end
@@ -369,13 +403,14 @@ RSpec.describe Slack::SlackNotificationService, type: :service do
     context 'with an end_point stage' do
       it 'calls slack notification method' do
         stage = Fabricate :stage, end_point: true
-        demand = Fabricate :demand, team: team
+        project = Fabricate :project
+        demand = Fabricate :demand, team: team, project: project
         team_member = Fabricate :team_member
         demand_transition = Fabricate :demand_transition, demand: demand, stage: stage, team_member: team_member
         first_config = Fabricate :slack_configuration, team: team, info_type: :demand_state_changed, stages_to_notify_transition: [stage.id]
         second_config = Fabricate :slack_configuration, team: team, info_type: :demand_state_changed, stages_to_notify_transition: [stage.id]
 
-        expect_any_instance_of(Project).to receive(:lead_time_position_percentage).once.and_return(0.15)
+        allow(project).to receive(:lead_time_position_percentage).with(demand).and_return(0.15)
 
         first_notifier = instance_double(Slack::Notifier, ping: 'bla')
         second_notifier = instance_double(Slack::Notifier, ping: 'ble')
