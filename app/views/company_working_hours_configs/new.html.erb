@@ -1,0 +1,12 @@
+<div class="row bottom-spaced-component">
+  <div class="col-xs-12">
+    <ul class="breadcrumb">
+      <li><%= link_to I18n.t('general.home.title'), root_path %></li>
+      <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
+      <li><%= link_to CompanyWorkingHoursConfig.model_name.human(count: 2), company_company_working_hours_configs_path(@company) %></li>
+      <li><%= I18n.t('general.actions.new') %></li>
+    </ul>
+  </div>
+</div>
+
+<%= render 'form' %> 

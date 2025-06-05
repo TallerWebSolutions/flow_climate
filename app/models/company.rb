@@ -48,6 +48,7 @@ class Company < ApplicationRecord
   has_many :team_resources, dependent: :destroy
   has_many :flow_events, dependent: :destroy
   has_many :work_item_types, dependent: :destroy
+  has_many :company_working_hours_configs, dependent: :destroy
 
   has_many :jira_accounts, class_name: 'Jira::JiraAccount', dependent: :destroy, inverse_of: :company
 

@@ -1,0 +1,44 @@
+<div class="row bottom-spaced-component">
+  <div class="col-xs-12">
+    <h4><%= I18n.t('company_working_hours_configs.form.title') %></h4>
+  </div>
+</div>
+
+<% if @config.errors.any? %>
+  <div class="alert alert-danger">
+    <ul>
+      <% @config.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<%= form_with model: [@company, @config], local: true do |form| %>
+  <div class="row">
+    <div class='col-xs-4 form-group <%= 'has-error' if @config.errors[:hours_per_day].present? %>'>
+      <%= form.label :hours_per_day, I18n.t('activerecord.attributes.company_working_hours_config.hours_per_day'), class: 'control-label' %>
+      <%= form.number_field :hours_per_day, step: 0.5, min: 0, max: 24, class: 'form-control' %>
+      <span class="help-block"><%= @config.errors[:hours_per_day].join(', ') %></span>
+    </div>
+
+    <div class='col-xs-4 form-group <%= 'has-error' if @config.errors[:start_date].present? %>'>
+      <%= form.label :start_date, I18n.t('activerecord.attributes.company_working_hours_config.start_date'), class: 'control-label' %>
+      <%= form.date_field :start_date, class: 'form-control' %>
+      <span class="help-block"><%= @config.errors[:start_date].join(', ') %></span>
+    </div>
+
+    <div class='col-xs-4 form-group <%= 'has-error' if @config.errors[:end_date].present? %>'>
+      <%= form.label :end_date, I18n.t('activerecord.attributes.company_working_hours_config.end_date'), class: 'control-label' %>
+      <%= form.date_field :end_date, class: 'form-control' %>
+      <span class="help-block"><%= @config.errors[:end_date].join(', ') %></span>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <%= form.submit I18n.t('general.buttons.save'), class: 'btn btn-primary' %>
+      <%= link_to I18n.t('general.buttons.cancel'), company_company_working_hours_configs_path(@company), class: 'btn btn-default' %>
+    </div>
+  </div>
+<% end %> 

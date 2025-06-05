@@ -9,11 +9,7 @@ alwaysApply: false
 
 - Use `spec_helper.rb` instead of `rails_helper.rb`
 - Add `# frozen_string_literal: true` at the top of every spec file
-- Specify the type in the RSpec describe block:
-  ```ruby
-  RSpec.describe ModelName, type: :model do
-  RSpec.describe ControllerName, type: :controller do
-  ```
+- DO NOT specify the type in the RSpec describe block
 
 ## Date and Time Handling
 

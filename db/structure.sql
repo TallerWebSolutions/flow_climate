@@ -787,6 +787,40 @@ ALTER SEQUENCE public.company_settings_id_seq OWNED BY public.company_settings.i
 
 
 --
+-- Name: company_working_hours_configs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.company_working_hours_configs (
+    id bigint NOT NULL,
+    company_id bigint NOT NULL,
+    hours_per_day numeric(4,1) NOT NULL,
+    start_date date NOT NULL,
+    end_date date,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: company_working_hours_configs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.company_working_hours_configs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: company_working_hours_configs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.company_working_hours_configs_id_seq OWNED BY public.company_working_hours_configs.id;
+
+
+--
 -- Name: contract_consolidations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3386,6 +3420,13 @@ ALTER TABLE ONLY public.company_settings ALTER COLUMN id SET DEFAULT nextval('pu
 
 
 --
+-- Name: company_working_hours_configs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.company_working_hours_configs ALTER COLUMN id SET DEFAULT nextval('public.company_working_hours_configs_id_seq'::regclass);
+
+
+--
 -- Name: contract_consolidations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4008,6 +4049,14 @@ ALTER TABLE ONLY public.company_settings
 
 
 --
+-- Name: company_working_hours_configs company_working_hours_configs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.company_working_hours_configs
+    ADD CONSTRAINT company_working_hours_configs_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: contract_consolidations contract_consolidations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4607,6 +4656,13 @@ CREATE UNIQUE INDEX customer_consolidation_unique ON public.customer_consolidati
 
 
 --
+-- Name: idx_company_working_hours_dates; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_company_working_hours_dates ON public.company_working_hours_configs USING btree (company_id, start_date, end_date);
+
+
+--
 -- Name: idx_contract_consolidation_unique; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4702,6 +4758,13 @@ CREATE UNIQUE INDEX index_companies_on_slug ON public.companies USING btree (slu
 --
 
 CREATE INDEX index_company_settings_on_company_id ON public.company_settings USING btree (company_id);
+
+
+--
+-- Name: index_company_working_hours_configs_on_company_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_company_working_hours_configs_on_company_id ON public.company_working_hours_configs USING btree (company_id);
 
 
 --
@@ -6479,6 +6542,14 @@ ALTER TABLE ONLY public.operations_dashboards
 
 
 --
+-- Name: company_working_hours_configs fk_rails_98bd131790; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.company_working_hours_configs
+    ADD CONSTRAINT fk_rails_98bd131790 FOREIGN KEY (company_id) REFERENCES public.companies(id);
+
+
+--
 -- Name: customers_projects fk_rails_9b68bbaf49; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6845,6 +6916,7 @@ ALTER TABLE ONLY public.stages
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20250605160824'),
 ('20250106193537'),
 ('20241206200836'),
 ('20241128032914'),
@@ -6854,6 +6926,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20241127151940'),
 ('20241127142153'),
 ('20241112185524'),
+('20240320000000'),
 ('20240305001433'),
 ('20231205130509'),
 ('20230920134031'),

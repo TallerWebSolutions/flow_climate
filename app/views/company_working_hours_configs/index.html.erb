@@ -1,0 +1,50 @@
+<div class="row bottom-spaced-component">
+  <div class="col-xs-12">
+    <ul class="breadcrumb">
+      <li><%= link_to I18n.t('general.home.title'), root_path %></li>
+      <li><%= link_to @company.abbreviation&.upcase, company_path(@company) %></li>
+      <li><%= CompanyWorkingHoursConfig.model_name.human(count: 2) %></li>
+    </ul>
+  </div>
+</div>
+
+<div class="row bottom-spaced-component">
+  <div class="col-xs-12">
+    <div class="row">
+      <div class="col-xs-6">
+        <h3><%= CompanyWorkingHoursConfig.model_name.human(count: 2) %></h3>
+      </div>
+      <div class="col-xs-6 text-right">
+        <%= link_to I18n.t('general.actions.new'), new_company_company_working_hours_config_path(@company), class: 'btn btn-primary' %>
+      </div>
+    </div>
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th><%= CompanyWorkingHoursConfig.human_attribute_name(:hours_per_day) %></th>
+          <th><%= CompanyWorkingHoursConfig.human_attribute_name(:start_date) %></th>
+          <th><%= CompanyWorkingHoursConfig.human_attribute_name(:end_date) %></th>
+          <th><%= I18n.t('general.actions.active') %></th>
+          <th><%= I18n.t('general.actions.title') %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @configs.each do |config| %>
+          <tr>
+            <td><%= config.hours_per_day %></td>
+            <td><%= l config.start_date %></td>
+            <td><%= l config.end_date if config.end_date.present? %></td>
+            <td><%= config.active_now? ? I18n.t('general.true') : I18n.t('general.false') %></td>
+            <td>
+              <%= link_to I18n.t('general.actions.edit'), edit_company_company_working_hours_config_path(@company, config), class: 'btn btn-default btn-sm' %>
+              <% if config.active_now? %>
+                <%= link_to I18n.t('general.actions.deactivate'), company_company_working_hours_config_path(@company, config), method: :delete, data: { confirm: I18n.t('company_working_hours_configs.confirm_delete') }, class: 'btn btn-danger btn-sm' %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div> 

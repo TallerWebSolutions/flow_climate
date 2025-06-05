@@ -71,6 +71,8 @@ Rails.application.routes.draw do
       get :risks_tab
     end
 
+    resources :company_working_hours_configs, except: :show
+
     resources :teams, except: %i[create update destroy] do
       resources :memberships, except: %i[new create update destroy] do
         get :efficiency_table, on: :collection
