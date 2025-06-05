@@ -1,0 +1,162 @@
+---
+description: Used for create specs and test files
+globs: 
+alwaysApply: false
+---
+ # Specs Best Practices
+
+## File Structure and Setup
+
+- Use `spec_helper.rb` instead of `rails_helper.rb`
+- Add `# frozen_string_literal: true` at the top of every spec file
+- Specify the type in the RSpec describe block:
+  ```ruby
+  RSpec.describe ModelName, type: :model do
+  RSpec.describe ControllerName, type: :controller do
+  ```
+
+## Date and Time Handling
+
+- Always use `Time.zone.today` instead of `Date.today`
+- Use `Time.zone.now` instead of `Time.now`
+- When dealing with dates in tests, use relative dates:
+  ```ruby
+  let(:date) { Time.zone.today }
+  let(:future_date) { date + 1.day }
+  let(:past_date) { date - 1.day }
+  ```
+
+## Test Data Setup
+
+- Use Fabricators for test data creation:
+  ```ruby
+  let(:company) { Fabricate :company }
+  let!(:config) { Fabricate :company_working_hours_config, company: company }
+  ```
+- Use `let` for lazy evaluation
+- Use `let!` when the object needs to be created before the test runs
+- Group related setup in `before` blocks:
+  ```ruby
+  before do
+    login_as user
+  end
+  ```
+
+## Controller Specs Structure
+
+- Test both successful and error cases
+- Group tests by action (index, show, create, update, destroy)
+- For each action, test:
+  - Valid parameters
+  - Invalid parameters
+  - Invalid company (non-existent and not permitted)
+  - Invalid resource (non-existent and from another company)
+- Example structure:
+  ```ruby
+  describe 'GET #index' do
+    context 'with valid parameters' do
+      it 'assigns @resources and renders template' do
+        # test code
+      end
+    end
+
+    context 'with invalid company' do
+      context 'non-existent' do
+        before { get :index, params: { company_id: 'foo' } }
+        it { expect(response).to have_http_status :not_found }
+      end
+
+      context 'not permitted' do
+        let(:company) { Fabricate :company, users: [] }
+        before { get :index, params: { company_id: company } }
+        it { expect(response).to have_http_status :not_found }
+      end
+    end
+  end
+  ```
+
+## Model Specs Structure
+
+- Test associations, validations, and scopes
+- Use shoulda-matchers for common validations:
+  ```ruby
+  describe 'associations' do
+    it { is_expected.to belong_to(:company) }
+  end
+
+  describe 'validations' do
+    it { is_expected.to validate_presence_of(:name) }
+    it { is_expected.to validate_numericality_of(:hours).is_greater_than(0) }
+  end
+  ```
+- Test custom validations and methods in separate contexts
+- Test scopes with different scenarios:
+  ```ruby
+  describe '.active' do
+    let!(:active_record) { Fabricate :model, active: true }
+    let!(:inactive_record) { Fabricate :model, active: false }
+
+    it 'returns only active records' do
+      expect(described_class.active).to include(active_record)
+      expect(described_class.active).not_to include(inactive_record)
+    end
+  end
+  ```
+
+## Common Test Patterns
+
+- Test flash messages:
+  ```ruby
+  expect(flash[:notice]).to eq I18n.t('model.action.success')
+  expect(flash[:error]).to eq I18n.t('model.action.error')
+  ```
+- Test redirects:
+  ```ruby
+  expect(response).to redirect_to company_path(company)
+  ```
+- Test template rendering:
+  ```ruby
+  expect(response).to render_template :index
+  ```
+- Test record changes:
+  ```ruby
+  expect do
+    post :create, params: valid_params
+  end.to change(Model, :count).by(1)
+  ```
+- Test attribute changes:
+  ```ruby
+  expect do
+    put :update, params: valid_params
+  end.not_to(change { record.reload.attribute })
+  ```
+
+## Error Handling
+
+- Test HTTP status codes:
+  ```ruby
+  expect(response).to have_http_status :not_found
+  expect(response).to have_http_status :unauthorized
+  ```
+- Test validation errors:
+  ```ruby
+  expect(record).not_to be_valid
+  expect(record.errors[:attribute]).to include('error message')
+  ```
+- Test overlapping/conflicting records:
+  ```ruby
+  expect(record.errors[:base]).to include('overlaps with existing record')
+  ```
+
+## Best Practices
+
+- Keep tests focused and atomic
+- Use descriptive context and example names
+- Test both positive and negative scenarios
+- Follow the Arrange-Act-Assert pattern
+- Use shared examples for common test patterns
+- Keep test data setup minimal and relevant
+- Use meaningful variable names in tests
+- Test edge cases and boundary conditions
+- Ensure tests are independent and don't rely on each other
+- Use proper scoping for test data to avoid conflicts
