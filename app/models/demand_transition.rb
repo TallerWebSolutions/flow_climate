@@ -70,7 +70,7 @@ class DemandTransition < ApplicationRecord
   def working_time_in_transition
     out_time = [last_time_out, Time.zone.now].compact.min
 
-    TimeService.instance.compute_working_hours_for_dates(last_time_in, out_time)
+    TimeService.instance.compute_working_hours_for_dates(last_time_in, out_time, demand.project.company)
   end
 
   def work_time_blocked_in_transition

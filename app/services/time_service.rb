@@ -3,10 +3,10 @@
 class TimeService
   include Singleton
 
-  def compute_working_hours_for_dates(start_date, end_date)
-    return 0 if start_date.blank? || end_date.blank? || (end_date - start_date) <= 1.minute
+  def compute_working_hours_for_dates(start_date, end_date, company)
+    return 0 if start_date.blank? || end_date.blank? || (end_date - start_date) <= 1.minute || company.blank?
 
-    compute_working_hours(start_date, end_date)
+    compute_working_hours(start_date, end_date, company)
   end
 
   def days_between_of(start_date, end_date)
@@ -81,14 +81,16 @@ class TimeService
     array_of_dates
   end
 
-  def compute_working_hours(start_time, end_time)
+  def compute_working_hours(start_time, end_time, company)
     initial_time = start_time
     working_total_hours = 0
     days_count = 0
+    working_hours_per_day = company.company_working_hours_configs.for_date(initial_time.to_date).first&.hours_per_day || 6
+
     while initial_time < end_time
       working_total_hours += 1 unless initial_time.saturday? || initial_time.sunday? || out_of_work_time?(initial_time)
 
-      if working_total_hours == 6
+      if working_total_hours == working_hours_per_day
         working_total_hours = 0
         days_count += 1
         initial_time += 1.day
@@ -98,7 +100,7 @@ class TimeService
       initial_time += 1.hour
     end
 
-    return (days_count * 6) + working_total_hours if days_count.positive?
+    return (days_count * working_hours_per_day) + working_total_hours if days_count.positive?
 
     working_total_hours
   end

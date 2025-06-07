@@ -65,7 +65,7 @@ module Flow
     def compute_effort_in_membership_transition(start_date, end_date, effort_transition)
       blocks_for_transition = effort_transition.demand.demand_blocks.closed.for_date_interval(effort_transition.last_time_in, effort_transition.last_time_out)
 
-      TimeService.instance.compute_working_hours_for_dates(start_date, end_date) - sum_blocks_working_time(blocks_for_transition, end_date, start_date)
+      TimeService.instance.compute_working_hours_for_dates(start_date, end_date, membership.company) - sum_blocks_working_time(blocks_for_transition, end_date, start_date)
     end
 
     def sum_blocks_working_time(blocks_for_transition, end_date, start_date)
@@ -74,7 +74,7 @@ module Flow
         start_block = [start_date, block.block_time].compact.max
         end_block = [end_date, block.unblock_time].compact.min
 
-        effort_in_blocks << TimeService.instance.compute_working_hours_for_dates(start_block, end_block)
+        effort_in_blocks << TimeService.instance.compute_working_hours_for_dates(start_block, end_block, membership.company)
       end
 
       effort_in_blocks.compact.sum

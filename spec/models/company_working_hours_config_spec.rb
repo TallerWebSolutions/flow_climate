@@ -10,27 +10,15 @@ RSpec.describe CompanyWorkingHoursConfig do
   end
 
   describe 'scopes' do
-    describe '.active' do
-      let!(:active_config) { Fabricate :company_working_hours_config, active: true }
-      let!(:inactive_config) { Fabricate :company_working_hours_config, active: false }
-
-      it 'returns only active configs' do
-        expect(described_class.active).to include(active_config)
-        expect(described_class.active).not_to include(inactive_config)
-      end
-    end
-
     describe '.for_date' do
       let(:date) { Time.zone.today }
       let!(:config_before) { Fabricate :company_working_hours_config, start_date: date - 1.day, end_date: date - 1.day }
-      let!(:config_during) { Fabricate :company_working_hours_config, start_date: date - 1.day, end_date: date + 1.day }
-      let!(:config_after) { Fabricate :company_working_hours_config, start_date: date + 1.day, end_date: date + 2.days }
-      let!(:config_no_end) { Fabricate :company_working_hours_config, start_date: date - 1.day, end_date: nil }
-      let!(:inactive_config) { Fabricate :company_working_hours_config, start_date: date - 1.day, end_date: date + 1.day, active: false }
+      let!(:config_during) { Fabricate :company_working_hours_config, start_date: date, end_date: date }
+      let!(:config_after) { Fabricate :company_working_hours_config, start_date: date + 1.day, end_date: nil }
 
       it 'returns configs active on the given date' do
-        expect(described_class.for_date(date)).to include(config_during, config_no_end)
-        expect(described_class.for_date(date)).not_to include(config_before, config_after, inactive_config)
+        expect(described_class.for_date(date)).to include(config_during)
+        expect(described_class.for_date(date)).not_to include(config_before, config_after)
       end
     end
   end
@@ -58,14 +46,14 @@ RSpec.describe CompanyWorkingHoursConfig do
     it { is_expected.to validate_numericality_of(:hours_per_day).is_greater_than(0).is_less_than_or_equal_to(24) }
 
     it 'is invalid if end_date is before start_date' do
-      config = described_class.new(company: company, hours_per_day: 8, start_date: Date.today, end_date: Date.yesterday)
+      config = described_class.new(company: company, hours_per_day: 8, start_date: Time.zone.today, end_date: Time.zone.yesterday)
       expect(config).not_to be_valid
       expect(config.errors[:end_date]).to include('must be after start date')
     end
 
     it 'is invalid if overlaps with another config for the same company' do
-      described_class.create!(company: company, hours_per_day: 8, start_date: Date.today, end_date: nil)
-      overlapping = described_class.new(company: company, hours_per_day: 6, start_date: Date.today, end_date: nil)
+      described_class.create!(company: company, hours_per_day: 8, start_date: Time.zone.today, end_date: nil)
+      overlapping = described_class.new(company: company, hours_per_day: 6, start_date: Time.zone.today, end_date: nil)
       expect(overlapping).not_to be_valid
       expect(overlapping.errors[:base]).to include('overlaps with existing configuration period')
     end

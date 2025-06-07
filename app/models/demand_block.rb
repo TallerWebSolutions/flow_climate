@@ -104,7 +104,7 @@ class DemandBlock < ApplicationRecord
 
   def update_computed_fields
     end_time = unblock_time || Time.zone.now
-    self.block_working_time_duration = TimeService.instance.compute_working_hours_for_dates(block_time, end_time)
+    self.block_working_time_duration = TimeService.instance.compute_working_hours_for_dates(block_time, end_time, demand.project.company)
     self.stage = demand.stage_at(block_time)
   end
 

@@ -53,7 +53,7 @@ class ItemAssignment < ApplicationRecord
     start_effort_time = [start_time, beginning_time].compact.max
     end_effort_time = [finish_time, end_time].compact.min
 
-    TimeService.instance.compute_working_hours_for_dates(start_effort_time, end_effort_time)
+    TimeService.instance.compute_working_hours_for_dates(start_effort_time, end_effort_time, demand.project.company)
   end
 
   def stages_during_assignment
