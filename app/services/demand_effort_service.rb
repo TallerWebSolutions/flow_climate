@@ -4,7 +4,6 @@ class DemandEffortService
   include Singleton
 
   LIMIT_EFFORT_WHEN_IT_HAS_DROPS = 8
-  NORMAL_EFFORT_LIMIT = 6
 
   # rubocop:disable Metrics/AbcSize
   def build_efforts_to_demand(demand)
@@ -145,6 +144,10 @@ class DemandEffortService
     effort_in_minutes = 0
     blocked_effort_in_minutes = 0
     initial_time = effort_start_time
+
+    company = demand.project.company
+    working_hours_per_day = company.company_working_hours_configs.for_date(effort_start_time.to_date).first&.hours_per_day || 6
+
     while initial_time < end_time
       if blocked?(demand, initial_time)
         blocked_effort_in_minutes += 1
@@ -154,7 +157,7 @@ class DemandEffortService
 
       initial_time += 1.minute
 
-      break if effort_in_minutes >= NORMAL_EFFORT_LIMIT * 60
+      break if effort_in_minutes >= working_hours_per_day * 60
     end
 
     effort_in_hours = effort_in_minutes.to_f / 60
