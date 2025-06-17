@@ -23,13 +23,28 @@ module Slack
 
     def process_assignments(demand)
       assignments_invalid = demand.item_assignments.select { |assignment| assignment.valid? == false }
-      assignments_invalid.map { |assignment_invalid| assignment_invalid.demand_efforts.map(&:delete) }
-      assignments_invalid.map.map(&:delete)
+      
+      assignments_invalid.each do |assignment_invalid|
+        DemandEffort.safe_destroy_each(assignment_invalid.demand_efforts)
+        
+        begin
+          assignment_invalid.destroy
+        rescue ActiveRecord::StaleObjectError
+          Rails.logger.info("ItemAssignment #{assignment_invalid.id} already destroyed by another process - skipping")
+        rescue ActiveRecord::RecordNotFound
+          Rails.logger.info("ItemAssignment #{assignment_invalid.id} already deleted - skipping")
+        end
+      end
 
       demand.item_assignments.reload.where(assignment_notified: false).each do |assignment|
         demand_url = company_demand_url(demand.company, demand)
         Slack::SlackNotificationService.instance.notify_item_assigned(assignment, demand_url)
-        ItemAssignment.transaction { assignment.update(assignment_notified: true) }
+        
+        begin
+          ItemAssignment.transaction { assignment.update(assignment_notified: true) }
+        rescue ActiveRecord::StaleObjectError
+          Rails.logger.info("ItemAssignment #{assignment.id} was updated by another process - skipping notification update")
+        end
       end
     end
 

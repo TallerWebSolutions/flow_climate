@@ -303,37 +303,88 @@ RSpec.describe ItemAssignment do
     let(:company) { Fabricate :company }
     let(:team) { Fabricate :team, company: company }
 
-    let(:project) { Fabricate :project, team: team, company: company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:product) { Fabricate :product, company: company, customer: customer }
+    let(:project) { Fabricate :project, products: [product], team: team, company: company }
 
-    it 'computes the pull interval after saving' do
-      travel_to Time.zone.local(2020, 6, 17, 10, 0, 0) do
+    it 'returns true if the assignment overlaps with other assignment' do
+      travel_to Time.zone.local(2020, 7, 22, 20, 0, 0) do
         first_team_member = Fabricate :team_member, company: company, name: 'first_member'
         second_team_member = Fabricate :team_member, company: company, name: 'second_member'
-        third_team_member = Fabricate :team_member, company: company, name: 'third_member'
 
         first_membership = Fabricate :membership, team: team, team_member: first_team_member, member_role: :developer
         second_membership = Fabricate :membership, team: team, team_member: second_team_member, member_role: :developer
-        third_membership = Fabricate :membership, team: team, team_member: third_team_member, member_role: :developer
 
-        first_demand = Fabricate :demand, company: company, team: team, project: project, created_date: 3.days.ago, commitment_date: 2.days.ago, end_date: 1.day.ago
-        second_demand = Fabricate :demand, company: company, team: team, project: project, created_date: 4.days.ago, commitment_date: 2.days.ago, end_date: nil
+        first_demand = Fabricate :demand, company: company, team: team, project: project
 
-        first_assignment = Fabricate :item_assignment, membership: first_membership, demand: first_demand, start_time: 11.days.ago, finish_time: nil
-        second_assignment = Fabricate :item_assignment, membership: first_membership, demand: second_demand, start_time: 5.hours.ago, finish_time: 1.hour.ago
-        third_assignment = Fabricate :item_assignment, membership: second_membership, demand: second_demand, start_time: 4.hours.ago, finish_time: 2.hours.ago
-        fourth_assignment = Fabricate :item_assignment, membership: second_membership, demand: first_demand, start_time: 15.days.ago, finish_time: 2.hours.ago
-        fifth_assignment = Fabricate :item_assignment, membership: third_membership, demand: second_demand, start_time: 15.days.ago, finish_time: 10.minutes.ago
+        first_assignment = Fabricate :item_assignment, membership: first_membership, demand: first_demand, start_time: 9.days.ago, finish_time: 1.week.ago
+        second_assignment = Fabricate :item_assignment, membership: second_membership, demand: first_demand, start_time: 8.days.ago, finish_time: 6.days.ago
+        third_assignment = Fabricate :item_assignment, membership: first_membership, demand: first_demand, start_time: 3.days.ago, finish_time: 1.hour.ago
 
-        expect(second_assignment.pairing_assignment?(third_assignment)).to be true
-        expect(third_assignment.pairing_assignment?(second_assignment)).to be true
-        expect(first_assignment.pairing_assignment?(second_assignment)).to be false
+        expect(first_assignment.pairing_assignment?(second_assignment)).to be true
+        expect(second_assignment.pairing_assignment?(first_assignment)).to be true
         expect(first_assignment.pairing_assignment?(third_assignment)).to be false
-        expect(first_assignment.pairing_assignment?(fourth_assignment)).to be true
-        expect(second_assignment.pairing_assignment?(first_assignment)).to be false
-        expect(fourth_assignment.pairing_assignment?(first_assignment)).to be true
-        expect(second_assignment.pairing_assignment?(fifth_assignment)).to be true
-        expect(fifth_assignment.pairing_assignment?(second_assignment)).to be true
-        expect(fifth_assignment.pairing_assignment?(fifth_assignment)).to be false
+        expect(third_assignment.pairing_assignment?(first_assignment)).to be false
+        expect(second_assignment.pairing_assignment?(third_assignment)).to be false
+        expect(third_assignment.pairing_assignment?(second_assignment)).to be false
+        expect(first_assignment.pairing_assignment?(first_assignment)).to be false
+      end
+    end
+  end
+
+  describe '.safe_destroy_each' do
+    let(:company) { Fabricate :company }
+    let(:team) { Fabricate :team, company: company }
+    let(:customer) { Fabricate :customer, company: company }
+    let(:product) { Fabricate :product, company: company, customer: customer }
+    let(:project) { Fabricate :project, products: [product], team: team, company: company }
+    let(:membership) { Fabricate :membership, team: team }
+    let(:demand) { Fabricate :demand, company: company, team: team, project: project }
+
+    context 'when assignments can be destroyed normally' do
+      it 'destroys all assignments and returns the count' do
+        assignment1 = Fabricate :item_assignment, membership: membership, demand: demand, start_time: 2.days.ago
+        assignment2 = Fabricate :item_assignment, membership: membership, demand: demand, start_time: 1.day.ago
+
+        assignments = ItemAssignment.where(id: [assignment1.id, assignment2.id])
+
+        result = ItemAssignment.safe_destroy_each(assignments)
+
+        expect(result[:destroyed]).to eq 2
+        expect(result[:skipped]).to eq 0
+        expect(ItemAssignment.where(id: [assignment1.id, assignment2.id])).to be_empty
+      end
+    end
+
+    context 'when StaleObjectError occurs' do
+      it 'skips the stale objects and continues with others' do
+        assignment1 = Fabricate :item_assignment, membership: membership, demand: demand, start_time: 2.days.ago
+        assignment2 = Fabricate :item_assignment, membership: membership, demand: demand, start_time: 1.day.ago
+
+        assignments = ItemAssignment.where(id: [assignment1.id, assignment2.id])
+
+        allow_any_instance_of(ItemAssignment).to receive(:destroy).and_raise(ActiveRecord::StaleObjectError)
+
+        result = ItemAssignment.safe_destroy_each(assignments)
+
+        expect(result[:destroyed]).to eq 0
+        expect(result[:skipped]).to eq 2
+      end
+    end
+
+    context 'when RecordNotFound occurs' do
+      it 'skips the missing records and continues with others' do
+        assignment1 = Fabricate :item_assignment, membership: membership, demand: demand, start_time: 2.days.ago
+        assignment2 = Fabricate :item_assignment, membership: membership, demand: demand, start_time: 1.day.ago
+
+        assignments = ItemAssignment.where(id: [assignment1.id, assignment2.id])
+
+        allow_any_instance_of(ItemAssignment).to receive(:destroy).and_raise(ActiveRecord::RecordNotFound)
+
+        result = ItemAssignment.safe_destroy_each(assignments)
+
+        expect(result[:destroyed]).to eq 0
+        expect(result[:skipped]).to eq 2
       end
     end
   end

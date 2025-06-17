@@ -105,8 +105,8 @@ class DemandsController < DemandsListController
   private
 
   def clean_assignments_efforts
-    @demand.item_assignments.joins(:demand_efforts).where(demand_efforts: { automatic_update: true }).destroy_all
-    @demand.demand_efforts.where(automatic_update: true).destroy_all
+    ItemAssignment.safe_destroy_each(@demand.item_assignments.joins(:demand_efforts).where(demand_efforts: { automatic_update: true }))
+    DemandEffort.safe_destroy_each(@demand.demand_efforts.where(automatic_update: true))
   end
 
   def read_demand_children

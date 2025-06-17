@@ -190,7 +190,7 @@ module Jira
         assignments_ids << responsible_hash_processment(demand, history_hash)
       end
 
-      demand.item_assignments.where.not(id: assignments_ids.flatten.uniq).find_each(&:destroy)
+      ItemAssignment.safe_destroy_each(demand.item_assignments.where.not(id: assignments_ids.flatten.uniq))
     end
 
     def responsible_hash_processment(demand, history_hash)

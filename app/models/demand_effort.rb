@@ -37,6 +37,8 @@
 #  fk_rails_ce4f1e0c32  (item_assignment_id => item_assignments.id)
 #
 class DemandEffort < ApplicationRecord
+  self.locking_column = :lock_version
+
   belongs_to :demand
   belongs_to :item_assignment
   belongs_to :demand_transition
@@ -58,6 +60,25 @@ class DemandEffort < ApplicationRecord
   scope :until_date, ->(limit_date) { where('start_time_to_computation <= :limit_date', limit_date: limit_date) }
 
   after_save :update_demand_caches
+
+  def self.safe_destroy_each(efforts)
+    destroyed_count = 0
+    skipped_count = 0
+
+    efforts.find_each do |effort|
+      effort.destroy
+      destroyed_count += 1
+    rescue ActiveRecord::StaleObjectError
+      Rails.logger.info("DemandEffort #{effort.id} already destroyed by another process - skipping")
+      skipped_count += 1
+    rescue ActiveRecord::RecordNotFound
+      Rails.logger.info("DemandEffort #{effort.id} already deleted - skipping")
+      skipped_count += 1
+    end
+
+    Rails.logger.info("DemandEffort batch destruction: #{destroyed_count} destroyed, #{skipped_count} skipped")
+    { destroyed: destroyed_count, skipped: skipped_count }
+  end
 
   def csv_array
     [

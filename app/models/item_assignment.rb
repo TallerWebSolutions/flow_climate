@@ -33,6 +33,8 @@
 class ItemAssignment < ApplicationRecord
   include Discard::Model
 
+  self.locking_column = :lock_version
+
   belongs_to :demand
   belongs_to :membership
 
@@ -48,6 +50,25 @@ class ItemAssignment < ApplicationRecord
 
   before_save :compute_assignment_effort
   before_save :compute_pull_interval
+
+  def self.safe_destroy_each(assignments)
+    destroyed_count = 0
+    skipped_count = 0
+
+    assignments.find_each do |assignment|
+      assignment.destroy
+      destroyed_count += 1
+    rescue ActiveRecord::StaleObjectError
+      Rails.logger.info("ItemAssignment #{assignment.id} already destroyed by another process - skipping")
+      skipped_count += 1
+    rescue ActiveRecord::RecordNotFound
+      Rails.logger.info("ItemAssignment #{assignment.id} already deleted - skipping")
+      skipped_count += 1
+    end
+
+    Rails.logger.info("ItemAssignment batch destruction: #{destroyed_count} destroyed, #{skipped_count} skipped")
+    { destroyed: destroyed_count, skipped: skipped_count }
+  end
 
   def working_hours_until(beginning_time = nil, end_time = Time.zone.now)
     start_effort_time = [start_time, beginning_time].compact.max
