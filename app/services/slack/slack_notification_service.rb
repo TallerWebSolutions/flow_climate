@@ -178,7 +178,7 @@ module Slack
       return if item_assignment.assignment_notified?
 
       demand_title = "*<#{demand_url}|#{item_assignment.demand.external_id} - #{item_assignment.demand.demand_title}>*"
-      assign_message = "#{item_assignment.team_member_name} puxou a demanda em _#{item_assignment.assigned_at&.name || 'sem etapa'}_ às #{I18n.l(item_assignment.start_time, format: :short)}"
+      assign_message = "#{item_assignment.team_member_name} assigned in _#{item_assignment.assigned_at&.name || 'no'}_ at #{I18n.l(item_assignment.start_time, format: :short)}"
       work_item_icon = case item_assignment.demand.work_item_type.name.downcase
                        when /story|feature|funcionalidade/
                          ':sparkle:'
@@ -191,7 +191,7 @@ module Slack
                        end
 
       work_item_type = "#{work_item_icon} #{item_assignment.demand.work_item_type.name}"
-      portfolio_unit = "*Unidade de portfólio:* #{item_assignment.demand.portfolio_unit&.name}\n" unless item_assignment.demand.portfolio_unit.nil?
+      portfolio_unit = "*Porfolio unit:* #{item_assignment.demand.portfolio_unit&.name}\n" unless item_assignment.demand.portfolio_unit.nil?
 
       info_block = { type: 'section', text: { type: 'mrkdwn', text: ">#{demand_title}\n>#{assign_message}\n>#{work_item_type}\n>#{portfolio_unit}" } }
 
